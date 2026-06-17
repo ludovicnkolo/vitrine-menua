@@ -613,17 +613,64 @@ body {
   grid-template-columns: 1fr 1fr;
   max-width: 1200px;
   margin: 0 auto;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+  position: relative;
+  overflow: visible;
 }
 .boxed-split .split-content {
   padding: 5rem 4rem;
+  position: relative;
+  z-index: 1;
 }
 .boxed-split .split-image {
-  min-height: 450px;
+  min-height: 460px;
+  position: relative;
+  z-index: 1;
 }
+
+/* ── Overlap variant: image is on the LEFT, text card on the RIGHT ── */
+/* Image protrudes right into the text area + sticks out top & bottom  */
+.overlap-split--img-left .split-image {
+  z-index: 2;
+  margin-right: -70px;         /* bite into the text box */
+  margin-top: -50px;
+  margin-bottom: -50px;
+  box-shadow: 12px 0 50px rgba(0,0,0,0.14);
+}
+.overlap-split--img-left .split-content {
+  z-index: 1;
+  padding-left: 90px;          /* compensate so text doesn't hide behind image */
+}
+
+/* ── Overlap variant: text card on the LEFT, image is on the RIGHT ── */
+/* Image protrudes left into the text area + sticks out top & bottom  */
+.overlap-split--img-right .split-image {
+  z-index: 2;
+  margin-left: -70px;
+  margin-top: -50px;
+  margin-bottom: -50px;
+  box-shadow: -12px 0 50px rgba(0,0,0,0.14);
+}
+.overlap-split--img-right .split-content {
+  z-index: 1;
+  padding-right: 90px;
+}
+
 @media (max-width: 900px) {
-  .boxed-split {
+  .boxed-split,
+  .overlap-split--img-left,
+  .overlap-split--img-right {
     grid-template-columns: 1fr;
+  }
+  .overlap-split--img-left .split-image,
+  .overlap-split--img-right .split-image {
+    margin: 0;
+    box-shadow: none;
+    order: -1;
+  }
+  .overlap-split--img-left .split-content,
+  .overlap-split--img-right .split-content {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 

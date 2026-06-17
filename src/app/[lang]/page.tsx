@@ -176,8 +176,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           </div>
         </div>
       </section>
-      <section style={{ backgroundColor: "#fff", padding: "6rem 2rem 4rem" }}>
-        <div className="boxed-split">
+      <section style={{ backgroundColor: "#fff", padding: "8rem 2rem 6rem", overflow: "visible" }}>
+        <div className="boxed-split overlap-split--img-left">
           <div className="split-image split-image--gradient" style={{ order: 1 }}>
             <Image src="/hero-bg.png" alt="Notre approche" fill sizes="50vw"
               style={{ objectFit: "cover", objectPosition: "center" }} />
@@ -205,8 +205,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </section>
 
       {/* ══ 7. POURQUOI MENUA ════════════════════════════════════════════ */}
-      <section style={{ backgroundColor: "#fff", padding: "4rem 2rem 8rem" }}>
-        <div className="boxed-split">
+      <section style={{ backgroundColor: "#fff", padding: "6rem 2rem 10rem", overflow: "visible" }}>
+        <div className="boxed-split overlap-split--img-right">
           <div className="split-content split-content--green" style={{ order: 1 }}>
             <h2 className="alliance-title" style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", textTransform: "uppercase", fontStyle: "normal", letterSpacing: 0, color: "#fff" }}>
               {isEn ? "Why MENUA CONSULTING?" : "Pourquoi MENUA CONSULTING ?"}

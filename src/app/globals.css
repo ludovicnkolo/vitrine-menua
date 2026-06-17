@@ -605,6 +605,27 @@ body {
 }
 .split-content--beige      { background-color: var(--beige-bg); }
 .split-content--beige-light { background-color: var(--beige-light); }
+.split-content--green      { background-color: var(--green-dark); color: #fff; }
+
+/* Boxed Split (Laplace style) */
+.boxed-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+}
+.boxed-split .split-content {
+  padding: 5rem 4rem;
+}
+.boxed-split .split-image {
+  min-height: 450px;
+}
+@media (max-width: 900px) {
+  .boxed-split {
+    grid-template-columns: 1fr;
+  }
+}
 
 .split-heading {
   font-family: var(--font-serif);

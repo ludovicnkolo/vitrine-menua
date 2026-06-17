@@ -176,66 +176,68 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           </div>
         </div>
       </section>
-
-      {/* ══ 6. APPROCHE (split inverse) ══════════════════════════════════ */}
-      <section className="split-grid" style={{ backgroundColor: "#fff" }}>
-        <div className="split-image split-image--gradient" style={{ order: 1 }}>
-          <Image src="/hero-bg.png" alt="Notre approche" fill sizes="50vw"
-            style={{ objectFit: "cover", objectPosition: "center" }} />
-        </div>
-        <div className="split-content split-content--beige-light" style={{ order: 2, backgroundColor: "#e6dfd5" }}>
-          <h2 className="alliance-title" style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", textTransform: "uppercase", fontStyle: "normal", letterSpacing: 0 }}>
-            {isEn ? "Our 100% operational approach" : "Notre approche 100% opérationnelle"}
-          </h2>
-          <p className="split-body" style={{ marginTop: "1.5rem" }}>
-            {isEn ? "MENUA CONSULTING adopts a resolutely operational stance: clients define the needs, methods, and priorities; we handle the execution." : "MENUA CONSULTING adopte une posture résolument opérationnelle : les clients définissent les besoins, les méthodes et les priorités, nous assurons l'exécution."}
-          </p>
-          <p className="split-body" style={{ marginTop: "1rem" }}>
-            {isEn ? (
-              <>Our approach is based on three pillars: <strong>operational continuity</strong>, <strong>action traceability</strong>, and <strong>deliverable reliability</strong>.</>
-            ) : (
-              <>Notre approche repose sur trois piliers : <strong>continuité opérationnelle</strong>, <strong>traçabilité des actions</strong> et <strong>fiabilité des livrables</strong>.</>
-            )}
-          </p>
-          <div className="cta-row" style={{ marginTop: "2rem" }}>
-            <p className="cta-label">{isEn ? "ABOUT US" : "NOUS CONNAÎTRE"}</p>
-            <ArrowBtn href={`/${lang}/nous-connaitre`} />
+      <section style={{ backgroundColor: "#fff", padding: "6rem 2rem 4rem" }}>
+        <div className="boxed-split">
+          <div className="split-image split-image--gradient" style={{ order: 1 }}>
+            <Image src="/hero-bg.png" alt="Notre approche" fill sizes="50vw"
+              style={{ objectFit: "cover", objectPosition: "center" }} />
+          </div>
+          <div className="split-content split-content--beige-light" style={{ order: 2, backgroundColor: "#e6dfd5" }}>
+            <h2 className="alliance-title" style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", textTransform: "uppercase", fontStyle: "normal", letterSpacing: 0 }}>
+              {isEn ? "Our 100% operational approach" : "Notre approche 100% opérationnelle"}
+            </h2>
+            <p className="split-body" style={{ marginTop: "1.5rem" }}>
+              {isEn ? "MENUA CONSULTING adopts a resolutely operational stance: clients define the needs, methods, and priorities; we handle the execution." : "MENUA CONSULTING adopte une posture résolument opérationnelle : les clients définissent les besoins, les méthodes et les priorités, nous assurons l'exécution."}
+            </p>
+            <p className="split-body" style={{ marginTop: "1rem" }}>
+              {isEn ? (
+                <>Our approach is based on three pillars: <strong>operational continuity</strong>, <strong>action traceability</strong>, and <strong>deliverable reliability</strong>.</>
+              ) : (
+                <>Notre approche repose sur trois piliers : <strong>continuité opérationnelle</strong>, <strong>traçabilité des actions</strong> et <strong>fiabilité des livrables</strong>.</>
+              )}
+            </p>
+            <div className="cta-row" style={{ marginTop: "2rem" }}>
+              <p className="cta-label">{isEn ? "ABOUT US" : "NOUS CONNAÎTRE"}</p>
+              <ArrowBtn href={`/${lang}/nous-connaitre`} />
+            </div>
           </div>
         </div>
       </section>
 
       {/* ══ 7. POURQUOI MENUA ════════════════════════════════════════════ */}
-      <section className="split-grid" style={{ backgroundColor: "#fff" }}>
-        <div className="split-content" style={{ order: 1 }}>
-          <h2 className="alliance-title" style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", textTransform: "uppercase", fontStyle: "normal", letterSpacing: 0 }}>
-            {isEn ? "Why MENUA CONSULTING?" : "Pourquoi MENUA CONSULTING ?"}
-          </h2>
-          <p className="split-body" style={{ marginTop: "1.5rem" }}>
-            {isEn ? "Specialists in back and middle office, we don't just analyze: we execute." : "Spécialistes du back et du middle office, nous n'analysons pas : nous exécutons."}
-          </p>
-          <ul className="split-body" style={{ marginTop: "1.5rem", listStyle: "none", paddingLeft: 0 }}>
-            {[
-              isEn ? "Back and middle office specialization" : "Spécialisation back et middle office",
-              isEn ? "100% operational approach" : "Approche 100% opérationnelle",
-              isEn ? "Integration into your organization" : "Intégration à votre organisation",
-              isEn ? "Reliable and continuous execution" : "Exécution fiable et continue",
-              isEn ? "Quality supervision of deliverables" : "Supervision qualité des livrables",
-              isEn ? "Bilingual English / French intervention" : "Intervention bilingue français / anglais",
-            ].map((item) => (
-              <li key={item} style={{ position: "relative", paddingLeft: "1rem", marginBottom: "0.5rem" }}>
-                <span style={{ position: "absolute", left: 0, top: "2px", color: "var(--green-dark)" }}>→</span>
-                {item}
-              </li>
-            ))}
-          </ul>
-          <div className="cta-row" style={{ marginTop: "2rem" }}>
-            <p className="cta-label">{isEn ? "WHY CHOOSE US" : "POURQUOI NOUS CHOISIR"}</p>
-            <ArrowBtn href={`/${lang}/pourquoi-menua`} />
+      <section style={{ backgroundColor: "#fff", padding: "4rem 2rem 8rem" }}>
+        <div className="boxed-split">
+          <div className="split-content split-content--green" style={{ order: 1 }}>
+            <h2 className="alliance-title" style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", textTransform: "uppercase", fontStyle: "normal", letterSpacing: 0, color: "#fff" }}>
+              {isEn ? "Why MENUA CONSULTING?" : "Pourquoi MENUA CONSULTING ?"}
+            </h2>
+            <p className="split-body" style={{ marginTop: "1.5rem", color: "rgba(255,255,255,0.85)" }}>
+              {isEn ? "Specialists in back and middle office, we don't just analyze: we execute." : "Spécialistes du back et du middle office, nous n'analysons pas : nous exécutons."}
+            </p>
+            <ul className="split-body" style={{ marginTop: "1.5rem", listStyle: "none", paddingLeft: 0, color: "rgba(255,255,255,0.85)" }}>
+              {[
+                isEn ? "Back and middle office specialization" : "Spécialisation back et middle office",
+                isEn ? "100% operational approach" : "Approche 100% opérationnelle",
+                isEn ? "Integration into your organization" : "Intégration à votre organisation",
+                isEn ? "Reliable and continuous execution" : "Exécution fiable et continue",
+                isEn ? "Quality supervision of deliverables" : "Supervision qualité des livrables",
+                isEn ? "Bilingual English / French intervention" : "Intervention bilingue français / anglais",
+              ].map((item) => (
+                <li key={item} style={{ position: "relative", paddingLeft: "1.2rem", marginBottom: "0.6rem" }}>
+                  <span style={{ position: "absolute", left: 0, top: "2px", color: "var(--beige-light)" }}>→</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className="cta-row" style={{ marginTop: "2.5rem" }}>
+              <p className="cta-label" style={{ color: "var(--beige-light)" }}>{isEn ? "WHY CHOOSE US" : "POURQUOI NOUS CHOISIR"}</p>
+              <ArrowBtn href={`/${lang}/pourquoi-menua`} dark={true} />
+            </div>
           </div>
-        </div>
-        <div className="split-image" style={{ order: 2 }}>
-          <Image src="/team-meeting.png" alt="Pourquoi Menua" fill sizes="50vw"
-            style={{ objectFit: "cover", objectPosition: "center" }} />
+          <div className="split-image" style={{ order: 2 }}>
+            <Image src="/team-meeting.png" alt="Pourquoi Menua" fill sizes="50vw"
+              style={{ objectFit: "cover", objectPosition: "center" }} />
+          </div>
         </div>
       </section>
 

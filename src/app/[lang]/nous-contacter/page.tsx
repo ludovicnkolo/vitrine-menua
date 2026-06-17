@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Nous contacter – MENUA CONSULTING",
-  description:
-    "Présentez votre besoin opérationnel à MENUA CONSULTING. Formulaire de contact, coordonnées et niveaux d'urgence.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const isEn = lang === 'en';
+  return {
+    title: isEn ? "Contact Us – MENUA CONSULTING" : "Nous contacter – MENUA CONSULTING",
+    description: isEn
+      ? "Present your operational need to MENUA CONSULTING. Contact form, contact details and urgency levels."
+      : "Présentez votre besoin opérationnel à MENUA CONSULTING. Formulaire de contact, coordonnées et niveaux d'urgence.",
+  };
+}
 
 /* ─── Styles inline partagés ─── */
 const fieldStyle: React.CSSProperties = {
@@ -33,19 +38,23 @@ const labelStyle: React.CSSProperties = {
   marginBottom: "0.5rem",
 };
 
-const typesBesoin = [
-  "Renfort opérationnel",
-  "Externalisation back office",
-  "Externalisation middle office",
-  "Finance & reporting",
-  "Contrôle de gestion",
-  "Risques & conformité",
-  "Support comptable & data",
-  "Support opérationnel CGP / gestion de patrimoine",
-  "Autre besoin opérationnel",
+const getTypesBesoin = (isEn: boolean) => [
+  isEn ? "Operational reinforcement" : "Renfort opérationnel",
+  isEn ? "Back office outsourcing" : "Externalisation back office",
+  isEn ? "Middle office outsourcing" : "Externalisation middle office",
+  isEn ? "Finance & reporting" : "Finance & reporting",
+  isEn ? "Management control" : "Contrôle de gestion",
+  isEn ? "Risk & compliance" : "Risques & conformité",
+  isEn ? "Accounting & data support" : "Support comptable & data",
+  isEn ? "PWM / Wealth management operational support" : "Support opérationnel CGP / gestion de patrimoine",
+  isEn ? "Other operational need" : "Autre besoin opérationnel",
 ];
 
-export default function NousContacter() {
+export default async function NousContacter({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  const isEn = lang === 'en';
+  const typesBesoin = getTypesBesoin(isEn);
+
   return (
     <main>
       {/* ── EN-TÊTE ── */}
@@ -73,11 +82,10 @@ export default function NousContacter() {
               marginBottom: "1.5rem",
             }}
           >
-            Nous contacter
+            {isEn ? "Contact us" : "Nous contacter"}
           </h1>
           <p style={{ fontSize: "1rem", color: "var(--text-mid)", lineHeight: 1.85, maxWidth: "620px", fontWeight: 300 }}>
-            Présentez votre besoin opérationnel, nous vous répondons avec une première analyse
-            et une proposition adaptée.
+            {isEn ? "Present your operational needs, and we will respond with an initial analysis and a tailored proposal." : "Présentez votre besoin opérationnel, nous vous répondons avec une première analyse et une proposition adaptée."}
           </p>
         </div>
       </section>
@@ -96,7 +104,7 @@ export default function NousContacter() {
             {/* ── Coordonnées ── */}
             <div>
               <div className="section-label-wrap" style={{ marginBottom: "2rem" }}>
-                <p className="section-lbl">Nous trouver</p>
+                <p className="section-lbl">{isEn ? "Find us" : "Nous trouver"}</p>
                 <div className="section-lbl-line" />
               </div>
               <div
@@ -131,7 +139,7 @@ export default function NousContacter() {
                 </div>
                 <div>
                   <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--beige)", marginBottom: "0.75rem" }}>
-                    Téléphone
+                    {isEn ? "Phone" : "Téléphone"}
                   </p>
                   <a
                     href="tel:+33686877914"
@@ -146,18 +154,18 @@ export default function NousContacter() {
             {/* ── Formulaire ── */}
             <div>
               <div className="section-label-wrap" style={{ marginBottom: "2rem" }}>
-                <p className="section-lbl">Formulaire de contact</p>
+                <p className="section-lbl">{isEn ? "Contact Form" : "Formulaire de contact"}</p>
                 <div className="section-lbl-line" />
               </div>
               <form style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
                 {/* Ligne 1 : Nom / Société */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
                   <div>
-                    <label htmlFor="nom" style={labelStyle}>Nom *</label>
+                    <label htmlFor="nom" style={labelStyle}>{isEn ? "Name *" : "Nom *"}</label>
                     <input id="nom" type="text" required style={fieldStyle} />
                   </div>
                   <div>
-                    <label htmlFor="societe" style={labelStyle}>Société *</label>
+                    <label htmlFor="societe" style={labelStyle}>{isEn ? "Company *" : "Société *"}</label>
                     <input id="societe" type="text" required style={fieldStyle} />
                   </div>
                 </div>
@@ -165,11 +173,11 @@ export default function NousContacter() {
                 {/* Ligne 2 : Fonction / Email */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
                   <div>
-                    <label htmlFor="fonction" style={labelStyle}>Fonction *</label>
+                    <label htmlFor="fonction" style={labelStyle}>{isEn ? "Job Title *" : "Fonction *"}</label>
                     <input id="fonction" type="text" required style={fieldStyle} />
                   </div>
                   <div>
-                    <label htmlFor="email" style={labelStyle}>Email professionnel *</label>
+                    <label htmlFor="email" style={labelStyle}>{isEn ? "Professional Email *" : "Email professionnel *"}</label>
                     <input id="email" type="email" required style={fieldStyle} />
                   </div>
                 </div>
@@ -177,24 +185,24 @@ export default function NousContacter() {
                 {/* Ligne 3 : Téléphone / Urgence */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
                   <div>
-                    <label htmlFor="telephone" style={labelStyle}>Téléphone</label>
+                    <label htmlFor="telephone" style={labelStyle}>{isEn ? "Phone" : "Téléphone"}</label>
                     <input id="telephone" type="tel" style={fieldStyle} />
                   </div>
                   <div>
-                    <label htmlFor="urgence" style={labelStyle}>Niveau d'urgence *</label>
+                    <label htmlFor="urgence" style={labelStyle}>{isEn ? "Urgency Level *" : "Niveau d'urgence *"}</label>
                     <select id="urgence" required style={fieldStyle}>
-                      <option value="">Sélectionnez</option>
-                      <option value="immediat">Immédiat</option>
-                      <option value="quelques-jours">Sous quelques jours</option>
-                      <option value="quelques-semaines">Sous quelques semaines</option>
-                      <option value="a-planifier">À planifier</option>
+                      <option value="">{isEn ? "Select" : "Sélectionnez"}</option>
+                      <option value="immediat">{isEn ? "Immediate" : "Immédiat"}</option>
+                      <option value="quelques-jours">{isEn ? "Within a few days" : "Sous quelques jours"}</option>
+                      <option value="quelques-semaines">{isEn ? "Within a few weeks" : "Sous quelques semaines"}</option>
+                      <option value="a-planifier">{isEn ? "To be planned" : "À planifier"}</option>
                     </select>
                   </div>
                 </div>
 
                 {/* Type de besoin */}
                 <div>
-                  <p style={labelStyle}>Type de besoin (plusieurs choix possibles) *</p>
+                  <p style={labelStyle}>{isEn ? "Type of need (multiple choices possible) *" : "Type de besoin (plusieurs choix possibles) *"}</p>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem 1.5rem" }}>
                     {typesBesoin.map((besoin) => (
                       <label
@@ -216,7 +224,7 @@ export default function NousContacter() {
 
                 {/* Message */}
                 <div>
-                  <label htmlFor="message" style={labelStyle}>Décrivez votre besoin *</label>
+                  <label htmlFor="message" style={labelStyle}>{isEn ? "Describe your need *" : "Décrivez votre besoin *"}</label>
                   <textarea
                     id="message"
                     rows={5}
@@ -234,7 +242,7 @@ export default function NousContacter() {
                     style={{ marginTop: "3px", accentColor: "var(--green-dark)", flexShrink: 0 }}
                   />
                   <label htmlFor="rgpd-contact" style={{ fontSize: "0.78rem", color: "var(--text-mid)", lineHeight: 1.65, cursor: "pointer" }}>
-                    J'accepte que les informations saisies soient exploitées par MENUA CONSULTING dans le cadre de ma demande de contact et de la relation commerciale qui peut en découler. *
+                    {isEn ? "I agree that the information entered will be used by MENUA CONSULTING as part of my contact request and the commercial relationship that may result. *" : "J'accepte que les informations saisies soient exploitées par MENUA CONSULTING dans le cadre de ma demande de contact et de la relation commerciale qui peut en découler. *"}
                   </label>
                 </div>
 
@@ -257,21 +265,33 @@ export default function NousContacter() {
                       transition: "background 0.25s",
                     }}
                   >
-                    Envoyer la demande
+                    {isEn ? "Send request" : "Envoyer la demande"}
                   </button>
                 </div>
 
                 {/* Mention RGPD */}
                 <p style={{ fontSize: "0.73rem", color: "var(--text-light)", lineHeight: 1.7, borderTop: "1px solid var(--border-light)", paddingTop: "1.25rem" }}>
-                  Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin de
-                  répondre à votre demande et d'en assurer le suivi. Elles peuvent être conservées jusqu'à
-                  3 ans après le dernier échange. Vous disposez de droits sur vos données personnelles et
-                  pouvez les exercer à l'adresse : contact@menuaconsulting.com. Pour en savoir plus,
-                  consultez notre{" "}
-                  <Link href="/politique-de-confidentialite" style={{ color: "var(--green-dark)", textDecoration: "underline" }}>
-                    Politique de confidentialité
-                  </Link>
-                  .
+                  {isEn ? (
+                    <>
+                      The information collected via this form is processed by MENUA CONSULTING to respond to your request and follow up on it. It may be kept for up to 3 years after the last exchange. You have rights over your personal data and can exercise them at: contact@menuaconsulting.com. For more information, consult our{" "}
+                      <Link href={`/${lang}/politique-de-confidentialite`} style={{ color: "var(--green-dark)", textDecoration: "underline" }}>
+                        Privacy Policy
+                      </Link>
+                      .
+                    </>
+                  ) : (
+                    <>
+                      Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin de
+                      répondre à votre demande et d'en assurer le suivi. Elles peuvent être conservées jusqu'à
+                      3 ans après le dernier échange. Vous disposez de droits sur vos données personnelles et
+                      pouvez les exercer à l'adresse : contact@menuaconsulting.com. Pour en savoir plus,
+                      consultez notre{" "}
+                      <Link href={`/${lang}/politique-de-confidentialite`} style={{ color: "var(--green-dark)", textDecoration: "underline" }}>
+                        Politique de confidentialité
+                      </Link>
+                      .
+                    </>
+                  )}
                 </p>
               </form>
             </div>

@@ -1,21 +1,33 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Nos solutions – MENUA CONSULTING",
-  description:
-    "Urgence, durée, volume, mode d'organisation, langues : MENUA CONSULTING adapte ses dispositifs d'externalisation opérationnelle à vos contraintes.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const isEn = lang === 'en';
+  return {
+    title: isEn ? "Our Solutions – MENUA CONSULTING" : "Nos solutions – MENUA CONSULTING",
+    description: isEn
+      ? "Discover the operational outsourcing solutions of MENUA CONSULTING: from the provision of resources to the complete taking over of processes."
+      : "Urgence, durée, volume, mode d'organisation, langues : MENUA CONSULTING adapte ses dispositifs d'externalisation opérationnelle à vos contraintes.",
+  };
+}
 
-const solutions = [
+const getSolutions = (isEn: boolean) => [
   {
     id: "urgence",
     num: "01",
-    title: "Urgence",
-    role: "Capacité de réaction",
-    description:
-      "Mobilisation rapide de ressources opérationnelles pour répondre à un besoin immédiat, absorber une surcharge d'activité et assurer la continuité de votre service.",
-    items: [
+    title: isEn ? "Urgency" : "Urgence",
+    role: isEn ? "Reaction capability" : "Capacité de réaction",
+    description: isEn
+      ? "Rapid mobilization of operational resources to meet an immediate need, absorb an activity overload, and ensure the continuity of your service."
+      : "Mobilisation rapide de ressources opérationnelles pour répondre à un besoin immédiat, absorber une surcharge d'activité et assurer la continuité de votre service.",
+    items: isEn ? [
+      "Activity overload or peak in cases",
+      "Temporary replacement of an absent employee",
+      "Occasional reinforcement during closing or reporting periods",
+      "Accelerated processing of late or pending cases",
+      "Progressive provision of resources to secure scaling up",
+    ] : [
       "Surcharge d'activité ou pic de dossiers",
       "Remplacement temporaire d'un collaborateur absent",
       "Renfort ponctuel en période de clôture ou de reporting",
@@ -26,11 +38,18 @@ const solutions = [
   {
     id: "duree",
     num: "02",
-    title: "Durée",
-    role: "Flexibilité contractuelle",
-    description:
-      "MENUA CONSULTING propose des dispositifs d'externalisation flexibles, adaptés au traitement d'un nombre défini de dossiers comme à la gestion récurrente d'un portefeuille plus important.",
-    items: [
+    title: isEn ? "Duration" : "Durée",
+    role: isEn ? "Contractual flexibility" : "Flexibilité contractuelle",
+    description: isEn
+      ? "MENUA CONSULTING offers flexible outsourcing setups, adapted to processing a set number of cases as well as ongoing recurring management of a larger portfolio."
+      : "MENUA CONSULTING propose des dispositifs d'externalisation flexibles, adaptés au traitement d'un nombre défini de dossiers comme à la gestion récurrente d'un portefeuille plus important.",
+    items: isEn ? [
+      "Short mission to address an identified need over a limited period",
+      "Long mission to support the management of a portfolio of cases over time",
+      "Continuous outsourcing to sustainably entrust all or part of your operational activities",
+      "Occasional intervention on a volume of accounting, financial, wealth, or administrative files",
+      "Adjustment of the setup according to the evolution of the workload and the client's priorities",
+    ] : [
       "Mission courte pour traiter un besoin identifié sur une période limitée",
       "Mission longue pour accompagner la gestion d'un portefeuille de dossiers dans la durée",
       "Externalisation continue pour confier durablement tout ou partie de vos activités opérationnelles",
@@ -41,11 +60,18 @@ const solutions = [
   {
     id: "volume",
     num: "03",
-    title: "Volume",
-    role: "Dimensionnement de l'équipe",
-    description:
-      "MENUA CONSULTING adapte le dimensionnement de ses ressources au volume de dossiers, de flux ou d'opérations à traiter, tout en veillant à la continuité et à la sécurisation de l'exécution.",
-    items: [
+    title: isEn ? "Volume" : "Volume",
+    role: isEn ? "Team sizing" : "Dimensionnement de l'équipe",
+    description: isEn
+      ? "MENUA CONSULTING adapts the sizing of its resources to the volume of files, flows, or operations to be processed, while ensuring the continuity and security of execution."
+      : "MENUA CONSULTING adapte le dimensionnement de ses ressources au volume de dossiers, de flux ou d'opérations à traiter, tout en veillant à la continuité et à la sécurisation de l'exécution.",
+    items: isEn ? [
+      "A dedicated resource on a specific scope",
+      "A temporary reinforcement to absorb an activity overload",
+      "An operational team to manage a large volume or multiple simultaneous flows",
+      "A scalable setup adjusted according to the workload, priorities, and client requirements",
+      "An organization allowing to ensure continuity of processing in case of absence or activity variation",
+    ] : [
       "Une ressource dédiée sur un périmètre précis",
       "Un renfort ponctuel pour absorber une surcharge d'activité",
       "Une équipe opérationnelle pour gérer un volume important ou plusieurs flux simultanés",
@@ -56,11 +82,18 @@ const solutions = [
   {
     id: "organisation",
     num: "04",
-    title: "Mode d'organisation",
-    role: "Comment le travail est exécuté",
-    description:
-      "MENUA CONSULTING structure ses interventions selon le format le plus adapté à vos contraintes : dispositif dédié, fonctionnement par mission ou prise en charge de flux et de process définis.",
-    items: [
+    title: isEn ? "Organizational Mode" : "Mode d'organisation",
+    role: isEn ? "How the work is executed" : "Comment le travail est exécuté",
+    description: isEn
+      ? "MENUA CONSULTING structures its interventions according to the most suitable format for your constraints: dedicated setup, mission-based operation, or handling of defined flows and processes."
+      : "MENUA CONSULTING structure ses interventions selon le format le plus adapté à vos contraintes : dispositif dédié, fonctionnement par mission ou prise en charge de flux et de process définis.",
+    items: isEn ? [
+      "Dedicated setup for a clearly identified service or scope",
+      "Mission-based intervention for a time-bound need or specific project",
+      "Handling of recurring flows or processes",
+      "Processing of files, memberships, or operations according to rules defined with your teams",
+      "Structured follow-up with regular checkpoints",
+    ] : [
       "Dispositif dédié pour un service ou un périmètre clairement identifié",
       "Intervention par mission pour un besoin borné dans le temps ou un projet spécifique",
       "Prise en charge de flux ou de process récurrents",
@@ -70,7 +103,11 @@ const solutions = [
   },
 ];
 
-export default function NosSolutions() {
+export default async function NosSolutions({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  const isEn = lang === 'en';
+  const solutions = getSolutions(isEn);
+
   return (
     <main>
       {/* ── EN-TÊTE ── */}
@@ -97,7 +134,7 @@ export default function NosSolutions() {
               marginBottom: "1.5rem",
             }}
           >
-            Nos solutions
+            {isEn ? "Our Solutions" : "Nos solutions"}
           </h1>
           <p
             style={{
@@ -108,8 +145,7 @@ export default function NosSolutions() {
               fontWeight: 300,
             }}
           >
-            Nous concevons des dispositifs d'externalisation sur mesure, adaptés à vos contraintes
-            opérationnelles d'urgence, de durée, de volume et d'organisation.
+            {isEn ? "We design tailor-made outsourcing setups adapted to your operational constraints regarding urgency, duration, volume, and organization." : "Nous concevons des dispositifs d'externalisation sur mesure, adaptés à vos contraintes opérationnelles d'urgence, de durée, de volume et d'organisation."}
           </p>
         </div>
       </section>
@@ -245,7 +281,7 @@ export default function NosSolutions() {
                   marginBottom: "1.25rem",
                 }}
               >
-                Langues
+                {isEn ? "Languages" : "Langues"}
               </h2>
               <p
                 style={{
@@ -256,11 +292,14 @@ export default function NosSolutions() {
                   marginBottom: "1rem",
                 }}
               >
-                Nous intervenons en <strong style={{ color: "#fff" }}>français</strong> et en{" "}
-                <strong style={{ color: "#fff" }}>anglais</strong>.
+                {isEn ? (
+                  <>We intervene in <strong style={{ color: "#fff" }}>French</strong> and in <strong style={{ color: "#fff" }}>English</strong>.</>
+                ) : (
+                  <>Nous intervenons en <strong style={{ color: "#fff" }}>français</strong> et en <strong style={{ color: "#fff" }}>anglais</strong>.</>
+                )}
               </p>
               <p style={{ fontSize: "0.87rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.75 }}>
-                D'autres langues peuvent être étudiées selon les besoins spécifiques de vos équipes.
+                {isEn ? "Other languages can be considered according to the specific needs of your teams." : "D'autres langues peuvent être étudiées selon les besoins spécifiques de vos équipes."}
               </p>
             </div>
           </div>
@@ -271,7 +310,7 @@ export default function NosSolutions() {
       <section style={{ padding: "5rem 2rem", background: "#fff" }}>
         <div className="container" style={{ textAlign: "center" }}>
           <div className="section-label-wrap" style={{ marginBottom: "1.5rem", justifyContent: "center" }}>
-            <p className="section-lbl">Présenter un besoin</p>
+            <p className="section-lbl">{isEn ? "Submit a need" : "Présenter un besoin"}</p>
             <div className="section-lbl-line" />
           </div>
           <p
@@ -283,11 +322,10 @@ export default function NosSolutions() {
               maxWidth: "520px",
             }}
           >
-            Présentez votre besoin opérationnel, nous vous répondons avec une première analyse et une
-            proposition adaptée.
+            {isEn ? "Present your operational needs, and we will respond with an initial analysis and a tailored proposal." : "Présentez votre besoin opérationnel, nous vous répondons avec une première analyse et une proposition adaptée."}
           </p>
           <Link
-            href="/nous-contacter"
+            href={`/${lang}/nous-contacter`}
             style={{
               display: "inline-block",
               padding: "0.85rem 2.5rem",
@@ -301,7 +339,7 @@ export default function NosSolutions() {
               textDecoration: "none",
             }}
           >
-            Nous contacter
+            {isEn ? "Contact us" : "Nous contacter"}
           </Link>
         </div>
       </section>

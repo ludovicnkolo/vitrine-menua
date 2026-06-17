@@ -1,20 +1,39 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Vos besoins – MENUA CONSULTING",
-  description:
-    "Finance & reporting, contrôle de gestion, risques & conformité, support comptable & data, gestion de patrimoine : découvrez comment MENUA CONSULTING répond à vos besoins opérationnels.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const isEn = lang === 'en';
+  return {
+    title: isEn ? "Your Needs – MENUA CONSULTING" : "Vos besoins – MENUA CONSULTING",
+    description: isEn
+      ? "Finance & reporting, management control, risks & compliance, accounting & data support, wealth management: discover how MENUA CONSULTING meets your operational needs."
+      : "Finance & reporting, contrôle de gestion, risques & conformité, support comptable & data, gestion de patrimoine : découvrez comment MENUA CONSULTING répond à vos besoins opérationnels.",
+  };
+}
 
-const besoins = [
+const getBesoins = (isEn: boolean) => [
   {
     id: "finance",
-    title: "Finance & reporting",
-    role: "Offre cœur métier",
-    description:
-      "Production, structuration et fiabilisation de reportings financiers destinés au pilotage de la performance, au suivi de l'activité et à l'aide à la décision.",
-    items: [
+    title: isEn ? "Finance & reporting" : "Finance & reporting",
+    role: isEn ? "Core business offering" : "Offre cœur métier",
+    description: isEn
+      ? "Production, structuring, and ensuring the reliability of financial reporting aimed at performance management, activity monitoring, and decision support."
+      : "Production, structuration et fiabilisation de reportings financiers destinés au pilotage de la performance, au suivi de l'activité et à l'aide à la décision.",
+    items: isEn ? [
+      "Financial reporting",
+      "KPIs & Dashboards",
+      "Performance analysis",
+      "Financial department support",
+      "Data consolidation",
+      "Financial analysis",
+      "Preparation of reports for the finance department",
+      "Activity tracking",
+      "Monthly / quarterly reporting",
+      "Cash flow reporting",
+      "Profitability reporting",
+      "Indicator tracking",
+    ] : [
       "Reporting financier",
       "KPI & Dashboard",
       "Analyse de performance",
@@ -31,11 +50,25 @@ const besoins = [
   },
   {
     id: "controle",
-    title: "Contrôle de gestion",
-    role: "Optimisation interne des coûts et performance",
-    description:
-      "Appui opérationnel au suivi budgétaire, à l'analyse des écarts et au pilotage de la performance afin d'aider les organisations à mieux maîtriser leurs coûts, leurs marges et leurs ressources.",
-    items: [
+    title: isEn ? "Management control" : "Contrôle de gestion",
+    role: isEn ? "Internal cost and performance optimization" : "Optimisation interne des coûts et performance",
+    description: isEn
+      ? "Operational support in budget tracking, variance analysis, and performance management to help organizations better control their costs, margins, and resources."
+      : "Appui opérationnel au suivi budgétaire, à l'analyse des écarts et au pilotage de la performance afin d'aider les organisations à mieux maîtriser leurs coûts, leurs marges et leurs ressources.",
+    items: isEn ? [
+      "Budget tracking",
+      "Variance analysis between actuals, budget, and forecast",
+      "Dashboards",
+      "Performance management",
+      "Tracking of costs, expenses, and margins",
+      "Profitability analysis",
+      "Tracking of operational indicators",
+      "Preparation of management reports",
+      "Tracking of turnover and objectives",
+      "Updating management files",
+      "Consolidation of management data",
+      "Support to financial departments and operational managers",
+    ] : [
       "Suivi budgétaire",
       "Analyse des écarts entre réalisé, budget et prévisionnel",
       "Tableaux de bord",
@@ -52,11 +85,27 @@ const besoins = [
   },
   {
     id: "risques",
-    title: "Risques & conformité",
-    role: "Sécurisation réglementaire",
-    description:
-      "Appui opérationnel aux équipes risques et conformité dans le traitement, le contrôle et la fiabilisation des dossiers sensibles, dans le respect des procédures internes et des exigences réglementaires applicables.",
-    items: [
+    title: isEn ? "Risk & Compliance" : "Risques & conformité",
+    role: isEn ? "Regulatory securing" : "Sécurisation réglementaire",
+    description: isEn
+      ? "Operational support to risk and compliance teams in processing, controlling, and ensuring the reliability of sensitive files, in compliance with internal procedures and applicable regulatory requirements."
+      : "Appui opérationnel aux équipes risques et conformité dans le traitement, le contrôle et la fiabilisation des dossiers sensibles, dans le respect des procédures internes et des exigences réglementaires applicables.",
+    items: isEn ? [
+      "KYC",
+      "AML-CFT",
+      "AML",
+      "Documentary control",
+      "Analysis and completeness of client files",
+      "Verification of supporting documents",
+      "Client onboarding",
+      "Periodic review of files",
+      "KYC remediation",
+      "Processing of compliance alerts",
+      "Analysis of unusual movements",
+      "Support to risk and compliance teams",
+      "Monitoring of internal procedures",
+      "Preparation of files for validation by authorized teams",
+    ] : [
       "KYC",
       "LCB-FT",
       "AML",
@@ -75,11 +124,27 @@ const besoins = [
   },
   {
     id: "comptable",
-    title: "Support comptable & data",
-    role: "Back-office opérationnel",
-    description:
-      "Appui opérationnel aux équipes comptables, administratives et data dans le traitement, la fiabilisation et la structuration des informations nécessaires à la production comptable et au reporting.",
-    items: [
+    title: isEn ? "Accounting & data support" : "Support comptable & data",
+    role: isEn ? "Operational back-office" : "Back-office opérationnel",
+    description: isEn
+      ? "Operational support to accounting, administrative, and data teams in processing, ensuring reliability, and structuring information necessary for accounting production and reporting."
+      : "Appui opérationnel aux équipes comptables, administratives et data dans le traitement, la fiabilisation et la structuration des informations nécessaires à la production comptable et au reporting.",
+    items: isEn ? [
+      "Accounting entry",
+      "Bank reconciliations",
+      "Account lettering",
+      "Control and filing of accounting documents",
+      "Preparation of VAT returns",
+      "Preparation of accounting elements for review",
+      "Tracking of client and supplier invoices",
+      "Administrative follow-ups for missing documents",
+      "Data cleaning",
+      "Structuring and updating databases",
+      "Data consistency control",
+      "Preparation of reporting files",
+      "Consolidation of accounting and operational data",
+      "Archiving and document organization",
+    ] : [
       "Saisie comptable",
       "Rapprochements bancaires",
       "Lettrage des comptes",
@@ -98,11 +163,26 @@ const besoins = [
   },
   {
     id: "patrimoine",
-    title: "Gestion de patrimoine & support CGP",
-    role: "Assistance spécialisée",
-    description:
-      "Appui opérationnel aux cabinets de gestion de patrimoine, family offices et structures patrimoniales dans le traitement, la préparation et le suivi administratif des dossiers clients.",
-    items: [
+    title: isEn ? "Wealth management & PWM support" : "Gestion de patrimoine & support CGP",
+    role: isEn ? "Specialized assistance" : "Assistance spécialisée",
+    description: isEn
+      ? "Operational support to wealth management firms, family offices, and wealth structures in the processing, preparation, and administrative follow-up of client files."
+      : "Appui opérationnel aux cabinets de gestion de patrimoine, family offices et structures patrimoniales dans le traitement, la préparation et le suivi administratif des dossiers clients.",
+    items: isEn ? [
+      "Preparation of onboarding files",
+      "Collection and control of supporting documents",
+      "Control of client file completeness",
+      "Updating client information",
+      "Preparation and pre-filling of forms",
+      "Administrative support for subscriptions",
+      "Support for arbitrations",
+      "Support for partial or total redemptions",
+      "Tracking of client requests",
+      "Organization and document archiving",
+      "Updating client databases",
+      "Preparation of files for validation by authorized advisors",
+      "Tracking of wealth operations in compliance with internal procedures",
+    ] : [
       "Préparation des dossiers d'entrée en relation",
       "Collecte et contrôle des pièces justificatives",
       "Contrôle de complétude des dossiers clients",
@@ -120,11 +200,27 @@ const besoins = [
   },
   {
     id: "autres",
-    title: "Autres besoins opérationnels",
-    role: "Flexibilité & agilité",
-    description:
-      "Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques ne relevant pas exclusivement d'une fonction financière, comptable, patrimoniale, conformité ou data.",
-    items: [
+    title: isEn ? "Other operational needs" : "Autres besoins opérationnels",
+    role: isEn ? "Flexibility & agility" : "Flexibilité & agilité",
+    description: isEn
+      ? "Handling of specific, cross-functional, or occasional operational needs that do not exclusively fall under a financial, accounting, wealth, compliance, or data function."
+      : "Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques ne relevant pas exclusivement d'une fonction financière, comptable, patrimoniale, conformité ou data.",
+    items: isEn ? [
+      "Occasional operational reinforcement missions",
+      "Financial administrative support",
+      "Volume processing of files",
+      "Filing, archiving, and document organization",
+      "Preparation and updating of tracking files",
+      "Support in managing cross-functional operations",
+      "Assistance in formalizing internal procedures",
+      "Help in structuring operational processes",
+      "Preparation of administrative documents",
+      "Tracking of internal or client requests",
+      "Support during periods of activity overload",
+      "Temporary replacement or team support",
+      "Coordination between internal teams and outsourced providers",
+      "Study of specific needs not listed in the previous sections",
+    ] : [
       "Missions ponctuelles de renfort opérationnel",
       "Support administratif financier",
       "Traitement de dossiers en volume",
@@ -143,7 +239,11 @@ const besoins = [
   },
 ];
 
-export default function VosBesoins() {
+export default async function VosBesoins({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  const isEn = lang === 'en';
+  const besoins = getBesoins(isEn);
+
   return (
     <main>
       {/* ── EN-TÊTE ── */}
@@ -171,7 +271,7 @@ export default function VosBesoins() {
               marginBottom: "1.5rem",
             }}
           >
-            Vos besoins
+            {isEn ? "Your Needs" : "Vos besoins"}
           </h1>
           <p
             style={{
@@ -182,9 +282,7 @@ export default function VosBesoins() {
               fontWeight: 300,
             }}
           >
-            MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales,
-            IT et réglementées sur l'ensemble des fonctions back et middle office nécessitant rigueur,
-            continuité et fiabilité opérationnelle.
+            {isEn ? "MENUA CONSULTING operates in support of financial, accounting, wealth management, IT, and regulated teams on all back and middle office functions requiring rigor, continuity, and operational reliability." : "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l'ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle."}
           </p>
         </div>
       </section>
@@ -290,7 +388,7 @@ export default function VosBesoins() {
       <section className="solutions-section">
         <div className="container" style={{ textAlign: "center" }}>
           <div className="section-label-wrap" style={{ marginBottom: "1.5rem", justifyContent: "center" }}>
-            <p className="section-lbl section-lbl--light">Présenter un besoin</p>
+            <p className="section-lbl section-lbl--light">{isEn ? "Submit a need" : "Présenter un besoin"}</p>
             <div className="section-lbl-line" />
           </div>
           <p
@@ -301,11 +399,10 @@ export default function VosBesoins() {
               maxWidth: "520px",
             }}
           >
-            Votre besoin ne figure pas dans cette liste ? Contactez-nous, nous étudions tout besoin
-            opérationnel spécifique.
+            {isEn ? "Your need is not on this list? Contact us, we study any specific operational requirement." : "Votre besoin ne figure pas dans cette liste ? Contactez-nous, nous étudions tout besoin opérationnel spécifique."}
           </p>
           <Link
-            href="/nous-contacter"
+            href={`/${lang}/nous-contacter`}
             style={{
               display: "inline-block",
               padding: "0.85rem 2.5rem",
@@ -319,7 +416,7 @@ export default function VosBesoins() {
               textDecoration: "none",
             }}
           >
-            Nous contacter
+            {isEn ? "Contact us" : "Nous contacter"}
           </Link>
         </div>
       </section>

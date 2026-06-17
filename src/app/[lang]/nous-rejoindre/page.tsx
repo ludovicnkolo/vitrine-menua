@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Nous rejoindre – MENUA CONSULTING",
-  description:
-    "MENUA CONSULTING recrute des profils opérationnels back & middle office, comptabilité, conformité, CGP. Postulez via notre formulaire de recrutement.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const isEn = lang === 'en';
+  return {
+    title: isEn ? "Join Us – MENUA CONSULTING" : "Nous rejoindre – MENUA CONSULTING",
+    description: isEn
+      ? "MENUA CONSULTING is recruiting operational profiles in back & middle office, accounting, compliance, wealth management. Apply via our recruitment form."
+      : "MENUA CONSULTING recrute des profils opérationnels back & middle office, comptabilité, conformité, CGP. Postulez via notre formulaire de recrutement.",
+  };
+}
 
 const fieldStyle: React.CSSProperties = {
   width: "100%",
@@ -32,18 +37,22 @@ const labelStyle: React.CSSProperties = {
   marginBottom: "0.5rem",
 };
 
-const profils = [
-  "Back et middle office",
-  "Comptabilité et support administratif",
-  "Reporting, data et contrôle de gestion",
-  "Risques, conformité, KYC / AML",
-  "Support opérationnel aux acteurs de la gestion de patrimoine / CGP",
-  "Profils bilingues français / anglais",
-  "Autres langues appréciées",
-  "Profils disponibles pour des missions ponctuelles ou récurrentes",
+const getProfils = (isEn: boolean) => [
+  isEn ? "Back and middle office" : "Back et middle office",
+  isEn ? "Accounting and administrative support" : "Comptabilité et support administratif",
+  isEn ? "Reporting, data, and management control" : "Reporting, data et contrôle de gestion",
+  isEn ? "Risk, compliance, KYC / AML" : "Risques, conformité, KYC / AML",
+  isEn ? "Operational support for wealth management / PWM" : "Support opérationnel aux acteurs de la gestion de patrimoine / CGP",
+  isEn ? "Bilingual French / English profiles" : "Profils bilingues français / anglais",
+  isEn ? "Other languages appreciated" : "Autres langues appréciées",
+  isEn ? "Profiles available for occasional or recurring missions" : "Profils disponibles pour des missions ponctuelles ou récurrentes",
 ];
 
-export default function NousRejoindre() {
+export default async function NousRejoindre({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  const isEn = lang === 'en';
+  const profils = getProfils(isEn);
+
   return (
     <main>
       {/* ── EN-TÊTE ── */}
@@ -70,12 +79,10 @@ export default function NousRejoindre() {
               marginBottom: "1.5rem",
             }}
           >
-            Nous rejoindre
+            {isEn ? "Join Us" : "Nous rejoindre"}
           </h1>
           <p style={{ fontSize: "1rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.85, maxWidth: "680px", fontWeight: 300 }}>
-            MENUA CONSULTING recrute des profils opérationnels autonomes, rigoureux, fiables et organisés,
-            capables d'intervenir à distance sur des fonctions back et middle office, en France comme
-            à l'international.
+            {isEn ? "MENUA CONSULTING is recruiting autonomous, rigorous, reliable, and organized operational profiles, capable of working remotely on back and middle office functions, in France and internationally." : "MENUA CONSULTING recrute des profils opérationnels autonomes, rigoureux, fiables et organisés, capables d'intervenir à distance sur des fonctions back et middle office, en France comme à l'international."}
           </p>
         </div>
       </section>
@@ -86,7 +93,7 @@ export default function NousRejoindre() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "start" }}>
             <div>
               <div className="section-label-wrap" style={{ marginBottom: "2rem" }}>
-                <p className="section-lbl">Profils recherchés</p>
+                <p className="section-lbl">{isEn ? "Profiles Sought" : "Profils recherchés"}</p>
                 <div className="section-lbl-line" />
               </div>
               <h2
@@ -100,16 +107,13 @@ export default function NousRejoindre() {
                   marginBottom: "1.5rem",
                 }}
               >
-                Des profils orientés exécution
+                {isEn ? "Execution-oriented profiles" : "Des profils orientés exécution"}
               </h2>
               <p style={{ fontSize: "0.87rem", color: "var(--text-mid)", lineHeight: 1.85, marginBottom: "1rem" }}>
-                MENUA CONSULTING recherche des profils opérationnels autonomes, rigoureux, fiables et
-                organisés, capables d'intervenir à distance sur des fonctions back et middle office,
-                principalement dans un cadre international.
+                {isEn ? "MENUA CONSULTING is looking for autonomous, rigorous, reliable, and organized operational profiles, capable of working remotely on back and middle office functions, mainly in an international setting." : "MENUA CONSULTING recherche des profils opérationnels autonomes, rigoureux, fiables et organisés, capables d'intervenir à distance sur des fonctions back et middle office, principalement dans un cadre international."}
               </p>
               <p style={{ fontSize: "0.87rem", color: "var(--text-mid)", lineHeight: 1.85 }}>
-                Les profils recherchés doivent être orientés exécution, à l'aise avec le travail à distance
-                et capables de respecter des procédures, des délais et des standards de qualité élevés.
+                {isEn ? "The profiles sought must be execution-oriented, comfortable with remote work, and able to comply with procedures, deadlines, and high quality standards." : "Les profils recherchés doivent être orientés exécution, à l'aise avec le travail à distance et capables de respecter des procédures, des délais et des standards de qualité élevés."}
               </p>
             </div>
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.85rem" }}>
@@ -139,7 +143,7 @@ export default function NousRejoindre() {
       <section id="formulaire" style={{ padding: "6rem 2rem", background: "#fff" }}>
         <div className="container" style={{ maxWidth: "860px" }}>
           <div className="section-label-wrap" style={{ marginBottom: "2rem" }}>
-            <p className="section-lbl">Formulaire de recrutement</p>
+            <p className="section-lbl">{isEn ? "Recruitment Form" : "Formulaire de recrutement"}</p>
             <div className="section-lbl-line" />
           </div>
           <h2
@@ -153,13 +157,13 @@ export default function NousRejoindre() {
               marginBottom: "2.5rem",
             }}
           >
-            Déposez votre candidature
+            {isEn ? "Submit your application" : "Déposez votre candidature"}
           </h2>
           <form style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             {/* Nom / Prénom */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
               <div>
-                <label htmlFor="rec-nom" style={labelStyle}>Nom & Prénom *</label>
+                <label htmlFor="rec-nom" style={labelStyle}>{isEn ? "First & Last Name *" : "Nom & Prénom *"}</label>
                 <input id="rec-nom" type="text" required style={fieldStyle} />
               </div>
               <div>
@@ -171,34 +175,34 @@ export default function NousRejoindre() {
             {/* Téléphone / Pays */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
               <div>
-                <label htmlFor="rec-tel" style={labelStyle}>Téléphone *</label>
+                <label htmlFor="rec-tel" style={labelStyle}>{isEn ? "Phone *" : "Téléphone *"}</label>
                 <input id="rec-tel" type="tel" required style={fieldStyle} />
               </div>
               <div>
-                <label htmlFor="rec-pays" style={labelStyle}>Pays de résidence *</label>
+                <label htmlFor="rec-pays" style={labelStyle}>{isEn ? "Country of residence *" : "Pays de résidence *"}</label>
                 <input id="rec-pays" type="text" required style={fieldStyle} />
               </div>
             </div>
 
             {/* Type de contrat */}
             <div>
-              <label htmlFor="rec-contrat" style={labelStyle}>Type de collaboration souhaitée *</label>
+              <label htmlFor="rec-contrat" style={labelStyle}>{isEn ? "Desired type of collaboration *" : "Type de collaboration souhaitée *"}</label>
               <select id="rec-contrat" required style={fieldStyle}>
-                <option value="">Sélectionnez</option>
+                <option value="">{isEn ? "Select" : "Sélectionnez"}</option>
                 <option value="freelance">Freelance / Indépendant</option>
-                <option value="ponctuel">Mission ponctuelle</option>
-                <option value="recurrent">Mission récurrente</option>
-                <option value="autre">Autre</option>
+                <option value="ponctuel">{isEn ? "Occasional mission" : "Mission ponctuelle"}</option>
+                <option value="recurrent">{isEn ? "Recurring mission" : "Mission récurrente"}</option>
+                <option value="autre">{isEn ? "Other" : "Autre"}</option>
               </select>
             </div>
 
             {/* Domaines */}
             <div>
-              <label htmlFor="rec-domaines" style={labelStyle}>Domaines d'expertise *</label>
+              <label htmlFor="rec-domaines" style={labelStyle}>{isEn ? "Areas of expertise *" : "Domaines d'expertise *"}</label>
               <input
                 id="rec-domaines"
                 type="text"
-                placeholder="Ex : Finance, Conformité KYC, Data…"
+                placeholder={isEn ? "Ex: Finance, KYC Compliance, Data..." : "Ex : Finance, Conformité KYC, Data…"}
                 required
                 style={fieldStyle}
               />
@@ -206,11 +210,11 @@ export default function NousRejoindre() {
 
             {/* Langues */}
             <div>
-              <label htmlFor="rec-langues" style={labelStyle}>Langues maîtrisées *</label>
+              <label htmlFor="rec-langues" style={labelStyle}>{isEn ? "Languages spoken *" : "Langues maîtrisées *"}</label>
               <input
                 id="rec-langues"
                 type="text"
-                placeholder="Ex : Français (natif), Anglais (courant)"
+                placeholder={isEn ? "Ex: French (native), English (fluent)" : "Ex : Français (natif), Anglais (courant)"}
                 required
                 style={fieldStyle}
               />
@@ -218,11 +222,11 @@ export default function NousRejoindre() {
 
             {/* CV */}
             <div>
-              <label htmlFor="rec-cv" style={labelStyle}>CV (lien ou texte) *</label>
+              <label htmlFor="rec-cv" style={labelStyle}>{isEn ? "Resume (link or text) *" : "CV (lien ou texte) *"}</label>
               <input
                 id="rec-cv"
                 type="text"
-                placeholder="Lien vers votre CV ou profil LinkedIn"
+                placeholder={isEn ? "Link to your resume or LinkedIn profile" : "Lien vers votre CV ou profil LinkedIn"}
                 required
                 style={fieldStyle}
               />
@@ -248,8 +252,7 @@ export default function NousRejoindre() {
                 style={{ marginTop: "3px", accentColor: "var(--green-dark)", flexShrink: 0 }}
               />
               <label htmlFor="rgpd-recrutement" style={{ fontSize: "0.78rem", color: "var(--text-mid)", lineHeight: 1.65, cursor: "pointer" }}>
-                J'accepte que les informations saisies soient exploitées par MENUA CONSULTING dans le cadre
-                de l'étude de ma candidature et du suivi de ma demande. *
+                {isEn ? "I agree that the information entered will be used by MENUA CONSULTING as part of the review of my application and the monitoring of my request. *" : "J'accepte que les informations saisies soient exploitées par MENUA CONSULTING dans le cadre de l'étude de ma candidature et du suivi de ma demande. *"}
               </label>
             </div>
 
@@ -271,21 +274,33 @@ export default function NousRejoindre() {
                   borderRadius: "2px",
                 }}
               >
-                Envoyer ma candidature
+                {isEn ? "Send my application" : "Envoyer ma candidature"}
               </button>
             </div>
 
             {/* Mention RGPD */}
             <p style={{ fontSize: "0.73rem", color: "var(--text-light)", lineHeight: 1.7, borderTop: "1px solid var(--border-light)", paddingTop: "1.25rem" }}>
-              Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin
-              d'étudier votre candidature et d'en assurer le suivi. Votre dossier peut être conservé
-              jusqu'à 2 ans après le dernier contact, sauf opposition de votre part. Vous disposez
-              de droits sur vos données personnelles à l'adresse : contact@menuaconsulting.com.
-              Pour en savoir plus, consultez notre{" "}
-              <Link href="/politique-de-confidentialite" style={{ color: "var(--green-dark)", textDecoration: "underline" }}>
-                Politique de confidentialité
-              </Link>
-              .
+              {isEn ? (
+                <>
+                  The information collected via this form is processed by MENUA CONSULTING to review your application and follow up on it. Your file may be kept for up to 2 years after the last contact, unless you object. You have rights over your personal data at the address: contact@menuaconsulting.com. For more information, consult our{" "}
+                  <Link href={`/${lang}/politique-de-confidentialite`} style={{ color: "var(--green-dark)", textDecoration: "underline" }}>
+                    Privacy Policy
+                  </Link>
+                  .
+                </>
+              ) : (
+                <>
+                  Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin
+                  d'étudier votre candidature et d'en assurer le suivi. Votre dossier peut être conservé
+                  jusqu'à 2 ans après le dernier contact, sauf opposition de votre part. Vous disposez
+                  de droits sur vos données personnelles à l'adresse : contact@menuaconsulting.com.
+                  Pour en savoir plus, consultez notre{" "}
+                  <Link href={`/${lang}/politique-de-confidentialite`} style={{ color: "var(--green-dark)", textDecoration: "underline" }}>
+                    Politique de confidentialité
+                  </Link>
+                  .
+                </>
+              )}
             </p>
           </form>
         </div>

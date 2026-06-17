@@ -1,6 +1,11 @@
 import Link from "next/link";
+import frDict from "../i18n/fr";
+import enDict from "../i18n/en";
 
-export default function Footer() {
+export default function Footer({ lang }: { lang: string }) {
+  const dict = lang === 'en' ? enDict.footer : frDict.footer;
+  const navDict = lang === 'en' ? enDict.nav : frDict.nav;
+
   return (
     <footer className="footer-white">
       {/* Top bar vert */}
@@ -8,9 +13,9 @@ export default function Footer() {
         <div className="container" style={{ display: "flex", justifyContent: "flex-end" }}>
           <div className="cta-row">
             <p className="cta-label" style={{ color: "#fff", fontSize: "0.8rem" }}>
-              NOUS CONTACTER
+              {navDict.nousContacter}
             </p>
-            <Link href="/nous-contacter" className="arrow-btn arrow-btn--dark">
+            <Link href={`/${lang}/nous-contacter`} className="arrow-btn arrow-btn--dark">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M13 6l6 6-6 6" />
               </svg>
@@ -23,21 +28,21 @@ export default function Footer() {
       <div className="footer-main container">
         {/* Colonne 1 – Logo + navigation */}
         <div className="footer-col">
-          <Link href="/" className="footer-logo-dark">Menua</Link>
+          <Link href={`/${lang}`} className="footer-logo-dark">Menua</Link>
           <ul className="footer-nav">
-            <li><Link href="/nous-connaitre">NOUS CONNAÎTRE</Link></li>
-            <li><Link href="/vos-besoins">VOS BESOINS</Link></li>
-            <li><Link href="/nos-solutions">NOS SOLUTIONS</Link></li>
-            <li><Link href="/pourquoi-menua">POURQUOI MENUA ?</Link></li>
-            <li><Link href="/actualites">ACTUALITÉS</Link></li>
-            <li><Link href="/nous-rejoindre">NOUS REJOINDRE</Link></li>
-            <li><Link href="/nous-contacter">NOUS CONTACTER</Link></li>
+            <li><Link href={`/${lang}/nous-connaitre`}>{navDict.nousConnaitre}</Link></li>
+            <li><Link href={`/${lang}/vos-besoins`}>{navDict.vosBesoins}</Link></li>
+            <li><Link href={`/${lang}/nos-solutions`}>{navDict.nosSolutions}</Link></li>
+            <li><Link href={`/${lang}/pourquoi-menua`}>{navDict.pourquoiMenua}</Link></li>
+            <li><Link href={`/${lang}/actualites`}>{navDict.actualites}</Link></li>
+            <li><Link href={`/${lang}/nous-rejoindre`}>{navDict.nousRejoindre}</Link></li>
+            <li><Link href={`/${lang}/nous-contacter`}>{navDict.nousContacter}</Link></li>
           </ul>
         </div>
 
         {/* Colonne 2 – Nous trouver */}
         <div className="footer-col">
-          <h3 className="footer-heading">Nous trouver</h3>
+          <h3 className="footer-heading">{dict.nousTrouver}</h3>
           <div className="footer-address">
             <p>92 rue des Pyrénées</p>
             <p>75020 <strong>PARIS</strong></p>
@@ -68,13 +73,12 @@ export default function Footer() {
 
         {/* Colonne 3 – Présenter un besoin */}
         <div className="footer-col">
-          <h3 className="footer-heading">Présenter un besoin</h3>
+          <h3 className="footer-heading">{dict.presenterBesoin}</h3>
           <p style={{ fontSize: "0.84rem", color: "var(--text-mid)", lineHeight: 1.75, marginBottom: "2rem" }}>
-            Présentez votre besoin opérationnel, nous vous répondons avec une première analyse
-            et une proposition adaptée.
+            {dict.presenterBesoinDesc}
           </p>
           <Link
-            href="/nous-contacter"
+            href={`/${lang}/nous-contacter`}
             style={{
               display: "inline-block",
               padding: "0.75rem 1.75rem",
@@ -89,7 +93,7 @@ export default function Footer() {
               marginBottom: "2.5rem",
             }}
           >
-            Nous contacter
+            {dict.contactBtn}
           </Link>
 
           {/* Réseaux sociaux */}
@@ -111,10 +115,10 @@ export default function Footer() {
       {/* Barre de bas */}
       <div className="footer-bottom-bar container">
         <span style={{ fontSize: "0.65rem", color: "var(--text-light)", letterSpacing: "0.05em" }}>
-          © {new Date().getFullYear()} MENUA CONSULTING — SASU au capital de 15&nbsp;000&nbsp;€ — RCS Paris 993&nbsp;749&nbsp;779
+          © {new Date().getFullYear()} {dict.droits}
         </span>
-        <Link href="/mentions-legales">MENTIONS LÉGALES</Link>
-        <Link href="/politique-de-confidentialite">POLITIQUE DE CONFIDENTIALITÉ</Link>
+        <Link href={`/${lang}/mentions-legales`}>{dict.mentions}</Link>
+        <Link href={`/${lang}/politique-de-confidentialite`}>{dict.politique}</Link>
       </div>
     </footer>
   );

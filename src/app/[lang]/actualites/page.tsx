@@ -1,50 +1,63 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Actualités – MENUA CONSULTING",
-  description:
-    "Veille financière, comptable, réglementaire et opérationnelle de MENUA CONSULTING. Actualités financières, publications et analyses sectorielles.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const isEn = lang === 'en';
+  return {
+    title: isEn ? "News – MENUA CONSULTING" : "Actualités – MENUA CONSULTING",
+    description: isEn
+      ? "Follow the news of MENUA CONSULTING: our latest posts, our analyses and our advice in operational outsourcing."
+      : "Veille financière, comptable, réglementaire et opérationnelle de MENUA CONSULTING. Actualités financières, publications et analyses sectorielles.",
+  };
+}
 
 /* Articles exemple — à remplacer par des données CMS */
-const articles = [
+const getArticles = (isEn: boolean) => [
   {
     id: 1,
-    category: "Réglementation",
-    date: "Juin 2026",
-    title: "Évolutions KYC / AML : ce qui change pour les acteurs financiers",
-    excerpt:
-      "Les exigences en matière de conformité continuent de s'intensifier pour les établissements financiers. Analyse des principaux changements réglementaires à anticiper.",
+    category: isEn ? "Regulation" : "Réglementation",
+    date: isEn ? "June 2026" : "Juin 2026",
+    title: isEn ? "KYC / AML evolutions: what changes for financial players" : "Évolutions KYC / AML : ce qui change pour les acteurs financiers",
+    excerpt: isEn
+      ? "Compliance requirements continue to intensify for financial institutions. Analysis of the main regulatory changes to anticipate."
+      : "Les exigences en matière de conformité continuent de s'intensifier pour les établissements financiers. Analyse des principaux changements réglementaires à anticiper.",
     href: "#",
   },
   {
     id: 2,
-    category: "Finance",
-    date: "Juin 2026",
-    title: "Reporting financier : les bonnes pratiques d'externalisation",
-    excerpt:
-      "Comment structurer l'externalisation de vos fonctions reporting pour garantir fiabilité, traçabilité et continuité ? Retour sur les standards opérationnels du marché.",
+    category: isEn ? "Finance" : "Finance",
+    date: isEn ? "June 2026" : "Juin 2026",
+    title: isEn ? "Financial reporting: best practices for outsourcing" : "Reporting financier : les bonnes pratiques d'externalisation",
+    excerpt: isEn
+      ? "How to structure the outsourcing of your reporting functions to guarantee reliability, traceability, and continuity? A look back at the market's operational standards."
+      : "Comment structurer l'externalisation de vos fonctions reporting pour garantir fiabilité, traçabilité et continuité ? Retour sur les standards opérationnels du marché.",
     href: "#",
   },
   {
     id: 3,
-    category: "Opérationnel",
-    date: "Mai 2026",
-    title: "Gestion de patrimoine : renforcer le back-office administratif",
-    excerpt:
-      "Les cabinets CGP font face à une charge administrative croissante. Les solutions d'externalisation opérationnelle permettent de sécuriser l'exécution sans alourdir les effectifs.",
+    category: isEn ? "Operational" : "Opérationnel",
+    date: isEn ? "May 2026" : "Mai 2026",
+    title: isEn ? "Wealth management: strengthening the administrative back-office" : "Gestion de patrimoine : renforcer le back-office administratif",
+    excerpt: isEn
+      ? "PWM firms face an increasing administrative burden. Operational outsourcing solutions secure execution without increasing headcount."
+      : "Les cabinets CGP font face à une charge administrative croissante. Les solutions d'externalisation opérationnelle permettent de sécuriser l'exécution sans alourdir les effectifs.",
     href: "#",
   },
 ];
 
-const categories = [
-  { label: "À la une", id: "une" },
-  { label: "Actualités financières & réglementaires", id: "financieres" },
-  { label: "Nos publications", id: "publications" },
+const getCategories = (isEn: boolean) => [
+  { label: isEn ? "Featured" : "À la une", id: "une" },
+  { label: isEn ? "Financial & Regulatory News" : "Actualités financières & réglementaires", id: "financieres" },
+  { label: isEn ? "Our Publications" : "Nos publications", id: "publications" },
 ];
 
-export default function Actualites() {
+export default async function Actualites({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  const isEn = lang === 'en';
+  const articles = getArticles(isEn);
+  const categories = getCategories(isEn);
+
   return (
     <main>
       {/* ── EN-TÊTE ── */}
@@ -72,12 +85,10 @@ export default function Actualites() {
               marginBottom: "1.5rem",
             }}
           >
-            Actualités
+            {isEn ? "News" : "Actualités"}
           </h1>
           <p style={{ fontSize: "1rem", color: "var(--text-mid)", lineHeight: 1.85, maxWidth: "680px", fontWeight: 300 }}>
-            MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables,
-            patrimoniales, réglementaires et opérationnelles afin d'éclairer ses clients sur les enjeux
-            qui impactent leurs activités.
+            {isEn ? "MENUA CONSULTING provides regular monitoring of financial, accounting, wealth, regulatory, and operational developments to enlighten its clients on issues impacting their activities." : "MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles afin d'éclairer ses clients sur les enjeux qui impactent leurs activités."}
           </p>
         </div>
       </section>
@@ -114,7 +125,7 @@ export default function Actualites() {
       <section id="une" style={{ padding: "5rem 2rem", background: "#fff" }}>
         <div className="container">
           <div className="section-label-wrap" style={{ marginBottom: "2.5rem" }}>
-            <p className="section-lbl">À la une</p>
+            <p className="section-lbl">{isEn ? "Featured" : "À la une"}</p>
             <div className="section-lbl-line" />
           </div>
           <div className="news-grid">
@@ -165,7 +176,7 @@ export default function Actualites() {
                   <h2 className="news-title">{article.title}</h2>
                   <p className="news-excerpt">{article.excerpt}</p>
                   <div className="cta-row">
-                    <p className="cta-label" style={{ fontSize: "0.65rem" }}>LIRE</p>
+                    <p className="cta-label" style={{ fontSize: "0.65rem" }}>{isEn ? "READ" : "LIRE"}</p>
                     <Link href={article.href} className="arrow-btn" style={{ width: "2.2rem", height: "2.2rem" }}>
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M5 12h14M13 6l6 6-6 6" />
@@ -183,7 +194,7 @@ export default function Actualites() {
       <section id="publications" style={{ padding: "5rem 2rem", background: "var(--beige-bg)", borderTop: "1px solid var(--border-light)" }}>
         <div className="container" style={{ maxWidth: "860px" }}>
           <div className="section-label-wrap" style={{ marginBottom: "2rem" }}>
-            <p className="section-lbl">Nos publications</p>
+            <p className="section-lbl">{isEn ? "Our Publications" : "Nos publications"}</p>
             <div className="section-lbl-line" />
           </div>
           <h2
@@ -197,11 +208,10 @@ export default function Actualites() {
               marginBottom: "1.25rem",
             }}
           >
-            Retrouvez nos prises de parole sur LinkedIn
+            {isEn ? "Find our insights on LinkedIn" : "Retrouvez nos prises de parole sur LinkedIn"}
           </h2>
           <p style={{ fontSize: "0.87rem", color: "var(--text-mid)", lineHeight: 1.85, marginBottom: "2rem" }}>
-            Retrouvez les prises de parole, analyses et contenus publiés par MENUA CONSULTING sur
-            les enjeux opérationnels, réglementaires et sectoriels.
+            {isEn ? "Find the insights, analyses, and content published by MENUA CONSULTING on operational, regulatory, and sector-specific issues." : "Retrouvez les prises de parole, analyses et contenus publiés par MENUA CONSULTING sur les enjeux opérationnels, réglementaires et sectoriels."}
           </p>
           <a
             href="https://www.linkedin.com"
@@ -226,10 +236,10 @@ export default function Actualites() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path d="M20.447 20.452H16.89v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a1.981 1.981 0 0 1-1.977-1.98 1.981 1.981 0 1 1 3.96 0 1.981 1.981 0 0 1-1.983 1.98zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
             </svg>
-            Suivre MENUA CONSULTING sur LinkedIn
+            {isEn ? "Follow MENUA CONSULTING on LinkedIn" : "Suivre MENUA CONSULTING sur LinkedIn"}
           </a>
           <p style={{ fontSize: "0.73rem", color: "var(--text-light)", marginTop: "1rem", fontStyle: "italic" }}>
-            Le lien vers la page LinkedIn officielle de MENUA CONSULTING sera intégré dès sa création.
+            {isEn ? "The link to the official MENUA CONSULTING LinkedIn page will be integrated once created." : "Le lien vers la page LinkedIn officielle de MENUA CONSULTING sera intégré dès sa création."}
           </p>
         </div>
       </section>

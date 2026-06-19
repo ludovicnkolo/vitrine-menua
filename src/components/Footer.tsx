@@ -28,7 +28,9 @@ export default function Footer({ lang }: { lang: string }) {
       <div className="footer-main container">
         {/* Colonne 1 – Logo + navigation */}
         <div className="footer-col">
-          <Link href={`/${lang}`} className="footer-logo-dark">Menua</Link>
+          <Link href={`/${lang}`} className="footer-logo-dark" style={{ display: 'inline-block', marginBottom: '1.5rem' }}>
+            <img src="/LogoSansSlogan.jpeg" alt="Menua Consulting" style={{ width: "160px", objectFit: "contain" }} />
+          </Link>
           <ul className="footer-nav">
             <li><Link href={`/${lang}/nous-connaitre`}>{navDict.nousConnaitre}</Link></li>
             <li><Link href={`/${lang}/vos-besoins`}>{navDict.vosBesoins}</Link></li>

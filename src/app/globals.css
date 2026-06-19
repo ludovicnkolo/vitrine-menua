@@ -3,18 +3,19 @@
 
 /* ─── DESIGN TOKENS ──────────────────────────────────────────── */
 :root {
-  --green-dark:    #2c4a3e;
-  --green-mid:     #3a5f50;
-  --green-light:   #4a7a66;
-  --beige:         #c8b99a;
-  --beige-light:   #dfd4c2;
-  --beige-bg:      #f5f0ea;
-  --gold:          #b8952a;
+  --green-dark:    #06101e; /* Deep navy blue – Premium Finance */
+  --green-mid:     #0d1e35;
+  --green-light:   #152d50;
+  --beige:         #d4c4a8;
+  --beige-light:   #e8ddc8;
+  --beige-bg:      #f5f7fa; /* Soft blue-white background */
+  --gold:          #1a5be0; /* Vivid finance blue */
+  --gold-hover:    #1448c0;
   --white:         #ffffff;
-  --text-dark:     #1a1a1a;
-  --text-mid:      #4a4a4a;
-  --text-light:    #7a7a7a;
-  --border-light:  #e0d8cc;
+  --text-dark:     #0d1220;
+  --text-mid:      #374151;
+  --text-light:    #6b7280;
+  --border-light:  #e2e8f0;
 
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans:  'Inter', system-ui, sans-serif;

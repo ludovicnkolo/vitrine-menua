@@ -290,7 +290,9 @@ function MegaPanel({ item, visible }: { item: NavItem; visible: boolean }) {
         <div className="nav-inner">
 
           {/* Logo */}
-          <Link href={`/${lang}`} className="nav-logo">Menua</Link>
+          <Link href={`/${lang}`} className="nav-logo" style={{ display: "flex", alignItems: "center" }}>
+            <img src="/LogoAvecSlogan.jpeg" alt="Menua Consulting" style={{ height: "48px", objectFit: "contain" }} />
+          </Link>
 
           {/* Desktop links */}
           <nav className="nav-links" aria-label="Navigation principale">

@@ -374,6 +374,9 @@ export default async function NousConnaitre({ params }: { params: Promise<{ lang
             <p style={{ fontSize: "0.93rem", color: "var(--text-mid)", lineHeight: 1.85 }}>
               <strong style={{ color: "var(--text-dark)", fontWeight: 600 }}>Rosette Fouelefack</strong> {isEn ? "is the Managing Director of MENUA CONSULTING. She has experience in finance, risk management, wealth management, and back & middle office operations acquired in demanding environments. She directly supervises the structuring of missions, team composition, deliverable validation, and the quality control system." : "est directrice générale de MENUA CONSULTING. Elle dispose d'une expérience en finance, gestion des risques, gestion de patrimoine et opérations back & middle office acquise au sein d'environnements exigeants. Elle supervise directement la structuration des missions, la constitution des équipes, la validation des livrables et le dispositif de contrôle qualité."}
             </p>
+            <div style={{ marginTop: "0.5rem" }}>
+              <img src="/LogoSignature.jpeg" alt="Signature Rosette Fouelefack" style={{ height: "65px", objectFit: "contain", mixBlendMode: "multiply" }} />
+            </div>
             <p style={{ fontSize: "0.93rem", color: "var(--text-mid)", lineHeight: 1.85 }}>
               {isEn ? "MENUA CONSULTING relies on an agile organization, composed of operational management in France and outsourced employees or partners mobilized according to client needs." : "MENUA CONSULTING s'appuie sur une organisation agile, composée d'une direction opérationnelle en France et de collaborateurs ou partenaires externalisés mobilisés selon les besoins des clients."}
             </p>

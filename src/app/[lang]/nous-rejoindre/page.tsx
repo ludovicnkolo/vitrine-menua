@@ -159,85 +159,97 @@ export default async function NousRejoindre({ params }: { params: Promise<{ lang
           >
             {isEn ? "Submit your application" : "Déposez votre candidature"}
           </h2>
+          <div style={{ marginBottom: "2.5rem", padding: "1.5rem", background: "rgba(20, 40, 30, 0.03)", borderLeft: "3px solid var(--green-dark)", borderRadius: "2px" }}>
+            <p style={{ fontSize: "0.87rem", color: "var(--text-dark)", lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
+              {isEn 
+                ? "For security reasons, no CV is requested at this stage. If your profile matches the needs of MENUA CONSULTING, we will contact you to request additional information." 
+                : "Pour des raisons de sécurité, aucun CV n’est demandé à ce stade. Si votre profil correspond aux besoins de MENUA CONSULTING, nous reviendrons vers vous afin de vous demander des éléments complémentaires."}
+            </p>
+          </div>
           <form style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             {/* Nom / Prénom */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
               <div>
-                <label htmlFor="rec-nom" style={labelStyle}>{isEn ? "First & Last Name *" : "Nom & Prénom *"}</label>
+                <label htmlFor="rec-nom" style={labelStyle}>{isEn ? "Last Name *" : "Nom *"}</label>
                 <input id="rec-nom" type="text" required style={fieldStyle} />
               </div>
+              <div>
+                <label htmlFor="rec-prenom" style={labelStyle}>{isEn ? "First Name *" : "Prénom *"}</label>
+                <input id="rec-prenom" type="text" required style={fieldStyle} />
+              </div>
+            </div>
+
+            {/* Email / Téléphone */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
               <div>
                 <label htmlFor="rec-email" style={labelStyle}>Email *</label>
                 <input id="rec-email" type="email" required style={fieldStyle} />
               </div>
-            </div>
-
-            {/* Téléphone / Pays */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
               <div>
-                <label htmlFor="rec-tel" style={labelStyle}>{isEn ? "Phone *" : "Téléphone *"}</label>
+                <label htmlFor="rec-tel" style={labelStyle}>{isEn ? "Phone / WhatsApp *" : "Téléphone / WhatsApp *"}</label>
                 <input id="rec-tel" type="tel" required style={fieldStyle} />
               </div>
+            </div>
+
+            {/* Résidence / Domaine */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
               <div>
-                <label htmlFor="rec-pays" style={labelStyle}>{isEn ? "Country of residence *" : "Pays de résidence *"}</label>
-                <input id="rec-pays" type="text" required style={fieldStyle} />
+                <label htmlFor="rec-residence" style={labelStyle}>{isEn ? "Country / City of residence *" : "Pays / ville de résidence *"}</label>
+                <input id="rec-residence" type="text" required style={fieldStyle} />
+              </div>
+              <div>
+                <label htmlFor="rec-domaine" style={labelStyle}>{isEn ? "Desired area of intervention *" : "Domaine d’intervention souhaité *"}</label>
+                <input id="rec-domaine" type="text" required style={fieldStyle} />
               </div>
             </div>
 
-            {/* Type de contrat */}
-            <div>
-              <label htmlFor="rec-contrat" style={labelStyle}>{isEn ? "Desired type of collaboration *" : "Type de collaboration souhaitée *"}</label>
-              <select id="rec-contrat" required style={fieldStyle}>
-                <option value="">{isEn ? "Select" : "Sélectionnez"}</option>
-                <option value="freelance">Freelance / Indépendant</option>
-                <option value="ponctuel">{isEn ? "Occasional mission" : "Mission ponctuelle"}</option>
-                <option value="recurrent">{isEn ? "Recurring mission" : "Mission récurrente"}</option>
-                <option value="autre">{isEn ? "Other" : "Autre"}</option>
-              </select>
+            {/* Compétences / Expérience */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+              <div>
+                <label htmlFor="rec-competences" style={labelStyle}>{isEn ? "Core competencies *" : "Compétences principales *"}</label>
+                <input id="rec-competences" type="text" required style={fieldStyle} />
+              </div>
+              <div>
+                <label htmlFor="rec-experience" style={labelStyle}>{isEn ? "Years of experience *" : "Années d’expérience *"}</label>
+                <input id="rec-experience" type="text" required style={fieldStyle} />
+              </div>
             </div>
 
-            {/* Domaines */}
-            <div>
-              <label htmlFor="rec-domaines" style={labelStyle}>{isEn ? "Areas of expertise *" : "Domaines d'expertise *"}</label>
-              <input
-                id="rec-domaines"
-                type="text"
-                placeholder={isEn ? "Ex: Finance, KYC Compliance, Data..." : "Ex : Finance, Conformité KYC, Data…"}
-                required
-                style={fieldStyle}
-              />
+            {/* Langues / Disponibilité */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+              <div>
+                <label htmlFor="rec-langues" style={labelStyle}>{isEn ? "Languages spoken *" : "Langues maîtrisées *"}</label>
+                <input id="rec-langues" type="text" required style={fieldStyle} />
+              </div>
+              <div>
+                <label htmlFor="rec-dispo" style={labelStyle}>{isEn ? "Availability *" : "Disponibilité *"}</label>
+                <input id="rec-dispo" type="text" required style={fieldStyle} />
+              </div>
             </div>
 
-            {/* Langues */}
-            <div>
-              <label htmlFor="rec-langues" style={labelStyle}>{isEn ? "Languages spoken *" : "Langues maîtrisées *"}</label>
-              <input
-                id="rec-langues"
-                type="text"
-                placeholder={isEn ? "Ex: French (native), English (fluent)" : "Ex : Français (natif), Anglais (courant)"}
-                required
-                style={fieldStyle}
-              />
-            </div>
-
-            {/* CV */}
-            <div>
-              <label htmlFor="rec-cv" style={labelStyle}>{isEn ? "Resume (link or text) *" : "CV (lien ou texte) *"}</label>
-              <input
-                id="rec-cv"
-                type="text"
-                placeholder={isEn ? "Link to your resume or LinkedIn profile" : "Lien vers votre CV ou profil LinkedIn"}
-                required
-                style={fieldStyle}
-              />
+            {/* Type de mission / LinkedIn */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+              <div>
+                <label htmlFor="rec-mission" style={labelStyle}>{isEn ? "Desired type of mission *" : "Type de mission souhaité *"}</label>
+                <select id="rec-mission" required style={fieldStyle}>
+                  <option value="">{isEn ? "Select" : "Sélectionnez"}</option>
+                  <option value="ponctuelle">{isEn ? "Occasional mission" : "Mission ponctuelle"}</option>
+                  <option value="recurrente">{isEn ? "Recurring mission" : "Mission récurrente"}</option>
+                  <option value="les-deux">{isEn ? "Both" : "Les deux"}</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="rec-linkedin" style={labelStyle}>{isEn ? "LinkedIn link or portfolio (optional)" : "Lien LinkedIn ou portfolio (si disponible)"}</label>
+                <input id="rec-linkedin" type="url" style={fieldStyle} />
+              </div>
             </div>
 
             {/* Message */}
             <div>
-              <label htmlFor="rec-message" style={labelStyle}>Message *</label>
+              <label htmlFor="rec-message" style={labelStyle}>{isEn ? "Additional message / observations (max 5 lines) *" : "Message / observations complémentaires (limité à environ 5 lignes) *"}</label>
               <textarea
                 id="rec-message"
-                rows={4}
+                rows={5}
                 required
                 style={{ ...fieldStyle, resize: "vertical" }}
               />
@@ -252,7 +264,7 @@ export default async function NousRejoindre({ params }: { params: Promise<{ lang
                 style={{ marginTop: "3px", accentColor: "var(--green-dark)", flexShrink: 0 }}
               />
               <label htmlFor="rgpd-recrutement" style={{ fontSize: "0.78rem", color: "var(--text-mid)", lineHeight: 1.65, cursor: "pointer" }}>
-                {isEn ? "I agree that the information entered will be used by MENUA CONSULTING as part of the review of my application and the monitoring of my request. *" : "J'accepte que les informations saisies soient exploitées par MENUA CONSULTING dans le cadre de l'étude de ma candidature et du suivi de ma demande. *"}
+                {isEn ? "I agree that the information entered will be used by MENUA CONSULTING as part of the review of my application. *" : "J'accepte que les informations saisies soient exploitées par MENUA CONSULTING dans le cadre de l'étude de ma candidature. *"}
               </label>
             </div>
 

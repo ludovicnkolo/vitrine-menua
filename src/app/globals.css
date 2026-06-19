@@ -1242,3 +1242,34 @@ body {
 @media (max-width: 900px) {
   .footer-main { grid-template-columns: 1fr; gap: 3rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL REVEAL ANIMATIONS
+═══════════════════════════════════════════════════════════════ */
+
+/* Base state — hidden before intersection */
+.reveal {
+  will-change: opacity, transform;
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal--up    { opacity: 0; transform: translateY(40px); }
+.reveal--left  { opacity: 0; transform: translateX(-50px); }
+.reveal--right { opacity: 0; transform: translateX(50px); }
+.reveal--fade  { opacity: 0; transform: none; }
+
+/* Visible state — triggered by JS when element enters viewport */
+.reveal--visible {
+  opacity: 1 !important;
+  transform: translate(0, 0) !important;
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

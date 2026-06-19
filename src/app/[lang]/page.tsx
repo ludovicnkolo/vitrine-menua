@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
@@ -42,6 +43,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
         {/* Left content */}
         <div className="container" style={{ position: "relative", zIndex: 2, width: "100%" }}>
+          <ScrollReveal direction="up" delay={100}>
           <div style={{ maxWidth: "520px", padding: "5rem 0" }}>
             <h1 style={{
               fontFamily: "var(--font-serif)",
@@ -89,12 +91,14 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
               🌐 {isEn ? "Interventions in French and English – bilingual operational profiles" : "Interventions en français et en anglais – profils opérationnels bilingues"}
             </p>
           </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* ══ 2. MENUA CONSULTING — Intro + 4 pilliers ═══════════════════════ */}
       <section style={{ backgroundColor: "#ffffff", padding: "6rem 0", borderTop: "1px solid #e2e8f0" }}>
         <div className="container" style={{ textAlign: "center" }}>
+          <ScrollReveal direction="up">
           <p style={{
             fontFamily: "var(--font-sans)", fontSize: "0.7rem", fontWeight: 700,
             letterSpacing: "0.2em", color: "#1a3a6b", textTransform: "uppercase", marginBottom: "0.5rem",
@@ -170,6 +174,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
               </div>
             ))}
           </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -427,38 +432,128 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         </div>
       </section>
 
-      {/* ══ 6. CTA — VOUS AVEZ UN BESOIN ══════════════════════════════════ */}
-      <section style={{ backgroundColor: "#ffffff", padding: "6rem 0" }}>
-        <div className="container" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "center" }}>
-          {/* Image */}
-          <div style={{ position: "relative", height: "380px", borderRadius: "4px", overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
-            <Image src="/desk-laptop.png" alt="Présenter votre besoin" fill sizes="50vw" style={{ objectFit: "cover", objectPosition: "center" }} />
+      {/* ══ 6. CTA — VOUS AVEZ UN BESOIN (creative layout) ════════════════ */}
+      <section style={{
+        backgroundColor: "#0d1e35",
+        marginTop: "5rem",
+        marginBottom: "5rem",
+        borderTop: "6px solid #1a3a6b",
+        borderBottom: "6px solid #1a3a6b",
+        padding: "4rem 0",
+        overflow: "hidden",
+      }}>
+        <div className="container" style={{ display: "grid", gridTemplateColumns: "55fr 45fr", gap: "0", alignItems: "stretch", minHeight: "420px" }}>
+
+          {/* ── Left: framed image with diagonal right edge ── */}
+          <div style={{ position: "relative", overflow: "hidden" }}>
+            {/* Decorative navy left-edge accent bar */}
+            <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "6px", background: "#b8952a", zIndex: 3 }} />
+
+            {/* Decorative dots grid behind image (top-left corner) */}
+            <div style={{
+              position: "absolute", top: "-1rem", left: "1.5rem",
+              width: "80px", height: "80px", zIndex: 2,
+              backgroundImage: "radial-gradient(circle, rgba(184,149,42,0.35) 1.5px, transparent 1.5px)",
+              backgroundSize: "10px 10px",
+            }} />
+
+            {/* Image container — NOT full width, with padding top & bottom */}
+            <div style={{
+              position: "relative",
+              height: "100%",
+              minHeight: "380px",
+              clipPath: "polygon(0 0, 92% 0, 100% 100%, 0 100%)",
+              overflow: "hidden",
+            }}>
+              <Image
+                src="/desk-laptop.png"
+                alt="Présenter votre besoin – Menua Consulting"
+                fill
+                sizes="55vw"
+                style={{ objectFit: "cover", objectPosition: "center 35%" }}
+              />
+              {/* Dark vignette at edges */}
+              <div style={{
+                position: "absolute", inset: 0,
+                background: "linear-gradient(to right, rgba(13,30,53,0.25) 0%, transparent 40%, rgba(13,30,53,0.1) 100%)",
+              }} />
+            </div>
           </div>
 
-          {/* Text */}
-          <div>
+          {/* ── Right: white card with content ── */}
+          <div style={{
+            background: "#ffffff",
+            padding: "3.5rem 3rem",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            position: "relative",
+          }}>
+            {/* Decorative gold top-border strip */}
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "4px", background: "#b8952a" }} />
+
+            {/* Label */}
             <p style={{
-              fontFamily: "var(--font-sans)", fontSize: "0.65rem", fontWeight: 700,
-              letterSpacing: "0.18em", color: "#1a3a6b", textTransform: "uppercase", marginBottom: "0.75rem",
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.65rem",
+              fontWeight: 700,
+              letterSpacing: "0.2em",
+              color: "#1a3a6b",
+              textTransform: "uppercase",
+              marginBottom: "1.25rem",
             }}>
               {isEn ? "YOU HAVE A NEED?" : "VOUS AVEZ UN BESOIN ?"}
             </p>
+
+            {/* Heading */}
             <h2 style={{
-              fontFamily: "var(--font-serif)", fontSize: "clamp(1.4rem, 2.5vw, 1.9rem)",
-              color: "#0d1e35", fontWeight: 500, lineHeight: 1.3, marginBottom: "1.5rem",
+              fontFamily: "var(--font-serif)",
+              fontSize: "clamp(1.3rem, 2vw, 1.75rem)",
+              color: "#0d1e35",
+              fontWeight: 500,
+              lineHeight: 1.35,
+              marginBottom: "2rem",
             }}>
               {isEn
                 ? "Present your need and receive an initial analysis within 24 working hours."
                 : "Présentez votre besoin et recevez une première analyse sous 24h ouvrées."}
             </h2>
 
-            <Link href={`/${lang}/nous-contacter`} style={{
-              display: "inline-flex", alignItems: "center", gap: "0.5rem",
-              backgroundColor: "#1a3a6b", color: "#ffffff",
-              padding: "0.85rem 1.75rem",
-              fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em",
-              textTransform: "uppercase", textDecoration: "none",
-            }}>
+            {/* Checkmarks */}
+            <ul style={{ listStyle: "none", padding: 0, margin: "0 0 2.5rem 0", display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+              {[
+                isEn ? "Response within 24 working hours" : "Réponse sous 24h ouvrées",
+                isEn ? "Personalised analysis" : "Analyse personnalisée",
+                isEn ? "No commitment" : "Sans engagement",
+              ].map((item) => (
+                <li key={item} style={{ display: "flex", alignItems: "center", gap: "0.75rem", fontSize: "0.86rem", color: "#374151" }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" fill="#1a3a6b" />
+                    <polyline points="8 12 11 15 16 9" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+
+            {/* CTA Button */}
+            <Link
+              href={`/${lang}/nous-contacter`}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.6rem",
+                backgroundColor: "#1a3a6b",
+                color: "#ffffff",
+                padding: "1rem 2rem",
+                fontSize: "0.72rem",
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                textDecoration: "none",
+              }}
+            >
               {isEn ? "Submit a need" : "Présenter un besoin"} →
             </Link>
           </div>

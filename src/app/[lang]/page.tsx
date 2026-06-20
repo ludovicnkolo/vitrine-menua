@@ -353,7 +353,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </section>
 
       {/* ══ 5. LA CONFIANCE AU CŒUR — dark navy ═══════════════════════════ */}
-      <section style={{ backgroundColor: "#06101e", padding: "6rem 0" }}>
+     <section style={{ backgroundColor: "#06101e", padding: "6rem 0", width: "85%", margin: "0 auto", borderRadius: "16px" }}>
+
         <div className="container" style={{ textAlign: "center" }}>
           <p style={{
             fontFamily: "var(--font-sans)", fontSize: "0.65rem", fontWeight: 700,
@@ -434,14 +435,26 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
       {/* ══ 6. CTA — VOUS AVEZ UN BESOIN (creative layout) ════════════════ */}
       <section style={{
-        backgroundColor: "#0d1e35",
-        marginTop: "5rem",
-        marginBottom: "5rem",
-        borderTop: "6px solid #1a3a6b",
-        borderBottom: "6px solid #1a3a6b",
-        padding: "4rem 0",
-        overflow: "hidden",
+        position: "relative",
+        width: "90%",
+        maxWidth: "1400px",
+        margin: "5rem auto",
+        padding: "0",
       }}>
+        {/* Le fond bleu réduit en hauteur (effet superposé/overlapping) */}
+        <div style={{
+          position: "absolute",
+          top: "15%",       /* Décale le haut vers le bas pour réduire la hauteur */
+          bottom: "15%",    /* Remonte le bas pour réduire la hauteur */
+          left: 0,
+          right: 0,
+          backgroundColor: "#0d1e35",
+          borderTop: "6px solid #1a3a6b",
+          borderBottom: "6px solid #1a3a6b",
+          borderRadius: "16px",
+          zIndex: -1,
+        }} />
+
         <div className="container" style={{ display: "grid", gridTemplateColumns: "55fr 45fr", gap: "0", alignItems: "stretch", minHeight: "420px" }}>
 
           {/* ── Left: framed image with diagonal right edge ── */}

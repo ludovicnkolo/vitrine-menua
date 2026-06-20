@@ -247,24 +247,26 @@ body {
 /* Each panel overlaps at top:0 of the host */
 .mega-panel {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: #1e3a2f;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  top: 1rem; /* Détaché du header pour faire un effet flottant */
+  left: 50%; /* Centrage */
+  width: fit-content;
+  max-width: 95vw;
+  background: #0d1e35; /* Force blue marine foncé pour éviter tout cache vert */
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px; /* Forme créatrice / bords arrondis */
+  box-shadow: 0 24px 64px rgba(0,0,0,0.4);
 
   /* Hidden by default — invisible AND inert */
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-6px);
+  transform: translateX(-50%) translateY(-10px); /* Animation vers le bas */
   pointer-events: none;
   transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s linear 0.22s;
 }
 .mega-panel--visible {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateX(-50%) translateY(0);
   pointer-events: auto;
   transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s linear 0s;
 }

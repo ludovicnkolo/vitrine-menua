@@ -33,7 +33,7 @@ export default async function ActualitesHub({ params }: { params: Promise<{ lang
       <PageHeader
         title={isEn ? "News" : "Actualités"}
         subtitle={isEn ? "MENUA CONSULTING provides regular monitoring of financial, accounting, wealth, regulatory, and operational developments to enlighten its clients on issues impacting their activities." : "MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles afin d'éclairer ses clients sur les enjeux qui impactent leurs activités."}
-        imageSrc="/paris-hero.jpg"
+        imageSrc="/actualites_hero.jpg"
       />
 
       <section style={{ padding: "5rem 2rem", background: "#fff", minHeight: "60vh" }}>

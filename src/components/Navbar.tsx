@@ -29,19 +29,19 @@ export default function Navbar({ lang }: { lang: string }) {
           {
             heading: "About us", headingHref: "/en/nous-connaitre",
             links: [
-              { label: "Our firm",                 href: "/en/nous-connaitre#presentation" },
-              { label: "Our approach",             href: "/en/nous-connaitre#approche" },
-              { label: "Our methodology",          href: "/en/nous-connaitre#methodologie" },
-              { label: "Accreditations",           href: "/en/nous-connaitre#accreditations" },
-              { label: "Our team",                 href: "/en/nous-connaitre#equipe" },
+              { label: "Our firm",                 href: "/en/nous-connaitre/presentation" },
+              { label: "Our approach",             href: "/en/nous-connaitre/approche" },
+              { label: "Our methodology",          href: "/en/nous-connaitre/methodologie" },
+              { label: "Accreditations",           href: "/en/nous-connaitre/accreditations" },
+              { label: "Our team",                 href: "/en/nous-connaitre/equipe" },
             ],
           },
           {
             heading: "Why choose us?", headingHref: "/en/pourquoi-menua",
             links: [
-              { label: "Our benefits",             href: "/en/pourquoi-menua#benefices" },
-              { label: "Our differentiation",      href: "/en/pourquoi-menua#differentiation" },
-              { label: "Our commitments",          href: "/en/pourquoi-menua#engagements" },
+              { label: "Our benefits",             href: "/en/pourquoi-menua/benefices" },
+              { label: "Our differentiation",      href: "/en/pourquoi-menua/differentiation" },
+              { label: "Our commitments",          href: "/en/pourquoi-menua/engagements" },
             ],
           },
         ],
@@ -62,17 +62,17 @@ export default function Navbar({ lang }: { lang: string }) {
           {
             heading: "Financial functions", headingHref: "/en/vos-besoins",
             links: [
-              { label: "Finance & reporting",      href: "/en/vos-besoins#finance" },
-              { label: "Management control",       href: "/en/vos-besoins#controle" },
-              { label: "Risk & compliance",        href: "/en/vos-besoins#risques" },
+              { label: "Finance & reporting",      href: "/en/vos-besoins/finance" },
+              { label: "Management control",       href: "/en/vos-besoins/controle" },
+              { label: "Risk & compliance",        href: "/en/vos-besoins/risques" },
             ],
           },
           {
             heading: "Back & Middle Office", headingHref: "/en/vos-besoins",
             links: [
-              { label: "Accounting & data support", href: "/en/vos-besoins#comptable" },
-              { label: "Wealth management",         href: "/en/vos-besoins#patrimoine" },
-              { label: "Other operational needs",   href: "/en/vos-besoins#autres" },
+              { label: "Accounting & data support", href: "/en/vos-besoins/comptable" },
+              { label: "Wealth management",         href: "/en/vos-besoins/patrimoine" },
+              { label: "Other operational needs",   href: "/en/vos-besoins/autres" },
             ],
           },
         ],
@@ -93,16 +93,16 @@ export default function Navbar({ lang }: { lang: string }) {
           {
             heading: "Flexibility", headingHref: "/en/nos-solutions",
             links: [
-              { label: "Urgency – Rapid mobilization", href: "/en/nos-solutions#urgence" },
-              { label: "Duration – Short & long missions", href: "/en/nos-solutions#duree" },
-              { label: "Volume – Team sizing",         href: "/en/nos-solutions#volume" },
+              { label: "Urgency – Rapid mobilization", href: "/en/nos-solutions/urgence" },
+              { label: "Duration – Short & long missions", href: "/en/nos-solutions/duree" },
+              { label: "Volume – Team sizing",         href: "/en/nos-solutions/volume" },
             ],
           },
           {
             heading: "Organization", headingHref: "/en/nos-solutions",
             links: [
-              { label: "Organization mode",            href: "/en/nos-solutions#organisation" },
-              { label: "Bilingual intervention EN/FR", href: "/en/nos-solutions#langues" },
+              { label: "Organization mode",            href: "/en/nos-solutions/organisation" },
+              { label: "Bilingual intervention EN/FR", href: "/en/nos-solutions/langues" },
             ],
           },
         ],
@@ -115,8 +115,52 @@ export default function Navbar({ lang }: { lang: string }) {
         },
       },
     },
-    { label: "Why Menua?", href: "/en/pourquoi-menua" },
-    { label: "News",       href: "/en/actualites" },
+    {
+      label: "Why Menua?",
+      href: "/en/pourquoi-menua",
+      mega: {
+        columns: [
+          {
+            heading: "Our Commitments", headingHref: "/en/pourquoi-menua",
+            links: [
+              { label: "Our benefits",             href: "/en/pourquoi-menua/benefices" },
+              { label: "Our differentiation",      href: "/en/pourquoi-menua/differentiation" },
+              { label: "Our promises",             href: "/en/pourquoi-menua/engagements" },
+            ],
+          },
+        ],
+        featured: {
+          title: "Excellence",
+          body: "A reliable approach for demanding challenges.",
+          cta: "Discover why",
+          ctaHref: "/en/pourquoi-menua",
+          accent: "#1a5be0",
+        },
+      },
+    },
+    {
+      label: "News",
+      href: "/en/actualites",
+      mega: {
+        columns: [
+          {
+            heading: "Categories", headingHref: "/en/actualites",
+            links: [
+              { label: "Featured", href: "/en/actualites/une" },
+              { label: "Financial News", href: "/en/actualites/financieres" },
+              { label: "Our Publications", href: "/en/actualites/publications" },
+            ],
+          },
+        ],
+        featured: {
+          title: "Insights",
+          body: "Stay informed on the latest regulatory and financial updates.",
+          cta: "Read more",
+          ctaHref: "/en/actualites",
+          accent: "#b8952a",
+        },
+      },
+    },
   ] : [
     {
       label: "Nous connaître",
@@ -126,19 +170,19 @@ export default function Navbar({ lang }: { lang: string }) {
           {
             heading: "Nous connaître", headingHref: "/fr/nous-connaitre",
             links: [
-              { label: "Présentation du cabinet",         href: "/fr/nous-connaitre#presentation" },
-              { label: "Notre approche",                  href: "/fr/nous-connaitre#approche" },
-              { label: "Notre méthodologie",              href: "/fr/nous-connaitre#methodologie" },
-              { label: "Accréditations & certifications", href: "/fr/nous-connaitre#accreditations" },
-              { label: "Notre équipe",                    href: "/fr/nous-connaitre#equipe" },
+              { label: "Présentation du cabinet",         href: "/fr/nous-connaitre/presentation" },
+              { label: "Notre approche",                  href: "/fr/nous-connaitre/approche" },
+              { label: "Notre méthodologie",              href: "/fr/nous-connaitre/methodologie" },
+              { label: "Accréditations & certifications", href: "/fr/nous-connaitre/accreditations" },
+              { label: "Notre équipe",                    href: "/fr/nous-connaitre/equipe" },
             ],
           },
           {
             heading: "Pourquoi nous choisir ?", headingHref: "/fr/pourquoi-menua",
             links: [
-              { label: "Nos bénéfices",           href: "/fr/pourquoi-menua#benefices" },
-              { label: "Notre différenciation",   href: "/fr/pourquoi-menua#differentiation" },
-              { label: "Nos engagements",         href: "/fr/pourquoi-menua#engagements" },
+              { label: "Nos bénéfices",           href: "/fr/pourquoi-menua/benefices" },
+              { label: "Notre différenciation",   href: "/fr/pourquoi-menua/differentiation" },
+              { label: "Nos engagements",         href: "/fr/pourquoi-menua/engagements" },
             ],
           },
         ],
@@ -159,17 +203,17 @@ export default function Navbar({ lang }: { lang: string }) {
           {
             heading: "Fonctions financières", headingHref: "/fr/vos-besoins",
             links: [
-              { label: "Finance & reporting",    href: "/fr/vos-besoins#finance" },
-              { label: "Contrôle de gestion",    href: "/fr/vos-besoins#controle" },
-              { label: "Risques & conformité",   href: "/fr/vos-besoins#risques" },
+              { label: "Finance & reporting",    href: "/fr/vos-besoins/finance" },
+              { label: "Contrôle de gestion",    href: "/fr/vos-besoins/controle" },
+              { label: "Risques & conformité",   href: "/fr/vos-besoins/risques" },
             ],
           },
           {
             heading: "Back & Middle Office", headingHref: "/fr/vos-besoins",
             links: [
-              { label: "Support comptable & data",     href: "/fr/vos-besoins#comptable" },
-              { label: "Gestion de patrimoine & CGP",  href: "/fr/vos-besoins#patrimoine" },
-              { label: "Autres besoins opérationnels", href: "/fr/vos-besoins#autres" },
+              { label: "Support comptable & data",     href: "/fr/vos-besoins/comptable" },
+              { label: "Gestion de patrimoine & CGP",  href: "/fr/vos-besoins/patrimoine" },
+              { label: "Autres besoins opérationnels", href: "/fr/vos-besoins/autres" },
             ],
           },
         ],
@@ -190,16 +234,16 @@ export default function Navbar({ lang }: { lang: string }) {
           {
             heading: "Flexibilité", headingHref: "/fr/nos-solutions",
             links: [
-              { label: "Urgence – Mobilisation rapide",      href: "/fr/nos-solutions#urgence" },
-              { label: "Durée – Missions courtes & longues", href: "/fr/nos-solutions#duree" },
-              { label: "Volume – Dimensionnement d'équipe",  href: "/fr/nos-solutions#volume" },
+              { label: "Urgence – Mobilisation rapide",      href: "/fr/nos-solutions/urgence" },
+              { label: "Durée – Missions courtes & longues", href: "/fr/nos-solutions/duree" },
+              { label: "Volume – Dimensionnement d'équipe",  href: "/fr/nos-solutions/volume" },
             ],
           },
           {
             heading: "Organisation", headingHref: "/fr/nos-solutions",
             links: [
-              { label: "Mode d'organisation",           href: "/fr/nos-solutions#organisation" },
-              { label: "Intervention bilingue FR / EN", href: "/fr/nos-solutions#langues" },
+              { label: "Mode d'organisation",           href: "/fr/nos-solutions/organisation" },
+              { label: "Intervention bilingue FR / EN", href: "/fr/nos-solutions/langues" },
             ],
           },
         ],
@@ -212,8 +256,52 @@ export default function Navbar({ lang }: { lang: string }) {
         },
       },
     },
-    { label: "Pourquoi Menua ?", href: "/fr/pourquoi-menua" },
-    { label: "Actualités",       href: "/fr/actualites" },
+    {
+      label: "Pourquoi Menua ?",
+      href: "/fr/pourquoi-menua",
+      mega: {
+        columns: [
+          {
+            heading: "Nos engagements", headingHref: "/fr/pourquoi-menua",
+            links: [
+              { label: "Nos bénéfices",           href: "/fr/pourquoi-menua/benefices" },
+              { label: "Notre différenciation",   href: "/fr/pourquoi-menua/differentiation" },
+              { label: "Nos engagements",         href: "/fr/pourquoi-menua/engagements" },
+            ],
+          },
+        ],
+        featured: {
+          title: "Excellence",
+          body: "Une démarche fiable pour des enjeux exigeants.",
+          cta: "Découvrir pourquoi",
+          ctaHref: "/fr/pourquoi-menua",
+          accent: "#1a5be0",
+        },
+      },
+    },
+    {
+      label: "Actualités",
+      href: "/fr/actualites",
+      mega: {
+        columns: [
+          {
+            heading: "Catégories", headingHref: "/fr/actualites",
+            links: [
+              { label: "À la une", href: "/fr/actualites/une" },
+              { label: "Actualités financières", href: "/fr/actualites/financieres" },
+              { label: "Nos publications", href: "/fr/actualites/publications" },
+            ],
+          },
+        ],
+        featured: {
+          title: "Veille",
+          body: "Restez informé des dernières évolutions réglementaires et financières.",
+          cta: "Lire nos articles",
+          ctaHref: "/fr/actualites",
+          accent: "#b8952a",
+        },
+      },
+    },
   ];
 
 

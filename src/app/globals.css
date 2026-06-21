@@ -1275,3 +1275,12 @@ body {
     transition: none !important;
   }
 }
+
+.hub-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.hub-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}

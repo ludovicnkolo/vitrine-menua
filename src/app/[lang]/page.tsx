@@ -27,8 +27,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           zIndex: 0,
         }}>
           <Image
-            src="/building-hero.png"
-            alt="Immeuble moderne – Menua Consulting"
+            src="/finance-hero.png"
+            alt="Bureau financier – Menua Consulting"
             fill
             sizes="55vw"
             style={{ objectFit: "cover", objectPosition: "center" }}

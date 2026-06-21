@@ -33,7 +33,7 @@ export default async function Finance({ params }: { params: Promise<{ lang: stri
       />
       <section style={{ padding: "5.5rem 2rem", background: "#fff", minHeight: "60vh" }}>
         <div className="container" style={{ maxWidth: "1100px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "5rem", alignItems: "start" }}>
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-10 md:gap-20 items-start">
             <div style={{ position: "sticky", top: "5rem" }}>
               <div className="section-label-wrap" style={{ marginBottom: "1rem" }}>
                 <p className="section-lbl" style={{ color: "var(--gold)" }}>{isEn ? "Core business offering" : "Offre cœur métier"}</p>
@@ -44,7 +44,7 @@ export default async function Finance({ params }: { params: Promise<{ lang: stri
               </h2>
             </div>
             <div style={{ border: "1px solid var(--border-light)", padding: "2.5rem", background: "#fff" }}>
-              <ul style={{ listStyle: "none", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem 2.5rem" }}>
+              <ul className="list-none grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-10">
                 {items.map((item) => (
                   <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: "0.65rem" }}>
                     <span style={{ color: "var(--green-dark)", flexShrink: 0, marginTop: "2px", fontSize: "0.75rem" }}>→</span>

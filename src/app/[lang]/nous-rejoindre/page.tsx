@@ -90,7 +90,7 @@ export default async function NousRejoindre({ params }: { params: Promise<{ lang
       {/* ── PROFILS RECHERCHÉS ── */}
       <section style={{ padding: "6rem 2rem", background: "var(--beige-bg)", borderBottom: "1px solid var(--border-light)" }}>
         <div className="container" style={{ maxWidth: "1100px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "start" }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-start">
             <div>
               <div className="section-label-wrap" style={{ marginBottom: "2rem" }}>
                 <p className="section-lbl">{isEn ? "Profiles Sought" : "Profils recherchés"}</p>
@@ -168,7 +168,7 @@ export default async function NousRejoindre({ params }: { params: Promise<{ lang
           </div>
           <form style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             {/* Nom / Prénom */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label htmlFor="rec-nom" style={labelStyle}>{isEn ? "Last Name *" : "Nom *"}</label>
                 <input id="rec-nom" type="text" required style={fieldStyle} />
@@ -180,7 +180,7 @@ export default async function NousRejoindre({ params }: { params: Promise<{ lang
             </div>
 
             {/* Email / Téléphone */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label htmlFor="rec-email" style={labelStyle}>Email *</label>
                 <input id="rec-email" type="email" required style={fieldStyle} />
@@ -192,7 +192,7 @@ export default async function NousRejoindre({ params }: { params: Promise<{ lang
             </div>
 
             {/* Résidence / Domaine */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label htmlFor="rec-residence" style={labelStyle}>{isEn ? "Country / City of residence *" : "Pays / ville de résidence *"}</label>
                 <input id="rec-residence" type="text" required style={fieldStyle} />
@@ -204,7 +204,7 @@ export default async function NousRejoindre({ params }: { params: Promise<{ lang
             </div>
 
             {/* Compétences / Expérience */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label htmlFor="rec-competences" style={labelStyle}>{isEn ? "Core competencies *" : "Compétences principales *"}</label>
                 <input id="rec-competences" type="text" required style={fieldStyle} />
@@ -216,7 +216,7 @@ export default async function NousRejoindre({ params }: { params: Promise<{ lang
             </div>
 
             {/* Langues / Disponibilité */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label htmlFor="rec-langues" style={labelStyle}>{isEn ? "Languages spoken *" : "Langues maîtrisées *"}</label>
                 <input id="rec-langues" type="text" required style={fieldStyle} />
@@ -228,7 +228,7 @@ export default async function NousRejoindre({ params }: { params: Promise<{ lang
             </div>
 
             {/* Type de mission / LinkedIn */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label htmlFor="rec-mission" style={labelStyle}>{isEn ? "Desired type of mission *" : "Type de mission souhaité *"}</label>
                 <select id="rec-mission" required style={fieldStyle}>

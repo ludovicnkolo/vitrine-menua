@@ -159,7 +159,7 @@ export default async function NousContacter({ params }: { params: Promise<{ lang
               </div>
               <form style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
                 {/* Ligne 1 : Nom / Société */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
                     <label htmlFor="nom" style={labelStyle}>{isEn ? "Name *" : "Nom *"}</label>
                     <input id="nom" type="text" required style={fieldStyle} />
@@ -171,7 +171,7 @@ export default async function NousContacter({ params }: { params: Promise<{ lang
                 </div>
 
                 {/* Ligne 2 : Fonction / Email */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
                     <label htmlFor="fonction" style={labelStyle}>{isEn ? "Job Title *" : "Fonction *"}</label>
                     <input id="fonction" type="text" required style={fieldStyle} />
@@ -183,7 +183,7 @@ export default async function NousContacter({ params }: { params: Promise<{ lang
                 </div>
 
                 {/* Ligne 3 : Téléphone / Urgence */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
                     <label htmlFor="telephone" style={labelStyle}>{isEn ? "Phone" : "Téléphone"}</label>
                     <input id="telephone" type="tel" style={fieldStyle} />
@@ -203,7 +203,7 @@ export default async function NousContacter({ params }: { params: Promise<{ lang
                 {/* Type de besoin */}
                 <div>
                   <p style={labelStyle}>{isEn ? "Type of need (multiple choices possible) *" : "Type de besoin (plusieurs choix possibles) *"}</p>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem 1.5rem" }}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-6">
                     {typesBesoin.map((besoin) => (
                       <label
                         key={besoin}

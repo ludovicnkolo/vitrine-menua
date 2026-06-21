@@ -35,7 +35,7 @@ export default async function Duree({ params }: { params: Promise<{ lang: string
       />
       <section style={{ padding: "6rem 2rem", background: "var(--beige-bg)", minHeight: "60vh" }}>
         <div className="container" style={{ maxWidth: "1100px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "4rem", alignItems: "start" }}>
+          <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8 md:gap-16 items-start">
             <span style={{ fontFamily: "var(--font-serif)", fontSize: "5rem", fontWeight: 400, color: "var(--beige-light)", lineHeight: 1, userSelect: "none" }}>
               02
             </span>

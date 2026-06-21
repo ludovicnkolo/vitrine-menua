@@ -20,25 +20,17 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         overflow: "hidden",
       }}>
         {/* Background image — right portion */}
-        <div style={{
-          position: "absolute",
-          top: 0, right: 0, bottom: 0,
-          width: "55%",
-          zIndex: 0,
-        }}>
+        <div className="absolute top-0 right-0 bottom-0 w-full md:w-[55%] z-0">
           <Image
             src="/finance-hero.png"
             alt="Bureau financier – Menua Consulting"
             fill
-            sizes="55vw"
+            sizes="(max-width: 768px) 100vw, 55vw"
             style={{ objectFit: "cover", objectPosition: "center" }}
             priority
           />
           {/* Fade left edge */}
-          <div style={{
-            position: "absolute", inset: 0,
-            background: "linear-gradient(to right, #ffffff 0%, rgba(255,255,255,0.2) 30%, transparent 60%)",
-          }} />
+          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-white via-white/80 md:via-white/20 to-transparent" />
         </div>
 
         {/* Left content */}
@@ -118,10 +110,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           </p>
 
           {/* 4 pilliers */}
-          <div style={{
-            display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "2rem", borderTop: "1px solid #e2e8f0", paddingTop: "3rem",
-          }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 border-t border-slate-200 pt-12">
             {[
               {
                 val: "100%",
@@ -194,7 +183,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             {isEn ? "NOS EXPERTISES AU SERVICE DE VOS ENJEUX" : "NOS EXPERTISES AU SERVICE DE VOS ENJEUX"}
           </h2>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "1.5rem" }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {[
               {
                 title: "Finance & Reporting",
@@ -300,7 +289,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
       {/* ══ 4. NOTRE APPROCHE — image gauche + texte droite ═══════════════ */}
       <section style={{ backgroundColor: "#ffffff", padding: "6rem 0" }}>
-        <div className="container" style={{ display: "grid", gridTemplateColumns: "55fr 45fr", gap: "5rem", alignItems: "center" }}>
+        <div className="container grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-20 items-center">
           {/* Image */}
           <div style={{ position: "relative", height: "440px", borderRadius: "4px", overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
             <Image src="/team-meeting.png" alt="Notre approche – équipe en réunion" fill sizes="50vw" style={{ objectFit: "cover", objectPosition: "center" }} />
@@ -353,9 +342,9 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </section>
 
       {/* ══ 5. LA CONFIANCE AU CŒUR — dark navy ═══════════════════════════ */}
-     <section style={{ backgroundColor: "#06101e", padding: "6rem 0", width: "85%", margin: "0 auto", borderRadius: "16px" }}>
+     <section className="bg-[#06101e] py-16 md:py-24 w-[95%] md:w-[85%] mx-auto rounded-2xl">
 
-        <div className="container" style={{ textAlign: "center" }}>
+        <div className="container text-center">
           <p style={{
             fontFamily: "var(--font-sans)", fontSize: "0.65rem", fontWeight: 700,
             letterSpacing: "0.18em", color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: "0.75rem",
@@ -369,7 +358,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             {isEn ? "TRUST AT THE HEART OF OUR COMMITMENTS" : "LA CONFIANCE AU CŒUR DE NOS ENGAGEMENTS"}
           </h2>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "2rem" }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
             {[
               {
                 title: isEn ? "Integrity" : "Intégrité",
@@ -434,28 +423,12 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </section>
 
       {/* ══ 6. CTA — VOUS AVEZ UN BESOIN (creative layout) ════════════════ */}
-      <section style={{
-        position: "relative",
-        width: "90%",
-        maxWidth: "1400px",
-        margin: "5rem auto",
-        padding: "0",
-      }}>
+      <section className="relative w-[95%] md:w-[90%] max-w-[1400px] mx-auto my-12 md:my-20">
         {/* Le fond bleu réduit en hauteur (effet superposé/overlapping) */}
-        <div style={{
-          position: "absolute",
-          top: "15%",       /* Décale le haut vers le bas pour réduire la hauteur */
-          bottom: "15%",    /* Remonte le bas pour réduire la hauteur */
-          left: 0,
-          right: 0,
-          backgroundColor: "#0d1e35",
-          borderTop: "6px solid #1a3a6b",
-          borderBottom: "6px solid #1a3a6b",
-          borderRadius: "16px",
-          zIndex: -1,
-        }} />
+        <div className="absolute left-0 right-0 bg-[#0d1e35] border-y-4 border-[#1a3a6b] rounded-2xl -z-10" 
+             style={{ top: "10%", bottom: "10%" }} />
 
-        <div className="container" style={{ display: "grid", gridTemplateColumns: "55fr 45fr", gap: "0", alignItems: "stretch", minHeight: "420px" }}>
+        <div className="container grid grid-cols-1 md:grid-cols-2 gap-0 items-stretch min-h-[420px]">
 
           {/* ── Left: framed image with diagonal right edge ── */}
           <div style={{ position: "relative", overflow: "hidden" }}>

@@ -37,6 +37,7 @@ export default async function NosSolutionsHub({ params }: { params: Promise<{ la
       <PageHeader
         title={isEn ? "Our Solutions" : "Nos solutions"}
         subtitle={isEn ? "We design tailor-made outsourcing setups adapted to your operational constraints regarding urgency, duration, volume, and organization." : "Nous concevons des dispositifs d'externalisation sur mesure, adaptés à vos contraintes opérationnelles d'urgence, de durée, de volume et d'organisation."}
+        imageSrc="/nos_solutions_hero.png"
       />
 
       <section style={{ padding: "5rem 2rem", background: "#fff", minHeight: "60vh" }}>

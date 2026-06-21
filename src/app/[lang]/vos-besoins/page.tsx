@@ -39,6 +39,7 @@ export default async function VosBesoinsHub({ params }: { params: Promise<{ lang
       <PageHeader
         title={isEn ? "Your Needs" : "Vos besoins"}
         subtitle={isEn ? "MENUA CONSULTING operates in support of financial, accounting, wealth management, IT, and regulated teams on all back and middle office functions requiring rigor, continuity, and operational reliability." : "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l'ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle."}
+        imageSrc="/vos_besoins_hero.png"
       />
 
       <section style={{ padding: "5rem 2rem", background: "#fff", minHeight: "60vh" }}>

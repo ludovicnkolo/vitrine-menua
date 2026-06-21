@@ -33,6 +33,7 @@ export default async function PourquoiMenuaHub({ params }: { params: Promise<{ l
       <PageHeader
         title={isEn ? "Why MENUA CONSULTING?" : "Pourquoi MENUA CONSULTING ?"}
         subtitle={isEn ? "MENUA CONSULTING supports organizations facing demanding operational execution challenges." : "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d'exécution opérationnelle exigeants."}
+        imageSrc="/building-hero.png"
       />
 
       <section style={{ padding: "5rem 2rem", background: "#fff", minHeight: "60vh" }}>

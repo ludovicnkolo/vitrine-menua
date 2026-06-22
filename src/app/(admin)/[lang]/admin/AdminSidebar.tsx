@@ -167,17 +167,6 @@ export default function AdminSidebar() {
           {configItems.map(renderItem)}
         </ul>
       </div>
-
-      {/* ── Profil utilisateur ── */}
-      <div className="p-4 border-t border-gray-800 flex items-center gap-3">
-        <div className="w-9 h-9 rounded-full bg-indigo-700 flex items-center justify-center text-xs font-bold text-white shrink-0">
-          RF
-        </div>
-        <div className="min-w-0">
-          <p className="text-sm font-semibold text-white truncate">Rosette Fouelefack</p>
-          <p className="text-[11px] text-gray-500">{isEn ? "Administrator" : "Administrateur"}</p>
-        </div>
-      </div>
     </aside>
   );
 }

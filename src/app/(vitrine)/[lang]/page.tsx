@@ -364,13 +364,13 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       {/* ══ 6. CTA — VOUS AVEZ UN BESOIN (creative layout) ════════════════ */}
       <section className="section-cta">
         {/* Le fond bleu réduit en hauteur (effet superposé/overlapping) */}
-        <div className="section-cta__bg hidden md:block"
+        <div className="section-cta__bg"
              style={{ top: "10%", bottom: "10%" }} />
 
         <div className="container grid grid-cols-1 md:grid-cols-2 gap-0 items-stretch">
 
-          {/* ── Left: image (hidden on mobile, shown on md+) ── */}
-          <div className="hidden md:block" style={{ position: "relative", overflow: "hidden" }}>
+          {/* ── Top/Left: image (visible sur mobile en haut, à gauche sur md+) ── */}
+          <div style={{ position: "relative", overflow: "hidden", minHeight: "380px" }}>
             {/* Decorative navy left-edge accent bar */}
             <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "6px", background: "#b8952a", zIndex: 3 }} />
 

@@ -1,0 +1,279 @@
+// ============================================================
+//  MENUA CONSULTING — Schéma Prisma (SQLite pour dev local)
+//  Passer à provider = "postgresql" pour OVH/production.
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  // En production : remplacer par "postgresql" et DATABASE_URL dans .env
+  url      = env("DATABASE_URL")
+}
+
+// ─── ÉNUMÉRATIONS ───────────────────────────────────────────
+
+// Statuts CRM validés par la cliente
+enum StatutCRM {
+  NOUVEAU
+  EN_COURS
+  EN_ATTENTE
+  TRAITE
+  ARCHIVE
+}
+
+// Priorité d'un dossier
+enum Priorite {
+  HAUTE
+  MOYENNE
+  BASSE
+}
+
+// Séparation stricte : client/prospect vs prestataire/collaborateur
+enum TypeContact {
+  CLIENT
+  PROSPECT
+  PRESTATAIRE
+  COLLABORATEUR
+  CANDIDAT
+  PARTENAIRE
+}
+
+// Rôles utilisateurs du CRM (RBAC)
+enum RoleUtilisateur {
+  ADMINISTRATEUR
+  GESTIONNAIRE
+  CONSULTANT
+  LECTURE_SEULE
+}
+
+// Catégories de dossier/conversation
+enum Categorie {
+  CONTACT_GENERAL
+  DEMANDE_COMMERCIALE
+  DEMANDE_DE_DEVIS
+  RECRUTEMENT
+  PARTENARIAT
+  SUPPORT_TECHNIQUE
+  CLIENT_PROSPECT
+  PRESTATAIRE_COLLABORATEUR
+  AUTRE
+}
+
+// Urgence du formulaire de contact
+enum Urgence {
+  IMMEDIATE
+  SOUS_1_SEMAINE
+  SOUS_1_MOIS
+  NON_URGENTE
+}
+
+// ─── UTILISATEURS CRM (équipe interne Menua) ────────────────
+
+model UtilisateurCRM {
+  id          String           @id @default(cuid())
+  nom         String
+  prenom      String
+  email       String           @unique
+  motDePasse  String           // Haché bcrypt — JAMAIS en clair
+  role        RoleUtilisateur  @default(CONSULTANT)
+  actif       Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relations : dossiers attribués à cet utilisateur
+  dossiers    Dossier[]        @relation("DossierConsultant")
+  messages    Message[]
+}
+
+// ─── PÔLE CLIENTS / PROSPECTS ───────────────────────────────
+// Entités avec qui Menua travaille (vente de services)
+
+model Client {
+  id              String       @id @default(cuid())
+  type            TypeContact  // CLIENT ou PROSPECT uniquement
+  nom             String
+  prenom          String?
+  societe         String?
+  fonction        String?
+  email           String       @unique
+  telephone       String?
+  pays            String?      // Pays de résidence / siège
+  ville           String?
+  langueprincipale String?     // Langue principale de communication
+  notesInternes   String?      // Notes confidentielles visibles admins/gestionnaires
+
+  // KYC / Pré-KYC
+  statut_kyc      String?      // ex: "En attente", "Validé", "Non requis"
+
+  // Archivage sécurisé documentaire
+  documents       Document[]
+
+  // Dossiers liés à ce client
+  dossiers        Dossier[]
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+// ─── PÔLE PRESTATAIRES / COLLABORATEURS ─────────────────────
+// Entités avec qui Menua travaille (réalisation de missions)
+
+model Prestataire {
+  id               String       @id @default(cuid())
+  type             TypeContact  // PRESTATAIRE, COLLABORATEUR, CANDIDAT
+  nom              String
+  prenom           String?
+  societe          String?
+  fonction         String?      // Rôle / titre
+  email            String       @unique
+  telephone        String?
+  pays             String?      // Pays depuis lequel il intervient
+  ville            String?
+  languesprincipales String?    // Plusieurs langues (ex: "FR, EN, ES")
+  competences      String?      // Description des compétences clés
+  annees_experience String?
+  disponibilite    String?      // "Immédiate", "1 mois", etc.
+  missions_possibles String?    // Types de missions qu'il peut réaliser
+  lien_linkedin    String?      // LinkedIn ou portfolio
+
+  // Documents transmis (contrats prestation, vérification identité, etc.)
+  documents        Document[]
+
+  // Dossiers où ce prestataire est affecté
+  dossiers         Dossier[]
+
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+}
+
+// ─── DOSSIERS / CONVERSATIONS ───────────────────────────────
+// Unité centrale du CRM — relie tout ensemble
+
+model Dossier {
+  id              String          @id @default(cuid())
+  sujet           String
+  statut          StatutCRM       @default(NOUVEAU)
+  priorite        Priorite        @default(MOYENNE)
+  categorie       Categorie       @default(CONTACT_GENERAL)
+  urgence         Urgence?
+
+  // Étiquettes multiples (stockées en JSON texte pour SQLite)
+  // En PostgreSQL : utiliser String[] nativement
+  etiquettes      String          @default("[]")
+
+  // Notes internes du dossier
+  notesInternes   String?
+
+  // Lien vers un client OU un prestataire (pas les deux ensemble)
+  clientId        String?
+  client          Client?         @relation(fields: [clientId], references: [id])
+  prestataireId   String?
+  prestataire     Prestataire?    @relation(fields: [prestataireId], references: [id])
+
+  // Consultant CRM assigné à ce dossier
+  consultantId    String?
+  consultant      UtilisateurCRM? @relation("DossierConsultant", fields: [consultantId], references: [id])
+
+  // Historique des échanges
+  messages        Message[]
+
+  // Documents attachés au dossier
+  documents       Document[]
+
+  // Archivage : si archivé, garder trace identité + date
+  archiveAt       DateTime?
+  archiveRaison   String?
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+// ─── MESSAGES / ÉCHANGES ────────────────────────────────────
+
+model Message {
+  id          String         @id @default(cuid())
+  contenu     String
+  expediteur  String         // "admin" | "client" | "prestataire"
+  nomAffiche  String?        // Nom visible dans l'interface
+
+  dossierId   String
+  dossier     Dossier        @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+
+  // Si le message est envoyé par un utilisateur CRM interne
+  utilisateurId String?
+  utilisateur   UtilisateurCRM? @relation(fields: [utilisateurId], references: [id])
+
+  lu          Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+}
+
+// ─── DOCUMENTS SÉCURISÉS ────────────────────────────────────
+// Pièces d'identité, KYC, contrats, docs société, recrutement.
+// Stockés hors racine web (path vers volume Docker sécurisé)
+
+model Document {
+  id              String      @id @default(cuid())
+  nom             String      // Nom descriptif du fichier
+  typeDocument    String      // "identite", "societe", "contrat", "kyc", "recrutement"
+  cheminFichier   String      // Chemin absolu vers le fichier stocké hors web
+  tailleMo        Float?
+  mimeType        String?
+
+  // Accès contrôlé par rôle
+  accesMinimum    RoleUtilisateur @default(GESTIONNAIRE)
+
+  // Lien vers l'entité propriétaire (client ou prestataire)
+  clientId        String?
+  client          Client?     @relation(fields: [clientId], references: [id])
+  prestataireId   String?
+  prestataire     Prestataire? @relation(fields: [prestataireId], references: [id])
+  dossierId       String?
+  dossier         Dossier?    @relation(fields: [dossierId], references: [id])
+
+  // RGPD : durée de conservation
+  conserverJusquau DateTime?
+  supprime         Boolean    @default(false) // Suppression logique (soft delete)
+  supprimedAt      DateTime?
+
+  createdAt       DateTime    @default(now())
+}
+
+// ─── SOUMISSIONS FORMULAIRES (depuis la vitrine) ─────────────
+// Captures les envois du formulaire de contact public
+
+model FormulaireContact {
+  id          String   @id @default(cuid())
+  nom         String
+  societe     String?
+  fonction    String?
+  email       String
+  telephone   String?
+  typesBesoin String   @default("[]") // JSON array des types cochés
+  urgence     Urgence?
+  message     String
+  traite      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+// Soumissions du formulaire de recrutement public
+model FormulaireRecrutement {
+  id               String   @id @default(cuid())
+  nom              String
+  prenom           String
+  email            String
+  telephone        String?
+  pays             String?
+  ville            String?
+  competences      String?
+  anneesExperience String?
+  langues          String?
+  disponibilite    String?
+  typeMission      String?
+  lieuLinkedin     String?
+  message          String?
+  traite           Boolean  @default(false)
+  createdAt        DateTime @default(now())
+}

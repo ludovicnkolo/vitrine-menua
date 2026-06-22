@@ -39,15 +39,15 @@ const labelStyle: React.CSSProperties = {
 };
 
 const getTypesBesoin = (isEn: boolean) => [
-  isEn ? "Operational reinforcement" : "Renfort opérationnel",
-  isEn ? "Back office outsourcing" : "Externalisation back office",
-  isEn ? "Middle office outsourcing" : "Externalisation middle office",
-  isEn ? "Finance & reporting" : "Finance & reporting",
-  isEn ? "Management control" : "Contrôle de gestion",
-  isEn ? "Risk & compliance" : "Risques & conformité",
-  isEn ? "Accounting & data support" : "Support comptable & data",
-  isEn ? "PWM / Wealth management operational support" : "Support opérationnel CGP / gestion de patrimoine",
-  isEn ? "Other operational need" : "Autre besoin opérationnel",
+  isEn ? "General contact" : "Contact général",
+  isEn ? "Commercial request" : "Demande commerciale",
+  isEn ? "Quote request" : "Demande de devis",
+  isEn ? "Back / Middle office" : "Back / middle office",
+  isEn ? "Accounting" : "Comptabilité",
+  isEn ? "Compliance / KYC / AML" : "Conformité / KYC / AML",
+  isEn ? "Reporting / Data" : "Reporting / data",
+  isEn ? "Partnership" : "Partenariat",
+  isEn ? "Other" : "Autre",
 ];
 
 export default async function NousContacter({ params }: { params: Promise<{ lang: string }> }) {
@@ -192,10 +192,10 @@ export default async function NousContacter({ params }: { params: Promise<{ lang
                     <label htmlFor="urgence" style={labelStyle}>{isEn ? "Urgency Level *" : "Niveau d'urgence *"}</label>
                     <select id="urgence" required style={fieldStyle}>
                       <option value="">{isEn ? "Select" : "Sélectionnez"}</option>
-                      <option value="immediat">{isEn ? "Immediate" : "Immédiat"}</option>
-                      <option value="quelques-jours">{isEn ? "Within a few days" : "Sous quelques jours"}</option>
-                      <option value="quelques-semaines">{isEn ? "Within a few weeks" : "Sous quelques semaines"}</option>
-                      <option value="a-planifier">{isEn ? "To be planned" : "À planifier"}</option>
+                      <option value="immediate">{isEn ? "Immediate" : "Immédiate"}</option>
+                      <option value="1_week">{isEn ? "Under 1 week" : "Sous 1 semaine"}</option>
+                      <option value="1_month">{isEn ? "Under 1 month" : "Sous 1 mois"}</option>
+                      <option value="not_urgent">{isEn ? "Not urgent" : "Non urgente"}</option>
                     </select>
                   </div>
                 </div>

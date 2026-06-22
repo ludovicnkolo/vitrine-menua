@@ -17,8 +17,8 @@ export default function ContactsPage() {
       {/* Header */}
       <div className="flex justify-between items-end mb-8 flex-shrink-0">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Contacts</h1>
-          <p className="text-sm text-gray-500 mt-1">Gérez vos contacts</p>
+          <h1 className="admin-title">Contacts</h1>
+          <p className="admin-subtitle">Gérez vos contacts</p>
         </div>
         <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center gap-2">
           <span>+</span> Nouveau contact

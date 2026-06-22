@@ -19,8 +19,8 @@ export default function CategoriesPage() {
     <div className="p-8 w-full max-w-7xl mx-auto h-screen flex flex-col overflow-hidden">
       <div className="flex justify-between items-end mb-8 flex-shrink-0">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Catégories</h1>
-          <p className="text-sm text-gray-500 mt-1">Gérez vos catégories de messages</p>
+          <h1 className="admin-title">Catégories</h1>
+          <p className="admin-subtitle">Gérez vos catégories de messages</p>
         </div>
         <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center gap-2">
           <span>+</span> Nouvelle catégorie

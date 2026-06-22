@@ -1,20 +1,69 @@
-@import "tailwindcss";
+@reference "../globals.css";
+/* ============================================================
+   MENUA CONSULTING — ADMIN CSS
+   Styles centralisés pour l'interface d'administration.
+   ============================================================ */
 
-body {
-  background-color: #f4f7f6;
+/* ─────────────────────────────────────────────────────────────
+   LAYOUT GLOBAL
+   ───────────────────────────────────────────────────────────── */
+.admin-page {
+  @apply p-4 md:p-6 pb-20 w-full max-w-7xl mx-auto;
+  /* Centrage automatique et universel de la page admin */
+  display: flex;
+  flex-direction: column;
 }
 
-/* Custom Scrollbar for admin */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
+.admin-header-row {
+  @apply flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4;
 }
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+
+.admin-title {
+  @apply text-2xl font-bold text-gray-900;
 }
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+
+.admin-subtitle {
+  @apply text-sm text-gray-500 mt-1;
 }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+
+/* ─────────────────────────────────────────────────────────────
+   CARTES (CARDS)
+   ───────────────────────────────────────────────────────────── */
+.admin-card {
+  @apply bg-white rounded-xl shadow-sm border border-gray-100 p-4;
+  transition: box-shadow 0.2s;
+}
+
+.admin-card:hover {
+  @apply shadow-md;
+}
+
+.admin-card-title {
+  @apply text-sm font-bold text-gray-900 mb-4;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   BOUTONS
+   ───────────────────────────────────────────────────────────── */
+.admin-btn-primary {
+  @apply bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2;
+}
+
+.admin-btn-secondary {
+  @apply bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-gray-50 transition shadow-sm;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SIDEBAR
+   ───────────────────────────────────────────────────────────── */
+.admin-sidebar {
+  @apply w-64 bg-[#0a1128] text-white flex flex-col h-screen border-r border-gray-800;
+}
+
+.admin-nav-item {
+  @apply flex items-center gap-3 px-5 py-3 text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition cursor-pointer;
+}
+
+.admin-nav-item--active {
+  @apply text-white bg-indigo-600/10 border-r-2 border-indigo-500;
 }

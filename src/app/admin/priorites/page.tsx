@@ -13,8 +13,8 @@ export default function PrioritesPage() {
     <div className="p-8 w-full max-w-7xl mx-auto h-screen flex flex-col overflow-hidden">
       <div className="flex justify-between items-end mb-8 flex-shrink-0">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Priorités</h1>
-          <p className="text-sm text-gray-500 mt-1">Gérez les niveaux de priorité de vos conversations</p>
+          <h1 className="admin-title">Priorités</h1>
+          <p className="admin-subtitle">Gérez les niveaux de priorité de vos conversations</p>
         </div>
       </div>
 

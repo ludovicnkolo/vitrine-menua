@@ -6,8 +6,8 @@ export default function ParametresPage() {
   return (
     <div className="p-8 w-full max-w-4xl mx-auto h-screen flex flex-col overflow-y-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Paramètres</h1>
-        <p className="text-sm text-gray-500 mt-1">Configurez votre environnement MyCRM</p>
+        <h1 className="admin-title">Paramètres</h1>
+        <p className="admin-subtitle">Configurez votre environnement MyCRM</p>
       </div>
 
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 mb-6">

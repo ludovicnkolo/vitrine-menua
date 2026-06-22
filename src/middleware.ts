@@ -8,11 +8,10 @@ export function middleware(request: NextRequest) {
   // Check if there is any supported locale in the pathname
   const { pathname } = request.nextUrl;
   
-  // Exclude static files, api routes, admin, etc.
+  // Exclude static files, api routes, etc.
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
-    pathname.startsWith("/admin") ||
     pathname.includes(".") // e.g. favicon.ico, images
   ) {
     return;

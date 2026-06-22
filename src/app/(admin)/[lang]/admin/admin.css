@@ -1,4 +1,5 @@
-@reference "../globals.css";
+@import "tailwindcss";
+@reference "../../../globals.css";
 /* ============================================================
    MENUA CONSULTING — ADMIN CSS
    Styles centralisés pour l'interface d'administration.

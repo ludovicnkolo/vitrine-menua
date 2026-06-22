@@ -5,7 +5,7 @@ import AdminSidebar from "./AdminSidebar";
 
 export default function AdminLayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isLoginPage = pathname === "/admin/login";
+  const isLoginPage = pathname.endsWith("/admin/login");
 
   if (isLoginPage) {
     return (

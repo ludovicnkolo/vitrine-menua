@@ -230,13 +230,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
                 <p style={{ fontSize: "0.75rem", color: "#6b7280", lineHeight: 1.6, textAlign: "center", flexGrow: 1 }}>
                   {card.desc}
                 </p>
-                <Link href={card.href} style={{
-                  display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  width: "32px", height: "32px", borderRadius: "50%",
-                  border: "1.5px solid #1a3a6b", color: "#1a3a6b", textDecoration: "none",
-                  fontSize: "0.85rem", transition: "all 0.2s",
-                }}>
-                  →
+                <Link href={card.href} className="card-expertise__link">
+                  {isEn ? "Learn more" : "En savoir plus"} →
                 </Link>
               </div>
             ))}

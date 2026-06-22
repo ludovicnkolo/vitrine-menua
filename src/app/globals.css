@@ -484,7 +484,6 @@ body {
 @media (max-width: 1024px) {
   .nav-links    { display: none; }
   .nav-cta-wrap { display: none; }
-  .nav-lang     { display: none; } /* Hide duplicate lang switch on mobile */
   .nav-burger   { display: flex !important; align-items: center; justify-content: center; } /* Ensure burger is visible */
   .mega-panel   { display: none; }
 }

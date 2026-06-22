@@ -75,180 +75,92 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
       {/* ══ 2. MENUA CONSULTING — Intro + 4 pilliers ═══════════════════════ */}
       <section className="section-intro">
-        <div className="container" style={{ textAlign: "center" }}>
-          <ScrollReveal direction="up">
-          <p style={{
-            fontFamily: "var(--font-sans)", fontSize: "0.7rem", fontWeight: 700,
-            letterSpacing: "0.2em", color: "#1a3a6b", textTransform: "uppercase", marginBottom: "0.5rem",
-          }}>
-            MENUA CONSULTING
-          </p>
-          <div style={{ marginBottom: "2.5rem" }}>
-            <img src="/LogoSansSlogan.jpeg" alt="Menua Consulting" style={{ height: "60px", objectFit: "contain" }} />
+        <ScrollReveal>
+          <div className="container" style={{ maxWidth: "1000px" }}>
+            <p className="surtitle text-center">
+              {isEn ? "ABOUT MENUA CONSULTING" : "À PROPOS DE MENUA CONSULTING"}
+            </p>
+            <h2 className="section-title text-center">
+              {isEn ? "The partner for your demanding operational challenges" : "Le partenaire de vos enjeux opérationnels exigeants"}
+            </h2>
+            <p className="text-center" style={{ fontSize: "1.1rem", color: "#374151", lineHeight: 1.6, marginBottom: "2rem" }}>
+              {isEn ? "We support financial institutions, specialized cabinets, and large companies by securing their back and middle office functions. Beyond consulting, we engage directly in the execution of your processes." : "Nous accompagnons les institutions financières, cabinets spécialisés et grandes entreprises en sécurisant leurs fonctions back et middle office. Au-delà du conseil, nous nous engageons directement dans l'exécution de vos processus."}
+            </p>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Link href={`/${lang}/nous-connaitre`} className="btn-secondary">
+                {isEn ? "DISCOVER OUR APPROACH" : "DÉCOUVRIR NOTRE APPROCHE"}
+              </Link>
+            </div>
           </div>
-          <p style={{
-            fontSize: "0.92rem", color: "#374151", lineHeight: 1.85,
-            maxWidth: "680px", margin: "0 auto 4rem",
-          }}>
-            {isEn
-              ? "MENUA CONSULTING intervenes in support of financial, accounting, wealth management, data, and regulated teams to secure and strengthen the execution of back and middle office functions."
-              : "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l'exécution des fonctions back et middle office."}
-          </p>
-
-          {/* 4 pilliers */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 border-t border-slate-200 pt-12">
-            {[
-              {
-                val: "100%",
-                label: isEn ? "Operational approach" : "Approche opérationnelle",
-                icon: (
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1a3a6b" strokeWidth="1.5">
-                    <circle cx="12" cy="8" r="5" /><path d="M3 21v-2a7 7 0 0 1 14 0v2" />
-                    <path d="M16 11l2 2 4-4" />
-                  </svg>
-                ),
-              },
-              {
-                val: isEn ? "Dedicated teams" : "Équipes dédiées",
-                label: isEn ? "integrated to your processes" : "intégrées à vos processus",
-                icon: (
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1a3a6b" strokeWidth="1.5">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                ),
-              },
-              {
-                val: isEn ? "Reliability & traceability" : "Fiabilité & traçabilité",
-                label: isEn ? "of daily operations" : "des opérations au quotidien",
-                icon: (
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1a3a6b" strokeWidth="1.5">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    <polyline points="9 12 11 14 15 10" />
-                  </svg>
-                ),
-              },
-              {
-                val: "Bilingue FR / EN",
-                label: isEn ? "for international environments" : "pour des environnements internationaux",
-                icon: (
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1a3a6b" strokeWidth="1.5">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="2" y1="12" x2="22" y2="12" />
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                  </svg>
-                ),
-              },
-            ].map((item, idx) => (
-              <div key={idx} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.75rem", padding: "1.5rem 1rem" }}>
-                <div>{item.icon}</div>
-                <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 600, color: "#0d1e35", textAlign: "center" }}>{item.val}</p>
-                <p style={{ fontSize: "0.75rem", color: "#6b7280", textAlign: "center", lineHeight: 1.5 }}>{item.label}</p>
-              </div>
-            ))}
-          </div>
-          </ScrollReveal>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* ══ 3. NOS EXPERTISES ═════════════════════════════════════════════ */}
       <section className="section-expertises">
-        <div className="container" style={{ textAlign: "center" }}>
-          <p className="surtitle surtitle--blue">
-            {isEn ? "OUR EXPERTISE" : "NOS EXPERTISES"}
-          </p>
-          <h2 className="section-title section-title--dark">
-            {isEn ? "NOS EXPERTISES AU SERVICE DE VOS ENJEUX" : "NOS EXPERTISES AU SERVICE DE VOS ENJEUX"}
-          </h2>
+        <div className="container">
+          <ScrollReveal>
+            <p className="surtitle">{isEn ? "OUR DOMAINS OF EXPERTISE" : "NOS DOMAINES D'INTERVENTION"}</p>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "1rem", marginBottom: "3rem" }}>
+              <h2 className="section-title" style={{ margin: 0, maxWidth: "600px" }}>
+                {isEn ? "Targeted solutions for each financial function" : "Des solutions ciblées pour chaque fonction financière"}
+              </h2>
+              <Link href={`/${lang}/vos-besoins`} className="btn-text">
+                {isEn ? "SEE ALL OUR DOMAINS" : "VOIR TOUS NOS DOMAINES"} →
+              </Link>
+            </div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            {[
-              {
-                title: "Finance & Reporting",
-                desc: isEn ? "Production and reliability of financial reports, KPIs and performance analysis." : "Production et fiabilisation des reportings financiers, KPI et analyses de performance.",
-                href: `/${lang}/vos-besoins#finance`,
-                icon: (
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1a3a6b" strokeWidth="1.5">
-                    <line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" />
-                    <line x1="6" y1="20" x2="6" y2="14" /><polyline points="2 12 6 8 12 14 22 4" />
-                  </svg>
-                ),
-              },
-              {
-                title: "Contrôle de Gestion",
-                desc: isEn ? "Budgeting, cost analysis and steering of operational performance." : "Suivi budgétaire, analyse des coûts et pilotage de la performance opérationnelle.",
-                href: `/${lang}/vos-besoins#controle`,
-                icon: (
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1a3a6b" strokeWidth="1.5">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                  </svg>
-                ),
-              },
-              {
-                title: "Risques & Conformité",
-                desc: isEn ? "KYC, AML/CFT, documentary control and support on compliance missions." : "KYC, LCB-FT, contrôle documentaire et appui aux missions de conformité.",
-                href: `/${lang}/vos-besoins#risques`,
-                icon: (
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1a3a6b" strokeWidth="1.5">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    <polyline points="9 12 11 14 15 10" />
-                  </svg>
-                ),
-              },
-              {
-                title: "Support Comptable & Data",
-                desc: isEn ? "Accounting support, reconciliations, data cleaning and reporting preparation." : "Saisie comptable, rapprochements, data cleaning et préparation de reporting.",
-                href: `/${lang}/vos-besoins#comptable`,
-                icon: (
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1a3a6b" strokeWidth="1.5">
-                    <ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
-                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
-                  </svg>
-                ),
-              },
-              {
-                title: "Gestion de Patrimoine & Support CGP",
-                desc: isEn ? "Preparation and tracking of client files for wealth managers and family offices." : "Préparation et suivi des dossiers clients pour cabinets et family offices.",
-                href: `/${lang}/vos-besoins#patrimoine`,
-                icon: (
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1a3a6b" strokeWidth="1.5">
-                    <rect x="2" y="3" width="20" height="14" rx="2" /><polyline points="8 21 12 17 16 21" />
-                  </svg>
-                ),
-              },
-            ].map((card) => (
-              <div key={card.title} className="card-expertise">
-                <div className="card-expertise__icon">
-                  {card.icon}
-                </div>
-                <h3 style={{
-                  fontFamily: "var(--font-serif)", fontSize: "0.9rem", fontWeight: 600,
-                  color: "#0d1e35", textAlign: "center", lineHeight: 1.4,
-                }}>{card.title}</h3>
-                <p style={{ fontSize: "0.75rem", color: "#6b7280", lineHeight: 1.6, textAlign: "center", flexGrow: 1 }}>
-                  {card.desc}
-                </p>
-                <Link href={card.href} className="card-expertise__link">
-                  {isEn ? "Learn more" : "En savoir plus"} →
-                </Link>
-              </div>
-            ))}
+              {[
+                {
+                  title: "Finance & Reporting",
+                  desc: isEn ? "Production and reliability of financial reports, KPIs and performance analysis." : "Production et fiabilisation des reportings financiers, KPI et analyses de performance.",
+                  href: `/${lang}/vos-besoins/finance`,
+                  icon: "📈"
+                },
+                {
+                  title: isEn ? "Management Control" : "Contrôle de Gestion",
+                  desc: isEn ? "Budget tracking, cost analysis, and operational performance steering." : "Suivi budgétaire, analyse des coûts et pilotage de la performance opérationnelle.",
+                  href: `/${lang}/vos-besoins/controle`,
+                  icon: "⚙️"
+                },
+                {
+                  title: isEn ? "Risks & Compliance" : "Risques & Conformité",
+                  desc: isEn ? "KYC, AML/CFT, documentary control, and support for compliance missions." : "KYC, LCB-FT, contrôle documentaire et appui aux missions de conformité.",
+                  href: `/${lang}/vos-besoins/risques`,
+                  icon: "🛡️"
+                },
+                {
+                  title: isEn ? "Accounting & Data Support" : "Support Comptable & Data",
+                  desc: isEn ? "Accounting entry, reconciliations, data cleaning, and reporting preparation." : "Saisie comptable, rapprochements, data cleaning et préparation de reporting.",
+                  href: `/${lang}/vos-besoins/comptable`,
+                  icon: "📊"
+                },
+                {
+                  title: isEn ? "Wealth Management & CGP Support" : "Gestion de Patrimoine & Support CGP",
+                  desc: isEn ? "Preparation and tracking of client files for cabinets and family offices." : "Préparation et suivi des dossiers clients pour cabinets et family offices.",
+                  href: `/${lang}/vos-besoins/patrimoine`,
+                  icon: "🏛️"
+                },
+              ].map((card, idx) => (
+                <ScrollReveal key={card.title} delay={idx * 150} direction="up" className="h-full">
+                  <div className="card-expertise h-full">
+                    <div className="card-expertise__icon">{card.icon}</div>
+                    <h3 style={{
+                      fontFamily: "var(--font-serif)", fontSize: "0.9rem", fontWeight: 600,
+                      color: "#0d1e35", textAlign: "center", lineHeight: 1.4,
+                    }}>{card.title}</h3>
+                    <p style={{ fontSize: "0.75rem", color: "#6b7280", lineHeight: 1.6, textAlign: "center", flexGrow: 1 }}>
+                      {card.desc}
+                    </p>
+                    <Link href={card.href} className="card-expertise__link mt-auto">
+                      {isEn ? "Learn more" : "En savoir plus"} →
+                    </Link>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
-
-          <div style={{ marginTop: "3rem" }}>
-            <Link href={`/${lang}/vos-besoins`} style={{
-              display: "inline-flex", alignItems: "center", gap: "0.5rem",
-              backgroundColor: "#1a3a6b", color: "#ffffff",
-              padding: "0.85rem 2rem",
-              fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em",
-              textTransform: "uppercase", textDecoration: "none",
-            }}>
-              {isEn ? "Discover all our services" : "Découvrir tous nos services"} →
-            </Link>
-          </div>
-        </div>
       </section>
 
       {/* ══ 4. NOTRE APPROCHE — image gauche + texte droite ═══════════════ */}
@@ -295,71 +207,72 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
       {/* ══ 5. LA CONFIANCE AU CŒUR — dark navy ═══════════════════════════ */}
      <section className="section-engagements">
-
-        <div className="container text-center">
-          <p className="surtitle surtitle--light">
-            {isEn ? "OUR COMMITMENTS" : "NOS ENGAGEMENTS"}
-          </p>
-          <h2 className="section-title section-title--light">
-            {isEn ? "TRUST AT THE HEART OF OUR COMMITMENTS" : "LA CONFIANCE AU CŒUR DE NOS ENGAGEMENTS"}
-          </h2>
+        <div className="container" style={{ position: "relative", zIndex: 2 }}>
+          <ScrollReveal direction="left">
+            <p className="surtitle surtitle--light">
+              {isEn ? "OUR COMMITMENTS" : "NOS ENGAGEMENTS"}
+            </p>
+            <h2 className="section-title section-title--light">
+              {isEn ? "TRUST AT THE HEART OF OUR COMMITMENTS" : "LA CONFIANCE AU CŒUR DE NOS ENGAGEMENTS"}
+            </h2>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-            {[
-              {
-                title: isEn ? "Integrity" : "Intégrité",
-                desc: isEn ? "Relations built on transparency and respect of your requirements." : "Des relations basées sur la transparence et le respect de vos exigences.",
-                icon: (
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5b8cee" strokeWidth="1.5">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  </svg>
-                ),
-              },
-              {
-                title: isEn ? "Excellence" : "Excellence",
-                desc: isEn ? "High standards for reliable and consistent deliverables." : "Des standards élevés pour des livrables fiables et conformes.",
-                icon: (
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5b8cee" strokeWidth="1.5">
-                    <circle cx="12" cy="8" r="6" /><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
-                  </svg>
-                ),
-              },
-              {
-                title: isEn ? "Security" : "Sécurité",
-                desc: isEn ? "Data protection and respect of regulatory frameworks." : "Protection des données et respect des cadres réglementaires.",
-                icon: (
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5b8cee" strokeWidth="1.5">
-                    <rect x="3" y="11" width="18" height="11" rx="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                  </svg>
-                ),
-              },
-              {
-                title: isEn ? "Partnership" : "Partenariat",
-                desc: isEn ? "A lasting collaboration to support your ambitions." : "Une collaboration durable pour accompagner vos ambitions.",
-                icon: (
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5b8cee" strokeWidth="1.5">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                ),
-              },
-            ].map((item, idx) => (
-              <div key={idx} className="card-engagement">
-                <div className="card-engagement__icon">
-                  {item.icon}
-                </div>
-                <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", color: "#ffffff", fontWeight: 600 }}>{item.title}</h3>
-                <p style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, textAlign: "center" }}>{item.desc}</p>
-              </div>
-            ))}
+              {[
+                {
+                  title: isEn ? "Integrity" : "Intégrité",
+                  desc: isEn ? "Relations built on transparency and respect of your requirements." : "Des relations basées sur la transparence et le respect de vos exigences.",
+                  icon: (
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5b8cee" strokeWidth="1.5">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                  ),
+                },
+                {
+                  title: isEn ? "Excellence" : "Excellence",
+                  desc: isEn ? "High standards for reliable and consistent deliverables." : "Des standards élevés pour des livrables fiables et conformes.",
+                  icon: (
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5b8cee" strokeWidth="1.5">
+                      <circle cx="12" cy="8" r="6" /><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                    </svg>
+                  ),
+                },
+                {
+                  title: isEn ? "Security" : "Sécurité",
+                  desc: isEn ? "Data protection and respect of regulatory frameworks." : "Protection des données et respect des cadres réglementaires.",
+                  icon: (
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5b8cee" strokeWidth="1.5">
+                      <rect x="3" y="11" width="18" height="11" rx="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                  ),
+                },
+                {
+                  title: isEn ? "Partnership" : "Partenariat",
+                  desc: isEn ? "A lasting collaboration to support your ambitions." : "Une collaboration durable pour accompagner vos ambitions.",
+                  icon: (
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5b8cee" strokeWidth="1.5">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                  ),
+                },
+              ].map((item, idx) => (
+                <ScrollReveal key={idx} delay={idx * 150} direction="up" className="h-full">
+                  <div className="card-engagement h-full">
+                    <div className="card-engagement__icon">
+                      {item.icon}
+                    </div>
+                    <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", color: "#ffffff", fontWeight: 600 }}>{item.title}</h3>
+                    <p style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, textAlign: "center" }}>{item.desc}</p>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
-        </div>
       </section>
-
-
 
       {/* ══ 6. CTA — VOUS AVEZ UN BESOIN (creative layout) ════════════════ */}
       <section className="section-cta">
@@ -406,57 +319,59 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
           {/* ── Right: white card with content ── */}
           <div className="section-cta__card">
-            {/* La barre dorée est gérée par le ::before dans vitrine.css */}
+            <ScrollReveal direction="left" delay={200}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+                {/* Label */}
+                <p style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.65rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.2em",
+                  color: "#1a3a6b",
+                  textTransform: "uppercase",
+                  marginBottom: "1.25rem",
+                }}>
+                  {isEn ? "YOU HAVE A NEED?" : "VOUS AVEZ UN BESOIN ?"}
+                </p>
 
-            {/* Label */}
-            <p style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "0.65rem",
-              fontWeight: 700,
-              letterSpacing: "0.2em",
-              color: "#1a3a6b",
-              textTransform: "uppercase",
-              marginBottom: "1.25rem",
-            }}>
-              {isEn ? "YOU HAVE A NEED?" : "VOUS AVEZ UN BESOIN ?"}
-            </p>
+                {/* Heading */}
+                <h2 style={{
+                  fontFamily: "var(--font-serif)",
+                  fontSize: "clamp(1.3rem, 2vw, 1.75rem)",
+                  color: "#0d1e35",
+                  fontWeight: 500,
+                  lineHeight: 1.35,
+                  marginBottom: "2rem",
+                  maxWidth: "420px",
+                }}>
+                  {isEn
+                    ? "Present your need and receive an initial analysis within 24 working hours."
+                    : "Présentez votre besoin et recevez une première analyse sous 24h ouvrées."}
+                </h2>
 
-            {/* Heading */}
-            <h2 style={{
-              fontFamily: "var(--font-serif)",
-              fontSize: "clamp(1.3rem, 2vw, 1.75rem)",
-              color: "#0d1e35",
-              fontWeight: 500,
-              lineHeight: 1.35,
-              marginBottom: "2rem",
-              maxWidth: "420px",
-            }}>
-              {isEn
-                ? "Present your need and receive an initial analysis within 24 working hours."
-                : "Présentez votre besoin et recevez une première analyse sous 24h ouvrées."}
-            </h2>
+                {/* Checkmarks */}
+                <ul style={{ listStyle: "none", padding: 0, margin: "0 0 2.5rem 0", display: "flex", flexDirection: "column", gap: "0.85rem", alignSelf: "stretch", maxWidth: "320px" }}>
+                  {[
+                    isEn ? "Response within 24 working hours" : "Réponse sous 24h ouvrées",
+                    isEn ? "Personalised analysis" : "Analyse personnalisée",
+                    isEn ? "No commitment" : "Sans engagement",
+                  ].map((item) => (
+                    <li key={item} style={{ display: "flex", alignItems: "center", gap: "0.75rem", fontSize: "0.86rem", color: "#374151" }}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+                        <circle cx="12" cy="12" r="10" fill="#1a3a6b" />
+                        <polyline points="8 12 11 15 16 9" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
 
-            {/* Checkmarks */}
-            <ul style={{ listStyle: "none", padding: 0, margin: "0 0 2.5rem 0", display: "flex", flexDirection: "column", gap: "0.85rem", alignSelf: "stretch", maxWidth: "320px" }}>
-              {[
-                isEn ? "Response within 24 working hours" : "Réponse sous 24h ouvrées",
-                isEn ? "Personalised analysis" : "Analyse personnalisée",
-                isEn ? "No commitment" : "Sans engagement",
-              ].map((item) => (
-                <li key={item} style={{ display: "flex", alignItems: "center", gap: "0.75rem", fontSize: "0.86rem", color: "#374151" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
-                    <circle cx="12" cy="12" r="10" fill="#1a3a6b" />
-                    <polyline points="8 12 11 15 16 9" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  {item}
-                </li>
-              ))}
-            </ul>
-
-            {/* CTA Button */}
-            <Link href={`/${lang}/nous-contacter`} className="btn-primary" style={{ padding: "1rem 2rem", justifyContent: "center" }}>
-              {isEn ? "Submit a need" : "Présenter un besoin"} →
-            </Link>
+                {/* CTA Button */}
+                <Link href={`/${lang}/nous-contacter`} className="btn-primary" style={{ padding: "1rem 2rem", justifyContent: "center" }}>
+                  {isEn ? "Submit a need" : "Présenter un besoin"} →
+                </Link>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>

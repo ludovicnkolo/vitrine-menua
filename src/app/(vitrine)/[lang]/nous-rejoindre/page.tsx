@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SiretToggle } from "@/components/SiretToggle";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -162,11 +163,14 @@ export default async function NousRejoindre({ params }: { params: Promise<{ lang
           <div style={{ marginBottom: "2.5rem", padding: "1.5rem", background: "rgba(20, 40, 30, 0.03)", borderLeft: "3px solid var(--green-dark)", borderRadius: "2px" }}>
             <p style={{ fontSize: "0.87rem", color: "var(--text-dark)", lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
               {isEn 
-                ? "For security reasons, no CV is requested at this stage. If your profile matches the needs of MENUA CONSULTING, we will contact you to request additional information." 
-                : "Pour des raisons de sécurité, aucun CV n’est demandé à ce stade. Si votre profil correspond aux besoins de MENUA CONSULTING, nous reviendrons vers vous afin de vous demander des éléments complémentaires."}
+                ? "As part of our data security and digital sobriety policy, no attachments (CV, Kbis, presentations) are required during this initial contact. Should there be mutual interest, a secure document transmission procedure will be communicated to you." 
+                : "Dans le cadre de notre politique de sobriété numérique et de sécurisation des données, aucune pièce jointe (CV, Kbis, présentation) n'est requise lors de ce premier contact. En cas d'intérêt mutuel, une procédure sécurisée de transmission de documents vous sera communiquée ultérieurement."}
             </p>
           </div>
           <form style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+            {/* Statut Juridique & SIRET */}
+            <SiretToggle isEn={isEn} labelStyle={labelStyle} fieldStyle={fieldStyle} defaultIsCompany={false} />
+
             {/* Nom / Prénom */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>

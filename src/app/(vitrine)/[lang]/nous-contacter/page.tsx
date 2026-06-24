@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SiretToggle } from "@/components/SiretToggle";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -157,27 +158,33 @@ export default async function NousContacter({ params }: { params: Promise<{ lang
                 <p className="section-lbl">{isEn ? "Contact Form" : "Formulaire de contact"}</p>
                 <div className="section-lbl-line" />
               </div>
+              <div style={{ marginBottom: "2.5rem", padding: "1.5rem", background: "rgba(20, 40, 30, 0.03)", borderLeft: "3px solid var(--green-dark)", borderRadius: "2px" }}>
+                <p style={{ fontSize: "0.87rem", color: "var(--text-dark)", lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
+                  {isEn 
+                    ? "In accordance with our data security framework, no attachments (specifications, financial documents) are required during this initial contact. Following the qualification of your needs, our team will provide a secure channel for transmitting your confidential materials." 
+                    : "Dans une démarche de sécurisation des données, aucune pièce jointe (cahier des charges, documents financiers) n'est requise lors de cette première prise de contact. Notre équipe vous proposera un canal d'échange sécurisé pour la transmission de vos éléments confidentiels après qualification de votre besoin."}
+                </p>
+              </div>
               <form style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-                {/* Ligne 1 : Nom / Société */}
+                {/* Statut Juridique & SIRET */}
+                <SiretToggle isEn={isEn} labelStyle={labelStyle} fieldStyle={fieldStyle} />
+
+                {/* Ligne 1 : Nom / Fonction */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
                     <label htmlFor="nom" style={labelStyle}>{isEn ? "Name *" : "Nom *"}</label>
                     <input id="nom" type="text" required style={fieldStyle} />
                   </div>
                   <div>
-                    <label htmlFor="societe" style={labelStyle}>{isEn ? "Company *" : "Société *"}</label>
-                    <input id="societe" type="text" required style={fieldStyle} />
-                  </div>
-                </div>
-
-                {/* Ligne 2 : Fonction / Email */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
                     <label htmlFor="fonction" style={labelStyle}>{isEn ? "Job Title *" : "Fonction *"}</label>
                     <input id="fonction" type="text" required style={fieldStyle} />
                   </div>
+                </div>
+
+                {/* Ligne 2 : Email / Téléphone */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label htmlFor="email" style={labelStyle}>{isEn ? "Professional Email *" : "Email professionnel *"}</label>
+                    <label htmlFor="email" style={labelStyle}>{isEn ? "Email *" : "Email *"}</label>
                     <input id="email" type="email" required style={fieldStyle} />
                   </div>
                 </div>

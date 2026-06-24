@@ -9,15 +9,10 @@ services:
     build: .
     container_name: menua_app
     restart: always
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
-      # En local/test sur VPS, on peut utiliser SQLite. 
-      # Si vous installez PostgreSQL, changez l'URL ici.
-      - DATABASE_URL=file:/app/data/prod.db
-      - JWT_SECRET=${JWT_SECRET:-"change_moi_imperativement"}
-      - JWT_EXPIRES_IN=8h
-      # Stockage des documents sécurisés KYC / Contrats
-      - DOCUMENTS_STORAGE_PATH=/var/menua/documents
     volumes:
       # Volume persistant pour la BDD locale (si SQLite)
       - menua_db_data:/app/data

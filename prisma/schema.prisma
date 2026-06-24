@@ -13,62 +13,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ─── ÉNUMÉRATIONS ───────────────────────────────────────────
+// Note : Les énumérations ont été remplacées par des champs String car SQLite ne supporte pas nativement les enums avec Prisma.
+// Valeurs possibles pour référence :
 
-// Statuts CRM validés par la cliente
-enum StatutCRM {
-  NOUVEAU
-  EN_COURS
-  EN_ATTENTE
-  TRAITE
-  ARCHIVE
-}
-
-// Priorité d'un dossier
-enum Priorite {
-  HAUTE
-  MOYENNE
-  BASSE
-}
-
-// Séparation stricte : client/prospect vs prestataire/collaborateur
-enum TypeContact {
-  CLIENT
-  PROSPECT
-  PRESTATAIRE
-  COLLABORATEUR
-  CANDIDAT
-  PARTENAIRE
-}
-
-// Rôles utilisateurs du CRM (RBAC)
-enum RoleUtilisateur {
-  ADMINISTRATEUR
-  GESTIONNAIRE
-  CONSULTANT
-  LECTURE_SEULE
-}
-
-// Catégories de dossier/conversation
-enum Categorie {
-  CONTACT_GENERAL
-  DEMANDE_COMMERCIALE
-  DEMANDE_DE_DEVIS
-  RECRUTEMENT
-  PARTENARIAT
-  SUPPORT_TECHNIQUE
-  CLIENT_PROSPECT
-  PRESTATAIRE_COLLABORATEUR
-  AUTRE
-}
-
-// Urgence du formulaire de contact
-enum Urgence {
-  IMMEDIATE
-  SOUS_1_SEMAINE
-  SOUS_1_MOIS
-  NON_URGENTE
-}
+// StatutCRM : NOUVEAU, EN_COURS, EN_ATTENTE, TRAITE, ARCHIVE
+// Priorite : HAUTE, MOYENNE, BASSE
+// TypeContact : CLIENT, PROSPECT, PRESTATAIRE, COLLABORATEUR, CANDIDAT, PARTENAIRE
+// RoleUtilisateur : ADMINISTRATEUR, GESTIONNAIRE, CONSULTANT, LECTURE_SEULE
+// Categorie : CONTACT_GENERAL, DEMANDE_COMMERCIALE, DEMANDE_DE_DEVIS, RECRUTEMENT, PARTENARIAT, SUPPORT_TECHNIQUE, CLIENT_PROSPECT, PRESTATAIRE_COLLABORATEUR, AUTRE
+// Urgence : IMMEDIATE, SOUS_1_SEMAINE, SOUS_1_MOIS, NON_URGENTE
 
 // ─── UTILISATEURS CRM (équipe interne Menua) ────────────────
 
@@ -78,7 +31,7 @@ model UtilisateurCRM {
   prenom      String
   email       String           @unique
   motDePasse  String           // Haché bcrypt — JAMAIS en clair
-  role        RoleUtilisateur  @default(CONSULTANT)
+  role        String           @default("CONSULTANT")
   actif       Boolean          @default(true)
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
@@ -93,7 +46,7 @@ model UtilisateurCRM {
 
 model Client {
   id              String       @id @default(cuid())
-  type            TypeContact  // CLIENT ou PROSPECT uniquement
+  type            String       // "CLIENT" ou "PROSPECT" uniquement
   nom             String
   prenom          String?
   societe         String?
@@ -123,7 +76,7 @@ model Client {
 
 model Prestataire {
   id               String       @id @default(cuid())
-  type             TypeContact  // PRESTATAIRE, COLLABORATEUR, CANDIDAT
+  type             String       // "PRESTATAIRE", "COLLABORATEUR", "CANDIDAT"
   nom              String
   prenom           String?
   societe          String?
@@ -155,10 +108,10 @@ model Prestataire {
 model Dossier {
   id              String          @id @default(cuid())
   sujet           String
-  statut          StatutCRM       @default(NOUVEAU)
-  priorite        Priorite        @default(MOYENNE)
-  categorie       Categorie       @default(CONTACT_GENERAL)
-  urgence         Urgence?
+  statut          String          @default("NOUVEAU")
+  priorite        String          @default("MOYENNE")
+  categorie       String          @default("CONTACT_GENERAL")
+  urgence         String?
 
   // Étiquettes multiples (stockées en JSON texte pour SQLite)
   // En PostgreSQL : utiliser String[] nativement
@@ -223,7 +176,7 @@ model Document {
   mimeType        String?
 
   // Accès contrôlé par rôle
-  accesMinimum    RoleUtilisateur @default(GESTIONNAIRE)
+  accesMinimum    String      @default("GESTIONNAIRE")
 
   // Lien vers l'entité propriétaire (client ou prestataire)
   clientId        String?
@@ -252,7 +205,7 @@ model FormulaireContact {
   email       String
   telephone   String?
   typesBesoin String   @default("[]") // JSON array des types cochés
-  urgence     Urgence?
+  urgence     String?
   message     String
   traite      Boolean  @default(false)
   createdAt   DateTime @default(now())

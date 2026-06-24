@@ -49,6 +49,8 @@ model Client {
   type            String       // "CLIENT" ou "PROSPECT" uniquement
   nom             String
   prenom          String?
+  statutJuridique String?      // "PARTICULIER" ou "ENTREPRISE"
+  siret           String?
   societe         String?
   fonction        String?
   email           String       @unique
@@ -79,6 +81,8 @@ model Prestataire {
   type             String       // "PRESTATAIRE", "COLLABORATEUR", "CANDIDAT"
   nom              String
   prenom           String?
+  statutJuridique  String?      // "PARTICULIER" ou "ENTREPRISE"
+  siret            String?
   societe          String?
   fonction         String?      // Rôle / titre
   email            String       @unique
@@ -200,6 +204,8 @@ model Document {
 model FormulaireContact {
   id          String   @id @default(cuid())
   nom         String
+  statutJuridique String?  // "PARTICULIER" ou "ENTREPRISE"
+  siret       String?
   societe     String?
   fonction    String?
   email       String
@@ -216,6 +222,9 @@ model FormulaireRecrutement {
   id               String   @id @default(cuid())
   nom              String
   prenom           String
+  statutJuridique  String?  // "PARTICULIER" ou "ENTREPRISE"
+  siret            String?
+  societe          String?
   email            String
   telephone        String?
   pays             String?

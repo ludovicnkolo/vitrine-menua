@@ -1,7 +1,11 @@
+"use client";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, PieChart, Users, ShieldCheck, FileSpreadsheet, Briefcase, BarChart3 } from "lucide-react";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function Home() {
+  const { t } = useLanguage();
+
   return (
     <main className="flex flex-col w-full min-h-screen bg-[#051014] text-white overflow-hidden font-sans">
 
@@ -20,27 +24,33 @@ export default function Home() {
           </svg>
         </div>
 
-        <div className="relative z-10 px-8 md:px-16 lg:px-24 w-full max-w-7xl mx-auto flex">
+        <div className="relative z-10 px-8 md:px-16 lg:px-24 w-full max-w-7xl mx-auto flex pb-32 lg:pb-0 pt-16">
           <div className="w-full lg:w-1/2">
             <div className="text-[#c89b53] text-[0.65rem] font-bold tracking-[0.25em] uppercase mb-8 flex items-center gap-3">
-              <span>Conseil</span> <span>•</span> <span>Performance</span> <span>•</span> <span>Confiance</span>
+              <span>{t("Conseil", "Consulting")}</span> <span>•</span> <span>{t("Performance", "Performance")}</span> <span>•</span> <span>{t("Confiance", "Trust")}</span>
             </div>
 
             <h1 className="font-serif text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] mb-8">
-              <span className="text-white block mb-2">Externalisation</span>
-              <span className="text-white block mb-2">opérationnelle des</span>
-              <span className="text-[#c89b53] block italic font-normal text-4xl md:text-5xl lg:text-6xl mt-4">fonctions back & middle office</span>
+              <span className="text-white block mb-2">{t("Externalisation", "Operational")}</span>
+              <span className="text-white block mb-2">{t("opérationnelle des", "outsourcing of")}</span>
+              <span className="text-[#c89b53] block italic font-normal text-4xl md:text-5xl lg:text-6xl mt-4">{t("fonctions back & middle office", "back & middle office functions")}</span>
             </h1>
 
             <p className="text-gray-300 text-base lg:text-lg max-w-lg mb-4 leading-relaxed font-light">
-              Nous sécurisons l'exécution de vos opérations back et middle office afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.
+              {t(
+                "Nous sécurisons l'exécution de vos opérations back et middle office afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
+                "We secure the execution of your back and middle office operations to allow your teams to focus on strategic decisions."
+              )}
             </p>
             <p className="text-gray-500 text-sm max-w-md mb-10 italic">
-              Interventions en français et en anglais – profils opérationnels bilingues.
+              {t(
+                "Interventions en français et en anglais – profils opérationnels bilingues.",
+                "Interventions in French and English – bilingual operational profiles."
+              )}
             </p>
 
             <Link href="/nous-contacter" className="inline-flex items-center gap-3 bg-[#c89b53] hover:bg-[#b38541] text-white px-8 py-3.5 rounded text-xs font-bold tracking-wider uppercase transition-colors">
-              Présenter un besoin <ArrowRight size={16} />
+              {t("Présenter un besoin", "Submit a request")} <ArrowRight size={16} />
             </Link>
           </div>
         </div>
@@ -50,7 +60,10 @@ export default function Home() {
       <section className="bg-[#f4f4f3] text-[#051014] rounded-t-[3rem] relative z-20 px-8 py-16 -mt-10">
         <div className="max-w-5xl mx-auto text-center">
           <p className="text-gray-700 text-lg leading-relaxed max-w-3xl mx-auto font-light">
-            <span className="font-bold text-[#051014]">MENUA CONSULTING</span> intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l'exécution des fonctions back et middle office.
+            <span className="font-bold text-[#051014]">MENUA CONSULTING</span> {t(
+              "intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l'exécution des fonctions back et middle office.",
+              "supports financial, accounting, wealth, data, and regulatory teams to secure and strengthen the execution of back and middle office functions."
+            )}
           </p>
         </div>
       </section>
@@ -58,7 +71,7 @@ export default function Home() {
       {/* EXPERTISE SECTION */}
       <section className="bg-[#f4f4f3] text-[#051014] px-8 pb-24">
         <div className="max-w-6xl mx-auto">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-center mb-16">Nos domaines d'expertise</h2>
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-center mb-16">{t("Nos domaines d'expertise", "Our Areas of Expertise")}</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
               { icon: PieChart, title: "Finance\n& reporting" },

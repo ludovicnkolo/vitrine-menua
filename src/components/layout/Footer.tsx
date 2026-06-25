@@ -8,22 +8,30 @@ export default function Footer() {
         
         {/* BRAND */}
         <div>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="text-[#c89b53]">
-              <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 80V20L50 60L80 20V80" stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M35 50L20 80" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+          <div className="flex items-center gap-3 mb-6">
+            {/* Mc Cursive */}
+            <div className="text-[#c89b53] font-serif italic text-4xl pr-4 border-r border-[#c89b53]/40" style={{ fontFamily: 'Brush Script MT, cursive' }}>
+              Mc
             </div>
-            <div>
-              <div className="text-white font-serif text-lg font-bold leading-none">Menua</div>
-              <div className="text-[#c89b53] text-[0.55rem] uppercase tracking-widest">Consulting</div>
+            
+            {/* Text part */}
+            <div className="flex flex-col items-center pl-2">
+              <span className="text-white font-serif text-2xl font-medium leading-none tracking-[0.2em] ml-1">MENUA</span>
+              <span className="text-[#c89b53] text-[0.6rem] uppercase tracking-[0.4em] font-sans mt-1 ml-1">Consulting</span>
+              
+              <div className="flex flex-col items-center mt-2">
+                <div className="flex items-center gap-2 opacity-80">
+                  <span className="w-4 h-[0.5px] bg-[#c89b53]"></span>
+                  <span className="text-[#c89b53] text-[0.5rem] tracking-wider font-serif italic">Vos opérations, Notre expertise.</span>
+                  <span className="w-4 h-[0.5px] bg-[#c89b53]"></span>
+                </div>
+                <div className="text-[#c89b53] text-[0.4rem] mt-0.5 opacity-80">✧</div>
+              </div>
             </div>
           </div>
           <p className="text-gray-500 text-xs leading-relaxed mb-4">
             Externalisation opérationnelle des fonctions back & middle office.
           </p>
-          <p className="text-[#c89b53] text-[0.6rem] tracking-wider">Conseil · Performance · Confiance</p>
           <div className="flex items-center gap-3 mt-5">
             <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-[#c89b53] transition-colors">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

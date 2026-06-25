@@ -32,8 +32,8 @@ services:
       - "443:443"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      # Volumes pour Let's Encrypt / Certbot (HTTPS)
-      - ./nginx/ssl:/etc/nginx/ssl
+      # Volumes Let's Encrypt : monte les vrais certs générés par Certbot sur le HOST
+      - /etc/letsencrypt:/etc/nginx/ssl:ro
       - ./nginx/certbot/www:/var/www/certbot
     depends_on:
       - menua_app

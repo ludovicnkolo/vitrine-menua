@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
 import { ArrowRight, Star, TrendingUp, BookOpen } from "lucide-react";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function ActualitesHubPage() {
+  const { t } = useLanguage();
   const categories = [
     {
       title: "À la une",

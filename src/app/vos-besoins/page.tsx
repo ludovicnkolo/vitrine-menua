@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
 import { ArrowRight, BarChart3, LineChart, ShieldAlert, Database, Briefcase, PlusCircle } from "lucide-react";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function VosBesoinsHubPage() {
+  const { t } = useLanguage();
   const besoins = [
     {
       title: "Finance & reporting",

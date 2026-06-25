@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
 import { ArrowRight, TrendingUp, Gem, HeartHandshake } from "lucide-react";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function PourquoiMenuaHubPage() {
+  const { t } = useLanguage();
   const points = [
     {
       title: "Nos bénéfices",

@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
 import { ArrowRight, Clock, CalendarDays, Layers, Workflow, Globe } from "lucide-react";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function NosSolutionsHubPage() {
+  const { t } = useLanguage();
   const solutions = [
     {
       title: "Urgence",

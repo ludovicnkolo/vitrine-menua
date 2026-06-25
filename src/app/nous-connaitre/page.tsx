@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
 import { ArrowRight, Building2, Target, GitMerge, ShieldCheck, Users } from "lucide-react";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function NousConnaitreHubPage() {
+  const { t } = useLanguage();
   const sections = [
     {
       title: "Présentation du cabinet",

@@ -140,27 +140,11 @@ export default function Header() {
       <div className="flex items-center justify-between px-6 lg:px-8 py-4">
         {/* LOGO */}
         <Link href="/" className="flex items-center shrink-0 group z-50" onClick={() => { setOpenMenu(null); setIsMobileMenuOpen(false); }}>
-          {/* Mc Cursive */}
-          <div className="text-[#c89b53] font-serif italic text-2xl md:text-3xl lg:text-4xl pr-3 md:pr-4 border-r border-[#c89b53]/40 group-hover:text-white transition-colors" style={{ fontFamily: 'Brush Script MT, cursive' }}>
-            Mc
-          </div>
-          
-          {/* Text part */}
-          <div className="flex flex-col items-center pl-3 md:pl-4">
-            <span className="text-white font-serif text-lg md:text-xl lg:text-2xl font-medium leading-none tracking-[0.2em] ml-1">MENUA</span>
-            <span className="text-[#c89b53] text-[0.45rem] md:text-[0.5rem] lg:text-[0.6rem] uppercase tracking-[0.4em] font-sans mt-1 ml-1 group-hover:text-white transition-colors">Consulting</span>
-            
-            <div className="hidden sm:flex flex-col items-center mt-2">
-              <div className="flex items-center gap-2 opacity-80">
-                <span className="w-2 md:w-4 h-[0.5px] bg-[#c89b53]"></span>
-                <span className="text-[#c89b53] text-[0.45rem] md:text-[0.5rem] tracking-wider font-serif italic group-hover:text-white transition-colors">
-                  {t("Vos opérations, Notre expertise.", "Your operations, Our expertise.")}
-                </span>
-                <span className="w-2 md:w-4 h-[0.5px] bg-[#c89b53]"></span>
-              </div>
-              <div className="text-[#c89b53] text-[0.35rem] mt-0.5 opacity-80 group-hover:text-white transition-colors">✧</div>
-            </div>
-          </div>
+          <img
+            src="/logoSlogan.png"
+            alt="MENUA Consulting"
+            className="h-12 md:h-14 w-auto object-contain"
+          />
         </Link>
 
         {/* MOBILE MENU TOGGLE */}

@@ -7,45 +7,57 @@ export default function ActualitesHubPage() {
   const { t } = useLanguage();
   const categories = [
     {
-      title: "À la une",
+      title: t("À la une", "Headlines"),
       slug: "a-la-une",
       icon: Star,
-      description: "Sélection d’articles, de contenus et d’analyses mis en avant sur les sujets les plus récents ou les plus structurants pour vos activités.",
+      description: t(
+        "Sélection d'articles, de contenus et d'analyses mis en avant sur les sujets les plus récents ou les plus structurants pour vos activités.",
+        "Selection of articles, content, and analysis highlighted on the most recent or structuring subjects for your activities."
+      ),
     },
     {
-      title: "Actualités financières & réglementaires",
+      title: t("Actualités financières & réglementaires", "Financial & Regulatory News"),
       slug: "financieres-et-reglementaires",
       icon: TrendingUp,
-      description: "Analyse et décryptage des évolutions susceptibles d’avoir un impact sur vos organisations.",
+      description: t(
+        "Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations.",
+        "Analysis and deciphering of developments likely to have an impact on your organizations."
+      ),
     },
     {
-      title: "Nos publications",
+      title: t("Nos publications", "Our Publications"),
       slug: "nos-publications",
       icon: BookOpen,
-      description: "Retrouvez les prises de parole, analyses et contenus publiés par MENUA CONSULTING.",
+      description: t(
+        "Retrouvez les prises de parole, analyses et contenus publiés par MENUA CONSULTING.",
+        "Find the speaking engagements, analysis, and content published by MENUA CONSULTING."
+      ),
     }
   ];
 
   return (
     <main className="flex flex-col w-full bg-[#051014] text-white font-sans">
-      {/* HERO */}
-      <section className="relative w-full min-h-[50vh] flex items-end overflow-hidden pt-20">
+      {/* HERO — height adapts to content */}
+      <section className="relative w-full flex items-end overflow-hidden pt-36 pb-20 bg-[#051014]">
         <div className="absolute top-0 right-0 w-1/2 h-full z-0">
           <div className="absolute inset-0 bg-gradient-to-r from-[#051014] via-[#051014]/50 to-transparent z-10 w-full"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-[#051014] via-transparent to-transparent z-10"></div>
           <div className="absolute top-0 left-0 bottom-0 w-1/4 bg-[#051014] z-10"></div>
-          <img src="/banner-desk.jpg" alt="Actualités" className="w-full h-full object-cover opacity-80 rounded-bl-[4rem]" />
+          <img src="/banner-desk.jpg" alt={t("Actualités", "News")} className="w-full h-full object-cover opacity-80 rounded-bl-[4rem]" />
         </div>
-        <div className="relative z-10 px-8 md:px-16 lg:px-24 max-w-7xl mx-auto w-full pb-20">
+        <div className="relative z-10 px-8 md:px-16 lg:px-24 max-w-7xl mx-auto w-full">
           <div className="text-[#c89b53] text-[0.65rem] tracking-wider uppercase mb-4">
-            <Link href="/" className="hover:text-white">Accueil</Link>
+            <Link href="/" className="hover:text-white">{t("Accueil", "Home")}</Link>
             <span className="mx-2 text-gray-600">›</span>
-            <span>Actualités</span>
+            <span>{t("Actualités", "News")}</span>
           </div>
-          <h1 className="font-serif text-5xl md:text-6xl font-bold leading-tight mb-4">Actualités</h1>
+          <h1 className="font-serif text-5xl md:text-6xl font-bold leading-tight mb-4">{t("Actualités", "News")}</h1>
           <div className="w-12 h-1 bg-[#c89b53] mb-6"></div>
           <p className="text-gray-300 text-sm md:text-base max-w-xl leading-relaxed">
-            MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles.
+            {t(
+              "MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles.",
+              "MENUA CONSULTING ensures regular monitoring of financial, accounting, wealth, regulatory, and operational developments."
+            )}
           </p>
         </div>
       </section>
@@ -53,7 +65,7 @@ export default function ActualitesHubPage() {
       {/* GRID CARDS */}
       <section className="bg-[#f4f4f3] text-[#051014] px-8 py-20 rounded-t-[3rem] relative z-20 -mt-8">
         <div className="max-w-6xl mx-auto">
-          <h2 className="font-serif text-3xl font-bold mb-12 text-center">Nos catégories</h2>
+          <h2 className="font-serif text-3xl font-bold mb-12 text-center">{t("Nos catégories", "Our Categories")}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-center">
             {categories.map((item, idx) => (
@@ -66,7 +78,7 @@ export default function ActualitesHubPage() {
                   {item.description}
                 </p>
                 <div className="flex items-center text-[#c89b53] text-xs font-bold tracking-widest uppercase mt-auto">
-                  Consulter <ArrowRight size={16} className="ml-2 group-hover:translate-x-2 transition-transform" />
+                  {t("Consulter", "View")} <ArrowRight size={16} className="ml-2 group-hover:translate-x-2 transition-transform" />
                 </div>
               </Link>
             ))}

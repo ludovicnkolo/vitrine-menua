@@ -7,51 +7,64 @@ export default function PourquoiMenuaHubPage() {
   const { t } = useLanguage();
   const points = [
     {
-      title: "Nos bénéfices",
+      title: t("Nos bénéfices", "Our Benefits"),
       slug: "nos-benefices",
       icon: TrendingUp,
-      description: "Vous gagnez du temps, améliorez votre productivité et renforcez votre fiabilité.",
+      description: t(
+        "Vous gagnez du temps, améliorez votre productivité et renforcez votre fiabilité.",
+        "You save time, improve your productivity, and strengthen your reliability."
+      ),
     },
     {
-      title: "Notre différenciation",
+      title: t("Notre différenciation", "Our Differentiation"),
       slug: "notre-differenciation",
       icon: Gem,
-      description: "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l’analyse : nous exécutons.",
+      description: t(
+        "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.",
+        "Specialists in back and middle office, we do not stop at analysis: we execute."
+      ),
     },
     {
-      title: "Nos engagements",
+      title: t("Nos engagements", "Our Commitments"),
       slug: "nos-engagements",
       icon: HeartHandshake,
-      description: "MENUA CONSULTING s’engage sur l’essentiel : la qualité, le respect des délais et la traçabilité.",
+      description: t(
+        "MENUA CONSULTING s'engage sur l'essentiel : la qualité, le respect des délais et la traçabilité.",
+        "MENUA CONSULTING commits to the essentials: quality, meeting deadlines, and traceability."
+      ),
     }
   ];
 
   return (
     <main className="flex flex-col w-full bg-[#051014] text-white font-sans">
-      <section className="relative w-full min-h-[50vh] flex items-end overflow-hidden pt-20">
+      {/* HERO — height adapts to content */}
+      <section className="relative w-full flex items-end overflow-hidden pt-36 pb-20 bg-[#051014]">
         <div className="absolute top-0 right-0 w-1/2 h-full z-0">
           <div className="absolute inset-0 bg-gradient-to-r from-[#051014] via-[#051014]/50 to-transparent z-10 w-full"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-[#051014] via-transparent to-transparent z-10"></div>
           <div className="absolute top-0 left-0 bottom-0 w-1/4 bg-[#051014] z-10"></div>
-          <img src="/pourquoi-menua-hero.jpg" alt="Pourquoi Menua" className="w-full h-full object-cover opacity-80 rounded-bl-[4rem]" />
+          <img src="/pourquoi-menua-hero.jpg" alt={t("Pourquoi Menua ?", "Why Menua?")} className="w-full h-full object-cover opacity-80 rounded-bl-[4rem]" />
         </div>
-        <div className="relative z-10 px-8 md:px-16 lg:px-24 max-w-7xl mx-auto w-full pb-20">
+        <div className="relative z-10 px-8 md:px-16 lg:px-24 max-w-7xl mx-auto w-full">
           <div className="text-[#c89b53] text-[0.65rem] tracking-wider uppercase mb-4">
-            <Link href="/" className="hover:text-white">Accueil</Link>
+            <Link href="/" className="hover:text-white">{t("Accueil", "Home")}</Link>
             <span className="mx-2 text-gray-600">›</span>
-            <span>Pourquoi Menua ?</span>
+            <span>{t("Pourquoi Menua ?", "Why Menua?")}</span>
           </div>
-          <h1 className="font-serif text-5xl md:text-6xl font-bold leading-tight mb-4">Pourquoi Menua ?</h1>
+          <h1 className="font-serif text-5xl md:text-6xl font-bold leading-tight mb-4">{t("Pourquoi Menua ?", "Why Menua?")}</h1>
           <div className="w-12 h-1 bg-[#c89b53] mb-6"></div>
           <p className="text-gray-300 text-sm md:text-base max-w-xl leading-relaxed">
-            Un partenaire de confiance, expert de l'externalisation de vos processus back et middle office.
+            {t(
+              "Un partenaire de confiance, expert de l'externalisation de vos processus back et middle office.",
+              "A trusted partner, expert in outsourcing your back and middle office processes."
+            )}
           </p>
         </div>
       </section>
 
       <section className="bg-[#f4f4f3] text-[#051014] px-8 py-20 rounded-t-[3rem] relative z-20 -mt-8">
         <div className="max-w-6xl mx-auto">
-          <h2 className="font-serif text-3xl font-bold mb-12 text-center">Les raisons de nous choisir</h2>
+          <h2 className="font-serif text-3xl font-bold mb-12 text-center">{t("Les raisons de nous choisir", "Reasons to Choose Us")}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-center">
             {points.map((item, idx) => (
@@ -64,7 +77,7 @@ export default function PourquoiMenuaHubPage() {
                   {item.description}
                 </p>
                 <div className="flex items-center text-[#c89b53] text-xs font-bold tracking-widest uppercase mt-auto">
-                  Découvrir <ArrowRight size={16} className="ml-2 group-hover:translate-x-2 transition-transform" />
+                  {t("Découvrir", "Discover")} <ArrowRight size={16} className="ml-2 group-hover:translate-x-2 transition-transform" />
                 </div>
               </Link>
             ))}

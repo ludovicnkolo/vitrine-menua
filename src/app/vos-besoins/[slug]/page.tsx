@@ -201,12 +201,12 @@ export default function BesoinDetailsPage({ params }: { params: Promise<{ slug: 
     notFound();
   }
 
-  const lang = (language === 'en' ? 'en' : 'fr') as keyof Translation;
+  const lang = (language === 'EN' ? 'en' : 'fr') as keyof Translation;
 
   return (
     <main className="flex flex-col w-full bg-[#f4f4f3] text-[#051014] font-sans min-h-screen">
       {/* HERO FULL WIDTH */}
-      <section className="relative w-full min-h-[55vh] flex items-end overflow-hidden pt-24 bg-[#051014]">
+      <section className="relative w-full min-h-[75vh] flex items-end overflow-hidden pt-32 bg-[#051014]">
         <div className="absolute top-0 right-0 w-full md:w-3/4 h-full z-0">
           <div className="absolute inset-0 bg-gradient-to-r from-[#051014] via-[#051014]/90 to-transparent z-10 w-full"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-[#051014] via-[#051014]/40 to-transparent z-10"></div>

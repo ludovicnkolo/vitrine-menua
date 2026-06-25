@@ -143,7 +143,7 @@ export default function Header() {
           <img
             src="/logoSlogan.png"
             alt="MENUA Consulting"
-            className="h-12 md:h-14 w-auto object-contain"
+            className="h-15 md:h-28 w-auto object-contain"
           />
         </Link>
 

@@ -86,10 +86,10 @@ export default function PolitiqueConfidentialite() {
   ];
 
   return (
-    <main className="flex flex-col w-full bg-[#051014] text-white font-sans pt-24">
+    <main className="flex flex-col w-full bg-[#0F2B45] text-white font-sans pt-24">
       <section className="px-8 py-20">
         <div className="max-w-3xl mx-auto">
-          <div className="text-[#c89b53] text-[0.65rem] tracking-wider uppercase mb-4">
+          <div className="text-[#C89B5E] text-[0.65rem] tracking-wider uppercase mb-4">
             <Link href="/" className="hover:text-white">{t("Accueil","Home")}</Link>
             <span className="mx-2 text-gray-600">›</span>
             <span>{t("Politique de confidentialité","Privacy Policy")}</span>

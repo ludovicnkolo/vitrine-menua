@@ -22,41 +22,80 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
-    
-    /* Menua Custom Colors */
-    --menua-navy: #051014;
-    --menua-navy-light: #0d222b;
-    --menua-gold: #c89b53;
-    --menua-gold-hover: #b38541;
-    --menua-bg: #f9f9f8;
+
+    /* ═══════════════════════════════════════════════
+       MENUA CONSULTING — PALETTE UNIFIÉE
+       ═══════════════════════════════════════════════ */
+
+    /* 1. COULEURS PRINCIPALES */
+    --menua-navy:        #0F2B45; /* Bleu profond — header, footer, titres majeurs */
+    --menua-navy-night:  #1A2D4A; /* Bleu nuit — fonds sombres secondaires */
+
+    /* 2. ACCENTS PRINCIPAUX (CTA & interactions) */
+    --menua-sage:        #4A8C7A; /* Vert sauge — CTA principaux ("Présenter un besoin") */
+    --menua-emerald:     #2D7A5A; /* Vert émeraude — hover boutons, validation */
+
+    /* 3. ACCENT PREMIUM (usage limité) */
+    --menua-gold:        #C89B5E; /* Or cuivré — badges, icônes, liens "Lire l'article" */
+    --menua-gold-light:  #D9B06E; /* Or clair — hover des éléments or */
+
+    /* 4. FONDS NEUTRES */
+    --menua-bg:          #F8F9FA; /* Blanc cassé — fond principal */
+    --menua-bg-2:        #EDEFF2; /* Gris perle — fond secondaire */
+    --menua-bg-3:        #E2E6EA; /* Gris clair — distinction des blocs */
+
+    /* 5. TEXTES */
+    --menua-text:        #1E2A3A; /* Gris anthracite — texte principal */
+    --menua-text-light:  #3D4F64; /* Gris ardoise — texte secondaire */
+    --menua-text-white:  #F0F2F5; /* Blanc cassé — sur fonds sombres */
+    --menua-text-hover:  #D9B06E; /* Or cuivré clair — hover sur fond sombre */
+
+    /* 6. LIENS & INTERACTIFS */
+    --menua-link:        #4A8C7A; /* Liens normaux */
+    --menua-link-hover:  #2D7A5A; /* Liens hover */
+    --menua-link-alt:    #5A7A94; /* Liens alternatifs (moins importants) */
+
+    /* 7. FONCTIONNEL */
+    --menua-success:     #6BAF8D; /* Succès / Validation */
+    --menua-alert:       #8B3A3A; /* Alerte / Attention */
+    --menua-border:      #D1D6DC; /* Bordures / Séparations */
   }
 }
 
+/* ═══════════════════════════════════════════════
+   CLASSES UTILITAIRES MENUA
+   ═══════════════════════════════════════════════ */
 
+/* Fonds */
+.bg-menua-navy        { background-color: var(--menua-navy); }
+.bg-menua-navy-night  { background-color: var(--menua-navy-night); }
+.bg-menua-sage        { background-color: var(--menua-sage); }
+.bg-menua-gold        { background-color: var(--menua-gold); }
+.bg-menua-bg          { background-color: var(--menua-bg); }
+.bg-menua-bg-2        { background-color: var(--menua-bg-2); }
 
-.text-gold {
-  color: var(--menua-gold);
-}
+/* Hover fonds */
+.bg-menua-sage:hover   { background-color: var(--menua-emerald); }
+.bg-menua-gold:hover   { background-color: var(--menua-gold-light); }
 
-.bg-gold {
-  background-color: var(--menua-gold);
-}
+/* Textes */
+.text-menua-gold      { color: var(--menua-gold); }
+.text-menua-sage      { color: var(--menua-sage); }
+.text-menua-navy      { color: var(--menua-navy); }
+.text-menua-text      { color: var(--menua-text); }
 
-.bg-gold:hover {
-  background-color: var(--menua-gold-hover);
-}
+/* Bordures */
+.border-menua-gold    { border-color: var(--menua-gold); }
+.border-menua-sage    { border-color: var(--menua-sage); }
+.border-menua-border  { border-color: var(--menua-border); }
 
-.bg-navy {
-  background-color: var(--menua-navy);
-}
-
-.bg-navy-light {
-  background-color: var(--menua-navy-light);
-}
-
-.border-gold {
-  border-color: var(--menua-gold);
-}
+/* Classes legacy (rétrocompat) */
+.text-gold            { color: var(--menua-gold); }
+.bg-gold              { background-color: var(--menua-sage); }
+.bg-gold:hover        { background-color: var(--menua-emerald); }
+.bg-navy              { background-color: var(--menua-navy); }
+.bg-navy-light        { background-color: var(--menua-navy-night); }
+.border-gold          { border-color: var(--menua-gold); }
 
 /* Curved shapes */
 .curved-top {
@@ -66,5 +105,5 @@
 
 /* Background image overrides */
 .hero-gradient {
-  background: linear-gradient(90deg, rgba(5,16,20,1) 0%, rgba(5,16,20,0.9) 40%, rgba(5,16,20,0.4) 100%);
+  background: linear-gradient(90deg, rgba(15,43,69,1) 0%, rgba(15,43,69,0.9) 40%, rgba(15,43,69,0.4) 100%);
 }

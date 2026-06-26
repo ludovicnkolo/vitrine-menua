@@ -204,17 +204,17 @@ export default function BesoinDetailsPage({ params }: { params: Promise<{ slug: 
   const lang = (language === 'EN' ? 'en' : 'fr') as keyof Translation;
 
   return (
-    <main className="flex flex-col w-full bg-[#f4f4f3] text-[#051014] font-sans min-h-screen">
+    <main className="flex flex-col w-full bg-[#F8F9FA] text-[#1E2A3A] font-sans min-h-screen">
       {/* HERO FULL WIDTH */}
-      <section className="relative w-full min-h-[75vh] flex items-end overflow-hidden pt-32 bg-[#051014]">
+      <section className="relative w-full min-h-[75vh] flex items-end overflow-hidden pt-32 bg-[#0F2B45]">
         <div className="absolute top-0 right-0 w-full md:w-3/4 h-full z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#051014] via-[#051014]/90 to-transparent z-10 w-full"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#051014] via-[#051014]/40 to-transparent z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0F2B45] via-[#0F2B45]/90 to-transparent z-10 w-full"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0F2B45] via-[#0F2B45]/40 to-transparent z-10"></div>
           <img src={besoin.image} alt={besoin.title[lang]} className="w-full h-full object-cover opacity-50" />
         </div>
         
         <div className="relative z-10 px-8 md:px-16 lg:px-24 w-full max-w-7xl mx-auto pb-20">
-          <div className="text-[#c89b53] text-[0.65rem] tracking-[0.2em] uppercase mb-6 flex items-center flex-wrap gap-3 font-bold">
+          <div className="text-[#C89B5E] text-[0.65rem] tracking-[0.2em] uppercase mb-6 flex items-center flex-wrap gap-3 font-bold">
             <Link href="/" className="hover:text-white transition-colors">{t("Accueil", "Home")}</Link>
             <ChevronRight size={12} className="text-gray-500" />
             <Link href="/vos-besoins" className="hover:text-white transition-colors">{t("Vos besoins", "Your Needs")}</Link>
@@ -224,7 +224,7 @@ export default function BesoinDetailsPage({ params }: { params: Promise<{ slug: 
           <h1 className="font-serif text-4xl md:text-5xl lg:text-7xl font-bold leading-tight mb-8 max-w-4xl text-white">
             {besoin.title[lang]}
           </h1>
-          <div className="w-16 h-[2px] bg-[#c89b53] mb-8"></div>
+          <div className="w-16 h-[2px] bg-[#C89B5E] mb-8"></div>
           <p className="text-gray-300 text-base md:text-lg max-w-2xl leading-relaxed font-light">
             {besoin.description[lang]}
           </p>
@@ -239,22 +239,22 @@ export default function BesoinDetailsPage({ params }: { params: Promise<{ slug: 
             {/* MAIN CONTENT */}
             <div className="lg:w-2/3">
               <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100">
-                <div className="mb-10 inline-flex items-center gap-2 border border-[#c89b53]/30 bg-[#c89b53]/10 px-5 py-2.5 rounded-full">
-                  <div className="w-2 h-2 rounded-full bg-[#c89b53] animate-pulse"></div>
-                  <span className="text-[#c89b53] text-[0.7rem] font-bold tracking-[0.15em] uppercase">{besoin.role[lang]}</span>
+                <div className="mb-10 inline-flex items-center gap-2 border border-[#C89B5E]/30 bg-[#C89B5E]/10 px-5 py-2.5 rounded-full">
+                  <div className="w-2 h-2 rounded-full bg-[#C89B5E] animate-pulse"></div>
+                  <span className="text-[#C89B5E] text-[0.7rem] font-bold tracking-[0.15em] uppercase">{besoin.role[lang]}</span>
                 </div>
                 
                 <div className="flex items-center gap-4 mb-10">
-                  <div className="w-12 h-12 bg-[#051014] rounded-full flex items-center justify-center text-[#c89b53]">
+                  <div className="w-12 h-12 bg-[#0F2B45] rounded-full flex items-center justify-center text-[#C89B5E]">
                     <Briefcase size={20} />
                   </div>
-                  <h2 className="font-serif text-3xl font-bold text-[#051014]">{t("Contenus et besoins couverts", "Contents and covered needs")}</h2>
+                  <h2 className="font-serif text-3xl font-bold text-[#1E2A3A]">{t("Contenus et besoins couverts", "Contents and covered needs")}</h2>
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-8">
                   {besoin.items.map((item, index) => (
-                    <div key={index} className="flex items-start gap-4 p-5 rounded-xl border border-gray-100 bg-[#fbfbfb] hover:bg-white hover:shadow-md hover:border-[#c89b53]/40 transition-all duration-300 group">
-                      <CheckCircle2 className="text-[#c89b53] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" size={20} />
+                    <div key={index} className="flex items-start gap-4 p-5 rounded-xl border border-gray-100 bg-[#fbfbfb] hover:bg-white hover:shadow-md hover:border-[#C89B5E]/40 transition-all duration-300 group">
+                      <CheckCircle2 className="text-[#C89B5E] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" size={20} />
                       <span className="text-sm text-gray-700 leading-relaxed font-medium">{item[lang]}</span>
                     </div>
                   ))}
@@ -264,16 +264,16 @@ export default function BesoinDetailsPage({ params }: { params: Promise<{ slug: 
             
             {/* SIDEBAR CTA */}
             <div className="lg:w-1/3">
-              <div className="bg-[#051014] text-white p-10 rounded-2xl sticky top-32 shadow-2xl">
+              <div className="bg-[#0F2B45] text-white p-10 rounded-2xl sticky top-32 shadow-2xl">
                 <h3 className="font-serif text-2xl font-bold mb-6 leading-snug">{t("Un besoin sur ce périmètre ?", "A need in this scope?")}</h3>
-                <div className="w-8 h-1 bg-[#c89b53] mb-6"></div>
+                <div className="w-8 h-1 bg-[#C89B5E] mb-6"></div>
                 <p className="text-gray-400 text-sm leading-relaxed mb-10 font-light">
                   {t(
                     "Nos équipes interviennent en support pour sécuriser et renforcer l'exécution de vos opérations.",
                     "Our teams provide support to secure and strengthen the execution of your operations."
                   )}
                 </p>
-                <Link href="/nous-contacter" className="flex items-center justify-center gap-4 bg-[#c89b53] hover:bg-[#b38541] text-white px-6 py-4 rounded text-xs font-bold tracking-widest uppercase transition-all duration-300 hover:shadow-lg hover:shadow-[#c89b53]/20 w-full group">
+                <Link href="/nous-contacter" className="flex items-center justify-center gap-4 bg-[#4A8C7A] hover:bg-[#2D7A5A] text-white px-6 py-4 rounded text-xs font-bold tracking-widest uppercase transition-all duration-300 hover:shadow-lg hover:shadow-[#C89B5E]/20 w-full group">
                   {t("Nous solliciter", "Contact us")} <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>

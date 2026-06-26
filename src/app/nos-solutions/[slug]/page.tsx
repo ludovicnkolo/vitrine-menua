@@ -102,15 +102,15 @@ export default function NosSolutionsDetailsPage({ params }: { params: Promise<{ 
   const renderContent = (content: string) => {
     return content.split('\n\n').map((block, idx) => {
       if (block.startsWith('### ')) {
-        return <h3 key={idx} className="font-serif text-2xl font-bold mt-10 mb-4 text-[#051014] flex items-center gap-3"><span className="w-8 h-[1px] bg-[#c89b53]"></span>{block.replace('### ', '')}</h3>;
+        return <h3 key={idx} className="font-serif text-2xl font-bold mt-10 mb-4 text-[#1E2A3A] flex items-center gap-3"><span className="w-8 h-[1px] bg-[#C89B5E]"></span>{block.replace('### ', '')}</h3>;
       }
       if (block.includes('\n- ')) {
         const lines = block.split('\n');
         return (
           <ul key={idx} className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-8 mb-8">
             {lines.filter(line => line.startsWith('- ')).map((item, i) => (
-              <li key={i} className="flex items-start gap-4 p-5 rounded-xl border border-gray-100 bg-[#fbfbfb] hover:bg-white hover:shadow-md hover:border-[#c89b53]/40 transition-all duration-300 group">
-                <CheckCircle2 className="text-[#c89b53] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" size={20} />
+              <li key={i} className="flex items-start gap-4 p-5 rounded-xl border border-gray-100 bg-[#fbfbfb] hover:bg-white hover:shadow-md hover:border-[#C89B5E]/40 transition-all duration-300 group">
+                <CheckCircle2 className="text-[#C89B5E] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" size={20} />
                 <span className="text-sm text-gray-700 leading-relaxed font-medium">{item.replace('- ', '')}</span>
               </li>
             ))}
@@ -120,7 +120,7 @@ export default function NosSolutionsDetailsPage({ params }: { params: Promise<{ 
       if (idx === 0) {
         return (
           <p key={idx} className="text-gray-700 leading-loose mb-6 text-lg font-light">
-            <span className="float-left text-5xl font-serif text-[#c89b53] pr-3 pt-2 leading-none">{block.charAt(0)}</span>
+            <span className="float-left text-5xl font-serif text-[#C89B5E] pr-3 pt-2 leading-none">{block.charAt(0)}</span>
             {block.slice(1)}
           </p>
         );
@@ -130,16 +130,16 @@ export default function NosSolutionsDetailsPage({ params }: { params: Promise<{ 
   };
 
   return (
-    <main className="flex flex-col w-full bg-[#f4f4f3] text-[#051014] font-sans min-h-screen">
-      <section className="relative w-full min-h-[75vh] flex items-end overflow-hidden pt-32 bg-[#051014]">
+    <main className="flex flex-col w-full bg-[#F8F9FA] text-[#1E2A3A] font-sans min-h-screen">
+      <section className="relative w-full min-h-[75vh] flex items-end overflow-hidden pt-32 bg-[#0F2B45]">
         <div className="absolute top-0 right-0 w-full md:w-3/4 h-full z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#051014] via-[#051014]/90 to-transparent z-10 w-full"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#051014] via-[#051014]/40 to-transparent z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0F2B45] via-[#0F2B45]/90 to-transparent z-10 w-full"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0F2B45] via-[#0F2B45]/40 to-transparent z-10"></div>
           <img src={pageData.image} alt={pageData.title[lang]} className="w-full h-full object-cover opacity-50" />
         </div>
         
         <div className="relative z-10 px-8 md:px-16 lg:px-24 w-full max-w-7xl mx-auto pb-20">
-          <div className="text-[#c89b53] text-[0.65rem] tracking-[0.2em] uppercase mb-6 flex items-center flex-wrap gap-3 font-bold">
+          <div className="text-[#C89B5E] text-[0.65rem] tracking-[0.2em] uppercase mb-6 flex items-center flex-wrap gap-3 font-bold">
             <Link href="/" className="hover:text-white transition-colors">{t("Accueil", "Home")}</Link>
             <ChevronRight size={12} className="text-gray-500" />
             <Link href="/nos-solutions" className="hover:text-white transition-colors">{t("Nos solutions", "Our Solutions")}</Link>
@@ -149,7 +149,7 @@ export default function NosSolutionsDetailsPage({ params }: { params: Promise<{ 
           <h1 className="font-serif text-4xl md:text-5xl lg:text-7xl font-bold leading-tight mb-8 max-w-4xl text-white">
             {pageData.title[lang]}
           </h1>
-          <div className="w-16 h-[2px] bg-[#c89b53] mb-8"></div>
+          <div className="w-16 h-[2px] bg-[#C89B5E] mb-8"></div>
           <p className="text-gray-300 text-base md:text-lg max-w-2xl leading-relaxed font-light">
             {pageData.description[lang]}
           </p>
@@ -163,10 +163,10 @@ export default function NosSolutionsDetailsPage({ params }: { params: Promise<{ 
             <div className="lg:w-2/3">
               <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100">
                 <div className="flex items-center gap-4 mb-10">
-                  <div className="w-12 h-12 bg-[#051014] rounded-full flex items-center justify-center text-[#c89b53]">
+                  <div className="w-12 h-12 bg-[#0F2B45] rounded-full flex items-center justify-center text-[#C89B5E]">
                     <Settings size={20} />
                   </div>
-                  <h2 className="font-serif text-3xl font-bold text-[#051014]">{t("En détail", "In detail")}</h2>
+                  <h2 className="font-serif text-3xl font-bold text-[#1E2A3A]">{t("En détail", "In detail")}</h2>
                 </div>
                 
                 <div className="prose prose-lg max-w-none">
@@ -176,16 +176,16 @@ export default function NosSolutionsDetailsPage({ params }: { params: Promise<{ 
             </div>
             
             <div className="lg:w-1/3">
-              <div className="bg-[#051014] text-white p-10 rounded-2xl sticky top-32 shadow-2xl">
+              <div className="bg-[#0F2B45] text-white p-10 rounded-2xl sticky top-32 shadow-2xl">
                 <h3 className="font-serif text-2xl font-bold mb-6 leading-snug">{t("Besoin d'une solution sur-mesure ?", "Need a custom solution?")}</h3>
-                <div className="w-8 h-1 bg-[#c89b53] mb-6"></div>
+                <div className="w-8 h-1 bg-[#C89B5E] mb-6"></div>
                 <p className="text-gray-400 text-sm leading-relaxed mb-10 font-light">
                   {t(
                     "Nous concevons des dispositifs d’externalisation adaptés à vos contraintes.",
                     "We design outsourcing setups adapted to your constraints."
                   )}
                 </p>
-                <Link href="/nous-contacter" className="flex items-center justify-center gap-4 bg-[#c89b53] hover:bg-[#b38541] text-white px-6 py-4 rounded text-xs font-bold tracking-widest uppercase transition-all duration-300 hover:shadow-lg hover:shadow-[#c89b53]/20 w-full group">
+                <Link href="/nous-contacter" className="flex items-center justify-center gap-4 bg-[#4A8C7A] hover:bg-[#2D7A5A] text-white px-6 py-4 rounded text-xs font-bold tracking-widest uppercase transition-all duration-300 hover:shadow-lg hover:shadow-[#C89B5E]/20 w-full group">
                   {t("Nous contacter", "Contact us")} <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>

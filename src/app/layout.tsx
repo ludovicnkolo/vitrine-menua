@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`${inter.variable} ${playfair.variable} font-sans bg-[#051014] text-white min-h-screen flex flex-col antialiased`}>
+      <body className={`${inter.variable} ${playfair.variable} font-sans bg-[#0F2B45] text-white min-h-screen flex flex-col antialiased`}>
         <LanguageProvider>
           <Header />
           {children}

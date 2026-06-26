@@ -1,106 +1,281 @@
 "use client";
 import Link from "next/link";
-import { ArrowRight, Clock, CalendarDays, Layers, Workflow, Globe } from "lucide-react";
+import { ArrowRight, Zap, Calendar, Scale, Users2, Languages, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 
-export default function NosSolutionsHubPage() {
+export default function NosSolutionsPage() {
   const { t } = useLanguage();
-  const solutions = [
-    {
-      title: t("Urgence", "Urgency"),
-      slug: "urgence",
-      icon: Clock,
-      description: t(
-        "Mobilisation rapide de ressources opérationnelles pour répondre à un besoin immédiat et assurer la continuité.",
-        "Rapid mobilization of operational resources to meet an immediate need and ensure continuity."
-      ),
-    },
-    {
-      title: t("Durée", "Duration"),
-      slug: "duree",
-      icon: CalendarDays,
-      description: t(
-        "Des dispositifs d'externalisation flexibles, adaptés dans le temps, pour mission courte ou longue.",
-        "Flexible outsourcing arrangements, adaptable over time, for short or long-term missions."
-      ),
-    },
-    {
-      title: t("Volume", "Volume"),
-      slug: "volume",
-      icon: Layers,
-      description: t(
-        "Adaptation de nos ressources au volume de dossiers, de flux ou d'opérations à traiter.",
-        "Adaptation of our resources to the volume of files, flows, or operations to be processed."
-      ),
-    },
-    {
-      title: t("Mode d'organisation", "Organization Mode"),
-      slug: "mode-d-organisation",
-      icon: Workflow,
-      description: t(
-        "Nous structurons nos interventions selon le format le plus adapté à vos contraintes internes.",
-        "We structure our interventions according to the format best suited to your internal constraints."
-      ),
-    },
-    {
-      title: t("Langues", "Languages"),
-      slug: "langues",
-      icon: Globe,
-      description: t(
-        "Nous intervenons de manière native et fluide en français et en anglais.",
-        "We operate natively and fluently in French and English."
-      ),
-    }
-  ];
 
   return (
-    <main className="flex flex-col w-full bg-[#051014] text-white font-sans">
-      {/* HERO — height adapts to content */}
-      <section className="relative w-full flex items-end overflow-hidden pt-36 pb-20 bg-[#051014]">
-        <div className="absolute top-0 right-0 w-1/2 h-full z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#051014] via-[#051014]/50 to-transparent z-10 w-full"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#051014] via-transparent to-transparent z-10"></div>
-          <div className="absolute top-0 left-0 bottom-0 w-1/4 bg-[#051014] z-10"></div>
-          <img src="/nos-solutions-hero.jpg" alt={t("Nos solutions", "Our Solutions")} className="w-full h-full object-cover opacity-80 rounded-bl-[4rem]" />
-        </div>
-        <div className="relative z-10 px-8 md:px-16 lg:px-24 max-w-7xl mx-auto w-full">
-          <div className="text-[#c89b53] text-[0.65rem] tracking-wider uppercase mb-4">
-            <Link href="/" className="hover:text-white">{t("Accueil", "Home")}</Link>
-            <span className="mx-2 text-gray-600">›</span>
-            <span>{t("Nos solutions", "Our Solutions")}</span>
-          </div>
-          <h1 className="font-serif text-5xl md:text-6xl font-bold leading-tight mb-4">{t("Nos solutions", "Our Solutions")}</h1>
-          <div className="w-12 h-1 bg-[#c89b53] mb-6"></div>
-          <p className="text-gray-300 text-sm md:text-base max-w-xl leading-relaxed">
+    <main className="flex flex-col w-full min-h-screen bg-[#F8F9FA] font-sans pt-24">
+      {/* ── HEADER INTRO ─────────────────────────────────────────────────── */}
+      <section className="bg-[#F8F9FA] px-8 py-16 border-b border-gray-200">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="font-serif text-4xl md:text-5xl font-bold text-[#0F2B45] mb-6">
+            {t("Nos solutions", "Our Solutions")}
+          </h1>
+          <p className="text-[#1E2A3A] text-lg max-w-3xl mx-auto leading-relaxed">
             {t(
-              "Des dispositifs d'externalisation sur mesure, flexibles et adaptés à vos enjeux de croissance, de volume ou de ressources.",
-              "Tailor-made, flexible outsourcing arrangements adapted to your growth, volume, or resource challenges."
+              "MENUA CONSULTING adapte ses interventions à vos contraintes : urgence, durée, volume ou mode d'organisation. Nous proposons des dispositifs flexibles, fiables et dimensionnés à vos besoins réels.",
+              "MENUA CONSULTING adapts its interventions to your constraints: urgency, duration, volume or mode of organization. We offer flexible, reliable solutions sized to your real needs."
             )}
           </p>
         </div>
       </section>
 
-      <section className="bg-[#f4f4f3] text-[#051014] px-8 py-20 rounded-t-[3rem] relative z-20 -mt-8">
+      {/* ── 3.1 URGENCE ──────────────────────────────────────────────────── */}
+      <section id="urgence" className="bg-[#F8F9FA] px-8 py-20">
         <div className="max-w-6xl mx-auto">
-          <h2 className="font-serif text-3xl font-bold mb-12 text-center">{t("Des solutions adaptées", "Tailored Solutions")}</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-            {solutions.map((item, idx) => (
-              <Link key={idx} href={`/nos-solutions/${item.slug}`} className="group bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:border-[#c89b53]/40 transition-all duration-300 flex flex-col h-full">
-                <div className="w-14 h-14 rounded-full bg-[#051014] text-[#c89b53] flex items-center justify-center mb-6 group-hover:bg-[#c89b53] group-hover:text-white transition-colors">
-                  <item.icon size={24} strokeWidth={1.5} />
-                </div>
-                <h3 className="font-serif text-xl font-bold mb-3 text-[#051014] group-hover:text-[#c89b53] transition-colors">{item.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed mb-8 flex-1">
-                  {item.description}
-                </p>
-                <div className="flex items-center text-[#c89b53] text-xs font-bold tracking-widest uppercase mt-auto">
-                  {t("En savoir plus", "Learn more")} <ArrowRight size={16} className="ml-2 group-hover:translate-x-2 transition-transform" />
-                </div>
-              </Link>
-            ))}
+          <div className="flex flex-col lg:flex-row items-start gap-12">
+            <div className="w-full lg:w-1/3 flex flex-col items-center lg:items-start">
+              <div className="text-[#C89B5E] font-serif text-8xl font-bold leading-none mb-4 opacity-30">01</div>
+              <div className="w-20 h-20 rounded-2xl bg-white border border-gray-100 shadow-sm flex items-center justify-center mb-6">
+                <Zap className="text-[#4A8C7A]" size={36} />
+              </div>
+              <h2 className="font-serif text-3xl font-bold text-[#0F2B45] mb-4 text-center lg:text-left">
+                {t("Urgence", "Emergency")}
+              </h2>
+              <p className="text-[#4A8C7A] font-semibold text-sm tracking-widest uppercase">
+                {t("Capacité de réaction", "Response capacity")}
+              </p>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#1E2A3A] text-lg leading-relaxed mb-8">
+                {t(
+                  "Mobilisation rapide de ressources opérationnelles pour répondre à un besoin immédiat, absorber une surcharge d'activité et assurer la continuité de votre service.",
+                  "Rapid mobilization of operational resources to respond to an immediate need, absorb an activity overload and ensure the continuity of your service."
+                )}
+              </p>
+              <h3 className="font-bold text-[#0F2B45] mb-4 text-sm tracking-widest uppercase border-b border-gray-200 pb-3">
+                {t("Cas d'usage :", "Use cases:")}
+              </h3>
+              <ul className="space-y-4">
+                {[
+                  t("Surcharge d'activité ou pic de dossiers", "Activity overload or peak in files"),
+                  t("Remplacement temporaire d'un collaborateur absent", "Temporary replacement of an absent employee"),
+                  t("Renfort ponctuel en période de clôture ou de reporting", "Ad hoc reinforcement during closing or reporting periods"),
+                  t("Traitement accéléré de dossiers en retard ou en attente", "Accelerated processing of delayed or pending files"),
+                  t("Mise à disposition progressive de ressources pour sécuriser la montée en charge", "Progressive provision of resources to secure the ramp-up"),
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <CheckCircle2 className="text-[#4A8C7A] shrink-0 mt-0.5" size={20} />
+                    <span className="text-[#1E2A3A] leading-snug">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
+      </section>
+
+      {/* ── 3.2 DURÉE ────────────────────────────────────────────────────── */}
+      <section id="duree" className="bg-[#EDEFF2] px-8 py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-start gap-12">
+            <div className="w-full lg:w-1/3 flex flex-col items-center lg:items-start">
+              <div className="text-[#C89B5E] font-serif text-8xl font-bold leading-none mb-4 opacity-30">02</div>
+              <div className="w-20 h-20 rounded-2xl bg-white border border-gray-100 shadow-sm flex items-center justify-center mb-6">
+                <Calendar className="text-[#4A8C7A]" size={36} />
+              </div>
+              <h2 className="font-serif text-3xl font-bold text-[#0F2B45] mb-4 text-center lg:text-left">
+                {t("Durée", "Duration")}
+              </h2>
+              <p className="text-[#4A8C7A] font-semibold text-sm tracking-widest uppercase">
+                {t("Flexibilité contractuelle", "Contractual flexibility")}
+              </p>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#1E2A3A] text-lg leading-relaxed mb-8">
+                {t(
+                  "MENUA CONSULTING propose des dispositifs d'externalisation flexibles, adaptés au traitement d'un nombre défini de dossiers comme à la gestion récurrente d'un portefeuille plus important.",
+                  "MENUA CONSULTING offers flexible outsourcing solutions, adapted to the processing of a defined number of files as well as the recurring management of a larger portfolio."
+                )}
+              </p>
+              <h3 className="font-bold text-[#0F2B45] mb-4 text-sm tracking-widest uppercase border-b border-gray-200 pb-3">
+                {t("Nos dispositifs :", "Our arrangements:")}
+              </h3>
+              <ul className="space-y-4">
+                {[
+                  { label: t("Mission courte", "Short mission"), desc: t("Pour traiter un besoin identifié sur une période limitée", "To address an identified need over a limited period") },
+                  { label: t("Mission longue", "Long mission"), desc: t("Pour accompagner la gestion d'un portefeuille de dossiers dans la durée", "To support the management of a portfolio of files over time") },
+                  { label: t("Externalisation continue", "Continuous outsourcing"), desc: t("Pour confier durablement tout ou partie de vos activités opérationnelles", "To durably entrust all or part of your operational activities") },
+                  { label: t("Intervention ponctuelle", "Ad hoc intervention"), desc: t("Sur un volume de dossiers comptables, financiers, patrimoniaux ou administratifs", "On a volume of accounting, financial, wealth or administrative files") },
+                  { label: t("Ajustement du dispositif", "Arrangement adjustment"), desc: t("Selon l'évolution de la charge et des priorités du client", "According to changes in client workload and priorities") },
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <CheckCircle2 className="text-[#4A8C7A] shrink-0 mt-0.5" size={20} />
+                    <span className="text-[#1E2A3A] leading-snug">
+                      <strong className="text-[#0F2B45]">{item.label}</strong> : {item.desc}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3.3 VOLUME ───────────────────────────────────────────────────── */}
+      <section id="volume" className="bg-[#F8F9FA] px-8 py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-start gap-12">
+            <div className="w-full lg:w-1/3 flex flex-col items-center lg:items-start">
+              <div className="text-[#C89B5E] font-serif text-8xl font-bold leading-none mb-4 opacity-30">03</div>
+              <div className="w-20 h-20 rounded-2xl bg-white border border-gray-100 shadow-sm flex items-center justify-center mb-6">
+                <Scale className="text-[#4A8C7A]" size={36} />
+              </div>
+              <h2 className="font-serif text-3xl font-bold text-[#0F2B45] mb-4 text-center lg:text-left">
+                {t("Volume", "Volume")}
+              </h2>
+              <p className="text-[#4A8C7A] font-semibold text-sm tracking-widest uppercase">
+                {t("Dimensionnement d'équipe", "Team sizing")}
+              </p>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#1E2A3A] text-lg leading-relaxed mb-8">
+                {t(
+                  "MENUA CONSULTING adapte le dimensionnement de ses ressources au volume de dossiers, de flux ou d'opérations à traiter, tout en veillant à la continuité et à la sécurisation de l'exécution.",
+                  "MENUA CONSULTING adapts the sizing of its resources to the volume of files, flows or operations to be processed, while ensuring the continuity and security of execution."
+                )}
+              </p>
+              <h3 className="font-bold text-[#0F2B45] mb-4 text-sm tracking-widest uppercase border-b border-gray-200 pb-3">
+                {t("Nos dispositifs :", "Our arrangements:")}
+              </h3>
+              <ul className="space-y-4">
+                {[
+                  t("Une ressource dédiée sur un périmètre précis", "A dedicated resource on a precise scope"),
+                  t("Un renfort ponctuel pour absorber une surcharge d'activité", "Ad hoc reinforcement to absorb an activity overload"),
+                  t("Une équipe opérationnelle pour gérer un volume important ou plusieurs flux simultanés", "An operational team to manage a large volume or multiple simultaneous flows"),
+                  t("Un dispositif évolutif ajusté selon la charge, les priorités et les exigences du client", "An evolving arrangement adjusted according to workload, priorities and client requirements"),
+                  t("Une organisation permettant d'assurer la continuité du traitement en cas d'absence ou de variation d'activité", "An organization ensuring the continuity of processing in case of absence or variation in activity"),
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <CheckCircle2 className="text-[#4A8C7A] shrink-0 mt-0.5" size={20} />
+                    <span className="text-[#1E2A3A] leading-snug">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3.4 MODE D'ORGANISATION ──────────────────────────────────────── */}
+      <section id="organisation" className="bg-[#EDEFF2] px-8 py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-start gap-12">
+            <div className="w-full lg:w-1/3 flex flex-col items-center lg:items-start">
+              <div className="text-[#C89B5E] font-serif text-8xl font-bold leading-none mb-4 opacity-30">04</div>
+              <div className="w-20 h-20 rounded-2xl bg-white border border-gray-100 shadow-sm flex items-center justify-center mb-6">
+                <Users2 className="text-[#4A8C7A]" size={36} />
+              </div>
+              <h2 className="font-serif text-3xl font-bold text-[#0F2B45] mb-4 text-center lg:text-left">
+                {t("Mode d'organisation", "Organization mode")}
+              </h2>
+              <p className="text-[#4A8C7A] font-semibold text-sm tracking-widest uppercase">
+                {t("Intégration & flexibilité", "Integration & flexibility")}
+              </p>
+            </div>
+            <div className="flex-1">
+              <div className="text-[#1E2A3A] text-lg leading-relaxed mb-6 space-y-4">
+                <p>
+                  {t(
+                    "MENUA CONSULTING structure ses interventions selon le format le plus adapté à vos contraintes : dispositif dédié, fonctionnement par mission ou prise en charge de flux et de process définis.",
+                    "MENUA CONSULTING structures its interventions according to the format best suited to your constraints: dedicated arrangement, mission-based operation or management of defined flows and processes."
+                  )}
+                </p>
+                <p>
+                  {t(
+                    "Nous intégrons nos équipes à vos modes de fonctionnement existants afin de garantir une exécution fluide, traçable et conforme à vos standards internes.",
+                    "We integrate our teams into your existing operating modes to guarantee smooth, traceable execution that complies with your internal standards."
+                  )}
+                </p>
+              </div>
+              <h3 className="font-bold text-[#0F2B45] mb-4 text-sm tracking-widest uppercase border-b border-gray-200 pb-3">
+                {t("Modes d'intervention :", "Intervention modes:")}
+              </h3>
+              <ul className="space-y-4">
+                {[
+                  { label: t("Dispositif dédié", "Dedicated arrangement"), desc: t("Pour un service ou un périmètre clairement identifié", "For a clearly identified service or scope") },
+                  { label: t("Intervention par mission", "Mission intervention"), desc: t("Pour un besoin borné dans le temps ou un projet spécifique", "For a time-bounded need or a specific project") },
+                  { label: t("Prise en charge de flux ou de process récurrents", "Management of recurring flows or processes"), desc: "" },
+                  { label: t("Traitement de dossiers, adhésions ou opérations selon des règles définies avec vos équipes", "Processing of files, subscriptions or operations according to rules defined with your teams"), desc: "" },
+                  { label: t("Suivi structuré avec points de contrôle réguliers", "Structured monitoring with regular checkpoints"), desc: "" },
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <CheckCircle2 className="text-[#4A8C7A] shrink-0 mt-0.5" size={20} />
+                    <span className="text-[#1E2A3A] leading-snug">
+                      {item.desc ? <><strong className="text-[#0F2B45]">{item.label}</strong> : {item.desc}</> : item.label}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3.5 LANGUES ──────────────────────────────────────────────────── */}
+      <section id="langues" className="bg-[#F8F9FA] px-8 py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-start gap-12">
+            <div className="w-full lg:w-1/3 flex flex-col items-center lg:items-start">
+              <div className="text-[#C89B5E] font-serif text-8xl font-bold leading-none mb-4 opacity-30">05</div>
+              <div className="w-20 h-20 rounded-2xl bg-white border border-gray-100 shadow-sm flex items-center justify-center mb-6">
+                <Languages className="text-[#4A8C7A]" size={36} />
+              </div>
+              <h2 className="font-serif text-3xl font-bold text-[#0F2B45] mb-4 text-center lg:text-left">
+                {t("Langues", "Languages")}
+              </h2>
+              <p className="text-[#4A8C7A] font-semibold text-sm tracking-widest uppercase">
+                {t("FR / EN et autres", "FR / EN and others")}
+              </p>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#1E2A3A] text-lg leading-relaxed mb-10">
+                {t(
+                  "Nous intervenons en français et en anglais. D'autres langues peuvent être étudiées selon les besoins spécifiques de vos équipes.",
+                  "We operate in French and English. Other languages can be considered based on the specific needs of your teams."
+                )}
+              </p>
+              <div className="flex flex-wrap gap-6 mb-10">
+                <div className="flex items-center gap-4 bg-white border-2 border-[#C89B5E] rounded-xl px-8 py-4 shadow-sm">
+                  <span className="text-3xl">🇫🇷</span>
+                  <div>
+                    <p className="font-bold text-[#0F2B45] text-lg">Français</p>
+                    <p className="text-[#3D4F64] text-sm">{t("Langue principale", "Primary language")}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 bg-white border-2 border-[#C89B5E] rounded-xl px-8 py-4 shadow-sm">
+                  <span className="text-3xl">🇬🇧</span>
+                  <div>
+                    <p className="font-bold text-[#0F2B45] text-lg">English</p>
+                    <p className="text-[#3D4F64] text-sm">{t("Langue secondaire", "Secondary language")}</p>
+                  </div>
+                </div>
+              </div>
+              <p className="text-[#3D4F64] italic">
+                {t("Autres langues sur demande — selon les besoins spécifiques de vos équipes et de vos opérations.", "Other languages on request — according to the specific needs of your teams and operations.")}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ──────────────────────────────────────────────────────────── */}
+      <section className="bg-[#0F2B45] px-8 py-24 text-center">
+        <h2 className="font-serif text-3xl font-bold text-white mb-4">
+          {t("Vous avez un besoin opérationnel ?", "Do you have an operational need?")}
+        </h2>
+        <p className="text-white/70 mb-10 max-w-xl mx-auto">
+          {t("Présentez-nous votre situation. Nous construisons ensemble le dispositif adapté.", "Present your situation to us. We build the appropriate arrangement together.")}
+        </p>
+        <Link
+          href="/nous-contacter"
+          className="inline-flex items-center gap-3 bg-[#4A8C7A] hover:bg-[#2D7A5A] text-white px-8 py-4 rounded text-sm font-bold tracking-wider uppercase transition-all shadow-lg"
+        >
+          {t("Présenter un besoin", "Submit a request")} <ArrowRight size={16} />
+        </Link>
       </section>
     </main>
   );

@@ -152,7 +152,7 @@ export default function Header() {
                     ? "text-[#1C40C2]"
                     : "text-[#1B3680] hover:text-[#1C40C2]"
                 }`}
-                style={{ fontFamily: "var(--font-sans, sans-serif)" }}
+                
               >
                 {menus[key].label}
                 <ChevronDown
@@ -275,7 +275,7 @@ export default function Header() {
                   href={menus[key].href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-lg font-semibold text-[#1B3680] mb-3 block"
-                  style={{ fontFamily: "var(--font-serif, serif)" }}
+                  
                 >
                   {menus[key].label}
                 </Link>

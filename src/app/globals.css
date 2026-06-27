@@ -1,23 +1,48 @@
 @import "tailwindcss";
 
-/* ── Typographie de base — style Laplace ────────────────────── */
+/* ── Typographie de base — style Laplace (MENUA) ────────────────────── */
 @layer base {
   html {
-    font-family: var(--font-sans, "Source Sans 3", system-ui, sans-serif);
+    font-family: var(--font-optima), sans-serif;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-serif, "Cormorant Garamond", Georgia, serif);
-    font-weight: 600;
-    line-height: 1.15;
-    letter-spacing: -0.01em;
+  body {
+    font-family: var(--font-optima), sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: #222222;
   }
 
-  p, li {
-    font-family: var(--font-sans, "Source Sans 3", sans-serif);
-    line-height: 1.7;
+  h1, .h1-like {
+    font-family: var(--font-optima), sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30px;
+    color: #222222;
+  }
+
+  h2, .h2-like {
+    font-family: var(--font-optima), sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    color: #222222;
+  }
+
+  h3, h4, h5, h6 {
+    font-family: var(--font-optima), sans-serif;
+    font-weight: 600;
+  }
+
+  p, li, .text-body {
+    font-family: var(--font-optima), sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: #222222;
   }
 
   :root {
@@ -103,12 +128,55 @@
 
 /* Labels de section style Laplace */
 .section-eyebrow {
-  font-family: var(--font-sans, "Source Sans 3", sans-serif);
-  font-size: 0.65rem;
-  font-weight: 700;
+  font-family: var(--font-optima), sans-serif;
+  font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--menua-gold);
+}
+
+/* --------------------------------------------------
+   Utilitaires typographiques Laplace / MENUA
+-------------------------------------------------- */
+
+/* Petits textes (pied de page, mentions) */
+.small-text, .footer-text {
+  font-family: var(--font-optima), sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 14px;  /* valeur volontairement serrée */
+  color: #222222;
+}
+
+/* Chiffres clés (grands nombres) */
+.key-number {
+  font-family: var(--font-operetta), serif;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 60px;
+  color: #222222;
+}
+
+/* Texte sur fond sombre */
+.text-on-dark {
+  color: #ffffff;
+}
+
+/* Boutons / appels à l'action */
+.btn-laplace {
+  font-family: var(--font-optima), sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 14px;
+  color: #cec1b6; /* ou #ffffff selon le fond */
+}
+
+/* Couleurs secondaires */
+.text-secondary {
+  color: #2b3f37;
+}
+.text-tertiary {
+  color: #31374a;
 }
 
 /* Fonds */

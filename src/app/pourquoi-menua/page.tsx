@@ -23,12 +23,7 @@ export default function PourquoiMenuaPage() {
           </p>
           <h1
             className="mb-8"
-            style={{
-              fontFamily: "var(--font-serif, serif)",
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              fontWeight: 600,
-              lineHeight: 1.1,
-            }}
+            
           >
             {t(
               "Parce que l'excellence opérationnelle n'est pas une option.",
@@ -58,11 +53,7 @@ export default function PourquoiMenuaPage() {
           <div className="text-center mb-16">
             <h2
               className="text-[#1B3680]"
-              style={{
-                fontFamily: "var(--font-serif, serif)",
-                fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
-                fontWeight: 600,
-              }}
+              
             >
               {t("La valeur MENUA CONSULTING", "The MENUA CONSULTING value")}
             </h2>
@@ -87,11 +78,7 @@ export default function PourquoiMenuaPage() {
                   </div>
                   <h3
                     className="text-[#1B3680]"
-                    style={{
-                      fontFamily: "var(--font-serif, serif)",
-                      fontSize: "1.25rem",
-                      fontWeight: 600,
-                    }}
+                    
                   >
                     {item.title}
                   </h3>

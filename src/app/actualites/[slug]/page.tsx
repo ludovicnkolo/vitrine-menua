@@ -307,8 +307,9 @@ export function generateStaticParams() {
   return Object.keys(articlesData).map((slug) => ({ slug }));
 }
 
-export default function ArticlePage({ params }: { params: { slug: string } }) {
-  const article = articlesData[params.slug];
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params;
+  const article = articlesData[resolvedParams.slug];
 
   if (!article) return notFound();
 
@@ -336,12 +337,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
           </div>
           <h1
             className="text-white mb-2"
-            style={{
-              fontFamily: "var(--font-serif, serif)",
-              fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
-              fontWeight: 600,
-              lineHeight: 1.15,
-            }}
+            
           >
             {article.title}
           </h1>

@@ -26,11 +26,7 @@ export default function Home() {
           </p>
           <h1
             className="text-white mb-8 leading-[1.08]"
-            style={{
-              fontFamily: "var(--font-serif, 'Cormorant Garamond', Georgia, serif)",
-              fontSize: "clamp(2.6rem, 5.5vw, 5rem)",
-              fontWeight: 600,
-            }}
+            
           >
             {t(
               "Externalisation opérationnelle\ndes fonctions back & middle office",
@@ -77,13 +73,8 @@ export default function Home() {
           ].map((stat, i) => (
             <div key={i} className="flex flex-col items-center text-center px-6 py-4">
               <span
-                className="text-[#1B3680] mb-1"
-                style={{
-                  fontFamily: "var(--font-serif, 'Cormorant Garamond', serif)",
-                  fontSize: "clamp(2rem, 4vw, 3rem)",
-                  fontWeight: 700,
-                  lineHeight: 1,
-                }}
+                className="key-number text-[#222222] mb-1"
+                
               >
                 {stat.value}
               </span>
@@ -103,11 +94,7 @@ export default function Home() {
           </p>
           <h2
             className="text-[#1B3680] mb-8"
-            style={{
-              fontFamily: "var(--font-serif, 'Cormorant Garamond', serif)",
-              fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
-              fontWeight: 600,
-            }}
+            
           >
             {t(
               "Au service des acteurs financiers et réglementés en France",
@@ -137,11 +124,7 @@ export default function Home() {
             <p className="section-eyebrow mb-4">{t("Domaines d'intervention", "Areas of intervention")}</p>
             <h2
               className="text-[#1B3680]"
-              style={{
-                fontFamily: "var(--font-serif, 'Cormorant Garamond', serif)",
-                fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
-                fontWeight: 600,
-              }}
+              
             >
               {t("Vos besoins", "Your needs")}
             </h2>
@@ -162,11 +145,7 @@ export default function Home() {
                   </div>
                   <h3
                     className="text-[#1B3680]"
-                    style={{
-                      fontFamily: "var(--font-serif, 'Cormorant Garamond', serif)",
-                      fontSize: "1.25rem",
-                      fontWeight: 600,
-                    }}
+                    
                   >
                     {item.title}
                   </h3>
@@ -188,11 +167,7 @@ export default function Home() {
               <p className="section-eyebrow mb-5">{t("Notre valeur ajoutée", "Our value proposition")}</p>
               <h2
                 className="text-[#1B3680] mb-8"
-                style={{
-                  fontFamily: "var(--font-serif, 'Cormorant Garamond', serif)",
-                  fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
-                  fontWeight: 600,
-                }}
+                
               >
                 {t("Pourquoi Menua Consulting ?", "Why Menua Consulting?")}
               </h2>
@@ -223,11 +198,7 @@ export default function Home() {
                   <div>
                     <h3
                       className="text-[#1B3680] mb-1"
-                      style={{
-                        fontFamily: "var(--font-serif, 'Cormorant Garamond', serif)",
-                        fontSize: "1.1rem",
-                        fontWeight: 600,
-                      }}
+                      
                     >
                       {item.title}
                     </h3>
@@ -247,11 +218,7 @@ export default function Home() {
             <p className="section-eyebrow mb-4">{t("Notre offre", "Our offer")}</p>
             <h2
               className="text-[#1B3680]"
-              style={{
-                fontFamily: "var(--font-serif, 'Cormorant Garamond', serif)",
-                fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
-                fontWeight: 600,
-              }}
+              
             >
               {t("Nos solutions", "Our solutions")}
             </h2>
@@ -266,13 +233,8 @@ export default function Home() {
               <div key={i} className="bg-white group relative overflow-hidden">
                 <div className="p-10 flex flex-col h-full gap-4 transition-all duration-200 group-hover:bg-[#1B3680]">
                   <span
-                    className="text-[#D8DCE8] group-hover:text-[#2447A0] transition-colors"
-                    style={{
-                      fontFamily: "var(--font-serif, serif)",
-                      fontSize: "3.5rem",
-                      fontWeight: 700,
-                      lineHeight: 1,
-                    }}
+                    className="key-number text-[#D8DCE8] group-hover:text-[#2447A0] transition-colors"
+                    
                   >
                     {sol.num}
                   </span>
@@ -281,11 +243,7 @@ export default function Home() {
                   </div>
                   <h3
                     className="text-[#1B3680] group-hover:text-white transition-colors"
-                    style={{
-                      fontFamily: "var(--font-serif, serif)",
-                      fontSize: "1.2rem",
-                      fontWeight: 600,
-                    }}
+                    
                   >
                     {sol.title}
                   </h3>
@@ -314,11 +272,7 @@ export default function Home() {
             </p>
             <h3
               className="text-white"
-              style={{
-                fontFamily: "var(--font-serif, serif)",
-                fontSize: "1.5rem",
-                fontWeight: 600,
-              }}
+              
             >
               {t("Supervision & certifications", "Supervision & certifications")}
             </h3>
@@ -355,11 +309,7 @@ export default function Home() {
               <p className="section-eyebrow mb-4">{t("Veille & expertise", "Watch & expertise")}</p>
               <h2
                 className="text-[#1B3680]"
-                style={{
-                  fontFamily: "var(--font-serif, serif)",
-                  fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
-                  fontWeight: 600,
-                }}
+                
               >
                 {t("Actualités", "News")}
               </h2>
@@ -394,11 +344,7 @@ export default function Home() {
                   <span className="text-[#6B7794] text-[0.65rem] font-semibold tracking-wider mb-3">{news.date}</span>
                   <h3
                     className="text-[#1B3680] leading-snug mb-6 flex-grow"
-                    style={{
-                      fontFamily: "var(--font-serif, serif)",
-                      fontSize: "1.1rem",
-                      fontWeight: 600,
-                    }}
+                    
                   >
                     {news.title}
                   </h3>
@@ -420,11 +366,7 @@ export default function Home() {
           </p>
           <h2
             className="text-white mb-8"
-            style={{
-              fontFamily: "var(--font-serif, serif)",
-              fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
-              fontWeight: 600,
-            }}
+            
           >
             {t(
               "Un projet d'externalisation ? Parlons-en.",

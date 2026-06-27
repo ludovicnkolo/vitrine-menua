@@ -237,12 +237,7 @@ export default async function SubPage({ params }: { params: Promise<{ slug: stri
           <p className="text-[#DAF0F7] text-xs font-bold tracking-widest uppercase mb-4 mt-8">Nous connaître</p>
           <h1
             className="text-white mb-2"
-            style={{
-              fontFamily: "var(--font-serif, serif)",
-              fontSize: "clamp(1.8rem, 3vw, 2.5rem)",
-              fontWeight: 600,
-              lineHeight: 1.2,
-            }}
+            
           >
             {data.title}
           </h1>

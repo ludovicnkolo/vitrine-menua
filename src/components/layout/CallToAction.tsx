@@ -14,11 +14,7 @@ export default function CallToAction() {
         </p>
         <h2
           className="text-white mb-8"
-          style={{
-            fontFamily: "var(--font-serif, serif)",
-            fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
-            fontWeight: 600,
-          }}
+          
         >
           {t(
             "Un besoin opérationnel spécifique ?",

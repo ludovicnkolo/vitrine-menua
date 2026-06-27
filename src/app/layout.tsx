@@ -1,22 +1,18 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
+import { Rosario, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-/* ── Typographie style Laplace ─────────────────────────────────
-   Cormorant Garamond  → serif éditorial, élégant, institutionnel
-   Source Sans 3       → sans-serif lisible, moderne, neutre      */
-const cormorant = Cormorant_Garamond({
+const optimaAlternative = Rosario({
   subsets: ["latin"],
-  variable: "--font-serif",
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  variable: "--font-optima",
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
-const sourceSans = Source_Sans_3({
+const operettaAlternative = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["300", "400", "600", "700"],
+  variable: "--font-operetta",
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -51,9 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body
-        className={`${cormorant.variable} ${sourceSans.variable} font-sans bg-[#FAFBFC] text-[#0E1B2E] min-h-screen flex flex-col antialiased`}
-      >
+      <body className={`${optimaAlternative.variable} ${operettaAlternative.variable} min-h-screen flex flex-col antialiased bg-[#ffffff] text-[#222222]`}>
         <LanguageProvider>
           <Header />
           {children}

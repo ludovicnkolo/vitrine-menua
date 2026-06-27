@@ -23,12 +23,7 @@ export default function NosSolutionsPage() {
           </p>
           <h1
             className="mb-8"
-            style={{
-              fontFamily: "var(--font-serif, serif)",
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              fontWeight: 600,
-              lineHeight: 1.1,
-            }}
+            
           >
             {t(
               "Des dispositifs flexibles, calibrés sur vos contraintes opérationnelles.",
@@ -59,11 +54,7 @@ export default function NosSolutionsPage() {
           <div className="text-center mb-16">
             <h2
               className="text-[#1B3680]"
-              style={{
-                fontFamily: "var(--font-serif, serif)",
-                fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
-                fontWeight: 600,
-              }}
+              
             >
               {t("Nos axes de flexibilité", "Our flexibility axes")}
             </h2>
@@ -90,11 +81,7 @@ export default function NosSolutionsPage() {
                   </div>
                   <h3
                     className="text-[#1B3680]"
-                    style={{
-                      fontFamily: "var(--font-serif, serif)",
-                      fontSize: "1.25rem",
-                      fontWeight: 600,
-                    }}
+                    
                   >
                     {item.title}
                   </h3>

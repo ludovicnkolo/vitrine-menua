@@ -35,12 +35,7 @@ export default function ActualitesPage() {
           </p>
           <h1
             className="mb-8"
-            style={{
-              fontFamily: "var(--font-serif, serif)",
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              fontWeight: 600,
-              lineHeight: 1.1,
-            }}
+            
           >
             {t(
               "Analyses, décryptages et prises de parole.",

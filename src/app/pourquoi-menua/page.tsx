@@ -1,179 +1,114 @@
 "use client";
 import Link from "next/link";
-import { ArrowRight, Clock, TrendingDown, Zap, BarChart3, Shield, Users, CheckCircle2, Award, Target, Lock, MessageCircle, GraduationCap } from "lucide-react";
+import { ArrowRight, Trophy, Star, Shield } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
+import CallToAction from "@/components/layout/CallToAction";
 
 export default function PourquoiMenuaPage() {
   const { t } = useLanguage();
 
-  const benefits = [
-    { icon: Clock, label: t("Gain de temps", "Time savings") },
-    { icon: TrendingDown, label: t("Réduction des charges internes", "Reduction of internal costs") },
-    { icon: Zap, label: t("Productivité accrue", "Increased productivity") },
-    { icon: BarChart3, label: t("Efficacité renforcée", "Enhanced efficiency") },
-    { icon: Shield, label: t("Fiabilité des opérations", "Operational reliability") },
-    { icon: Users, label: t("Fidélisation de la clientèle", "Client retention") },
-    { icon: TrendingDown, label: t("Chiffre d'affaires soutenu", "Sustained revenue") },
-  ];
-
-  const differentiations = [
-    t("Spécialisation back et middle office", "Back and middle office specialization"),
-    t("Approche 100% opérationnelle", "100% operational approach"),
-    t("Intégration à votre organisation", "Integration into your organization"),
-    t("Exécution fiable et continue", "Reliable and continuous execution"),
-    t("Supervision qualité des livrables", "Quality supervision of deliverables"),
-    t("Intervention bilingue français / anglais", "Bilingual French / English intervention"),
-  ];
-
-  const commitments = [
-    { icon: Award, label: t("Qualité des livrables", "Quality of deliverables") },
-    { icon: Clock, label: t("Respect des délais", "Meeting deadlines") },
-    { icon: Lock, label: t("Traçabilité des opérations", "Traceability of operations") },
-    { icon: Shield, label: t("Contrôle à quatre yeux", "Four-eyes control") },
-    { icon: MessageCircle, label: t("Communication claire et régulière", "Clear and regular communication") },
-    { icon: GraduationCap, label: t("Formation des ressources mobilisées", "Training of mobilized resources") },
-    { icon: Target, label: t("Respect de vos exigences opérationnelles, qualité et réglementaires", "Compliance with your operational, quality and regulatory requirements") },
-  ];
-
   return (
-    <main className="flex flex-col w-full min-h-screen bg-[#F8F9FA] font-sans pt-24">
-      {/* ── HEADER INTRO ─────────────────────────────────────────────────── */}
-      <section className="bg-[#F8F9FA] px-8 py-16 border-b border-gray-200">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-[#0F2B45] mb-6">
-            {t("Pourquoi Menua Consulting ?", "Why Menua Consulting?")}
+    <main className="flex flex-col w-full min-h-screen bg-[#FAFBFC] font-sans">
+      {/* ── HERO INTRO ── */}
+      <section className="relative w-full min-h-[60vh] flex items-center justify-center overflow-hidden pt-24 pb-16">
+        <div className="absolute inset-0 z-0">
+          <img src="/pourquoi_menua_hero.png" alt="Pourquoi Menua" className="w-full h-full object-cover object-center" />
+          <div className="absolute inset-0 bg-[#1B3680]/60 mix-blend-multiply"></div>
+          <div className="absolute inset-0 hero-gradient"></div>
+        </div>
+        
+        <div className="relative z-10 max-w-4xl mx-auto text-center px-8 text-white mt-8">
+          <p className="text-[#DAF0F7] text-xs font-bold tracking-widest uppercase mb-6">
+            {t("Vue d’ensemble des bénéfices", "Overview of benefits")}
+          </p>
+          <h1
+            className="mb-8"
+            style={{
+              fontFamily: "var(--font-serif, serif)",
+              fontSize: "clamp(2rem, 4vw, 3.5rem)",
+              fontWeight: 600,
+              lineHeight: 1.1,
+            }}
+          >
+            {t(
+              "Parce que l'excellence opérationnelle n'est pas une option.",
+              "Because operational excellence is not an option."
+            )}
           </h1>
-          <p className="text-[#1E2A3A] text-lg max-w-3xl mx-auto leading-relaxed">
-            {t(
-              "Parce que l'excellence opérationnelle n'est pas une option. Choisir MENUA CONSULTING, c'est confier l'exécution de vos opérations à un partenaire spécialisé, rigoureux et engagé.",
-              "Because operational excellence is not an option. Choosing MENUA CONSULTING means entrusting the execution of your operations to a specialized, rigorous and committed partner."
-            )}
-          </p>
-        </div>
-      </section>
-
-      {/* ── 4.1 NOS BÉNÉFICES ────────────────────────────────────────────── */}
-      <section id="benefices" className="bg-[#F8F9FA] px-8 py-24">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="font-serif text-3xl font-bold text-[#0F2B45] mb-6 text-center">
-            {t("Nos bénéfices", "Our benefits")}
-          </h2>
-          <p className="text-[#1E2A3A] text-center text-lg max-w-4xl mx-auto mb-16 leading-relaxed">
-            {t(
-              "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité, renforcez votre fiabilité et soutenez durablement votre chiffre d'affaires. Cette organisation vous permet de réduire vos charges internes, de mieux absorber vos volumes d'activité et de fidéliser durablement votre clientèle.",
-              "By outsourcing your back and middle office functions with MENUA CONSULTING, you save time, improve your productivity, strengthen your reliability and sustainably support your revenue. This organization allows you to reduce your internal costs, better absorb your activity volumes and sustainably retain your clients."
-            )}
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {benefits.map((b, i) => (
-              <div key={i} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center hover:border-[#4A8C7A]/30 hover:shadow-md transition-all">
-                <div className="w-14 h-14 rounded-full bg-[#4A8C7A]/10 flex items-center justify-center mb-4">
-                  <b.icon className="text-[#4A8C7A]" size={28} />
-                </div>
-                <p className="font-semibold text-[#0F2B45] text-sm leading-snug">{b.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 4.2 NOTRE DIFFÉRENCIATION ────────────────────────────────────── */}
-      <section id="differenciation" className="bg-[#EDEFF2] px-8 py-24">
-        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-start gap-16">
-          <div className="lg:w-1/2">
-            <h2 className="font-serif text-3xl font-bold text-[#0F2B45] mb-6">
-              {t("Notre différenciation", "Our differentiation")}
-            </h2>
-            <div className="text-[#1E2A3A] text-lg leading-relaxed space-y-4 mb-8">
-              <p className="font-semibold text-[#0F2B45]">
-                {t(
-                  "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.",
-                  "Specialists in back and middle office, we don't stop at analysis: we execute."
-                )}
-              </p>
-              <p>
-                {t(
-                  "Notre approche 100% opérationnelle, notre intégration aux organisations clientes et notre capacité d'intervention en français comme en anglais nous permettent d'intervenir dans des environnements exigeants, structurés et ouverts à l'international.",
-                  "Our 100% operational approach, our integration into client organizations and our ability to intervene in French and English allow us to operate in demanding, structured and internationally open environments."
-                )}
-              </p>
-            </div>
-          </div>
-          <div className="lg:w-1/2">
-            <h3 className="font-bold text-[#0F2B45] mb-6 text-sm tracking-widest uppercase border-b border-gray-300 pb-3">
-              {t("Nos atouts différenciants :", "Our differentiating strengths:")}
-            </h3>
-            <ul className="space-y-4">
-              {differentiations.map((item, i) => (
-                <li key={i} className="flex items-start gap-4 bg-white p-4 rounded-lg border border-gray-100 shadow-sm">
-                  <span className="w-8 h-8 rounded-full bg-[#4A8C7A]/10 flex items-center justify-center shrink-0 font-bold text-[#4A8C7A] text-xs">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-[#1E2A3A] font-medium leading-snug pt-1">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 4.3 NOS ENGAGEMENTS ──────────────────────────────────────────── */}
-      <section id="engagements" className="bg-[#F8F9FA] px-8 py-24">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="font-serif text-3xl font-bold text-[#0F2B45] mb-6 text-center">
-            {t("Nos engagements", "Our commitments")}
-          </h2>
-          <div className="text-[#1E2A3A] text-center text-lg max-w-4xl mx-auto mb-8 leading-relaxed">
-            <p className="mb-4">
+          <div className="text-white/90 text-lg max-w-3xl mx-auto space-y-6 leading-relaxed">
+            <p>
               {t(
-                "MENUA CONSULTING s'engage sur l'essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
-                "MENUA CONSULTING commits to the essentials: the quality of deliverables, meeting deadlines, the traceability of operations and clear communication with your teams."
+                "Choisir MENUA CONSULTING, c'est confier l'exécution de vos opérations à un partenaire spécialisé, rigoureux et engagé. Nous ne nous contentons pas d’analyser : nous exécutons, nous intégrons et nous sécurisons vos processus au quotidien.",
+                "Choosing MENUA CONSULTING means entrusting the execution of your operations to a specialized, rigorous and committed partner. We don't just analyze: we execute, we integrate and we secure your processes on a daily basis."
               )}
             </p>
             <p>
               {t(
-                "Nos interventions s'appuient sur un contrôle à quatre yeux, des méthodes de travail structurées, la formation des ressources mobilisées et le respect de vos exigences opérationnelles, qualité et réglementaires.",
-                "Our interventions are based on four-eyes control, structured working methods, the training of mobilized resources and compliance with your operational, quality and regulatory requirements."
+                "Notre approche 100% opérationnelle, notre intégration aux organisations clientes et notre capacité d'intervention en français comme en anglais nous permettent d'intervenir dans des environnements exigeants, structurés et ouverts à l'international.",
+                "Our 100% operational approach, our integration into client organizations and our ability to intervene in both French and English allow us to intervene in demanding, structured and internationally open environments."
+              )}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── MOSAÏQUE ── */}
+      <section className="bg-white px-8 py-24 border-t border-[#D8DCE8]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2
+              className="text-[#1B3680]"
+              style={{
+                fontFamily: "var(--font-serif, serif)",
+                fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
+                fontWeight: 600,
+              }}
+            >
+              {t("La valeur MENUA CONSULTING", "The MENUA CONSULTING value")}
+            </h2>
+            <p className="text-[#3A4660] mt-4">
+              {t(
+                "Découvrez en détail nos bénéfices, nos atouts différenciants et nos engagements qualité.",
+                "Discover in detail our benefits, our differentiating assets and our quality commitments."
               )}
             </p>
           </div>
 
-          {/* Gold badge */}
-          <div className="flex justify-center mb-14">
-            <div className="inline-flex items-center gap-3 border-2 border-[#C89B5E] text-[#C89B5E] bg-white px-6 py-3 rounded-full font-bold text-sm tracking-widest uppercase shadow-sm">
-              <CheckCircle2 size={20} />
-              {t("Contrôle à quatre yeux garanti", "Four-eyes control guaranteed")}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {commitments.map((c, i) => (
-              <div key={i} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center hover:border-[#4A8C7A]/30 hover:shadow-md transition-all">
-                <div className="w-14 h-14 rounded-full bg-[#4A8C7A]/10 flex items-center justify-center mb-4">
-                  <c.icon className="text-[#4A8C7A]" size={28} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#D8DCE8]">
+            {[
+              { icon: Trophy, title: t("Nos bénéfices", "Our benefits"), desc: t("Gagnez en efficacité, fiabilité et performance durable.", "Gain efficiency, reliability and sustainable performance."), link: "/pourquoi-menua/nos-benefices" },
+              { icon: Star, title: t("Notre différenciation", "Our differentiation"), desc: t("Spécialistes du back et du middle office, nous exécutons.", "Back and middle office specialists, we execute."), link: "/pourquoi-menua/notre-differenciation" },
+              { icon: Shield, title: t("Nos engagements", "Our commitments"), desc: t("Une promesse de rigueur, de transparence et de conformité.", "A promise of rigor, transparency and compliance."), link: "/pourquoi-menua/nos-engagements" },
+            ].map((item, i) => (
+              <Link href={item.link} key={i} className="group bg-white block">
+                <div className="p-10 h-full flex flex-col gap-4 transition-all duration-200 group-hover:bg-[#F2F0ED]">
+                  <div className="text-[#1C40C2]">
+                    <item.icon size={28} strokeWidth={1.5} />
+                  </div>
+                  <h3
+                    className="text-[#1B3680]"
+                    style={{
+                      fontFamily: "var(--font-serif, serif)",
+                      fontSize: "1.25rem",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p className="text-[#3A4660] text-sm leading-relaxed mb-6">
+                    {item.desc}
+                  </p>
+                  <div className="mt-auto flex items-center text-[#1C40C2] text-sm font-semibold gap-2 group-hover:gap-3 transition-all">
+                    {t("En savoir plus", "Learn more")} <ArrowRight size={14} />
+                  </div>
                 </div>
-                <p className="font-semibold text-[#0F2B45] text-sm leading-snug">{c.label}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────────────────────── */}
-      <section className="bg-[#0F2B45] px-8 py-24 text-center">
-        <h2 className="font-serif text-3xl font-bold text-white mb-4">
-          {t("Prêt à nous confier vos opérations ?", "Ready to entrust us with your operations?")}
-        </h2>
-        <p className="text-white/70 mb-10 max-w-xl mx-auto">
-          {t("Contactez-nous pour étudier votre besoin et construire ensemble le dispositif adapté.", "Contact us to study your need and build the appropriate arrangement together.")}
-        </p>
-        <Link
-          href="/nous-contacter"
-          className="inline-flex items-center gap-3 bg-[#4A8C7A] hover:bg-[#2D7A5A] text-white px-8 py-4 rounded text-sm font-bold tracking-wider uppercase transition-all shadow-lg"
-        >
-          {t("Nous contacter", "Contact us")} <ArrowRight size={16} />
-        </Link>
-      </section>
+      <CallToAction />
     </main>
   );
 }

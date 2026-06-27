@@ -6,10 +6,10 @@ export default function MentionsLegales() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full bg-[#0F2B45] text-white font-sans pt-24">
+    <main className="flex flex-col w-full bg-[#1B3680] text-white font-sans pt-24">
       <section className="px-8 py-20">
         <div className="max-w-3xl mx-auto">
-          <div className="text-[#C89B5E] text-[0.65rem] tracking-wider uppercase mb-4">
+          <div className="text-[#B8922A] text-[0.65rem] tracking-wider uppercase mb-4">
             <Link href="/" className="hover:text-white">{t("Accueil","Home")}</Link>
             <span className="mx-2 text-gray-600">›</span>
             <span>{t("Mentions légales","Legal Notice")}</span>
@@ -21,7 +21,7 @@ export default function MentionsLegales() {
               "Le présent site est édité par MENUA CONSULTING, société par actions simplifiée unipersonnelle (SASU), au capital social de 15 000 €, dont le siège social est situé au 92 rue des Pyrénées – 75020 Paris, immatriculée au Registre du commerce et des sociétés de Paris sous le numéro 993 749 779 R.C.S. Paris.",
               "This site is published by MENUA CONSULTING, a simplified single-shareholder joint-stock company (SASU), with a share capital of €15,000, headquartered at 92 rue des Pyrénées – 75020 Paris, registered with the Paris Trade and Companies Register under number 993 749 779 R.C.S. Paris."
             )}</p>
-            <div className="bg-[#1A2D4A] rounded-xl p-8 space-y-2">
+            <div className="bg-[#122560] rounded-xl p-8 space-y-2">
               <div><span className="text-gray-500 text-xs uppercase tracking-wider">SIREN :</span> <span className="text-white font-medium">993 749 779</span></div>
               <div><span className="text-gray-500 text-xs uppercase tracking-wider">SIRET :</span> <span className="text-white font-medium">993 749 779 00019</span></div>
               <div><span className="text-gray-500 text-xs uppercase tracking-wider">{t("TVA intracommunautaire","VAT number")} :</span> <span className="text-white font-medium">FR36993749779</span></div>
@@ -29,7 +29,7 @@ export default function MentionsLegales() {
 
             <div>
               <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Éditeur du site","Site Publisher")}</h2>
-              <p>MENUA CONSULTING<br/>92 rue des Pyrénées – 75020 Paris<br/>Email : <a href="mailto:contact@menuaconsulting.com" className="text-[#C89B5E] hover:underline">contact@menuaconsulting.com</a><br/>{t("Téléphone","Phone")} : <a href="tel:+33686877914" className="text-[#C89B5E] hover:underline">+33 6 86 87 79 14</a></p>
+              <p>MENUA CONSULTING<br/>92 rue des Pyrénées – 75020 Paris<br/>Email : <a href="mailto:contact@menuaconsulting.com" className="text-[#B8922A] hover:underline">contact@menuaconsulting.com</a><br/>{t("Téléphone","Phone")} : <a href="tel:+33686877914" className="text-[#B8922A] hover:underline">+33 6 86 87 79 14</a></p>
             </div>
 
             <div>
@@ -79,7 +79,7 @@ export default function MentionsLegales() {
               <p className="mt-3">{t(
                 "Les informations communiquées via le site sont destinées exclusivement au traitement des demandes adressées à MENUA CONSULTING, sous réserve des précisions apportées dans la",
                 "The information communicated via the site is intended exclusively for the processing of requests addressed to MENUA CONSULTING, subject to the details provided in the"
-              )}{" "}<Link href="/politique-de-confidentialite" className="text-[#C89B5E] hover:underline">{t("Politique de confidentialité","Privacy Policy")}</Link>.</p>
+              )}{" "}<Link href="/politique-de-confidentialite" className="text-[#B8922A] hover:underline">{t("Politique de confidentialité","Privacy Policy")}</Link>.</p>
             </div>
 
             <div>
@@ -87,7 +87,7 @@ export default function MentionsLegales() {
               <p>{t(
                 "Pour toute question relative au site ou à son contenu, vous pouvez contacter MENUA CONSULTING à l'adresse suivante :",
                 "For any questions regarding the site or its content, you can contact MENUA CONSULTING at the following address:"
-              )}{" "}<a href="mailto:contact@menuaconsulting.com" className="text-[#C89B5E] hover:underline">contact@menuaconsulting.com</a></p>
+              )}{" "}<a href="mailto:contact@menuaconsulting.com" className="text-[#B8922A] hover:underline">contact@menuaconsulting.com</a></p>
             </div>
           </div>
         </div>

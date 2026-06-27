@@ -1,191 +1,261 @@
-"use client";
-
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import { ArrowRight, ChevronRight, Quote } from "lucide-react";
-import { use } from "react";
-import { useLanguage } from "@/components/LanguageProvider";
+import Breadcrumb from "@/components/layout/Breadcrumb";
+import CallToAction from "@/components/layout/CallToAction";
 
-type Translation = { fr: string; en: string };
-type PageData = { title: Translation; description: Translation; image: string; content: Translation };
-
-const nousConnaitreData: Record<string, PageData> = {
+// --- Données des sous-pages "Nous Connaître" ---
+const pagesData: Record<string, any> = {
   "presentation-du-cabinet": {
-    title: { 
-      fr: "Présentation du cabinet", 
-      en: "Firm Overview" 
-    },
-    description: { 
-      fr: "MENUA CONSULTING est un cabinet spécialisé dans l’externalisation opérationnelle des fonctions back et middle office en finance, comptabilité, conformité, de la gestion de patrimoine et data.",
-      en: "MENUA CONSULTING is a firm specializing in the operational outsourcing of back and middle office functions in finance, accounting, compliance, wealth management, and data."
-    },
-    image: "/nous-rejoindre-hero.jpg",
-    content: { 
-      fr: "Nous mettons à disposition des entreprises, cabinets et acteurs financiers des équipes opérationnelles dédiées, capables d’exécuter des missions exigeantes avec rigueur, continuité et fiabilité.\n\nNos collaborateurs s’intègrent aux organisations clientes afin de prendre en charge l’exécution opérationnelle, d’optimiser les charges internes et de sécuriser la continuité des opérations.\n\nCette organisation permet aux clients de se concentrer sur leur cœur de métier, tout en garantissant des processus maîtrisés, fluides et pérennes.",
-      en: "We provide companies, firms, and financial players with dedicated operational teams capable of executing demanding missions with rigor, continuity, and reliability.\n\nOur employees integrate into client organizations to take charge of operational execution, optimize internal costs, and secure the continuity of operations.\n\nThis organization allows clients to focus on their core business, while guaranteeing controlled, fluid, and sustainable processes."
-    }
+    title: "Un partenaire de confiance pour vos opérations financières et réglementées.",
+    content: (
+      <>
+        <p className="mb-4">
+          MENUA CONSULTING accompagne les entreprises dans l&apos;externalisation opérationnelle de fonctions back et middle office.
+        </p>
+        <p className="mb-4">
+          Basé à Paris, le cabinet intervient dans des environnements financiers, comptables, patrimoniaux et réglementés. Nous mettons à disposition des entreprises, cabinets d’expertise comptable et acteurs financiers des équipes opérationnelles dédiées, capables d’exécuter des missions exigeantes.
+        </p>
+        <p className="mb-4 font-semibold text-[#1B3680]">
+          Nos collaborateurs s&apos;intègrent pleinement aux organisations clientes afin de :
+        </p>
+        <ul className="list-disc pl-6 space-y-2 mb-6 text-[#3A4660]">
+          <li>Prendre en charge l’exécution opérationnelle au quotidien.</li>
+          <li>Optimiser les charges internes et la gestion des pics d’activité.</li>
+          <li>Sécuriser la continuité des opérations, même en cas d’absence ou de turnover.</li>
+        </ul>
+        <p>
+          Grâce à cette organisation, nos clients peuvent se recentrer sur leur stratégie et leur cœur de métier, tout en bénéficiant de processus financiers maîtrisés, fluides et pérennes.
+        </p>
+      </>
+    ),
   },
   "notre-approche": {
-    title: { 
-      fr: "Notre approche", 
-      en: "Our Approach" 
-    },
-    description: { 
-      fr: "MENUA CONSULTING adopte une posture résolument opérationnelle : les clients définissent les besoins, les méthodes et les priorités, nous assurons l’exécution.",
-      en: "MENUA CONSULTING adopts a resolutely operational posture: clients define the needs, methods, and priorities; we ensure the execution."
-    },
-    image: "/vos-besoins-hero.jpg",
-    content: { 
-      fr: "Nous intervenons dans des environnements financiers, comptables, patrimoniaux et réglementés, en respectant strictement les procédures internes, les circuits de validation et les exigences de qualité propres à chaque organisation.\n\nNotre approche repose sur trois piliers : continuité opérationnelle, traçabilité des actions et fiabilité des livrables.\n\nNos équipes peuvent intervenir en français et en anglais, garantissant une gestion fluide des échanges, des reportings et des opérations dans un contexte international.",
-      en: "We operate in financial, accounting, wealth, and regulated environments, strictly adhering to internal procedures, validation circuits, and the specific quality requirements of each organization.\n\nOur approach is based on three pillars: operational continuity, traceability of actions, and reliability of deliverables.\n\nOur teams can intervene in French and English, ensuring fluid management of exchanges, reporting, and operations in an international context."
-    }
+    title: "Une posture résolument opérationnelle et orientée résultats.",
+    content: (
+      <>
+        <p className="mb-4">
+          MENUA CONSULTING adopte une posture résolument opérationnelle : les clients définissent les besoins, les méthodes et les priorités ; nous assurons l&apos;exécution.
+        </p>
+        <p className="mb-6">
+          Nous intervenons dans des environnements financiers, comptables, patrimoniaux et réglementés, en respectant strictement les procédures internes, les circuits de validation et les exigences de qualité propres à chaque organisation.
+        </p>
+        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-4">Nos piliers fondamentaux :</h3>
+        <ul className="space-y-4 mb-6">
+          <li className="flex gap-3">
+            <div className="w-1.5 h-1.5 bg-[#B8922A] rounded-full mt-2.5 shrink-0"></div>
+            <p><strong>Continuité opérationnelle :</strong> Nous assurons la permanence et la fluidité de vos opérations, quel que soit le contexte.</p>
+          </li>
+          <li className="flex gap-3">
+            <div className="w-1.5 h-1.5 bg-[#B8922A] rounded-full mt-2.5 shrink-0"></div>
+            <p><strong>Traçabilité des actions :</strong> Chaque intervention est documentée, horodatée et vérifiable, garantissant une transparence totale.</p>
+          </li>
+          <li className="flex gap-3">
+            <div className="w-1.5 h-1.5 bg-[#B8922A] rounded-full mt-2.5 shrink-0"></div>
+            <p><strong>Fiabilité des livrables :</strong> Nous garantissons des résultats conformes à vos attentes et aux normes en vigueur.</p>
+          </li>
+        </ul>
+        <p className="font-semibold text-[#1B3680] bg-[#DAF0F7]/30 p-4 border-l-2 border-[#1C40C2]">
+          Nos équipes peuvent intervenir en français et en anglais, garantissant une gestion fluide des échanges, des reportings et des opérations dans un contexte international.
+        </p>
+      </>
+    ),
   },
   "notre-methodologie": {
-    title: { 
-      fr: "Notre méthodologie", 
-      en: "Our Methodology" 
-    },
-    description: { 
-      fr: "Une méthodologie stricte pour sécuriser l'exécution de vos opérations.",
-      en: "A strict methodology to secure the execution of your operations."
-    },
-    image: "/nos-solutions-hero.jpg",
-    content: { 
-      fr: "### Découverte\nAnalyse de votre organisation, de vos processus et de vos contraintes afin de définir précisément le périmètre d’intervention.\n\n### Vérifications préalables\nVérification de l’identité juridique, de la situation administrative et de la cohérence opérationnelle du client ou partenaire, afin de sécuriser l’entrée en relation.\n\n### Analyse\nConstruction d’une proposition opérationnelle adaptée à vos besoins, incluant les profils, le mode d’organisation et les livrables attendus.\n\n### Mise en œuvre & formation\nDéploiement des équipes et intégration aux outils, process et standards de votre organisation.\n\n### Suivi dans la durée\nPilotage continu de la mission, ajustements réguliers et contrôle qualité des livrables.",
-      en: "### Discovery\nAnalysis of your organization, your processes, and your constraints in order to precisely define the scope of intervention.\n\n### Preliminary Checks\nVerification of the legal identity, administrative situation, and operational consistency of the client or partner, in order to secure the onboarding process.\n\n### Analysis\nConstruction of an operational proposal adapted to your needs, including the profiles, organizational mode, and expected deliverables.\n\n### Implementation & Training\nDeployment of teams and integration with the tools, processes, and standards of your organization.\n\n### Long-term Monitoring\nContinuous management of the mission, regular adjustments, and quality control of deliverables."
-    }
+    title: "Un cadre structuré pour une exécution sans faille.",
+    content: (
+      <>
+        <p className="mb-8">
+          Notre méthodologie repose sur un processus en 5 étapes clés, garantissant une intégration rapide et un suivi rigoureux de chaque mission.
+        </p>
+        <div className="space-y-6">
+          {[
+            { num: "01", title: "Découverte", desc: "Analyse approfondie de votre organisation, de vos processus internes, de vos contraintes réglementaires et de vos objectifs opérationnels." },
+            { num: "02", title: "Vérifications préalables", desc: "Vérification de l'identité juridique, de la situation administrative et des éventuelles obligations spécifiques liées à votre secteur." },
+            { num: "03", title: "Analyse et proposition", desc: "Construction d'une proposition opérationnelle sur mesure, adaptée à vos besoins, à vos outils et à votre volumétrie." },
+            { num: "04", title: "Mise en œuvre", desc: "Déploiement des équipes opérationnelles, intégration aux outils et processus existants, et lancement de la mission." },
+            { num: "05", title: "Suivi dans la durée", desc: "Pilotage continu de la mission, points de contrôle réguliers, reporting de performance et contrôle qualité des livrables." },
+          ].map((step, idx) => (
+            <div key={idx} className="bg-white border border-[#D8DCE8] p-6 flex gap-6">
+              <span className="font-serif text-3xl font-bold text-[#B8922A] opacity-50">{step.num}</span>
+              <div>
+                <h4 className="font-bold text-[#1B3680] mb-2">{step.title}</h4>
+                <p className="text-[#3A4660] text-sm leading-relaxed">{step.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </>
+    ),
   },
-  "accreditations-et-certifications": {
-    title: { 
-      fr: "Accréditations & certifications", 
-      en: "Accreditations & Certifications" 
-    },
-    description: { 
-      fr: "MENUA CONSULTING intervient dans des environnements soumis à des exigences réglementaires élevées.",
-      en: "MENUA CONSULTING operates in environments subject to high regulatory requirements."
-    },
-    image: "/pourquoi-menua-hero.jpg",
-    content: { 
-      fr: "La dirigeante dispose notamment de la certification AMF, d’une certification en Contrôle Interne et Gestion des Risques des institutions financières, ainsi que d’une expérience acquise au sein d’environnements financiers, patrimoniaux et réglementés.\n\nLe cabinet intervient en coordination avec les équipes habilitées de ses clients (banques, cabinets, structures réglementées).\n\nMENUA CONSULTING n’exerce pas d’activité réglementée en son nom propre. Le cabinet met à disposition des ressources opérationnelles spécialisées intégrées aux cadres d’agrément et de supervision de ses clients.\n\nCe dispositif garantit la conformité, la qualité des opérations et la sécurité des processus.",
-      en: "The CEO notably holds the AMF certification, a certification in Internal Control and Risk Management for financial institutions, as well as experience acquired within financial, wealth, and regulated environments.\n\nThe firm intervenes in coordination with the authorized teams of its clients (banks, firms, regulated structures).\n\nMENUA CONSULTING does not carry out any regulated activity in its own name. The firm provides specialized operational resources integrated into the approval and supervision frameworks of its clients.\n\nThis system guarantees compliance, the quality of operations, and the security of processes."
-    }
+  "accreditations": {
+    title: "Une expertise reconnue dans des environnements réglementés.",
+    content: (
+      <>
+        <p className="mb-4">
+          MENUA CONSULTING intervient dans des environnements soumis à des exigences réglementaires élevées. La dirigeante dispose notamment de :
+        </p>
+        <ul className="list-disc pl-6 space-y-2 mb-8 text-[#3A4660]">
+          <li>La certification AMF (Autorité des Marchés Financiers).</li>
+          <li>Une certification en Contrôle Interne et Gestion des Risques des institutions financières.</li>
+          <li>Une expérience solide acquise au sein d&apos;environnements financiers, patrimoniaux et réglementés.</li>
+        </ul>
+        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-4">Notre cadre de supervision :</h3>
+        <p className="mb-4">
+          MENUA CONSULTING n&apos;exerce pas d&apos;activité réglementée en son nom propre. Le cabinet met à disposition des ressources opérationnelles spécialisées intégrées aux cadres d&apos;agrément et de supervision de ses clients.
+        </p>
+        <p className="p-4 bg-[#F2F0ED] border-l-2 border-[#B8922A] text-sm text-[#3A4660]">
+          Ce dispositif garantit la conformité, la qualité des opérations et la sécurité des processus, tout en laissant la responsabilité réglementaire et la supervision client à nos partenaires agréés.
+        </p>
+      </>
+    ),
   },
   "notre-equipe": {
-    title: { 
-      fr: "Notre équipe", 
-      en: "Our Team" 
-    },
-    description: { 
-      fr: "Une direction impliquée au plus près des opérations.",
-      en: "Management involved as close as possible to operations."
-    },
-    image: "/notebook.jpg",
-    content: { 
-      fr: "Rosette Fouelefack est directrice générale de MENUA CONSULTING.\n\nElle dispose d’une expérience en finance, gestion des risques, gestion de patrimoine et opérations back & middle office acquise au sein d’environnements exigeants.\n\nElle supervise directement la structuration des missions, la constitution des équipes, la validation des livrables et le dispositif de contrôle qualité.\n\nMENUA CONSULTING s’appuie sur une organisation agile, composée d’une direction opérationnelle en France et de collaborateurs ou partenaires externalisés mobilisés selon les besoins des clients.\n\nChaque mission est encadrée par des procédures de suivi, de validation et de contrôle, afin de garantir un niveau d’exécution conforme aux attentes du client et aux standards de rigueur attendus sur le marché français.\n\nMENUA CONSULTING repose sur un principe de contrôle à quatre yeux et une supervision continue des opérations afin de garantir fiabilité, rigueur et continuité de service.",
-      en: "Rosette Fouelefack is the CEO of MENUA CONSULTING.\n\nShe has experience in finance, risk management, wealth management, and back & middle office operations acquired in demanding environments.\n\nShe directly supervises the structuring of missions, the building of teams, the validation of deliverables, and the quality control system.\n\nMENUA CONSULTING relies on an agile organization, composed of operational management in France and outsourced employees or partners mobilized according to client needs.\n\nEach mission is framed by monitoring, validation, and control procedures, in order to guarantee a level of execution that meets the client's expectations and the standards of rigor expected on the French market.\n\nMENUA CONSULTING relies on a four-eyes principle and continuous supervision of operations to guarantee reliability, rigor, and continuity of service."
-    }
-  }
+    title: "Une direction impliquée au plus près des opérations.",
+    content: (
+      <>
+        <div className="flex flex-col md:flex-row gap-8 mb-10 items-start">
+          <div className="w-48 h-48 shrink-0 rounded-full overflow-hidden border-4 border-[#F2F0ED]">
+            <img src="/rosette.jpg" alt="Rosette Fouelefack" className="w-full h-full object-cover" />
+          </div>
+          <div>
+            <h3 className="font-serif text-2xl font-bold text-[#1B3680] mb-1">Rosette Fouelefack</h3>
+            <p className="text-[#1C40C2] text-xs font-bold tracking-widest uppercase mb-4">Directrice générale</p>
+            <p className="mb-4 text-[#3A4660]">
+              Rosette Fouelefack dispose d&apos;une expérience approfondie en finance, gestion des risques, gestion de patrimoine et opérations back & middle office acquise au sein d&apos;environnements exigeants (grandes institutions financières et cabinets de conseil).
+            </p>
+            <p className="font-semibold text-[#1B3680] mb-2">Elle supervise directement :</p>
+            <ul className="list-disc pl-6 space-y-1 text-[#3A4660] text-sm">
+              <li>La structuration des missions.</li>
+              <li>La constitution des équipes dédiées.</li>
+              <li>La validation finale des livrables.</li>
+              <li>Le dispositif global de contrôle qualité (principe des 4 yeux).</li>
+            </ul>
+          </div>
+        </div>
+        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-4">Une organisation agile :</h3>
+        <p className="mb-4">
+          MENUA CONSULTING s&apos;appuie sur une organisation agile, composée d&apos;une direction opérationnelle en France et de collaborateurs ou partenaires externalisés mobilisés selon les besoins spécifiques de chaque client.
+        </p>
+        <p>
+          Chaque mission est encadrée par des procédures de suivi, de validation et de contrôle, afin de garantir un niveau d&apos;exécution conforme aux attentes du client et aux standards de rigueur attendus sur le marché français.
+        </p>
+      </>
+    ),
+  },
+  "nos-implantations": {
+    title: "Une capacité d'intervention en France et à l'international.",
+    content: (
+      <>
+        <p className="mb-8">
+          MENUA CONSULTING est basé à Paris, avec une capacité d&apos;intervention en France métropolitaine et à l&apos;international.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white border border-[#D8DCE8] p-6">
+            <h4 className="font-bold text-[#1B3680] mb-2 uppercase text-sm tracking-wider">France métropolitaine</h4>
+            <p className="text-[#3A4660]">Paris (siège social) – 92 rue des Pyrénées – 75020 Paris.</p>
+          </div>
+          <div className="bg-white border border-[#D8DCE8] p-6">
+            <h4 className="font-bold text-[#1B3680] mb-2 uppercase text-sm tracking-wider">International</h4>
+            <p className="text-[#3A4660] mb-2">Interventions possibles dans les principaux centres financiers internationaux, notamment :</p>
+            <ul className="list-disc pl-4 text-[#3A4660] text-sm">
+              <li>Luxembourg</li>
+              <li>Suisse</li>
+              <li>Royaume-Uni</li>
+            </ul>
+          </div>
+        </div>
+        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-4">Modalités d&apos;intervention :</h3>
+        <p className="p-4 bg-[#DAF0F7]/30 border-l-2 border-[#1C40C2] text-[#3A4660]">
+          Nos équipes interviennent à distance pour l&apos;exécution quotidienne des opérations, ou en présentiel selon les besoins spécifiques et la configuration de la mission.
+        </p>
+      </>
+    ),
+  },
+  "interprofessionnalite": {
+    title: "Le partenaire privilégié des experts-comptables, avocats, notaires et CGP.",
+    content: (
+      <>
+        <p className="mb-4">
+          MENUA CONSULTING est le partenaire privilégié des professionnels du droit, du chiffre et du conseil en gestion de patrimoine.
+        </p>
+        <p className="mb-8">
+          Nous accompagnons les experts-comptables, avocats, notaires et Conseillers en Gestion de Patrimoine (CGP) dans l&apos;externalisation des fonctions back et middle office de leurs clients.
+        </p>
+        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-6">Nos offres dédiées aux cabinets :</h3>
+        <div className="space-y-6">
+          <div className="bg-white border border-[#D8DCE8] p-6 border-l-4 border-l-[#1C40C2]">
+            <h4 className="font-bold text-[#1B3680] mb-2">Structuration</h4>
+            <p className="text-[#3A4660] text-sm">Mise en place d&apos;un pôle patrimonial ou opérationnel au sein de votre cabinet, sans avoir à recruter en interne.</p>
+          </div>
+          <div className="bg-white border border-[#D8DCE8] p-6 border-l-4 border-l-[#1C40C2]">
+            <h4 className="font-bold text-[#1B3680] mb-2">Accompagnement</h4>
+            <p className="text-[#3A4660] text-sm">Prise en charge de l&apos;exécution opérationnelle pour vos propres clients (gestion administrative, suivi comptable, reportings).</p>
+          </div>
+          <div className="bg-white border border-[#D8DCE8] p-6 border-l-4 border-l-[#1C40C2]">
+            <h4 className="font-bold text-[#1B3680] mb-2">Formation</h4>
+            <p className="text-[#3A4660] text-sm">Renforcement des compétences de vos équipes sur les enjeux back & middle office, la réglementation et les bonnes pratiques.</p>
+          </div>
+        </div>
+      </>
+    ),
+  },
 };
 
-export default function NousConnaitreDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params);
-  const { t, language } = useLanguage();
-  const pageData = nousConnaitreData[slug];
+export function generateStaticParams() {
+  return Object.keys(pagesData).map((slug) => ({ slug }));
+}
 
-  if (!pageData) {
-    notFound();
-  }
+export default async function SubPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const data = pagesData[slug];
 
-  const lang = (language === 'EN' ? 'en' : 'fr') as keyof Translation;
-  
-  // Petit parser de markdown simple pour les titres h3 (utilisés dans la méthodo)
-  const renderContent = (content: string) => {
-    return content.split('\n\n').map((paragraph, idx) => {
-      if (paragraph.startsWith('### ')) {
-        return <h3 key={idx} className="font-serif text-2xl font-bold mt-10 mb-4 text-[#1E2A3A] flex items-center gap-3"><span className="w-8 h-[1px] bg-[#C89B5E]"></span>{paragraph.replace('### ', '')}</h3>;
-      }
-      if (idx === 0) {
-        // Drop cap for the first paragraph
-        return (
-          <p key={idx} className="text-gray-700 leading-loose mb-6 text-lg font-light">
-            <span className="float-left text-5xl font-serif text-[#C89B5E] pr-3 pt-2 leading-none">{paragraph.charAt(0)}</span>
-            {paragraph.slice(1)}
-          </p>
-        );
-      }
-      return <p key={idx} className="text-gray-600 leading-relaxed mb-6 font-light">{paragraph}</p>;
-    });
-  };
+  if (!data) return notFound();
+
+  // Create human-readable title for breadcrumb
+  const breadcrumbTitle = slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
   return (
-    <main className="flex flex-col w-full bg-[#F8F9FA] text-[#1E2A3A] font-sans min-h-screen">
-      {/* HERO FULL WIDTH */}
-      <section className="relative w-full min-h-[75vh] flex items-end overflow-hidden pt-32 bg-[#0F2B45]">
-        <div className="absolute top-0 right-0 w-full md:w-3/4 h-full z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0F2B45] via-[#0F2B45]/90 to-transparent z-10 w-full"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0F2B45] via-[#0F2B45]/40 to-transparent z-10"></div>
-          <img src={pageData.image} alt={pageData.title[lang]} className="w-full h-full object-cover opacity-50" />
+    <main className="flex flex-col w-full min-h-screen bg-[#FAFBFC] font-sans">
+      {/* ── HERO SUBPAGE ── */}
+      <section className="relative w-full min-h-[40vh] flex items-end justify-center overflow-hidden pb-12 pt-32">
+        <div className="absolute inset-0 z-0">
+          <img src="/subpage_hero.png" alt="Hero" className="w-full h-full object-cover object-center" />
+          <div className="absolute inset-0 bg-[#1B3680]/80 mix-blend-multiply"></div>
+          <div className="absolute inset-0 hero-gradient"></div>
         </div>
         
-        <div className="relative z-10 px-8 md:px-16 lg:px-24 w-full max-w-7xl mx-auto pb-20">
-          <div className="text-[#C89B5E] text-[0.65rem] tracking-[0.2em] uppercase mb-6 flex items-center flex-wrap gap-3 font-bold">
-            <Link href="/" className="hover:text-white transition-colors">{t("Accueil", "Home")}</Link>
-            <ChevronRight size={12} className="text-gray-500" />
-            <Link href="/nous-connaitre" className="hover:text-white transition-colors">{t("Nous connaître", "About Us")}</Link>
-            <ChevronRight size={12} className="text-gray-500" />
-            <span className="text-white">{pageData.title[lang]}</span>
-          </div>
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-7xl font-bold leading-tight mb-8 max-w-4xl text-white">
-            {pageData.title[lang]}
+        <div className="relative z-10 max-w-4xl w-full mx-auto px-8">
+          <Breadcrumb 
+            items={[
+              { label: "Nous connaître", href: "/nous-connaitre" },
+              { label: breadcrumbTitle }
+            ]} 
+            light={true}
+          />
+          <p className="text-[#DAF0F7] text-xs font-bold tracking-widest uppercase mb-4 mt-8">Nous connaître</p>
+          <h1
+            className="text-white mb-2"
+            style={{
+              fontFamily: "var(--font-serif, serif)",
+              fontSize: "clamp(1.8rem, 3vw, 2.5rem)",
+              fontWeight: 600,
+              lineHeight: 1.2,
+            }}
+          >
+            {data.title}
           </h1>
-          <div className="w-16 h-[2px] bg-[#C89B5E] mb-8"></div>
-          <p className="text-gray-300 text-base md:text-lg max-w-2xl leading-relaxed font-light">
-            {pageData.description[lang]}
-          </p>
         </div>
       </section>
 
-      {/* CONTENU DÉTAILLÉ - CONSTRAINED WIDTH */}
-      <section className="px-8 py-24 relative z-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col lg:flex-row gap-16 xl:gap-24">
-            
-            {/* MAIN CONTENT */}
-            <div className="lg:w-2/3">
-              <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100">
-                <div className="flex items-center gap-4 mb-10">
-                  <div className="w-12 h-12 bg-[#0F2B45] rounded-full flex items-center justify-center text-[#C89B5E]">
-                    <Quote size={20} />
-                  </div>
-                  <h2 className="font-serif text-3xl font-bold text-[#1E2A3A]">{t("En détail", "In detail")}</h2>
-                </div>
-                
-                <div className="prose prose-lg max-w-none">
-                  {renderContent(pageData.content[lang])}
-                </div>
-              </div>
-            </div>
-            
-            {/* SIDEBAR CTA */}
-            <div className="lg:w-1/3">
-              <div className="bg-[#0F2B45] text-white p-10 rounded-2xl sticky top-32 shadow-2xl">
-                <h3 className="font-serif text-2xl font-bold mb-6 leading-snug">{t("Besoin d'accompagnement ?", "Need assistance?")}</h3>
-                <div className="w-8 h-1 bg-[#C89B5E] mb-6"></div>
-                <p className="text-gray-400 text-sm leading-relaxed mb-10 font-light">
-                  {t(
-                    "MENUA CONSULTING accompagne les entreprises dans l’externalisation opérationnelle avec rigueur et expertise.",
-                    "MENUA CONSULTING supports companies in operational outsourcing with rigor and expertise."
-                  )}
-                </p>
-                <Link href="/nous-contacter" className="flex items-center justify-center gap-4 bg-[#4A8C7A] hover:bg-[#2D7A5A] text-white px-6 py-4 rounded text-xs font-bold tracking-widest uppercase transition-all duration-300 hover:shadow-lg hover:shadow-[#C89B5E]/20 w-full group">
-                  {t("Nous contacter", "Contact us")} <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </div>
-            
-          </div>
+      {/* ── CONTENT ── */}
+      <section className="px-8 py-16">
+        <div className="max-w-4xl mx-auto text-[#3A4660] text-lg leading-relaxed">
+          {data.content}
         </div>
       </section>
+      <CallToAction />
     </main>
   );
 }

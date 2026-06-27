@@ -1,6 +1,25 @@
 @import "tailwindcss";
 
+/* ── Typographie de base — style Laplace ────────────────────── */
 @layer base {
+  html {
+    font-family: var(--font-sans, "Source Sans 3", system-ui, sans-serif);
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif, "Cormorant Garamond", Georgia, serif);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  p, li {
+    font-family: var(--font-sans, "Source Sans 3", sans-serif);
+    line-height: 1.7;
+  }
+
   :root {
     --background: 0 0% 98%;
     --foreground: 222.2 84% 4.9%;
@@ -23,78 +42,120 @@
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
 
-    /* ═══════════════════════════════════════════════
-       MENUA CONSULTING — PALETTE UNIFIÉE
-       ═══════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════════════
+       MENUA CONSULTING — PALETTE FINANCE RÉGLEMENTÉE (France)
+       Secteur : Banques · CGP · Sociétés Financières · EC
+       Standard : AMF / ACPR
+       ══════════════════════════════════════════════════════════ */
 
-    /* 1. COULEURS PRINCIPALES */
-    --menua-navy:        #0F2B45; /* Bleu profond — header, footer, titres majeurs */
-    --menua-navy-night:  #1A2D4A; /* Bleu nuit — fonds sombres secondaires */
+    /* 1. BLEU MARINE INSTITUTIONNEL */
+    --menua-navy:        #1B3680;
+    --menua-navy-night:  #122560;
+    --menua-navy-light:  #2447A0;
 
-    /* 2. ACCENTS PRINCIPAUX (CTA & interactions) */
-    --menua-sage:        #4A8C7A; /* Vert sauge — CTA principaux ("Présenter un besoin") */
-    --menua-emerald:     #2D7A5A; /* Vert émeraude — hover boutons, validation */
+    /* 2. BLEU COBALT DIGITAL (CTA, liens actifs) */
+    --menua-cobalt:      #1C40C2;
+    --menua-cobalt-dark: #142E9A;
 
-    /* 3. ACCENT PREMIUM (usage limité) */
-    --menua-gold:        #C89B5E; /* Or cuivré — badges, icônes, liens "Lire l'article" */
-    --menua-gold-light:  #D9B06E; /* Or clair — hover des éléments or */
+    /* 3. OR INSTITUTIONNEL (micro-accents premium) */
+    --menua-gold:        #B8922A;
+    --menua-gold-light:  #CFA94A;
+    --menua-gold-pale:   #F5EDD8;
 
-    /* 4. FONDS NEUTRES */
-    --menua-bg:          #F8F9FA; /* Blanc cassé — fond principal */
-    --menua-bg-2:        #EDEFF2; /* Gris perle — fond secondaire */
-    --menua-bg-3:        #E2E6EA; /* Gris clair — distinction des blocs */
+    /* 4. ACCENT HUMAIN — usage ultra-limité */
+    --menua-coral:       #D97A55;
+    --menua-coral-hover: #C06440;
 
-    /* 5. TEXTES */
-    --menua-text:        #1E2A3A; /* Gris anthracite — texte principal */
-    --menua-text-light:  #3D4F64; /* Gris ardoise — texte secondaire */
-    --menua-text-white:  #F0F2F5; /* Blanc cassé — sur fonds sombres */
-    --menua-text-hover:  #D9B06E; /* Or cuivré clair — hover sur fond sombre */
+    /* 5. NEUTRES CHAUDS */
+    --menua-taupe:       #ABA89F;
+    --menua-taupe-light: #F2F0ED;
 
-    /* 6. LIENS & INTERACTIFS */
-    --menua-link:        #4A8C7A; /* Liens normaux */
-    --menua-link-hover:  #2D7A5A; /* Liens hover */
-    --menua-link-alt:    #5A7A94; /* Liens alternatifs (moins importants) */
+    /* 6. FONDS */
+    --menua-bg:          #FAFBFC;
+    --menua-bg-warm:     #FAF9F7;
+    --menua-bg-glacier:  #DAF0F7;
+    --menua-bg-deep:     #1B3680;
 
-    /* 7. FONCTIONNEL */
-    --menua-success:     #6BAF8D; /* Succès / Validation */
-    --menua-alert:       #8B3A3A; /* Alerte / Attention */
-    --menua-border:      #D1D6DC; /* Bordures / Séparations */
+    /* 7. TEXTES */
+    --menua-text:        #0E1B2E;
+    --menua-text-light:  #3A4660;
+    --menua-text-muted:  #6B7794;
+    --menua-text-white:  #F4F6FA;
+    --menua-text-hover:  #DAF0F7;
+
+    /* 8. BORDURES & LIENS */
+    --menua-border:      #D8DCE8;
+    --menua-border-warm: #D9C8B8;
+    --menua-link:        #1B3680;
+    --menua-link-hover:  #1C40C2;
+    --menua-link-alt:    #D97A55;
+
+    /* 9. FONCTIONNEL */
+    --menua-success:     #2E7D5E;
+    --menua-alert:       #8B2E2E;
+    --menua-info:        #1C40C2;
   }
 }
 
-/* ═══════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════
    CLASSES UTILITAIRES MENUA
-   ═══════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════════ */
+
+/* Labels de section style Laplace */
+.section-eyebrow {
+  font-family: var(--font-sans, "Source Sans 3", sans-serif);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--menua-gold);
+}
 
 /* Fonds */
 .bg-menua-navy        { background-color: var(--menua-navy); }
 .bg-menua-navy-night  { background-color: var(--menua-navy-night); }
-.bg-menua-sage        { background-color: var(--menua-sage); }
+.bg-menua-navy-light  { background-color: var(--menua-navy-light); }
+.bg-menua-cobalt      { background-color: var(--menua-cobalt); }
 .bg-menua-gold        { background-color: var(--menua-gold); }
+.bg-menua-gold-pale   { background-color: var(--menua-gold-pale); }
+.bg-menua-glacier     { background-color: var(--menua-bg-glacier); }
+.bg-menua-taupe       { background-color: var(--menua-taupe-light); }
 .bg-menua-bg          { background-color: var(--menua-bg); }
-.bg-menua-bg-2        { background-color: var(--menua-bg-2); }
+.bg-menua-bg-warm     { background-color: var(--menua-bg-warm); }
+/* Legacy */
+.bg-menua-sage        { background-color: var(--menua-cobalt); }
+.bg-menua-bg-2        { background-color: var(--menua-bg-glacier); }
+.bg-menua-bg-3        { background-color: var(--menua-taupe-light); }
+.bg-menua-bg-4        { background-color: var(--menua-taupe-light); }
+.bg-gold              { background-color: var(--menua-cobalt); }
+.bg-navy              { background-color: var(--menua-navy); }
+.bg-navy-light        { background-color: var(--menua-navy-light); }
 
 /* Hover fonds */
-.bg-menua-sage:hover   { background-color: var(--menua-emerald); }
+.bg-menua-cobalt:hover { background-color: var(--menua-cobalt-dark); }
+.bg-menua-navy:hover   { background-color: var(--menua-navy-night); }
 .bg-menua-gold:hover   { background-color: var(--menua-gold-light); }
+.bg-menua-sage:hover   { background-color: var(--menua-cobalt-dark); }
+.bg-gold:hover         { background-color: var(--menua-cobalt-dark); }
 
 /* Textes */
-.text-menua-gold      { color: var(--menua-gold); }
-.text-menua-sage      { color: var(--menua-sage); }
 .text-menua-navy      { color: var(--menua-navy); }
+.text-menua-cobalt    { color: var(--menua-cobalt); }
+.text-menua-gold      { color: var(--menua-gold); }
 .text-menua-text      { color: var(--menua-text); }
+.text-menua-muted     { color: var(--menua-text-muted); }
+.text-menua-glacier   { color: var(--menua-bg-glacier); }
+.text-menua-coral     { color: var(--menua-coral); }
+.text-menua-sage      { color: var(--menua-cobalt); }
+.text-gold            { color: var(--menua-gold); }
 
 /* Bordures */
+.border-menua-navy    { border-color: var(--menua-navy); }
+.border-menua-cobalt  { border-color: var(--menua-cobalt); }
 .border-menua-gold    { border-color: var(--menua-gold); }
-.border-menua-sage    { border-color: var(--menua-sage); }
 .border-menua-border  { border-color: var(--menua-border); }
-
-/* Classes legacy (rétrocompat) */
-.text-gold            { color: var(--menua-gold); }
-.bg-gold              { background-color: var(--menua-sage); }
-.bg-gold:hover        { background-color: var(--menua-emerald); }
-.bg-navy              { background-color: var(--menua-navy); }
-.bg-navy-light        { background-color: var(--menua-navy-night); }
+.border-menua-glacier { border-color: var(--menua-bg-glacier); }
+.border-menua-sage    { border-color: var(--menua-cobalt); }
 .border-gold          { border-color: var(--menua-gold); }
 
 /* Curved shapes */
@@ -103,7 +164,28 @@
   border-top-right-radius: 4rem;
 }
 
-/* Background image overrides */
+/* Dégradés */
 .hero-gradient {
-  background: linear-gradient(90deg, rgba(15,43,69,1) 0%, rgba(15,43,69,0.9) 40%, rgba(15,43,69,0.4) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(27, 54, 128, 1)    0%,
+    rgba(27, 54, 128, 0.92) 45%,
+    rgba(27, 54, 128, 0.20) 100%
+  );
+}
+
+.glacier-gradient {
+  background: linear-gradient(135deg, var(--menua-bg-glacier) 0%, var(--menua-bg) 100%);
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, var(--menua-gold-pale) 0%, var(--menua-bg) 100%);
+}
+
+.cobalt-gradient {
+  background: linear-gradient(135deg, var(--menua-navy) 0%, var(--menua-navy-night) 100%);
+}
+
+.blush-gradient {
+  background: linear-gradient(135deg, var(--menua-taupe-light) 0%, var(--menua-bg-warm) 100%);
 }

@@ -1,226 +1,117 @@
 "use client";
 import Link from "next/link";
-import { ArrowRight, PieChart, BarChart3, ShieldCheck, FileSpreadsheet, Building2, Briefcase, CheckCircle2 } from "lucide-react";
+import { ArrowRight, PieChart, ShieldCheck, FileSpreadsheet, Users, Briefcase, BarChart3 } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
+import CallToAction from "@/components/layout/CallToAction";
 
 export default function VosBesoinsPage() {
   const { t } = useLanguage();
 
-  const sections = [
-    {
-      id: "finance-reporting",
-      icon: PieChart,
-      title: t("Finance & reporting", "Finance & reporting"),
-      desc: t(
-        "Production, structuration et fiabilisation de reportings financiers destinés au pilotage de la performance, au suivi de l'activité et à l'aide à la décision.",
-        "Production, structuring and reliability of financial reports intended for performance management, activity monitoring and decision support."
-      ),
-      services: [
-        t("Reporting financier", "Financial reporting"),
-        t("KPI / Dashboard", "KPI / Dashboard"),
-        t("Analyse de performance", "Performance analysis"),
-        t("Support direction financière", "Financial management support"),
-        t("Consolidation des données", "Data consolidation"),
-        t("Analyse financière", "Financial analysis"),
-        t("Préparation de reportings pour direction financière", "Preparation of reports for financial management"),
-        t("Suivi d'activité", "Activity monitoring"),
-        t("Reporting mensuel / trimestriel", "Monthly / quarterly reporting"),
-        t("Reporting de trésorerie", "Cash reporting"),
-        t("Reporting de rentabilité", "Profitability reporting"),
-        t("Suivi des indicateurs", "Indicator monitoring"),
-      ],
-      bg: "bg-[#F8F9FA]"
-    },
-    {
-      id: "controle-gestion",
-      icon: BarChart3,
-      title: t("Contrôle de gestion", "Management control"),
-      desc: t(
-        "Appui opérationnel au suivi budgétaire, à l'analyse des écarts et au pilotage de la performance afin d'aider les organisations à mieux maîtriser leurs coûts, leurs marges et leurs ressources.",
-        "Operational support for budget monitoring, variance analysis and performance management to help organizations better control their costs, margins and resources."
-      ),
-      services: [
-        t("Suivi budgétaire", "Budget monitoring"),
-        t("Analyse des écarts entre réalisé, budget et prévisionnel", "Analysis of variances between actual, budget and forecast"),
-        t("Tableaux de bord", "Dashboards"),
-        t("Pilotage de performance", "Performance management"),
-        t("Suivi des coûts, charges et marges", "Monitoring of costs, expenses and margins"),
-        t("Analyse de rentabilité", "Profitability analysis"),
-        t("Suivi des indicateurs opérationnels", "Monitoring of operational indicators"),
-        t("Préparation de reportings de gestion", "Preparation of management reports"),
-        t("Suivi du chiffre d'affaires et des objectifs", "Monitoring of turnover and objectives"),
-        t("Mise à jour de fichiers de pilotage", "Updating management files"),
-        t("Consolidation des données de gestion", "Consolidation of management data"),
-        t("Support aux directions financières et responsables opérationnels", "Support to financial departments and operational managers"),
-      ],
-      bg: "bg-[#EDEFF2]"
-    },
-    {
-      id: "risques-conformite",
-      icon: ShieldCheck,
-      title: t("Risques & conformité", "Risk & compliance"),
-      desc: t(
-        "Appui opérationnel aux équipes risques et conformité dans le traitement, le contrôle et la fiabilisation des dossiers sensibles, dans le respect des procédures internes et des exigences réglementaires applicables.",
-        "Operational support for risk and compliance teams in the processing, control and reliability of sensitive files, in compliance with internal procedures and applicable regulatory requirements."
-      ),
-      services: [
-        t("KYC (Know Your Customer)", "KYC (Know Your Customer)"),
-        t("LCB-FT (Lutte contre le blanchiment et le financement du terrorisme)", "AML-CFT (Anti-Money Laundering and Combating the Financing of Terrorism)"),
-        t("AML (Anti-Money Laundering)", "AML (Anti-Money Laundering)"),
-        t("Contrôle documentaire", "Documentary control"),
-        t("Analyse et complétude des dossiers clients", "Analysis and completeness of client files"),
-        t("Vérification des pièces justificatives", "Verification of supporting documents"),
-        t("Entrée en relation client", "Client onboarding"),
-        t("Revue périodique des dossiers", "Periodic review of files"),
-        t("Remédiation KYC", "KYC remediation"),
-        t("Traitement des alertes de conformité", "Processing of compliance alerts"),
-        t("Analyse des mouvements inhabituels", "Analysis of unusual movements"),
-        t("Support aux équipes risques et conformité", "Support to risk and compliance teams"),
-        t("Suivi des procédures internes", "Monitoring of internal procedures"),
-        t("Préparation de dossiers pour validation par les équipes habilitées", "Preparation of files for validation by authorized teams"),
-      ],
-      bg: "bg-[#F8F9FA]"
-    },
-    {
-      id: "support-comptable",
-      icon: FileSpreadsheet,
-      title: t("Support comptable & data", "Accounting & data support"),
-      desc: t(
-        "Appui opérationnel aux équipes comptables, administratives et data dans le traitement, la fiabilisation et la structuration des informations nécessaires à la production comptable et au reporting.",
-        "Operational support for accounting, administrative and data teams in the processing, reliability and structuring of the information necessary for accounting production and reporting."
-      ),
-      services: [
-        t("Saisie comptable", "Accounting entry"),
-        t("Rapprochements bancaires", "Bank reconciliations"),
-        t("Lettrage des comptes", "Account matching"),
-        t("Contrôle et classement des pièces comptables", "Control and filing of accounting documents"),
-        t("Préparation des déclarations de TVA", "Preparation of VAT returns"),
-        t("Préparation des éléments comptables pour révision", "Preparation of accounting elements for review"),
-        t("Suivi des factures clients et fournisseurs", "Monitoring of customer and supplier invoices"),
-        t("Relances administratives liées aux pièces manquantes", "Administrative reminders linked to missing documents"),
-        t("Data cleaning", "Data cleaning"),
-        t("Structuration et mise à jour de bases de données", "Structuring and updating databases"),
-        t("Contrôle de cohérence des données", "Data consistency check"),
-        t("Préparation de fichiers de reporting", "Preparation of reporting files"),
-        t("Consolidation de données comptables et opérationnelles", "Consolidation of accounting and operational data"),
-        t("Archivage et organisation documentaire", "Archiving and document organization"),
-      ],
-      bg: "bg-[#EDEFF2]"
-    },
-    {
-      id: "gestion-patrimoine",
-      icon: Building2,
-      title: t("Gestion de patrimoine & Support CGP", "Wealth management & CGP support"),
-      desc: t(
-        "Appui opérationnel aux cabinets de gestion de patrimoine, famille offices et structures patrimoniales dans le traitement, la préparation et le suivi administratif des dossiers clients.",
-        "Operational support for wealth management firms, family offices and wealth structures in the processing, preparation and administrative monitoring of client files."
-      ),
-      services: [
-        t("Préparation des dossiers d'entrée en relation", "Preparation of onboarding files"),
-        t("Collecte et contrôle des pièces justificatives", "Collection and control of supporting documents"),
-        t("Contrôle de complétude des dossiers clients", "Completeness check of client files"),
-        t("Mise à jour des informations clients", "Updating client information"),
-        t("Préparation et pré remplissage de formulaires", "Preparation and pre-filling of forms"),
-        t("Support administratif aux souscriptions", "Administrative support for subscriptions"),
-        t("Support aux arbitrages", "Support for arbitrages"),
-        t("Support aux rachats partiels ou totaux", "Support for partial or total redemptions"),
-        t("Suivi des demandes clients", "Monitoring of client requests"),
-        t("Organisation et archivage documentaire", "Document organization and archiving"),
-        t("Mise à jour des bases clients", "Updating client databases"),
-        t("Préparation de dossiers pour validation par les conseillers habilités", "Preparation of files for validation by authorized advisors"),
-        t("Suivi des opérations patrimoniales dans le respect des procédures internes", "Monitoring of wealth operations in compliance with internal procedures"),
-      ],
-      bg: "bg-[#F8F9FA]"
-    },
-    {
-      id: "autres-besoins",
-      icon: Briefcase,
-      title: t("Autres besoins opérationnels", "Other operational needs"),
-      desc: t(
-        "Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques ne relevant pas exclusivement d'une fonction financière, comptable, patrimoniale, conformité ou data.",
-        "Taking charge of ad hoc, cross-functional or specific operational needs that do not exclusively fall under a financial, accounting, wealth, compliance or data function."
-      ),
-      services: [
-        t("Missions ponctuelles de renfort opérationnel", "Ad hoc operational reinforcement missions"),
-        t("Support administratif financier", "Financial administrative support"),
-        t("Traitement de dossiers en volume", "Volume processing of files"),
-        t("Classement, archivage et organisation documentaire", "Filing, archiving and document organization"),
-        t("Préparation et mise à jour de fichiers de suivi", "Preparation and updating of monitoring files"),
-        t("Support à la gestion d'opérations transverses", "Support for the management of cross-functional operations"),
-        t("Assistance à la formalisation de procédures internes", "Assistance with the formalization of internal procedures"),
-        t("Aide à la structuration de process opérationnels", "Help with the structuring of operational processes"),
-        t("Préparation de documents administratifs", "Preparation of administrative documents"),
-        t("Suivi de demandes internes ou clients", "Monitoring of internal or client requests"),
-        t("Support en période de surcharge d'activité", "Support during periods of activity overload"),
-        t("Remplacement ou appui temporaire d'équipe", "Replacement or temporary team support"),
-        t("Coordination entre équipes internes et prestataires externalisés", "Coordination between internal teams and outsourced service providers"),
-        t("Étude de besoins spécifiques non listés dans les rubriques précédentes", "Study of specific needs not listed in the previous sections"),
-      ],
-      bg: "bg-[#EDEFF2]"
-    }
-  ];
-
   return (
-    <main className="flex flex-col w-full min-h-screen bg-[#F8F9FA] font-sans pt-24">
-      {/* ── HEADER INTRO ─────────────────────────────────────────────────── */}
-      <section className="bg-[#F8F9FA] px-8 py-16">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-[#0F2B45] mb-6">
-            {t("Vos besoins", "Your Needs")}
-          </h1>
-          <p className="text-[#1E2A3A] text-lg max-w-3xl mx-auto leading-relaxed">
-            {t(
-              "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l'ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
-              "MENUA CONSULTING supports financial, accounting, wealth, IT and regulated teams on all back and middle office functions requiring rigor, continuity and operational reliability."
-            )}
+    <main className="flex flex-col w-full min-h-screen bg-[#FAFBFC] font-sans">
+      {/* ── HERO INTRO ── */}
+      <section className="relative w-full min-h-[60vh] flex items-center justify-center overflow-hidden pt-24 pb-16">
+        <div className="absolute inset-0 z-0">
+          <img src="/vos_besoins_hero.png" alt="Vos Besoins" className="w-full h-full object-cover object-center" />
+          <div className="absolute inset-0 bg-[#1B3680]/60 mix-blend-multiply"></div>
+          <div className="absolute inset-0 hero-gradient"></div>
+        </div>
+        
+        <div className="relative z-10 max-w-4xl mx-auto text-center px-8 text-white mt-8">
+          <p className="text-[#DAF0F7] text-xs font-bold tracking-widest uppercase mb-6">
+            {t("Vue d’ensemble des expertises", "Overview of expertise")}
           </p>
+          <h1
+            className="mb-8"
+            style={{
+              fontFamily: "var(--font-serif, serif)",
+              fontSize: "clamp(2rem, 4vw, 3.5rem)",
+              fontWeight: 600,
+              lineHeight: 1.1,
+            }}
+          >
+            {t(
+              "Une réponse opérationnelle sur mesure pour vos back et middle offices.",
+              "A tailor-made operational response for your back and middle offices."
+            )}
+          </h1>
+          <div className="text-white/90 text-lg max-w-3xl mx-auto space-y-6 leading-relaxed">
+            <p>
+              <strong className="text-white">MENUA CONSULTING</strong>{" "}
+              {t(
+                "intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l'ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
+                "supports financial, accounting, wealth, IT and regulated teams on all back and middle office functions requiring rigor, continuity and operational reliability."
+              )}
+            </p>
+            <p>
+              {t(
+                "Que vous ayez besoin de renforcer ponctuellement vos équipes, de sécuriser un processus critique ou de gérer un pic d’activité, nous mettons à votre disposition des profils immédiatement opérationnels, intégrés à vos outils et à vos méthodes.",
+                "Whether you need to temporarily strengthen your teams, secure a critical process or manage a peak in activity, we provide you with immediately operational profiles, integrated into your tools and methods."
+              )}
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* ── SECTIONS BESOINS ─────────────────────────────────────────────── */}
-      {sections.map((section, idx) => (
-        <section key={idx} id={section.id} className={`${section.bg} px-8 py-20 border-t border-gray-200/60`}>
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-16 h-16 rounded-xl bg-white shadow-sm flex items-center justify-center border border-gray-100 shrink-0">
-                <section.icon className="text-[#4A8C7A]" size={32} />
-              </div>
-              <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#0F2B45]">
-                {section.title}
-              </h2>
-            </div>
-            
-            <p className="text-[#1E2A3A] text-lg mb-12 max-w-4xl leading-relaxed">
-              {section.desc}
+      {/* ── MOSAÏQUE ── */}
+      <section className="bg-white px-8 py-24 border-t border-[#D8DCE8]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2
+              className="text-[#1B3680]"
+              style={{
+                fontFamily: "var(--font-serif, serif)",
+                fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
+                fontWeight: 600,
+              }}
+            >
+              {t("Nos 5 domaines d'intervention", "Our 5 areas of intervention")}
+            </h2>
+            <p className="text-[#3A4660] mt-4">
+              {t(
+                "Découvrez ci-dessous nos domaines d’intervention. Cliquez sur chaque service pour accéder à sa description complète.",
+                "Discover our areas of intervention below. Click on each service to access its full description."
+              )}
             </p>
-
-            <div className="bg-white rounded-2xl p-8 md:p-10 shadow-sm border border-gray-100">
-              <h3 className="text-[#0F2B45] font-bold mb-6 text-lg border-b border-gray-100 pb-4">{t("Services couverts :", "Covered services:")}</h3>
-              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-8">
-                {section.services.map((service, j) => (
-                  <li key={j} className="flex items-start gap-3">
-                    <CheckCircle2 className="text-[#4A8C7A] shrink-0 mt-0.5" size={18} />
-                    <span className="text-[#1E2A3A] text-sm leading-snug">{service}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
-        </section>
-      ))}
 
-      {/* ── CTA ──────────────────────────────────────────────────────────── */}
-      <section className="bg-[#0F2B45] px-8 py-24 text-center">
-        <h2 className="font-serif text-3xl font-bold text-white mb-8">
-          {t("Un besoin opérationnel spécifique ?", "A specific operational need?")}
-        </h2>
-        <Link
-          href="/nous-contacter"
-          className="inline-flex items-center gap-3 bg-[#4A8C7A] hover:bg-[#2D7A5A] text-white px-8 py-4 rounded text-sm font-bold tracking-wider uppercase transition-all shadow-lg"
-        >
-          {t("Présenter un besoin", "Submit a request")} <ArrowRight size={16} />
-        </Link>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[#D8DCE8]">
+            {[
+              { icon: PieChart, title: t("Finance & reporting", "Finance & reporting"), desc: t("Production, structuration et fiabilisation de vos reportings financiers.", "Production, structuring and reliability of your financial reporting."), link: "/vos-besoins/finance-reporting" },
+              { icon: ShieldCheck, title: t("Risques & conformité", "Risk & compliance"), desc: t("Appui opérationnel aux équipes risques et conformité (KYC, LCB-FT).", "Operational support for risk and compliance teams (KYC, AML)."), link: "/vos-besoins/risques-conformite" },
+              { icon: FileSpreadsheet, title: t("Support comptable & data", "Accounting & data support"), desc: t("Fiabilisation, structuration et traitement de vos données comptables.", "Reliability, structuring and processing of your accounting data."), link: "/vos-besoins/support-comptable-data" },
+              { icon: Users, title: t("Gestion de patrimoine & CGP", "Wealth management & CGP"), desc: t("L’exécution administrative au service des conseillers en gestion de patrimoine.", "Administrative execution for wealth management advisors."), link: "/vos-besoins/gestion-patrimoine-cgp" },
+              { icon: Briefcase, title: t("Autres besoins opérationnels", "Other operational needs"), desc: t("Une réponse agile à vos besoins ponctuels, transverses ou spécifiques.", "An agile response to your one-off, transversal or specific needs."), link: "/vos-besoins/autres-besoins-operationnels" },
+            ].map((item, i) => (
+              <Link href={item.link} key={i} className="group bg-white block">
+                <div className="p-10 h-full flex flex-col gap-4 transition-all duration-200 group-hover:bg-[#F2F0ED]">
+                  <div className="text-[#1C40C2]">
+                    <item.icon size={28} strokeWidth={1.5} />
+                  </div>
+                  <h3
+                    className="text-[#1B3680]"
+                    style={{
+                      fontFamily: "var(--font-serif, serif)",
+                      fontSize: "1.25rem",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p className="text-[#3A4660] text-sm leading-relaxed mb-6">
+                    {item.desc}
+                  </p>
+                  <div className="mt-auto flex items-center text-[#1C40C2] text-sm font-semibold gap-2 group-hover:gap-3 transition-all">
+                    {t("En savoir plus", "Learn more")} <ArrowRight size={14} />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
       </section>
+
+      <CallToAction />
     </main>
   );
 }

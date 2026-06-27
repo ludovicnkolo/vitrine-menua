@@ -1,17 +1,43 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const playfair = Playfair_Display({ 
-  subsets: ["latin"], 
-  variable: "--font-playfair",
-  weight: ["400", "500", "600", "700"] 
+/* ── Typographie style Laplace ─────────────────────────────────
+   Cormorant Garamond  → serif éditorial, élégant, institutionnel
+   Source Sans 3       → sans-serif lisible, moderne, neutre      */
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const sourceSans = Source_Sans_3({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["300", "400", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Menua Consulting | Externalisation opérationnelle",
-  description: "Nous sécurisons l'exécution de vos opérations back et middle office afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
+  title: "Menua Consulting | Externalisation Back & Middle Office",
+  description:
+    "Menua Consulting sécurise l'exécution de vos opérations back et middle office pour banques, cabinets de gestion de patrimoine, sociétés financières et experts-comptables en France.",
+  keywords: [
+    "externalisation back office",
+    "middle office",
+    "conformité AMF",
+    "gestion de patrimoine",
+    "cabinets financiers France",
+  ],
+  openGraph: {
+    title: "Menua Consulting | Externalisation Back & Middle Office",
+    description:
+      "Nous sécurisons l'exécution de vos opérations back et middle office afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
+    type: "website",
+    locale: "fr_FR",
+  },
 };
 
 import Header from "@/components/layout/Header";
@@ -25,7 +51,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`${inter.variable} ${playfair.variable} font-sans bg-[#0F2B45] text-white min-h-screen flex flex-col antialiased`}>
+      <body
+        className={`${cormorant.variable} ${sourceSans.variable} font-sans bg-[#FAFBFC] text-[#0E1B2E] min-h-screen flex flex-col antialiased`}
+      >
         <LanguageProvider>
           <Header />
           {children}

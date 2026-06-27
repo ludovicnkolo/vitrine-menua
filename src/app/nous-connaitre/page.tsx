@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ArrowRight, Shield, Award, ShieldCheck, Search, FileText, CheckCircle2, RotateCw, MapPin, Globe2, Laptop, Network, Users, BookOpen, AlertTriangle } from "lucide-react";
+import { ArrowRight, Shield, Award, ShieldCheck, Search, FileText, CheckCircle2, RotateCw, MapPin, Globe2, Laptop, Network, Users, BookOpen, AlertTriangle, HeartHandshake } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 
 export default function NousConnaitrePage() {

@@ -1,6 +1,7 @@
 "use client";
+import React from "react";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, PieChart, Users, ShieldCheck, FileSpreadsheet, Briefcase, BarChart3, Lock, Globe, Settings, Search, Zap, Calendar, Scale, Shield, Award } from "lucide-react";
+import { ArrowRight, CheckCircle2, PieChart, Users, ShieldCheck, FileSpreadsheet, Briefcase, BarChart3, Lock, Globe, Settings, Search, Zap, Calendar, Scale, Shield, Award, User } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 
 export default function Home() {
@@ -282,146 +283,205 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── NOS SOLUTIONS — fond blanc, grille numérotée style Laplace ── */}
-      <section className="bg-white px-8 py-24 border-t border-[#D8DCE8]">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="section-eyebrow mb-4">{t("Notre offre", "Our offer")}</p>
-            <h2
-              className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-[2.25rem]"
-              
-            >
-              {t("Nos solutions", "Our solutions")}
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-[#D8DCE8]">
-            {[
-              { num: "01", icon: Zap, title: t("Urgence", "Emergency"), desc: t("Mobilisation rapide pour absorber une surcharge et assurer la continuité de service.", "Rapid mobilisation to handle overload and ensure service continuity."), link: "/nos-solutions#urgence" },
-              { num: "02", icon: Calendar, title: t("Durée", "Duration"), desc: t("Flexibilité contractuelle : missions courtes, longues ou externalisation continue.", "Contractual flexibility: short missions, long missions or ongoing outsourcing."), link: "/nos-solutions#duree" },
-              { num: "03", icon: BarChart3, title: t("Volume", "Volume"), desc: t("Dimensionnement adapté au volume de dossiers, flux ou opérations à traiter.", "Sizing adapted to the volume of files, flows or operations to be processed."), link: "/nos-solutions#volume" },
-              { num: "04", icon: Users, title: t("Organisation", "Organisation"), desc: t("Dispositif dédié ou prise en charge de flux et process récurrents.", "Dedicated setup or handling of recurring flows and processes."), link: "/nos-solutions#organisation" },
-            ].map((sol, i) => (
-              <div key={i} className="bg-white group relative overflow-hidden">
-                <div className="p-10 flex flex-col h-full gap-4 transition-all duration-200 group-hover:bg-[#1B3680]">
-                  <span
-                    className="key-number text-[#D8DCE8] group-hover:text-[#2447A0] transition-colors"
-                    
-                  >
-                    {sol.num}
-                  </span>
-                  <div className="text-[#1C40C2] group-hover:text-[#DAF0F7] transition-colors">
-                    <sol.icon size={28} strokeWidth={1.5} />
-                  </div>
-                  <h3
-                    className="text-[#1B3680] group-hover:text-white transition-colors text-[1.3rem] font-semibold"
-                    
-                  >
-                    {sol.title}
-                  </h3>
-                  <p className="text-[#4A4E5A] group-hover:text-white/75 text-[0.95rem] leading-[1.5] font-normal transition-colors">
-                    {sol.desc}
-                  </p>
-                  <Link
-                    href={sol.link}
-                    className="mt-auto inline-flex items-center gap-2 text-[#1C40C2] group-hover:text-[#DAF0F7] text-sm font-semibold transition-colors"
-                  >
-                    {t("En savoir plus", "Learn more")} <ArrowRight size={14} />
+      {/* ── NOS SOLUTIONS — layout hexagones avec titre au centre ── */}
+      <section className="bg-white px-8 py-24">
+        <div className="max-w-7xl mx-auto">
+          
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-6 max-w-5xl mx-auto">
+            
+            {/* Colonne Gauche (Hexagones 1 et 3) */}
+            <div className="flex flex-col gap-4 w-full lg:w-[35%] order-2 lg:order-1">
+              {[
+                { num: "01", icon: Zap, title: t("Urgence", "Emergency"), desc: t("Mobilisation rapide pour absorber une surcharge et assurer la continuité de service.", "Rapid mobilisation to handle overload and ensure service continuity."), link: "/nos-solutions#urgence" },
+                { num: "03", icon: BarChart3, title: t("Volume", "Volume"), desc: t("Dimensionnement adapté au volume de dossiers, flux ou opérations à traiter.", "Sizing adapted to the volume of files, flows or operations to be processed."), link: "/nos-solutions#volume" },
+              ].map((sol, i) => (
+                <div 
+                  key={i} 
+                  className={`group relative p-[1px] transition-all duration-300 bg-[#E5E8F0] hover:bg-[#1B3680]`}
+                  style={{ clipPath: "polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0% 50%)" }}
+                >
+                  <Link href={sol.link} className="block w-full h-full">
+                    <div 
+                      className={`w-full h-full px-10 py-8 flex flex-col items-center text-center justify-center gap-3 transition-all duration-300 bg-white group-hover:bg-[#fbfbfd]`}
+                      style={{ clipPath: "polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0% 50%)" }}
+                    >
+                      <div className="mb-1 text-[#1C40C2]">
+                        <sol.icon size={28} strokeWidth={1.5} />
+                      </div>
+                      <h3 className="text-[1.05rem] font-bold text-[#1B3680]">
+                        <span className="text-[0.75rem] font-bold mr-2 text-[#B8922A]">{sol.num}</span>
+                        {sol.title}
+                      </h3>
+                      <p className="text-[0.75rem] leading-[1.6] max-w-[240px] text-[#4A4E5A]">
+                        {sol.desc}
+                      </p>
+                      <div className="mt-1 flex items-center text-[0.75rem] font-bold tracking-wide uppercase gap-2 transition-all group-hover:gap-3 text-[#1C40C2]">
+                        {t("En savoir plus", "Learn more")} <ArrowRight size={13} />
+                      </div>
+                    </div>
                   </Link>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {/* Centre : Titre */}
+            <div className="w-full lg:w-[30%] text-center order-1 lg:order-2 mb-6 lg:mb-0 px-4">
+              <p className="text-[#B8922A] text-[0.75rem] font-bold tracking-[0.15em] uppercase mb-4">
+                {t("Notre offre", "Our offer")}
+              </p>
+              <h2 className="text-[#1B3680] text-[1.8rem] md:text-[2.2rem] leading-[1.2] font-bold uppercase tracking-wide">
+                {t("Nos solutions", "Our solutions")}
+              </h2>
+            </div>
+
+            {/* Colonne Droite (Hexagones 2 et 4) */}
+            <div className="flex flex-col gap-4 w-full lg:w-[35%] order-3 lg:order-3">
+              {[
+                { num: "02", icon: Calendar, title: t("Durée", "Duration"), desc: t("Flexibilité contractuelle : missions courtes, longues ou externalisation continue.", "Contractual flexibility: short missions, long missions or ongoing outsourcing."), link: "/nos-solutions#duree" },
+                { num: "04", icon: Users, title: t("Organisation", "Organisation"), desc: t("Dispositif dédié ou prise en charge de flux et process récurrents.", "Dedicated setup or handling of recurring flows and processes."), link: "/nos-solutions#organisation" },
+              ].map((sol, i) => {
+                const isLast = i === 1; // Le 04 est la dernière carte de la boucle
+                return (
+                  <div 
+                    key={i} 
+                    className={`group relative p-[1px] transition-all duration-300 ${isLast ? 'bg-[#1B3680] shadow-lg' : 'bg-[#E5E8F0] hover:bg-[#1B3680]'}`}
+                    style={{ clipPath: "polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0% 50%)" }}
+                  >
+                    <Link href={sol.link} className="block w-full h-full">
+                      <div 
+                        className={`w-full h-full px-10 py-8 flex flex-col items-center text-center justify-center gap-3 transition-all duration-300 ${isLast ? 'bg-[#1B3680]' : 'bg-white group-hover:bg-[#fbfbfd]'}`}
+                        style={{ clipPath: "polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0% 50%)" }}
+                      >
+                        <div className={`mb-1 ${isLast ? 'text-white' : 'text-[#1C40C2]'}`}>
+                          <sol.icon size={28} strokeWidth={1.5} />
+                        </div>
+                        <h3 className={`text-[1.05rem] font-bold ${isLast ? 'text-white' : 'text-[#1B3680]'}`}>
+                          <span className={`text-[0.75rem] font-bold mr-2 text-[#B8922A]`}>{sol.num}</span>
+                          {sol.title}
+                        </h3>
+                        <p className={`text-[0.75rem] leading-[1.6] max-w-[240px] ${isLast ? 'text-white/90' : 'text-[#4A4E5A]'}`}>
+                          {sol.desc}
+                        </p>
+                        <div className={`mt-1 flex items-center text-[0.75rem] font-bold tracking-wide uppercase gap-2 transition-all group-hover:gap-3 ${isLast ? 'text-white' : 'text-[#1C40C2]'}`}>
+                          {t("En savoir plus", "Learn more")} <ArrowRight size={13} />
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+            
           </div>
         </div>
       </section>
 
-      {/* ── ACCRÉDITATIONS — bande marine sombre style Laplace ── */}
-      <section className="bg-[#1B3680] px-8 py-16">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-          <div>
-            <p className="text-[#DAF0F7]/70 text-[0.65rem] font-bold tracking-widest uppercase mb-2">
+      {/* ── ACCRÉDITATIONS — Design avec losanges ── */}
+      <section className="bg-[#1B3680] px-8 py-16 relative overflow-hidden">
+        {/* Motif abstrait en arrière-plan (optionnel, simulé avec un dégradé) */}
+        <div className="absolute right-0 top-0 bottom-0 w-[40%] bg-gradient-to-l from-blue-500/5 to-transparent pointer-events-none" />
+        
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 relative z-10 px-4 md:px-8">
+          
+          <div className="lg:w-[35%]">
+            <p className="text-[#B8922A] text-[0.7rem] font-bold tracking-[0.15em] uppercase mb-4">
               {t("Environnements maîtrisés", "Mastered environments")}
             </p>
-            <h3
-              className="text-white text-[1.3rem] leading-[1.6rem] font-bold uppercase"
-              
-            >
+            <h2 className="text-white text-[1.6rem] md:text-[2rem] leading-[1.2] font-bold mb-4">
               {t("Supervision & certifications", "Supervision & certifications")}
-            </h3>
+            </h2>
+            <p className="text-white/80 text-[0.85rem] leading-[1.6] max-w-md">
+              {t(
+                "MENUA CONSULTING n'exerce pas d'activité réglementée en son nom propre. Les interventions sont réalisées sous la supervision des responsables habilités de nos clients.",
+                "MENUA CONSULTING does not carry out regulated activities in its own name. Interventions are conducted under the supervision of our clients' authorised managers."
+              )}
+            </p>
           </div>
-          <div className="flex flex-wrap justify-center md:justify-end gap-3">
+          
+          <div className="lg:w-[65%] flex flex-wrap justify-center lg:justify-end gap-x-6 lg:gap-x-10 gap-y-12">
             {[
-              { icon: Award, label: t("Environnement AMF", "AMF Environment") },
-              { icon: Shield, label: t("Contrôle Interne & Risques", "Internal Control & Risk") },
-              { icon: ShieldCheck, label: t("Conformité ACPR", "ACPR Compliance") },
-              { icon: Lock, label: t("Profils habilités", "Authorised profiles") },
+              { icon: Award, label: t("Environnement\nAMF", "AMF\nEnvironment") },
+              { icon: Shield, label: t("Contrôle Interne\n& Risques", "Internal Control\n& Risk") },
+              { icon: ShieldCheck, label: t("Conformité\nACPR", "ACPR\nCompliance") },
+              { icon: User, label: t("Profils\nhabilités", "Authorised\nprofiles") },
             ].map((badge, i) => (
-              <div key={i} className="flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-2.5">
-                <badge.icon className="text-[#B8922A]" size={16} />
-                <span className="text-white text-xs font-semibold">{badge.label}</span>
-              </div>
+              <React.Fragment key={i}>
+                <div className="flex flex-col items-center justify-start w-[110px] relative">
+                  <div className="w-[4.5rem] h-[4.5rem] rotate-45 border border-[#B8922A] rounded-[0.4rem] flex items-center justify-center mb-8 bg-transparent transition-all shadow-[0_0_15px_rgba(184,146,42,0.15)] hover:shadow-[0_0_20px_rgba(184,146,42,0.3)]">
+                    <div className="-rotate-45 text-[#B8922A]">
+                      <badge.icon size={26} strokeWidth={1.5} />
+                    </div>
+                  </div>
+                  <span className="text-white text-[0.75rem] font-medium text-center leading-snug">
+                    {badge.label.split('\n').map((l, j) => <span key={j} className="block">{l}</span>)}
+                  </span>
+                </div>
+                {/* Ligne de séparation verticale */}
+                {i < 3 && (
+                  <div className="hidden lg:block w-px h-24 bg-white/10 mt-4" />
+                )}
+              </React.Fragment>
             ))}
           </div>
         </div>
-        <div className="max-w-6xl mx-auto mt-6 pt-6 border-t border-white/10">
-          <p className="text-white/50 text-xs italic text-center">
-            {t(
-              "MENUA CONSULTING n'exerce pas d'activité réglementée en son nom propre. Les interventions sont réalisées sous la supervision des responsables habilités de nos clients.",
-              "MENUA CONSULTING does not carry out regulated activities in its own name. Interventions are conducted under the supervision of our clients' authorised managers."
-            )}
-          </p>
-        </div>
       </section>
 
-      {/* ── ACTUALITÉS — fond blanc ── */}
-      <section className="bg-white px-8 py-24 border-t border-[#D8DCE8]">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-14 gap-4">
+      {/* ── ACTUALITÉS — fond blanc, cards image ── */}
+      <section className="bg-white px-8 py-24">
+        <div className="max-w-7xl mx-auto">
+          
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
             <div>
-              <p className="section-eyebrow mb-4">{t("Veille & expertise", "Watch & expertise")}</p>
-              <h2
-                className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-[2.25rem]"
-                
-              >
+              <div className="flex items-center gap-4 mb-3">
+                <p className="text-[#B8922A] text-[0.65rem] font-bold tracking-[0.15em] uppercase">
+                  {t("Veille & expertise", "Watch & expertise")}
+                </p>
+              </div>
+              <h2 className="text-[#0A1A3A] text-[1.8rem] leading-[1.2] font-bold tracking-wide">
                 {t("Actualités", "News")}
               </h2>
             </div>
-            <Link
-              href="/actualites"
-              className="inline-flex items-center gap-2 text-[#1C40C2] text-sm font-semibold hover:gap-3 transition-all whitespace-nowrap"
-            >
-              {t("Voir toutes les actualités", "View all news")} <ArrowRight size={14} />
-            </Link>
+            
+            <div className="flex items-center gap-5">
+              <Link
+                href="/actualites"
+                className="text-[#1C40C2] text-sm font-bold tracking-wide hover:opacity-70 transition-all flex items-center gap-2"
+              >
+                {t("Voir toutes les actualités", "View all news")} <ArrowRight size={14} />
+              </Link>
+              <Link href="/actualites" className="w-11 h-11 bg-[#2C3440] hover:bg-[#1C40C2] transition-colors flex items-center justify-center rounded-sm shadow-md">
+                <ArrowRight className="text-white" size={18} />
+              </Link>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#D8DCE8]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
               { img: "/news-1.jpg", cat: t("BACK OFFICE", "BACK OFFICE"), date: t("28 MAI 2025", "28 MAY 2025"), title: t("Digitalisation des processus back office : enjeux et bonnes pratiques", "Back office process digitalisation: challenges and best practices") },
               { img: "/news-2.jpg", cat: t("CONFORMITÉ", "COMPLIANCE"), date: t("21 MAI 2025", "21 MAY 2025"), title: t("Conformité : les nouvelles exigences réglementaires en 2026", "Compliance: new regulatory requirements for 2026") },
               { img: "/news-3.jpg", cat: t("REPORTING", "REPORTING"), date: t("20 MAI 2025", "20 MAY 2025"), title: t("Optimiser le reporting financier grâce à la data", "Optimising financial reporting through data") },
             ].map((news, i) => (
-              <Link href="/actualites" key={i} className="group bg-white flex flex-col overflow-hidden">
-                <div className="h-52 overflow-hidden relative">
-                  <img
-                    src={news.img}
-                    alt={news.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-[#1B3680]/0 group-hover:bg-[#1B3680]/20 transition-all duration-300" />
-                  <span className="absolute top-4 left-4 bg-[#1B3680] text-white text-[0.6rem] font-bold tracking-widest uppercase px-3 py-1">
-                    {news.cat}
-                  </span>
+              <Link href="/actualites" key={i} className="group relative h-[360px] rounded overflow-hidden flex flex-col justify-end shadow-lg">
+                <img
+                  src={news.img}
+                  alt={news.title}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 z-0"
+                />
+                
+                {/* Overlay gradient sombre au bas pour lisibilité */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A1A3A]/90 via-[#0A1A3A]/40 to-transparent z-10" />
+                
+                {/* Badge Catégorie */}
+                <div className="absolute top-5 left-5 bg-[#0A1A3A] text-white text-[0.55rem] font-bold tracking-[0.1em] uppercase px-3 py-1.5 z-20">
+                  {news.cat}
                 </div>
-                <div className="p-8 flex flex-col flex-grow border-t border-[#D8DCE8]">
-                  <span className="text-[#6B7794] text-[0.65rem] font-semibold tracking-wider mb-3">{news.date}</span>
-                  <h3
-                    className="text-[#1B3680] text-[1.3rem] font-semibold leading-snug mb-6 flex-grow"
-                    
-                  >
+                
+                {/* Contenu textuel */}
+                <div className="relative z-20 p-6 flex flex-col">
+                  <span className="text-white/80 text-[0.65rem] font-bold tracking-widest mb-2">{news.date}</span>
+                  <h3 className="text-white text-[1.15rem] font-bold leading-[1.3]">
                     {news.title}
                   </h3>
-                  <span className="inline-flex items-center gap-2 text-[#1C40C2] text-xs font-semibold group-hover:gap-3 transition-all">
-                    {t("Lire l'article", "Read article")} <ArrowRight size={13} />
-                  </span>
                 </div>
               </Link>
             ))}

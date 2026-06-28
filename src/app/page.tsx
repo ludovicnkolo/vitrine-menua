@@ -224,19 +224,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── POURQUOI MENUA — fond taupe léger ── */}
-      <section className="bg-[#F2F0ED] px-8 py-24">
+      {/* ── POURQUOI MENUA — fond bleu institutionnel ── */}
+      <section className="bg-[#1B3680] px-8 py-16">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            
+            {/* Colonne gauche : Introduction */}
             <div>
-              <p className="section-eyebrow mb-5">{t("Notre valeur ajoutée", "Our value proposition")}</p>
-              <h2
-                className="text-[#1B3680] mb-[2.25rem] text-[1.3rem] leading-[1.6rem] font-bold uppercase"
-                
-              >
+              <div className="flex items-center gap-4 mb-4">
+                <p className="text-[#B8922A] text-[0.75rem] font-bold tracking-[0.15em] uppercase">
+                  {t("Notre valeur ajoutée", "Our value proposition")}
+                </p>
+                <div className="h-[1.5px] bg-[#B8922A] w-12" />
+              </div>
+              <h2 className="text-white mb-6 text-[1.8rem] leading-[1.2] font-bold uppercase tracking-wide">
                 {t("Pourquoi Menua Consulting ?", "Why Menua Consulting?")}
               </h2>
-              <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] mb-8 font-normal">
+              <p className="text-white/80 text-[0.95rem] leading-[1.6] mb-8 font-normal max-w-lg">
                 {t(
                   "Nous exécutons là où les autres s'arrêtent à l'analyse. Notre approche opérationnelle, nos profils spécialisés et notre méthodologie éprouvée font la différence dans vos environnements réglementés.",
                   "We execute where others stop at analysis. Our operational approach, specialised profiles, and proven methodology make the difference in your regulated environments."
@@ -244,34 +248,36 @@ export default function Home() {
               </p>
               <Link
                 href="/pourquoi-menua"
-                className="inline-flex items-center gap-3 bg-[#1B3680] hover:bg-[#122560] text-white px-8 py-3.5 text-sm font-semibold tracking-wide uppercase transition-all duration-200"
+                className="inline-flex items-center gap-3 border border-[#B8922A] text-[#B8922A] hover:bg-[#B8922A] hover:text-white px-7 py-3 text-[0.75rem] font-bold tracking-[0.15em] uppercase transition-all duration-200"
               >
-                {t("Nos différenciants", "Our differentiators")} <ArrowRight size={15} />
+                {t("Nos différenciants", "Our differentiators")} <ArrowRight size={14} />
               </Link>
             </div>
-            <div className="grid grid-cols-1 gap-6">
+
+            {/* Colonne droite : Différenciants */}
+            <div className="grid grid-cols-1 gap-4">
               {[
                 { icon: Settings, title: t("Approche 100% opérationnelle", "100% operational approach"), desc: t("Nous exécutons, nous ne nous arrêtons pas à l'analyse.", "We execute, not just analyse.") },
                 { icon: Users, title: t("Ressources spécialisées & flexibles", "Specialised & flexible resources"), desc: t("Profils adaptés à vos besoins et contraintes réglementaires.", "Profiles adapted to your needs and regulatory constraints.") },
                 { icon: Search, title: t("Contrôle qualité permanent", "Permanent quality control"), desc: t("Supervision continue et contrôle à quatre yeux.", "Continuous supervision and four-eyes control.") },
                 { icon: Scale, title: t("Expertise sectorielle certifiée", "Certified sector expertise"), desc: t("Maîtrise des environnements AMF, ACPR et réglementations financières.", "Expertise in AMF, ACPR and financial regulations.") },
               ].map((item, i) => (
-                <div key={i} className="flex gap-5 bg-white p-6 border-l-2 border-[#1C40C2]">
-                  <div className="text-[#1C40C2] shrink-0 mt-0.5">
-                    <item.icon size={22} strokeWidth={1.5} />
+                <div key={i} className="flex gap-4 bg-white/5 backdrop-blur-sm p-5 border-l-2 border-[#B8922A] hover:bg-white/10 transition-colors">
+                  <div className="text-[#B8922A] shrink-0 mt-1">
+                    <item.icon size={24} strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h3
-                      className="text-[#1B3680] mb-1 text-[1.3rem] font-semibold"
-                      
-                    >
+                    <h3 className="text-white mb-1.5 text-[1.1rem] font-bold tracking-wide">
                       {item.title}
                     </h3>
-                    <p className="text-[#4A4E5A] text-[0.95rem] leading-[1.5] font-normal">{item.desc}</p>
+                    <p className="text-white/70 text-[0.85rem] leading-[1.5] font-normal">
+                      {item.desc}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
+            
           </div>
         </div>
       </section>

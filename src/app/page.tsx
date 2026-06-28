@@ -3,12 +3,13 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, PieChart, Users, ShieldCheck, FileSpreadsheet, Briefcase, BarChart3, Lock, Globe, Settings, Search, Zap, Calendar, Scale, Shield, Award, User } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
+import CallToAction from "@/components/layout/CallToAction";
 
 export default function Home() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen overflow-hidden bg-white gap-6 md:gap-8">
+    <main className="flex flex-col w-full min-h-screen overflow-hidden bg-white gap-12 md:gap-20 pb-12 md:pb-20">
 
       {/* ── HERO — pleine largeur, photo + overlay marine ── */}
       <section className="relative w-full min-h-screen flex items-center overflow-hidden pt-16">
@@ -488,34 +489,7 @@ export default function Home() {
       </section>
 
       {/* ── CTA FINAL — marine ── */}
-      <section className="bg-[#122560] px-8 py-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-[#DAF0F7]/60 text-[0.65rem] font-bold tracking-widest uppercase mb-6">
-            {t("Prenons contact", "Get in touch")}
-          </p>
-          <h2
-            className="text-white mb-[2.25rem] text-[1.3rem] leading-[1.6rem] font-bold uppercase"
-            
-          >
-            {t(
-              "Un projet d'externalisation ? Parlons-en.",
-              "An outsourcing project? Let's talk."
-            )}
-          </h2>
-          <p className="text-white/60 text-[0.95rem] leading-[1.5] mb-10 max-w-xl mx-auto font-normal">
-            {t(
-              "Nos équipes analysent votre besoin et vous proposent un dispositif adapté à vos contraintes opérationnelles et réglementaires.",
-              "Our teams analyse your needs and propose a solution adapted to your operational and regulatory constraints."
-            )}
-          </p>
-          <Link
-            href="/nous-contacter"
-            className="inline-flex items-center gap-3 bg-white text-[#1B3680] hover:bg-[#DAF0F7] px-10 py-4 text-sm font-bold tracking-wide uppercase transition-all duration-200"
-          >
-            {t("Nous contacter", "Contact us")} <ArrowRight size={15} />
-          </Link>
-        </div>
-      </section>
+      <CallToAction />
     </main>
   );
 }

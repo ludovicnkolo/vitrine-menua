@@ -8,48 +8,72 @@ export default function VosBesoinsPage() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-[#FAFBFC] font-sans">
+    <main className="flex flex-col w-full min-h-screen overflow-hidden bg-white gap-12 md:gap-20 pb-12 md:pb-20">
       {/* ── HERO INTRO ── */}
-      <section className="relative w-full min-h-[60vh] flex items-center justify-center overflow-hidden pt-24 pb-16">
+      <section className="relative w-full min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
-          <img src="/vos_besoins_hero.png" alt="Vos Besoins" className="w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-[#1B3680]/60 mix-blend-multiply"></div>
-          <div className="absolute inset-0 hero-gradient"></div>
+          <img
+            src="/vos_besoins_hero.png"
+            alt="Vos Besoins"
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B3680] from-20% via-[#1B3680]/70 via-45% to-transparent to-65%" />
         </div>
-        
-        <div className="relative z-10 max-w-4xl mx-auto text-center px-8 text-white mt-8">
-          <p className="text-[#DAF0F7] text-xs font-bold tracking-widest uppercase mb-6">
-            {t("Vue d’ensemble des expertises", "Overview of expertise")}
-          </p>
-          <h1
-            className="text-white mb-[2.25rem] text-[2.5rem] leading-[2.5rem] font-bold uppercase"
+
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
+          <div className="relative py-12 pl-10">
+            {/* Decorative golden bracket */}
+            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-[#B8922A]" />
+            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#B8922A]" />
+            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#B8922A]" />
             
+            <div className="relative">
+              <p className="text-[#B8922A] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.15em] uppercase mb-8">
+                {t("Vue d’ensemble des expertises", "Overview of expertise")}
+              </p>
+              <h1 className="text-white mb-8 text-[2.2rem] md:text-[3.2rem] lg:text-[3.6rem] leading-[1.1] font-bold uppercase max-w-4xl tracking-tight">
+                {t(
+                  "Une réponse opérationnelle\nsur mesure pour vos\nback et middle offices.",
+                  "A tailor-made\noperational response for your\nback and middle offices."
+                ).split('\n').map((line, i) => (
+                  <span key={i} className="block">{line}</span>
+                ))}
+              </h1>
+              <div className="text-white/95 text-[1.05rem] md:text-[1.15rem] leading-[1.6] max-w-2xl font-normal space-y-4">
+                <p>
+                  <strong className="text-white">MENUA CONSULTING</strong>{" "}
+                  {t(
+                    "intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l'ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
+                    "supports financial, accounting, wealth, IT and regulated teams on all back and middle office functions requiring rigor, continuity and operational reliability."
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SUITE TEXTE (Overlap layout possible) ── */}
+      <section className="bg-white overflow-hidden -mt-12 relative z-20">
+        <div className="max-w-5xl mx-auto px-8 relative flex flex-col items-center justify-center">
+          <div 
+            className="w-full bg-[#F5F0EA] p-8 md:p-12 z-10 relative shadow-lg"
+            style={{ borderRadius: "2rem 8rem 8rem 2rem" }}
           >
-            {t(
-              "Une réponse opérationnelle sur mesure pour vos back et middle offices.",
-              "A tailor-made operational response for your back and middle offices."
-            )}
-          </h1>
-          <div className="text-white/90 text-[0.95rem] leading-[1.5] max-w-3xl mx-auto space-y-6 font-normal">
-            <p>
-              <strong className="text-white">MENUA CONSULTING</strong>{" "}
-              {t(
-                "intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l'ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
-                "supports financial, accounting, wealth, IT and regulated teams on all back and middle office functions requiring rigor, continuity and operational reliability."
-              )}
-            </p>
-            <p>
-              {t(
-                "Que vous ayez besoin de renforcer ponctuellement vos équipes, de sécuriser un processus critique ou de gérer un pic d’activité, nous mettons à votre disposition des profils immédiatement opérationnels, intégrés à vos outils et à vos méthodes.",
-                "Whether you need to temporarily strengthen your teams, secure a critical process or manage a peak in activity, we provide you with immediately operational profiles, integrated into your tools and methods."
-              )}
+            <p className="text-[#3A3A3A] text-[1.05rem] leading-[1.7] font-normal space-y-4">
+              <span>
+                {t(
+                  "Que vous ayez besoin de renforcer ponctuellement vos équipes, de sécuriser un processus critique ou de gérer un pic d’activité, nous mettons à votre disposition des profils immédiatement opérationnels, intégrés à vos outils et à vos méthodes.",
+                  "Whether you need to temporarily strengthen your teams, secure a critical process or manage a peak in activity, we provide you with immediately operational profiles, integrated into your tools and methods."
+                )}
+              </span>
             </p>
           </div>
         </div>
       </section>
 
       {/* ── MOSAÏQUE ── */}
-      <section className="bg-white px-8 py-24 border-t border-[#D8DCE8]">
+      <section className="bg-white px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2

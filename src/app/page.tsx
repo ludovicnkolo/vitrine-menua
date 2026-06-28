@@ -8,7 +8,7 @@ export default function Home() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen overflow-hidden">
+    <main className="flex flex-col w-full min-h-screen overflow-hidden bg-white gap-6 md:gap-8">
 
       {/* ── HERO — pleine largeur, photo + overlay marine ── */}
       <section className="relative w-full min-h-screen flex items-center overflow-hidden pt-16">
@@ -51,45 +51,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CHIFFRES CLÉS — parallelogrammes style référence ── */}
-      <div className="bg-white py-6 px-8">
-      <section className="bg-[#0E1F5B] py-6 px-8 max-w-6xl mx-auto">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 justify-center items-stretch">
-          {[
-            { value: "10+", label: t("Années en environnements réglementés", "Years in regulated environments"), accent: "#1C40C2" },
-            { value: "50+", label: t("Missions accomplies avec succès", "Successfully completed missions"), accent: "#1C7CC2" },
-            { value: "100%", label: t("Supervision par professionnels habilités", "Supervised by qualified professionals"), accent: "#5B4FC2" },
-            { value: "FR / EN", label: t("Interventions bilingues", "Bilingual interventions"), accent: "#B8922A" },
-          ].map((stat, i) => (
-            <div
-              key={i}
-              className="flex-1 relative bg-[#162466] border border-white/10 px-8 py-3 flex flex-col items-center text-center"
-              style={{ clipPath: "polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%)" }}
-            >
-              <span className="text-white text-[2rem] font-bold leading-tight tracking-tight mb-1">
-                {stat.value}
-              </span>
-              <span className="text-white/70 text-[0.78rem] leading-snug max-w-[130px]">
-                {stat.label}
-              </span>
-              {/* colored bottom accent */}
-              <div
-                className="absolute bottom-0 left-[6%] right-[6%] h-[3px]"
-                style={{ backgroundColor: stat.accent }}
-              />
-            </div>
-          ))}
-        </div>
-      </section>
-      </div>
-
       {/* ── POSITIONNEMENT — Overlap Layout Exact ── */}
-      <section className="bg-white py-20 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-8 relative flex flex-col md:flex-row items-center">
+      <section className="bg-white py-6 md:py-8 overflow-hidden">
+        <div className="max-w-5xl mx-auto px-8 relative flex flex-col md:flex-row items-center justify-center">
           
           {/* COLONNE GAUCHE — Panneau beige en superposition */}
           <div 
-            className="w-full md:w-[52%] bg-[#F5F0EA] p-10 md:p-14 lg:p-16 z-10 relative shadow-lg"
+            className="w-full md:w-[52%] bg-[#F5F0EA] p-6 md:p-8 lg:p-10 z-10 relative shadow-lg"
             style={{ borderRadius: "2rem 8rem 8rem 2rem" }}
           >
             <p className="text-[#B8922A] text-[0.72rem] font-bold tracking-[0.2em] uppercase mb-3">
@@ -117,7 +85,7 @@ export default function Home() {
           </div>
 
           {/* COLONNE DROITE — Image en arrière-plan partiel */}
-          <div className="w-full md:w-[58%] h-[400px] md:h-[600px] relative z-0 md:-ml-[10%] mt-8 md:mt-0">
+          <div className="w-full md:w-[58%] h-[250px] md:h-[350px] relative z-0 md:-ml-[10%] mt-8 md:mt-0">
             <img
               src="/notre_position.png"
               alt="Notre positionnement"
@@ -141,12 +109,42 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── CHIFFRES CLÉS — parallelogrammes style référence ── */}
+      <section className="bg-[#0E1F5B] py-8 px-4 md:px-8 w-full">
+        <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row gap-4 justify-center items-stretch">
+          {[
+            { value: "10+", label: t("Années en environnements réglementés", "Years in regulated environments"), accent: "#1C40C2" },
+            { value: "50+", label: t("Missions accomplies avec succès", "Successfully completed missions"), accent: "#1C7CC2" },
+            { value: "100%", label: t("Supervision par professionnels habilités", "Supervised by qualified professionals"), accent: "#5B4FC2" },
+            { value: "FR / EN", label: t("Interventions bilingues", "Bilingual interventions"), accent: "#B8922A" },
+          ].map((stat, i) => (
+            <div
+              key={i}
+              className="flex-1 relative bg-[#162466] border border-white/10 px-8 py-4 flex flex-col items-center text-center"
+              style={{ clipPath: "polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%)" }}
+            >
+              <span className="text-white text-[2.2rem] font-bold leading-tight tracking-tight mb-1">
+                {stat.value}
+              </span>
+              <span className="text-white/70 text-[0.8rem] leading-snug max-w-[130px]">
+                {stat.label}
+              </span>
+              {/* colored bottom accent */}
+              <div
+                className="absolute bottom-0 left-[6%] right-[6%] h-[3px]"
+                style={{ backgroundColor: stat.accent }}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── VOS BESOINS — layout asymétrique avec image courbée ── */}
-      <section className="bg-[#F8F9FA] relative py-16 md:py-20 overflow-hidden">
-        <div className="max-w-[1440px] mx-auto w-full relative flex flex-col md:flex-row items-stretch">
+      <section className="relative w-full flex justify-center">
+        <div className="max-w-5xl mx-auto w-full bg-[#F8F9FA] relative flex flex-col md:flex-row items-stretch overflow-hidden">
           
-          {/* COLONNE GAUCHE - TEXTE ET GRILLE */}
-          <div className="w-full md:w-[60%] pl-8 pr-8 lg:pl-20 lg:pr-16 z-10 flex flex-col justify-center">
+          {/* COLONNE DROITE (Maintenant GAUCHE) - TEXTE ET GRILLE */}
+          <div className="w-full md:w-[60%] md:ml-auto py-8 pl-8 pr-8 lg:pl-10 lg:pr-12 z-10 flex flex-col justify-center">
             
             <div className="flex items-center gap-4 mb-4">
               <p className="text-[#B8922A] text-[0.75rem] font-bold tracking-[0.15em] uppercase">
@@ -155,7 +153,7 @@ export default function Home() {
               <div className="h-[1.5px] bg-[#B8922A] w-12" />
             </div>
             
-            <h2 className="text-[#1B3680] text-[1.8rem] leading-[1.2] font-bold uppercase mb-12 tracking-wide">
+            <h2 className="text-[#1B3680] text-[1.8rem] leading-[1.2] font-bold uppercase mb-8 tracking-wide">
               {t("Vos besoins", "Your needs")}
             </h2>
 
@@ -179,15 +177,15 @@ export default function Home() {
                   <Link 
                     href={item.href} 
                     key={i} 
-                    className={`group flex flex-col p-6 lg:p-8 transition-colors hover:bg-white
+                    className={`group flex flex-col p-4 transition-colors hover:bg-white
                       ${isTopRow ? 'border-b border-t border-[#D8DCE8]' : 'border-b border-[#D8DCE8]'}
                       ${!isRightCol ? 'border-r border-[#D8DCE8]' : ''}
                     `}
                   >
-                    <div className="text-[#1B3680] mb-8">
+                    <div className="text-[#1B3680] mb-4">
                       <item.icon size={28} strokeWidth={1.5} />
                     </div>
-                    <h3 className="text-[#1B3680] text-[0.95rem] font-bold leading-snug mb-8 flex-grow">
+                    <h3 className="text-[#1B3680] text-[0.95rem] font-bold leading-snug mb-4 flex-grow">
                       {item.title}
                     </h3>
                     <div className="mt-auto flex items-center text-[#1B3680] text-[0.8rem] font-medium gap-2 group-hover:gap-3 transition-all">
@@ -199,11 +197,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* COLONNE DROITE - IMAGE COURBÉE */}
-          <div className="hidden md:block absolute right-0 top-0 w-[43%] h-full z-0 overflow-visible">
+          {/* COLONNE GAUCHE (Maintenant DROITE) - IMAGE COURBÉE */}
+          <div className="hidden md:block absolute left-0 top-0 w-[43%] h-full z-0 overflow-visible">
             <div 
               className="absolute inset-0 overflow-hidden shadow-2xl" 
-              style={{ borderTopLeftRadius: '45% 100%', borderBottomLeftRadius: '45% 100%' }}
+              style={{ borderTopRightRadius: '45% 100%', borderBottomRightRadius: '45% 100%' }}
             >
               <img 
                 src="/besoin.png" 
@@ -212,14 +210,14 @@ export default function Home() {
               />
               {/* Ligne dorée qui suit la courbe */}
               <div 
-                className="absolute inset-0 border-l-[1.5px] border-[#B8922A] pointer-events-none" 
+                className="absolute inset-0 border-r-[1.5px] border-[#B8922A] pointer-events-none" 
                 style={{ borderRadius: 'inherit' }} 
               />
             </div>
             
             {/* Points dorés (dots) sur la courbe */}
-            <div className="absolute left-[3px] top-[32%] w-2 h-2 bg-[#B8922A] rounded-full -translate-x-1/2 -translate-y-1/2 shadow-sm" />
-            <div className="absolute left-[-1px] top-[55%] w-2 h-2 bg-[#B8922A] rounded-full -translate-x-1/2 -translate-y-1/2 shadow-sm" />
+            <div className="absolute right-[3px] top-[32%] w-2 h-2 bg-[#B8922A] rounded-full translate-x-1/2 -translate-y-1/2 shadow-sm" />
+            <div className="absolute right-[-1px] top-[55%] w-2 h-2 bg-[#B8922A] rounded-full translate-x-1/2 -translate-y-1/2 shadow-sm" />
           </div>
 
         </div>
@@ -377,11 +375,11 @@ export default function Home() {
       </section>
 
       {/* ── ACCRÉDITATIONS — Design avec losanges ── */}
-      <section className="bg-[#1B3680] px-8 py-16 relative overflow-hidden">
+      <section className="bg-[#1B3680] px-8 py-6 relative overflow-hidden">
         {/* Motif abstrait en arrière-plan (optionnel, simulé avec un dégradé) */}
         <div className="absolute right-0 top-0 bottom-0 w-[40%] bg-gradient-to-l from-blue-500/5 to-transparent pointer-events-none" />
         
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 relative z-10 px-4 md:px-8">
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10 px-4 md:px-8">
           
           <div className="lg:w-[35%]">
             <p className="text-[#B8922A] text-[0.7rem] font-bold tracking-[0.15em] uppercase mb-4">
@@ -407,7 +405,7 @@ export default function Home() {
             ].map((badge, i) => (
               <React.Fragment key={i}>
                 <div className="flex flex-col items-center justify-start w-[110px] relative">
-                  <div className="w-[4.5rem] h-[4.5rem] rotate-45 border border-[#B8922A] rounded-[0.4rem] flex items-center justify-center mb-8 bg-transparent transition-all shadow-[0_0_15px_rgba(184,146,42,0.15)] hover:shadow-[0_0_20px_rgba(184,146,42,0.3)]">
+                  <div className="w-[4.5rem] h-[4.5rem] rotate-45 border border-[#B8922A] rounded-[0.4rem] flex items-center justify-center mb-4 bg-transparent transition-all shadow-[0_0_15px_rgba(184,146,42,0.15)] hover:shadow-[0_0_20px_rgba(184,146,42,0.3)]">
                     <div className="-rotate-45 text-[#B8922A]">
                       <badge.icon size={26} strokeWidth={1.5} />
                     </div>
@@ -418,7 +416,7 @@ export default function Home() {
                 </div>
                 {/* Ligne de séparation verticale */}
                 {i < 3 && (
-                  <div className="hidden lg:block w-px h-24 bg-white/10 mt-4" />
+                  <div className="hidden lg:block w-px h-16 bg-white/10 mt-4" />
                 )}
               </React.Fragment>
             ))}
@@ -427,7 +425,7 @@ export default function Home() {
       </section>
 
       {/* ── ACTUALITÉS — fond blanc, cards image ── */}
-      <section className="bg-white px-8 py-24">
+      <section className="bg-white px-8 py-8">
         <div className="max-w-7xl mx-auto">
           
           <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
@@ -461,7 +459,7 @@ export default function Home() {
               { img: "/news-2.jpg", cat: t("CONFORMITÉ", "COMPLIANCE"), date: t("21 MAI 2025", "21 MAY 2025"), title: t("Conformité : les nouvelles exigences réglementaires en 2026", "Compliance: new regulatory requirements for 2026") },
               { img: "/news-3.jpg", cat: t("REPORTING", "REPORTING"), date: t("20 MAI 2025", "20 MAY 2025"), title: t("Optimiser le reporting financier grâce à la data", "Optimising financial reporting through data") },
             ].map((news, i) => (
-              <Link href="/actualites" key={i} className="group relative h-[360px] rounded overflow-hidden flex flex-col justify-end shadow-lg">
+              <Link href="/actualites" key={i} className="group relative h-[200px] rounded overflow-hidden flex flex-col justify-end shadow-lg">
                 <img
                   src={news.img}
                   alt={news.title}

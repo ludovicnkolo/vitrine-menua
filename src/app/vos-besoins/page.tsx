@@ -22,7 +22,7 @@ export default function VosBesoinsPage() {
             {t("Vue d’ensemble des expertises", "Overview of expertise")}
           </p>
           <h1
-            className="mb-8"
+            className="text-white mb-[2.25rem] text-[2.5rem] leading-[2.5rem] font-bold uppercase"
             
           >
             {t(
@@ -30,7 +30,7 @@ export default function VosBesoinsPage() {
               "A tailor-made operational response for your back and middle offices."
             )}
           </h1>
-          <div className="text-white/90 text-lg max-w-3xl mx-auto space-y-6 leading-relaxed">
+          <div className="text-white/90 text-[0.95rem] leading-[1.5] max-w-3xl mx-auto space-y-6 font-normal">
             <p>
               <strong className="text-white">MENUA CONSULTING</strong>{" "}
               {t(
@@ -53,12 +53,12 @@ export default function VosBesoinsPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2
-              className="text-[#1B3680]"
+              className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-[2.25rem]"
               
             >
               {t("Nos 5 domaines d'intervention", "Our 5 areas of intervention")}
             </h2>
-            <p className="text-[#3A4660] mt-4">
+            <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] mt-4 font-normal">
               {t(
                 "Découvrez ci-dessous nos domaines d’intervention. Cliquez sur chaque service pour accéder à sa description complète.",
                 "Discover our areas of intervention below. Click on each service to access its full description."
@@ -80,12 +80,12 @@ export default function VosBesoinsPage() {
                     <item.icon size={28} strokeWidth={1.5} />
                   </div>
                   <h3
-                    className="text-[#1B3680]"
+                    className="text-[#1B3680] text-[1.3rem] font-semibold"
                     
                   >
                     {item.title}
                   </h3>
-                  <p className="text-[#3A4660] text-sm leading-relaxed mb-6">
+                  <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal mb-6">
                     {item.desc}
                   </p>
                   <div className="mt-auto flex items-center text-[#1C40C2] text-sm font-semibold gap-2 group-hover:gap-3 transition-all">

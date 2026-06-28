@@ -138,7 +138,7 @@ export default function Header() {
         </button>
 
         {/* DESKTOP NAV */}
-        <nav className="hidden lg:flex items-center gap-0.5 text-sm font-medium">
+        <nav className="hidden lg:flex items-center gap-0.5">
           {(Object.keys(menus) as MenuKey[]).map((key) => (
             <div
               key={key}
@@ -147,7 +147,7 @@ export default function Header() {
             >
               <Link
                 href={menus[key].href}
-                className={`flex items-center gap-1 px-4 py-2 transition-colors whitespace-nowrap ${
+                className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[1.05rem] font-semibold ${
                   openMenu === key
                     ? "text-[#1C40C2]"
                     : "text-[#1B3680] hover:text-[#1C40C2]"
@@ -166,7 +166,7 @@ export default function Header() {
                 <div className="absolute left-0 top-full pt-0">
                   <div className="bg-white border border-[#D8DCE8] shadow-xl min-w-[280px] py-3">
                     <div className="px-5 py-2 border-b border-[#D8DCE8] mb-2">
-                      <span className="text-[#1C40C2] text-[0.6rem] font-bold tracking-widest uppercase">
+                      <span className="text-[#1B3680] text-[1.25rem] leading-[1.65rem] font-bold">
                         {menus[key].label}
                       </span>
                     </div>
@@ -176,7 +176,7 @@ export default function Header() {
                           <Link
                             href={link.href}
                             onClick={() => setOpenMenu(null)}
-                            className="flex items-center gap-3 px-5 py-2.5 text-[#3A4660] hover:text-[#1B3680] hover:bg-[#DAF0F7]/40 text-sm transition-colors group"
+                            className="flex items-center gap-3 px-5 py-2.5 text-[#3A4660] hover:text-[#1B3680] hover:bg-[#DAF0F7]/40 text-[14px] leading-[1rem] transition-colors group"
                           >
                             <span className="w-4 h-px bg-[#D8DCE8] group-hover:bg-[#1C40C2] transition-colors shrink-0" />
                             {link.label}
@@ -184,15 +184,7 @@ export default function Header() {
                         </li>
                       ))}
                     </ul>
-                    <div className="px-5 pt-3 mt-2 border-t border-[#D8DCE8]">
-                      <Link
-                        href={menus[key].href}
-                        onClick={() => setOpenMenu(null)}
-                        className="inline-flex items-center gap-2 text-[#1C40C2] text-xs font-semibold hover:gap-3 transition-all"
-                      >
-                        {t("Voir tout", "View all")} <ArrowRight size={12} />
-                      </Link>
-                    </div>
+
                   </div>
                 </div>
               )}
@@ -224,14 +216,14 @@ export default function Header() {
           <div className="flex items-center gap-2 ml-4">
             <Link
               href="/nous-rejoindre"
-              className="px-4 py-2 text-[#1B3680] border border-[#1B3680] hover:bg-[#1B3680] hover:text-white text-xs font-bold tracking-wide uppercase transition-all duration-200"
+              className="px-3 py-1 bg-[#1C40C2] text-white border border-[#1C40C2] hover:bg-white hover:text-[#1C40C2] rounded-full text-[0.65rem] font-bold tracking-wider uppercase transition-all duration-300"
               onMouseEnter={() => setOpenMenu(null)}
             >
               {t("Nous rejoindre", "Join Us")}
             </Link>
             <Link
               href="/nous-contacter"
-              className="px-4 py-2 bg-[#1C40C2] text-white hover:bg-[#142E9A] text-xs font-bold tracking-wide uppercase transition-all duration-200"
+              className="px-3 py-1 bg-[#1C40C2] text-white border border-[#1C40C2] hover:bg-white hover:text-[#1C40C2] rounded-full text-[0.65rem] font-bold tracking-wider uppercase transition-all duration-300"
               onMouseEnter={() => setOpenMenu(null)}
             >
               {t("Nous contacter", "Contact Us")}
@@ -274,7 +266,7 @@ export default function Header() {
                 <Link
                   href={menus[key].href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-lg font-semibold text-[#1B3680] mb-3 block"
+                  className="text-[1.25rem] leading-[1.65rem] font-bold text-[#1B3680] mb-3 block"
                   
                 >
                   {menus[key].label}
@@ -285,7 +277,7 @@ export default function Header() {
                       key={j}
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="text-[#4A4E5A] text-sm hover:text-[#1C40C2] transition-colors"
+                      className="text-[#4A4E5A] text-[14px] leading-[1rem] hover:text-[#1C40C2] transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -298,14 +290,14 @@ export default function Header() {
               <Link
                 href="/nous-rejoindre"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="border border-[#1B3680] text-[#1B3680] text-center px-5 py-3 text-sm font-bold tracking-wide uppercase w-full transition-all hover:bg-[#1B3680] hover:text-white"
+                className="bg-[#1C40C2] text-white text-center px-4 py-2 text-[0.7rem] font-bold tracking-wider uppercase w-full rounded-full border border-[#1C40C2] transition-all hover:bg-white hover:text-[#1C40C2]"
               >
                 {t("Nous rejoindre", "Join Us")}
               </Link>
               <Link
                 href="/nous-contacter"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="bg-[#1C40C2] text-white text-center px-5 py-3 text-sm font-bold tracking-wide uppercase w-full transition-all hover:bg-[#142E9A]"
+                className="bg-[#1C40C2] text-white text-center px-4 py-2 text-[0.7rem] font-bold tracking-wider uppercase w-full rounded-full border border-[#1C40C2] transition-all hover:bg-white hover:text-[#1C40C2]"
               >
                 {t("Nous contacter", "Contact Us")}
               </Link>

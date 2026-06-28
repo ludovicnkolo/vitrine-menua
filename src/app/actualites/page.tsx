@@ -34,7 +34,7 @@ export default function ActualitesPage() {
             {t("Actualités et Insights", "News and Insights")}
           </p>
           <h1
-            className="mb-8"
+            className="text-white mb-[2.25rem] text-[2.5rem] leading-[2.5rem] font-bold uppercase"
             
           >
             {t(
@@ -42,7 +42,7 @@ export default function ActualitesPage() {
               "Analysis, decoding and speaking out."
             )}
           </h1>
-          <p className="text-white/90 text-lg max-w-3xl mx-auto leading-relaxed">
+          <p className="text-white/90 text-[0.95rem] leading-[1.5] max-w-3xl mx-auto font-normal">
             {t(
               "Retrouvez ici les analyses, décryptages et prises de parole de MENUA CONSULTING sur les enjeux opérationnels, réglementaires et sectoriels qui façonnent les métiers de la finance, de la comptabilité, de la conformité et de la gestion de patrimoine.",
               "Find here MENUA CONSULTING's analyses, decodings and speeches on the operational, regulatory and sectoral issues that shape the finance, accounting, compliance and wealth management professions."
@@ -55,7 +55,7 @@ export default function ActualitesPage() {
       <section className="bg-white px-8 py-24 border-t border-[#D8DCE8]">
         <div className="max-w-6xl mx-auto">
           
-          <h2 className="text-xl font-bold text-[#1B3680] mb-8 border-b border-[#D8DCE8] pb-4 font-serif">
+          <h2 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-8 border-b border-[#D8DCE8] pb-4">
             À la une
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
@@ -69,7 +69,7 @@ export default function ActualitesPage() {
                 </div>
                 <div className="p-8 flex flex-col flex-1">
                   <p className="text-[#6B7794] text-xs font-semibold mb-3">{article.date}</p>
-                  <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-6 group-hover:text-[#1C40C2] transition-colors line-clamp-3">
+                  <h3 className="text-[#1B3680] text-[1.3rem] font-semibold mb-6 group-hover:text-[#1C40C2] transition-colors line-clamp-3">
                     {article.title}
                   </h3>
                   <div className="mt-auto flex items-center text-[#1C40C2] text-sm font-semibold gap-2 group-hover:gap-3 transition-all">
@@ -80,7 +80,7 @@ export default function ActualitesPage() {
             ))}
           </div>
 
-          <h2 className="text-xl font-bold text-[#1B3680] mb-8 border-b border-[#D8DCE8] pb-4 font-serif">
+          <h2 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-8 border-b border-[#D8DCE8] pb-4">
             Tous les articles
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
@@ -95,7 +95,7 @@ export default function ActualitesPage() {
                     <span className="text-[#6B7794] text-[0.65rem]">•</span>
                     <span className="text-[#6B7794] text-xs">{article.date}</span>
                   </div>
-                  <h3 className="font-serif text-lg font-bold text-[#1B3680] mb-3 group-hover:text-[#1C40C2] transition-colors">
+                  <h3 className="text-[#1B3680] text-[1.3rem] font-semibold mb-3 group-hover:text-[#1C40C2] transition-colors">
                     {article.title}
                   </h3>
                   <div className="flex items-center text-[#1C40C2] text-xs font-semibold gap-1 group-hover:gap-2 transition-all">

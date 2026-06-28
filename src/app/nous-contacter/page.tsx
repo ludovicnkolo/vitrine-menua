@@ -25,9 +25,9 @@ export default function NousContacter() {
             <span className="mx-2 text-gray-600">›</span>
             <span>{t("Nous contacter", "Contact Us")}</span>
           </div>
-          <h1 className="font-serif text-5xl md:text-6xl font-bold leading-tight mb-4">{t("Nous contacter", "Contact Us")}</h1>
+          <h1 className="text-white mb-[2.25rem] text-[2.5rem] leading-[2.5rem] font-bold uppercase">{t("Nous contacter", "Contact Us")}</h1>
           <div className="w-12 h-1 bg-[#B8922A] mb-6"></div>
-          <p className="text-gray-300 text-sm max-w-md leading-relaxed">
+          <p className="text-gray-300 text-[0.95rem] leading-[1.5] max-w-md font-normal">
             {t(
               "Présentez votre besoin opérationnel, nous vous répondons avec une première analyse et une proposition adaptée.",
               "Present your operational need, and we will respond with an initial analysis and a tailored proposal."
@@ -57,7 +57,7 @@ export default function NousContacter() {
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-12 items-start">
           {/* LEFT INFO */}
           <div className="md:w-2/5 space-y-6">
-            <h2 className="font-serif text-2xl font-bold">{t("Pourquoi nous contacter ?","Why contact us?")}</h2>
+            <h2 className="text-[#0E1B2E] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-[2.25rem]">{t("Pourquoi nous contacter ?","Why contact us?")}</h2>
             {[
               {icon:Clock, title:t("Réponse rapide","Quick Response"), desc:t("Nous nous engageons à vous répondre dans les meilleurs délais.","We commit to responding to you as soon as possible.")},
               {icon:Users, title:t("Analyse personnalisée","Personalized Analysis"), desc:t("Nous analysons votre besoin pour vous proposer une solution adaptée.","We analyze your need to propose a tailored solution.")},
@@ -76,7 +76,7 @@ export default function NousContacter() {
 
           {/* RIGHT FORM */}
           <div className="flex-1">
-            <h2 className="font-serif text-2xl font-bold mb-2">{t("Formulaire de contact","Contact Form")}</h2>
+            <h2 className="text-[#0E1B2E] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-[2.25rem]">{t("Formulaire de contact","Contact Form")}</h2>
             <p className="text-gray-500 text-xs mb-5 leading-relaxed">
               {t(
                 "Les informations recueillies sont traitées par MENUA CONSULTING afin de répondre à votre demande. Elles peuvent être conservées jusqu'à 3 ans après le dernier échange. Droits exercés à :",
@@ -184,7 +184,7 @@ export default function NousContacter() {
       <section className="bg-[#1B3680] px-8 py-20">
         <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden flex flex-col md:flex-row items-stretch min-h-[220px]">
           <div className="flex-1 bg-[#122560] p-12 flex flex-col justify-center">
-            <h2 className="font-serif text-3xl font-bold mb-6">{t("Une question urgente ?","An urgent question?")}<br/>{t("Contactez-nous directement.","Contact us directly.")}</h2>
+            <h2 className="text-white text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-6">{t("Une question urgente ?","An urgent question?")}<br/>{t("Contactez-nous directement.","Contact us directly.")}</h2>
             <Link href="tel:+33686877914" className="inline-flex items-center gap-3 bg-[#1C40C2] hover:bg-[#142E9A] text-white px-8 py-3.5 rounded text-xs font-bold tracking-wider uppercase transition-colors w-fit">
               {t("Nous appeler maintenant","Call us now")} <ArrowRight size={16}/>
             </Link>

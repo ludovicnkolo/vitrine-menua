@@ -11,11 +11,11 @@ const articlesData: Record<string, any> = {
     cat: "Conformité / LCB-FT",
     content: (
       <>
-        <p className="mb-6 font-semibold text-[#1B3680] text-lg">
+        <p className="text-[#1B3680] text-[0.95rem] leading-[1.5] font-semibold mb-6">
           Le paysage réglementaire de la Lutte Contre le Blanchiment et le Financement du Terrorisme (LCB-FT) connaît une nouvelle accélération. Les autorités de contrôle (AMF, ACPR, Banque de France) renforcent leurs exigences en matière de dispositifs KYC (Know Your Customer), imposant aux acteurs financiers une vigilance accrue sur l’ensemble du cycle de vie du client.
         </p>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-6">Les 3 évolutions majeures à intégrer :</h3>
-        <ul className="space-y-4 text-[#3A4660] mb-8">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-6">Les 3 évolutions majeures à intégrer :</h3>
+        <ul className="space-y-4 text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal mb-8">
           <li className="bg-white p-5 border border-[#D8DCE8] border-l-4 border-l-[#1C40C2]">
             <strong className="text-[#1B3680] block mb-1">Renforcement des obligations de vérification des bénéficiaires effectifs :</strong> 
             Les seuils de détection sont abaissés et les délais de mise à jour des données sont raccourcis. Les établissements doivent désormais justifier d’une revue annuelle pour les clients à risque.
@@ -29,8 +29,8 @@ const articlesData: Record<string, any> = {
             Les exigences de conservation des preuves documentaires (justificatifs d&apos;identité, de domicile, pièces juridiques) s&apos;étendent à 10 ans après la sortie de relation.
           </li>
         </ul>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-4">Comment MENUA CONSULTING vous accompagne :</h3>
-        <p className="text-[#3A4660] bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-4">Comment MENUA CONSULTING vous accompagne :</h3>
+        <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
           Nous prenons en charge l&apos;exécution opérationnelle de vos revues KYC. Nos équipes traitent les campagnes de mise à jour, contrôlent la complétude des dossiers et préparent les alertes pour validation par vos équipes conformité habilitées, dans le respect strict du principe des 4 yeux.
         </p>
       </>
@@ -42,11 +42,11 @@ const articlesData: Record<string, any> = {
     cat: "Opérations / Externalisation",
     content: (
       <>
-        <p className="mb-6 font-semibold text-[#1B3680] text-lg">
+        <p className="text-[#1B3680] text-[0.95rem] leading-[1.5] font-semibold mb-6">
           L&apos;externalisation des fonctions back office est un levier puissant de performance, mais elle expose à des risques de rupture si le dispositif de suivi et de contrôle n&apos;est pas parfaitement structuré. La continuité opérationnelle ne se décrète pas : elle se construit, avec des garde-fous solides.
         </p>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-6">Les 4 piliers d&apos;une externalisation sécurisée :</h3>
-        <ul className="space-y-4 text-[#3A4660] mb-8">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-6">Les 4 piliers d&apos;une externalisation sécurisée :</h3>
+        <ul className="space-y-4 text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal mb-8">
           <li className="bg-white p-5 border border-[#D8DCE8] border-l-4 border-l-[#1C40C2]">
             <strong className="text-[#1B3680] block mb-1">Une intégration rigoureuse :</strong> 
             L&apos;équipe externalisée doit être formée à vos outils métier, à vos process internes et à votre culture d&apos;entreprise. Une intégration réussie réduit de 80% les risques d&apos;erreur.
@@ -64,8 +64,8 @@ const articlesData: Record<string, any> = {
             Chaque action réalisée par nos équipes est documentée et horodatée. En cas de question de votre part, nous pouvons remonter à la source de l&apos;opération en quelques secondes.
           </li>
         </ul>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-4">Conclusion :</h3>
-        <p className="text-[#3A4660] bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-4">Conclusion :</h3>
+        <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
           L&apos;externalisation est un accélérateur, à condition qu&apos;elle soit pilotée comme un véritable prolongement de votre organisation interne. C&apos;est exactement la philosophie de MENUA CONSULTING.
         </p>
       </>
@@ -77,11 +77,11 @@ const articlesData: Record<string, any> = {
     cat: "Finance / Reporting",
     content: (
       <>
-        <p className="mb-6 font-semibold text-[#1B3680] text-lg">
+        <p className="text-[#1B3680] text-[0.95rem] leading-[1.5] font-semibold mb-6">
           Un reporting financier fiable est le fondement d&apos;une prise de décision éclairée. Pourtant, les directions financières et les contrôleurs de gestion sont confrontés à des erreurs récurrentes qui fragilisent la confiance des parties prenantes.
         </p>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-6">Les 5 erreurs les plus fréquentes :</h3>
-        <ul className="space-y-4 text-[#3A4660] mb-8">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-6">Les 5 erreurs les plus fréquentes :</h3>
+        <ul className="space-y-4 text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal mb-8">
           <li className="bg-white p-5 border border-[#D8DCE8] border-l-4 border-l-[#1C40C2]">
             <strong className="text-[#1B3680] block mb-1">La mauvaise qualification des flux :</strong> 
             Confondre dépenses d&apos;investissement et charges d&apos;exploitation, ou mal ventiler les coûts par centre de responsabilité.
@@ -103,8 +103,8 @@ const articlesData: Record<string, any> = {
             Noyer le lecteur sous des centaines de lignes sans focus sur les KPI stratégiques.
           </li>
         </ul>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-4">Nos solutions :</h3>
-        <p className="text-[#3A4660] bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-4">Nos solutions :</h3>
+        <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
           MENUA CONSULTING intervient pour fiabiliser vos reportings. Nous structurons vos données, automatisons les contrôles de cohérence et préparons des livrables clairs, avec une mise en avant des écarts significatifs et des recommandations opérationnelles.
         </p>
       </>
@@ -116,11 +116,11 @@ const articlesData: Record<string, any> = {
     cat: "Réglementation / DORA",
     content: (
       <>
-        <p className="mb-6 font-semibold text-[#1B3680] text-lg">
+        <p className="text-[#1B3680] text-[0.95rem] leading-[1.5] font-semibold mb-6">
           Le Digital Operational Resilience Act (DORA) est entré en pleine application. Ce règlement européen impose aux acteurs financiers et à leurs prestataires ICT (Technologies de l&apos;Information et de la Communication) un cadre strict pour garantir la résilience numérique.
         </p>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-6">Ce que DORA change concrètement :</h3>
-        <ul className="space-y-4 text-[#3A4660] mb-8">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-6">Ce que DORA change concrètement :</h3>
+        <ul className="space-y-4 text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal mb-8">
           <li className="bg-white p-5 border border-[#D8DCE8] border-l-4 border-l-[#1C40C2]">
             <strong className="text-[#1B3680] block mb-1">Gestion des risques ICT :</strong> 
             Les établissements doivent identifier, classer et gérer les risques liés à leurs systèmes d&apos;information comme ils le font pour les risques financiers.
@@ -138,8 +138,8 @@ const articlesData: Record<string, any> = {
             Les contrats avec les prestataires cloud et ICT doivent inclure des clauses spécifiques sur la continuité, la sous-traitance et les droits d&apos;audit.
           </li>
         </ul>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-4">Notre appui :</h3>
-        <p className="text-[#3A4660] bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-4">Notre appui :</h3>
+        <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
           MENUA CONSULTING assiste les directions opérationnelles dans la mise en conformité documentaire et la revue des contrats ICT, en lien avec leurs équipes juridiques et IT.
         </p>
       </>
@@ -151,11 +151,11 @@ const articlesData: Record<string, any> = {
     cat: "Comptabilité / Gestion",
     content: (
       <>
-        <p className="mb-6 font-semibold text-[#1B3680] text-lg">
+        <p className="text-[#1B3680] text-[0.95rem] leading-[1.5] font-semibold mb-6">
           Les clôtures mensuelles, trimestrielles et surtout annuelles sont des moments de tension extrême pour les équipes comptables. Anticiper ces pics d&apos;activité est essentiel pour préserver la santé de vos équipes et la qualité des livrables.
         </p>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-6">Nos recommandations opérationnelles :</h3>
-        <ul className="space-y-4 text-[#3A4660] mb-8">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-6">Nos recommandations opérationnelles :</h3>
+        <ul className="space-y-4 text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal mb-8">
           <li className="bg-white p-5 border border-[#D8DCE8] border-l-4 border-l-[#1C40C2]">
             <strong className="text-[#1B3680] block mb-1">Planification en amont :</strong> 
             Définir un calendrier précis des cut-offs (arrêtés des écritures, rapprochements bancaires, inventaires) au moins 3 semaines avant la clôture.
@@ -169,8 +169,8 @@ const articlesData: Record<string, any> = {
             Ne pas attendre la clôture pour vérifier la cohérence des comptes. Un contrôle hebdomadaire réduit le temps de clôture de 30%.
           </li>
         </ul>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-4">Comment nous vous aidons :</h3>
-        <p className="text-[#3A4660] bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-4">Comment nous vous aidons :</h3>
+        <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
           MENUA CONSULTING met à disposition des renforts opérationnels pendant vos périodes de clôture. Nos collaborateurs s&apos;intègrent à votre outil comptable et exécutent les tâches de saisie et de rapprochement selon vos procédures.
         </p>
       </>
@@ -182,11 +182,11 @@ const articlesData: Record<string, any> = {
     cat: "Gestion de patrimoine / CGP",
     content: (
       <>
-        <p className="mb-6 font-semibold text-[#1B3680] text-lg">
+        <p className="text-[#1B3680] text-[0.95rem] leading-[1.5] font-semibold mb-6">
           Le devoir de conseil du Conseiller en Gestion de Patrimoine (CGP) ne se limite pas à la recommandation financière. Il s&apos;accompagne d&apos;une lourde charge administrative (traçabilité, formalisation, conservation) qui pèse sur l&apos;efficacité opérationnelle du cabinet.
         </p>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-6">Les 3 principaux enjeux administratifs :</h3>
-        <ul className="space-y-4 text-[#3A4660] mb-8">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-6">Les 3 principaux enjeux administratifs :</h3>
+        <ul className="space-y-4 text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal mb-8">
           <li className="bg-white p-5 border border-[#D8DCE8] border-l-4 border-l-[#1C40C2]">
             <strong className="text-[#1B3680] block mb-1">La traçabilité des recommandations :</strong> 
             Chaque conseil donné doit être formalisé, motivé (analyse de la situation du client) et archivé. Cela génère une volumétrie documentaire importante.
@@ -200,8 +200,8 @@ const articlesData: Record<string, any> = {
             La réglementation MIFID II impose une revue régulière de l&apos;adéquation des investissements, nécessitant des mises à jour fréquentes des bases clients.
           </li>
         </ul>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-4">Notre solution :</h3>
-        <p className="text-[#3A4660] bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-4">Notre solution :</h3>
+        <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
           MENUA CONSULTING prend en charge le volet administratif du devoir de conseil. Nous préparons les dossiers d&apos;entrée en relation, collectons les pièces, pré-remplissons les formulaires et assurons le suivi des revues périodiques.
         </p>
       </>
@@ -213,11 +213,11 @@ const articlesData: Record<string, any> = {
     cat: "Conformité / KYC / AML",
     content: (
       <>
-        <p className="mb-6 font-semibold text-[#1B3680] text-lg">
+        <p className="text-[#1B3680] text-[0.95rem] leading-[1.5] font-semibold mb-6">
           La remédiation KYC (rattrapage des dossiers clients incomplets ou obsolètes) est un défi récurrent pour les établissements financiers. Souvent perçue comme une corvée réglementaire, elle peut pourtant être transformée en opportunité de fiabilisation du référentiel client.
         </p>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-6">Stratégies efficaces :</h3>
-        <ul className="space-y-4 text-[#3A4660] mb-8">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-6">Stratégies efficaces :</h3>
+        <ul className="space-y-4 text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal mb-8">
           <li className="bg-white p-5 border border-[#D8DCE8] border-l-4 border-l-[#1C40C2]">
             <strong className="text-[#1B3680] block mb-1">Priorisation par le risque :</strong> 
             Cibler en premier les clients à haut risque (PEP, secteurs sensibles, nationalités spécifiques) pour concentrer l&apos;effort là où le risque de non-conformité est maximal.
@@ -231,8 +231,8 @@ const articlesData: Record<string, any> = {
             Utiliser une grille d&apos;analyse unique et exhaustive pour chaque dossier, évitant les oublis et facilitant le contrôle en 4 yeux.
           </li>
         </ul>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-4">Notre appui :</h3>
-        <p className="text-[#3A4660] bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-4">Notre appui :</h3>
+        <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
           Nous traitons vos campagnes de remédiation de bout en bout. Collecte, vérification, relances clients, mise à jour en base et préparation des dossiers pour validation par vos équipes conformité.
         </p>
       </>
@@ -244,23 +244,23 @@ const articlesData: Record<string, any> = {
     cat: "Data / Finance",
     content: (
       <>
-        <p className="mb-6 font-semibold text-[#1B3680] text-lg">
+        <p className="text-[#1B3680] text-[0.95rem] leading-[1.5] font-semibold mb-6">
           La qualité des données (Data Quality) est devenue un enjeu stratégique majeur en finance. Des données erronées ou mal structurées impactent directement le reporting réglementaire (BCE, ACPR), les décisions de gestion et la performance opérationnelle.
         </p>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-6">Les causes principales de la mauvaise qualité des données :</h3>
-        <ul className="list-disc pl-6 space-y-2 mb-8 text-[#3A4660]">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-6">Les causes principales de la mauvaise qualité des données :</h3>
+        <ul className="list-disc pl-6 space-y-2 mb-8 text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal">
           <li>Silos d&apos;information entre les services (front, middle, back).</li>
           <li>Saisies manuelles multiples sans contrôle de cohérence.</li>
           <li>Absence de standardisation des formats (dates, codes devise, noms de contreparties).</li>
         </ul>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-6">Les solutions concrètes :</h3>
-        <ul className="list-disc pl-6 space-y-2 mb-8 text-[#3A4660]">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-6">Les solutions concrètes :</h3>
+        <ul className="list-disc pl-6 space-y-2 mb-8 text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal">
           <li>Mise en place de règles de validation automatique à l&apos;entrée des données.</li>
           <li>Nettoyage et dédoublonnage des bases clients/fournisseurs.</li>
           <li>Création d&apos;un référentiel unique (Master Data Management) partagé par tous les services.</li>
         </ul>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-4">Notre intervention :</h3>
-        <p className="text-[#3A4660] bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-4">Notre intervention :</h3>
+        <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
           MENUA CONSULTING réalise des missions ponctuelles de data cleaning et de structuration de bases. Nous contrôlons, standardisons et consolidons vos données pour garantir la fiabilité de vos reportings.
         </p>
       </>
@@ -272,11 +272,11 @@ const articlesData: Record<string, any> = {
     cat: "Opérations / Middle Office",
     content: (
       <>
-        <p className="mb-6 font-semibold text-[#1B3680] text-lg">
+        <p className="text-[#1B3680] text-[0.95rem] leading-[1.5] font-semibold mb-6">
           Le Middle Office est souvent victime de son positionnement ambigu, entre le Front Office (commercial) et le Back Office (administratif/comptable). Pourtant, il joue un rôle critique dans la sécurisation des opérations et la gestion des risques.
         </p>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-6">Les missions clés du Middle Office souvent sous-estimées :</h3>
-        <ul className="space-y-4 text-[#3A4660] mb-8">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-6">Les missions clés du Middle Office souvent sous-estimées :</h3>
+        <ul className="space-y-4 text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal mb-8">
           <li className="bg-white p-5 border border-[#D8DCE8] border-l-4 border-l-[#1C40C2]">
             <strong className="text-[#1B3680] block mb-1">Le contrôle des opérations :</strong> 
             Vérifier que les transactions initiées par le Front Office sont correctement capturées, validées et transmises au Back Office.
@@ -294,8 +294,8 @@ const articlesData: Record<string, any> = {
             Produire des indicateurs sur les incidents de traitement.
           </li>
         </ul>
-        <h3 className="font-serif text-xl font-bold text-[#1B3680] mb-4">La vision MENUA CONSULTING :</h3>
-        <p className="text-[#3A4660] bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
+        <h3 className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-4">La vision MENUA CONSULTING :</h3>
+        <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal bg-[#F2F0ED] p-6 border-l-2 border-[#B8922A]">
           Nous considérons le Middle Office comme le verrou stratégique de la chaîne opérationnelle. En l&apos;externalisant, nous vous apportons une sécurité renforcée, une réduction des erreurs de transmission et une meilleure gestion des exceptions.
         </p>
       </>
@@ -336,7 +336,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <span className="text-white/60 text-xs font-semibold">{article.date}</span>
           </div>
           <h1
-            className="text-white mb-2"
+            className="text-white mb-[2.25rem] text-[2.5rem] leading-[2.5rem] font-bold uppercase"
             
           >
             {article.title}

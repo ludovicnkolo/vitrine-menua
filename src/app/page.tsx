@@ -10,152 +10,217 @@ export default function Home() {
     <main className="flex flex-col w-full min-h-screen overflow-hidden">
 
       {/* ── HERO — pleine largeur, photo + overlay marine ── */}
-      <section className="relative w-full min-h-[92vh] flex items-end pb-0 overflow-hidden">
+      <section className="relative w-full min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
           <img
             src="/hero-bg.jpg"
             alt="Finance opérationnelle"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-right"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1B3680]/95 via-[#1B3680]/80 to-[#1B3680]/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B3680] from-20% via-[#1B3680]/70 via-45% to-transparent to-65%" />
         </div>
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-8 md:px-16 lg:px-24 pb-24 pt-40">
-          <p className="section-eyebrow text-[#DAF0F7]/80 mb-6">
-            {t("Cabinet de conseil — France", "Advisory firm — France")}
-          </p>
-          <h1
-            className="text-white mb-8 leading-[1.08]"
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
+          <div className="relative py-12 pl-10">
+            {/* Decorative golden bracket */}
+            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-[#B8922A]" />
+            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#B8922A]" />
+            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#B8922A]" />
             
-          >
-            {t(
-              "Externalisation opérationnelle\ndes fonctions back & middle office",
-              "Operational outsourcing\nof back & middle office functions"
-            )}
-          </h1>
-          <p className="text-white/80 text-lg max-w-xl mb-10 leading-relaxed font-light">
-            {t(
-              "Nous sécurisons l'exécution de vos opérations pour que vos équipes se concentrent sur les décisions stratégiques.",
-              "We secure your operations execution so your teams focus on strategic decisions."
-            )}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 items-start">
-            <Link
-              href="/nous-contacter"
-              className="inline-flex items-center gap-3 bg-[#1C40C2] hover:bg-[#142E9A] text-white px-8 py-4 text-sm font-semibold tracking-wide uppercase transition-all duration-200"
-            >
-              {t("Présenter un besoin", "Submit a request")} <ArrowRight size={15} />
-            </Link>
-            <Link
-              href="/nous-connaitre"
-              className="inline-flex items-center gap-3 border border-white/40 hover:border-white text-white px-8 py-4 text-sm font-semibold tracking-wide uppercase transition-all duration-200"
-            >
-              {t("Découvrir Menua", "Discover Menua")} <ArrowRight size={15} />
-            </Link>
+            <div className="relative">
+              <p className="text-[#B8922A] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.15em] uppercase mb-8">
+                {t("Cabinet de conseil — France", "Advisory firm — France")}
+              </p>
+              <h1 className="text-white mb-8 text-[2.2rem] md:text-[3.2rem] lg:text-[3.6rem] leading-[1.1] font-bold uppercase max-w-4xl tracking-tight">
+                {t(
+                  "Externalisation opérationnelle\ndes fonctions back\n& middle office",
+                  "Operational outsourcing\nof back & middle office functions"
+                ).split('\n').map((line, i) => (
+                  <span key={i} className="block">{line}</span>
+                ))}
+              </h1>
+              <p className="text-white/95 text-[1.05rem] md:text-[1.15rem] leading-[1.6] max-w-2xl font-normal">
+                {t(
+                  "Nous sécurisons l'exécution de vos opérations pour que vos équipes se concentrent sur les décisions stratégiques.",
+                  "We secure your operations execution so your teams focus on strategic decisions."
+                )}
+              </p>
+            </div>
           </div>
-        </div>
-
-        {/* Barre de scroll hint */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-60">
-          <span className="text-white text-[0.6rem] tracking-widest uppercase">Scroll</span>
-          <div className="w-px h-10 bg-white/40 animate-pulse" />
         </div>
       </section>
 
-      {/* ── CHIFFRES CLÉS — bande blanche style Laplace ── */}
-      <section className="bg-white border-b border-[#D8DCE8] py-12 px-8">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-[#D8DCE8]">
+      {/* ── CHIFFRES CLÉS — parallelogrammes style référence ── */}
+      <div className="bg-white py-6 px-8">
+      <section className="bg-[#0E1F5B] py-6 px-8 max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 justify-center items-stretch">
           {[
-            { value: "10+", label: t("Années en environnements réglementés", "Years in regulated environments") },
-            { value: "50+", label: t("Missions accomplies avec succès", "Successfully completed missions") },
-            { value: "100%", label: t("Supervision par professionnels habilités", "Supervised by qualified professionals") },
-            { value: "FR / EN", label: t("Interventions bilingues", "Bilingual interventions") },
+            { value: "10+", label: t("Années en environnements réglementés", "Years in regulated environments"), accent: "#1C40C2" },
+            { value: "50+", label: t("Missions accomplies avec succès", "Successfully completed missions"), accent: "#1C7CC2" },
+            { value: "100%", label: t("Supervision par professionnels habilités", "Supervised by qualified professionals"), accent: "#5B4FC2" },
+            { value: "FR / EN", label: t("Interventions bilingues", "Bilingual interventions"), accent: "#B8922A" },
           ].map((stat, i) => (
-            <div key={i} className="flex flex-col items-center text-center px-6 py-4">
-              <span
-                className="key-number text-[#222222] mb-1"
-                
-              >
+            <div
+              key={i}
+              className="flex-1 relative bg-[#162466] border border-white/10 px-8 py-3 flex flex-col items-center text-center"
+              style={{ clipPath: "polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%)" }}
+            >
+              <span className="text-white text-[2rem] font-bold leading-tight tracking-tight mb-1">
                 {stat.value}
               </span>
-              <span className="text-[#4A4E5A] text-xs leading-snug mt-2 max-w-[120px]">
+              <span className="text-white/70 text-[0.78rem] leading-snug max-w-[130px]">
                 {stat.label}
               </span>
+              {/* colored bottom accent */}
+              <div
+                className="absolute bottom-0 left-[6%] right-[6%] h-[3px]"
+                style={{ backgroundColor: stat.accent }}
+              />
             </div>
           ))}
         </div>
       </section>
+      </div>
 
-      {/* ── POSITIONNEMENT — fond glacier ── */}
-      <section className="bg-[#DAF0F7] px-8 py-24">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="section-eyebrow mb-5">
-            {t("Notre positionnement", "Our positioning")}
-          </p>
-          <h2
-            className="text-[#1B3680] mb-8"
-            
+      {/* ── POSITIONNEMENT — Overlap Layout Exact ── */}
+      <section className="bg-white py-20 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-8 relative flex flex-col md:flex-row items-center">
+          
+          {/* COLONNE GAUCHE — Panneau beige en superposition */}
+          <div 
+            className="w-full md:w-[52%] bg-[#F5F0EA] p-10 md:p-14 lg:p-16 z-10 relative shadow-lg"
+            style={{ borderRadius: "2rem 8rem 8rem 2rem" }}
           >
-            {t(
-              "Au service des acteurs financiers et réglementés en France",
-              "Serving financial and regulated institutions in France"
-            )}
-          </h2>
-          <p className="text-[#3A4660] text-lg leading-relaxed mb-10 max-w-3xl mx-auto">
-            <strong className="text-[#1B3680]">MENUA CONSULTING</strong>{" "}
-            {t(
-              "est un cabinet spécialisé dans l'externalisation opérationnelle des fonctions back office et middle office pour des acteurs financiers et réglementés : banques, cabinets de gestion de patrimoine, sociétés financières, experts-comptables.",
-              "is a firm specialising in operational outsourcing of back office and middle office functions for financial and regulated players: banks, wealth management firms, financial companies, chartered accountants."
-            )}
-          </p>
-          <Link
-            href="/nous-connaitre"
-            className="inline-flex items-center gap-3 border border-[#1B3680] text-[#1B3680] hover:bg-[#1B3680] hover:text-white px-8 py-3.5 text-sm font-semibold tracking-wide uppercase transition-all duration-200"
-          >
-            {t("Découvrir le cabinet", "Discover the firm")} <ArrowRight size={15} />
-          </Link>
+            <p className="text-[#B8922A] text-[0.72rem] font-bold tracking-[0.2em] uppercase mb-3">
+              {t("Notre positionnement", "Our positioning")}
+            </p>
+            <div className="w-8 h-[2px] bg-[#B8922A] mb-7" />
+            <h2 className="text-[#1A1A1A] text-[1.85rem] leading-[1.2] font-bold mb-6">
+              {t("Au service des ", "Serving ")}<span className="text-[#B8922A]">{t("acteurs\nfinanciers", "financial\nplayers").split('\n').map((l,i)=><span key={i} className="block">{l}</span>)}</span>
+              {" "}{t("et", "and")}{" "}<span className="text-[#B8922A]">{t("réglementés", "regulated")}</span>{" "}
+              <span className="block">{t("en France", "in France")}</span>
+            </h2>
+            <p className="text-[#3A3A3A] text-[0.9rem] leading-[1.7] mb-8 font-normal">
+              <strong className="text-[#B8922A]">MENUA CONSULTING</strong>{" "}
+              {t(
+                "est un cabinet spécialisé dans l'externalisation opérationnelle des fonctions back office et middle office pour des acteurs financiers et réglementés : banques, cabinets de gestion de patrimoine, sociétés financières, experts-comptables.",
+                "is a firm specialising in operational outsourcing of back office and middle office functions for financial and regulated players: banks, wealth management firms, financial companies, chartered accountants."
+              )}
+            </p>
+            <Link
+              href="/nous-connaitre"
+              className="inline-flex items-center gap-3 border border-[#B8922A] text-[#B8922A] hover:bg-[#B8922A] hover:text-white px-6 py-2.5 text-[0.7rem] font-bold tracking-[0.15em] uppercase transition-all duration-200 w-fit"
+            >
+              {t("Découvrir le cabinet", "Discover the firm")} <ArrowRight size={12} />
+            </Link>
+          </div>
+
+          {/* COLONNE DROITE — Image en arrière-plan partiel */}
+          <div className="w-full md:w-[58%] h-[400px] md:h-[600px] relative z-0 md:-ml-[10%] mt-8 md:mt-0">
+            <img
+              src="/notre_position.png"
+              alt="Notre positionnement"
+              className="w-full h-full object-cover object-center rounded-[2rem] shadow-md"
+            />
+            {/* Badge circulaire bas-droite */}
+            <Link
+              href="/nous-connaitre"
+              className="absolute -bottom-6 -right-6 md:bottom-10 md:-right-10 w-24 h-24 rounded-full bg-[#9c8e80] border border-white/20 flex flex-col items-center justify-center text-center hover:bg-[#B8922A] transition-all duration-300 shadow-xl group z-20"
+            >
+              <div className="w-8 h-8 rounded-full border border-white flex items-center justify-center mb-1">
+                <ArrowRight size={12} className="text-white" />
+              </div>
+              <span className="text-white text-[0.55rem] font-bold tracking-wider uppercase leading-tight text-center">
+                <span className="block">Découvrir</span>
+                <span className="block">le cabinet</span>
+              </span>
+            </Link>
+          </div>
+
         </div>
       </section>
 
-      {/* ── VOS BESOINS — fond blanc ── */}
-      <section className="bg-white px-8 py-24">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="section-eyebrow mb-4">{t("Domaines d'intervention", "Areas of intervention")}</p>
-            <h2
-              className="text-[#1B3680]"
-              
-            >
+      {/* ── VOS BESOINS — layout asymétrique avec image courbée ── */}
+      <section className="bg-[#F8F9FA] relative py-16 md:py-20 overflow-hidden">
+        <div className="max-w-[1440px] mx-auto w-full relative flex flex-col md:flex-row items-stretch">
+          
+          {/* COLONNE GAUCHE - TEXTE ET GRILLE */}
+          <div className="w-full md:w-[60%] pl-8 pr-8 lg:pl-20 lg:pr-16 z-10 flex flex-col justify-center">
+            
+            <div className="flex items-center gap-4 mb-4">
+              <p className="text-[#B8922A] text-[0.75rem] font-bold tracking-[0.15em] uppercase">
+                {t("Domaines d'intervention", "Areas of intervention")}
+              </p>
+              <div className="h-[1.5px] bg-[#B8922A] w-12" />
+            </div>
+            
+            <h2 className="text-[#1B3680] text-[1.8rem] leading-[1.2] font-bold uppercase mb-12 tracking-wide">
               {t("Vos besoins", "Your needs")}
             </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[#D8DCE8]">
-            {[
-              { icon: PieChart, title: t("Finance & reporting", "Finance & reporting"), href: "/vos-besoins#finance-reporting" },
-              { icon: BarChart3, title: t("Contrôle de gestion", "Management control"), href: "/vos-besoins#controle-gestion" },
-              { icon: ShieldCheck, title: t("Risques & conformité", "Risk & compliance"), href: "/vos-besoins#risques-conformite" },
-              { icon: FileSpreadsheet, title: t("Support comptable & data", "Accounting & data support"), href: "/vos-besoins#support-comptable" },
-              { icon: Users, title: t("Gestion de patrimoine & CGP", "Wealth management & CGP"), href: "/vos-besoins#gestion-patrimoine" },
-              { icon: Briefcase, title: t("Autres besoins opérationnels", "Other operational needs"), href: "/vos-besoins#autres-besoins" },
-            ].map((item, i) => (
-              <Link href={item.href} key={i} className="group bg-white block">
-                <div className="p-10 h-full flex flex-col gap-5 transition-all duration-200 group-hover:bg-[#F2F0ED]">
-                  <div className="text-[#1C40C2]">
-                    <item.icon size={32} strokeWidth={1.5} />
-                  </div>
-                  <h3
-                    className="text-[#1B3680]"
-                    
+
+            {/* GRILLE 3x2 */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { icon: PieChart, title: t("Finance & reporting", "Finance & reporting"), href: "/vos-besoins#finance-reporting" },
+                { icon: BarChart3, title: t("Contrôle de gestion", "Management control"), href: "/vos-besoins#controle-gestion" },
+                { icon: ShieldCheck, title: t("Risques & conformité", "Risk & compliance"), href: "/vos-besoins#risques-conformite" },
+                { icon: FileSpreadsheet, title: t("Support comptable & data", "Accounting & data support"), href: "/vos-besoins#support-comptable" },
+                { icon: Users, title: t("Gestion de patrimoine & CGP", "Wealth management & CGP"), href: "/vos-besoins#gestion-patrimoine" },
+                { icon: Briefcase, title: t("Autres besoins opérationnels", "Other operational needs"), href: "/vos-besoins#autres-besoins" },
+              ].map((item, i) => {
+                // Determine border classes based on position to match image
+                const isTopRow = i < 3;
+                const isLeftCol = i % 3 === 0;
+                const isMidCol = i % 3 === 1;
+                const isRightCol = i % 3 === 2;
+                
+                return (
+                  <Link 
+                    href={item.href} 
+                    key={i} 
+                    className={`group flex flex-col p-6 lg:p-8 transition-colors hover:bg-white
+                      ${isTopRow ? 'border-b border-t border-[#D8DCE8]' : 'border-b border-[#D8DCE8]'}
+                      ${!isRightCol ? 'border-r border-[#D8DCE8]' : ''}
+                    `}
                   >
-                    {item.title}
-                  </h3>
-                  <div className="mt-auto flex items-center text-[#1C40C2] text-sm font-semibold gap-2 group-hover:gap-3 transition-all">
-                    {t("En savoir plus", "Learn more")} <ArrowRight size={14} />
-                  </div>
-                </div>
-              </Link>
-            ))}
+                    <div className="text-[#1B3680] mb-8">
+                      <item.icon size={28} strokeWidth={1.5} />
+                    </div>
+                    <h3 className="text-[#1B3680] text-[0.95rem] font-bold leading-snug mb-8 flex-grow">
+                      {item.title}
+                    </h3>
+                    <div className="mt-auto flex items-center text-[#1B3680] text-[0.8rem] font-medium gap-2 group-hover:gap-3 transition-all">
+                      {t("En savoir plus", "Learn more")} <ArrowRight size={14} />
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
+
+          {/* COLONNE DROITE - IMAGE COURBÉE */}
+          <div className="hidden md:block absolute right-0 top-0 w-[43%] h-full z-0 overflow-visible">
+            <div 
+              className="absolute inset-0 overflow-hidden shadow-2xl" 
+              style={{ borderTopLeftRadius: '45% 100%', borderBottomLeftRadius: '45% 100%' }}
+            >
+              <img 
+                src="/besoin.png" 
+                alt="Vos besoins" 
+                className="w-full h-full object-cover object-center" 
+              />
+              {/* Ligne dorée qui suit la courbe */}
+              <div 
+                className="absolute inset-0 border-l-[1.5px] border-[#B8922A] pointer-events-none" 
+                style={{ borderRadius: 'inherit' }} 
+              />
+            </div>
+            
+            {/* Points dorés (dots) sur la courbe */}
+            <div className="absolute left-[3px] top-[32%] w-2 h-2 bg-[#B8922A] rounded-full -translate-x-1/2 -translate-y-1/2 shadow-sm" />
+            <div className="absolute left-[-1px] top-[55%] w-2 h-2 bg-[#B8922A] rounded-full -translate-x-1/2 -translate-y-1/2 shadow-sm" />
+          </div>
+
         </div>
       </section>
 
@@ -166,12 +231,12 @@ export default function Home() {
             <div>
               <p className="section-eyebrow mb-5">{t("Notre valeur ajoutée", "Our value proposition")}</p>
               <h2
-                className="text-[#1B3680] mb-8"
+                className="text-[#1B3680] mb-[2.25rem] text-[1.3rem] leading-[1.6rem] font-bold uppercase"
                 
               >
                 {t("Pourquoi Menua Consulting ?", "Why Menua Consulting?")}
               </h2>
-              <p className="text-[#3A4660] leading-relaxed mb-8">
+              <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] mb-8 font-normal">
                 {t(
                   "Nous exécutons là où les autres s'arrêtent à l'analyse. Notre approche opérationnelle, nos profils spécialisés et notre méthodologie éprouvée font la différence dans vos environnements réglementés.",
                   "We execute where others stop at analysis. Our operational approach, specialised profiles, and proven methodology make the difference in your regulated environments."
@@ -197,12 +262,12 @@ export default function Home() {
                   </div>
                   <div>
                     <h3
-                      className="text-[#1B3680] mb-1"
+                      className="text-[#1B3680] mb-1 text-[1.3rem] font-semibold"
                       
                     >
                       {item.title}
                     </h3>
-                    <p className="text-[#4A4E5A] text-sm leading-relaxed">{item.desc}</p>
+                    <p className="text-[#4A4E5A] text-[0.95rem] leading-[1.5] font-normal">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -217,7 +282,7 @@ export default function Home() {
           <div className="text-center mb-16">
             <p className="section-eyebrow mb-4">{t("Notre offre", "Our offer")}</p>
             <h2
-              className="text-[#1B3680]"
+              className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-[2.25rem]"
               
             >
               {t("Nos solutions", "Our solutions")}
@@ -242,12 +307,12 @@ export default function Home() {
                     <sol.icon size={28} strokeWidth={1.5} />
                   </div>
                   <h3
-                    className="text-[#1B3680] group-hover:text-white transition-colors"
+                    className="text-[#1B3680] group-hover:text-white transition-colors text-[1.3rem] font-semibold"
                     
                   >
                     {sol.title}
                   </h3>
-                  <p className="text-[#4A4E5A] group-hover:text-white/75 text-sm leading-relaxed transition-colors">
+                  <p className="text-[#4A4E5A] group-hover:text-white/75 text-[0.95rem] leading-[1.5] font-normal transition-colors">
                     {sol.desc}
                   </p>
                   <Link
@@ -271,7 +336,7 @@ export default function Home() {
               {t("Environnements maîtrisés", "Mastered environments")}
             </p>
             <h3
-              className="text-white"
+              className="text-white text-[1.3rem] leading-[1.6rem] font-bold uppercase"
               
             >
               {t("Supervision & certifications", "Supervision & certifications")}
@@ -308,7 +373,7 @@ export default function Home() {
             <div>
               <p className="section-eyebrow mb-4">{t("Veille & expertise", "Watch & expertise")}</p>
               <h2
-                className="text-[#1B3680]"
+                className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-[2.25rem]"
                 
               >
                 {t("Actualités", "News")}
@@ -343,7 +408,7 @@ export default function Home() {
                 <div className="p-8 flex flex-col flex-grow border-t border-[#D8DCE8]">
                   <span className="text-[#6B7794] text-[0.65rem] font-semibold tracking-wider mb-3">{news.date}</span>
                   <h3
-                    className="text-[#1B3680] leading-snug mb-6 flex-grow"
+                    className="text-[#1B3680] text-[1.3rem] font-semibold leading-snug mb-6 flex-grow"
                     
                   >
                     {news.title}
@@ -365,7 +430,7 @@ export default function Home() {
             {t("Prenons contact", "Get in touch")}
           </p>
           <h2
-            className="text-white mb-8"
+            className="text-white mb-[2.25rem] text-[1.3rem] leading-[1.6rem] font-bold uppercase"
             
           >
             {t(
@@ -373,7 +438,7 @@ export default function Home() {
               "An outsourcing project? Let's talk."
             )}
           </h2>
-          <p className="text-white/60 text-base leading-relaxed mb-10 max-w-xl mx-auto">
+          <p className="text-white/60 text-[0.95rem] leading-[1.5] mb-10 max-w-xl mx-auto font-normal">
             {t(
               "Nos équipes analysent votre besoin et vous proposent un dispositif adapté à vos contraintes opérationnelles et réglementaires.",
               "Our teams analyse your needs and propose a solution adapted to your operational and regulatory constraints."

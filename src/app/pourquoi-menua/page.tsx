@@ -22,7 +22,7 @@ export default function PourquoiMenuaPage() {
             {t("Vue d’ensemble des bénéfices", "Overview of benefits")}
           </p>
           <h1
-            className="mb-8"
+            className="text-white mb-[2.25rem] text-[2.5rem] leading-[2.5rem] font-bold uppercase"
             
           >
             {t(
@@ -30,7 +30,7 @@ export default function PourquoiMenuaPage() {
               "Because operational excellence is not an option."
             )}
           </h1>
-          <div className="text-white/90 text-lg max-w-3xl mx-auto space-y-6 leading-relaxed">
+          <div className="text-white/90 text-[0.95rem] leading-[1.5] max-w-3xl mx-auto space-y-6 font-normal">
             <p>
               {t(
                 "Choisir MENUA CONSULTING, c'est confier l'exécution de vos opérations à un partenaire spécialisé, rigoureux et engagé. Nous ne nous contentons pas d’analyser : nous exécutons, nous intégrons et nous sécurisons vos processus au quotidien.",
@@ -52,12 +52,12 @@ export default function PourquoiMenuaPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2
-              className="text-[#1B3680]"
+              className="text-[#1B3680] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-[2.25rem]"
               
             >
               {t("La valeur MENUA CONSULTING", "The MENUA CONSULTING value")}
             </h2>
-            <p className="text-[#3A4660] mt-4">
+            <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] mt-4 font-normal">
               {t(
                 "Découvrez en détail nos bénéfices, nos atouts différenciants et nos engagements qualité.",
                 "Discover in detail our benefits, our differentiating assets and our quality commitments."
@@ -77,12 +77,12 @@ export default function PourquoiMenuaPage() {
                     <item.icon size={28} strokeWidth={1.5} />
                   </div>
                   <h3
-                    className="text-[#1B3680]"
+                    className="text-[#1B3680] text-[1.3rem] font-semibold"
                     
                   >
                     {item.title}
                   </h3>
-                  <p className="text-[#3A4660] text-sm leading-relaxed mb-6">
+                  <p className="text-[#3A4660] text-[0.95rem] leading-[1.5] font-normal mb-6">
                     {item.desc}
                   </p>
                   <div className="mt-auto flex items-center text-[#1C40C2] text-sm font-semibold gap-2 group-hover:gap-3 transition-all">

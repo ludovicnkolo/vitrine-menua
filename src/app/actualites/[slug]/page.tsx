@@ -314,56 +314,70 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   if (!article) return notFound();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-[#FAFBFC] font-sans">
+    <main className="flex flex-col w-full min-h-screen overflow-hidden bg-white gap-12 md:gap-20 pb-12 md:pb-20">
       {/* ── HERO ARTICLE ── */}
-      <section className="relative w-full min-h-[45vh] flex items-end justify-center overflow-hidden pb-12 pt-32">
+      <section className="relative w-full min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
-          <img src="/actualites_hero.png" alt="Actualités" className="w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-[#1B3680]/75 mix-blend-multiply"></div>
-          <div className="absolute inset-0 hero-gradient"></div>
-        </div>
-        <div className="relative z-10 max-w-3xl w-full mx-auto px-8">
-          <Breadcrumb 
-            items={[
-              { label: "Actualités", href: "/actualites" },
-              { label: "Article" }
-            ]}
-            light={true}
+          <img
+            src="/actualites_hero.png"
+            alt="Actualités"
+            className="w-full h-full object-cover object-center"
           />
-          <div className="flex items-center gap-3 mb-5 mt-8">
-            <span className="text-[#DAF0F7] text-xs font-bold uppercase tracking-widest">{article.cat}</span>
-            <span className="text-white/30">|</span>
-            <span className="text-white/60 text-xs font-semibold">{article.date}</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B3680] from-20% via-[#1B3680]/70 via-45% to-transparent to-65%" />
+        </div>
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
+          <div className="relative py-12 pl-10">
+            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-[#B8922A]" />
+            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#B8922A]" />
+            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#B8922A]" />
+            <div className="relative">
+              <div className="mb-8">
+                <Breadcrumb
+                  items={[
+                    { label: "Actualités", href: "/actualites" },
+                    { label: "Article" }
+                  ]}
+                  light={true}
+                />
+              </div>
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-[#B8922A] text-[0.8rem] font-bold uppercase tracking-[0.15em]">{article.cat}</span>
+                <span className="text-white/30">|</span>
+                <span className="text-white/60 text-[0.8rem] font-semibold">{article.date}</span>
+              </div>
+              <h1 className="text-white mb-8 text-[2.2rem] md:text-[3.2rem] lg:text-[3.6rem] leading-[1.1] font-bold uppercase max-w-4xl tracking-tight">
+                {article.title}
+              </h1>
+            </div>
           </div>
-          <h1
-            className="text-white mb-[2.25rem] text-[2.5rem] leading-[2.5rem] font-bold uppercase"
-            
-          >
-            {article.title}
-          </h1>
         </div>
       </section>
 
       {/* ── CONTENT ── */}
-      <article className="px-8 py-16 pb-20">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-[#0E1B2E] text-base md:text-lg leading-relaxed space-y-6">
-            {article.content}
-          </div>
-
-          <div className="mt-16 pt-8 border-t border-[#D8DCE8] flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#F2F0ED]">
-                <img src="/rosette.jpg" alt="MENUA CONSULTING" className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-[#1B3680]">Par MENUA CONSULTING</p>
-                <p className="text-xs text-[#6B7794]">Expertise opérationnelle</p>
-              </div>
+      <article className="bg-white overflow-hidden -mt-12 relative z-20">
+        <div className="max-w-5xl mx-auto px-8 relative flex flex-col items-center justify-center">
+          <div
+            className="w-full bg-white border border-[#D8DCE8] p-8 md:p-12 z-10 relative shadow-xl"
+            style={{ borderRadius: "2rem 8rem 2rem 2rem" }}
+          >
+            <div className="text-[#0E1B2E] text-base md:text-lg leading-relaxed space-y-6">
+              {article.content}
             </div>
-            <Link href="/actualites" className="flex items-center gap-2 text-sm font-bold text-[#1C40C2] uppercase tracking-wider hover:text-[#142E9A] transition-colors">
-              <ArrowLeft size={14} /> Retour aux actualités
-            </Link>
+
+            <div className="mt-16 pt-8 border-t border-[#D8DCE8] flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#F2F0ED]">
+                  <img src="/rosette.jpg" alt="MENUA CONSULTING" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#1B3680]">Par MENUA CONSULTING</p>
+                  <p className="text-xs text-[#6B7794]">Expertise opérationnelle</p>
+                </div>
+              </div>
+              <Link href="/actualites" className="flex items-center gap-2 text-sm font-bold text-[#1C40C2] uppercase tracking-wider hover:text-[#142E9A] transition-colors">
+                <ArrowLeft size={14} /> Retour aux actualités
+              </Link>
+            </div>
           </div>
         </div>
       </article>

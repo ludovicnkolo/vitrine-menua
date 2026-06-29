@@ -9,6 +9,7 @@ type MenuKey = "nous-connaitre" | "vos-besoins" | "nos-solutions" | "pourquoi-me
 export default function Header() {
   const [openMenu, setOpenMenu] = useState<MenuKey | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openMobileSubmenu, setOpenMobileSubmenu] = useState<MenuKey | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const { lang, setLang, t } = useLanguage();
 
@@ -105,40 +106,39 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white shadow-md border-b border-[#D8DCE8]"
-          : "bg-white/98 backdrop-blur-sm border-b border-[#D8DCE8]/60"
-      }`}
+      className={`fixed top-0 w-full z-50 transition-all duration-300 bg-white shadow-sm border-b border-[#D8DCE8] ${scrolled ? "shadow-md" : ""}`}
       onMouseLeave={() => setOpenMenu(null)}
     >
       {/* ── TOP BAR ── */}
-      <div className="flex items-center justify-between px-6 lg:px-10 h-16 lg:h-[70px] max-w-[1440px] mx-auto">
+      <div className="flex items-center justify-between px-6 lg:px-10 h-16 lg:h-[70px] max-w-[1440px] mx-auto relative">
 
-        {/* LOGO */}
-        <Link
-          href="/"
-          className="flex items-center shrink-0 z-50"
-          onClick={() => { setOpenMenu(null); setIsMobileMenuOpen(false); }}
-        >
-          <img
-            src="/logoSlogan.png"
-            alt="MENUA Consulting"
-            className="h-9 lg:h-11 w-auto object-contain"
-          />
-        </Link>
-
-        {/* MOBILE TOGGLE */}
+        {/* MOBILE TOGGLE (Left on mobile, hidden on desktop) */}
         <button
-          className="lg:hidden text-[#1B3680] z-50 p-2"
+          className="lg:hidden text-[#1B3680] z-50 p-2 -ml-2"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Menu"
         >
           {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
 
+        {/* LOGO (Centered on mobile, Left on desktop) */}
+        <Link
+          href="/"
+          className="flex items-center z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0"
+          onClick={() => { setOpenMenu(null); setIsMobileMenuOpen(false); }}
+        >
+          <img
+            src="/logoSlogan.png"
+            alt="MENUA Consulting"
+            className="h-16 lg:h-11 w-auto object-contain"
+          />
+        </Link>
+
+        {/* MOBILE RIGHT SPACER (to balance the toggle and center the absolute logo perfectly in context of flex if needed, though absolute handles it) */}
+        <div className="w-10 lg:hidden" />
+
         {/* DESKTOP NAV */}
-        <nav className="hidden lg:flex items-center gap-0.5">
+        <nav className="hidden lg:flex items-center gap-0.5 lg:ml-auto">
           {(Object.keys(menus) as MenuKey[]).map((key) => (
             <div
               key={key}
@@ -234,17 +234,52 @@ export default function Header() {
 
       {/* ── MOBILE MENU ── */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 top-16 bg-white overflow-y-auto pb-16 z-40 border-t border-[#D8DCE8]">
-          <div className="flex flex-col p-6 space-y-1">
+        <div className="lg:hidden fixed top-[4.5rem] left-1/2 -translate-x-1/2 w-[92%] max-w-[400px] bottom-4 bg-white z-[9999] border border-[#D8DCE8] rounded-xl shadow-[0_10px_40px_rgba(27,54,128,0.15)] flex flex-col overflow-y-auto" style={{backgroundColor: '#ffffff'}}>
+          
+          {/* Nav Links */}
+          <nav className="flex-1 flex flex-col px-6 py-4 gap-2">
+            {(Object.keys(menus) as MenuKey[]).map((key) => (
+              <div key={key} className="flex flex-col border-b border-[#D8DCE8]/50">
+                <button
+                  onClick={() => setOpenMobileSubmenu(openMobileSubmenu === key ? null : key)}
+                  className="flex items-center justify-between py-3 text-[1.1rem] font-bold text-[#1B3680] hover:text-[#1C40C2] transition-colors text-left"
+                >
+                  <span>{menus[key].label}</span>
+                  <ChevronDown size={18} className={`text-[#B8922A] transition-transform ${openMobileSubmenu === key ? "rotate-180" : ""}`} />
+                </button>
+                
+                {openMobileSubmenu === key && (
+                  <div className="flex flex-col gap-3 pb-4 pl-4 border-l-2 border-[#1C40C2]/20 mt-1">
+                    <Link
+                      href={menus[key].href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-[#1B3680] text-[0.95rem] font-bold mb-1"
+                    >
+                      {t("Vue d'ensemble", "Overview")}
+                    </Link>
+                    {menus[key].links.map((link, j) => (
+                      <Link
+                        key={j}
+                        href={link.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="text-[#4A4E5A] text-[0.9rem] hover:text-[#1C40C2] transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </nav>
 
-            {/* Lang Switcher Mobile */}
-            <div className="flex items-center gap-4 py-4 border-b border-[#D8DCE8] mb-4">
-              <span className="text-[#6B7794] text-[0.65rem] font-bold tracking-widest uppercase">
-                {t("Langue :", "Language:")}
-              </span>
+          {/* Bottom: Lang + CTA */}
+          <div className="px-6 pb-6 pt-3 border-t border-[#D8DCE8] space-y-3">
+            {/* Lang Switcher */}
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => setLang("FR")}
-                className={`flex items-center gap-2 px-3 py-1.5 border text-xs font-bold transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
                   lang === "FR" ? "border-[#1B3680] text-[#1B3680]" : "border-[#D8DCE8] text-[#6B7794]"
                 }`}
               >
@@ -252,7 +287,7 @@ export default function Header() {
               </button>
               <button
                 onClick={() => setLang("EN")}
-                className={`flex items-center gap-2 px-3 py-1.5 border text-xs font-bold transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
                   lang === "EN" ? "border-[#1B3680] text-[#1B3680]" : "border-[#D8DCE8] text-[#6B7794]"
                 }`}
               >
@@ -260,44 +295,19 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Nav Links Mobile */}
-            {(Object.keys(menus) as MenuKey[]).map((key) => (
-              <div key={key} className="border-b border-[#D8DCE8]/60 pb-4 mb-2">
-                <Link
-                  href={menus[key].href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-[1.25rem] leading-[1.65rem] font-bold text-[#1B3680] mb-3 block"
-                  
-                >
-                  {menus[key].label}
-                </Link>
-                <div className="pl-4 flex flex-col gap-2 border-l-2 border-[#1C40C2]/20">
-                  {menus[key].links.map((link, j) => (
-                    <Link
-                      key={j}
-                      href={link.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="text-[#4A4E5A] text-[14px] leading-[1rem] hover:text-[#1C40C2] transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ))}
-
-            <div className="flex flex-col gap-3 pt-4">
+            {/* CTA Buttons */}
+            <div className="flex flex-col gap-3">
               <Link
                 href="/nous-rejoindre"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="bg-[#1C40C2] text-white text-center px-4 py-2 text-[0.7rem] font-bold tracking-wider uppercase w-full rounded-full border border-[#1C40C2] transition-all hover:bg-white hover:text-[#1C40C2]"
+                className="flex-1 bg-transparent text-[#1C40C2] text-center px-4 py-2.5 text-[0.7rem] font-bold tracking-wider uppercase rounded-full border border-[#1C40C2] transition-all hover:bg-[#1C40C2] hover:text-white"
               >
                 {t("Nous rejoindre", "Join Us")}
               </Link>
               <Link
                 href="/nous-contacter"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="bg-[#1C40C2] text-white text-center px-4 py-2 text-[0.7rem] font-bold tracking-wider uppercase w-full rounded-full border border-[#1C40C2] transition-all hover:bg-white hover:text-[#1C40C2]"
+                className="flex-1 bg-[#1C40C2] text-white text-center px-4 py-2.5 text-[0.7rem] font-bold tracking-wider uppercase rounded-full border border-[#1C40C2] transition-all hover:bg-white hover:text-[#1C40C2]"
               >
                 {t("Nous contacter", "Contact Us")}
               </Link>

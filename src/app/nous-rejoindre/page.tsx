@@ -12,38 +12,53 @@ export default function NousRejoindre() {
   return (
     <>
     <main className="flex flex-col w-full bg-[#1B3680] text-white font-sans">
-      {/* HERO — height adapts to content */}
-      <section className="relative w-full flex items-end overflow-hidden pt-36 pb-20 bg-[#1B3680]">
-        <div className="absolute top-0 right-0 w-1/2 h-full z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1B3680] via-[#1B3680]/50 to-transparent z-10 w-full"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1B3680] via-transparent to-transparent z-10"></div>
-          <div className="absolute top-0 left-0 bottom-0 w-1/4 bg-[#1B3680] z-10"></div>
-          <img src="/nous-rejoindre-hero.jpg" alt={t("Rejoignez-nous","Join Us")} className="w-full h-full object-cover opacity-80 rounded-bl-[4rem]"/>
+      {/* ── HERO INTRO ── */}
+      <section className="relative w-full min-h-screen flex items-center overflow-hidden pt-16">
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/nous-rejoindre-hero.jpg"
+            alt={t("Rejoignez-nous","Join Us")}
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B3680] from-20% via-[#1B3680]/70 via-45% to-transparent to-65%" />
         </div>
-        <div className="relative z-10 px-8 md:px-16 lg:px-24 max-w-7xl mx-auto w-full">
-          <div className="text-[#B8922A] text-[0.65rem] tracking-wider uppercase mb-4">
-            <Link href="/" className="hover:text-white">{t("Accueil","Home")}</Link>
-            <span className="mx-2 text-gray-600">›</span>
-            <span>{t("Nous rejoindre","Join Us")}</span>
-          </div>
-          <h1 className="font-serif text-5xl md:text-6xl font-bold leading-tight mb-4">{t("Rejoignez-nous","Join Us")}</h1>
-          <div className="w-12 h-1 bg-[#B8922A] mb-6"></div>
-          <p className="text-gray-300 text-base max-w-md leading-relaxed mb-8">
-            {t(
-              "MENUA CONSULTING recrute des profils opérationnels autonomes, rigoureux, fiables et organisés, capables d'intervenir à distance sur des fonctions back et middle office, en France comme à l'international.",
-              "MENUA CONSULTING recruits autonomous, rigorous, reliable, and organized operational profiles, capable of working remotely on back and middle office functions, in France and internationally."
-            )}
-          </p>
-          <div className="space-y-3">
-            {[
-              {icon:Briefcase, text:t("Environnement stimulant – Projets variés et exigeants","Stimulating environment – Varied and demanding projects")},
-              {icon:Clock, text:t("Évolution et formations","Career development and training")},
-              {icon:ShieldCheck, text:t("Culture d'excellence","Culture of excellence")},
-            ].map((item,i)=>(
-              <div key={i} className="flex items-center gap-3 text-gray-300 text-sm">
-                <div className="text-[#B8922A]"><item.icon size={18} strokeWidth={1.5}/></div>{item.text}
+
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
+          <div className="relative py-12 pl-10">
+            {/* Decorative golden bracket */}
+            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-[#B8922A]" />
+            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#B8922A]" />
+            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#B8922A]" />
+            
+            <div className="relative">
+              <div className="text-[#B8922A] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.15em] uppercase mb-8">
+                <Link href="/" className="hover:text-white transition-colors">{t("Accueil", "Home")}</Link>
+                <span className="mx-2 text-white/50">›</span>
+                <span className="text-white">{t("Nous rejoindre", "Join Us")}</span>
               </div>
-            ))}
+              <h1 className="text-white mb-8 text-[2.2rem] md:text-[3.2rem] lg:text-[3.6rem] leading-[1.1] font-bold uppercase max-w-4xl tracking-tight">
+                {t("Rejoignez-nous", "Join Us")}
+              </h1>
+              <p className="text-gray-300 text-[0.95rem] md:text-[1.1rem] leading-[1.6] max-w-2xl font-normal mb-8">
+                {t(
+                  "MENUA CONSULTING recrute des profils opérationnels autonomes, rigoureux, fiables et organisés, capables d'intervenir à distance sur des fonctions back et middle office, en France comme à l'international.",
+                  "MENUA CONSULTING recruits autonomous, rigorous, reliable, and organized operational profiles, capable of working remotely on back and middle office functions, in France and internationally."
+                )}
+              </p>
+              <div className="space-y-4">
+                {[
+                  {icon:Briefcase, text:t("Environnement stimulant – Projets variés et exigeants","Stimulating environment – Varied and demanding projects")},
+                  {icon:Clock, text:t("Évolution et formations","Career development and training")},
+                  {icon:Users, text:t("Équipe experte et bienveillante","Expert and caring team")},
+                  {icon:Globe, text:t("Opportunités à l'international","International opportunities")}
+                ].map((item,i)=>(
+                  <div key={i} className="flex items-center gap-4">
+                    <div className="text-[#B8922A]"><item.icon size={20} strokeWidth={1.5}/></div>
+                    <p className="text-[0.9rem] md:text-[0.95rem]">{item.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -97,51 +112,6 @@ export default function NousRejoindre() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-[#1B3680] px-8 py-16">
-        <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden flex flex-col md:flex-row items-stretch min-h-[200px]">
-          <div className="flex-1 bg-[#122560] p-12 flex flex-col justify-center">
-            <h2 className="font-serif text-3xl font-bold mb-6">{t("Une question urgente ?","An urgent question?")}<br/>{t("Contactez-nous directement.","Contact us directly.")}</h2>
-            <Link href="tel:+33686877914" className="inline-flex items-center gap-3 bg-[#1C40C2] hover:bg-[#142E9A] text-white px-8 py-3.5 rounded text-xs font-bold tracking-wider uppercase transition-colors w-fit">
-              {t("Nous appeler maintenant","Call us now")} <ArrowRight size={16}/>
-            </Link>
-          </div>
-          <div className="md:w-5/12 min-h-[180px] relative">
-            <img src="/headphones.jpg" alt={t("Téléphone","Phone")} className="w-full h-full object-cover"/>
-            <div className="absolute inset-0 bg-gradient-to-r from-[#122560] to-transparent"></div>
-          </div>
-        </div>
-      </section>
-
-      {/* CONTACT MINI */}
-      <section className="bg-[#FAFBFC] text-[#0E1B2E] px-8 py-20">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-12 items-start">
-          <div className="flex-1">
-            <div className="text-[#B8922A] text-[0.65rem] tracking-wider uppercase mb-4">{t("Accueil › Nous contacter","Home › Contact Us")}</div>
-            <h2 className="font-serif text-4xl font-bold mb-4">{t("Une question, un besoin ?","A question, a need?")}<br/>{t("Contactez-nous.","Contact us.")}</h2>
-            <p className="text-gray-600 text-sm max-w-md leading-relaxed mb-8">{t("Notre équipe est à votre écoute pour comprendre vos enjeux et vous proposer une réponse adaptée.","Our team is here to understand your challenges and offer you a tailored response.")}</p>
-            <div className="grid grid-cols-3 gap-6 mb-8">
-              {[
-                {icon:Clock, title:t("Réactivité","Responsiveness"), desc:t("Un retour sous 24h ouvrées.","A response within 24 working hours.")},
-                {icon:Users, title:t("Écoute","Listening"), desc:t("Un suivi de bout en bout et personnalisé.","End-to-end, personalized follow-up.")},
-                {icon:ShieldCheck, title:t("Expertise","Expertise"), desc:t("Des solutions opérationnelles sur-mesure.","Tailor-made operational solutions.")},
-              ].map((item,i)=>(
-                <div key={i} className="flex flex-col gap-2">
-                  <div className="text-[#B8922A]"><item.icon size={22} strokeWidth={1.5}/></div>
-                  <h3 className="font-bold text-sm">{item.title}</h3>
-                  <p className="text-gray-500 text-xs leading-relaxed">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-            <Link href="/nous-contacter" className="inline-flex items-center gap-3 bg-[#1C40C2] hover:bg-[#142E9A] text-white px-8 py-3.5 rounded text-xs font-bold tracking-wider uppercase transition-colors">
-              {t("Nous contacter","Contact Us")} <ArrowRight size={16}/>
-            </Link>
-          </div>
-          <div className="md:w-2/5 h-72 rounded-2xl overflow-hidden shadow-lg shrink-0">
-            <img src="/nous-contacter-hero.jpg" alt={t("Contact","Contact")} className="w-full h-full object-cover"/>
-          </div>
-        </div>
-      </section>
     </main>
       
       {/* FORM MODAL */}

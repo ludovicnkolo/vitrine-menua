@@ -13,28 +13,41 @@ export default function NousContacter() {
   return (
     <>
     <main className="flex flex-col w-full bg-[#1B3680] text-white font-sans">
-      {/* HERO — height adapts to content */}
-      <section className="relative w-full flex items-end overflow-hidden pt-36 pb-20 bg-[#1B3680]">
-        <div className="absolute top-0 right-0 w-1/2 h-full z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1B3680] via-[#1B3680]/50 to-transparent z-10 w-full"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1B3680] via-transparent to-transparent z-10"></div>
-          <div className="absolute top-0 left-0 bottom-0 w-1/4 bg-[#1B3680] z-10"></div>
-          <img src="/nous-contacter-hero.jpg" alt={t("Contact", "Contact")} className="w-full h-full object-cover opacity-80 rounded-bl-[4rem]" />
+      {/* ── HERO INTRO ── */}
+      <section className="relative w-full min-h-screen flex items-center overflow-hidden pt-16">
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/nous-contacter-hero.jpg"
+            alt={t("Contact", "Contact")}
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1B3680] from-20% via-[#1B3680]/70 via-45% to-transparent to-65%" />
         </div>
-        <div className="relative z-10 px-8 md:px-16 lg:px-24 max-w-7xl mx-auto w-full">
-          <div className="text-[#B8922A] text-[0.65rem] tracking-wider uppercase mb-4">
-            <Link href="/" className="hover:text-white">{t("Accueil", "Home")}</Link>
-            <span className="mx-2 text-gray-600">›</span>
-            <span>{t("Nous contacter", "Contact Us")}</span>
+
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
+          <div className="relative py-12 pl-10">
+            {/* Decorative golden bracket */}
+            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-[#B8922A]" />
+            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#B8922A]" />
+            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#B8922A]" />
+            
+            <div className="relative">
+              <div className="text-[#B8922A] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.15em] uppercase mb-8">
+                <Link href="/" className="hover:text-white transition-colors">{t("Accueil", "Home")}</Link>
+                <span className="mx-2 text-white/50">›</span>
+                <span className="text-white">{t("Nous contacter", "Contact Us")}</span>
+              </div>
+              <h1 className="text-white mb-8 text-[2.2rem] md:text-[3.2rem] lg:text-[3.6rem] leading-[1.1] font-bold uppercase max-w-4xl tracking-tight">
+                {t("Nous contacter", "Contact Us")}
+              </h1>
+              <p className="text-gray-300 text-[0.95rem] md:text-[1.1rem] leading-[1.6] max-w-2xl font-normal">
+                {t(
+                  "Présentez votre besoin opérationnel, nous vous répondons avec une première analyse et une proposition adaptée.",
+                  "Present your operational need, and we will respond with an initial analysis and a tailored proposal."
+                )}
+              </p>
+            </div>
           </div>
-          <h1 className="text-white mb-[2.25rem] text-[2.5rem] leading-[2.5rem] font-bold uppercase">{t("Nous contacter", "Contact Us")}</h1>
-          <div className="w-12 h-1 bg-[#B8922A] mb-6"></div>
-          <p className="text-gray-300 text-[0.95rem] leading-[1.5] max-w-md font-normal">
-            {t(
-              "Présentez votre besoin opérationnel, nous vous répondons avec une première analyse et une proposition adaptée.",
-              "Present your operational need, and we will respond with an initial analysis and a tailored proposal."
-            )}
-          </p>
         </div>
       </section>
 
@@ -54,29 +67,31 @@ export default function NousContacter() {
         </div>
       </section>
 
-      {/* FORM CTA */}
-      <section className="bg-[#FAFBFC] text-[#0E1B2E] px-8 pb-24 border-t border-gray-200">
-        <div className="max-w-5xl mx-auto flex flex-col items-center pt-16 text-center">
-          <h2 className="text-[#0E1B2E] text-[1.8rem] leading-[2.2rem] font-bold uppercase mb-6">{t("Prêt à échanger ?","Ready to talk?")}</h2>
-          <p className="text-gray-600 mb-8 max-w-2xl">{t("Remplissez notre formulaire pour nous détailler votre besoin et nous vous recontacterons dans les plus brefs délais.","Fill out our form to detail your need and we will contact you as soon as possible.")}</p>
-          <button onClick={() => setIsModalOpen(true)} className="inline-flex items-center gap-3 bg-[#1C40C2] hover:bg-[#142E9A] text-white px-8 py-4 rounded-full text-sm font-bold tracking-wider uppercase transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
-             {t("Accéder au formulaire de contact","Access the contact form")} <ArrowRight size={18}/>
-          </button>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="bg-[#1B3680] px-8 py-20">
-        <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden flex flex-col md:flex-row items-stretch min-h-[220px]">
-          <div className="flex-1 bg-[#122560] p-12 flex flex-col justify-center">
-            <h2 className="text-white text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-6">{t("Une question urgente ?","An urgent question?")}<br/>{t("Contactez-nous directement.","Contact us directly.")}</h2>
-            <Link href="tel:+33686877914" className="inline-flex items-center gap-3 bg-[#1C40C2] hover:bg-[#142E9A] text-white px-8 py-3.5 rounded text-xs font-bold tracking-wider uppercase transition-colors w-fit">
-              {t("Nous appeler maintenant","Call us now")} <ArrowRight size={16}/>
-            </Link>
+      {/* CONTACT CTA BLOCK */}
+      <section className="bg-[#FAFBFC] text-[#0E1B2E] px-8 py-20 border-t border-gray-200">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-12 items-start">
+          <div className="flex-1">
+            <h2 className="text-[#0E1B2E] text-[1.8rem] leading-[2.2rem] font-bold uppercase mb-4">{t("Une question, un besoin ?","A question, a need?")}<br/>{t("Contactez-nous.","Contact us.")}</h2>
+            <p className="text-gray-600 text-sm max-w-md leading-relaxed mb-8">{t("Notre équipe est à votre écoute pour comprendre vos enjeux et vous proposer une réponse adaptée.","Our team is here to understand your challenges and offer you a tailored response.")}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+              {[
+                {icon:Clock, title:t("Réactivité","Responsiveness"), desc:t("Un retour sous 24h ouvrées.","A response within 24 working hours.")},
+                {icon:Users, title:t("Écoute","Listening"), desc:t("Un suivi de bout en bout et personnalisé.","End-to-end, personalized follow-up.")},
+                {icon:ShieldCheck, title:t("Expertise","Expertise"), desc:t("Des solutions opérationnelles sur-mesure.","Tailor-made operational solutions.")},
+              ].map((item,i)=>(
+                <div key={i} className="flex flex-col gap-2">
+                  <div className="text-[#B8922A]"><item.icon size={22} strokeWidth={1.5}/></div>
+                  <h3 className="font-bold text-sm">{item.title}</h3>
+                  <p className="text-gray-500 text-xs leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+            <button onClick={() => setIsModalOpen(true)} className="inline-flex items-center gap-3 bg-[#1C40C2] hover:bg-[#142E9A] text-white px-8 py-3.5 rounded text-xs font-bold tracking-wider uppercase transition-colors">
+              {t("Accéder au formulaire de contact","Access the contact form")} <ArrowRight size={16}/>
+            </button>
           </div>
-          <div className="md:w-5/12 min-h-[180px] relative">
-            <img src="/headphones.jpg" alt={t("Téléphone","Phone")} className="w-full h-full object-cover"/>
-            <div className="absolute inset-0 bg-gradient-to-r from-[#122560] to-transparent"></div>
+          <div className="md:w-2/5 h-72 rounded-2xl overflow-hidden shadow-lg shrink-0">
+            <img src="/nous-contacter-hero.jpg" alt={t("Contact","Contact")} className="w-full h-full object-cover"/>
           </div>
         </div>
       </section>

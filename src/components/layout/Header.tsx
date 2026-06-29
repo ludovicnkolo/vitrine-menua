@@ -110,7 +110,7 @@ export default function Header() {
       onMouseLeave={() => setOpenMenu(null)}
     >
       {/* ── TOP BAR ── */}
-      <div className="flex items-center justify-between px-6 lg:px-10 h-16 lg:h-[70px] max-w-[1440px] mx-auto relative">
+      <div className="flex items-center justify-between px-6 lg:px-10 h-20 lg:h-[90px] max-w-[1440px] mx-auto relative">
 
         {/* MOBILE TOGGLE (Left on mobile, hidden on desktop) */}
         <button
@@ -124,13 +124,13 @@ export default function Header() {
         {/* LOGO (Centered on mobile, Left on desktop) */}
         <Link
           href="/"
-          className="flex items-center z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0"
+          className="flex items-center z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0 lg:-ml-6"
           onClick={() => { setOpenMenu(null); setIsMobileMenuOpen(false); }}
         >
           <img
             src="/logoSlogan.png"
             alt="MENUA Consulting"
-            className="h-16 lg:h-11 w-auto object-contain"
+            className="h-[110px] lg:h-[150px] w-auto object-contain"
           />
         </Link>
 
@@ -234,7 +234,7 @@ export default function Header() {
 
       {/* ── MOBILE MENU ── */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed top-[4.5rem] left-1/2 -translate-x-1/2 w-[92%] max-w-[400px] bottom-4 bg-white z-[9999] border border-[#D8DCE8] rounded-xl shadow-[0_10px_40px_rgba(27,54,128,0.15)] flex flex-col overflow-y-auto" style={{backgroundColor: '#ffffff'}}>
+        <div className="lg:hidden fixed top-[5.5rem] left-1/2 -translate-x-1/2 w-[92%] max-w-[400px] bottom-4 bg-white z-[9999] border border-[#D8DCE8] rounded-xl shadow-[0_10px_40px_rgba(27,54,128,0.15)] flex flex-col overflow-y-auto" style={{backgroundColor: '#ffffff'}}>
           
           {/* Nav Links */}
           <nav className="flex-1 flex flex-col px-6 py-4 gap-2">

@@ -6,10 +6,10 @@ export default function MentionsLegales() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full bg-[#1B3680] text-white font-sans pt-24">
-      <section className="px-8 py-20">
+    <main className="flex flex-col w-full bg-[#223930] text-white font-sans pt-24">
+      <section className="px-8 py-24">
         <div className="max-w-3xl mx-auto">
-          <div className="text-[#B8922A] text-[0.65rem] tracking-wider uppercase mb-4">
+          <div className="text-[#E0D6C8] text-[0.65rem] tracking-[0.05em] uppercase font-semibold text-[14px] mb-4">
             <Link href="/" className="hover:text-white">{t("Accueil","Home")}</Link>
             <span className="mx-2 text-gray-600">›</span>
             <span>{t("Mentions légales","Legal Notice")}</span>
@@ -21,29 +21,29 @@ export default function MentionsLegales() {
               "Le présent site est édité par MENUA CONSULTING, société par actions simplifiée unipersonnelle (SASU), au capital social de 15 000 €, dont le siège social est situé au 92 rue des Pyrénées – 75020 Paris, immatriculée au Registre du commerce et des sociétés de Paris sous le numéro 993 749 779 R.C.S. Paris.",
               "This site is published by MENUA CONSULTING, a simplified single-shareholder joint-stock company (SASU), with a share capital of €15,000, headquartered at 92 rue des Pyrénées – 75020 Paris, registered with the Paris Trade and Companies Register under number 993 749 779 R.C.S. Paris."
             )}</p>
-            <div className="bg-[#122560] rounded-xl p-8 space-y-2">
+            <div className="bg-[#223930] rounded-lg p-8 space-y-2">
               <div><span className="text-gray-500 text-xs uppercase tracking-wider">SIREN :</span> <span className="text-white font-medium">993 749 779</span></div>
               <div><span className="text-gray-500 text-xs uppercase tracking-wider">SIRET :</span> <span className="text-white font-medium">993 749 779 00019</span></div>
               <div><span className="text-gray-500 text-xs uppercase tracking-wider">{t("TVA intracommunautaire","VAT number")} :</span> <span className="text-white font-medium">FR36993749779</span></div>
             </div>
 
             <div>
-              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Éditeur du site","Site Publisher")}</h2>
-              <p>MENUA CONSULTING<br/>92 rue des Pyrénées – 75020 Paris<br/>Email : <a href="mailto:contact@menuaconsulting.com" className="text-[#B8922A] hover:underline">contact@menuaconsulting.com</a><br/>{t("Téléphone","Phone")} : <a href="tel:+33686877914" className="text-[#B8922A] hover:underline">+33 6 86 87 79 14</a></p>
+              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Éditeur du site","Site Publisher")}</h2>
+              <p>MENUA CONSULTING<br/>92 rue des Pyrénées – 75020 Paris<br/>Email : <a href="mailto:contact@menuaconsulting.com" className="text-[#E0D6C8] hover:underline">contact@menuaconsulting.com</a><br/>{t("Téléphone","Phone")} : <a href="tel:+33686877914" className="text-[#E0D6C8] hover:underline">+33 6 86 87 79 14</a></p>
             </div>
 
             <div>
-              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Directrice de la publication","Publication Director")}</h2>
+              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Directrice de la publication","Publication Director")}</h2>
               <p>{t("Rosette Fouelefack, Présidente de MENUA CONSULTING","Rosette Fouelefack, President of MENUA CONSULTING")}</p>
             </div>
 
             <div>
-              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Hébergement","Hosting")}</h2>
+              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Hébergement","Hosting")}</h2>
               <p className="text-gray-500 italic">{t("Le site est hébergé par : (à compléter ultérieurement)","The site is hosted by: (to be completed later)")}</p>
             </div>
 
             <div>
-              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Propriété intellectuelle","Intellectual Property")}</h2>
+              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Propriété intellectuelle","Intellectual Property")}</h2>
               <p>{t(
                 "L'ensemble du contenu présent sur ce site, notamment les textes, éléments graphiques, logos, images, documents et éléments de structure, est protégé par les dispositions applicables en matière de propriété intellectuelle, sauf mention contraire.",
                 "All content on this site, including texts, graphic elements, logos, images, documents, and structural elements, is protected by applicable intellectual property provisions, unless otherwise stated."
@@ -55,7 +55,7 @@ export default function MentionsLegales() {
             </div>
 
             <div>
-              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Responsabilité","Liability")}</h2>
+              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Responsabilité","Liability")}</h2>
               <p>{t(
                 "MENUA CONSULTING s'efforce d'assurer l'exactitude et la mise à jour des informations diffusées sur le site. Toutefois, la société ne peut garantir l'exhaustivité ou l'absence d'erreurs de l'ensemble des contenus publiés.",
                 "MENUA CONSULTING strives to ensure the accuracy and updating of the information published on the site. However, the company cannot guarantee the completeness or absence of errors in all published content."
@@ -71,7 +71,7 @@ export default function MentionsLegales() {
             </div>
 
             <div>
-              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Confidentialité","Confidentiality")}</h2>
+              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Confidentialité","Confidentiality")}</h2>
               <p>{t(
                 "MENUA CONSULTING attache une importance particulière à la confidentialité des informations qui lui sont transmises dans le cadre de ses échanges, demandes de contact, candidatures ou relations professionnelles.",
                 "MENUA CONSULTING attaches particular importance to the confidentiality of information transmitted to it in the context of its exchanges, contact requests, applications, or professional relationships."
@@ -79,15 +79,15 @@ export default function MentionsLegales() {
               <p className="mt-3">{t(
                 "Les informations communiquées via le site sont destinées exclusivement au traitement des demandes adressées à MENUA CONSULTING, sous réserve des précisions apportées dans la",
                 "The information communicated via the site is intended exclusively for the processing of requests addressed to MENUA CONSULTING, subject to the details provided in the"
-              )}{" "}<Link href="/politique-de-confidentialite" className="text-[#B8922A] hover:underline">{t("Politique de confidentialité","Privacy Policy")}</Link>.</p>
+              )}{" "}<Link href="/politique-de-confidentialite" className="text-[#E0D6C8] hover:underline">{t("Politique de confidentialité","Privacy Policy")}</Link>.</p>
             </div>
 
             <div>
-              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Contact","Contact")}</h2>
+              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Contact","Contact")}</h2>
               <p>{t(
                 "Pour toute question relative au site ou à son contenu, vous pouvez contacter MENUA CONSULTING à l'adresse suivante :",
                 "For any questions regarding the site or its content, you can contact MENUA CONSULTING at the following address:"
-              )}{" "}<a href="mailto:contact@menuaconsulting.com" className="text-[#B8922A] hover:underline">contact@menuaconsulting.com</a></p>
+              )}{" "}<a href="mailto:contact@menuaconsulting.com" className="text-[#E0D6C8] hover:underline">contact@menuaconsulting.com</a></p>
             </div>
           </div>
         </div>

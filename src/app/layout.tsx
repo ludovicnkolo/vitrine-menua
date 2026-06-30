@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
-import { Rosario, Playfair_Display } from "next/font/google";
+import { Raleway, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 
-const optimaAlternative = Rosario({
+/* ── Raleway ≈ Optima LT W04 (humaniste élégant sans-serif) ── */
+const fontRaleway = Raleway({
   subsets: ["latin"],
   variable: "--font-optima",
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
-const operettaAlternative = Playfair_Display({
+/* ── Cormorant Garamond ≈ Operetta 18 (élégant serif affichage, chiffres clés) ── */
+const fontCormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-operetta",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-display",
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -47,7 +50,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`${optimaAlternative.variable} ${operettaAlternative.variable} min-h-screen flex flex-col antialiased bg-[#ffffff] text-[#222222]`}>
+      <body className={`${fontRaleway.variable} ${fontCormorant.variable} min-h-screen flex flex-col antialiased bg-[#F5F2EB] text-[#223930]`}>
         <LanguageProvider>
           <Header />
           {children}

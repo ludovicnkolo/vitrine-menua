@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { ArrowRight, Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 
 type MenuKey = "nous-connaitre" | "vos-besoins" | "nos-solutions" | "pourquoi-menua" | "actualites";
@@ -29,53 +29,52 @@ export default function Header() {
       label: t("Nous connaître", "About Us"),
       href: "/nous-connaitre",
       links: [
-        { label: t("Présentation du cabinet", "Firm Presentation"), href: "/nous-connaitre/presentation-du-cabinet" },
-        { label: t("Notre approche", "Our Approach"), href: "/nous-connaitre/notre-approche" },
-        { label: t("Notre méthodologie", "Our Methodology"), href: "/nous-connaitre/notre-methodologie" },
-        { label: t("Accréditations & certifications", "Accreditations & Certifications"), href: "/nous-connaitre/accreditations" },
-        { label: t("Notre équipe", "Our Team"), href: "/nous-connaitre/notre-equipe" },
-        { label: t("Nos implantations", "Our Locations"), href: "/nous-connaitre/nos-implantations" },
-        { label: t("L'interprofessionnalité", "Interprofessionalism"), href: "/nous-connaitre/interprofessionnalite" },
+        { label: t("Présentation du cabinet", "Firm Presentation"), href: "/nous-connaitre#presentation-du-cabinet" },
+        { label: t("Notre approche", "Our Approach"), href: "/nous-connaitre#notre-approche" },
+        { label: t("Notre méthodologie", "Our Methodology"), href: "/nous-connaitre#notre-methodologie" },
+        { label: t("Certifications & cadre", "Certifications & framework"), href: "/nous-connaitre#certifications" },
+        { label: t("Notre équipe", "Our Team"), href: "/nous-connaitre#notre-equipe" },
       ],
     },
     "vos-besoins": {
       label: t("Vos besoins", "Your Needs"),
       href: "/vos-besoins",
       links: [
-        { label: t("Finance & reporting", "Finance & Reporting"), href: "/vos-besoins/finance-reporting" },
-        { label: t("Risques & conformité", "Risk & Compliance"), href: "/vos-besoins/risques-conformite" },
-        { label: t("Support comptable & data", "Accounting & Data Support"), href: "/vos-besoins/support-comptable-data" },
-        { label: t("Gestion de patrimoine & CGP", "Wealth Management"), href: "/vos-besoins/gestion-patrimoine-cgp" },
-        { label: t("Autres besoins opérationnels", "Other Operational Needs"), href: "/vos-besoins/autres-besoins-operationnels" },
+        { label: t("Finance & reporting", "Finance & Reporting"), href: "/vos-besoins#finance-reporting" },
+        { label: t("Contrôle de gestion", "Management control"), href: "/vos-besoins#controle-de-gestion" },
+        { label: t("Risques & conformité", "Risk & Compliance"), href: "/vos-besoins#risques-conformite" },
+        { label: t("Support comptable & data", "Accounting & Data Support"), href: "/vos-besoins#support-comptable-data" },
+        { label: t("Gestion de patrimoine & CGP", "Wealth Management"), href: "/vos-besoins#gestion-patrimoine" },
+        { label: t("Autres besoins opérationnels", "Other Operational Needs"), href: "/vos-besoins#autres-besoins" },
       ],
     },
     "nos-solutions": {
       label: t("Nos solutions", "Our Solutions"),
       href: "/nos-solutions",
       links: [
-        { label: t("Urgence – Réactivité opérationnelle", "Emergency – Operational reactivity"), href: "/nos-solutions/urgence" },
-        { label: t("Durée – Flexibilité contractuelle", "Duration – Contractual flexibility"), href: "/nos-solutions/duree" },
-        { label: t("Volume – Dimensionnement d'équipe", "Volume – Team sizing"), href: "/nos-solutions/volume" },
-        { label: t("Mode d'organisation", "Organisation mode"), href: "/nos-solutions/mode-organisation" },
-        { label: t("Langues – FR / EN", "Languages – FR / EN"), href: "/nos-solutions/langues" },
+        { label: t("Urgence – Réactivité opérationnelle", "Emergency – Operational reactivity"), href: "/nos-solutions#urgence" },
+        { label: t("Durée – Flexibilité contractuelle", "Duration – Contractual flexibility"), href: "/nos-solutions#duree" },
+        { label: t("Volume – Dimensionnement d'équipe", "Volume – Team sizing"), href: "/nos-solutions#volume" },
+        { label: t("Mode d'organisation", "Organisation mode"), href: "/nos-solutions#organisation" },
+        { label: t("Langues – FR / EN", "Languages – FR / EN"), href: "/nos-solutions#langues" },
       ],
     },
     "pourquoi-menua": {
       label: t("Pourquoi Menua ?", "Why Menua?"),
       href: "/pourquoi-menua",
       links: [
-        { label: t("Nos bénéfices", "Our Benefits"), href: "/pourquoi-menua/nos-benefices" },
-        { label: t("Notre différenciation", "Our Differentiation"), href: "/pourquoi-menua/notre-differenciation" },
-        { label: t("Nos engagements", "Our Commitments"), href: "/pourquoi-menua/nos-engagements" },
+        { label: t("Nos bénéfices", "Our Benefits"), href: "/pourquoi-menua#nos-benefices" },
+        { label: t("Notre différenciation", "Our Differentiation"), href: "/pourquoi-menua#notre-differenciation" },
+        { label: t("Nos engagements", "Our Commitments"), href: "/pourquoi-menua#nos-engagements" },
       ],
     },
     "actualites": {
       label: t("Actualités", "News"),
       href: "/actualites",
       links: [
-        { label: t("KYC & LCB-FT – Nouvelles obligations", "KYC & AML – New Obligations"), href: "/actualites/kyc-lcft-nouvelles-obligations" },
-        { label: t("Externalisation back office", "Back office outsourcing"), href: "/actualites/externalisation-securiser-continuite" },
-        { label: t("Reporting financier", "Financial reporting"), href: "/actualites/reporting-erreurs-frequentes" },
+        { label: t("À la une", "Featured articles"), href: "/actualites#articles" },
+        { label: t("Toutes les actualités", "All news"), href: "/actualites#articles" },
+        { label: t("Nos publications LinkedIn", "Our LinkedIn publications"), href: "/actualites#linkedin" },
       ],
     },
   });
@@ -83,7 +82,7 @@ export default function Header() {
   const menus = getMenus();
 
   const FlagFR = () => (
-    <svg width="16" height="12" viewBox="0 0 3 2" className="rounded-sm overflow-hidden shadow-sm">
+    <svg width="16" height="12" viewBox="0 0 3 2" className="rounded-sm overflow-hidden">
       <rect width="1" height="2" fill="#0055A4" />
       <rect width="1" height="2" x="1" fill="#FFFFFF" />
       <rect width="1" height="2" x="2" fill="#EF4135" />
@@ -91,7 +90,7 @@ export default function Header() {
   );
 
   const FlagEN = () => (
-    <svg width="16" height="12" viewBox="0 0 60 30" className="rounded-sm overflow-hidden shadow-sm">
+    <svg width="16" height="12" viewBox="0 0 60 30" className="rounded-sm overflow-hidden">
       <clipPath id="hs"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
       <clipPath id="ht"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
       <g clipPath="url(#hs)">
@@ -106,22 +105,22 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 bg-white shadow-sm border-b border-[#D8DCE8] ${scrolled ? "shadow-md" : ""}`}
+      className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled ? "bg-[#223930]/95 backdrop-blur-md border-white/10 shadow-2xl" : "bg-[#223930] border-transparent"}`}
       onMouseLeave={() => setOpenMenu(null)}
     >
       {/* ── TOP BAR ── */}
-      <div className="flex items-center justify-between px-6 lg:px-10 h-20 lg:h-[90px] max-w-[1440px] mx-auto relative">
+      <div className="flex items-center justify-between px-6 lg:px-10 h-14 lg:h-[64px] max-w-[1440px] mx-auto relative">
 
-        {/* MOBILE TOGGLE (Left on mobile, hidden on desktop) */}
+        {/* MOBILE TOGGLE */}
         <button
-          className="lg:hidden text-[#1B3680] z-50 p-2 -ml-2"
+          className="lg:hidden text-white hover:text-[#E0D6C8] transition-colors z-50 p-2 -ml-2"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Menu"
         >
           {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
 
-        {/* LOGO (Centered on mobile, Left on desktop) */}
+        {/* LOGO */}
         <Link
           href="/"
           className="flex items-center z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0 lg:-ml-6"
@@ -130,11 +129,10 @@ export default function Header() {
           <img
             src="/logoSlogan.png"
             alt="MENUA Consulting"
-            className="h-[110px] lg:h-[150px] w-auto object-contain"
+            className="h-[72px] lg:h-[90px] w-auto object-contain brightness-0 invert"
           />
         </Link>
 
-        {/* MOBILE RIGHT SPACER (to balance the toggle and center the absolute logo perfectly in context of flex if needed, though absolute handles it) */}
         <div className="w-10 lg:hidden" />
 
         {/* DESKTOP NAV */}
@@ -147,12 +145,12 @@ export default function Header() {
             >
               <Link
                 href={menus[key].href}
-                className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[1.05rem] font-semibold ${
+                className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[15px] leading-[25px] font-normal ${
                   openMenu === key
-                    ? "text-[#1C40C2]"
-                    : "text-[#1B3680] hover:text-[#1C40C2]"
+                    ? "text-[#E0D6C8]"
+                    : "text-white hover:text-[#E0D6C8]"
                 }`}
-                
+                style={{ fontFamily: "'Optima LT W04 Demi Bold', Optima, sans-serif" }}
               >
                 {menus[key].label}
                 <ChevronDown
@@ -164,9 +162,9 @@ export default function Header() {
               {/* DROPDOWN */}
               {openMenu === key && (
                 <div className="absolute left-0 top-full pt-0">
-                  <div className="bg-white border border-[#D8DCE8] shadow-xl min-w-[280px] py-3">
-                    <div className="px-5 py-2 border-b border-[#D8DCE8] mb-2">
-                      <span className="text-[#1B3680] text-[1.25rem] leading-[1.65rem] font-bold">
+                  <div className="bg-white border border-[#E0D6C8]/30 shadow-xl min-w-[280px] py-3">
+                    <div className="px-5 py-2 border-b border-[#E0D6C8]/30 mb-2">
+                      <span className="text-[#223930] text-[1.1rem] leading-[1.5rem] font-bold">
                         {menus[key].label}
                       </span>
                     </div>
@@ -176,27 +174,44 @@ export default function Header() {
                           <Link
                             href={link.href}
                             onClick={() => setOpenMenu(null)}
-                            className="flex items-center gap-3 px-5 py-2.5 text-[#3A4660] hover:text-[#1B3680] hover:bg-[#DAF0F7]/40 text-[14px] leading-[1rem] transition-colors group"
+                            className="flex items-center gap-3 px-5 py-2.5 text-[#223930]/80 hover:text-[#223930] hover:bg-[#F5F2EB]/40 text-[13px] leading-[1rem] transition-colors group"
                           >
-                            <span className="w-4 h-px bg-[#D8DCE8] group-hover:bg-[#1C40C2] transition-colors shrink-0" />
+                            <span className="w-4 h-px bg-[#E0D6C8] shrink-0" />
                             {link.label}
                           </Link>
                         </li>
                       ))}
                     </ul>
-
                   </div>
                 </div>
               )}
             </div>
           ))}
 
+          {/* "Nous rejoindre" & "Nous contacter" as plain nav links */}
+          <Link
+            href="/nous-rejoindre"
+            className="flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[15px] leading-[25px] font-normal text-[#E0D6C8] hover:text-white"
+            style={{ fontFamily: "'Optima LT W04 Demi Bold', Optima, sans-serif" }}
+            onMouseEnter={() => setOpenMenu(null)}
+          >
+            {t("Nous rejoindre", "Join Us")}
+          </Link>
+          <Link
+            href="/nous-contacter"
+            className="flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[15px] leading-[25px] font-normal text-white hover:text-[#E0D6C8]"
+            style={{ fontFamily: "'Optima LT W04 Demi Bold', Optima, sans-serif" }}
+            onMouseEnter={() => setOpenMenu(null)}
+          >
+            {t("Nous contacter", "Contact Us")}
+          </Link>
+
           {/* LANG SWITCHER */}
-          <div className="flex items-center gap-2 border-l border-[#D8DCE8] pl-5 ml-3">
+          <div className="flex items-center gap-2 border-l border-[#E0D6C8]/30 pl-4 ml-2">
             <button
               onClick={() => setLang("FR")}
               className={`flex items-center gap-1.5 text-xs font-bold transition-all ${
-                lang === "FR" ? "text-[#1B3680] opacity-100" : "text-[#6B7794] opacity-50 hover:opacity-80"
+                lang === "FR" ? "text-white opacity-100" : "text-white/50 hover:text-white"
               }`}
             >
               <FlagFR /> FR
@@ -205,55 +220,43 @@ export default function Header() {
             <button
               onClick={() => setLang("EN")}
               className={`flex items-center gap-1.5 text-xs font-bold transition-all ${
-                lang === "EN" ? "text-[#1B3680] opacity-100" : "text-[#6B7794] opacity-50 hover:opacity-80"
+                lang === "EN" ? "text-white opacity-100" : "text-white/50 hover:text-white"
               }`}
             >
               <FlagEN /> EN
             </button>
-          </div>
-
-          {/* CTA buttons */}
-          <div className="flex items-center gap-2 ml-4">
-            <Link
-              href="/nous-rejoindre"
-              className="px-3 py-1 bg-[#1C40C2] text-white border border-[#1C40C2] hover:bg-white hover:text-[#1C40C2] rounded-full text-[0.65rem] font-bold tracking-wider uppercase transition-all duration-300"
-              onMouseEnter={() => setOpenMenu(null)}
-            >
-              {t("Nous rejoindre", "Join Us")}
-            </Link>
-            <Link
-              href="/nous-contacter"
-              className="px-3 py-1 bg-[#1C40C2] text-white border border-[#1C40C2] hover:bg-white hover:text-[#1C40C2] rounded-full text-[0.65rem] font-bold tracking-wider uppercase transition-all duration-300"
-              onMouseEnter={() => setOpenMenu(null)}
-            >
-              {t("Nous contacter", "Contact Us")}
-            </Link>
           </div>
         </nav>
       </div>
 
       {/* ── MOBILE MENU ── */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed top-[5.5rem] left-1/2 -translate-x-1/2 w-[92%] max-w-[400px] bottom-4 bg-white z-[9999] border border-[#D8DCE8] rounded-xl shadow-[0_10px_40px_rgba(27,54,128,0.15)] flex flex-col overflow-y-auto" style={{backgroundColor: '#ffffff'}}>
+        <div className="lg:hidden fixed top-[3.6rem] left-1/2 -translate-x-1/2 w-[92%] max-w-[400px] bottom-4 bg-white z-[9999] border border-[#E0D6C8]/30 rounded-lg shadow-[0_10px_40px_rgba(27,54,128,0.15)] flex flex-col overflow-y-auto">
           
-          {/* Nav Links */}
           <nav className="flex-1 flex flex-col px-6 py-4 gap-2">
+            {/* Accueil */}
+            <div className="border-b border-[#E0D6C8]/30">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#223930] hover:text-[#E0D6C8] transition-colors">
+                {t("Accueil", "Home")}
+              </Link>
+            </div>
+
             {(Object.keys(menus) as MenuKey[]).map((key) => (
-              <div key={key} className="flex flex-col border-b border-[#D8DCE8]/50">
+              <div key={key} className="flex flex-col border-b border-[#E0D6C8]/30">
                 <button
                   onClick={() => setOpenMobileSubmenu(openMobileSubmenu === key ? null : key)}
-                  className="flex items-center justify-between py-3 text-[1.1rem] font-bold text-[#1B3680] hover:text-[#1C40C2] transition-colors text-left"
+                  className="flex items-center justify-between py-3 text-[1.1rem] font-bold text-[#223930] hover:text-[#E0D6C8] transition-colors text-left"
                 >
                   <span>{menus[key].label}</span>
-                  <ChevronDown size={18} className={`text-[#B8922A] transition-transform ${openMobileSubmenu === key ? "rotate-180" : ""}`} />
+                  <ChevronDown size={18} className={`text-[#E0D6C8] transition-transform ${openMobileSubmenu === key ? "rotate-180" : ""}`} />
                 </button>
                 
                 {openMobileSubmenu === key && (
-                  <div className="flex flex-col gap-3 pb-4 pl-4 border-l-2 border-[#1C40C2]/20 mt-1">
+                  <div className="flex flex-col gap-3 pb-4 pl-4 border-l-2 border-[#E0D6C8]/20 mt-1">
                     <Link
                       href={menus[key].href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="text-[#1B3680] text-[0.95rem] font-bold mb-1"
+                      className="text-[#223930] text-[0.95rem] font-bold mb-1"
                     >
                       {t("Vue d'ensemble", "Overview")}
                     </Link>
@@ -262,7 +265,7 @@ export default function Header() {
                         key={j}
                         href={link.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="text-[#4A4E5A] text-[0.9rem] hover:text-[#1C40C2] transition-colors"
+                        className="text-[#4A4E5A] text-[0.9rem] hover:text-[#E0D6C8] transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -271,16 +274,26 @@ export default function Header() {
                 )}
               </div>
             ))}
+
+            <div className="border-b border-[#E0D6C8]/30">
+              <Link href="/nous-rejoindre" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#E0D6C8] hover:text-[#223930] transition-colors">
+                {t("Nous rejoindre", "Join Us")}
+              </Link>
+            </div>
+            <div className="border-b border-[#E0D6C8]/30">
+              <Link href="/nous-contacter" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#223930] hover:text-[#E0D6C8] transition-colors">
+                {t("Nous contacter", "Contact Us")}
+              </Link>
+            </div>
           </nav>
 
-          {/* Bottom: Lang + CTA */}
-          <div className="px-6 pb-6 pt-3 border-t border-[#D8DCE8] space-y-3">
-            {/* Lang Switcher */}
+          {/* Bottom: Lang */}
+          <div className="px-6 pb-6 pt-3 border-t border-[#E0D6C8]/30 space-y-3">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setLang("FR")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
-                  lang === "FR" ? "border-[#1B3680] text-[#1B3680]" : "border-[#D8DCE8] text-[#6B7794]"
+                  lang === "FR" ? "border-[#223930] text-[#223930]" : "border-[#E0D6C8]/30 text-[#3A5448]"
                 }`}
               >
                 <FlagFR /> FR
@@ -288,29 +301,11 @@ export default function Header() {
               <button
                 onClick={() => setLang("EN")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
-                  lang === "EN" ? "border-[#1B3680] text-[#1B3680]" : "border-[#D8DCE8] text-[#6B7794]"
+                  lang === "EN" ? "border-[#223930] text-[#223930]" : "border-[#E0D6C8]/30 text-[#3A5448]"
                 }`}
               >
                 <FlagEN /> EN
               </button>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col gap-3">
-              <Link
-                href="/nous-rejoindre"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex-1 bg-transparent text-[#1C40C2] text-center px-4 py-2.5 text-[0.7rem] font-bold tracking-wider uppercase rounded-full border border-[#1C40C2] transition-all hover:bg-[#1C40C2] hover:text-white"
-              >
-                {t("Nous rejoindre", "Join Us")}
-              </Link>
-              <Link
-                href="/nous-contacter"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex-1 bg-[#1C40C2] text-white text-center px-4 py-2.5 text-[0.7rem] font-bold tracking-wider uppercase rounded-full border border-[#1C40C2] transition-all hover:bg-white hover:text-[#1C40C2]"
-              >
-                {t("Nous contacter", "Contact Us")}
-              </Link>
             </div>
           </div>
         </div>

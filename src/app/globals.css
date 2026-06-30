@@ -1,263 +1,202 @@
 @import "tailwindcss";
 
-/* ── Typographie de base — style Laplace (MENUA) ────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   MENUA CONSULTING — SYSTÈME TYPOGRAPHIQUE (réf. Laplace Groupe)
+   ───────────────────────────────────────────────────────────────
+   --font-optima   = Raleway     ≈ Optima LT W04 (nav, corps, labels)
+   --font-display  = Cormorant Garamond ≈ Operetta 18 (héro titres, chiffres clés)
+   ═══════════════════════════════════════════════════════════════ */
 @layer base {
   html {
-    font-family: var(--font-optima), sans-serif;
+    /* Corps de texte : Raleway 400 ≈ Optima LT W04 Medium */
+    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
     font-size: 16px;
+    line-height: 24px; /* 16px/24px = Optima LT W04 Medium */
     -webkit-font-smoothing: antialiased;
   }
 
   body {
-    font-family: var(--font-optima), sans-serif;
+    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
     font-weight: 400;
-    font-size: 0.95rem; /* ~15.2px */
-    line-height: 1.5; /* ~22.8px */
-    color: #222222;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #223930;
+    background-color: #F5F2EB;
   }
 
+  /* H1 Hero — Optima LT W04 Bold 40px/40px */
   h1, .h1-like {
-    font-family: var(--font-optima), sans-serif;
+    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
     font-weight: 700;
-    font-size: 2.5rem;
-    line-height: 2.5rem;
+    font-size: 40px;
+    line-height: 40px;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
-    color: #222222;
+    color: #223930;
   }
 
+  /* H2 Section — Optima LT W04 Bold 24px/30px */
   h2, .h2-like {
-    font-family: var(--font-optima), sans-serif;
+    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
     font-weight: 700;
-    font-size: 1.3rem;
-    line-height: 1.6rem;
+    font-size: 24px;
+    line-height: 30px;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: #222222;
+    color: #223930;
   }
 
-  h3, h4, h5, h6 {
-    font-family: var(--font-optima), sans-serif;
+  /* H3 — Optima LT W04 Demi Bold 17px/25px (≈ nav links) */
+  h3 {
+    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
     font-weight: 600;
-    font-size: 1.3rem;
-    line-height: 1.6rem;
+    font-size: 17px;
+    line-height: 25px;
+    color: #223930;
   }
 
+  /* H4-H6 — Optima LT W04 Demi Bold 16px/24px */
+  h4, h5, h6 {
+    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    color: #223930;
+  }
+
+  /* Paragraphes — Optima LT W04 Medium 16px/24px */
   p, li, .text-body {
-    font-family: var(--font-optima), sans-serif;
+    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
     font-weight: 400;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: #222222;
+    font-size: 16px;
+    line-height: 24px;
+    color: #223930;
   }
 
   :root {
-    --background: 0 0% 98%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
-
     /* ══════════════════════════════════════════════════════════
-       MENUA CONSULTING — PALETTE FINANCE RÉGLEMENTÉE (France)
-       Secteur : Banques · CGP · Sociétés Financières · EC
-       Standard : AMF / ACPR
+       MENUA CONSULTING — PALETTE LAPLACE GROUPE
        ══════════════════════════════════════════════════════════ */
 
-    /* 1. BLEU MARINE INSTITUTIONNEL */
-    --menua-navy:        #1B3680;
-    --menua-navy-night:  #122560;
-    --menua-navy-light:  #2447A0;
+    /* 1. VERT SAPIN (Primary) */
+    --menua-navy:        #223930;
+    --menua-navy-night:  #192C24;
+    --menua-navy-light:  #2C493D;
 
-    /* 2. BLEU COBALT DIGITAL (CTA, liens actifs) */
-    --menua-cobalt:      #1C40C2;
-    --menua-cobalt-dark: #142E9A;
+    /* 2. BEIGE SABLE (Secondary / Accent) */
+    --menua-gold:        #E0D6C8;
+    --menua-gold-light:  #E0D6C8;
+    --menua-gold-pale:   #F5F2EB;
 
-    /* 3. OR INSTITUTIONNEL (micro-accents premium) */
-    --menua-gold:        #B8922A;
-    --menua-gold-light:  #CFA94A;
-    --menua-gold-pale:   #F5EDD8;
+    /* 3. NEUTRES */
+    --menua-taupe:       #E0D6C8;
+    --menua-taupe-light: #F5F2EB;
 
-    /* 4. ACCENT HUMAIN — usage ultra-limité */
-    --menua-coral:       #D97A55;
-    --menua-coral-hover: #C06440;
+    /* 4. FONDS */
+    --menua-bg:          #FFFFFF;
+    --menua-bg-warm:     #FAF9F6;
+    --menua-bg-deep:     #223930;
 
-    /* 5. NEUTRES CHAUDS */
-    --menua-taupe:       #ABA89F;
-    --menua-taupe-light: #F2F0ED;
-
-    /* 6. FONDS */
-    --menua-bg:          #FAFBFC;
-    --menua-bg-warm:     #FAF9F7;
-    --menua-bg-glacier:  #DAF0F7;
-    --menua-bg-deep:     #1B3680;
-
-    /* 7. TEXTES */
-    --menua-text:        #0E1B2E;
-    --menua-text-light:  #3A4660;
+    /* 5. TEXTES */
+    --menua-text:        #223930;
+    --menua-text-light:  #3A5448;
     --menua-text-muted:  #6B7794;
-    --menua-text-white:  #F4F6FA;
-    --menua-text-hover:  #DAF0F7;
+    --menua-text-white:  #FFFFFF;
 
-    /* 8. BORDURES & LIENS */
-    --menua-border:      #D8DCE8;
-    --menua-border-warm: #D9C8B8;
-    --menua-link:        #1B3680;
-    --menua-link-hover:  #1C40C2;
-    --menua-link-alt:    #D97A55;
-
-    /* 9. FONCTIONNEL */
-    --menua-success:     #2E7D5E;
-    --menua-alert:       #8B2E2E;
-    --menua-info:        #1C40C2;
+    /* 6. BORDURES & LIENS */
+    --menua-border:      #E0D6C8;
+    --menua-border-warm: #E0D6C8;
+    --menua-link:        #223930;
+    --menua-link-hover:  #E0D6C8;
   }
 }
 
+
 /* ══════════════════════════════════════════════════════════════
-   CLASSES UTILITAIRES MENUA
+   CLASSES UTILITAIRES LAPLACE / MENUA
    ══════════════════════════════════════════════════════════════ */
 
-/* Labels de section style Laplace */
 .section-eyebrow {
-  font-family: var(--font-optima), sans-serif;
+  font-family: var(--font-inter), sans-serif;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--menua-gold);
 }
 
-/* --------------------------------------------------
-   Utilitaires typographiques Laplace / MENUA
--------------------------------------------------- */
-
-/* Petits textes (pied de page, mentions) */
 .small-text, .footer-text {
-  font-family: var(--font-optima), sans-serif;
+  font-family: var(--font-inter), sans-serif;
   font-weight: 400;
-  font-size: 15px;
-  line-height: 14px;  /* valeur volontairement serrée */
-  color: #222222;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #223930;
 }
 
-/* Chiffres clés (grands nombres) */
 .key-number {
-  font-family: var(--font-operetta), serif;
-  font-weight: 400;
-  font-size: 40px;
-  line-height: 60px;
-  color: #222222;
+  font-family: var(--font-playfair), serif;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 1.2;
+  color: var(--menua-navy);
 }
 
-/* Texte sur fond sombre */
 .text-on-dark {
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
-/* Boutons / appels à l'action */
 .btn-laplace {
-  font-family: var(--font-optima), sans-serif;
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 14px;
-  color: #cec1b6; /* ou #ffffff selon le fond */
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.3s ease-in-out;
 }
 
-/* Couleurs secondaires */
-.text-secondary {
-  color: #2b3f37;
-}
-.text-tertiary {
-  color: #31374a;
+/* Ombres douces type Laplace */
+.shadow-laplace {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
-/* Fonds */
+/* Animations */
+.hover-translate-x:hover svg {
+  transform: translateX(4px);
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Fonds utilitaires */
 .bg-menua-navy        { background-color: var(--menua-navy); }
 .bg-menua-navy-night  { background-color: var(--menua-navy-night); }
 .bg-menua-navy-light  { background-color: var(--menua-navy-light); }
-.bg-menua-cobalt      { background-color: var(--menua-cobalt); }
 .bg-menua-gold        { background-color: var(--menua-gold); }
 .bg-menua-gold-pale   { background-color: var(--menua-gold-pale); }
-.bg-menua-glacier     { background-color: var(--menua-bg-glacier); }
 .bg-menua-taupe       { background-color: var(--menua-taupe-light); }
 .bg-menua-bg          { background-color: var(--menua-bg); }
-.bg-menua-bg-warm     { background-color: var(--menua-bg-warm); }
-/* Legacy */
-.bg-menua-sage        { background-color: var(--menua-cobalt); }
-.bg-menua-bg-2        { background-color: var(--menua-bg-glacier); }
-.bg-menua-bg-3        { background-color: var(--menua-taupe-light); }
-.bg-menua-bg-4        { background-color: var(--menua-taupe-light); }
-.bg-gold              { background-color: var(--menua-cobalt); }
-.bg-navy              { background-color: var(--menua-navy); }
-.bg-navy-light        { background-color: var(--menua-navy-light); }
 
-/* Hover fonds */
-.bg-menua-cobalt:hover { background-color: var(--menua-cobalt-dark); }
-.bg-menua-navy:hover   { background-color: var(--menua-navy-night); }
-.bg-menua-gold:hover   { background-color: var(--menua-gold-light); }
-.bg-menua-sage:hover   { background-color: var(--menua-cobalt-dark); }
-.bg-gold:hover         { background-color: var(--menua-cobalt-dark); }
-
-/* Textes */
+/* Textes utilitaires */
 .text-menua-navy      { color: var(--menua-navy); }
-.text-menua-cobalt    { color: var(--menua-cobalt); }
 .text-menua-gold      { color: var(--menua-gold); }
 .text-menua-text      { color: var(--menua-text); }
-.text-menua-muted     { color: var(--menua-text-muted); }
-.text-menua-glacier   { color: var(--menua-bg-glacier); }
-.text-menua-coral     { color: var(--menua-coral); }
-.text-menua-sage      { color: var(--menua-cobalt); }
 .text-gold            { color: var(--menua-gold); }
 
 /* Bordures */
 .border-menua-navy    { border-color: var(--menua-navy); }
-.border-menua-cobalt  { border-color: var(--menua-cobalt); }
 .border-menua-gold    { border-color: var(--menua-gold); }
 .border-menua-border  { border-color: var(--menua-border); }
-.border-menua-glacier { border-color: var(--menua-bg-glacier); }
-.border-menua-sage    { border-color: var(--menua-cobalt); }
-.border-gold          { border-color: var(--menua-gold); }
 
-/* Curved shapes */
-.curved-top {
-  border-top-left-radius: 4rem;
-  border-top-right-radius: 4rem;
+/* Curved shapes (Arrondis 8px Laplace style) */
+.laplace-card {
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  padding: 32px;
 }
 
-/* Dégradés */
+/* Dégradés Overlay Images */
 .hero-gradient {
   background: linear-gradient(
-    90deg,
-    rgba(27, 54, 128, 1)    0%,
-    rgba(27, 54, 128, 0.92) 45%,
-    rgba(27, 54, 128, 0.20) 100%
+    180deg,
+    rgba(11, 27, 61, 0.2) 0%,
+    rgba(11, 27, 61, 0.7) 100%
   );
-}
-
-.glacier-gradient {
-  background: linear-gradient(135deg, var(--menua-bg-glacier) 0%, var(--menua-bg) 100%);
-}
-
-.gold-gradient {
-  background: linear-gradient(135deg, var(--menua-gold-pale) 0%, var(--menua-bg) 100%);
-}
-
-.cobalt-gradient {
-  background: linear-gradient(135deg, var(--menua-navy) 0%, var(--menua-navy-night) 100%);
-}
-
-.blush-gradient {
-  background: linear-gradient(135deg, var(--menua-taupe-light) 0%, var(--menua-bg-warm) 100%);
 }

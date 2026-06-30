@@ -1,240 +1,252 @@
 "use client";
 import Link from "next/link";
-import { ArrowRight, MapPin, Mail, Phone, Clock, Users, ShieldCheck, X } from "lucide-react";
-import { useState } from "react";
+import { ArrowRight, Globe, MapPin, Mail, Phone, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
+import CallToAction from "@/components/layout/CallToAction";
 
 export default function NousContacter() {
   const { t } = useLanguage();
-  const [agreed, setAgreed] = useState(false);
-  const [demandeurType, setDemandeurType] = useState<"entreprise" | "independant">("entreprise");
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <>
-    <main className="flex flex-col w-full bg-[#1B3680] text-white font-sans">
+    <main className="flex flex-col w-full min-h-screen bg-[#FDFDFD]">
       {/* ── HERO INTRO ── */}
-      <section className="relative w-full min-h-screen flex items-center overflow-hidden pt-16">
+      <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
           <img
             src="/nous-contacter-hero.jpg"
-            alt={t("Contact", "Contact")}
+            alt="Nous Contacter"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1B3680] from-20% via-[#1B3680]/70 via-45% to-transparent to-65%" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#223930] from-20% via-[#223930]/70 via-45% to-transparent to-65%" />
         </div>
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-8 md:px-16 lg:px-24">
+        <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
             {/* Decorative golden bracket */}
-            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-[#B8922A]" />
-            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#B8922A]" />
-            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#B8922A]" />
+            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-[#E0D6C8]" />
+            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#E0D6C8]" />
+            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#E0D6C8]" />
             
             <div className="relative">
-              <div className="text-[#B8922A] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.15em] uppercase mb-8">
-                <Link href="/" className="hover:text-white transition-colors">{t("Accueil", "Home")}</Link>
-                <span className="mx-2 text-white/50">›</span>
-                <span className="text-white">{t("Nous contacter", "Contact Us")}</span>
-              </div>
+              <p className="text-[#E0D6C8] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.15em] uppercase mb-8">
+                {t("Contact", "Contact")}
+              </p>
               <h1 className="text-white mb-8 text-[2.2rem] md:text-[3.2rem] lg:text-[3.6rem] leading-[1.1] font-bold uppercase max-w-4xl tracking-tight">
                 {t("Nous contacter", "Contact Us")}
               </h1>
-              <p className="text-gray-300 text-[0.95rem] md:text-[1.1rem] leading-[1.6] max-w-2xl font-normal">
-                {t(
-                  "Présentez votre besoin opérationnel, nous vous répondons avec une première analyse et une proposition adaptée.",
-                  "Present your operational need, and we will respond with an initial analysis and a tailored proposal."
-                )}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* COORDONNÉES */}
-      <section className="bg-[#FAFBFC] text-[#0E1B2E] px-8 py-10">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-gray-200 pb-10">
-          {[
-            {icon:MapPin, title:t("Adresse","Address"), content:<>MENUA CONSULTING<br/>92 rue des Pyrénées – 75020 Paris</>},
-            {icon:Mail, title:"Email", content:<a href="mailto:contact@menuaconsulting.com" className="text-gray-600 text-sm hover:text-[#B8922A]">contact@menuaconsulting.com</a>},
-            {icon:Phone, title:t("Téléphone","Phone"), content:<a href="tel:+33686877914" className="text-gray-600 text-sm hover:text-[#B8922A]">+33 6 86 87 79 14</a>},
-          ].map((item,i)=>(
-            <div key={i} className="flex items-start gap-4">
-              <div className="text-[#B8922A]"><item.icon size={22} strokeWidth={1.5}/></div>
-              <div><h3 className="font-bold text-sm mb-1">{item.title}</h3><p className="text-gray-600 text-sm">{item.content}</p></div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CONTACT CTA BLOCK */}
-      <section className="bg-[#FAFBFC] text-[#0E1B2E] px-8 py-20 border-t border-gray-200">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-12 items-start">
-          <div className="flex-1">
-            <h2 className="text-[#0E1B2E] text-[1.8rem] leading-[2.2rem] font-bold uppercase mb-4">{t("Une question, un besoin ?","A question, a need?")}<br/>{t("Contactez-nous.","Contact us.")}</h2>
-            <p className="text-gray-600 text-sm max-w-md leading-relaxed mb-8">{t("Notre équipe est à votre écoute pour comprendre vos enjeux et vous proposer une réponse adaptée.","Our team is here to understand your challenges and offer you a tailored response.")}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-              {[
-                {icon:Clock, title:t("Réactivité","Responsiveness"), desc:t("Un retour sous 24h ouvrées.","A response within 24 working hours.")},
-                {icon:Users, title:t("Écoute","Listening"), desc:t("Un suivi de bout en bout et personnalisé.","End-to-end, personalized follow-up.")},
-                {icon:ShieldCheck, title:t("Expertise","Expertise"), desc:t("Des solutions opérationnelles sur-mesure.","Tailor-made operational solutions.")},
-              ].map((item,i)=>(
-                <div key={i} className="flex flex-col gap-2">
-                  <div className="text-[#B8922A]"><item.icon size={22} strokeWidth={1.5}/></div>
-                  <h3 className="font-bold text-sm">{item.title}</h3>
-                  <p className="text-gray-500 text-xs leading-relaxed">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-            <button onClick={() => setIsModalOpen(true)} className="inline-flex items-center gap-3 bg-[#1C40C2] hover:bg-[#142E9A] text-white px-8 py-3.5 rounded text-xs font-bold tracking-wider uppercase transition-colors">
-              {t("Accéder au formulaire de contact","Access the contact form")} <ArrowRight size={16}/>
-            </button>
-          </div>
-          <div className="md:w-2/5 h-72 rounded-2xl overflow-hidden shadow-lg shrink-0">
-            <img src="/nous-contacter-hero.jpg" alt={t("Contact","Contact")} className="w-full h-full object-cover"/>
-          </div>
-        </div>
-      </section>
-    </main>
-      
-      {/* FORM MODAL */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 md:p-8">
-          <div className="absolute inset-0 bg-[#0E1B2E]/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
-          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-300">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
-              <h2 className="text-[#0E1B2E] text-[1.1rem] leading-[1.3rem] font-bold uppercase">{t("Formulaire de contact","Contact Form")}</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-800 transition-colors p-2 rounded-full hover:bg-gray-100">
-                <X size={24} />
-              </button>
-            </div>
-            <div className="overflow-y-auto p-6 md:p-10 flex flex-col md:flex-row gap-12 text-[#0E1B2E]">
-              {/* LEFT INFO */}
-              <div className="md:w-2/5 space-y-6">
-                <h2 className="text-[#0E1B2E] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-[2.25rem]">{t("Pourquoi nous contacter ?","Why contact us?")}</h2>
-                {[
-                  {icon:Clock, title:t("Réponse rapide","Quick Response"), desc:t("Nous nous engageons à vous répondre dans les meilleurs délais.","We commit to responding to you as soon as possible.")},
-                  {icon:Users, title:t("Analyse personnalisée","Personalized Analysis"), desc:t("Nous analysons votre besoin pour vous proposer une solution adaptée.","We analyze your need to propose a tailored solution.")},
-                  {icon:ShieldCheck, title:t("Expertise opérationnelle","Operational Expertise"), desc:t("Interventions sur des missions complexes avec rigueur et fiabilité.","Interventions on complex missions with rigor and reliability.")},
-                  {icon:ShieldCheck, title:t("Confiance & confidentialité","Trust & Confidentiality"), desc:t("Vos informations sont traitées avec la plus grande confidentialité.","Your information is handled with the utmost confidentiality.")},
-                ].map((item,i)=>(
-                  <div key={i} className="flex gap-4">
-                    <div className="text-[#B8922A] shrink-0 mt-0.5"><item.icon size={20} strokeWidth={1.5}/></div>
-                    <div><h3 className="font-bold text-sm mb-1">{item.title}</h3><p className="text-gray-500 text-xs leading-relaxed">{item.desc}</p></div>
-                  </div>
-                ))}
-                <div className="rounded-2xl overflow-hidden h-44 mt-4 hidden md:block">
-                  <img src="/notebook.jpg" alt="notebook" className="w-full h-full object-cover"/>
-                </div>
-              </div>
-
-              {/* RIGHT FORM */}
-              <div className="flex-1">
-                <h2 className="text-[#0E1B2E] text-[1.3rem] leading-[1.6rem] font-bold uppercase mb-[2.25rem] hidden md:block">{t("Formulaire de contact","Contact Form")}</h2>
-                <p className="text-gray-500 text-xs mb-5 leading-relaxed">
+              <div className="text-white/95 text-[1.05rem] md:text-[1.15rem] leading-[1.6] max-w-2xl font-normal space-y-4 mb-8">
+                <p>
                   {t(
-                    "Les informations recueillies sont traitées par MENUA CONSULTING afin de répondre à votre demande. Elles peuvent être conservées jusqu'à 3 ans après le dernier échange. Droits exercés à :",
-                    "The information collected is processed by MENUA CONSULTING to respond to your request. It may be kept for up to 3 years after the last exchange. Rights exercised at:"
-                  )}{" "}<a href="mailto:contact@menuaconsulting.com" className="text-[#B8922A] hover:underline">contact@menuaconsulting.com</a>.{" "}
-                  {t("Voir notre","See our")}{" "}<Link href="/politique-de-confidentialite" className="text-[#B8922A] hover:underline">{t("Politique de confidentialité","Privacy Policy")}</Link>.
-                </p>
-
-                {/* TYPE TOGGLE */}
-                <div className="mb-6">
-                  <label className="text-xs font-semibold text-gray-600 mb-3 block">{t("Vous représentez *","You represent *")}</label>
-                  <div className="flex gap-3">
-                    <button type="button" onClick={() => setDemandeurType("entreprise")}
-                      className={`flex-1 py-3 px-4 rounded border text-xs font-semibold transition-colors ${demandeurType==="entreprise"?"bg-[#1B3680] text-white border-[#1B3680]":"bg-white text-gray-600 border-gray-300 hover:border-[#B8922A]"}`}>
-                      {t("Une entreprise / organisation","A company / organization")}
-                    </button>
-                    <button type="button" onClick={() => setDemandeurType("independant")}
-                      className={`flex-1 py-3 px-4 rounded border text-xs font-semibold transition-colors ${demandeurType==="independant"?"bg-[#1B3680] text-white border-[#1B3680]":"bg-white text-gray-600 border-gray-300 hover:border-[#B8922A]"}`}>
-                      {t("Un professionnel individuel","An individual professional")}
-                    </button>
-                  </div>
-                </div>
-
-                <form className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div><label className="text-xs font-semibold text-gray-600 mb-1 block">{t("Nom *","Last Name *")}</label><input type="text" className="w-full border border-gray-300 rounded px-4 py-3 text-sm text-[#0E1B2E] focus:outline-none focus:border-[#B8922A]"/></div>
-                    <div><label className="text-xs font-semibold text-gray-600 mb-1 block">{t("Société *","Company *")}</label><input type="text" className="w-full border border-gray-300 rounded px-4 py-3 text-sm text-[#0E1B2E] focus:outline-none focus:border-[#B8922A]"/></div>
-                  </div>
-
-                  {demandeurType === "entreprise" && (
-                    <div>
-                      <label className="text-xs font-semibold text-gray-600 mb-1 block">{t("SIRET / Numéro d'identification de l'entreprise *","SIRET / Company identification number *")}</label>
-                      <input type="text" placeholder="Ex : 993 749 779 00019" className="w-full border border-gray-300 rounded px-4 py-3 text-sm text-[#0E1B2E] focus:outline-none focus:border-[#B8922A]"/>
-                    </div>
+                    "Présentez votre besoin opérationnel, nous vous répondons avec une première analyse et une proposition adaptée.",
+                    "Present your operational need, we will respond with an initial analysis and a tailored proposal."
                   )}
+                </p>
+              </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div><label className="text-xs font-semibold text-gray-600 mb-1 block">{t("Fonction *","Position *")}</label><input type="text" className="w-full border border-gray-300 rounded px-4 py-3 text-sm text-[#0E1B2E] focus:outline-none focus:border-[#B8922A]"/></div>
-                    <div><label className="text-xs font-semibold text-gray-600 mb-1 block">{t("Email professionnel *","Professional Email *")}</label><input type="email" className="w-full border border-gray-300 rounded px-4 py-3 text-sm text-[#0E1B2E] focus:outline-none focus:border-[#B8922A]"/></div>
-                  </div>
-                  <div><label className="text-xs font-semibold text-gray-600 mb-1 block">{t("Téléphone *","Phone *")}</label><input type="tel" className="w-full border border-gray-300 rounded px-4 py-3 text-sm text-[#0E1B2E] focus:outline-none focus:border-[#B8922A]"/></div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                <button
+                  onClick={() => {
+                    document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="inline-flex items-center gap-3 bg-[#E0D6C8] text-[#223930] px-8 py-3.5 text-[0.75rem] font-bold tracking-[0.1em] uppercase transition-all hover:bg-transparent hover:text-[#E0D6C8] border border-[#E0D6C8] w-fit"
+                >
+                  {t("Présenter mon besoin", "Present my need")}
+                </button>
 
-                  <div>
-                    <label className="text-xs font-semibold text-gray-600 mb-3 block">{t("Type de besoin *","Type of need *")}</label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4">
-                      {[
-                        t("Renfort opérationnel","Operational reinforcement"),
-                        t("Externalisation back office","Back office outsourcing"),
-                        t("Externalisation middle office","Middle office outsourcing"),
-                        t("Finance & reporting","Finance & reporting"),
-                        t("Contrôle de gestion","Management control"),
-                        t("Risques & conformité","Risks & compliance"),
-                        t("Support comptable & data","Accounting & data support"),
-                        t("Support opérationnel CGP / gestion de patrimoine","Operational support CGP / wealth management"),
-                        t("Autre besoin opérationnel","Other operational need"),
-                      ].map((opt,i)=>(
-                        <label key={i} className="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
-                          <input type="checkbox" className="accent-[#B8922A]"/>{opt}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-gray-600 mb-1 block">{t("Niveau d'urgence *","Urgency level *")}</label>
-                    <select className="w-full border border-gray-300 rounded px-4 py-3 text-sm text-gray-500 focus:outline-none focus:border-[#B8922A] bg-white">
-                      <option value="">{t("Sélectionnez une option","Select an option")}</option>
-                      <option>{t("Immédiat","Immediate")}</option>
-                      <option>{t("Sous quelques jours","Within a few days")}</option>
-                      <option>{t("Sous quelques semaines","Within a few weeks")}</option>
-                      <option>{t("À planifier","To be planned")}</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-gray-600 mb-1 block">{t("Décrivez votre besoin *","Describe your need *")}</label>
-                    <textarea rows={4} placeholder={t("Décrivez votre besoin en quelques lignes...","Describe your need in a few lines...")} className="w-full border border-gray-300 rounded px-4 py-3 text-sm text-[#0E1B2E] focus:outline-none focus:border-[#B8922A] resize-none"></textarea>
-                  </div>
-
-                  <div className="bg-[#1B3680]/5 border border-[#B8922A]/30 rounded-xl px-5 py-4">
-                    <p className="text-[#0E1B2E] text-xs leading-relaxed">
-                      <span className="font-semibold text-[#B8922A]">{t("Aucun document n'est requis à ce stade.","No documents are required at this stage.")}</span>{" "}
-                      {t(
-                        "Pour garantir la sécurité et la confidentialité de vos échanges, nous ne collectons aucune pièce jointe lors de ce premier contact. Si votre demande retient notre attention, nous vous recontacterons directement pour convenir de la meilleure façon d'avancer ensemble.",
-                        "To guarantee the security and confidentiality of your exchanges, we do not collect any attachments during this first contact. If your request catches our attention, we will contact you directly to agree on the best way to move forward together."
-                      )}
-                    </p>
-                  </div>
-
-                  <label className="flex items-start gap-3 text-xs text-gray-600 cursor-pointer">
-                    <input type="checkbox" checked={agreed} onChange={()=>setAgreed(!agreed)} className="accent-[#B8922A] mt-0.5 shrink-0"/>
-                    <span>{t("J'accepte que mes données soient traitées conformément à la","I accept that my data is processed in accordance with the")}{" "}<Link href="/politique-de-confidentialite" className="text-[#B8922A] underline">{t("politique de confidentialité","privacy policy")}</Link>. *</span>
-                  </label>
-                  <div className="flex justify-end pt-2">
-                    <button type="submit" className="inline-flex items-center gap-3 bg-[#1C40C2] hover:bg-[#142E9A] text-white px-8 py-3.5 rounded text-xs font-bold tracking-wider uppercase transition-colors">
-                      {t("Envoyer ma demande","Send my request")} <ArrowRight size={16}/>
-                    </button>
-                  </div>
-                </form>
+                <div className="flex items-start gap-3">
+                  <Globe className="text-[#E0D6C8] shrink-0 mt-0.5" size={24} strokeWidth={1.5} />
+                  <p className="text-white/90 text-[0.85rem] font-medium leading-relaxed max-w-[300px]">
+                    {t("Interventions en français et en anglais.", "Interventions in French and English.")}<br/>
+                    <span className="text-[#E0D6C8]">{t("Réponse rapide", "Quick response")}</span> <span className="text-white/50">•</span> <span className="text-[#E0D6C8]">{t("Échange confidentiel", "Confidential exchange")}</span>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      )}
-    </>
+      </section>
+
+      {/* ── CONTENT SECTION ── */}
+      <section className="w-full bg-white px-8 py-16 lg:py-24" id="contact-form">
+        <div className="max-w-[1280px] mx-auto flex flex-col lg:flex-row gap-8">
+          
+          {/* Left Column (Info) */}
+          <div className="w-full lg:w-1/3 flex flex-col gap-6">
+            
+            {/* Coordonnées */}
+            <div className="bg-white border border-[#E0D6C8]/30 p-8 md:p-10 shadow-sm">
+              <h2 className="text-[#223930] text-[1.1rem] font-bold uppercase mb-4 tracking-wider">
+                {t("Coordonnées", "Contact Details")}
+              </h2>
+              <div className="w-10 h-[1.5px] bg-[#d5a864] mb-8" />
+              
+              <div className="mb-8">
+                <h3 className="font-bold text-[#223930] text-sm mb-2">MENUA CONSULTING</h3>
+                <p className="text-[#223930] text-sm">92 rue des Pyrénées</p>
+                <p className="text-[#223930] text-sm">75020 Paris</p>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-[#223930] text-white flex items-center justify-center shrink-0">
+                    <Mail size={18} />
+                  </div>
+                  <a href="mailto:contact@menuaconsulting.com" className="text-[#223930] text-sm font-medium hover:text-[#d5a864] transition-colors">
+                    contact@menuaconsulting.com
+                  </a>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-[#223930] text-white flex items-center justify-center shrink-0">
+                    <Phone size={18} />
+                  </div>
+                  <a href="tel:+33686877914" className="text-[#223930] text-sm font-medium hover:text-[#d5a864] transition-colors">
+                    06 86 87 79 14
+                  </a>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-[#223930] text-white flex items-center justify-center shrink-0">
+                    <MapPin size={18} />
+                  </div>
+                  <p className="text-[#223930] text-sm font-medium">
+                    Interventions partout en France.<br/>Français / Anglais
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Pourquoi nous contacter */}
+            <div className="bg-[#F5F2EB] p-8 md:p-10 border border-[#E0D6C8]/30">
+              <h2 className="text-[#223930] text-[0.95rem] font-bold uppercase mb-4 tracking-wider">
+                {t("Pourquoi nous contacter ?", "Why contact us?")}
+              </h2>
+              <div className="w-10 h-[1.5px] bg-[#d5a864] mb-8" />
+              
+              <ul className="space-y-4">
+                {[
+                  t("Renfort opérationnel", "Operational reinforcement"),
+                  t("Externalisation back office", "Back office outsourcing"),
+                  t("Externalisation middle office", "Middle office outsourcing"),
+                  t("Finance & reporting", "Finance & reporting"),
+                  t("Contrôle de gestion", "Management control"),
+                  t("Risques & conformité", "Risk & compliance"),
+                  t("Support comptable & data", "Accounting & data support"),
+                  t("Gestion de patrimoine", "Wealth management"),
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-[#223930] text-[0.85rem] font-medium">
+                    <CheckCircle2 size={16} className="text-[#d5a864] shrink-0 mt-0.5" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* LinkedIn */}
+            <div className="bg-[#F5F2EB] p-8 md:p-10 border border-[#E0D6C8]/30 flex flex-col items-center text-center">
+              <div className="flex items-center gap-4 mb-6 w-full">
+                <div className="w-12 h-12 rounded-full bg-[#223930] text-white flex items-center justify-center shrink-0">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                </div>
+                <p className="text-[#223930] text-[0.85rem] font-medium text-left leading-snug">
+                  {t("Retrouvez nos analyses\net publications.", "Find our analyses\nand publications.")}
+                </p>
+              </div>
+              <a href="https://linkedin.com/company/menua-consulting" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-between border border-[#d5a864] text-[#223930] bg-white hover:bg-[#FDFDFD] px-4 py-3 text-[0.65rem] font-bold tracking-[0.1em] uppercase transition-colors">
+                {t("Suivre Menua Consulting", "Follow Menua Consulting")} <ArrowRight size={14} />
+              </a>
+            </div>
+
+          </div>
+
+          {/* Right Column (Form) */}
+          <div className="w-full lg:w-2/3 border border-[#E0D6C8]/30 p-8 md:p-12">
+            <h2 className="text-[#223930] text-[1.3rem] font-bold uppercase mb-4 text-center tracking-wider">
+              {t("Formulaire de contact", "Contact Form")}
+            </h2>
+            <div className="w-10 h-[2px] bg-[#d5a864] mx-auto mb-12" />
+
+            <form className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-xs font-bold text-[#223930] mb-2 block">{t("Nom", "Last Name")} <span className="text-[#d5a864]">*</span></label>
+                  <input type="text" placeholder={t("Votre nom", "Your last name")} className="w-full border border-[#E0D6C8] bg-transparent px-4 py-3 text-sm text-[#223930] focus:outline-none focus:border-[#223930]" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-[#223930] mb-2 block">{t("Société", "Company")}</label>
+                  <input type="text" placeholder={t("Votre société", "Your company")} className="w-full border border-[#E0D6C8] bg-transparent px-4 py-3 text-sm text-[#223930] focus:outline-none focus:border-[#223930]" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-xs font-bold text-[#223930] mb-2 block">{t("Fonction", "Position")}</label>
+                  <input type="text" placeholder={t("Votre fonction", "Your position")} className="w-full border border-[#E0D6C8] bg-transparent px-4 py-3 text-sm text-[#223930] focus:outline-none focus:border-[#223930]" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-[#223930] mb-2 block">Email <span className="text-[#d5a864]">*</span></label>
+                  <input type="email" placeholder="votre.email@exemple.com" className="w-full border border-[#E0D6C8] bg-transparent px-4 py-3 text-sm text-[#223930] focus:outline-none focus:border-[#223930]" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-xs font-bold text-[#223930] mb-2 block">{t("Téléphone", "Phone")}</label>
+                  <input type="tel" placeholder="+33 6 12 34 56 78" className="w-full border border-[#E0D6C8] bg-transparent px-4 py-3 text-sm text-[#223930] focus:outline-none focus:border-[#223930]" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-[#223930] mb-2 block">{t("Niveau d'urgence", "Urgency level")} <span className="text-[#d5a864]">*</span></label>
+                  <select className="w-full border border-[#E0D6C8] bg-transparent px-4 py-3 text-sm text-gray-500 focus:outline-none focus:border-[#223930]">
+                    <option value="">{t("Sélectionnez un niveau", "Select a level")}</option>
+                    <option value="Immédiat (sous 48h)">{t("Immédiat (sous 48h)", "Immediate (within 48h)")}</option>
+                    <option value="Moyen (sous 1 mois)">{t("Moyen (sous 1 mois)", "Medium (within 1 month)")}</option>
+                    <option value="Faible (projet à plus d'un mois)">{t("Faible (projet à plus d'un mois)", "Low (project in more than 1 month)")}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-[#223930] mb-3 block">
+                  {t("Type de besoin", "Type of need")} <span className="text-[#d5a864]">*</span> <span className="font-normal italic text-gray-500">({t("plusieurs choix possibles", "multiple choices possible")})</span>
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6">
+                  {[
+                    t("Renfort opérationnel", "Operational reinforcement"),
+                    t("Risques & conformité", "Risk & compliance"),
+                    t("Externalisation back office", "Back office outsourcing"),
+                    t("Support comptable & data", "Accounting & data support"),
+                    t("Externalisation middle office", "Middle office outsourcing"),
+                    t("Support opérationnel CGP / gestion de patrimoine", "Operational support CGP / wealth management"),
+                    t("Finance & reporting", "Finance & reporting"),
+                    t("Autre besoin opérationnel", "Other operational need"),
+                    t("Contrôle de gestion", "Management control"),
+                  ].map((opt, i) => (
+                    <label key={i} className="flex items-start gap-2 text-[0.8rem] text-[#223930] cursor-pointer font-medium">
+                      <input type="checkbox" className="accent-[#223930] mt-1 shrink-0" /> {opt}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-[#223930] mb-2 block">{t("Message", "Message")} <span className="text-[#d5a864]">*</span></label>
+                <textarea rows={5} placeholder={t("Décrivez votre besoin en quelques lignes...", "Describe your need in a few lines...")} className="w-full border border-[#E0D6C8] bg-transparent px-4 py-3 text-sm text-[#223930] focus:outline-none focus:border-[#223930] resize-none"></textarea>
+              </div>
+
+              <label className="flex items-start gap-3 text-[0.8rem] text-[#223930] cursor-pointer font-medium pt-2">
+                <input type="checkbox" className="accent-[#223930] mt-0.5 shrink-0" />
+                <span>
+                  {t("J'accepte la", "I accept the")} <Link href="/politique-de-confidentialite" className="text-[#d5a864] hover:underline">{t("politique de confidentialité", "privacy policy")}</Link> {t("et le traitement de mes données conformément au RGPD.", "and the processing of my data according to GDPR.")} <span className="text-[#d5a864]">*</span>
+                </span>
+              </label>
+
+              <button type="submit" className="w-full flex items-center justify-center gap-3 bg-[#223930] text-white px-8 py-4 text-xs font-bold tracking-[0.1em] uppercase hover:bg-[#1a2c25] transition-colors">
+                {t("Envoyer ma demande", "Send my request")} <ArrowRight size={16} />
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <CallToAction />
+    </main>
   );
 }

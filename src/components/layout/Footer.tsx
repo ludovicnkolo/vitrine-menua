@@ -2,58 +2,67 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-white pt-20 pb-12 px-8 text-[#222222] footer-text">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 mb-20">
+    <footer className="bg-[#223930] pt-16 pb-8 px-8 text-white w-full border-t border-white/10">
+      <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
         
-        {/* Colonne 1: Branding & Navigation */}
-        <div className="flex flex-col gap-10">
-          {/* Logo Menua Consulting */}
-          <div className="flex flex-col">
-             <span className="text-[#222222] leading-none" style={{ fontFamily: "var(--font-operetta)", fontSize: "3rem", fontWeight: 400 }}>
-               Menua
+        {/* Colonne 1: Branding */}
+        <div className="flex flex-col">
+          <div className="flex flex-col mb-4">
+             <span className="text-white leading-none" style={{ fontFamily: "var(--font-playfair)", fontSize: "2.2rem", fontWeight: 400 }}>
+               MENUA
              </span>
-             <span className="text-[#222222] uppercase tracking-[0.2em] text-[0.65rem] mt-2 font-bold">
+             <span className="text-white uppercase tracking-[0.25em] text-[0.65rem] mt-1 font-normal">
                Consulting
              </span>
           </div>
-          
-          <ul className="flex flex-col space-y-3">
-            <li><Link href="/nous-connaitre" className="uppercase hover:text-[#1B3680] transition-colors tracking-widest text-[0.8rem] font-medium">Nous connaître</Link></li>
-            <li><Link href="/vos-besoins" className="uppercase hover:text-[#1B3680] transition-colors tracking-widest text-[0.8rem] font-medium">Vos besoins</Link></li>
-            <li><Link href="/nos-solutions" className="uppercase hover:text-[#1B3680] transition-colors tracking-widest text-[0.8rem] font-medium">Nos solutions</Link></li>
-            <li><Link href="/pourquoi-menua" className="uppercase hover:text-[#1B3680] transition-colors tracking-widest text-[0.8rem] font-medium">Pourquoi Menua ?</Link></li>
-            <li><Link href="/actualites" className="uppercase hover:text-[#1B3680] transition-colors tracking-widest text-[0.8rem] font-medium">Actualités</Link></li>
-            <li><Link href="/nous-rejoindre" className="uppercase hover:text-[#1B3680] transition-colors tracking-widest text-[0.8rem] font-medium">Nous rejoindre</Link></li>
+          <p className="text-white/80 text-[0.8rem] leading-relaxed max-w-[250px]">
+            Externalisation opérationnelle des fonctions back & middle office.
+          </p>
+        </div>
+
+        {/* Colonne 2: Expertises */}
+        <div className="flex flex-col">
+          <h4 className="uppercase text-[0.8rem] font-bold tracking-[0.1em] mb-6 text-white">Expertises</h4>
+          <ul className="flex flex-col space-y-3 text-[0.85rem] text-white/80 font-medium">
+            <li><Link href="/vos-besoins#finance-reporting" className="hover:text-[#E0D6C8] transition-colors">Finance & reporting</Link></li>
+            <li><Link href="/vos-besoins#controle-de-gestion" className="hover:text-[#E0D6C8] transition-colors">Contrôle de gestion</Link></li>
+            <li><Link href="/vos-besoins#risques-conformite" className="hover:text-[#E0D6C8] transition-colors">Risques & conformité</Link></li>
+            <li><Link href="/vos-besoins#support-comptable-data" className="hover:text-[#E0D6C8] transition-colors">Support comptable & data</Link></li>
+            <li><Link href="/vos-besoins#gestion-patrimoine" className="hover:text-[#E0D6C8] transition-colors">Gestion de patrimoine</Link></li>
+            <li><Link href="/vos-besoins#autres-besoins" className="hover:text-[#E0D6C8] transition-colors">Autres besoins</Link></li>
           </ul>
         </div>
 
-        {/* Colonne 2: NOUS TROUVER */}
-        <div className="flex flex-col mt-4 md:mt-0">
-          <h4 className="uppercase text-xl mb-8 tracking-wide" style={{ fontFamily: "var(--font-optima)", fontWeight: 500 }}>Nous trouver</h4>
-          
-          <div className="flex flex-col space-y-1 mb-8 text-[0.9rem]">
-            <span className="uppercase">92 Rue des Pyrénées</span>
-            <span className="uppercase">75020 Paris</span>
-            <span className="mt-1">+33 6 86 87 79 14</span>
-          </div>
+        {/* Colonne 3: Nos Solutions */}
+        <div className="flex flex-col">
+          <h4 className="uppercase text-[0.8rem] font-bold tracking-[0.1em] mb-6 text-white">Nos solutions</h4>
+          <ul className="flex flex-col space-y-3 text-[0.85rem] text-white/80 font-medium">
+            <li><Link href="/nos-solutions#urgence" className="hover:text-[#E0D6C8] transition-colors">Urgence</Link></li>
+            <li><Link href="/nos-solutions#duree" className="hover:text-[#E0D6C8] transition-colors">Durée</Link></li>
+            <li><Link href="/nos-solutions#volume" className="hover:text-[#E0D6C8] transition-colors">Volume</Link></li>
+            <li><Link href="/nos-solutions#organisation" className="hover:text-[#E0D6C8] transition-colors">Organisation</Link></li>
+          </ul>
         </div>
-
-        {/* Colonne 3: NOUS CONTACTER */}
-        <div className="flex flex-col mt-4 md:mt-0">
-          <h4 className="uppercase text-xl mb-8 tracking-wide" style={{ fontFamily: "var(--font-optima)", fontWeight: 500 }}>Nous contacter</h4>
+        
+        {/* Colonne 4: Contact & Légal */}
+        <div className="flex flex-col">
+          <h4 className="uppercase text-[0.8rem] font-bold tracking-[0.1em] mb-6 text-white">Contact & Légal</h4>
+          <ul className="flex flex-col space-y-3 text-[0.85rem] text-white/80 font-medium mb-6">
+            <li><Link href="/nous-contacter" className="hover:text-[#E0D6C8] transition-colors">Nous contacter</Link></li>
+            <li><Link href="/nous-rejoindre" className="hover:text-[#E0D6C8] transition-colors">Nous rejoindre</Link></li>
+            <li><Link href="/mentions-legales" className="hover:text-[#E0D6C8] transition-colors">Mentions légales</Link></li>
+            <li><Link href="/politique-de-confidentialite" className="hover:text-[#E0D6C8] transition-colors">Politique de confidentialité</Link></li>
+          </ul>
           
-          <Link href="/nous-contacter" className="uppercase hover:text-[#1B3680] transition-colors tracking-widest text-[0.8rem] font-medium mb-10">
-            Nous écrire
-          </Link>
-          
-          <h5 className="text-[1.1rem] mb-4" style={{ fontFamily: "var(--font-optima)", fontWeight: 500 }}>Contact direct</h5>
-          <a href="mailto:contact@menuaconsulting.com" className="hover:text-[#1B3680] transition-colors text-[0.9rem] mb-12">
-            contact@menuaconsulting.com
-          </a>
-
-          <div className="flex items-center gap-3 mt-auto">
-            <a href="https://www.linkedin.com/company/menua-consulting/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full border border-[#222222] flex items-center justify-center hover:bg-[#222222] hover:text-[#E2DFD8] transition-all" aria-label="LinkedIn">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+          <div className="flex items-center">
+            <a 
+              href="https://www.linkedin.com/company/menua-consulting/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-10 h-10 rounded-full border border-white flex items-center justify-center hover:bg-[#E0D6C8] hover:border-[#E0D6C8] hover:text-[#223930] transition-all text-white" 
+              aria-label="LinkedIn"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
             </a>
           </div>
         </div>
@@ -61,14 +70,9 @@ export default function Footer() {
       </div>
       
       {/* Bas de page */}
-      <div className="max-w-7xl mx-auto pt-8 flex flex-col items-center gap-5">
-        <ul className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-[0.65rem] uppercase tracking-widest text-[#222222]/80 font-medium">
-          <li><Link href="/mentions-legales" className="hover:text-[#222222] transition-colors">Mentions légales</Link></li>
-          <li><Link href="/politique-de-confidentialite" className="hover:text-[#222222] transition-colors">Politique de confidentialité</Link></li>
-          <li><Link href="#" className="hover:text-[#222222] transition-colors">Plan du site</Link></li>
-        </ul>
-        <p className="text-[0.65rem] uppercase tracking-widest text-[#222222]/60 font-medium">
-          © {new Date().getFullYear()} MENUA CONSULTING. Tous droits réservés.
+      <div className="max-w-[1280px] mx-auto pt-6 border-t border-white/10 flex flex-col items-center">
+        <p className="text-[0.75rem] text-white/60 font-medium">
+          © 2024 Menua Consulting – Tous droits réservés.
         </p>
       </div>
     </footer>

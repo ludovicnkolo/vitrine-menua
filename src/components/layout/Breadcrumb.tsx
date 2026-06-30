@@ -11,9 +11,9 @@ interface BreadcrumbItem {
 export default function Breadcrumb({ items, light = false }: { items: BreadcrumbItem[], light?: boolean }) {
   const { t } = useLanguage();
 
-  const textColor = light ? "text-white/60" : "text-[#6B7794]";
-  const hoverColor = light ? "hover:text-white" : "hover:text-[#1C40C2]";
-  const activeColor = light ? "text-white" : "text-[#1B3680]";
+  const textColor = light ? "text-white/60" : "text-[#3A5448]";
+  const hoverColor = light ? "hover:text-white" : "hover:text-[#E0D6C8]";
+  const activeColor = light ? "text-white" : "text-[#223930]";
 
   return (
     <nav className={`flex items-center text-xs font-semibold tracking-wide ${textColor} mb-8`} aria-label="Breadcrumb">

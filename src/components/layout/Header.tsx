@@ -188,26 +188,8 @@ export default function Header() {
             </div>
           ))}
 
-          {/* "Nous rejoindre" & "Nous contacter" as plain nav links */}
-          <Link
-            href="/nous-rejoindre"
-            className="flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[15px] leading-[25px] font-normal text-[#E0D6C8] hover:text-white"
-            style={{ fontFamily: "'Optima LT W04 Demi Bold', Optima, sans-serif" }}
-            onMouseEnter={() => setOpenMenu(null)}
-          >
-            {t("Nous rejoindre", "Join Us")}
-          </Link>
-          <Link
-            href="/nous-contacter"
-            className="flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[15px] leading-[25px] font-normal text-white hover:text-[#E0D6C8]"
-            style={{ fontFamily: "'Optima LT W04 Demi Bold', Optima, sans-serif" }}
-            onMouseEnter={() => setOpenMenu(null)}
-          >
-            {t("Nous contacter", "Contact Us")}
-          </Link>
-
-          {/* LANG SWITCHER */}
-          <div className="flex items-center gap-2 border-l border-[#E0D6C8]/30 pl-4 ml-2">
+          {/* LANG SWITCHER — placed right after Actualités */}
+          <div className="flex items-center gap-2 border-l border-[#E0D6C8]/30 pl-4 ml-2 mr-2" onMouseEnter={() => setOpenMenu(null)}>
             <button
               onClick={() => setLang("FR")}
               className={`flex items-center gap-1.5 text-xs font-bold transition-all ${
@@ -226,6 +208,24 @@ export default function Header() {
               <FlagEN /> EN
             </button>
           </div>
+
+          {/* "Nous rejoindre" & "Nous contacter" as plain nav links */}
+          <Link
+            href="/nous-rejoindre"
+            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[12px] font-bold tracking-wide uppercase text-[#C49A6C] hover:text-white hover:bg-[#8B6240]/40 rounded-full"
+            style={{ fontFamily: "'Optima LT W04 Demi Bold', Optima, sans-serif", border: "1px solid #8B6240" }}
+            onMouseEnter={() => setOpenMenu(null)}
+          >
+            {t("Nous rejoindre", "Join Us")}
+          </Link>
+          <Link
+            href="/nous-contacter"
+            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[12px] font-bold tracking-wide uppercase text-[#E0D6C8] hover:text-white hover:bg-[#3E2510]/50 rounded-full"
+            style={{ fontFamily: "'Optima LT W04 Demi Bold', Optima, sans-serif", border: "1px solid #5A3A1E" }}
+            onMouseEnter={() => setOpenMenu(null)}
+          >
+            {t("Nous contacter", "Contact Us")}
+          </Link>
         </nav>
       </div>
 

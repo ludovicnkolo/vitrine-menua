@@ -1,0 +1,125 @@
+@reference "tailwindcss";
+
+@layer components {
+  /* ==========================================================================
+     1. HERO SECTION
+     ========================================================================== */
+  .home-hero-section {
+    @apply relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16;
+  }
+  .home-hero-overlay {
+    @apply absolute inset-0 bg-gradient-to-r from-[#122017] from-20% via-[#122017]/70 via-45% to-transparent to-65%;
+  }
+  .home-hero-content {
+    @apply relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24;
+  }
+  .home-hero-title {
+    @apply text-white mb-2 text-[2.2rem] md:text-[3.2rem] lg:text-[3.6rem] leading-[1.1] font-bold uppercase max-w-4xl tracking-tight;
+  }
+  .home-hero-subtitle {
+    @apply text-white text-[1.4rem] md:text-[1.8rem] lg:text-[2rem] leading-[1.2] font-bold mb-8 uppercase tracking-wide;
+  }
+  .home-hero-desc {
+    @apply text-white text-[1.05rem] md:text-[1.15rem] leading-[1.6] max-w-2xl font-normal space-y-4 mb-8;
+  }
+  .home-hero-btn {
+    @apply inline-flex items-center justify-center gap-3 bg-[#E0D6C8] text-[#122017] border border-[#E0D6C8] px-8 py-3.5 text-[0.75rem] font-bold tracking-[0.1em] uppercase transition-all hover:bg-transparent hover:text-[#E0D6C8] w-fit;
+  }
+
+  /* ==========================================================================
+     2. WAVE & INTRO
+     ========================================================================== */
+  .home-wave-section {
+    @apply relative w-full z-20 bg-[#FDFDFD];
+  }
+  .home-wave-container {
+    @apply absolute left-0 w-full h-[50px] md:h-[80px] -top-[49px] md:-top-[79px] overflow-hidden pointer-events-none drop-shadow-sm;
+  }
+  .home-wave-text {
+    @apply text-[#272A2C] text-[0.85rem] md:text-[1.05rem] font-medium leading-relaxed tracking-wide text-center;
+  }
+
+  /* ==========================================================================
+     3. CHIFFRES CLÉS
+     ========================================================================== */
+  .home-chiffres-section {
+    @apply w-full bg-[#FDFDFD] py-8 lg:py-12;
+  }
+  .home-chiffres-container {
+    @apply max-w-[900px] mx-auto px-6 lg:px-12 flex flex-col items-center;
+  }
+
+  /* ==========================================================================
+     4. DOMAINES D'INTERVENTION
+     ========================================================================== */
+  .home-domaines-section {
+    @apply w-full bg-[#F6F3F0] py-8 lg:py-10 my-12 lg:my-16;
+  }
+  .home-domaines-container {
+    @apply max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row gap-12 lg:gap-20 items-center;
+  }
+  .home-domaines-title-sm {
+    @apply text-[#272A2C] text-[0.85rem] font-bold uppercase tracking-[0.15em] mb-4 text-center sm:text-left;
+  }
+  .home-domaines-title-lg {
+    @apply text-[#272A2C] text-[1.5rem] md:text-[2rem] font-bold leading-tight mb-8 text-center sm:text-left;
+  }
+
+  /* ==========================================================================
+     5. POURQUOI MENUA
+     ========================================================================== */
+  .home-pourquoi-section {
+    @apply w-full relative py-8 lg:py-10 text-white overflow-hidden;
+  }
+  .home-pourquoi-container {
+    @apply max-w-[1280px] mx-auto px-6 lg:px-12 relative z-10;
+  }
+  .home-pourquoi-card {
+    @apply relative w-full sm:w-[48%] lg:w-[26%] flex-shrink-0 rounded-2xl p-7 backdrop-blur-md;
+  }
+
+  /* ==========================================================================
+     6. NOS SOLUTIONS
+     ========================================================================== */
+  .home-solutions-section {
+    @apply w-full bg-[#FDFDFD] mb-12 lg:mb-16 py-10;
+  }
+  .home-solutions-container {
+    @apply max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row gap-6 lg:gap-0 items-center;
+  }
+  .home-solutions-cream-block {
+    @apply w-full lg:w-[62%] relative z-10 lg:-mr-6 bg-[#F5F0EA] rounded-3xl py-12 px-8 lg:px-12 flex flex-col self-stretch justify-center;
+  }
+  .home-solutions-card {
+    @apply flex flex-col bg-white rounded-2xl p-5;
+  }
+  .home-solutions-img-wrapper {
+    @apply w-full lg:w-[45%] relative z-20 flex items-center justify-center;
+  }
+
+  /* ==========================================================================
+     7. SUPERVISION & CERTIFICATIONS
+     ========================================================================== */
+  .home-supervision-section {
+    @apply w-full bg-[#122017] py-8 lg:py-12 mb-12 lg:mb-16;
+  }
+  .home-supervision-grid {
+    @apply grid grid-cols-1 md:grid-cols-3 w-full mb-8 border-t border-b border-white/20 py-6;
+  }
+  .home-supervision-item {
+    @apply flex flex-col items-center text-center py-4;
+  }
+
+  /* ==========================================================================
+     8. ACTUALITÉS
+     ========================================================================== */
+  .home-news-section {
+    @apply w-full bg-[#FDFDFD] py-16 lg:py-24;
+  }
+  .home-news-card {
+    @apply bg-white border border-[#918279]/20 flex flex-col shadow-sm hover:shadow-lg transition-all cursor-pointer h-full;
+  }
+  .home-news-img-wrapper {
+    @apply relative h-[220px] w-full overflow-hidden;
+  }
+}

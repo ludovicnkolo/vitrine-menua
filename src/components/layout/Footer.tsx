@@ -8,7 +8,7 @@ export default function Footer() {
         {/* Colonne 1: Branding */}
         <div className="flex flex-col">
           <div className="flex flex-col mb-4">
-             <span className="text-[#272A2C] leading-none" style={{ fontFamily: "var(--font-playfair), var(--font-inter), sans-serif", fontSize: "2.2rem", fontWeight: 400 }}>
+             <span className="text-[#272A2C] leading-none text-[2.2rem] font-normal">
                MENUA
              </span>
              <span className="text-[#272A2C] uppercase tracking-[0.25em] text-[0.65rem] mt-1 font-normal">

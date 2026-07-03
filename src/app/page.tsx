@@ -25,43 +25,54 @@ export default function Home() {
         </div>
 
         <div className="home-hero-content">
-          <div className="relative py-12 pl-10">
-            {/* Decorative golden bracket */}
-            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-[#E0D6C8]" />
-            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#E0D6C8]" />
-            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#E0D6C8]" />
-            
+          <div className="relative py-12">
             <div className="relative">
-            <h1 className="home-hero-title">
-              {t("Externalisation\nopérationnelle", "Operational\noutsourcing").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-            </h1>
-            <h2 className="home-hero-subtitle">
-              {t("des fonctions back &\nmiddle office", "of back &\nmiddle office functions").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-            </h2>
-            
-            <div className="home-hero-desc">
-              <p className="text-white">
-                {t(
-                  "Nous aidons les entreprises à optimiser leurs opérations back et middle office afin de leur permettre de se concentrer sur leurs décisions stratégiques.",
-                  "We help companies optimize their back and middle office operations so they can focus on strategic decisions."
-                )}
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              <Link
-                href="/nous-contacter"
-                className="home-hero-btn"
-              >
-                {t("Présenter un besoin", "Present a need")} <ArrowRight size={16} />
-              </Link>
-
-              <div className="flex items-center gap-3 text-white">
-                <Globe className="shrink-0 text-white" size={24} strokeWidth={1.5} />
-                <p className="text-white text-[0.75rem] font-medium leading-relaxed max-w-[250px]">
-                  {t("Interventions en français et en anglais – profils opérationnels bilingues.", "Interventions in French and English – bilingual operational profiles.")}
+              <h1 className="home-hero-title">
+                {t("Externalisation\nopérationnelle.", "Operational\noutsourcing.").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+              </h1>
+              <h2 className="home-hero-subtitle">
+                {t("Sérénité garantie.", "Guaranteed serenity.")}
+              </h2>
+              
+              <div className="home-hero-desc max-w-3xl">
+                <p className="text-white mb-6">
+                  {t(
+                    "Nous sécurisons l'exécution de vos opérations back et middle office pour que vos équipes se concentrent sur les décisions stratégiques qui comptent.",
+                    "We secure the execution of your back and middle office operations so your teams can focus on strategic decisions that matter."
+                  )}
                 </p>
+
+                {/* Features List */}
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-white text-[0.85rem] font-normal tracking-wide mb-10">
+                  <div className="flex items-center gap-2">
+                    <Globe className="shrink-0 text-[#D9B151]" size={20} strokeWidth={1.5} />
+                    <span>{t("Interventions en français et en anglais", "Interventions in French and English")}</span>
+                  </div>
+                  <span className="text-[#D9B151] hidden sm:block">•</span>
+                  <div className="flex items-center gap-2">
+                    <Users className="shrink-0 text-[#D9B151]" size={20} strokeWidth={1.5} />
+                    <span>{t("Profils bilingues et certifiés", "Bilingual and certified profiles")}</span>
+                  </div>
+                </div>
               </div>
+
+              {/* CTA & Trust Badge */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8">
+                <Link
+                  href="/nous-contacter"
+                  className="home-hero-btn"
+                >
+                  {t("PRÉSENTER UN BESOIN", "PRESENT A NEED")} <ArrowRight size={16} />
+                </Link>
+
+                <div className="flex items-center gap-4 text-white">
+                  <div className="shrink-0 w-[42px] h-[42px] flex items-center justify-center border border-[#D9B151] rounded-[0.4rem]">
+                    <ShieldCheck className="text-[#D9B151]" size={24} strokeWidth={1.5} />
+                  </div>
+                  <p className="text-white text-xs font-normal leading-relaxed max-w-[180px]">
+                    {t("Supervision par des\nprofessionnels habilités", "Supervision by\nauthorized professionals").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

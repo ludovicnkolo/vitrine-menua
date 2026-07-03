@@ -86,7 +86,7 @@ export default function PolitiqueConfidentialite() {
   ];
 
   return (
-    <main className="flex flex-col w-full bg-[#223930] text-white font-sans pt-24">
+    <main className="flex flex-col w-full bg-[#223930] text-white pt-24">
       <section className="px-8 py-24">
         <div className="max-w-3xl mx-auto">
           <div className="text-[#E0D6C8] text-[0.65rem] tracking-[0.05em] uppercase font-semibold text-[14px] mb-4">
@@ -105,7 +105,7 @@ export default function PolitiqueConfidentialite() {
           <div className="space-y-10 text-gray-300 text-sm leading-relaxed">
             {sections.map((section, i) => (
               <div key={i}>
-                <h2 className="font-sans text-xl font-bold text-white mb-4">{section.title}</h2>
+                <h2 className="font-serif text-xl font-bold text-white mb-4">{section.title}</h2>
                 {section.content.split("\n\n").map((para, j) => (
                   <p key={j} className="mb-3 last:mb-0">{para}</p>
                 ))}

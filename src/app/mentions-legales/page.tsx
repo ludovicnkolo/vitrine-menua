@@ -6,7 +6,7 @@ export default function MentionsLegales() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full bg-[#223930] text-white font-sans pt-24">
+    <main className="flex flex-col w-full bg-[#223930] text-white pt-24">
       <section className="px-8 py-24">
         <div className="max-w-3xl mx-auto">
           <div className="text-[#E0D6C8] text-[0.65rem] tracking-[0.05em] uppercase font-semibold text-[14px] mb-4">
@@ -28,22 +28,22 @@ export default function MentionsLegales() {
             </div>
 
             <div>
-              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Éditeur du site","Site Publisher")}</h2>
+              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Éditeur du site","Site Publisher")}</h2>
               <p>MENUA CONSULTING<br/>92 rue des Pyrénées – 75020 Paris<br/>Email : <a href="mailto:contact@menuaconsulting.com" className="text-[#E0D6C8] hover:underline">contact@menuaconsulting.com</a><br/>{t("Téléphone","Phone")} : <a href="tel:+33686877914" className="text-[#E0D6C8] hover:underline">+33 6 86 87 79 14</a></p>
             </div>
 
             <div>
-              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Directrice de la publication","Publication Director")}</h2>
+              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Directrice de la publication","Publication Director")}</h2>
               <p>{t("Rosette Fouelefack, Présidente de MENUA CONSULTING","Rosette Fouelefack, President of MENUA CONSULTING")}</p>
             </div>
 
             <div>
-              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Hébergement","Hosting")}</h2>
+              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Hébergement","Hosting")}</h2>
               <p className="text-gray-500 italic">{t("Le site est hébergé par : (à compléter ultérieurement)","The site is hosted by: (to be completed later)")}</p>
             </div>
 
             <div>
-              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Propriété intellectuelle","Intellectual Property")}</h2>
+              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Propriété intellectuelle","Intellectual Property")}</h2>
               <p>{t(
                 "L'ensemble du contenu présent sur ce site, notamment les textes, éléments graphiques, logos, images, documents et éléments de structure, est protégé par les dispositions applicables en matière de propriété intellectuelle, sauf mention contraire.",
                 "All content on this site, including texts, graphic elements, logos, images, documents, and structural elements, is protected by applicable intellectual property provisions, unless otherwise stated."
@@ -55,7 +55,7 @@ export default function MentionsLegales() {
             </div>
 
             <div>
-              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Responsabilité","Liability")}</h2>
+              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Responsabilité","Liability")}</h2>
               <p>{t(
                 "MENUA CONSULTING s'efforce d'assurer l'exactitude et la mise à jour des informations diffusées sur le site. Toutefois, la société ne peut garantir l'exhaustivité ou l'absence d'erreurs de l'ensemble des contenus publiés.",
                 "MENUA CONSULTING strives to ensure the accuracy and updating of the information published on the site. However, the company cannot guarantee the completeness or absence of errors in all published content."
@@ -71,7 +71,7 @@ export default function MentionsLegales() {
             </div>
 
             <div>
-              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Confidentialité","Confidentiality")}</h2>
+              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Confidentialité","Confidentiality")}</h2>
               <p>{t(
                 "MENUA CONSULTING attache une importance particulière à la confidentialité des informations qui lui sont transmises dans le cadre de ses échanges, demandes de contact, candidatures ou relations professionnelles.",
                 "MENUA CONSULTING attaches particular importance to the confidentiality of information transmitted to it in the context of its exchanges, contact requests, applications, or professional relationships."
@@ -83,7 +83,7 @@ export default function MentionsLegales() {
             </div>
 
             <div>
-              <h2 className="font-sans text-xl font-bold text-white mb-4">{t("Contact","Contact")}</h2>
+              <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Contact","Contact")}</h2>
               <p>{t(
                 "Pour toute question relative au site ou à son contenu, vous pouvez contacter MENUA CONSULTING à l'adresse suivante :",
                 "For any questions regarding the site or its content, you can contact MENUA CONSULTING at the following address:"

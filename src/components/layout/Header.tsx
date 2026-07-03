@@ -150,7 +150,6 @@ export default function Header() {
                     ? "text-[#E0D6C8]"
                     : "text-white hover:text-[#E0D6C8]"
                 }`}
-                style={{ fontFamily: "var(--font-inter), 'Inter', sans-serif" }}
               >
                 {menus[key].label}
                 <ChevronDown
@@ -213,7 +212,7 @@ export default function Header() {
           <Link
             href="/nous-rejoindre"
             className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#C49A6C] hover:text-white hover:bg-[#8B6240]/40 rounded-full"
-            style={{ fontFamily: "var(--font-inter), 'Inter', sans-serif", border: "1px solid #8B6240" }}
+            style={{ border: "1px solid #8B6240" }}
             onMouseEnter={() => setOpenMenu(null)}
           >
             {t("Nous rejoindre", "Join Us")}
@@ -221,7 +220,7 @@ export default function Header() {
           <Link
             href="/nous-contacter"
             className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#E0D6C8] hover:text-white hover:bg-[#3E2510]/50 rounded-full"
-            style={{ fontFamily: "var(--font-inter), 'Inter', sans-serif", border: "1px solid #5A3A1E" }}
+            style={{ border: "1px solid #5A3A1E" }}
             onMouseEnter={() => setOpenMenu(null)}
           >
             {t("Nous contacter", "Contact Us")}

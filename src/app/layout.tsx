@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
-import { DM_Sans, Playfair_Display } from "next/font/google";
+import { Playfair_Display } from "next/font/google";
 import "./globals.css";
-
-/* ── DM Sans = police corps — g simple boucle nativement ── */
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
-});
 
 /* ── Playfair Display (titres) ── */
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair", weight: ["400", "500", "600", "700"], style: ["normal", "italic"], display: "swap" });
@@ -44,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`${dmSans.variable} ${playfair.variable} font-sans min-h-screen flex flex-col antialiased bg-[#F5F2EB] text-[#223930]`}>
+      <body className={`${playfair.variable} font-sans min-h-screen flex flex-col antialiased bg-[#F5F2EB] text-[#223930]`}>
         <LanguageProvider>
           <Header />
           {children}

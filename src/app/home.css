@@ -23,11 +23,11 @@
   }
   .home-hero-desc {
     @apply text-white/90 text-base lg:text-lg leading-relaxed max-w-2xl font-light space-y-4 mb-8;
-    font-family: var(--font-inter), "Inter", sans-serif;
+    font-family: var(--font-playfair), "Playfair Display", serif;
   }
   .home-hero-btn {
-    @apply inline-flex items-center justify-center gap-3 bg-[#E0D6C8] text-[#122017] border border-[#E0D6C8] px-8 py-3.5 text-xs font-bold tracking-wider uppercase transition-all hover:bg-transparent hover:text-[#E0D6C8] w-fit;
-    font-family: var(--font-inter), "Inter", sans-serif;
+    @apply inline-flex items-center justify-center gap-3 bg-[#D9B151] text-[#122017] border border-[#D9B151] px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:bg-transparent hover:text-[#D9B151] w-fit rounded-sm shadow-md;
+    font-family: var(--font-playfair), "Playfair Display", serif;
   }
 
   /* ==========================================================================
@@ -41,7 +41,7 @@
   }
   .home-wave-text {
     @apply text-gray-700 text-lg leading-relaxed font-light text-center;
-    font-family: var(--font-inter), "Inter", sans-serif;
+    font-family: var(--font-playfair), "Playfair Display", serif;
   }
 
   /* ==========================================================================

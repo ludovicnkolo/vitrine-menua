@@ -1,23 +1,17 @@
 import type { Metadata } from "next";
-import { Raleway, Cormorant_Garamond } from "next/font/google";
+import { DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-/* ── Raleway ≈ Optima LT W04 (humaniste élégant sans-serif) ── */
-const fontRaleway = Raleway({
+/* ── DM Sans = police corps — g simple boucle nativement ── */
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-optima",
-  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter",
   display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-/* ── Cormorant Garamond ≈ Operetta 18 (élégant serif affichage, chiffres clés) ── */
-const fontCormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
+/* ── Playfair Display (titres) ── */
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair", weight: ["400", "500", "600", "700"], style: ["normal", "italic"], display: "swap" });
 
 export const metadata: Metadata = {
   title: "Menua Consulting | Externalisation Back & Middle Office",
@@ -50,7 +44,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`${fontRaleway.variable} ${fontCormorant.variable} min-h-screen flex flex-col antialiased bg-[#F5F2EB] text-[#223930]`}>
+      <body className={`${dmSans.variable} ${playfair.variable} font-sans min-h-screen flex flex-col antialiased bg-[#F5F2EB] text-[#223930]`}>
         <LanguageProvider>
           <Header />
           {children}

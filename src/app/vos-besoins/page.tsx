@@ -29,16 +29,20 @@ export default function VosBesoinsPage() {
               <p className="text-[#D9B151] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.2em] uppercase mb-6">
                 {t("Expertises", "Expertise")}
               </p>
-              <h1 className="text-white mb-8 text-[2.5rem] md:text-[3.5rem] lg:text-[4rem] leading-[1.05] font-bold uppercase max-w-3xl tracking-tight">
+              <h1 className="font-serif text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] text-white mb-8">
                 {t("Vos\nbesoins", "Your\nneeds").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
               </h1>
-              <div className="text-white/90 text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-xl font-normal space-y-3">
+              <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-xl font-normal space-y-3" style={{ color: 'white' }}>
                 <p>
                   MENUA CONSULTING {t(
-                    "intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées sur l'ensemble des fonctions",
-                    "supports financial, accounting, wealth, data and regulated teams on all"
+                    "intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l'ensemble des fonctions",
+                    "supports financial, accounting, wealth, IT and regulated teams on all"
                   )}{" "}
-                  <span className="text-[#D9B151] font-semibold">back & middle office.</span>
+                  <span className="text-[#D9B151] font-semibold">back et middle office</span>{" "}
+                  {t(
+                    "nécessitant rigueur, continuité et fiabilité opérationnelle.",
+                    "requiring rigor, continuity and operational reliability."
+                  )}
                 </p>
               </div>
             </div>
@@ -51,14 +55,14 @@ export default function VosBesoinsPage() {
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
           {/* Text left */}
           <div className="w-full lg:w-[55%] flex flex-col">
-            <p className="text-[#D9B151] text-[0.75rem] font-bold uppercase tracking-[0.2em] mb-4">
+            <p className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151] mb-4">
               {t("01 — Domaine", "01 — Area")}
             </p>
-            <h2 className="text-white text-[2rem] md:text-[2.6rem] font-bold uppercase leading-tight mb-6 tracking-tight">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-10">
               {t("Finance &\nReporting", "Finance &\nReporting").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
             </h2>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
-            <p className="text-white/80 text-[0.95rem] leading-[1.8] mb-8">
+            <p className="text-white text-[0.95rem] leading-[1.8] mb-8">
               {t(
                 "Production, structuration et fiabilisation de reportings financiers destinés au pilotage de la performance, au suivi de l'activité et à l'aide à la décision.",
                 "Production, structuring and reliability of financial reporting intended for performance management, activity monitoring and decision support."
@@ -70,14 +74,19 @@ export default function VosBesoinsPage() {
                 t("KPI | Dashboard", "KPI | Dashboard"),
                 t("Analyse de performance", "Performance analysis"),
                 t("Support direction financière", "Financial direction support"),
-                t("Consolidation de données", "Data consolidation"),
+                t("Consolidation de donnée", "Data consolidation"),
+                t("Analyse financière", "Financial analysis"),
+                t("Consolidation des données", "Data consolidation"),
+                t("Préparation de reportings pour direction financière", "Preparation of reporting for financial direction"),
+                t("Suivi d'activité", "Activity tracking"),
                 t("Reporting mensuel / trimestriel", "Monthly / quarterly reporting"),
                 t("Reporting de trésorerie", "Treasury reporting"),
+                t("Reporting de rentabilité", "Profitability reporting"),
                 t("Suivi des indicateurs", "Indicator tracking"),
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 text-white/70 text-[0.82rem]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0" />
-                  {item}
+                <div key={i} className="flex items-start gap-3 text-white text-[0.82rem]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
+                  <span>{item}</span>
                 </div>
               ))}
             </div>
@@ -112,10 +121,10 @@ export default function VosBesoinsPage() {
           </div>
           {/* Right: text */}
           <div className="w-full lg:w-[55%] order-1 lg:order-2 flex flex-col sticky top-24 self-start">
-            <p className="text-[#8B6240] text-[0.75rem] font-bold uppercase tracking-[0.2em] mb-4">
+            <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
               {t("02 — Domaine", "02 — Area")}
             </p>
-            <h2 className="text-[#122017] text-[2rem] md:text-[2.6rem] font-bold uppercase leading-tight mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
               {t("Contrôle\nde gestion", "Management\nControl").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
             </h2>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
@@ -128,17 +137,21 @@ export default function VosBesoinsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
                 t("Suivi budgétaire", "Budget tracking"),
-                t("Analyse des écarts (réalisé vs budget)", "Variance analysis (actual vs budget)"),
+                t("Analyse des écarts entre réalisé, budget et prévisionnel", "Variance analysis between actual, budget and forecast"),
                 t("Tableaux de bord", "Dashboards"),
                 t("Pilotage de performance", "Performance management"),
-                t("Suivi des coûts et marges", "Cost and margin tracking"),
+                t("Suivi des coûts, charges et marges", "Tracking of costs, expenses and margins"),
                 t("Analyse de rentabilité", "Profitability analysis"),
-                t("Reportings de gestion", "Management reporting"),
-                t("Support aux directions financières", "Financial direction support"),
+                t("Suivi des indicateurs opérationnels", "Tracking of operational indicators"),
+                t("Préparation de reportings de gestion", "Preparation of management reporting"),
+                t("Suivi du chiffre d'affaires et des objectifs", "Tracking of turnover and objectives"),
+                t("Mise à jour de fichiers de pilotage", "Update of management files"),
+                t("Consolidation des données de gestion", "Consolidation of management data"),
+                t("Support aux directions financières et responsables opérationnels", "Support to financial directions and operational managers"),
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 text-[#122017]/70 text-[0.82rem]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0" />
-                  {item}
+                <div key={i} className="flex items-start gap-3 text-[#122017]/70 text-[0.82rem]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
+                  <span>{item}</span>
                 </div>
               ))}
             </div>
@@ -152,32 +165,41 @@ export default function VosBesoinsPage() {
       }}>
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col items-center mb-14">
-            <p className="text-[#D9B151] text-[0.75rem] font-bold uppercase tracking-[0.2em] mb-4">
+            <p className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151] mb-4">
               {t("03 — Domaine", "03 — Area")}
             </p>
-            <h2 className="text-white text-[2rem] md:text-[2.6rem] font-bold uppercase leading-tight text-center mb-4">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-center text-white mb-10">
               {t("Risques & Conformité", "Risk & Compliance")}
             </h2>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-6" />
-            <p className="text-white/70 text-[0.95rem] text-center max-w-2xl leading-[1.8]">
+            <p className="text-white text-[0.95rem] text-center max-w-2xl leading-[1.8]">
               {t(
                 "Appui opérationnel aux équipes risques et conformité dans le traitement, le contrôle et la fiabilisation des dossiers sensibles, dans le respect des procédures internes et des exigences réglementaires applicables.",
                 "Operational support to risk and compliance teams in the processing, control and reliability of sensitive files, in compliance with internal procedures and applicable regulatory requirements."
               )}
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6 max-w-[1100px] mx-auto mt-8">
             {[
-              { label: "KYC", desc: t("Collecte, vérification et revue des dossiers clients.", "Collection, verification and review of client files.") },
-              { label: "LCB-FT / AML", desc: t("Traitement des alertes, analyse des mouvements inhabituels.", "Alert processing, analysis of unusual movements.") },
-              { label: t("Contrôle documentaire", "Documentary control"), desc: t("Analyse et complétude des pièces justificatives.", "Analysis and completeness of supporting documents.") },
-              { label: t("Remédiation KYC", "KYC Remediation"), desc: t("Mise à jour et correction des dossiers non-conformes.", "Update and correction of non-compliant files.") },
-              { label: t("Suivi des procédures", "Procedure monitoring"), desc: t("Respect des procédures internes et exigences réglementaires.", "Compliance with internal procedures and regulatory requirements.") },
-            ].map((card, i) => (
-              <div key={i} className="relative flex flex-col bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/15 hover:bg-white/15 transition-all">
-                <span className="text-[#D9B151]/50 text-[2.5rem] font-bold leading-none mb-3 select-none">0{i + 1}</span>
-                <h3 className="text-white text-[0.85rem] font-bold uppercase tracking-wide mb-3 leading-tight">{card.label}</h3>
-                <p className="text-white/65 text-[0.78rem] leading-[1.7]">{card.desc}</p>
+              "KYC",
+              "LCB-FT",
+              "AML",
+              t("Contrôle documentaire", "Documentary control"),
+              t("Analyse et complétude des dossiers clients", "Analysis and completeness of client files"),
+              t("Vérification des pièces justificatives", "Verification of supporting documents"),
+              t("Entrée en relation client", "Client onboarding"),
+              t("Revue périodique des dossiers", "Periodic review of files"),
+              t("Remédiation KYC", "KYC Remediation"),
+              t("Traitement des alertes de conformité", "Processing of compliance alerts"),
+              t("Analyse des mouvements inhabituels", "Analysis of unusual movements"),
+              t("Support aux équipes risques", "Support to risk teams"),
+              t("Support aux équipes conformité", "Support to compliance teams"),
+              t("Suivi des procédures internes", "Monitoring of internal procedures"),
+              t("Préparation de dossiers pour validation par les équipes habilitées", "Preparation of files for validation by authorized teams"),
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-3 text-white text-[0.88rem] bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-2" />
+                <span>{item}</span>
               </div>
             ))}
           </div>
@@ -189,10 +211,10 @@ export default function VosBesoinsPage() {
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-start gap-16">
           {/* Left: text */}
           <div className="w-full lg:w-[55%] flex flex-col">
-            <p className="text-[#8B6240] text-[0.75rem] font-bold uppercase tracking-[0.2em] mb-4">
+            <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
               {t("04 — Domaine", "04 — Area")}
             </p>
-            <h2 className="text-[#122017] text-[2rem] md:text-[2.6rem] font-bold uppercase leading-tight mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
               {t("Support\nComptable & Data", "Accounting &\nData Support").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
             </h2>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
@@ -202,21 +224,26 @@ export default function VosBesoinsPage() {
                 "Operational support to accounting, administrative and data teams in processing, making reliable and structuring information necessary for accounting production and reporting."
               )}
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
-                { label: t("Comptabilité opérationnelle", "Operational accounting"), items: [t("Saisie comptable", "Accounting entry"), t("Rapprochements bancaires", "Bank reconciliations"), t("Lettrage des comptes", "Account lettering"), t("Contrôle des pièces", "Document control")] },
-                { label: t("Data & Structuration", "Data & Structuring"), items: [t("Data cleaning", "Data cleaning"), t("Bases de données", "Databases"), t("Contrôle de cohérence", "Consistency control"), t("Reporting files", "Reporting files")] },
-              ].map((group, i) => (
-                <div key={i} className="bg-[#F6F3F0] rounded-xl p-5 border border-[#E0D6C8]/50">
-                  <h3 className="text-[#122017] text-[0.78rem] font-bold uppercase tracking-wide mb-3">{group.label}</h3>
-                  <ul className="space-y-2">
-                    {group.items.map((item, j) => (
-                      <li key={j} className="flex items-center gap-2 text-[#122017]/70 text-[0.8rem]">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+                t("Saisie comptable", "Accounting entry"),
+                t("Rapprochements bancaires", "Bank reconciliations"),
+                t("Lettrage des comptes", "Account lettering"),
+                t("Contrôle et classement des pièces comptables", "Control and filing of accounting documents"),
+                t("Préparation des déclarations de TVA", "Preparation of VAT returns"),
+                t("Préparation des éléments comptables pour révision", "Preparation of accounting elements for review"),
+                t("Suivi des factures clients et fournisseurs", "Tracking of client and supplier invoices"),
+                t("Relances administratives liées aux pièces manquantes", "Administrative follow-ups linked to missing documents"),
+                t("Data cleaning", "Data cleaning"),
+                t("Structuration et mise à jour de bases de données", "Structuring and updating of databases"),
+                t("Contrôle de cohérence des données", "Data consistency control"),
+                t("Préparation de fichiers de reporting", "Preparation of reporting files"),
+                t("Consolidation de données comptables et opérationnelles", "Consolidation of accounting and operational data"),
+                t("Archivage et organisation documentaire", "Archiving and document organization"),
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 text-[#122017]/75 text-[0.82rem]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
+                  <span>{item}</span>
                 </div>
               ))}
             </div>
@@ -239,31 +266,40 @@ export default function VosBesoinsPage() {
       <section id="gestion-patrimoine" className="w-full bg-[#122017] py-12 lg:py-16 mb-10 lg:mb-16">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col items-center mb-14">
-            <p className="text-[#D9B151] text-[0.75rem] font-bold uppercase tracking-[0.2em] mb-4">
+            <p className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151] mb-4">
               {t("05 — Domaine", "05 — Area")}
             </p>
-            <h2 className="text-white text-[2rem] md:text-[2.6rem] font-bold uppercase leading-tight text-center mb-4">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-center text-white mb-10">
               {t("Gestion de Patrimoine & CGP", "Wealth Management & IFA")}
             </h2>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-6" />
-            <p className="text-white/60 text-[0.9rem] text-center max-w-2xl leading-[1.8]">
+            <p className="text-white text-[0.9rem] text-center max-w-2xl leading-[1.8]">
               {t(
                 "Appui opérationnel aux cabinets de gestion de patrimoine, family offices et structures patrimoniales dans le traitement, la préparation et le suivi administratif des dossiers clients.",
                 "Operational support to wealth management firms, family offices and wealth structures in the processing, preparation and administrative follow-up of client files."
               )}
             </p>
           </div>
-          {/* Cards layout like director card in nous-connaitre */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-[960px] mx-auto">
+          {/* Grid of bullets */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-[1100px] mx-auto mt-8">
             {[
-              { num: "01", title: t("Dossiers clients", "Client files"), desc: t("Préparation des dossiers d'entrée en relation, collecte et contrôle des pièces justificatives, contrôle de complétude.", "Preparation of onboarding files, collection and control of supporting documents, completeness check.") },
-              { num: "02", title: t("Mises à jour & formulaires", "Updates & forms"), desc: t("Mise à jour des informations clients, préparation et pré-remplissage de formulaires, support aux souscriptions.", "Update of client information, preparation and pre-filling of forms, subscription support.") },
-              { num: "03", title: t("Opérations patrimoniales", "Wealth operations"), desc: t("Support aux arbitrages, rachats partiels ou totaux, suivi des demandes clients dans le respect des procédures internes.", "Support for arbitrations, partial or total redemptions, client request follow-up in compliance with internal procedures.") },
+              t("Préparation des dossiers d'entrée en relation", "Preparation of onboarding files"),
+              t("Collecte et contrôle des pièces justificatives", "Collection and control of supporting documents"),
+              t("Contrôle de complétude des dossiers clients", "Completeness control of client files"),
+              t("Mise à jour des informations clients", "Update of client information"),
+              t("Préparation et pré remplissage de formulaires", "Preparation and pre-filling of forms"),
+              t("Support administratif aux souscriptions", "Administrative support for subscriptions"),
+              t("Support aux arbitrages", "Support for arbitrations"),
+              t("Support aux rachats partiels ou totaux", "Support for partial or total redemptions"),
+              t("Suivi des demandes clients", "Follow-up of client requests"),
+              t("Organisation et archivage documentaire", "Document organization and archiving"),
+              t("Mise à jour des bases clients", "Update of client databases"),
+              t("Préparation de dossiers pour validation par les conseillers habilités", "Preparation of files for validation by authorized advisors"),
+              t("Suivi des opérations patrimoniales dans le respect des procédures internes", "Follow-up of wealth operations in compliance with internal procedures"),
             ].map((item, i) => (
-              <div key={i} className="flex flex-col bg-white/10 backdrop-blur-sm rounded-xl p-7 border border-white/15 hover:bg-white/15 transition-all">
-                <span className="text-[#D9B151]/50 text-[2.5rem] font-bold leading-none mb-3 select-none">{item.num}</span>
-                <h3 className="text-white text-[0.9rem] font-bold uppercase tracking-wide mb-3">{item.title}</h3>
-                <p className="text-white/65 text-[0.82rem] leading-[1.7]">{item.desc}</p>
+              <div key={i} className="flex items-start gap-3 text-white text-[0.85rem] bg-[#1a2e24] p-4 rounded-xl border border-white/5">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-2" />
+                <span>{item}</span>
               </div>
             ))}
           </div>
@@ -275,10 +311,10 @@ export default function VosBesoinsPage() {
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-start gap-16">
           {/* Left: sticky title block */}
           <div className="w-full lg:w-[38%] flex flex-col sticky top-24 self-start">
-            <p className="text-[#8B6240] text-[0.75rem] font-bold uppercase tracking-[0.2em] mb-4">
+            <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
               {t("06 — Domaine", "06 — Area")}
             </p>
-            <h2 className="text-[#122017] text-[2rem] md:text-[2.6rem] font-bold uppercase leading-tight mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
               {t("Autres besoins\nopérationnels", "Other operational\nneeds").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
             </h2>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-6" />
@@ -293,21 +329,27 @@ export default function VosBesoinsPage() {
               {t("FR / EN — Bilingue", "FR / EN — Bilingual")}
             </div>
           </div>
-          {/* Right: cards */}
-          <div className="w-full lg:w-[62%] flex flex-col gap-5">
+          {/* Right: cards list */}
+          <div className="w-full lg:w-[62%] grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
-              { title: t("Renfort opérationnel ponctuel", "Occasional operational reinforcement"), desc: t("Missions ponctuelles de renfort, traitement de dossiers en volume, support en période de surcharge d'activité.", "Occasional reinforcement missions, volume file processing, support during periods of activity overload.") },
-              { title: t("Support administratif & organisationnel", "Administrative & organizational support"), desc: t("Classement, archivage, organisation documentaire, préparation et mise à jour de fichiers de suivi, coordination entre équipes.", "Filing, archiving, document organization, preparation and update of tracking files, coordination between teams.") },
-              { title: t("Structuration de processus", "Process structuring"), desc: t("Assistance à la formalisation de procédures internes, aide à la structuration de process opérationnels, préparation de documents administratifs.", "Assistance in formalizing internal procedures, help structuring operational processes, preparation of administrative documents.") },
-            ].map((pillar, i) => (
-              <div key={i} className="flex items-start gap-6 bg-white rounded-xl p-7 border border-[#E0D6C8]/50 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 text-white font-bold text-[0.75rem] tracking-widest" style={{ backgroundColor: ["#122017", "#5A3A1E", "#8B6240"][i] }}>
-                  0{i + 1}
-                </div>
-                <div>
-                  <h3 className="text-[#122017] text-[1rem] font-bold mb-2 uppercase tracking-wide">{pillar.title}</h3>
-                  <p className="text-[#122017]/70 text-[0.88rem] leading-[1.7]">{pillar.desc}</p>
-                </div>
+              t("Missions ponctuelles de renfort opérationnel", "Occasional operational reinforcement missions"),
+              t("Support administratif financier", "Financial administrative support"),
+              t("Traitement de dossiers en volume", "Volume file processing"),
+              t("Classement, archivage et organisation documentaire", "Filing, archiving and document organization"),
+              t("Préparation et mise à jour de fichiers de suivi", "Preparation and update of tracking files"),
+              t("Support à la gestion d'opérations transverses", "Support for the management of transverse operations"),
+              t("Assistance à la formalisation de procédures internes", "Assistance in the formalization of internal procedures"),
+              t("Aide à la structuration de process opérationnels", "Help in structuring operational processes"),
+              t("Préparation de documents administratifs", "Preparation of administrative documents"),
+              t("Suivi de demandes internes ou clients", "Follow-up of internal or client requests"),
+              t("Support en période de surcharge d'activité", "Support during periods of activity overload"),
+              t("Remplacement ou appui temporaire d'équipe", "Replacement or temporary team support"),
+              t("Coordination entre équipes internes et prestataires externalisés", "Coordination between internal teams and external providers"),
+              t("Étude de besoins spécifiques non listés dans les rubriques précédentes", "Study of specific needs not listed in previous sections"),
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-3 bg-white p-4 rounded-xl border border-[#E0D6C8]/50 shadow-sm text-[#122017]/80 text-[0.82rem]">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
+                <span>{item}</span>
               </div>
             ))}
           </div>

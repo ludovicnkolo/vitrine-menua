@@ -31,10 +31,10 @@ export default function NousRejoindre() {
               <p className="text-[#E0D6C8] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.15em] uppercase mb-8">
                 {t("Carrières", "Careers")}
               </p>
-              <h1 className="text-white mb-8 text-[2.2rem] md:text-[3.2rem] lg:text-[3.6rem] leading-[1.1] font-bold uppercase max-w-4xl tracking-tight">
+              <h1 className="font-serif text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] text-white mb-8">
                 {t("Nous rejoindre", "Join Us")}
               </h1>
-              <div className="text-white/95 text-[1.05rem] md:text-[1.15rem] leading-[1.6] max-w-2xl font-normal space-y-4 mb-8">
+              <div className="text-white text-[1.05rem] md:text-[1.15rem] leading-[1.6] max-w-2xl font-normal space-y-4 mb-8" style={{ color: 'white' }}>
                 <p>
                   {t(
                     "MENUA CONSULTING recrute des profils opérationnels autonomes, rigoureux, fiables et organisés.",
@@ -90,7 +90,7 @@ export default function NousRejoindre() {
 
             <div className="flex items-center gap-4 mb-6">
               <Users size={32} className="text-[#223930] font-light" strokeWidth={1} />
-              <h2 className="text-[#223930] text-[1.1rem] font-bold uppercase tracking-wider">
+              <h2 className="font-serif text-2xl font-bold text-[#223930]">
                 {t("Notre engagement", "Our commitment")}
               </h2>
             </div>
@@ -105,7 +105,7 @@ export default function NousRejoindre() {
 
           {/* Right Column (Form) */}
           <div id="candidature-form" className="w-full lg:w-2/3 border border-[#E0D6C8]/30 p-8 md:p-12">
-            <h2 className="text-[#223930] text-[1.3rem] font-bold uppercase mb-4 text-center tracking-wider">
+            <h2 className="font-serif text-2xl font-bold text-center text-[#223930] mb-4">
               {t("Formulaire de candidature", "Application Form")}
             </h2>
             <div className="w-10 h-[2px] bg-[#d5a864] mx-auto mb-12" />

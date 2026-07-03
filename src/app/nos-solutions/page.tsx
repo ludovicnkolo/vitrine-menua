@@ -29,14 +29,14 @@ export default function NosSolutionsPage() {
               <p className="text-[#D9B151] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.2em] uppercase mb-6">
                 {t("Dispositifs", "Solutions")}
               </p>
-              <h1 className="text-white mb-8 text-[2.5rem] md:text-[3.5rem] lg:text-[4rem] leading-[1.05] font-bold uppercase max-w-3xl tracking-tight">
+              <h1 className="font-serif text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] text-white mb-8">
                 {t("Nos\nsolutions", "Our\nsolutions").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
               </h1>
-              <div className="text-white/90 text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-xl font-normal space-y-3">
+              <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-xl font-normal space-y-3" style={{ color: 'white' }}>
                 <p>
                   {t(
-                    "Nous concevons des dispositifs d'externalisation sur mesure, adaptés à vos contraintes opérationnelles.",
-                    "We design tailor-made outsourcing solutions, adapted to your operational constraints."
+                    "Nous concevons des dispositifs d'externalisation sur mesure, adaptés à vos contraintes opérationnelles d'urgence, de durée, de volume et d'organisation.",
+                    "We design tailor-made outsourcing solutions, adapted to your operational constraints of emergency, duration, volume and organization."
                   )}
                 </p>
               </div>
@@ -44,41 +44,11 @@ export default function NosSolutionsPage() {
           </div>
         </div>
       </section>
-      {/* ══ 1. URGENCE — Fond vert foncé, image droite ══ */}
+      {/* ══ 1. URGENCE — Fond vert foncé, image gauche ══ */}
       <section id="urgence" className="w-full bg-[#122017] py-12 lg:py-16 my-10 lg:my-16 overflow-hidden">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-          {/* Text left */}
-          <div className="w-full lg:w-[55%] flex flex-col">
-            <p className="text-[#D9B151] text-[0.75rem] font-bold uppercase tracking-[0.2em] mb-4">
-              {t("01 — Dispositif", "01 — Solution")}
-            </p>
-            <h2 className="text-white text-[2rem] md:text-[2.6rem] font-bold uppercase leading-tight mb-6 tracking-tight">
-              {t("Urgence", "Emergency")}
-            </h2>
-            <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
-            <p className="text-white/80 text-[0.95rem] leading-[1.8] mb-8">
-              {t(
-                "Mobilisation rapide de ressources opérationnelles pour répondre à un besoin immédiat, absorber une surcharge d'activité et assurer la continuité de votre service.",
-                "Rapid mobilization of operational resources to meet an immediate need, absorb an overload of activity and ensure the continuity of your service."
-              )}
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {[
-                t("Surcharge imprévue", "Unexpected overload"),
-                t("Remplacement temporaire", "Temporary replacement"),
-                t("Renfort en clôture", "Closing reinforcement"),
-                t("Dossiers en retard", "Overdue files"),
-                t("Absences ou congés", "Absences or leave"),
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 text-white/70 text-[0.82rem]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0" />
-                  {item}
-                </div>
-              ))}
-            </div>
-          </div>
-          {/* Image right */}
-          <div className="w-full lg:w-[45%] flex justify-center lg:justify-end">
+          {/* Image left */}
+          <div className="w-full lg:w-[45%] flex justify-center lg:justify-start">
             <div className="w-full max-w-[460px] h-[380px] rounded-2xl overflow-hidden shadow-2xl border border-white/10">
               <img
                 src="/trust-circle.jpg"
@@ -88,6 +58,36 @@ export default function NosSolutionsPage() {
               />
             </div>
           </div>
+          {/* Text right */}
+          <div className="w-full lg:w-[55%] flex flex-col">
+            <p className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151] mb-4">
+              {t("01 — Dispositif", "01 — Solution")}
+            </p>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-10">
+              {t("Urgence", "Emergency")}
+            </h2>
+            <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
+            <p className="text-white text-[0.95rem] leading-[1.8] mb-8">
+              {t(
+                "Mobilisation rapide de ressources opérationnelles pour répondre à un besoin immédiat, absorber une surcharge d'activité et assurer la continuité de votre service.",
+                "Rapid mobilization of operational resources to meet an immediate need, absorb an overload of activity and ensure the continuity of your service."
+              )}
+            </p>
+            <div className="grid grid-cols-1 gap-3">
+              {[
+                t("Surcharge d'activité ou pic de dossiers", "Activity overload or peak files"),
+                t("Remplacement temporaire d'un collaborateur absent", "Temporary replacement of an absent collaborator"),
+                t("Renfort ponctuel en période de clôture ou de reporting", "Occasional reinforcement during closing or reporting periods"),
+                t("Traitement accéléré de dossiers en retard ou en attente", "Accelerated processing of overdue or pending files"),
+                t("Mise à disposition progressive de ressources pour sécuriser la montée en charge", "Progressive provision of resources to secure ramp-up"),
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 text-white text-[0.82rem]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -95,7 +95,7 @@ export default function NosSolutionsPage() {
       <section id="duree" className="w-full bg-[#F6F3F0] py-12 lg:py-16 mb-10 lg:mb-16">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-start gap-16">
           {/* Left: image */}
-          <div className="w-full lg:w-[45%] order-2 lg:order-1 flex justify-center">
+          <div className="w-full lg:w-[45%] flex justify-center">
             <div className="w-full max-w-[460px] h-[380px] rounded-2xl overflow-hidden shadow-xl border border-[#E0D6C8]/50">
               <img
                 src="/office-lounge.jpg"
@@ -106,32 +106,31 @@ export default function NosSolutionsPage() {
             </div>
           </div>
           {/* Right: text */}
-          <div className="w-full lg:w-[55%] order-1 lg:order-2 flex flex-col sticky top-24 self-start">
-            <p className="text-[#8B6240] text-[0.75rem] font-bold uppercase tracking-[0.2em] mb-4">
+          <div className="w-full lg:w-[55%] flex flex-col sticky top-24 self-start">
+            <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
               {t("02 — Dispositif", "02 — Solution")}
             </p>
-            <h2 className="text-[#122017] text-[2rem] md:text-[2.6rem] font-bold uppercase leading-tight mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
               {t("Durée", "Duration")}
             </h2>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
             <p className="text-[#122017]/75 text-[0.95rem] leading-[1.8] mb-8">
               MENUA CONSULTING {t(
-                "propose des dispositifs d'externalisation flexibles, adaptés au traitement d'un nombre défini de dossiers comme à la gestion récurrente d'un portefeuille.",
-                "offers flexible outsourcing solutions, adapted to the processing of a defined number of files as well as the recurring management of a portfolio."
+                "propose des dispositifs d'externalisation flexibles, adaptés au traitement d'un nombre défini de dossiers comme à la gestion récurrente d'un portefeuille plus important.",
+                "offers flexible outsourcing solutions, adapted to the processing of a defined number of files as well as the recurring management of a larger portfolio."
               )}
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               {[
-                t("Mission courte durée", "Short term mission"),
-                t("Mission longue durée", "Long term mission"),
-                t("Externalisation continue", "Continuous outsourcing"),
-                t("Intervention récurrente", "Recurring intervention"),
-                t("Projets de transition", "Transition projects"),
-                t("Congé maternité/sabbatique", "Maternity/sabbatical leave"),
+                t("Mission courte pour traiter un besoin identifié sur une période limitée", "Short mission to address an identified need over a limited period"),
+                t("Mission longue pour accompagner la gestion d'un portefeuille de dossiers dans la durée", "Long mission to support the management of a portfolio of files over time"),
+                t("Externalisation continue pour confier durablement tout ou partie de vos activités opérationnelles", "Continuous outsourcing to permanently entrust all or part of your operational activities"),
+                t("Intervention ponctuelle sur un volume de dossiers comptables, financiers, patrimoniaux ou administratifs", "Occasional intervention on a volume of accounting, financial, wealth or administrative files"),
+                t("Ajustement du dispositif selon l'évolution de la charge et des priorités du client", "Adjustment of the setup according to the evolution of the workload and the client's priorities"),
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 text-[#122017]/70 text-[0.82rem]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0" />
-                  {item}
+                <div key={i} className="flex items-start gap-3 text-[#122017]/70 text-[0.82rem]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
+                  <span>{item}</span>
                 </div>
               ))}
             </div>
@@ -145,31 +144,31 @@ export default function NosSolutionsPage() {
       }}>
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col items-center mb-14">
-            <p className="text-[#D9B151] text-[0.75rem] font-bold uppercase tracking-[0.2em] mb-4">
+            <p className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151] mb-4">
               {t("03 — Dispositif", "03 — Solution")}
             </p>
-            <h2 className="text-white text-[2rem] md:text-[2.6rem] font-bold uppercase leading-tight text-center mb-4">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-center text-white mb-10">
               {t("Volume", "Volume")}
             </h2>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-6" />
-            <p className="text-white/70 text-[0.95rem] text-center max-w-2xl leading-[1.8]">
+            <p className="text-white text-[0.95rem] text-center max-w-2xl leading-[1.8]">
               MENUA CONSULTING {t(
-                "adapte le dimensionnement de ses ressources au volume de dossiers, de flux ou d'opérations à traiter.",
-                "adapts the sizing of its resources to the volume of files, flows or operations to be processed."
+                "adapte le dimensionnement de ses ressources au volume de dossiers, de flux ou d'opérations à traiter, tout en veillant à la continuité et à la sécurisation de l'exécution.",
+                "adapts the sizing of its resources to the volume of files, flows or operations to be processed, while ensuring continuity and secure execution."
               )}
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-[1100px] mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 gap-x-6 max-w-[1100px] mx-auto mt-8">
             {[
-              { label: t("Portefeuille défini", "Defined portfolio"), desc: t("Prise en charge d'un portefeuille spécifique.", "Handling of a specific portfolio.") },
-              { label: t("Flux de dossiers", "File flows"), desc: t("Gestion de flux de dossiers spécifiques en continu.", "Continuous management of specific file flows.") },
-              { label: t("Volumes variables", "Variable volumes"), desc: t("Traitement de volumes variables ou saisonniers.", "Processing of variable or seasonal volumes.") },
-              { label: t("Pics de charge", "Peak loads"), desc: t("Flexibilité pour absorber les pics de charge.", "Flexibility to absorb peak loads.") },
-            ].map((card, i) => (
-              <div key={i} className="relative flex flex-col bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/15 hover:bg-white/15 transition-all">
-                <span className="text-[#D9B151]/50 text-[2.5rem] font-bold leading-none mb-3 select-none">0{i + 1}</span>
-                <h3 className="text-white text-[0.85rem] font-bold uppercase tracking-wide mb-3 leading-tight">{card.label}</h3>
-                <p className="text-white/65 text-[0.78rem] leading-[1.7]">{card.desc}</p>
+              t("Une ressource dédiée sur un périmètre précis", "A dedicated resource on a specific scope"),
+              t("Un renfort ponctuel pour absorber une surcharge d'activité", "Occasional reinforcement to absorb an activity overload"),
+              t("Une équipe opérationnelle pour gérer un volume important ou plusieurs flux simultanés", "An operational team to manage a large volume or several simultaneous flows"),
+              t("Un dispositif évolutif ajusté selon la charge, les priorités et les exigences du client", "A scalable setup adjusted according to the workload, priorities and client requirements"),
+              t("Une organisation permettant d'assurer la continuité du traitement en cas d'absence ou de variation d'activité", "An organization ensuring processing continuity in case of absence or variation in activity"),
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-3 text-white text-[0.88rem] bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-2" />
+                <span>{item}</span>
               </div>
             ))}
           </div>
@@ -181,35 +180,40 @@ export default function NosSolutionsPage() {
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-start gap-16">
           {/* Left: sticky title block */}
           <div className="w-full lg:w-[38%] flex flex-col sticky top-24 self-start">
-            <p className="text-[#8B6240] text-[0.75rem] font-bold uppercase tracking-[0.2em] mb-4">
+            <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
               {t("04 — Dispositif", "04 — Solution")}
             </p>
-            <h2 className="text-[#122017] text-[2rem] md:text-[2.6rem] font-bold uppercase leading-tight mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
               {t("Organisation", "Organization")}
             </h2>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-6" />
-            <p className="text-[#122017]/70 text-[0.9rem] leading-[1.7]">
-              MENUA CONSULTING {t(
-                "structure ses interventions selon le format le plus adapté à vos contraintes : dispositif dédié, fonctionnement par mission ou prise en charge de flux.",
-                "structures its interventions according to the format most suited to your constraints: dedicated setup, mission-based operation or flow management."
-              )}
-            </p>
+            <div className="text-[#122017]/70 text-[0.9rem] leading-[1.7] space-y-4">
+              <p>
+                MENUA CONSULTING {t(
+                  "structure ses interventions selon le format le plus adapté à vos contraintes : dispositif dédié, fonctionnement par mission ou prise en charge de flux et de process définis.",
+                  "structures its interventions according to the format most suited to your constraints: dedicated setup, mission-based operation or management of defined flows and processes."
+                )}
+              </p>
+              <p>
+                {t(
+                  "Nous intégrons nos équipes à vos modes de fonctionnement existants afin de garantir une exécution fluide, traçable et conforme à vos standards internes.",
+                  "We integrate our teams into your existing operating modes to guarantee smooth, traceable execution that complies with your internal standards."
+                )}
+              </p>
+            </div>
           </div>
-          {/* Right: cards */}
-          <div className="w-full lg:w-[62%] flex flex-col gap-5">
+          {/* Right: bullets */}
+          <div className="w-full lg:w-[62%] grid grid-cols-1 gap-4">
             {[
-              { title: t("Dispositif dédié", "Dedicated setup"), desc: t("Dispositif exclusif et intégré aux outils et systèmes de votre organisation.", "Exclusive setup integrated with your organization's tools and systems.") },
-              { title: t("Fonctionnement par mission", "Mission-based operation"), desc: t("Intervention ponctuelle ou structurée autour d'un projet précis.", "Occasional or structured intervention around a specific project.") },
-              { title: t("Prise en charge de process", "Process handling"), desc: t("Suivi structuré avec reporting d'avancement pour les processus récurrents.", "Structured follow-up with progress reporting for recurring processes.") },
-            ].map((pillar, i) => (
-              <div key={i} className="flex items-start gap-6 bg-[#F6F3F0] rounded-xl p-7 border border-[#E0D6C8]/50 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 text-white font-bold text-[0.75rem] tracking-widest" style={{ backgroundColor: ["#122017", "#5A3A1E", "#8B6240"][i] }}>
-                  0{i + 1}
-                </div>
-                <div>
-                  <h3 className="text-[#122017] text-[1rem] font-bold mb-2 uppercase tracking-wide">{pillar.title}</h3>
-                  <p className="text-[#122017]/70 text-[0.88rem] leading-[1.7]">{pillar.desc}</p>
-                </div>
+              t("Dispositif dédié pour un service ou un périmètre clairement identifié", "Dedicated setup for a clearly identified service or scope"),
+              t("Intervention par mission pour un besoin borné dans le temps ou un projet spécifique", "Mission-based intervention for a time-bound need or specific project"),
+              t("Prise en charge de flux ou de process récurrents", "Handling of recurring flows or processes"),
+              t("Traitement de dossiers, adhésions ou opérations selon des règles définies avec vos équipes", "Processing of files, memberships or operations according to rules defined with your teams"),
+              t("Suivi structuré avec points de contrôle réguliers", "Structured monitoring with regular control points"),
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-3 bg-[#F6F3F0] p-4 rounded-xl border border-[#E0D6C8]/50 shadow-sm text-[#122017]/80 text-[0.85rem]">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
+                <span>{item}</span>
               </div>
             ))}
           </div>
@@ -244,7 +248,7 @@ export default function NosSolutionsPage() {
             <h3 className="text-white text-[1.15rem] font-bold mb-2">
               {t("Nous intervenons en français et en anglais.", "We operate in French and English.")}
             </h3>
-            <p className="text-white/70 text-[0.95rem] font-medium">
+            <p className="text-white text-[0.95rem] font-medium">
               {t("D'autres langues peuvent être étudiées selon les besoins spécifiques de vos équipes.", "Other languages can be studied according to the specific needs of your teams.")}
             </p>
           </div>

@@ -1,76 +1,123 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-playfair), "Playfair Display", serif;
+  --font-serif: var(--font-playfair), "Playfair Display", serif;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    MENUA CONSULTING — SYSTÈME TYPOGRAPHIQUE (réf. Laplace Groupe)
    ───────────────────────────────────────────────────────────────
    --font-optima   = Raleway     ≈ Optima LT W04 (nav, corps, labels)
-   --font-display  = Cormorant Garamond ≈ Operetta 18 (héro titres, chiffres clés)
+   --font-playfair  = Playfair Display ≈ Operetta 18 (héro titres, chiffres clés)
    ═══════════════════════════════════════════════════════════════ */
 @layer base {
   html {
-    /* Corps de texte : Raleway 400 ≈ Optima LT W04 Medium */
-    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
+    font-family: var(--font-inter), "DM Sans", sans-serif;
     font-size: 16px;
-    line-height: 24px; /* 16px/24px = Optima LT W04 Medium */
+    line-height: 1.49;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
+    font-family: var(--font-inter), "DM Sans", sans-serif;
     font-weight: 400;
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: 1rem;
+    line-height: 1.49;
     color: #223930;
     background-color: #F5F2EB;
   }
 
-  /* H1 Hero — Optima LT W04 Bold 40px/40px */
+  /* H1 — Inter Bold (≈ 2.44rem à partir de 1200px) */
   h1, .h1-like {
-    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
+    font-family: var(--font-playfair), "Playfair Display", serif;
     font-weight: 700;
-    font-size: 40px;
-    line-height: 40px;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: #223930;
+    font-size: clamp(1.75rem, 4vw, 2.44rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: #122017;
+    margin-top: 0;
+    margin-bottom: 0.25rem;
   }
 
-  /* H2 Section — Optima LT W04 Bold 24px/30px */
+  /* H2 — Inter Bold (≈ 1.95rem à partir de 1200px) */
   h2, .h2-like {
-    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
+    font-family: var(--font-playfair), "Playfair Display", serif;
     font-weight: 700;
-    font-size: 24px;
-    line-height: 30px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: #223930;
+    font-size: clamp(1.35rem, 2.5vw, 1.953rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: #122017;
+    margin-top: 0;
+    margin-bottom: 0.25rem;
   }
 
-  /* H3 — Optima LT W04 Demi Bold 17px/25px (≈ nav links) */
+  /* H3 — Inter Bold (≈ 1.5625rem à partir de 1200px) */
   h3 {
-    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
-    font-weight: 600;
-    font-size: 17px;
-    line-height: 25px;
-    color: #223930;
+    font-family: var(--font-playfair), "Playfair Display", serif;
+    font-weight: 700;
+    font-size: clamp(1.2rem, 1.8vw, 1.5625rem);
+    line-height: 1;
+    color: #122017;
+    margin-top: 0;
+    margin-bottom: 0.25rem;
   }
 
-  /* H4-H6 — Optima LT W04 Demi Bold 16px/24px */
-  h4, h5, h6 {
-    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    color: #223930;
+  /* H4 — Inter Bold 1.25rem */
+  h4 {
+    font-family: var(--font-playfair), "Playfair Display", serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: #122017;
+    margin-top: 0;
+    margin-bottom: 0.25rem;
   }
 
-  /* Paragraphes — Optima LT W04 Medium 16px/24px */
+  /* H5 — Inter Bold 1rem */
+  h5 {
+    font-family: var(--font-playfair), "Playfair Display", serif;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1;
+    color: #122017;
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+  }
+
+  /* H6 — Inter Bold 0.8rem */
+  h6 {
+    font-family: var(--font-playfair), "Playfair Display", serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    line-height: 1;
+    color: #122017;
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Paragraphes — Inter Regular 1rem/1.49 */
   p, li, .text-body {
-    font-family: var(--font-optima), Optima, 'Gill Sans', Calibri, sans-serif;
+    font-family: var(--font-inter), "Inter", sans-serif;
     font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: #223930;
+    font-size: 1rem;
+    line-height: 1.49;
+    color: inherit;
+  }
+
+  /* Liens */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* strong / b */
+  b, strong {
+    font-weight: 800;
   }
 
   :root {
@@ -80,11 +127,11 @@
 
     /* 1. VERT SAPIN (Primary) */
     --menua-navy:        #223930;
-    --menua-navy-night:  #192C24;
+    --menua-navy-night:  #122017;
     --menua-navy-light:  #2C493D;
 
-    /* 2. BEIGE SABLE (Secondary / Accent) */
-    --menua-gold:        #E0D6C8;
+    /* 2. OR / ACCENT */
+    --menua-gold:        #D9B151;
     --menua-gold-light:  #E0D6C8;
     --menua-gold-pale:   #F5F2EB;
 
@@ -95,7 +142,7 @@
     /* 4. FONDS */
     --menua-bg:          #FFFFFF;
     --menua-bg-warm:     #FAF9F6;
-    --menua-bg-deep:     #223930;
+    --menua-bg-deep:     #122017;
 
     /* 5. TEXTES */
     --menua-text:        #223930;
@@ -107,7 +154,10 @@
     --menua-border:      #E0D6C8;
     --menua-border-warm: #E0D6C8;
     --menua-link:        #223930;
-    --menua-link-hover:  #E0D6C8;
+    --menua-link-hover:  #D9B151;
+
+    /* 7. NUNITO SANS token */
+    --font-body: var(--font-playfair), "Playfair Display", serif;
   }
 }
 
@@ -117,25 +167,33 @@
    ══════════════════════════════════════════════════════════════ */
 
 .section-eyebrow {
-  font-family: var(--font-inter), sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-family: var(--font-playfair), "Playfair Display", serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--menua-gold);
 }
 
 .small-text, .footer-text {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-playfair), "Playfair Display", serif;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 0.875rem;
+  line-height: 1.49;
   color: #223930;
 }
 
+/* Force inheritance in white-text containers (hero sections, dark cards) */
+[style*="color: white"] p,
+[style*="color: white"] li,
+[style*="color: white"] span {
+  color: inherit;
+}
+
 .key-number {
-  font-family: var(--font-playfair), serif;
+  font-family: var(--font-playfair), var(--font-playfair), "Playfair Display", serif;
   font-weight: 700;
-  font-size: 48px;
+  font-size: 3rem;
   line-height: 1.2;
   color: var(--menua-navy);
 }
@@ -145,10 +203,10 @@
 }
 
 .btn-laplace {
-  font-family: var(--font-inter), sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.05em;
+  font-family: var(--font-playfair), "Playfair Display", serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   transition: all 0.3s ease-in-out;
 }

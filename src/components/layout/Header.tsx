@@ -145,12 +145,12 @@ export default function Header() {
             >
               <Link
                 href={menus[key].href}
-                className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[15px] leading-[25px] font-normal ${
+                className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[15px] leading-[25px] font-bold ${
                   openMenu === key
                     ? "text-[#E0D6C8]"
                     : "text-white hover:text-[#E0D6C8]"
                 }`}
-                style={{ fontFamily: "'Optima LT W04 Demi Bold', Optima, sans-serif" }}
+                style={{ fontFamily: "var(--font-inter), 'Inter', sans-serif" }}
               >
                 {menus[key].label}
                 <ChevronDown
@@ -212,16 +212,16 @@ export default function Header() {
           {/* "Nous rejoindre" & "Nous contacter" as plain nav links */}
           <Link
             href="/nous-rejoindre"
-            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[12px] font-bold tracking-wide uppercase text-[#C49A6C] hover:text-white hover:bg-[#8B6240]/40 rounded-full"
-            style={{ fontFamily: "'Optima LT W04 Demi Bold', Optima, sans-serif", border: "1px solid #8B6240" }}
+            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#C49A6C] hover:text-white hover:bg-[#8B6240]/40 rounded-full"
+            style={{ fontFamily: "var(--font-inter), 'Inter', sans-serif", border: "1px solid #8B6240" }}
             onMouseEnter={() => setOpenMenu(null)}
           >
             {t("Nous rejoindre", "Join Us")}
           </Link>
           <Link
             href="/nous-contacter"
-            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[12px] font-bold tracking-wide uppercase text-[#E0D6C8] hover:text-white hover:bg-[#3E2510]/50 rounded-full"
-            style={{ fontFamily: "'Optima LT W04 Demi Bold', Optima, sans-serif", border: "1px solid #5A3A1E" }}
+            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#E0D6C8] hover:text-white hover:bg-[#3E2510]/50 rounded-full"
+            style={{ fontFamily: "var(--font-inter), 'Inter', sans-serif", border: "1px solid #5A3A1E" }}
             onMouseEnter={() => setOpenMenu(null)}
           >
             {t("Nous contacter", "Contact Us")}

@@ -73,8 +73,8 @@ export default function Home() {
         <div className="relative w-full max-w-[1000px] mx-auto px-6 py-12 md:py-16 flex justify-center items-center">
           <p className="home-wave-text">
             MENUA CONSULTING {t(
-              "intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l'exécution des fonctions back et middle office.",
-              "supports financial, accounting, wealth, data and regulated teams to secure and strengthen the execution of back and middle office functions."
+              "intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées pour sécuriser et renforcer l'exécution des fonctions back et middle office.",
+              "supports financial, accounting, wealth, IT and regulated teams to secure and strengthen the execution of back and middle office functions."
             )}
           </p>
         </div>
@@ -156,25 +156,25 @@ export default function Home() {
             <h2 className="home-domaines-title-sm">
               {t("Domaines d'intervention", "Areas of intervention")}
             </h2>
-            <h3 className="home-domaines-title-lg">
-              {t("Vos besoins", "Your needs")}
+            <h3 className="home-domaines-title-lg uppercase">
+              {t("VOS BESOINS", "YOUR NEEDS")}
             </h3>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-12" />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-12">
               {[
-                { title: t("Finance & reporting", "Finance & reporting"), desc: t("Production, structuration et fabrication de reporting financiers.", "Production, structuring and manufacturing of financial reporting.") },
-                { title: t("Contrôle de gestion", "Management control"), desc: t("Suivi budgétaire, analyse des écarts et pilotage de la performance.", "Budget monitoring, variance analysis and performance management.") },
-                { title: t("Gestion de patrimoine", "Wealth management"), desc: t("Activités de gestion de patrimoine, family offices et structures patrimoniales.", "Wealth management activities, family offices and patrimonial structures.") },
-                { title: t("Autres besoins opérationnels", "Other operational needs"), desc: t("Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques.", "Handling of one-off, transversal or specific operational needs.") },
-                { title: t("Support comptable & data", "Accounting & data support"), desc: t("Équipes comptables, administratives et data.", "Accounting, administrative and data teams.") },
-                { title: t("Aides hautes spécialités", "High specialties aid"), desc: t("Pour des besoins spécifiques, ponctuels, dossiers complexes.", "For specific, one-off needs, complex files.") },
+                { title: t("Finance & Reporting", "Finance & Reporting"), desc: t("Production, structuration et fiabilisation de reportings financiers.", "Production, structuring and reliability of financial reporting.") },
+                { title: t("Contrôle de gestion", "Management control"), desc: t("Appui opérationnel au suivi budgétaire, à l'analyse des écarts et au pilotage de la performance.", "Operational support for budget monitoring, variance analysis and performance management.") },
+                { title: t("Risques & Conformité", "Risk & Compliance"), desc: t("Appui opérationnel aux équipes risques et conformité dans le traitement des dossiers sensibles.", "Operational support to risk and compliance teams in the processing of sensitive files.") },
+                { title: t("Support comptable & data", "Accounting & data support"), desc: t("Appui opérationnel aux équipes comptables, administratives et data.", "Operational support to accounting, administrative and data teams.") },
+                { title: t("Gestion de Patrimoine & CGP", "Wealth management & IFA"), desc: t("Appui opérationnel aux cabinets de gestion de patrimoine et structures patrimoniales.", "Operational support to wealth management firms and wealth structures.") },
+                { title: t("Autres besoins opérationnels", "Other operational needs"), desc: t("Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques.", "Handling of occasional, transversal or specific operational needs.") },
               ].map((item, i) => (
                 <div key={i} className={`flex flex-col ${i % 2 === 1 ? 'sm:border-l-[2px] sm:border-[#D9B151]/40 sm:pl-6' : 'sm:pr-4'}`}>
-                  <h3 className="text-[#111F18] text-[0.8rem] font-bold mb-3 uppercase tracking-wide">
+                  <h3 className="font-semibold text-xs whitespace-pre-line leading-snug text-[#111F18] mb-3">
                     {item.title}
                   </h3>
-                  <p className="text-[#646A66] text-[0.8rem] font-medium leading-[1.6]">
+                  <p className="text-[#646A66] text-[0.95rem] lg:text-[1rem] font-medium leading-[1.6]">
                     {item.desc}
                   </p>
                 </div>
@@ -207,7 +207,7 @@ export default function Home() {
 
         <div className="home-pourquoi-container">
           <div className="flex flex-col items-center mb-2">
-            <h2 className="text-white text-[0.85rem] font-bold uppercase tracking-[0.2em] mb-3 text-center">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-3 text-center">
               {t("Pourquoi Menua Consulting ?", "Why Menua Consulting?")}
             </h2>
             <div className="w-10 h-[2px] bg-white" />
@@ -236,7 +236,7 @@ export default function Home() {
               >
                 <div className="text-[#D9B151] text-[2.5rem] font-light leading-none mb-3 opacity-80">{item.num}</div>
                 <div className="w-8 h-[2px] bg-[#D9B151] mb-4 opacity-70" />
-                <h3 className="text-white text-[0.8rem] font-bold uppercase tracking-widest leading-[1.5] mb-4">
+                <h3 className="font-semibold text-xs leading-snug text-white mb-4">
                   {item.title.split('\n').map((l, j) => <span key={j} className="block">{l}</span>)}
                 </h3>
                 <p className="text-white/70 text-[0.75rem] font-normal leading-[1.7]">
@@ -258,7 +258,7 @@ export default function Home() {
           <div className="home-solutions-cream-block">
             {/* Title */}
             <div className="flex flex-col items-center mb-10">
-              <h2 className="text-[#272A2C] text-[0.8rem] font-bold uppercase tracking-[0.25em] mb-3">
+              <h2 className="font-serif text-2xl md:text-3xl font-bold text-[#272A2C] mb-3">
                 {t("Nos solutions", "Our solutions")}
               </h2>
               <div className="w-10 h-[2px] bg-[#D9B151]" />
@@ -278,7 +278,7 @@ export default function Home() {
                   style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.06)", borderBottom: "3px solid #D9B151" }}
                 >
                   <span className="text-[#D9B151]/30 text-[2.5rem] font-light leading-none mb-3 select-none">{item.num}</span>
-                  <h3 className="text-[#1A1A1A] text-[0.75rem] font-bold uppercase tracking-wide mb-2">{item.title}</h3>
+                  <h3 className="font-semibold text-xs leading-snug text-[#1A1A1A] mb-2">{item.title}</h3>
                   <p className="text-[#6B6B6B] text-[0.72rem] font-normal leading-[1.7]">{item.desc}</p>
                 </div>
               ))}
@@ -305,7 +305,7 @@ export default function Home() {
         <div className="max-w-[1100px] mx-auto px-6 lg:px-12 flex flex-col items-center">
           
           <div className="flex flex-col items-center mb-6">
-            <h2 className="text-white text-[0.85rem] font-bold uppercase tracking-[0.2em] mb-4 text-center">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4 text-center">
               {t("Supervision & certifications", "Supervision & certifications")}
             </h2>
             <div className="w-10 h-[2px] bg-white" />
@@ -328,7 +328,7 @@ export default function Home() {
 
           <p className="text-white text-[0.75rem] font-medium text-center max-w-4xl leading-[1.8]">
             {t(
-              "MENUA CONSULTING n'intervient pas d'activité réglementée en son nom propre. Le cabinet met à disposition des ressources opérationnelles spécialisées intégrées aux cadres d'agrément et de supervision de ses clients. Ce dispositif garantit la conformité, la qualité des opérations et la sécurité des processus.",
+              "MENUA CONSULTING n'exerce pas d'activité réglementée en son nom propre. Le cabinet met à disposition des ressources opérationnelles spécialisées intégrées aux cadres d'agrément et de supervision de ses clients. Ce dispositif garantit la conformité, la qualité des opérations et la sécurité des processus.",
               "MENUA CONSULTING does not carry out regulated activities in its own name. The firm provides specialized operational resources integrated into its clients' approval and supervision frameworks. This ensures compliance, quality of operations and process security."
             )}
           </p>
@@ -338,7 +338,7 @@ export default function Home() {
       {/* ── ACTUALITÉS ── */}
       <section className="home-news-section">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-center">
-          <h2 className="text-[#272A2C] text-[0.85rem] font-bold uppercase tracking-[0.2em] mb-12 text-center">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12 text-center">
             {t("Actualités", "News")}
           </h2>
 

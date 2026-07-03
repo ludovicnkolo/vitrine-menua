@@ -14,16 +14,20 @@
     @apply relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24;
   }
   .home-hero-title {
-    @apply text-white mb-2 text-[2.2rem] md:text-[3.2rem] lg:text-[3.6rem] leading-[1.1] font-bold uppercase max-w-4xl tracking-tight;
+    @apply text-white mb-2 text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] max-w-4xl;
+    font-family: var(--font-playfair), "Playfair Display", serif;
   }
   .home-hero-subtitle {
-    @apply text-white text-[1.4rem] md:text-[1.8rem] lg:text-[2rem] leading-[1.2] font-bold mb-8 uppercase tracking-wide;
+    @apply text-[#D9B151] italic font-normal text-4xl md:text-5xl lg:text-6xl mt-4 mb-8 leading-[1.1];
+    font-family: var(--font-playfair), "Playfair Display", serif;
   }
   .home-hero-desc {
-    @apply text-white text-[1.05rem] md:text-[1.15rem] leading-[1.6] max-w-2xl font-normal space-y-4 mb-8;
+    @apply text-white/90 text-base lg:text-lg leading-relaxed max-w-2xl font-light space-y-4 mb-8;
+    font-family: var(--font-inter), "Inter", sans-serif;
   }
   .home-hero-btn {
-    @apply inline-flex items-center justify-center gap-3 bg-[#E0D6C8] text-[#122017] border border-[#E0D6C8] px-8 py-3.5 text-[0.75rem] font-bold tracking-[0.1em] uppercase transition-all hover:bg-transparent hover:text-[#E0D6C8] w-fit;
+    @apply inline-flex items-center justify-center gap-3 bg-[#E0D6C8] text-[#122017] border border-[#E0D6C8] px-8 py-3.5 text-xs font-bold tracking-wider uppercase transition-all hover:bg-transparent hover:text-[#E0D6C8] w-fit;
+    font-family: var(--font-inter), "Inter", sans-serif;
   }
 
   /* ==========================================================================
@@ -36,7 +40,8 @@
     @apply absolute left-0 w-full h-[50px] md:h-[80px] -top-[49px] md:-top-[79px] overflow-hidden pointer-events-none drop-shadow-sm;
   }
   .home-wave-text {
-    @apply text-[#272A2C] text-[0.85rem] md:text-[1.05rem] font-medium leading-relaxed tracking-wide text-center;
+    @apply text-gray-700 text-lg leading-relaxed font-light text-center;
+    font-family: var(--font-inter), "Inter", sans-serif;
   }
 
   /* ==========================================================================
@@ -59,10 +64,11 @@
     @apply max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row gap-12 lg:gap-20 items-center;
   }
   .home-domaines-title-sm {
-    @apply text-[#272A2C] text-[0.85rem] font-bold uppercase tracking-[0.15em] mb-4 text-center sm:text-left;
+    @apply text-3xl md:text-4xl font-bold mb-16 text-center sm:text-left;
+    font-family: var(--font-playfair), "Playfair Display", serif;
   }
   .home-domaines-title-lg {
-    @apply text-[#272A2C] text-[1.5rem] md:text-[2rem] font-bold leading-tight mb-8 text-center sm:text-left;
+    @apply text-xl font-bold mb-8 text-center sm:text-left hidden;
   }
 
   /* ==========================================================================

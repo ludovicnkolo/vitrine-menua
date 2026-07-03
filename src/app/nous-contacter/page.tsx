@@ -31,10 +31,10 @@ export default function NousContacter() {
               <p className="text-[#E0D6C8] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.15em] uppercase mb-8">
                 {t("Contact", "Contact")}
               </p>
-              <h1 className="text-white mb-8 text-[2.2rem] md:text-[3.2rem] lg:text-[3.6rem] leading-[1.1] font-bold uppercase max-w-4xl tracking-tight">
+              <h1 className="font-serif text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] text-white mb-8">
                 {t("Nous contacter", "Contact Us")}
               </h1>
-              <div className="text-white/95 text-[1.05rem] md:text-[1.15rem] leading-[1.6] max-w-2xl font-normal space-y-4 mb-8">
+              <div className="text-white text-[1.05rem] md:text-[1.15rem] leading-[1.6] max-w-2xl font-normal space-y-4 mb-8" style={{ color: 'white' }}>
                 <p>
                   {t(
                     "Présentez votre besoin opérationnel, nous vous répondons avec une première analyse et une proposition adaptée.",
@@ -55,7 +55,7 @@ export default function NousContacter() {
 
                 <div className="flex items-start gap-3">
                   <Globe className="text-[#E0D6C8] shrink-0 mt-0.5" size={24} strokeWidth={1.5} />
-                  <p className="text-white/90 text-[0.85rem] font-medium leading-relaxed max-w-[300px]">
+                  <p className="text-white text-[0.85rem] font-medium leading-relaxed max-w-[300px]">
                     {t("Interventions en français et en anglais.", "Interventions in French and English.")}<br/>
                     <span className="text-[#E0D6C8]">{t("Réponse rapide", "Quick response")}</span> <span className="text-white/50">•</span> <span className="text-[#E0D6C8]">{t("Échange confidentiel", "Confidential exchange")}</span>
                   </p>
@@ -75,7 +75,7 @@ export default function NousContacter() {
             
             {/* Coordonnées */}
             <div className="bg-white border border-[#E0D6C8]/30 p-8 md:p-10 shadow-sm">
-              <h2 className="text-[#223930] text-[1.1rem] font-bold uppercase mb-4 tracking-wider">
+              <h2 className="font-serif text-2xl font-bold text-[#223930] mb-4">
                 {t("Coordonnées", "Contact Details")}
               </h2>
               <div className="w-10 h-[1.5px] bg-[#d5a864] mb-8" />
@@ -116,7 +116,7 @@ export default function NousContacter() {
 
             {/* Pourquoi nous contacter */}
             <div className="bg-[#F5F2EB] p-8 md:p-10 border border-[#E0D6C8]/30">
-              <h2 className="text-[#223930] text-[0.95rem] font-bold uppercase mb-4 tracking-wider">
+              <h2 className="font-serif text-2xl font-bold text-[#223930] mb-4">
                 {t("Pourquoi nous contacter ?", "Why contact us?")}
               </h2>
               <div className="w-10 h-[1.5px] bg-[#d5a864] mb-8" />
@@ -159,7 +159,7 @@ export default function NousContacter() {
 
           {/* Right Column (Form) */}
           <div className="w-full lg:w-2/3 border border-[#E0D6C8]/30 p-8 md:p-12">
-            <h2 className="text-[#223930] text-[1.3rem] font-bold uppercase mb-4 text-center tracking-wider">
+            <h2 className="font-serif text-2xl font-bold text-center text-[#223930] mb-4">
               {t("Formulaire de contact", "Contact Form")}
             </h2>
             <div className="w-10 h-[2px] bg-[#d5a864] mx-auto mb-12" />

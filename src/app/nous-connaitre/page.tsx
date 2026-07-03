@@ -1,4 +1,6 @@
 "use client";
+import React from "react";
+import Link from "next/link";
 import { Landmark, Target, GitMerge, FileCheck, ShieldCheck, ArrowRight, Globe, Users, CheckCircle, RefreshCw, FileText, Search, ClipboardCheck, BarChart2 } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import CallToAction from "@/components/layout/CallToAction";
@@ -28,122 +30,129 @@ export default function NousConnaitrePage() {
               <p className="text-[#D9B151] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.2em] uppercase mb-6">
                 {t("Le cabinet", "The firm")}
               </p>
-              <h1 className="font-serif text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] text-white mb-8">
-                {t("Nous\nconnaître", "About\nUs").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+              <h1 className="font-serif text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] text-white mb-2">
+                {t("Un partenaire de confiance", "A trusted partner")}
               </h1>
-              <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-xl font-normal space-y-3" style={{ color: 'white' }}>
-                <p>
-                  MENUA CONSULTING {t(
-                    "accompagne les entreprises dans l'externalisation opérationnelle de fonctions",
-                    "supports companies in the operational outsourcing of functions"
-                  )}{" "}
-                  <span className="text-[#D9B151] font-semibold">back et middle office.</span>
-                </p>
+              <h2 className="text-[#D9B151] italic text-4xl md:text-5xl lg:text-[4.5rem] font-bold leading-[1.1] mb-8">
+                {t("pour vos opérations financières.", "for your financial operations.")}
+              </h2>
+              <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-xl font-normal space-y-3 mb-10">
                 <p>
                   {t(
-                    "Nous intervenons en support des équipes internes dans un cadre structuré, défini par les méthodes, les priorités et les exigences de chaque organisation.",
-                    "We support internal teams within a structured framework, defined by the methods, priorities and requirements of each organization."
+                    "MENUA CONSULTING accompagne les entreprises dans l'externalisation opérationnelle de leurs fonctions back et middle office. Un engagement fondé sur la rigueur, la continuité et la fiabilité.",
+                    "MENUA CONSULTING supports companies in the operational outsourcing of their back and middle office functions. A commitment based on rigor, continuity and reliability."
                   )}
                 </p>
               </div>
+              <Link href="/nous-connaitre#excellence" className="inline-flex items-center justify-center gap-3 bg-[#D9B151] text-[#122017] border border-[#D9B151] px-8 py-3.5 text-[0.85rem] font-bold tracking-wider uppercase transition-all hover:bg-transparent hover:text-[#D9B151] w-fit rounded-sm shadow-md">
+                {t("DÉCOUVRIR NOTRE CABINET", "DISCOVER OUR FIRM")} <ArrowRight size={16} />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ══ 1. PRÉSENTATION DU CABINET — Fond vert foncé, image droite ══ */}
-      <section id="presentation-du-cabinet" className="w-full bg-[#122017] py-16 lg:py-24 my-10 lg:my-16 overflow-hidden">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+      {/* ══ 1. PRÉSENTATION DU CABINET ══ */}
+      <section id="presentation-du-cabinet" className="w-full bg-[#F9F7F1] py-24 lg:py-32">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-          {/* Text left */}
-          <div className="w-full lg:w-[55%] flex flex-col">
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-10">
-              {t("MENUA CONSULTING\nPRÉSENTATION\nDU CABINET", "MENUA CONSULTING\nFIRM\nPRESENTATION").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-            </h2>
-            <div className="w-16 h-[3px] bg-[#D9B151] mb-10" />
-            <div className="text-white text-[1rem] leading-[1.8] space-y-6 font-normal">
-              <p>
-                {t("MENUA CONSULTING est un cabinet spécialisé dans l'externalisation opérationnelle des fonctions back et middle office en finance, comptabilité, conformité, de la gestion de patrimoine et data.", "MENUA CONSULTING is a firm specialized in operational outsourcing of back and middle office functions in finance, accounting, compliance, wealth management and data.")}
-              </p>
-              <p>
-                {t("Nous mettons à disposition des entreprises, cabinets et acteurs financiers des équipes opérationnelles dédiées, capables d'exécuter des missions exigeantes avec rigueur, continuité et fiabilité.", "We provide companies, firms and financial players with dedicated operational teams, capable of executing demanding missions with rigor, continuity and reliability.")}
-              </p>
-              <p>
-                {t("Nos collaborateurs s'intègrent aux organisations clientes afin de prendre en charge l'exécution opérationnelle, d'optimiser les charges internes et de sécuriser la continuité des opérations.", "Our collaborators integrate into client organizations to take charge of operational execution, optimize internal costs and secure operational continuity.")}
-              </p>
-              <p>
-                {t("Cette organisation permet aux clients de se concentrer sur leur cœur de métier, tout en garantissant des processus maîtrisés, fluides et pérennes.", "This organization allows clients to focus on their core business, while guaranteeing controlled, fluid and sustainable processes.")}
-              </p>
+            {/* Text left */}
+            <div className="flex flex-col">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-8 h-[1px] bg-[#D9B151]" />
+                <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
+                  {t("Le cabinet", "The firm")}
+                </span>
+              </div>
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-6">
+                {t("MENUA CONSULTING\nPRÉSENTATION\nDU CABINET", "MENUA CONSULTING\nFIRM\nPRESENTATION").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+              </h2>
+              <div className="w-16 h-[3px] bg-[#D9B151] mb-8" />
+              <div className="text-[#4A4E5A] text-[1.05rem] leading-[1.8] space-y-5 font-normal">
+                <p>
+                  {t("MENUA CONSULTING est un cabinet spécialisé dans l'externalisation opérationnelle des fonctions back et middle office en finance, comptabilité, conformité, de la gestion de patrimoine et data.", "MENUA CONSULTING is a firm specialized in operational outsourcing of back and middle office functions in finance, accounting, compliance, wealth management and data.")}
+                </p>
+                <p>
+                  {t("Nous mettons à disposition des entreprises, cabinets et acteurs financiers des équipes opérationnelles dédiées, capables d'exécuter des missions exigeantes avec rigueur, continuité et fiabilité.", "We provide companies, firms and financial players with dedicated operational teams, capable of executing demanding missions with rigor, continuity and reliability.")}
+                </p>
+                <p>
+                  {t("Nos collaborateurs s'intègrent aux organisations clientes afin de prendre en charge l'exécution opérationnelle, d'optimiser les charges internes et de sécuriser la continuité des opérations.", "Our collaborators integrate into client organizations to take charge of operational execution, optimize internal costs and secure operational continuity.")}
+                </p>
+                <p>
+                  {t("Cette organisation permet aux clients de se concentrer sur leur cœur de métier, tout en garantissant des processus maîtrisés, fluides et pérennes.", "This organization allows clients to focus on their core business, while guaranteeing controlled, fluid and sustainable processes.")}
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Image right */}
-          <div className="w-full lg:w-[45%] flex justify-center lg:justify-end">
-            <div className="w-full max-w-[400px] aspect-square rounded-2xl overflow-hidden shadow-2xl">
+            {/* Image right — same dimensions as homepage section 2 */}
+            <div className="w-full h-[450px] rounded-2xl overflow-hidden shadow-2xl">
               <img
                 src="/presentation_cabinet_desk.png"
                 alt="Cabinet Menua Consulting"
                 className="w-full h-full object-cover"
+                onError={(e) => { e.currentTarget.src = "/banner-desk.jpg"; }}
               />
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* ══ 2. NOTRE APPROCHE — Fond crème, 3 piliers en cartes ══ */}
-      <section id="notre-approche" className="w-full bg-[#F6F3F0] py-16 lg:py-24 mb-10 lg:my-16">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-          
-          {/* Left title block */}
-          <div className="w-full lg:w-[45%] flex flex-col">
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
-              {t("NOTRE\nAPPROCHE", "OUR\nAPPROACH").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-            </h2>
-            <div className="w-16 h-[3px] bg-[#D9B151] mb-10" />
-            
-            <div className="text-[#223930] text-[1rem] leading-[1.8] space-y-6 font-normal">
-              <p>
-                {t(
-                  "MENUA CONSULTING adopte une posture résolument opérationnelle : les clients définissent les besoins, les méthodes et les priorités, nous assurons l'exécution.",
-                  "MENUA CONSULTING adopts a resolutely operational stance: clients define needs, methods and priorities, we ensure execution."
-                )}
-              </p>
-              <p>
-                {t(
-                  "Nous intervenons dans des environnements financiers, comptables, patrimoniaux et réglementés, en respectant strictement les procédures internes, les circuits de validation et les exigences de qualité propres à chaque organisation.",
-                  "We operate in financial, accounting, wealth and regulated environments, strictly respecting internal procedures, validation circuits and the quality requirements specific to each organization."
-                )}
-              </p>
-              <p>
-                {t(
-                  "Notre approche repose sur trois piliers : continuité opérationnelle, traçabilité des actions et fiabilité des livrables.",
-                  "Our approach is based on three pillars: operational continuity, traceability of actions and reliability of deliverables."
-                )}
-              </p>
-              <p>
-                {t(
-                  "Nos équipes peuvent intervenir en français et en anglais, garantissant une gestion fluide des échanges, des reportings et des opérations dans un contexte international.",
-                  "Our teams can intervene in French and English, guaranteeing smooth management of exchanges, reporting and operations in an international context."
-                )}
-              </p>
-            </div>
+      {/* ══ 2. NOTRE APPROCHE ══ */}
+      <section id="notre-approche" className="w-full bg-[#F6F3F0] py-16 lg:py-24">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-6">
+            {t("NOTRE\nAPPROCHE", "OUR\nAPPROACH").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+          </h2>
+          <div className="w-16 h-[3px] bg-[#D9B151] mb-10" />
+
+          <div className="text-[#223930] text-[1rem] leading-[1.8] space-y-6 font-normal max-w-4xl mb-12">
+            <p>
+              {t(
+                "MENUA CONSULTING adopte une posture résolument opérationnelle : les clients définissent les besoins, les méthodes et les priorités, nous assurons l'exécution.",
+                "MENUA CONSULTING adopts a resolutely operational stance: clients define needs, methods and priorities, we ensure execution."
+              )}
+            </p>
+            <p>
+              {t(
+                "Nous intervenons dans des environnements financiers, comptables, patrimoniaux et réglementés, en respectant strictement les procédures internes, les circuits de validation et les exigences de qualité propres à chaque organisation.",
+                "We operate in financial, accounting, wealth and regulated environments, strictly respecting internal procedures, validation circuits and the quality requirements specific to each organization."
+              )}
+            </p>
+            <p>
+              {t(
+                "Notre approche repose sur trois piliers : continuité opérationnelle, traçabilité des actions et fiabilité des livrables.",
+                "Our approach is based on three pillars: operational continuity, traceability of actions and reliability of deliverables."
+              )}
+            </p>
+            <p>
+              {t(
+                "Nos équipes peuvent intervenir en français et en anglais, garantissant une gestion fluide des échanges, des reportings et des opérations dans un contexte international.",
+                "Our teams can intervene in French and English, guaranteeing smooth management of exchanges, reporting and operations in an international context."
+              )}
+            </p>
           </div>
 
-          {/* Right: 3 pillar cards */}
-          <div className="w-full lg:w-[55%] flex flex-col gap-6">
+          {/* 3 pillars — horizontal, no icons, no boxes */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-0 sm:gap-0 border-t border-[#D9B151]/30 pt-10">
             {[
-              { icon: RefreshCw, title: t("CONTINUITÉ OPÉRATIONNELLE", "OPERATIONAL CONTINUITY"), bg: "#1A2F22" },
-              { icon: FileText, title: t("TRAÇABILITÉ DES ACTIONS", "TRACEABILITY OF ACTIONS"), bg: "#6B4423" },
-              { icon: ShieldCheck, title: t("FIABILITÉ DES LIVRABLES", "RELIABILITY OF DELIVERABLES"), bg: "#A06A3A" },
-            ].map((pillar, i) => (
-              <div key={i} className="flex items-center gap-6 bg-white rounded-xl p-5 shadow-sm">
-                <div className="w-[85px] h-[85px] rounded-2xl flex items-center justify-center shrink-0" style={{ backgroundColor: pillar.bg }}>
-                  <pillar.icon size={36} className="text-white" strokeWidth={1.5} />
-                </div>
-                <h3 className="font-serif text-2xl font-bold text-[#122017]">{pillar.title}</h3>
-              </div>
+              t("CONTINUITÉ OPÉRATIONNELLE", "OPERATIONAL CONTINUITY"),
+              t("TRAÇABILITÉ DES ACTIONS", "TRACEABILITY OF ACTIONS"),
+              t("FIABILITÉ DES LIVRABLES", "RELIABILITY OF DELIVERABLES"),
+            ].map((label, i) => (
+              <React.Fragment key={i}>
+                <span className="text-[#122017] font-bold text-[1rem] tracking-wide uppercase whitespace-nowrap py-2 sm:py-0">
+                  {label}
+                </span>
+                {i < 2 && (
+                  <div className="hidden sm:block w-px h-6 bg-[#D9B151] mx-10 shrink-0" />
+                )}
+              </React.Fragment>
             ))}
           </div>
+
         </div>
       </section>
 

@@ -1,416 +1,282 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Globe, Calendar, FileCheck, ShieldCheck, Target, Users, Search, Award, BarChart2, PieChart, FileSpreadsheet, Building2, MoreHorizontal } from "lucide-react";
+import { ArrowRight, Globe, BarChart2, CheckCircle2, FileSpreadsheet, Building2, Zap, Clock, Maximize, Settings, Search, Lightbulb, CheckSquare } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
-import CallToAction from "@/components/layout/CallToAction";
-import "./home.css";
 
 export default function Home() {
   const { t } = useLanguage();
 
   return (
     <main className="flex flex-col w-full min-h-screen bg-[#FDFDFD]">
-      
-      {/* ── HERO INTRO ── */}
-      <section className="home-hero-section">
+
+      {/* ── SECTION 1 : HERO ── */}
+      <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
-          <img
-            src="/office-lounge.jpg"
-            alt="Externalisation opérationnelle"
-            className="w-full h-full object-cover object-center"
-            onError={(e) => { e.currentTarget.src = "/banner-desk.jpg"; }}
-          />
-          <div className="home-hero-overlay" />
+          <img src="/office-lounge.jpg" alt="Hero" className="w-full h-full object-cover object-center" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#122017] from-20% via-[#122017]/75 via-50% to-transparent to-70%" />
         </div>
 
-        <div className="home-hero-content">
-          <div className="relative py-12">
+        <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
+          <div className="relative py-12 pl-10">
+            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-[#D9B151]" />
+            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#D9B151]" />
+            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#D9B151]" />
             <div className="relative">
-              <h1 className="home-hero-title">
-                {t("Externalisation\nopérationnelle.", "Operational\noutsourcing.").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+              <h1 className="font-serif text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] text-white mb-4">
+                <span className="block">{t("Externalisation", "Outsourcing")}</span>
+                <span className="block">{t("opérationnelle.", "operational.")}</span>
               </h1>
-              <h2 className="home-hero-subtitle">
+              <h2 className="text-[#D9B151] italic text-4xl md:text-5xl lg:text-6xl mb-8 leading-[1.1]">
                 {t("Sérénité garantie.", "Guaranteed serenity.")}
               </h2>
-              
-              <div className="home-hero-desc max-w-3xl">
-                <p className="text-white mb-6">
-                  {t(
-                    "Nous sécurisons l'exécution de vos opérations back et middle office pour que vos équipes se concentrent sur les décisions stratégiques qui comptent.",
-                    "We secure the execution of your back and middle office operations so your teams can focus on strategic decisions that matter."
-                  )}
+              <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-xl font-normal space-y-3 mb-8">
+                <p>
+                  {t("Nous sécurisons l'exécution de vos opérations back et middle office pour que vos équipes se concentrent sur les décisions stratégiques qui comptent.", "We secure the execution of your back and middle office operations so your teams can focus on strategic decisions that matter.")}
                 </p>
-
-                {/* Features List */}
-                <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-white text-[0.85rem] font-normal tracking-wide mb-10">
-                  <div className="flex items-center gap-2">
-                    <Globe className="shrink-0 text-[#D9B151]" size={20} strokeWidth={1.5} />
-                    <span>{t("Interventions en français et en anglais", "Interventions in French and English")}</span>
-                  </div>
-                  <span className="text-[#D9B151] hidden sm:block">•</span>
-                  <div className="flex items-center gap-2">
-                    <Users className="shrink-0 text-[#D9B151]" size={20} strokeWidth={1.5} />
-                    <span>{t("Profils bilingues et certifiés", "Bilingual and certified profiles")}</span>
-                  </div>
-                </div>
               </div>
-
-              {/* CTA & Trust Badge */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8">
-                <Link
-                  href="/nous-contacter"
-                  className="home-hero-btn"
-                >
-                  {t("PRÉSENTER UN BESOIN", "PRESENT A NEED")} <ArrowRight size={16} />
-                </Link>
-
-                <div className="flex items-center gap-4 text-white">
-                  <div className="shrink-0 w-[42px] h-[42px] flex items-center justify-center border border-[#D9B151] rounded-[0.4rem]">
-                    <ShieldCheck className="text-[#D9B151]" size={24} strokeWidth={1.5} />
-                  </div>
-                  <p className="text-white text-xs font-normal leading-relaxed max-w-[180px]">
-                    {t("Supervision par des\nprofessionnels habilités", "Supervision by\nauthorized professionals").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-                  </p>
-                </div>
+              <div className="flex items-center gap-3 text-white text-[0.95rem] mb-10 font-medium">
+                <Globe className="text-[#D9B151]" size={20} />
+                <span>{t("Interventions en français et en anglais", "Interventions in French and English")}</span>
               </div>
+              <Link href="/nous-contacter" className="inline-flex items-center justify-center gap-3 bg-[#D9B151] text-[#122017] border border-[#D9B151] px-8 py-3.5 text-[0.85rem] font-bold tracking-wider uppercase transition-all hover:bg-transparent hover:text-[#D9B151] w-fit rounded-sm shadow-md">
+                {t("PRÉSENTER UN BESOIN", "PRESENT A NEED")} <ArrowRight size={16} />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── INTRO TEXT ── */}
-      <section className="w-full relative bg-[#FDFDFD]">
-        <div className="relative w-full max-w-[1000px] mx-auto px-6 py-12 md:py-16 flex justify-center items-center">
-          <p className="home-wave-text">
-            MENUA CONSULTING {t(
-              "intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées pour sécuriser et renforcer l'exécution des fonctions back et middle office.",
-              "supports financial, accounting, wealth, IT and regulated teams to secure and strengthen the execution of back and middle office functions."
-            )}
+      {/* ── SECTION 2 : L'EXPERTISE D'UN CABINET SPÉCIALISÉ ── */}
+      <section className="py-24 bg-[#F9F7F1]">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-8 h-[1px] bg-[#D9B151]" />
+                <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
+                  {t("Le partenaire opérationnel de vos équipes", "The operational partner of your teams")}
+                </span>
+              </div>
+              <h2 className="text-[#122017] text-4xl lg:text-[2.8rem] font-bold leading-[1.15] mb-8">
+                {t("L'expertise d'un cabinet spécialisé, la fiabilité d'une équipe dédiée.", "The expertise of a specialized firm, the reliability of a dedicated team.")}
+              </h2>
+              <p className="text-[#4A4E5A] text-[1.05rem] leading-[1.7] mb-10 max-w-xl">
+                {t("MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées. Notre mission: sécuriser et renforcer l'exécution de vos fonctions back et middle office pour vous permettre de vous concentrer sur votre cœur de métier.", "MENUA CONSULTING supports financial, accounting, wealth, data and regulated teams. Our mission: to secure and strengthen the execution of your back and middle office functions to allow you to focus on your core business.")}
+              </p>
+              <Link href="/nous-connaitre" className="inline-flex items-center justify-center gap-3 bg-[#122017] text-white px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:bg-[#D9B151] hover:text-[#122017] w-fit rounded-sm shadow-md">
+                {t("DÉCOUVRIR NOS EXPERTISES", "DISCOVER OUR EXPERTISE")} <ArrowRight size={16} />
+              </Link>
+            </div>
+            <div className="w-full h-[450px] rounded-2xl overflow-hidden shadow-2xl">
+              <img src="/banner-desk.jpg" alt="Expertise" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SECTION 3 : DES EXPERTISES OPÉRATIONNELLES ── */}
+      <section className="py-24 bg-white">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
+          <h2 className="text-[#122017] text-3xl lg:text-4xl font-bold text-center mb-4">
+            {t("Des expertises opérationnelles, au cœur de votre activité.", "Operational expertise, at the heart of your activity.")}
+          </h2>
+          <p className="text-[#4A4E5A] text-center italic text-xl mb-8 font-serif">
+            {t("Un appui ciblé pour chaque fonction de votre organisation.", "Targeted support for each function of your organization.")}
           </p>
-        </div>
-      </section>
+          <div className="w-12 h-[2px] bg-[#D9B151] mb-16" />
 
-      {/* ── CHIFFRES CLÉS ── */}
-      <section className="home-chiffres-section">
-        <div className="home-chiffres-container">
-          
-          {/* Diamond Grid Layout */}
-          <div className="relative mx-auto" style={{ width: "100%", maxWidth: "440px", height: "440px", marginTop: "2rem", marginBottom: "2rem" }}>
-            
-            {/* Circle connector lines */}
-            <div className="absolute rounded-full border border-[#122017]/30"
-              style={{ width: "46%", height: "46%", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} />
-
-            {/* Center label */}
-            <div className="absolute z-10 text-center pointer-events-none"
-              style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-              <span className="text-[#122017] text-[1rem] md:text-[1.15rem] font-light italic whitespace-nowrap">
-                {t("Chiffres clés", "Key figures")}
-              </span>
-            </div>
-
-            {/* TOP — 10+ */}
-            <div className="absolute flex items-center justify-center"
-              style={{ width: "34%", aspectRatio: "1/1", top: "0", left: "50%", transform: "translateX(-50%) rotate(45deg)", backgroundColor: "#122017", borderRadius: "1.2rem", boxShadow: "4px 4px 16px rgba(44,74,56,0.3)" }}>
-              <div style={{ transform: "rotate(-45deg)", textAlign: "center", padding: "0.5rem" }}>
-                <div className="text-white text-[1.8rem] md:text-[2.2rem] font-light leading-none">10+</div>
-                <div className="text-white/70 text-[0.45rem] md:text-[0.55rem] font-bold uppercase tracking-widest mt-2 leading-tight">
-                  {t("Années", "Years")}<br/>{t("d'expérience", "of experience")}
-                </div>
-              </div>
-            </div>
-
-            {/* LEFT — 50+ */}
-            <div className="absolute flex items-center justify-center"
-              style={{ width: "34%", aspectRatio: "1/1", top: "50%", left: "-12%", transform: "translateY(-50%) rotate(45deg)", backgroundColor: "#122017", borderRadius: "1.2rem", boxShadow: "4px 4px 16px rgba(44,74,56,0.3)" }}>
-              <div style={{ transform: "rotate(-45deg)", textAlign: "center", padding: "0.5rem" }}>
-                <div className="text-white text-[1.8rem] md:text-[2.2rem] font-light leading-none">50+</div>
-                <div className="text-white/70 text-[0.45rem] md:text-[0.55rem] font-bold uppercase tracking-widest mt-2 leading-tight">
-                  {t("Missions", "Missions")}<br/>{t("accomplies", "accomplished")}
-                </div>
-              </div>
-            </div>
-
-            {/* RIGHT — FR/EN */}
-            <div className="absolute flex items-center justify-center"
-              style={{ width: "34%", aspectRatio: "1/1", top: "50%", right: "-12%", transform: "translateY(-50%) rotate(45deg)", backgroundColor: "#122017", borderRadius: "1.2rem", boxShadow: "4px 4px 16px rgba(44,74,56,0.3)" }}>
-              <div style={{ transform: "rotate(-45deg)", textAlign: "center", padding: "0.5rem" }}>
-                <div className="text-white text-[1.1rem] md:text-[1.5rem] font-light leading-none">FR / EN</div>
-                <div className="text-white/70 text-[0.45rem] md:text-[0.55rem] font-bold uppercase tracking-widest mt-2 leading-tight">
-                  {t("Interventions", "Interventions")}<br/>{t("bilingues", "bilingual")}
-                </div>
-              </div>
-            </div>
-
-            {/* BOTTOM — 100% */}
-            <div className="absolute flex items-center justify-center"
-              style={{ width: "34%", aspectRatio: "1/1", bottom: "0", left: "50%", transform: "translateX(-50%) rotate(45deg)", backgroundColor: "#122017", borderRadius: "1.2rem", boxShadow: "4px 4px 16px rgba(44,74,56,0.3)" }}>
-              <div style={{ transform: "rotate(-45deg)", textAlign: "center", padding: "0.5rem" }}>
-                <div className="text-white text-[1.8rem] md:text-[2.2rem] font-light leading-none">100%</div>
-                <div className="text-white/70 text-[0.45rem] md:text-[0.55rem] font-bold uppercase tracking-widest mt-2 leading-tight">
-                  {t("Supervision", "Supervision")}<br/>{t("par des professionnels", "by professionals")}
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ── DOMAINES D'INTERVENTION ── */}
-      <section className="home-domaines-section" id="domaines">
-        <div className="home-domaines-container">
-          
-          {/* Left Text Block */}
-          <div className="w-full lg:w-[55%] flex flex-col">
-            <h2 className="home-domaines-title-sm">
-              {t("Domaines d'intervention", "Areas of intervention")}
-            </h2>
-            <h3 className="home-domaines-title-lg uppercase">
-              {t("VOS BESOINS", "YOUR NEEDS")}
-            </h3>
-            <div className="w-12 h-[2px] bg-[#D9B151] mb-12" />
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-12">
-              {[
-                { title: t("Finance & Reporting", "Finance & Reporting"), desc: t("Production, structuration et fiabilisation de reportings financiers.", "Production, structuring and reliability of financial reporting.") },
-                { title: t("Contrôle de gestion", "Management control"), desc: t("Appui opérationnel au suivi budgétaire, à l'analyse des écarts et au pilotage de la performance.", "Operational support for budget monitoring, variance analysis and performance management.") },
-                { title: t("Risques & Conformité", "Risk & Compliance"), desc: t("Appui opérationnel aux équipes risques et conformité dans le traitement des dossiers sensibles.", "Operational support to risk and compliance teams in the processing of sensitive files.") },
-                { title: t("Support comptable & data", "Accounting & data support"), desc: t("Appui opérationnel aux équipes comptables, administratives et data.", "Operational support to accounting, administrative and data teams.") },
-                { title: t("Gestion de Patrimoine & CGP", "Wealth management & IFA"), desc: t("Appui opérationnel aux cabinets de gestion de patrimoine et structures patrimoniales.", "Operational support to wealth management firms and wealth structures.") },
-                { title: t("Autres besoins opérationnels", "Other operational needs"), desc: t("Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques.", "Handling of occasional, transversal or specific operational needs.") },
-              ].map((item, i) => (
-                <div key={i} className={`flex flex-col ${i % 2 === 1 ? 'sm:border-l-[2px] sm:border-[#D9B151]/40 sm:pl-6' : 'sm:pr-4'}`}>
-                  <h3 className="font-semibold text-xs whitespace-pre-line leading-snug text-[#111F18] mb-3">
-                    {item.title}
-                  </h3>
-                  <p className="text-[#646A66] text-[0.95rem] lg:text-[1rem] font-medium leading-[1.6]">
-                    {item.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right Image Block */}
-          <div className="w-full lg:w-[45%] flex justify-center lg:justify-end mt-12 lg:mt-0">
-            <div className="w-full max-w-[450px] h-[350px] rounded-[2rem] overflow-hidden shadow-xl">
-              <img src="/trust-circle.jpg" alt="Vos besoins" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/besoin.png"; }} />
-            </div>
-          </div>
-          
-        </div>
-      </section>
-
-      {/* ── POURQUOI MENUA CONSULTING ── */}
-      <section className="home-pourquoi-section">
-        {/* Effet Bois Huilé (Oiled Wood Background) */}
-        <div 
-          className="absolute inset-0"
-          style={{
-            background: `
-              radial-gradient(ellipse 60% 30% at 45% 45%, rgba(255,210,140,0.18) 0%, transparent 100%),
-              linear-gradient(160deg, #8B6240 0%, #5A3A1E 50%, #3E2510 100%)
-            `,
-          }}
-        />
-
-        <div className="home-pourquoi-container">
-          <div className="flex flex-col items-center mb-2">
-            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-3 text-center">
-              {t("Pourquoi Menua Consulting ?", "Why Menua Consulting?")}
-            </h2>
-            <div className="w-10 h-[2px] bg-white" />
-          </div>
-
-          {/* Staircase cards */}
-          <div className="w-full flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-0 lg:justify-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full mb-16">
             {[
-              { num: "01", title: t("Approche 100%\nopérationnelle", "100% operational\napproach"), desc: t("Nous exécutons, nous restons impliqués, nous livrons.", "We execute, we stay involved, we deliver.") },
-              { num: "02", title: t("Ressources\nspécialisées\n& flexibles", "Specialized\n& flexible\nresources"), desc: t("Profils adaptés à vos besoins et contraintes réglementaires.", "Profiles adapted to your needs and regulatory constraints.") },
-              { num: "03", title: t("Contrôle qualité\npermanent", "Permanent\nquality control"), desc: t("Supervision continue et contrôlée à chaque étape.", "Continuous supervision and controlled at each step.") },
-              { num: "04", title: t("Expertise sectorielle\ncertifiée", "Certified sector\nexpertise"), desc: t("Maîtrise des environnements AMF, ACPR et réglementations internationales.", "Mastery of AMF, ACPR environments and international regulations.") },
+              { icon: BarChart2, title: t("Finance &\nReporting", "Finance &\nReporting"), desc: t("Des données fiabilisées pour un pilotage éclairé.", "Reliable data for informed management.") },
+              { icon: CheckCircle2, title: t("Contrôle\nde gestion", "Management\ncontrol"), desc: t("Une maîtrise accrue des coûts et de la performance.", "Increased control of costs and performance.") },
+              { icon: FileSpreadsheet, title: t("Support\ncomptable & Data", "Accounting\n& Data support"), desc: t("Des opérations fluides et des données structurées.", "Smooth operations and structured data.") },
+              { icon: Building2, title: t("Gestion de\nPatrimoine & CGP", "Wealth Management\n& IFA"), desc: t("Un support administratif réactif pour vos conseillers.", "Responsive administrative support for your advisors.") },
             ].map((item, i) => (
-              <div
-                key={i}
-                className="home-pourquoi-card"
-                style={{
-                  backgroundColor: "rgba(255,255,255,0.10)",
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15)",
-                  marginTop: i === 0 ? "0" : undefined,
-                  transform: `translateY(${i * 40}px)`,
-                  zIndex: 10 - i,
-                  marginLeft: i !== 0 ? "-1.5rem" : undefined,
-                }}
-              >
-                <div className="text-[#D9B151] text-[2.5rem] font-light leading-none mb-3 opacity-80">{item.num}</div>
-                <div className="w-8 h-[2px] bg-[#D9B151] mb-4 opacity-70" />
-                <h3 className="font-semibold text-xs leading-snug text-white mb-4">
-                  {item.title.split('\n').map((l, j) => <span key={j} className="block">{l}</span>)}
+              <div key={i} className="flex flex-col items-center text-center bg-[#F9F7F1] border border-[#E0D6C8] rounded-xl p-8 hover:shadow-xl transition-all">
+                <div className="w-14 h-14 rounded-full border border-[#D9B151] flex items-center justify-center mb-6 shrink-0 bg-white">
+                  <item.icon className="text-[#D9B151]" size={26} strokeWidth={1.5} />
+                </div>
+                <h3 className="text-[#122017] text-[1.1rem] font-bold mb-4 whitespace-pre-line leading-[1.2]">
+                  {item.title}
                 </h3>
-                <p className="text-white/70 text-[0.75rem] font-normal leading-[1.7]">
-                  {item.desc}
-                </p>
+                <p className="text-[#646A66] text-[0.85rem] leading-[1.6]">{item.desc}</p>
               </div>
             ))}
           </div>
-          {/* Bottom spacing for staircase offset */}
-          <div className="h-[120px] lg:h-[160px]" />
+
+          <Link href="/vos-besoins" className="inline-flex items-center justify-center gap-3 bg-[#F9F7F1] text-[#122017] border border-[#E0D6C8] px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:border-[#D9B151] w-fit rounded-sm shadow-sm">
+            {t("VOIR TOUS NOS DOMAINES D'INTERVENTION", "VIEW ALL OUR AREAS OF INTERVENTION")} <ArrowRight size={16} />
+          </Link>
         </div>
       </section>
 
-      {/* ── NOS SOLUTIONS ── */}
-      <section className="home-solutions-section">
-        <div className="home-solutions-container">
+      {/* ── SECTION 4 : 02 — DISPOSITIF DURÉE ── */}
+      <section className="py-24 bg-[#F9F7F1]">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-16 items-center">
 
-          {/* Left: cream block with title + 2x2 cards */}
-          <div className="home-solutions-cream-block">
-            {/* Title */}
-            <div className="flex flex-col items-center mb-10">
-              <h2 className="font-serif text-2xl md:text-3xl font-bold text-[#272A2C] mb-3">
-                {t("Nos solutions", "Our solutions")}
-              </h2>
-              <div className="w-10 h-[2px] bg-[#D9B151]" />
+            <div className="w-full rounded-2xl overflow-hidden shadow-2xl h-[450px]">
+              <img src="/meeting.jpg" alt="Dispositif" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} />
             </div>
 
-            {/* 2x2 card grid */}
-            <div className="grid grid-cols-2 gap-5">
+            <div className="flex flex-col items-center lg:items-start w-full">
+              <div className="flex items-center gap-4 mb-6">
+                <span className="text-[#D9B151] text-xl font-bold tracking-widest">02 —</span>
+                <span className="text-[#D9B151] text-[1.1rem] font-normal uppercase tracking-widest">
+                  {t("Dispositif", "Framework")}
+                </span>
+              </div>
+              <h2 className="text-[#122017] text-4xl lg:text-[3.2rem] font-bold leading-none mb-16 font-serif">
+                {t("Durée", "Duration")}
+              </h2>
+
+              <div className="relative w-[380px] h-[380px] mx-auto lg:mx-0 flex items-center justify-center">
+                <div className="absolute w-[260px] h-[260px] rounded-full border-[1.5px] border-[#D9B151]/40" />
+
+                {/* Top: 01 Contrôle */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 flex flex-col items-center bg-[#F9F7F1] p-2">
+                  <div className="w-16 h-16 rounded-full border border-[#D9B151] bg-white flex items-center justify-center shadow-md mb-2">
+                    <Search className="text-[#D9B151]" size={24} strokeWidth={1.5} />
+                  </div>
+                  <span className="text-[#D9B151] font-bold text-sm">01</span>
+                  <span className="text-[#122017] font-bold text-sm">{t("Contrôle", "Control")}</span>
+                </div>
+
+                {/* Right: 02 Analyse */}
+                <div className="absolute top-1/2 right-0 translate-x-4 -translate-y-1/2 flex flex-col items-center bg-[#F9F7F1] p-2">
+                  <div className="w-16 h-16 rounded-full border border-[#D9B151] bg-white flex items-center justify-center shadow-md mb-2">
+                    <BarChart2 className="text-[#D9B151]" size={24} strokeWidth={1.5} />
+                  </div>
+                  <span className="text-[#D9B151] font-bold text-sm">02</span>
+                  <span className="text-[#122017] font-bold text-sm">{t("Analyse", "Analysis")}</span>
+                </div>
+
+                {/* Bottom: 03 Expertise */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-4 flex flex-col items-center bg-[#F9F7F1] p-2">
+                  <div className="w-16 h-16 rounded-full border border-[#D9B151] bg-white flex items-center justify-center shadow-md mb-2">
+                    <Lightbulb className="text-[#D9B151]" size={24} strokeWidth={1.5} />
+                  </div>
+                  <span className="text-[#D9B151] font-bold text-sm">03</span>
+                  <span className="text-[#122017] font-bold text-sm">{t("Expertise", "Expertise")}</span>
+                </div>
+
+                {/* Left: 04 Clôture */}
+                <div className="absolute top-1/2 left-0 -translate-x-4 -translate-y-1/2 flex flex-col items-center bg-[#F9F7F1] p-2">
+                  <div className="w-16 h-16 rounded-full border border-[#D9B151] bg-white flex items-center justify-center shadow-md mb-2">
+                    <CheckSquare className="text-[#D9B151]" size={24} strokeWidth={1.5} />
+                  </div>
+                  <span className="text-[#D9B151] font-bold text-sm">04</span>
+                  <span className="text-[#122017] font-bold text-sm">{t("Clôture", "Closure")}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SECTION 5 : DES SOLUTIONS D'EXTERNALISATION ── */}
+      <section className="py-24 bg-white">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+          <div className="flex flex-col max-w-5xl mx-auto">
+            <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase mb-4 text-center lg:text-left">
+              {t("NOS SOLUTIONS", "OUR SOLUTIONS")}
+            </p>
+            <h2 className="text-[#122017] text-4xl lg:text-[2.8rem] font-bold leading-[1.15] mb-12 text-center lg:text-left">
+              {t("Des solutions d'externalisation conçues pour s'adapter à vos contraintes.", "Outsourcing solutions designed to adapt to your constraints.")}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10 mb-12">
               {[
-                { num: "01", title: t("URGENCE", "EMERGENCY"), desc: t("Mobilisation rapide de ressources spécialisées pour répondre à un besoin urgent et assurer le soutien adapté et structuré la continuité de votre service.", "Rapid mobilization of specialized resources to respond to an urgent need and ensure adapted, structured support and continuity of your service.") },
-                { num: "02", title: t("DURÉE", "DURATION"), desc: t("Menua Consulting propose des missions adaptées à la fois en durée et en intensité selon nécessaire à vos projets.", "Menua Consulting offers missions adapted in both duration and intensity as necessary to your projects.") },
-                { num: "03", title: t("VOLUME", "VOLUME"), desc: t("Gestion optimisée de vos volumes d'opérations avec une capacité d'adaptation rapide et efficace.", "Optimized management of your operational volumes with rapid and efficient adaptation capacity.") },
-                { num: "04", title: t("ORGANISATION", "ORGANIZATION"), desc: t("Intégration fluide dans vos processus existants pour renforcer votre structure sans impacter en performance.", "Fluid integration into your existing processes to strengthen your structure without impacting performance.") },
+                { icon: Zap, title: t("Urgence", "Emergency"), desc: t("Mobilisation rapide de ressources pour absorber un pic d'activité ou un besoin immédiat.", "Rapid mobilization of resources to absorb a peak in activity or an immediate need.") },
+                { icon: Clock, title: t("Durée", "Duration"), desc: t("De la mission ponctuelle à l'externalisation continue, la flexibilité contractuelle que vous attendez.", "From ad hoc missions to continuous outsourcing, the contractual flexibility you expect.") },
+                { icon: Maximize, title: t("Volume", "Volume"), desc: t("Un dimensionnement d'équipe ajusté à la charge de travail, pour une efficacité optimale.", "Team sizing adjusted to the workload, for optimal efficiency.") },
+                { icon: Settings, title: t("Organisation", "Organization"), desc: t("Intégration dédiée, prise en charge de processus métiers spécifiques, selon vos besoins.", "Dedicated integration, handling of specific business processes, according to your needs.") },
               ].map((item, i) => (
-                <div
-                  key={i}
-                  className="flex flex-col bg-white rounded-2xl p-5"
-                  style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.06)", borderBottom: "3px solid #D9B151" }}
-                >
-                  <span className="text-[#D9B151]/30 text-[2.5rem] font-light leading-none mb-3 select-none">{item.num}</span>
-                  <h3 className="font-semibold text-xs leading-snug text-[#1A1A1A] mb-2">{item.title}</h3>
-                  <p className="text-[#6B6B6B] text-[0.72rem] font-normal leading-[1.7]">{item.desc}</p>
+                <div key={i} className="flex gap-4">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-[#D9B151]">
+                    <item.icon className="text-[#D9B151]" size={18} strokeWidth={1.5} />
+                  </div>
+                  <div className="flex flex-col">
+                    <h3 className="text-[#122017] text-[1.05rem] font-bold mb-2">{item.title}</h3>
+                    <p className="text-[#646A66] text-[0.85rem] leading-[1.5]">{item.desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Right: image — above cream block in Z */}
-          <div className="home-solutions-img-wrapper">
-            <div className="w-full h-[360px] lg:h-[420px] rounded-2xl lg:rounded-l-none overflow-hidden" style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.10)" }}>
-              <img
-                src="/meeting.jpg"
-                alt="Nos solutions"
-                className="w-full h-full object-cover"
-                onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
-              />
+            <div className="flex justify-center lg:justify-start">
+              <Link href="/nos-solutions" className="inline-flex items-center justify-center gap-3 bg-[#122017] text-white px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:bg-[#D9B151] hover:text-[#122017] w-fit rounded-sm shadow-md">
+                {t("DÉCOUVRIR NOS SOLUTIONS", "DISCOVER OUR SOLUTIONS")} <ArrowRight size={16} />
+              </Link>
             </div>
           </div>
-
         </div>
       </section>
 
-      {/* ── SUPERVISION & CERTIFICATIONS ── */}
-      <section className="home-supervision-section">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 flex flex-col items-center">
-          
-          <div className="flex flex-col items-center mb-6">
-            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4 text-center">
-              {t("Supervision & certifications", "Supervision & certifications")}
-            </h2>
-            <div className="w-10 h-[2px] bg-white" />
-          </div>
-          
-          <div className="home-supervision-grid">
-             <div className="home-supervision-item md:border-r border-white/20">
-               <span className="text-white text-[0.85rem] font-bold tracking-widest uppercase mb-4">AMF</span>
-               <span className="text-white text-[0.75rem] font-medium leading-[1.6]">Certification AMF<br/>en tant qu'apporteur</span>
-             </div>
-             <div className="home-supervision-item md:border-r border-white/20">
-               <span className="text-white text-[0.85rem] font-bold tracking-widest uppercase mb-4">Contrôle Interne</span>
-               <span className="text-white text-[0.75rem] font-medium leading-[1.6]">Certification en Contrôle Interne<br/>et Gestion des Risques</span>
-             </div>
-             <div className="home-supervision-item">
-               <span className="text-white text-[0.85rem] font-bold tracking-widest uppercase mb-4">Risques & Conformité</span>
-               <span className="text-white text-[0.75rem] font-medium leading-[1.6]">Environnements réglementés maîtrisés</span>
-             </div>
-          </div>
-
-          <p className="text-white text-[0.75rem] font-medium text-center max-w-4xl leading-[1.8]">
-            {t(
-              "MENUA CONSULTING n'exerce pas d'activité réglementée en son nom propre. Le cabinet met à disposition des ressources opérationnelles spécialisées intégrées aux cadres d'agrément et de supervision de ses clients. Ce dispositif garantit la conformité, la qualité des opérations et la sécurité des processus.",
-              "MENUA CONSULTING does not carry out regulated activities in its own name. The firm provides specialized operational resources integrated into its clients' approval and supervision frameworks. This ensures compliance, quality of operations and process security."
-            )}
-          </p>
-        </div>
-      </section>
-
-      {/* ── ACTUALITÉS ── */}
-      <section className="home-news-section">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-center">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12 text-center">
-            {t("Actualités", "News")}
+      {/* ── SECTION 6 : ÉCLAIRAGES & ANALYSES ── */}
+      <section className="py-24 bg-[#F9F7F1]">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
+          <h2 className="text-[#122017] text-3xl lg:text-4xl font-bold text-center mb-2">
+            {t("Éclairages & analyses", "Insights & analyses")}
           </h2>
+          <p className="text-[#122017] text-2xl lg:text-3xl font-bold text-center mb-16">
+            {t("pour anticiper les évolutions du secteur.", "to anticipate industry developments.")}
+          </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mb-16">
             {[
-              {
-                img: "/news-1.jpg",
-                tag: "ACTUALITÉ",
-                date: t("12 MAI 2024", "12 MAY 2024"),
-                title: t("Digitalisation des processus back office : enjeux et bonnes pratiques", "Digitalization of back office processes: challenges and best practices"),
-                desc: t("Automatisation, fiabilisation des données, réduction des délais : les leviers clés pour transformer durablement vos opérations.", "Automation, data reliability, reduced delays: the key levers to sustainably transform your operations."),
-              },
-              {
-                img: "/news-2.jpg",
-                tag: "RÉGLEMENTATION",
-                date: t("06 MAI 2024", "06 MAY 2024"),
-                title: t("Conformité réglementaire : les évolutions dès à anticiper en 2025", "Regulatory compliance: key developments to anticipate in 2025"),
-                desc: t("Tour d'horizon des nouvelles exigences et bonnes pratiques à intégrer dès maintenant dans vos processus.", "An overview of new requirements and best practices to integrate now into your processes."),
-              },
-              {
-                img: "/news-3.jpg",
-                tag: "REPORTING",
-                date: t("28 MAI 2024", "28 MAY 2024"),
-                title: t("Reporting financier : améliorer la qualité des données opérationnelles", "Financial reporting: improving the quality of operational data"),
-                desc: t("Méthodes, outils et indicateurs pour produire un reporting fiable, pertinent et décisionnel.", "Methods, tools and indicators to produce reliable, relevant and decision-oriented reporting."),
-              },
+              { img: "/news-1.jpg", tag: "DIGITALISATION", date: "12 MAI 2024", title: t("Digitalisation des processus back office : enjeux et bonnes pratiques", "Digitalization of back office processes: challenges and best practices") },
+              { img: "/news-2.jpg", tag: "RÉGLEMENTATION", date: "06 MAI 2024", title: t("Conformité réglementaire : les évolutions dès à anticiper en 2025", "Regulatory compliance: key developments to anticipate in 2025") },
+              { img: "/news-3.jpg", tag: "REPORTING", date: "28 MAI 2024", title: t("Reporting financier : améliorer la qualité des données opérationnelles", "Financial reporting: improving the quality of operational data") },
             ].map((news, i) => (
-              <div key={i} className="home-news-card group">
-                {/* Image */}
-                <div className="home-news-img-wrapper">
-                  <img src={news.img} alt={news.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                  <div className="absolute -bottom-0 left-6">
-                    <div className="bg-[#C16150] text-white px-3 py-1.5 text-[0.55rem] font-bold uppercase tracking-widest shadow-md">
-                      {news.tag}
-                    </div>
-                  </div>
+              <div key={i} className="flex flex-col bg-white overflow-hidden shadow-sm hover:shadow-xl transition-all rounded-lg group">
+                <div className="h-[220px] overflow-hidden">
+                  <img src={news.img} alt={news.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                 </div>
-                {/* Content */}
-                <div className="p-8 pt-6 flex flex-col flex-1">
-                  <div className="text-[#918279] text-[0.65rem] font-bold mb-4 uppercase tracking-widest">{news.date}</div>
-                  <h3 className="text-[#272A2C] text-[1rem] font-bold leading-[1.4] mb-4 group-hover:text-[#D9B151] transition-colors">
-                    {news.title}
-                  </h3>
-                  <p className="text-[#272A2C]/70 text-[0.8rem] leading-relaxed font-medium mb-6 flex-1">
-                    {news.desc}
-                  </p>
-                  <Link href="/actualites" className="flex items-center gap-2 text-[#C16150] text-[0.7rem] font-bold uppercase tracking-widest transition-all mt-auto w-fit">
-                    {t("Lire la suite", "Read more")} <ArrowRight size={14} />
+                <div className="p-8 flex flex-col flex-1">
+                  <div className="flex items-center gap-2 text-[#918279] text-[0.65rem] font-bold mb-4 uppercase tracking-widest">
+                    <span>{news.date}</span>
+                    <span>|</span>
+                    <span>{news.tag}</span>
+                  </div>
+                  <h3 className="text-[#122017] text-[1.15rem] font-bold leading-[1.4] mb-8">{news.title}</h3>
+                  <Link href="/actualites" className="flex items-center gap-2 text-[#D9B151] text-[0.75rem] font-bold uppercase tracking-widest transition-all mt-auto w-fit hover:gap-4">
+                    {t("LIRE LA SUITE", "READ MORE")} <ArrowRight size={14} />
                   </Link>
                 </div>
               </div>
             ))}
           </div>
 
-          <Link href="/actualites" className="inline-flex items-center justify-center gap-2 bg-transparent text-[#272A2C] border border-[#272A2C]/20 px-8 py-3.5 text-[0.75rem] font-bold uppercase tracking-[0.1em] hover:bg-[#F6F3F0] transition-colors w-full sm:w-auto">
-            {t("Voir toutes les actualités", "View all news")} <ArrowRight size={14} />
+          <Link href="/actualites" className="inline-flex items-center justify-center gap-3 bg-white text-[#122017] border border-[#E0D6C8] px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:border-[#D9B151] hover:bg-[#F9F7F1] w-fit rounded-sm shadow-sm">
+            {t("VOIR TOUTES LES ACTUALITÉS", "VIEW ALL NEWS")} <ArrowRight size={16} />
           </Link>
         </div>
       </section>
 
-      <CallToAction />
+      {/* ── SECTION 7 : L'EXPERTISE AU SERVICE DE VOTRE PERFORMANCE ── */}
+      <section className="bg-[#122017] py-16">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
+            <div className="flex flex-col text-center lg:text-left">
+              <h2 className="text-white text-3xl md:text-4xl font-bold mb-2">
+                {t("L'expertise au service de votre performance.", "Expertise serving your performance.")}
+              </h2>
+              <p className="text-white/70 text-lg font-normal">
+                {t("Des solutions d'externalisation sur-mesure, réactives et efficaces.", "Customized, reactive and efficient outsourcing solutions.")}
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/nous-contacter" className="inline-flex items-center justify-center gap-3 bg-[#D9B151] text-[#122017] border border-[#D9B151] px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:bg-transparent hover:text-[#D9B151] rounded-sm">
+                {t("PRÉSENTER UN BESOIN", "PRESENT A NEED")} <ArrowRight size={16} />
+              </Link>
+              <Link href="/nous-rejoindre" className="inline-flex items-center justify-center gap-3 bg-transparent text-white border border-white/30 px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:bg-white hover:text-[#122017] rounded-sm">
+                {t("NOUS REJOINDRE", "JOIN US")} <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
   );
 }

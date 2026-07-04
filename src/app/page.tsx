@@ -23,11 +23,11 @@ export default function Home() {
             <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#D9B151]" />
             <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#D9B151]" />
             <div className="relative">
-              <h1 className="font-serif text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] text-white mb-4">
+              <h1 className="font-serif text-4xl md:text-5xl lg:text-[2.5rem] font-bold leading-[1.1] text-white mb-4">
                 <span className="block">{t("Externalisation", "Outsourcing")}</span>
                 <span className="block">{t("opérationnelle.", "operational.")}</span>
               </h1>
-              <h2 className="text-[#D9B151] italic text-4xl md:text-5xl lg:text-6xl mb-8 leading-[1.1]">
+              <h2 className="text-[#D9B151] italic text-3xl md:text-4xl lg:text-[1.9rem] mb-8 leading-[1.1]">
                 {t("Sérénité garantie.", "Guaranteed serenity.")}
               </h2>
               <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-xl font-normal space-y-3 mb-8">
@@ -39,7 +39,7 @@ export default function Home() {
                 <Globe className="text-[#D9B151]" size={20} />
                 <span>{t("Interventions en français et en anglais", "Interventions in French and English")}</span>
               </div>
-              <Link href="/nous-contacter" className="inline-flex items-center justify-center gap-3 bg-[#D9B151] text-[#122017] border border-[#D9B151] px-8 py-3.5 text-[0.85rem] font-bold tracking-wider uppercase transition-all hover:bg-transparent hover:text-[#D9B151] w-fit rounded-sm shadow-md">
+              <Link href="/nous-contacter" className="inline-flex items-center justify-center gap-3 bg-[#D9B151] text-[#122017] border border-[#D9B151] px-8 py-3.5 text-[0.85rem] font-medium tracking-wider uppercase transition-all hover:bg-transparent hover:text-[#D9B151] w-fit rounded-sm shadow-md">
                 {t("PRÉSENTER UN BESOIN", "PRESENT A NEED")} <ArrowRight size={16} />
               </Link>
             </div>
@@ -48,9 +48,9 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 2 : L'EXPERTISE D'UN CABINET SPÉCIALISÉ ── */}
-      <section className="py-24 bg-[#F9F7F1]">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="py-12 bg-white">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-[#F9F7F1] rounded-2xl py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             <div className="flex flex-col">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-8 h-[1px] bg-[#D9B151]" />
@@ -58,7 +58,7 @@ export default function Home() {
                   {t("Le partenaire opérationnel de vos équipes", "The operational partner of your teams")}
                 </span>
               </div>
-              <h2 className="text-[#122017] text-4xl lg:text-[2.8rem] font-bold leading-[1.15] mb-8">
+              <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-8">
                 {t("L'expertise d'un cabinet spécialisé, la fiabilité d'une équipe dédiée.", "The expertise of a specialized firm, the reliability of a dedicated team.")}
               </h2>
               <p className="text-[#4A4E5A] text-[1.05rem] leading-[1.7] mb-10 max-w-xl">
@@ -68,7 +68,7 @@ export default function Home() {
                 {t("DÉCOUVRIR NOS EXPERTISES", "DISCOVER OUR EXPERTISE")} <ArrowRight size={16} />
               </Link>
             </div>
-            <div className="w-full h-[450px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
               <img src="/banner-desk.jpg" alt="Expertise" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} />
             </div>
           </div>
@@ -76,7 +76,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 3 : DES EXPERTISES OPÉRATIONNELLES ── */}
-      <section className="py-24 bg-white">
+      <section className="py-12 bg-white">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
           <h2 className="text-[#122017] text-3xl lg:text-4xl font-bold text-center mb-4">
             {t("Des expertises opérationnelles, au cœur de votre activité.", "Operational expertise, at the heart of your activity.")}
@@ -84,20 +84,17 @@ export default function Home() {
           <p className="text-[#4A4E5A] text-center italic text-xl mb-8 font-serif">
             {t("Un appui ciblé pour chaque fonction de votre organisation.", "Targeted support for each function of your organization.")}
           </p>
-          <div className="w-12 h-[2px] bg-[#D9B151] mb-16" />
+          <div className="w-12 h-[2px] bg-[#D9B151] mb-10" />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full mb-10">
             {[
               { icon: BarChart2, title: t("Finance &\nReporting", "Finance &\nReporting"), desc: t("Des données fiabilisées pour un pilotage éclairé.", "Reliable data for informed management.") },
               { icon: CheckCircle2, title: t("Contrôle\nde gestion", "Management\ncontrol"), desc: t("Une maîtrise accrue des coûts et de la performance.", "Increased control of costs and performance.") },
               { icon: FileSpreadsheet, title: t("Support\ncomptable & Data", "Accounting\n& Data support"), desc: t("Des opérations fluides et des données structurées.", "Smooth operations and structured data.") },
               { icon: Building2, title: t("Gestion de\nPatrimoine & CGP", "Wealth Management\n& IFA"), desc: t("Un support administratif réactif pour vos conseillers.", "Responsive administrative support for your advisors.") },
             ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center text-center bg-[#F9F7F1] border border-[#E0D6C8] rounded-xl p-8 hover:shadow-xl transition-all">
-                <div className="w-14 h-14 rounded-full border border-[#D9B151] flex items-center justify-center mb-6 shrink-0 bg-white">
-                  <item.icon className="text-[#D9B151]" size={26} strokeWidth={1.5} />
-                </div>
-                <h3 className="text-[#122017] text-[1.1rem] font-bold mb-4 whitespace-pre-line leading-[1.2]">
+              <div key={i} className="flex flex-col items-center text-center bg-[#F9F7F1] border border-[#E0D6C8] rounded-xl p-5 hover:shadow-xl transition-all">
+                <h3 className="text-[#122017] text-[1.1rem] font-bold mb-3 whitespace-pre-line leading-[1.2]">
                   {item.title}
                 </h3>
                 <p className="text-[#646A66] text-[0.85rem] leading-[1.6]">{item.desc}</p>

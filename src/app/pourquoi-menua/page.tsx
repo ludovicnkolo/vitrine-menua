@@ -28,14 +28,17 @@ export default function PourquoiMenuaPage() {
               <p className="text-[#D9B151] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.2em] uppercase mb-6">
                 {t("Notre valeur ajoutée", "Our added value")}
               </p>
-              <h1 className="font-serif text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] text-white mb-8">
-                {t("Pourquoi\nMenua Consulting ?", "Why\nMenua Consulting?").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] text-white mb-2">
+                {t("Pourquoi nous choisir comme", "Why choose us as an")}
               </h1>
-              <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-xl font-normal space-y-3" style={{ color: 'white' }}>
+              <h2 className="text-[#D9B151] italic text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-8">
+                {t("partenaire opérationnel ?", "operational partner?")}
+              </h2>
+              <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-2xl font-normal space-y-3" style={{ color: 'white' }}>
                 <p>
-                  MENUA CONSULTING {t(
-                    "accompagne les organisations confrontées à des enjeux d'exécution opérationnelle exigeants.",
-                    "supports organizations facing demanding operational execution challenges."
+                  {t(
+                    "Parce que nous transformons l'externalisation en un levier de performance, de fiabilité et de sérénité pour vos équipes.",
+                    "Because we transform outsourcing into a lever of performance, reliability and peace of mind for your teams."
                   )}
                 </p>
               </div>

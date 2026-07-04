@@ -50,50 +50,57 @@ export default function VosBesoinsPage() {
         </div>
       </section>
 
-      {/* ══ 1. FINANCE & REPORTING — Fond vert foncé, image droite ══ */}
-      <section id="finance-reporting" className="w-full bg-[#122017] py-12 lg:py-16 my-10 lg:my-16 overflow-hidden">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-          {/* Text left */}
-          <div className="w-full lg:w-[55%] flex flex-col">
-            <p className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151] mb-4">
-              {t("01 — Domaine", "01 — Area")}
-            </p>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-10">
-              {t("Finance &\nReporting", "Finance &\nReporting").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-            </h2>
-            <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
-            <p className="text-white text-[0.95rem] leading-[1.8] mb-8">
-              {t(
-                "Production, structuration et fiabilisation de reportings financiers destinés au pilotage de la performance, au suivi de l'activité et à l'aide à la décision.",
-                "Production, structuring and reliability of financial reporting intended for performance management, activity monitoring and decision support."
-              )}
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {[
-                t("Reporting financier", "Financial reporting"),
-                t("KPI | Dashboard", "KPI | Dashboard"),
-                t("Analyse de performance", "Performance analysis"),
-                t("Support direction financière", "Financial direction support"),
-                t("Consolidation de donnée", "Data consolidation"),
-                t("Analyse financière", "Financial analysis"),
-                t("Consolidation des données", "Data consolidation"),
-                t("Préparation de reportings pour direction financière", "Preparation of reporting for financial direction"),
-                t("Suivi d'activité", "Activity tracking"),
-                t("Reporting mensuel / trimestriel", "Monthly / quarterly reporting"),
-                t("Reporting de trésorerie", "Treasury reporting"),
-                t("Reporting de rentabilité", "Profitability reporting"),
-                t("Suivi des indicateurs", "Indicator tracking"),
-              ].map((item, i) => (
-                <div key={i} className="flex items-start gap-3 text-white text-[0.82rem]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
-                  <span>{item}</span>
-                </div>
-              ))}
+      {/* ══ 1. FINANCE & REPORTING ══ */}
+      <section id="finance-reporting" className="w-full bg-[#F9F7F1] py-24 lg:py-32">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            
+            {/* Text left */}
+            <div className="flex flex-col">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-8 h-[1px] bg-[#D9B151]" />
+                <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
+                  {t("01 — Domaine", "01 — Area")}
+                </span>
+              </div>
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-6">
+                {t("Finance &\nReporting", "Finance &\nReporting").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+              </h2>
+              <div className="w-16 h-[3px] bg-[#D9B151] mb-8" />
+              <div className="text-[#4A4E5A] text-[1.05rem] leading-[1.8] mb-8 font-normal">
+                <p>
+                  {t(
+                    "Production, structuration et fiabilisation de reportings financiers destinés au pilotage de la performance, au suivi de l'activité et à l'aide à la décision.",
+                    "Production, structuring and reliability of financial reporting intended for performance management, activity monitoring and decision support."
+                  )}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {[
+                  t("Reporting financier", "Financial reporting"),
+                  t("KPI | Dashboard", "KPI | Dashboard"),
+                  t("Analyse de performance", "Performance analysis"),
+                  t("Support direction financière", "Financial direction support"),
+                  t("Consolidation de donnée", "Data consolidation"),
+                  t("Analyse financière", "Financial analysis"),
+                  t("Consolidation des données", "Data consolidation"),
+                  t("Préparation de reportings pour direction financière", "Preparation of reporting for financial direction"),
+                  t("Suivi d'activité", "Activity tracking"),
+                  t("Reporting mensuel / trimestriel", "Monthly / quarterly reporting"),
+                  t("Reporting de trésorerie", "Treasury reporting"),
+                  t("Reporting de rentabilité", "Profitability reporting"),
+                  t("Suivi des indicateurs", "Indicator tracking"),
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3 text-[#122017]/70 text-[0.82rem]">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-          {/* Image right */}
-          <div className="w-full lg:w-[45%] flex justify-center lg:justify-end">
-            <div className="w-full max-w-[460px] h-[380px] rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+
+            {/* Image right */}
+            <div className="w-full h-[450px] rounded-2xl overflow-hidden shadow-2xl">
               <img
                 src="/trust-circle.jpg"
                 alt="Finance & Reporting"
@@ -101,6 +108,7 @@ export default function VosBesoinsPage() {
                 onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
               />
             </div>
+
           </div>
         </div>
       </section>
@@ -151,27 +159,22 @@ export default function VosBesoinsPage() {
         <div className="w-full border-y border-[#E0D6C8]/50">
           <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row">
             {/* Left Box (Title & Icon) */}
-            <div className="w-full md:w-1/2 p-6 lg:p-10 flex items-center gap-6 lg:gap-8">
-              <div className="w-20 h-20 lg:w-24 lg:h-24 bg-[#122017] rounded-2xl flex items-center justify-center shrink-0 shadow-lg">
-                <ShieldCheck className="text-[#D9B151]" size={36} strokeWidth={1.5} />
-              </div>
-              <div className="flex flex-col justify-center h-full">
-                <p className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151] mb-1">
-                  03
-                </p>
-                <h2 className="font-serif text-2xl lg:text-3xl font-bold text-[#122017] mb-2">
-                  {t("Risques & Conformité", "Risk & Compliance")}
-                </h2>
-                <p className="text-[#4A4E5A] text-[0.9rem] leading-[1.5]">
-                  {t(
-                    "Des processus fiabilisés au service de la conformité réglementaire.",
-                    "Reliable processes serving regulatory compliance."
-                  )}
-                </p>
-              </div>
+            <div className="w-full md:w-1/2 p-6 lg:p-10 flex flex-col justify-center">
+              <p className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151] mb-1">
+                03
+              </p>
+              <h2 className="font-serif text-2xl lg:text-3xl font-bold text-[#122017] mb-2">
+                {t("Risques & Conformité", "Risk & Compliance")}
+              </h2>
+              <p className="text-[#4A4E5A] text-[0.9rem] leading-[1.5]">
+                {t(
+                  "Des processus fiabilisés au service de la conformité réglementaire.",
+                  "Reliable processes serving regulatory compliance."
+                )}
+              </p>
             </div>
             {/* Right Image */}
-            <div className="w-full md:w-1/2 h-[250px] md:h-auto p-4 lg:p-6">
+            <div className="w-full md:w-1/2 h-[250px] md:h-[350px] p-4 lg:p-6">
               <img
                 src="/office-lounge.jpg"
                 alt="Risques & Conformité"
@@ -277,96 +280,131 @@ export default function VosBesoinsPage() {
         </div>
       </section>
 
-      {/* ══ 5. GESTION DE PATRIMOINE — Fond vert foncé, cards ══ */}
-      <section id="gestion-patrimoine" className="w-full bg-[#122017] py-12 lg:py-16 mb-10 lg:mb-16">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
-          <div className="flex flex-col items-center mb-14">
-            <p className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151] mb-4">
+      {/* ══ 5. GESTION DE PATRIMOINE ══ */}
+      <section id="gestion-patrimoine" className="w-full bg-[#FDFDFD] py-12 lg:py-16 mb-10 lg:mb-16">
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start gap-16">
+          {/* Text */}
+          <div className="w-full flex flex-col">
+            <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
               {t("05 — Domaine", "05 — Area")}
             </p>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-center text-white mb-10">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
               {t("Gestion de Patrimoine & CGP", "Wealth Management & IFA")}
             </h2>
-            <div className="w-12 h-[2px] bg-[#D9B151] mb-6" />
-            <p className="text-white text-[0.9rem] text-center max-w-2xl leading-[1.8]">
+            <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
+            <p className="text-[#122017]/75 text-[0.95rem] leading-[1.8] mb-8 max-w-3xl">
               {t(
                 "Appui opérationnel aux cabinets de gestion de patrimoine, family offices et structures patrimoniales dans le traitement, la préparation et le suivi administratif des dossiers clients.",
                 "Operational support to wealth management firms, family offices and wealth structures in the processing, preparation and administrative follow-up of client files."
               )}
             </p>
-          </div>
-          {/* Grid of bullets */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-[1100px] mx-auto mt-8">
-            {[
-              t("Préparation des dossiers d'entrée en relation", "Preparation of onboarding files"),
-              t("Collecte et contrôle des pièces justificatives", "Collection and control of supporting documents"),
-              t("Contrôle de complétude des dossiers clients", "Completeness control of client files"),
-              t("Mise à jour des informations clients", "Update of client information"),
-              t("Préparation et pré remplissage de formulaires", "Preparation and pre-filling of forms"),
-              t("Support administratif aux souscriptions", "Administrative support for subscriptions"),
-              t("Support aux arbitrages", "Support for arbitrations"),
-              t("Support aux rachats partiels ou totaux", "Support for partial or total redemptions"),
-              t("Suivi des demandes clients", "Follow-up of client requests"),
-              t("Organisation et archivage documentaire", "Document organization and archiving"),
-              t("Mise à jour des bases clients", "Update of client databases"),
-              t("Préparation de dossiers pour validation par les conseillers habilités", "Preparation of files for validation by authorized advisors"),
-              t("Suivi des opérations patrimoniales dans le respect des procédures internes", "Follow-up of wealth operations in compliance with internal procedures"),
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-3 text-white text-[0.85rem] bg-[#1a2e24] p-4 rounded-xl border border-white/5">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-2" />
-                <span>{item}</span>
-              </div>
-            ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {[
+                t("Préparation des dossiers d'entrée en relation", "Preparation of onboarding files"),
+                t("Collecte et contrôle des pièces justificatives", "Collection and control of supporting documents"),
+                t("Contrôle de complétude des dossiers clients", "Completeness control of client files"),
+                t("Mise à jour des informations clients", "Update of client information"),
+                t("Préparation et pré remplissage de formulaires", "Preparation and pre-filling of forms"),
+                t("Support administratif aux souscriptions", "Administrative support for subscriptions"),
+                t("Support aux arbitrages", "Support for arbitrations"),
+                t("Support aux rachats partiels ou totaux", "Support for partial or total redemptions"),
+                t("Suivi des demandes clients", "Follow-up of client requests"),
+                t("Organisation et archivage documentaire", "Document organization and archiving"),
+                t("Mise à jour des bases clients", "Update of client databases"),
+                t("Préparation de dossiers pour validation par les conseillers habilités", "Preparation of files for validation by authorized advisors"),
+                t("Suivi des opérations patrimoniales dans le respect des procédures internes", "Follow-up of wealth operations in compliance with internal procedures"),
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 text-[#122017]/75 text-[0.82rem]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ══ 6. AUTRES BESOINS — Fond crème ══ */}
-      <section id="autres-besoins" className="w-full bg-[#F6F3F0] py-12 lg:py-16 mb-10 lg:mb-16">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-start gap-16">
-          {/* Left: sticky title block */}
-          <div className="w-full lg:w-[38%] flex flex-col sticky top-24 self-start">
-            <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
-              {t("06 — Domaine", "06 — Area")}
-            </p>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
-              {t("Autres besoins\nopérationnels", "Other operational\nneeds").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-            </h2>
-            <div className="w-12 h-[2px] bg-[#D9B151] mb-6" />
-            <p className="text-[#122017]/70 text-[0.9rem] leading-[1.7]">
+      {/* ══ 6. AUTRES BESOINS ══ */}
+      <section id="autres-besoins" className="w-full flex flex-col mb-10 lg:mb-16 bg-pink-100">
+        {/* Top Banner */}
+        <div className="w-full border-y border-[#E0D6C8]/50">
+          <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row">
+            {/* Left Image (order 2 on mobile, order 1 on desktop) */}
+            <div className="w-full md:w-1/2 h-[250px] md:h-[350px] p-4 lg:p-6 order-2 md:order-1">
+              <img
+                src="/meeting.jpg"
+                alt="Autres besoins opérationnels"
+                className="w-full h-full object-cover rounded-2xl shadow-lg"
+                onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
+              />
+            </div>
+            {/* Right Box (Title) (order 1 on mobile, order 2 on desktop) */}
+            <div className="w-full md:w-1/2 p-6 lg:p-10 flex flex-col justify-center order-1 md:order-2">
+              <p className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151] mb-1">
+                06
+              </p>
+              <h2 className="font-serif text-2xl lg:text-3xl font-bold text-[#122017] mb-2">
+                {t("Autres besoins opérationnels", "Other operational needs")}
+              </h2>
+              <p className="text-[#4A4E5A] text-[0.9rem] leading-[1.5]">
+                {t(
+                  "Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques.",
+                  "Handling of occasional, transversal or specific operational needs."
+                )}
+              </p>
+              <div className="mt-6 flex items-center gap-3 text-[#122017] font-bold text-[0.85rem] border border-[#122017]/20 bg-white/60 px-4 py-3 rounded-lg w-fit">
+                <Globe size={18} className="text-[#8B6240]" />
+                {t("FR / EN — Bilingue", "FR / EN — Bilingual")}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Details */}
+        <div className="w-full py-10 lg:py-12">
+          <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center gap-12 lg:gap-24">
+            
+            {/* Left Paragraph */}
+            <div className="w-full md:w-[35%] text-[#122017]/80 text-[0.95rem] leading-[1.8] font-medium">
               {t(
                 "Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques ne relevant pas exclusivement d'une fonction financière, comptable, patrimoniale, conformité ou data.",
                 "Handling of occasional, transversal or specific operational needs not exclusively related to a financial, accounting, wealth, compliance or data function."
               )}
-            </p>
-            <div className="mt-8 flex items-center gap-3 text-[#122017] font-bold text-[0.85rem] border border-[#122017]/20 bg-white px-4 py-3 rounded-lg w-fit">
-              <Globe size={18} className="text-[#8B6240]" />
-              {t("FR / EN — Bilingue", "FR / EN — Bilingual")}
             </div>
-          </div>
-          {/* Right: cards list */}
-          <div className="w-full lg:w-[62%] grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              t("Missions ponctuelles de renfort opérationnel", "Occasional operational reinforcement missions"),
-              t("Support administratif financier", "Financial administrative support"),
-              t("Traitement de dossiers en volume", "Volume file processing"),
-              t("Classement, archivage et organisation documentaire", "Filing, archiving and document organization"),
-              t("Préparation et mise à jour de fichiers de suivi", "Preparation and update of tracking files"),
-              t("Support à la gestion d'opérations transverses", "Support for the management of transverse operations"),
-              t("Assistance à la formalisation de procédures internes", "Assistance in the formalization of internal procedures"),
-              t("Aide à la structuration de process opérationnels", "Help in structuring operational processes"),
-              t("Préparation de documents administratifs", "Preparation of administrative documents"),
-              t("Suivi de demandes internes ou clients", "Follow-up of internal or client requests"),
-              t("Support en période de surcharge d'activité", "Support during periods of activity overload"),
-              t("Remplacement ou appui temporaire d'équipe", "Replacement or temporary team support"),
-              t("Coordination entre équipes internes et prestataires externalisés", "Coordination between internal teams and external providers"),
-              t("Étude de besoins spécifiques non listés dans les rubriques précédentes", "Study of specific needs not listed in previous sections"),
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-3 bg-white p-4 rounded-xl border border-[#E0D6C8]/50 shadow-sm text-[#122017]/80 text-[0.82rem]">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
-                <span>{item}</span>
+
+            {/* Right List */}
+            <div className="w-full md:w-[65%] border-t md:border-t-0 md:border-l border-[#D9B151] pt-12 md:pt-0 md:pl-12 lg:pl-16">
+              <h3 className="text-[#8B6240] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-10">
+                {t("Périmètre d'intervention", "Scope of intervention")}
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
+                {[
+                  t("Missions ponctuelles de renfort opérationnel", "Occasional operational reinforcement missions"),
+                  t("Support administratif financier", "Financial administrative support"),
+                  t("Traitement de dossiers en volume", "Volume file processing"),
+                  t("Classement, archivage et organisation documentaire", "Filing, archiving and document organization"),
+                  t("Préparation et mise à jour de fichiers de suivi", "Preparation and update of tracking files"),
+                  t("Support à la gestion d'opérations transverses", "Support for the management of transverse operations"),
+                  t("Assistance à la formalisation de procédures internes", "Assistance in the formalization of internal procedures"),
+                  t("Aide à la structuration de process opérationnels", "Help in structuring operational processes"),
+                  t("Préparation de documents administratifs", "Preparation of administrative documents"),
+                  t("Suivi de demandes internes ou clients", "Follow-up of internal or client requests"),
+                  t("Support en période de surcharge d'activité", "Support during periods of activity overload"),
+                  t("Remplacement ou appui temporaire d'équipe", "Replacement or temporary team support"),
+                  t("Coordination entre équipes internes et prestataires externalisés", "Coordination between internal teams and external providers"),
+                  t("Étude de besoins spécifiques non listés dans les rubriques précédentes", "Study of specific needs not listed in previous sections"),
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-4">
+                    {/* Checkmark icon (Lucide Check path) */}
+                    <svg className="w-4 h-4 text-[#8B6240] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span className="text-[#122017]/80 text-[0.85rem] leading-[1.5]">{item}</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
           </div>
         </div>
       </section>

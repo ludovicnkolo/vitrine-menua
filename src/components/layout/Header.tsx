@@ -109,7 +109,7 @@ export default function Header() {
       onMouseLeave={() => setOpenMenu(null)}
     >
       {/* ── TOP BAR ── */}
-      <div className="flex items-center justify-between px-6 lg:px-10 h-14 lg:h-[64px] max-w-[1440px] mx-auto relative">
+      <div className="flex items-center justify-between px-6 lg:px-10 h-20 lg:h-[80px] max-w-[1440px] mx-auto relative">
 
         {/* MOBILE TOGGLE */}
         <button

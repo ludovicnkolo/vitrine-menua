@@ -31,7 +31,7 @@ export default function ActualitesPage() {
               <p className="text-[#D9B151] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.2em] uppercase mb-6">
                 {t("ACTUALITÉS", "NEWS")}
               </p>
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] text-white mb-8">
+              <h1 className="font-serif text-2xl md:text-3xl lg:text-[1.8rem] font-bold leading-[1.2] text-white mb-8">
                 {t("Éclairages & analyses", "Insights & analyses")}<br />
                 <span className="text-[#D9B151]">{t("pour anticiper les", "to anticipate")}</span><br />
                 <span className="text-[#D9B151]">{t("évolutions du secteur.", "sector evolutions.")}</span>

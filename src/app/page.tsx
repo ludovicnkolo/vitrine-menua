@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Globe, BarChart2, CheckCircle2, FileSpreadsheet, Building2, Zap, Clock, Maximize, Settings, Search, Lightbulb, CheckSquare } from "lucide-react";
+import { ArrowRight, Globe, BarChart2, CheckCircle2, FileSpreadsheet, Building2, Zap, Clock, Maximize, Settings, Search, Lightbulb, CheckSquare, Network, ShieldCheck } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 
 export default function Home() {
@@ -78,7 +78,7 @@ export default function Home() {
       {/* ── SECTION 3 : DES EXPERTISES OPÉRATIONNELLES ── */}
       <section className="py-12 bg-white">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
-          <h2 className="text-[#122017] text-3xl lg:text-4xl font-bold text-center mb-4">
+          <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold text-center mb-4">
             {t("Des expertises opérationnelles, au cœur de votre activité.", "Operational expertise, at the heart of your activity.")}
           </h2>
           <p className="text-[#4A4E5A] text-center italic text-xl mb-8 font-serif">
@@ -108,69 +108,76 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── SECTION 4 : 02 — DISPOSITIF DURÉE ── */}
-      <section className="py-24 bg-[#F9F7F1]">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-16 items-center">
+      {/* ── SECTION 4 : NOTRE APPROCHE ── */}
+      <section className="py-12 bg-white">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-[#F9F7F1] rounded-2xl py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
 
-            <div className="w-full rounded-2xl overflow-hidden shadow-2xl h-[450px]">
-              <img src="/meeting.jpg" alt="Dispositif" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} />
+            {/* Image à gauche */}
+            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
+              <img src="/meeting.jpg" alt="Notre approche" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} />
             </div>
 
-            <div className="flex flex-col items-center lg:items-start w-full">
+            {/* Texte à droite */}
+            <div className="flex flex-col">
               <div className="flex items-center gap-4 mb-6">
-                <span className="text-[#D9B151] text-xl font-bold tracking-widest">02 —</span>
-                <span className="text-[#D9B151] text-[1.1rem] font-normal uppercase tracking-widest">
-                  {t("Dispositif", "Framework")}
+                <div className="w-8 h-[1px] bg-[#D9B151]" />
+                <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
+                  {t("Notre approche", "Our approach")}
                 </span>
               </div>
-              <h2 className="text-[#122017] text-4xl lg:text-[3.2rem] font-bold leading-none mb-16 font-serif">
-                {t("Durée", "Duration")}
+              <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-3">
+                {t("Une approche 100% opérationnelle,", "A 100% operational approach,")}
               </h2>
+              <h2 className="text-[#D9B151] italic text-xl lg:text-[1.5rem] font-bold leading-[1.2] mb-6">
+                {t("intégrée à vos process.", "integrated into your processes.")}
+              </h2>
+              <p className="text-[#4A4E5A] text-[0.9rem] leading-[1.7] mb-8 italic">
+                {t(
+                  "Nous ne sommes pas des consultants. Nous sommes les bras et l'expertise qui exécutent.",
+                  "We are not consultants. We are the hands and expertise that execute."
+                )}
+              </p>
 
-              <div className="relative w-[380px] h-[380px] mx-auto lg:mx-0 flex items-center justify-center">
-                <div className="absolute w-[260px] h-[260px] rounded-full border-[1.5px] border-[#D9B151]/40" />
-
-                {/* Top: 01 Contrôle */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 flex flex-col items-center bg-[#F9F7F1] p-2">
-                  <div className="w-16 h-16 rounded-full border border-[#D9B151] bg-white flex items-center justify-center shadow-md mb-2">
-                    <Search className="text-[#D9B151]" size={24} strokeWidth={1.5} />
+              {/* 3 piliers */}
+              <div className="flex flex-col gap-5 mb-8">
+                {[
+                  {
+                    icon: Network,
+                    title: t("Intégration Fluide", "Seamless Integration"),
+                    desc: t("Vos méthodes, vos outils, vos procédures. Nous nous adaptons à votre organisation pour un renfort immédiatement opérationnel.", "Your methods, tools, procedures. We adapt to your organization for immediately operational support."),
+                  },
+                  {
+                    icon: ShieldCheck,
+                    title: t("Contrôle Qualité Permanent", "Permanent Quality Control"),
+                    desc: t("Une supervision continue et un contrôle à quatre yeux sur chaque livrable, garantissant une fiabilité et une traçabilité sans faille.", "Continuous supervision and four-eyes control on every deliverable, ensuring flawless reliability and traceability."),
+                  },
+                  {
+                    icon: Globe,
+                    title: t("Intervention Bilingue", "Bilingual Intervention"),
+                    desc: t("Une capacité d'intervention en français et en anglais pour une gestion fluide de vos opérations et reportings dans un contexte international.", "Ability to intervene in French and English for smooth management of your operations and reporting in an international context."),
+                  },
+                ].map((pilier, i) => (
+                  <div key={i} className="flex items-start gap-4">
+                    <div className="w-9 h-9 rounded-full border border-[#D9B151] bg-white flex items-center justify-center shrink-0 shadow-sm">
+                      <pilier.icon className="text-[#D9B151]" size={16} strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <h3 className="text-[#122017] text-[0.9rem] font-bold mb-1">{pilier.title}</h3>
+                      <p className="text-[#4A4E5A] text-[0.8rem] leading-[1.6]">{pilier.desc}</p>
+                    </div>
                   </div>
-                  <span className="text-[#D9B151] font-bold text-sm">01</span>
-                  <span className="text-[#122017] font-bold text-sm">{t("Contrôle", "Control")}</span>
-                </div>
-
-                {/* Right: 02 Analyse */}
-                <div className="absolute top-1/2 right-0 translate-x-4 -translate-y-1/2 flex flex-col items-center bg-[#F9F7F1] p-2">
-                  <div className="w-16 h-16 rounded-full border border-[#D9B151] bg-white flex items-center justify-center shadow-md mb-2">
-                    <BarChart2 className="text-[#D9B151]" size={24} strokeWidth={1.5} />
-                  </div>
-                  <span className="text-[#D9B151] font-bold text-sm">02</span>
-                  <span className="text-[#122017] font-bold text-sm">{t("Analyse", "Analysis")}</span>
-                </div>
-
-                {/* Bottom: 03 Expertise */}
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-4 flex flex-col items-center bg-[#F9F7F1] p-2">
-                  <div className="w-16 h-16 rounded-full border border-[#D9B151] bg-white flex items-center justify-center shadow-md mb-2">
-                    <Lightbulb className="text-[#D9B151]" size={24} strokeWidth={1.5} />
-                  </div>
-                  <span className="text-[#D9B151] font-bold text-sm">03</span>
-                  <span className="text-[#122017] font-bold text-sm">{t("Expertise", "Expertise")}</span>
-                </div>
-
-                {/* Left: 04 Clôture */}
-                <div className="absolute top-1/2 left-0 -translate-x-4 -translate-y-1/2 flex flex-col items-center bg-[#F9F7F1] p-2">
-                  <div className="w-16 h-16 rounded-full border border-[#D9B151] bg-white flex items-center justify-center shadow-md mb-2">
-                    <CheckSquare className="text-[#D9B151]" size={24} strokeWidth={1.5} />
-                  </div>
-                  <span className="text-[#D9B151] font-bold text-sm">04</span>
-                  <span className="text-[#122017] font-bold text-sm">{t("Clôture", "Closure")}</span>
-                </div>
+                ))}
               </div>
+
+              <Link href="/pourquoi-menua" className="inline-flex items-center gap-3 text-[#122017] text-[0.8rem] font-bold tracking-wider uppercase hover:text-[#D9B151] transition-colors w-fit">
+                {t("En savoir plus sur notre méthodologie", "Learn more about our methodology")} <ArrowRight size={16} />
+              </Link>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* ── SECTION 5 : DES SOLUTIONS D'EXTERNALISATION ── */}
       <section className="py-24 bg-white">
@@ -179,7 +186,7 @@ export default function Home() {
             <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase mb-4 text-center lg:text-left">
               {t("NOS SOLUTIONS", "OUR SOLUTIONS")}
             </p>
-            <h2 className="text-[#122017] text-4xl lg:text-[2.8rem] font-bold leading-[1.15] mb-12 text-center lg:text-left">
+            <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-8 text-center lg:text-left">
               {t("Des solutions d'externalisation conçues pour s'adapter à vos contraintes.", "Outsourcing solutions designed to adapt to your constraints.")}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10 mb-12">
@@ -212,7 +219,7 @@ export default function Home() {
       {/* ── SECTION 6 : ÉCLAIRAGES & ANALYSES ── */}
       <section className="py-24 bg-[#F9F7F1]">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
-          <h2 className="text-[#122017] text-3xl lg:text-4xl font-bold text-center mb-2">
+          <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold text-center mb-2">
             {t("Éclairages & analyses", "Insights & analyses")}
           </h2>
           <p className="text-[#122017] text-2xl lg:text-3xl font-bold text-center mb-16">
@@ -251,11 +258,11 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 7 : L'EXPERTISE AU SERVICE DE VOTRE PERFORMANCE ── */}
-      <section className="bg-[#122017] py-16">
+      <section className="bg-[#122017] py-5">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
             <div className="flex flex-col text-center lg:text-left">
-              <h2 className="text-white text-3xl md:text-4xl font-bold mb-2">
+              <h2 className="text-white text-2xl lg:text-[1.8rem] font-bold mb-2">
                 {t("L'expertise au service de votre performance.", "Expertise serving your performance.")}
               </h2>
               <p className="text-white/70 text-lg font-normal">

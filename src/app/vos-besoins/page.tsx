@@ -18,7 +18,7 @@ export default function VosBesoinsPage() {
             alt="Vos Besoins"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A0E08] from-40% via-[#1A0E08]/75 via-65% to-transparent to-90%" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A0E08]/75 to-[#1A0E08]/40" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">

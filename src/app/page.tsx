@@ -14,7 +14,7 @@ export default function Home() {
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
           <img src="/office-lounge.jpg" alt="Hero" className="w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A0E08] from-40% via-[#1A0E08]/75 via-65% to-transparent to-90%" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A0E08]/75 to-[#1A0E08]/40" />
         </div>
 
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
@@ -189,19 +189,21 @@ export default function Home() {
             <h2 className="text-white text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-8 text-center lg:text-left">
               {t("Des solutions d'externalisation conçues pour s'adapter à vos contraintes.", "Outsourcing solutions designed to adapt to your constraints.")}
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 mb-16 pt-4">
               {[
                 { title: t("Urgence", "Emergency"), desc: t("Mobilisation rapide de ressources pour absorber un pic d'activité ou un besoin immédiat.", "Rapid mobilization of resources to absorb a peak in activity or an immediate need.") },
                 { title: t("Durée", "Duration"), desc: t("De la mission ponctuelle à l'externalisation continue, la flexibilité contractuelle que vous attendez.", "From ad hoc missions to continuous outsourcing, the contractual flexibility you expect.") },
                 { title: t("Volume", "Volume"), desc: t("Un dimensionnement d'équipe ajusté à la charge de travail, pour une efficacité optimale.", "Team sizing adjusted to the workload, for optimal efficiency.") },
                 { title: t("Organisation", "Organization"), desc: t("Intégration dédiée, prise en charge de processus métiers spécifiques, selon vos besoins.", "Dedicated integration, handling of specific business processes, according to your needs.") },
               ].map((item, i) => (
-                <div key={i} className="flex gap-4">
-                  <span className="text-[#D9B151] font-bold text-[0.75rem] tracking-[0.15em] uppercase shrink-0 mt-1">{String(i + 1).padStart(2, '0')}</span>
-                  <div className="flex flex-col">
-                    <h3 className="text-white text-[1.05rem] font-bold mb-2">{item.title}</h3>
-                    <p className="text-white/80 text-[0.85rem] leading-[1.5]">{item.desc}</p>
+                <div key={i} className="flex flex-col border-t border-white/20 pt-6">
+                  <div className="flex items-center gap-6 mb-4">
+                    <span className="text-[#D9B151] font-serif text-4xl font-bold italic leading-none shrink-0">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <h3 className="text-white text-[1.1rem] font-bold uppercase tracking-widest">{item.title}</h3>
                   </div>
+                  <p className="text-white/80 text-[0.95rem] leading-[1.7]">{item.desc}</p>
                 </div>
               ))}
             </div>

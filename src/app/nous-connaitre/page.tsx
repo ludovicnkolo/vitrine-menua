@@ -19,7 +19,7 @@ export default function NousConnaitrePage() {
             alt="Nous Connaître"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A0E08] from-40% via-[#1A0E08]/75 via-65% to-transparent to-90%" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A0E08]/75 to-[#1A0E08]/40" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
@@ -173,16 +173,16 @@ export default function NousConnaitrePage() {
 
 
       {/* ══ 3. NOTRE MÉTHODOLOGIE — Fond marron foncé, 5 cartes centrées ══ */}
-      <section id="notre-methodologie" className="mt-12 bg-[#e4dcf7] w-full py-12 overflow-hidden">
+      <section id="notre-methodologie" className="mt-8 bg-[#1A0E08] w-full py-6 overflow-hidden">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start">
-          <div className="mb-14">
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#1A0E08] mb-10">
+          <div className="mb-5">
+            <h2 className="font-serif text-2xl md:text-3xl font-bold text-white mb-4">
               {t("NOTRE MÉTHODOLOGIE", "OUR METHODOLOGY").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
             </h2>
-            <div className="w-16 h-[3px] bg-[#D9B151]" />
+            <div className="w-12 h-[3px] bg-[#D9B151]" />
           </div>
 
-          <div className="w-full flex flex-wrap justify-center gap-6">
+          <div className="w-full flex flex-col gap-2 md:gap-3 max-w-4xl mx-auto pt-1">
             {[
               { title: t("DÉCOUVERTE", "DISCOVERY"), desc: t("Analyse de votre organisation, de vos processus et de vos contraintes afin de définir précisément le périmètre d'intervention.", "Analysis of your organization, processes and constraints to precisely define the scope of intervention.") },
               { title: t("VÉRIFICATIONS PRÉALABLES", "PRELIMINARY CHECKS"), desc: t("Vérification de l'identité juridique, de la situation administrative et de la cohérence opérationnelle du client ou partenaire, afin de sécuriser l'entrée en relation.", "Verification of legal identity, administrative situation and operational coherence of the client or partner, to secure the entry into relation.") },
@@ -190,102 +190,119 @@ export default function NousConnaitrePage() {
               { title: t("MISE EN ŒUVRE & FORMATION", "IMPLEMENTATION & TRAINING"), desc: t("Déploiement des équipes et intégration aux outils, process et standards de votre organisation.", "Deployment of teams and integration into your organization's tools, processes and standards.") },
               { title: t("SUIVI DANS LA DURÉE", "LONG-TERM FOLLOW-UP"), desc: t("Pilotage continu de la mission, ajustements réguliers et contrôle qualité des livrables.", "Continuous mission management, regular adjustments and quality control of deliverables.") },
             ].map((step, i) => (
-              <div key={i} className="flex flex-col items-center bg-white/60 rounded-2xl p-8 lg:p-10 border border-[#1A0E08]/10 w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1rem)] max-w-[400px]">
-                <span className="text-[#D9B151] font-bold text-[0.7rem] tracking-[0.2em] uppercase mb-4">{String(i + 1).padStart(2, '0')}</span>
-                <h3 className="font-semibold text-xs leading-snug text-[#1A0E08] text-center mb-4">{step.title}</h3>
-                <p className="text-[#4A4E5A] text-[0.88rem] leading-[1.8] text-center font-normal">{step.desc}</p>
+              <div key={i} className="flex flex-col md:flex-row md:items-start gap-3 md:gap-5 border-t border-white/20 pt-3">
+                <span className="text-[#D9B151] font-serif text-2xl md:text-3xl font-bold italic shrink-0 w-8 md:w-12 leading-none mt-1 md:mt-0">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div className="flex flex-col">
+                  <h3 className="text-white text-[0.9rem] md:text-[0.95rem] font-bold tracking-[0.1em] uppercase mb-1">
+                    {step.title}
+                  </h3>
+                  <p className="text-white/80 text-[0.85rem] leading-[1.4] font-normal">
+                    {step.desc}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══ 4. ACCRÉDITATIONS & CERTIFICATIONS — Composant pleine largeur avec image ══ */}
-      <section id="certifications" className="mt-12 bg-[#8e8478] w-full py-12 ">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
-          <div className="w-full max-w-[1000px] mx-auto p-10 lg:p-16 flex flex-col justify-center">
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-10">
-              {t("ACCRÉDITATIONS, CERTIFICATIONS & CADRE D'INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS & INTERVENTION FRAMEWORK").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-            </h2>
-            <div className="w-12 h-[3px] bg-[#D9B151] mb-8" />
-            <div className="text-white/90 text-[0.95rem] leading-[1.8] space-y-6 font-normal">
-              <p>
-                {t(
-                  "MENUA CONSULTING intervient dans des environnements soumis à des exigences réglementaires élevées.",
-                  "MENUA CONSULTING operates in environments subject to high regulatory requirements."
-                )}
-              </p>
-              <p>
-                {t(
-                  "La dirigeante dispose notamment de la certification AMF, d'une certification en Contrôle Interne et Gestion des Risques des institutions financières, ainsi que d'une expérience acquise au sein d'environnements financiers, patrimoniaux et réglementés.",
-                  "The CEO holds an AMF certification, a certification in Internal Control and Risk Management of financial institutions, and experience in financial, wealth and regulated environments."
-                )}
-              </p>
-              <p>
-                {t(
-                  "Le cabinet intervient en coordination avec les équipes habilitées de ses clients (banques, cabinets, structures réglementées).",
-                  "The firm works in coordination with the authorized teams of its clients (banks, firms, regulated structures)."
-                )}
-              </p>
-              <p>
-                {t(
-                  "MENUA CONSULTING n'exerce pas d'activité réglementée en son nom propre. Le cabinet met à disposition des ressources opérationnelles spécialisées intégrées aux cadres d'agrément et de supervision de ses clients.",
-                  "MENUA CONSULTING does not carry out regulated activities in its own name. The firm provides specialized operational resources integrated into its clients' approval and supervision frameworks."
-                )}
-              </p>
-              <p>
-                {t(
-                  "Ce dispositif garantit la conformité, la qualité des opérations et la sécurité des processus.",
-                  "This system guarantees compliance, operational quality, and process security."
-                )}
-              </p>
+      {/* ══ 4. ACCRÉDITATIONS & CERTIFICATIONS ══ */}
+      <section id="certifications" className="mt-12 bg-white w-full">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+            
+            <div className="flex flex-col">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-8 h-[1px] bg-[#D9B151]" />
+                <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
+                  {t("Gage de qualité", "Quality assurance")}
+                </span>
+              </div>
+              <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-8 pr-4">
+                {t("ACCRÉDITATIONS, CERTIFICATIONS & CADRE D'INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS & INTERVENTION FRAMEWORK")}
+              </h2>
+              <div className="text-[#4A4E5A] text-[0.95rem] leading-[1.7] mb-10 max-w-xl space-y-4">
+                <p>
+                  {t(
+                    "MENUA CONSULTING intervient dans des environnements soumis à des exigences réglementaires élevées.",
+                    "MENUA CONSULTING operates in environments subject to high regulatory requirements."
+                  )}
+                </p>
+                <p>
+                  {t(
+                    "La dirigeante dispose notamment de la certification AMF, d'une certification en Contrôle Interne et Gestion des Risques des institutions financières, ainsi que d'une expérience acquise au sein d'environnements financiers, patrimoniaux et réglementés.",
+                    "The CEO holds an AMF certification, a certification in Internal Control and Risk Management of financial institutions, and experience in financial, wealth and regulated environments."
+                  )}
+                </p>
+                <p>
+                  {t(
+                    "Le cabinet intervient en coordination avec les équipes habilitées de ses clients (banques, cabinets, structures réglementées).",
+                    "The firm works in coordination with the authorized teams of its clients (banks, firms, regulated structures)."
+                  )}
+                </p>
+                <p>
+                  {t(
+                    "MENUA CONSULTING n'exerce pas d'activité réglementée en son nom propre. Le cabinet met à disposition des ressources opérationnelles spécialisées intégrées aux cadres d'agrément et de supervision de ses clients.",
+                    "MENUA CONSULTING does not carry out regulated activities in its own name. The firm provides specialized operational resources integrated into its clients' approval and supervision frameworks."
+                  )}
+                </p>
+                <p className="font-bold text-[#122017]">
+                  {t(
+                    "Ce dispositif garantit la conformité, la qualité des opérations et la sécurité des processus.",
+                    "This system guarantees compliance, operational quality, and process security."
+                  )}
+                </p>
+              </div>
             </div>
+
+            <div className="w-full h-[450px] rounded-2xl overflow-hidden shadow-2xl">
+              <img src="/certification.jpg" alt="Certifications" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} />
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* ══ 5. NOTRE ÉQUIPE — Fond vert foncé, grand portrait ══ */}
       {/* ══ 5. NOTRE ÉQUIPE ══ */}
-      <section id="notre-equipe" className="mt-12 bg-[#e4dcf7] w-full py-12 ">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
-          <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-16">
+      <section id="notre-equipe" className="mt-12 bg-[#e4dcf7] w-full py-16 lg:py-24">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-12 lg:gap-20 items-center">
             
             {/* Left: Photo */}
-            <div className="w-full lg:w-[28%] shrink-0 lg:translate-y-32">
-              <div className="relative w-full aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl">
+            <div className="w-full relative">
+              <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden z-10">
                 <img
                   src="/rosette.jpg"
                   alt="La dirigeante"
                   className="w-full h-full object-cover object-top"
-                  onError={(e) => { e.currentTarget.style.background = "#1a2e24"; }}
+                  onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
                 />
               </div>
             </div>
 
             {/* Right: Text */}
-            <div className="w-full lg:w-[72%] flex flex-col pt-2 lg:pt-4">
+            <div className="w-full flex flex-col">
               
-              {/* Header: 01 — NOTRE ÉQUIPE */}
               <div className="flex items-center gap-4 mb-6">
-                <span className="text-[#1A0E08] text-3xl font-bold">01</span>
-                <div className="w-8 h-[2px] bg-[#D9B151]"></div>
-                <h1 className="text-[#1A0E08] text-[0.85rem] font-semibold uppercase tracking-[0.15em] m-0">
+                <div className="w-8 h-[1px] bg-[#D9B151]"></div>
+                <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
                   {t("NOTRE ÉQUIPE", "OUR TEAM")}
-                </h1>
+                </span>
               </div>
               
-              {/* Title & Subtitle in the exact order requested */}
-              <h2 className="text-[#1A0E08] text-[1.1rem] md:text-[1.25rem] mb-3 font-normal">
-                {t("Une direction impliquée au plus près des opérations", "Management closely involved with operations")}
+              <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#122017] mb-3 leading-tight">
+                {t("La dirigeante", "The Director")}
               </h2>
               
-              <h3 className="font-serif text-4xl md:text-5xl font-bold text-[#1A0E08] mb-12 leading-tight">
-                {t("La dirigeante", "The Director")}
+              <h3 className="text-[#8B6240] text-[1.05rem] mb-10 font-medium italic">
+                {t("Une direction impliquée au plus près des opérations", "Management closely involved with operations")}
               </h3>
               
               {/* Body Text */}
-              <div className="text-[#1A0E08]/80 text-[1.05rem] leading-[1.8] space-y-6 font-normal">
-                <p>
+              <div className="text-[#4A4E5A] text-[0.95rem] leading-[1.8] space-y-4 font-normal">
+                <p className="text-[#122017] font-bold">
                   {t(
                     "Rosette Fouelefack est directrice générale de MENUA CONSULTING.",
                     "Rosette Fouelefack is the chief executive officer of MENUA CONSULTING."

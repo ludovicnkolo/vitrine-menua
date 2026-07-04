@@ -8,7 +8,7 @@ export default function NosSolutionsPage() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-transparent">
+    <main className="flex flex-col w-full min-h-screen bg-white">
 
       {/* ── HERO ── */}
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
@@ -220,7 +220,7 @@ export default function NosSolutionsPage() {
       </section>
 
       {/* ── LANGUES BANNER ── */}
-      <section className="mt-12 bg-[#e4dcf7] w-full max-w-[1280px] mx-auto px-6 lg:px-12 pb-16 lg:pb-20">
+      <section className="mt-12 w-full max-w-[1280px] mx-auto px-6 lg:px-12 pb-16 lg:pb-20">
         <div className="bg-[#8e8478] py-10 px-10 flex flex-col md:flex-row items-center gap-8 rounded-2xl shadow-xl border border-white/10">
           <div className="flex gap-4 items-center shrink-0">
             {/* French Flag */}

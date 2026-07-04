@@ -11,7 +11,7 @@ export default function NousContacter() {
   const [entrepriseType, setEntrepriseType] = useState<string>("");
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-transparent">
+    <main className="flex flex-col w-full min-h-screen bg-white">
       {/* ── HERO INTRO ── */}
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">

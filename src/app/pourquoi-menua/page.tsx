@@ -8,7 +8,7 @@ export default function PourquoiMenuaPage() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-transparent">
+    <main className="flex flex-col w-full min-h-screen bg-white">
       {/* ── HERO ── */}
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">

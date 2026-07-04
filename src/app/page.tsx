@@ -8,7 +8,7 @@ export default function Home() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-transparent">
+    <main className="flex flex-col w-full min-h-screen bg-white">
 
       {/* ── SECTION 1 : HERO ── */}
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
@@ -191,15 +191,13 @@ export default function Home() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10 mb-12">
               {[
-                { icon: Zap, title: t("Urgence", "Emergency"), desc: t("Mobilisation rapide de ressources pour absorber un pic d'activité ou un besoin immédiat.", "Rapid mobilization of resources to absorb a peak in activity or an immediate need.") },
-                { icon: Clock, title: t("Durée", "Duration"), desc: t("De la mission ponctuelle à l'externalisation continue, la flexibilité contractuelle que vous attendez.", "From ad hoc missions to continuous outsourcing, the contractual flexibility you expect.") },
-                { icon: Maximize, title: t("Volume", "Volume"), desc: t("Un dimensionnement d'équipe ajusté à la charge de travail, pour une efficacité optimale.", "Team sizing adjusted to the workload, for optimal efficiency.") },
-                { icon: Settings, title: t("Organisation", "Organization"), desc: t("Intégration dédiée, prise en charge de processus métiers spécifiques, selon vos besoins.", "Dedicated integration, handling of specific business processes, according to your needs.") },
+                { title: t("Urgence", "Emergency"), desc: t("Mobilisation rapide de ressources pour absorber un pic d'activité ou un besoin immédiat.", "Rapid mobilization of resources to absorb a peak in activity or an immediate need.") },
+                { title: t("Durée", "Duration"), desc: t("De la mission ponctuelle à l'externalisation continue, la flexibilité contractuelle que vous attendez.", "From ad hoc missions to continuous outsourcing, the contractual flexibility you expect.") },
+                { title: t("Volume", "Volume"), desc: t("Un dimensionnement d'équipe ajusté à la charge de travail, pour une efficacité optimale.", "Team sizing adjusted to the workload, for optimal efficiency.") },
+                { title: t("Organisation", "Organization"), desc: t("Intégration dédiée, prise en charge de processus métiers spécifiques, selon vos besoins.", "Dedicated integration, handling of specific business processes, according to your needs.") },
               ].map((item, i) => (
                 <div key={i} className="flex gap-4">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-[#D9B151]">
-                    <item.icon className="text-[#D9B151]" size={18} strokeWidth={1.5} />
-                  </div>
+                  <span className="text-[#D9B151] font-bold text-[0.75rem] tracking-[0.15em] uppercase shrink-0 mt-1">{String(i + 1).padStart(2, '0')}</span>
                   <div className="flex flex-col">
                     <h3 className="text-white text-[1.05rem] font-bold mb-2">{item.title}</h3>
                     <p className="text-white/80 text-[0.85rem] leading-[1.5]">{item.desc}</p>

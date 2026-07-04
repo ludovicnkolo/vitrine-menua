@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Landmark, Target, GitMerge, FileCheck, ShieldCheck, ArrowRight, Globe, Users, CheckCircle, RefreshCw, FileText, Search, ClipboardCheck, BarChart2 } from "lucide-react";
+import { Landmark, Target, GitMerge, FileCheck, ShieldCheck, ArrowRight, Globe, Users, CheckCircle, RefreshCw, FileText, Search, ClipboardCheck, BarChart2, Network } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import CallToAction from "@/components/layout/CallToAction";
 
@@ -9,7 +9,7 @@ export default function NousConnaitrePage() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-transparent">
+    <main className="flex flex-col w-full min-h-screen bg-white">
 
       {/* ── HERO ── */}
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
@@ -100,61 +100,77 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 2. NOTRE APPROCHE ══ */}
-      <section id="notre-approche" className="mt-12 bg-[#e4dcf7] w-full py-12">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+      <section id="notre-approche" className="mt-12 bg-[#e4dcf7]">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
 
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-6">
-            {t("NOTRE APPROCHE", "OUR APPROACH").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-          </h2>
-          <div className="w-16 h-[3px] bg-[#D9B151] mb-10" />
+            {/* Image à gauche */}
+            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
+              <img src="/office-lounge.jpg" alt="Notre approche" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} />
+            </div>
 
-          <div className="text-[#223930] text-[1rem] leading-[1.8] space-y-6 font-normal max-w-4xl mb-12">
-            <p>
-              {t(
-                "MENUA CONSULTING adopte une posture résolument opérationnelle : les clients définissent les besoins, les méthodes et les priorités, nous assurons l'exécution.",
-                "MENUA CONSULTING adopts a resolutely operational stance: clients define needs, methods and priorities, we ensure execution."
-              )}
-            </p>
-            <p>
-              {t(
-                "Nous intervenons dans des environnements financiers, comptables, patrimoniaux et réglementés, en respectant strictement les procédures internes, les circuits de validation et les exigences de qualité propres à chaque organisation.",
-                "We operate in financial, accounting, wealth and regulated environments, strictly respecting internal procedures, validation circuits and the quality requirements specific to each organization."
-              )}
-            </p>
-            <p>
-              {t(
-                "Notre approche repose sur trois piliers : continuité opérationnelle, traçabilité des actions et fiabilité des livrables.",
-                "Our approach is based on three pillars: operational continuity, traceability of actions and reliability of deliverables."
-              )}
-            </p>
-            <p>
-              {t(
-                "Nos équipes peuvent intervenir en français et en anglais, garantissant une gestion fluide des échanges, des reportings et des opérations dans un contexte international.",
-                "Our teams can intervene in French and English, guaranteeing smooth management of exchanges, reporting and operations in an international context."
-              )}
-            </p>
-          </div>
-
-          {/* 3 pillars — horizontal, no icons, no boxes */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-0 sm:gap-0 border-t border-[#D9B151]/30 pt-10">
-            {[
-              t("CONTINUITÉ OPÉRATIONNELLE", "OPERATIONAL CONTINUITY"),
-              t("TRAÇABILITÉ DES ACTIONS", "TRACEABILITY OF ACTIONS"),
-              t("FIABILITÉ DES LIVRABLES", "RELIABILITY OF DELIVERABLES"),
-            ].map((label, i) => (
-              <React.Fragment key={i}>
-                <span className="text-[#122017] font-bold text-[1rem] tracking-wide uppercase whitespace-nowrap py-2 sm:py-0">
-                  {label}
+            {/* Texte à droite */}
+            <div className="flex flex-col">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-8 h-[1px] bg-[#D9B151]" />
+                <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
+                  {t("Notre approche", "Our approach")}
                 </span>
-                {i < 2 && (
-                  <div className="hidden sm:block w-px h-6 bg-[#D9B151] mx-10 shrink-0" />
-                )}
-              </React.Fragment>
-            ))}
-          </div>
+              </div>
+              <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-6">
+                {t("NOTRE APPROCHE", "OUR APPROACH")}
+              </h2>
 
+              <div className="text-[#4A4E5A] text-[0.9rem] leading-[1.7] mb-8 space-y-3">
+                <p>
+                  {t(
+                    "MENUA CONSULTING adopte une posture résolument opérationnelle : les clients définissent les besoins, les méthodes et les priorités, nous assurons l'exécution.",
+                    "MENUA CONSULTING adopts a resolutely operational stance: clients define needs, methods and priorities, we ensure execution."
+                  )}
+                </p>
+                <p>
+                  {t(
+                    "Nous intervenons dans des environnements financiers, comptables, patrimoniaux et réglementés, en respectant strictement les procédures internes, les circuits de validation et les exigences de qualité propres à chaque organisation.",
+                    "We operate in financial, accounting, wealth and regulated environments, strictly respecting internal procedures, validation circuits and the quality requirements specific to each organization."
+                  )}
+                </p>
+              </div>
+
+              {/* 3 piliers */}
+              <div className="flex flex-col gap-5 mb-8">
+                {[
+                  {
+                    icon: Network,
+                    title: t("Continuité opérationnelle", "Operational continuity"),
+                    desc: t("Notre approche repose sur la continuité des opérations, garantissant une exécution ininterrompue et fiable pour vos équipes.", "Our approach is based on operational continuity, ensuring uninterrupted and reliable execution for your teams."),
+                  },
+                  {
+                    icon: ShieldCheck,
+                    title: t("Traçabilité des actions", "Traceability of actions"),
+                    desc: t("Chaque intervention est documentée, tracée et conforme aux procédures internes et aux circuits de validation de votre organisation.", "Each intervention is documented, traced and compliant with the internal procedures and validation circuits of your organization."),
+                  },
+                  {
+                    icon: Globe,
+                    title: t("Intervention bilingue", "Bilingual intervention"),
+                    desc: t("Nos équipes peuvent intervenir en français et en anglais, garantissant une gestion fluide des échanges et des reportings dans un contexte international.", "Our teams can intervene in French and English, ensuring smooth management of exchanges and reporting in an international context."),
+                  },
+                ].map((pilier, i) => (
+                  <div key={i} className="flex items-start gap-4">
+                    <div className="w-9 h-9 rounded-full border border-[#D9B151] bg-white flex items-center justify-center shrink-0 shadow-sm">
+                      <pilier.icon className="text-[#D9B151]" size={16} strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <h3 className="text-[#122017] text-[0.9rem] font-bold mb-1">{pilier.title}</h3>
+                      <p className="text-[#4A4E5A] text-[0.8rem] leading-[1.6]">{pilier.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
+
 
       {/* ══ 3. NOTRE MÉTHODOLOGIE — Fond marron foncé, 5 cartes centrées ══ */}
       <section id="notre-methodologie" className="mt-12 bg-[#e4dcf7] w-full py-12 overflow-hidden">
@@ -168,16 +184,14 @@ export default function NousConnaitrePage() {
 
           <div className="w-full flex flex-wrap justify-center gap-6">
             {[
-              { icon: Search, title: t("DÉCOUVERTE", "DISCOVERY"), desc: t("Analyse de votre organisation, de vos processus et de vos contraintes afin de définir précisément le périmètre d'intervention.", "Analysis of your organization, processes and constraints to precisely define the scope of intervention.") },
-              { icon: ClipboardCheck, title: t("VÉRIFICATIONS PRÉALABLES", "PRELIMINARY CHECKS"), desc: t("Vérification de l'identité juridique, de la situation administrative et de la cohérence opérationnelle du client ou partenaire, afin de sécuriser l'entrée en relation.", "Verification of legal identity, administrative situation and operational coherence of the client or partner, to secure the entry into relation.") },
-              { icon: BarChart2, title: t("ANALYSE", "ANALYSIS"), desc: t("Construction d'une proposition opérationnelle adaptée à vos besoins, incluant les profils, le mode d'organisation et les livrables attendus.", "Construction of an operational proposal adapted to your needs, including profiles, organization mode and expected deliverables.") },
-              { icon: Users, title: t("MISE EN ŒUVRE & FORMATION", "IMPLEMENTATION & TRAINING"), desc: t("Déploiement des équipes et intégration aux outils, process et standards de votre organisation.", "Deployment of teams and integration into your organization's tools, processes and standards.") },
-              { icon: ShieldCheck, title: t("SUIVI DANS LA DURÉE", "LONG-TERM FOLLOW-UP"), desc: t("Pilotage continu de la mission, ajustements réguliers et contrôle qualité des livrables.", "Continuous mission management, regular adjustments and quality control of deliverables.") },
+              { title: t("DÉCOUVERTE", "DISCOVERY"), desc: t("Analyse de votre organisation, de vos processus et de vos contraintes afin de définir précisément le périmètre d'intervention.", "Analysis of your organization, processes and constraints to precisely define the scope of intervention.") },
+              { title: t("VÉRIFICATIONS PRÉALABLES", "PRELIMINARY CHECKS"), desc: t("Vérification de l'identité juridique, de la situation administrative et de la cohérence opérationnelle du client ou partenaire, afin de sécuriser l'entrée en relation.", "Verification of legal identity, administrative situation and operational coherence of the client or partner, to secure the entry into relation.") },
+              { title: t("ANALYSE", "ANALYSIS"), desc: t("Construction d'une proposition opérationnelle adaptée à vos besoins, incluant les profils, le mode d'organisation et les livrables attendus.", "Construction of an operational proposal adapted to your needs, including profiles, organization mode and expected deliverables.") },
+              { title: t("MISE EN ŒUVRE & FORMATION", "IMPLEMENTATION & TRAINING"), desc: t("Déploiement des équipes et intégration aux outils, process et standards de votre organisation.", "Deployment of teams and integration into your organization's tools, processes and standards.") },
+              { title: t("SUIVI DANS LA DURÉE", "LONG-TERM FOLLOW-UP"), desc: t("Pilotage continu de la mission, ajustements réguliers et contrôle qualité des livrables.", "Continuous mission management, regular adjustments and quality control of deliverables.") },
             ].map((step, i) => (
               <div key={i} className="flex flex-col items-center bg-white/60 rounded-2xl p-8 lg:p-10 border border-[#1A0E08]/10 w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1rem)] max-w-[400px]">
-                <div className="w-[70px] h-[70px] rounded-full border-[1.5px] border-[#D9B151] flex items-center justify-center mb-6 shrink-0">
-                  <step.icon size={32} className="text-[#D9B151]" strokeWidth={1.5} />
-                </div>
+                <span className="text-[#D9B151] font-bold text-[0.7rem] tracking-[0.2em] uppercase mb-4">{String(i + 1).padStart(2, '0')}</span>
                 <h3 className="font-semibold text-xs leading-snug text-[#1A0E08] text-center mb-4">{step.title}</h3>
                 <p className="text-[#4A4E5A] text-[0.88rem] leading-[1.8] text-center font-normal">{step.desc}</p>
               </div>

@@ -8,7 +8,7 @@ export default function PourquoiMenuaPage() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-[#FDFDFD]">
+    <main className="flex flex-col w-full min-h-screen bg-transparent">
       {/* ── HERO ── */}
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
@@ -17,7 +17,7 @@ export default function PourquoiMenuaPage() {
             alt="Pourquoi Menua"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#122017] from-20% via-[#122017]/75 via-50% to-transparent to-70%" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#436850] from-20% via-[#436850]/75 via-50% to-transparent to-70%" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
@@ -48,7 +48,7 @@ export default function PourquoiMenuaPage() {
       </section>
 
       {/* ══ 1. BÉNÉFICES — Fond vert foncé, grille ══ */}
-      <section id="nos-benefices" className="w-full bg-[#122017] py-12 lg:py-16 my-10 lg:my-16">
+      <section id="nos-benefices" className="bg-[#E3C29E] w-full py-12 lg:py-16 my-10 lg:my-16">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col items-center mb-10">
             <p className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151] mb-4">
@@ -98,7 +98,7 @@ export default function PourquoiMenuaPage() {
       </section>
 
       {/* ══ 2. DIFFÉRENCIATION — Fond crème ══ */}
-      <section id="notre-differenciation" className="w-full bg-[#F6F3F0] py-12 lg:py-16 mb-10 lg:mb-16">
+      <section id="notre-differenciation" className="bg-[#C2D5C4] w-full py-12 lg:py-16 mb-10 lg:mb-16">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-start gap-16">
           {/* Left: sticky title block */}
           <div className="w-full lg:w-[38%] flex flex-col sticky top-24 self-start">
@@ -148,9 +148,7 @@ export default function PourquoiMenuaPage() {
       </section>
 
       {/* ══ 3. ENGAGEMENTS — Fond bois/brun ══ */}
-      <section id="nos-engagements" className="w-full py-12 lg:py-16 mb-10 lg:mb-16 overflow-hidden" style={{
-        background: "linear-gradient(160deg, #8B6240 0%, #5A3A1E 40%, #3E2510 100%)"
-      }}>
+      <section id="nos-engagements" className="bg-[#FDFBF7] w-full py-12 lg:py-16 mb-10 lg:mb-16 overflow-hidden" style={{ background: "linear-gradient(160deg, #8B6240 0%, #5A3A1E 40%, #3E2510 100%)" }}>
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col items-center mb-10">
             <p className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151] mb-4">

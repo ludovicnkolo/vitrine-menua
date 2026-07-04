@@ -8,7 +8,7 @@ export default function NousRejoindre() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-[#FDFDFD]">
+    <main className="flex flex-col w-full min-h-screen bg-transparent">
       {/* ── HERO INTRO ── */}
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
@@ -17,7 +17,7 @@ export default function NousRejoindre() {
             alt="Nous Rejoindre"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#223930] from-20% via-[#223930]/70 via-45% to-transparent to-65%" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#436850] from-20% via-[#436850]/70 via-45% to-transparent to-65%" />
         </div>
 
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
@@ -56,7 +56,7 @@ export default function NousRejoindre() {
       </section>
 
       {/* ── CONTENT SECTION ── */}
-      <section className="w-full bg-white px-8 py-16 lg:py-24">
+      <section className="bg-[#E3C29E] w-full px-8 py-16 lg:py-24">
         <div className="max-w-[1280px] mx-auto flex flex-col lg:flex-row gap-8">
           
           {/* Left Column (Profiles) */}

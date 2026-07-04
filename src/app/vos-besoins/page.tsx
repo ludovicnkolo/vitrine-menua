@@ -8,7 +8,7 @@ export default function VosBesoinsPage() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-[#FDFDFD]">
+    <main className="flex flex-col w-full min-h-screen bg-transparent">
 
       {/* ── HERO ── */}
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
@@ -18,7 +18,7 @@ export default function VosBesoinsPage() {
             alt="Vos Besoins"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#122017] from-20% via-[#122017]/75 via-50% to-transparent to-70%" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#436850] from-20% via-[#436850]/75 via-50% to-transparent to-70%" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
@@ -51,8 +51,8 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 1. FINANCE & REPORTING ══ */}
-      <section id="finance-reporting" className="mt-12 mb-6 bg-white">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-[#F9F7F1] rounded-2xl py-12">
+      <section id="finance-reporting" className="bg-[#E3C29E] mt-12 mb-6 ">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             
             {/* Text left */}
@@ -112,7 +112,7 @@ export default function VosBesoinsPage() {
         </div>
       </section>
       {/* ══ 2. CONTRÔLE DE GESTION ══ */}
-      <section id="controle-de-gestion" className="w-full bg-[#F6F3F0] py-12 lg:py-16 mb-10 lg:mb-16">
+      <section id="controle-de-gestion" className="bg-[#C2D5C4] w-full py-12 lg:py-16 mb-10 lg:mb-16">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
             {t("02 — Domaine", "02 — Area")}
@@ -152,7 +152,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 3. RISQUES & CONFORMITÉ ══ */}
-      <section id="risques-conformite" className="w-full flex flex-col mb-10 lg:mb-16 bg-pink-100">
+      <section id="risques-conformite" className="bg-[#FDFBF7] w-full flex flex-col mb-10 lg:mb-16 bg-pink-100">
         {/* Top Banner */}
         <div className="w-full border-y border-[#E0D6C8]/50">
           <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row">
@@ -234,7 +234,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 4. SUPPORT COMPTABLE & DATA ══ */}
-      <section id="support-comptable-data" className="w-full bg-[#FDFDFD] py-12 lg:py-16 mb-10 lg:mb-16">
+      <section id="support-comptable-data" className="bg-[#E2E4E1] w-full py-12 lg:py-16 mb-10 lg:mb-16">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start gap-16">
           {/* Text */}
           <div className="w-full flex flex-col">
@@ -279,7 +279,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 5. GESTION DE PATRIMOINE ══ */}
-      <section id="gestion-patrimoine" className="w-full bg-[#FDFDFD] py-12 lg:py-16 mb-10 lg:mb-16">
+      <section id="gestion-patrimoine" className="bg-[#E3C29E] w-full py-12 lg:py-16 mb-10 lg:mb-16">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start gap-16">
           {/* Text */}
           <div className="w-full flex flex-col">
@@ -323,7 +323,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 6. AUTRES BESOINS ══ */}
-      <section id="autres-besoins" className="w-full flex flex-col mb-10 lg:mb-16 bg-pink-100">
+      <section id="autres-besoins" className="bg-[#C2D5C4] w-full flex flex-col mb-10 lg:mb-16 bg-pink-100">
         {/* Top Banner */}
         <div className="w-full border-y border-[#E0D6C8]/50">
           <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row">

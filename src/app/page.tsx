@@ -8,13 +8,13 @@ export default function Home() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-[#FDFDFD]">
+    <main className="flex flex-col w-full min-h-screen bg-transparent">
 
       {/* ── SECTION 1 : HERO ── */}
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
           <img src="/office-lounge.jpg" alt="Hero" className="w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#122017] from-20% via-[#122017]/75 via-50% to-transparent to-70%" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#436850] from-20% via-[#436850]/75 via-50% to-transparent to-70%" />
         </div>
 
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
@@ -48,8 +48,8 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 2 : L'EXPERTISE D'UN CABINET SPÉCIALISÉ ── */}
-      <section className="mt-12 mb-6 bg-white">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-[#F9F7F1] rounded-2xl py-12">
+      <section className="bg-[#E3C29E] mt-12 mb-6 ">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             <div className="flex flex-col">
               <div className="flex items-center gap-4 mb-6">
@@ -76,7 +76,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 3 : DES EXPERTISES OPÉRATIONNELLES ── */}
-      <section className="mb-6 bg-white">
+      <section className="bg-[#C2D5C4] mb-6 ">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
           <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold text-center mb-4">
             {t("Des expertises opérationnelles, au cœur de votre activité.", "Operational expertise, at the heart of your activity.")}
@@ -109,8 +109,8 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 4 : NOTRE APPROCHE ── */}
-      <section className="mb-6 bg-white">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-[#F9F7F1] rounded-2xl py-12">
+      <section className="bg-[#e4dcf7] mb-6 ">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
 
             {/* Image à gauche */}
@@ -180,13 +180,13 @@ export default function Home() {
 
 
       {/* ── SECTION 5 : DES SOLUTIONS D'EXTERNALISATION ── */}
-      <section className="mb-6 bg-white py-12">
+      <section className="bg-[#8e8478] mb-6 py-12">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col max-w-5xl mx-auto">
             <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase mb-4 text-center lg:text-left">
               {t("NOS SOLUTIONS", "OUR SOLUTIONS")}
             </p>
-            <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-8 text-center lg:text-left">
+            <h2 className="text-white text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-8 text-center lg:text-left">
               {t("Des solutions d'externalisation conçues pour s'adapter à vos contraintes.", "Outsourcing solutions designed to adapt to your constraints.")}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10 mb-12">
@@ -201,8 +201,8 @@ export default function Home() {
                     <item.icon className="text-[#D9B151]" size={18} strokeWidth={1.5} />
                   </div>
                   <div className="flex flex-col">
-                    <h3 className="text-[#122017] text-[1.05rem] font-bold mb-2">{item.title}</h3>
-                    <p className="text-[#646A66] text-[0.85rem] leading-[1.5]">{item.desc}</p>
+                    <h3 className="text-white text-[1.05rem] font-bold mb-2">{item.title}</h3>
+                    <p className="text-white/80 text-[0.85rem] leading-[1.5]">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -217,7 +217,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 6 : ÉCLAIRAGES & ANALYSES ── */}
-      <section className="mb-6 bg-[#F9F7F1] py-12">
+      <section className="bg-[#E3C29E] mb-6 py-12">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
           <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold text-center mb-2">
             {t("Éclairages & analyses", "Insights & analyses")}
@@ -258,7 +258,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 7 : L'EXPERTISE AU SERVICE DE VOTRE PERFORMANCE ── */}
-      <section className="bg-[#122017] py-5">
+      <section className="bg-[#C2D5C4] py-5">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
             <div className="flex flex-col text-center lg:text-left">

@@ -1,49 +1,80 @@
 const fs = require('fs');
 const path = require('path');
 
-const directoryPath = path.join(__dirname, 'src');
-
-const replacements = [
-  // Navys
-  { regex: /#1B3680/gi, replacement: '#0B1B3D' },
-  { regex: /#122560/gi, replacement: '#0B1B3D' },
-  { regex: /#0F2B45/gi, replacement: '#0B1B3D' }, // old primary
-  // Golds
-  { regex: /#B8922A/gi, replacement: '#C89B5E' },
-  { regex: /#1C40C2/gi, replacement: '#C89B5E' }, // Cobalt to Gold for links/hover
-  { regex: /#4A8C7A/gi, replacement: '#C89B5E' }, // Sage green to Gold
-  { regex: /#2D7A5A/gi, replacement: '#D4AF37' }, // Dark Sage green to Light Gold
-  // Texts
-  { regex: /#222222/gi, replacement: '#1E2A3A' },
-  { regex: /#3A4660/gi, replacement: '#3D4F64' },
-  { regex: /#1E2A3A/gi, replacement: '#1E2A3A' }, // Already good but just in case
+const files = [
+    'src/app/page.tsx',
+    'src/app/nous-connaitre/page.tsx',
+    'src/app/vos-besoins/page.tsx',
+    'src/app/nos-solutions/page.tsx',
+    'src/app/pourquoi-menua/page.tsx',
+    'src/app/nous-rejoindre/page.tsx',
+    'src/app/nous-contacter/page.tsx',
+    'src/app/actualites/page.tsx',
 ];
 
-function processDirectory(dirPath) {
-  const files = fs.readdirSync(dirPath);
+const heroColor = '#797e6f';
+const sectionColors = ['#9d8772', '#b4b3a1', '#e6e0d9', '#bcbbb8'];
 
-  files.forEach(file => {
-    const fullPath = path.join(dirPath, file);
-    if (fs.statSync(fullPath).isDirectory()) {
-      processDirectory(fullPath);
-    } else if (fullPath.endsWith('.tsx') || fullPath.endsWith('.ts') || fullPath.endsWith('.css')) {
-      let content = fs.readFileSync(fullPath, 'utf8');
-      let changed = false;
+files.forEach(file => {
+    let content = fs.readFileSync(file, 'utf8');
 
-      replacements.forEach(({ regex, replacement }) => {
-        if (regex.test(content)) {
-          content = content.replace(regex, replacement);
-          changed = true;
-        }
-      });
-
-      if (changed) {
-        fs.writeFileSync(fullPath, content, 'utf8');
-        console.log(`Updated: ${fullPath}`);
-      }
+    // 1. Replace Hero gradients
+    content = content.replace(/from-\[#(122017|223930)\]/g, `from-[${heroColor}]`);
+    content = content.replace(/via-\[#(122017|223930)\]/g, `via-[${heroColor}]`);
+    content = content.replace(/to-\[#(122017|223930)\]/g, `to-[${heroColor}]`);
+    
+    // 2. Process sections to apply the 4 alternating colors
+    const sectionRegex = /<section[^>]+>/g;
+    let match;
+    let matches = [];
+    while ((match = sectionRegex.exec(content)) !== null) {
+        matches.push({
+            fullMatch: match[0],
+            index: match.index,
+            length: match[0].length
+        });
     }
-  });
-}
 
-processDirectory(directoryPath);
-console.log("Colors replaced successfully.");
+    if (matches.length > 1) {
+        let colorIdx = 0;
+        let newContent = content.substring(0, matches[1].index);
+        
+        for (let i = 1; i < matches.length; i++) {
+            let sectionStr = matches[i].fullMatch;
+            
+            // Remove existing background colors from section
+            sectionStr = sectionStr.replace(/bg-(white|\[#F9F7F1\]|\[#F6F3F0\]|\[#FDFDFD\]|\[#F5F2EB\]|\[#122017\]|\[#223930\]|\[#e6e0d9\]|\[#bcbbb8\]|\[#b4b3a1\]|\[#9d8772\])/g, '');
+            
+            // Inject the new color
+            const color = sectionColors[colorIdx % sectionColors.length];
+            colorIdx++;
+            
+            if (sectionStr.includes('className="')) {
+                sectionStr = sectionStr.replace('className="', `className="bg-[${color}] `);
+            } else if (sectionStr.includes("className={'")) {
+                sectionStr = sectionStr.replace("className={'", `className={'bg-[${color}] `);
+            }
+            
+            // Cleanup double spaces
+            sectionStr = sectionStr.replace(/\s+/g, ' ');
+
+            const nextIndex = i + 1 < matches.length ? matches[i+1].index : content.length;
+            let betweenSections = content.substring(matches[i].index + matches[i].length, nextIndex);
+            
+            // We should also remove inner background colors from typical wrappers like max-w-[1100px] bg-[#F9F7F1]
+            // so they don't hide the section color.
+            betweenSections = betweenSections.replace(/bg-(white|\[#F9F7F1\]|\[#F6F3F0\]|\[#FDFDFD\]|\[#F5F2EB\])/g, 'bg-transparent');
+
+            newContent += sectionStr + betweenSections;
+        }
+        content = newContent;
+    }
+    
+    // Also, main tag background
+    content = content.replace(/<main[^>]+>/g, (match) => {
+        return match.replace(/bg-\[#FDFDFD\]/, 'bg-transparent');
+    });
+
+    fs.writeFileSync(file, content);
+});
+console.log('Colors replaced successfully!');

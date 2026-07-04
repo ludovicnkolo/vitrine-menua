@@ -8,7 +8,7 @@ export default function ActualitesPage() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-[#FDFDFD]">
+    <main className="flex flex-col w-full min-h-screen bg-transparent">
       {/* ── HERO ── */}
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
@@ -18,7 +18,7 @@ export default function ActualitesPage() {
             className="w-full h-full object-cover object-center"
             onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#122017] from-20% via-[#122017]/75 via-50% to-transparent to-70%" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#436850] from-20% via-[#436850]/75 via-50% to-transparent to-70%" />
         </div>
         
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
@@ -50,7 +50,7 @@ export default function ActualitesPage() {
       </section>
 
       {/* ── CONTENU PRINCIPAL ── */}
-      <section className="w-full bg-[#FDFDFD] py-16 lg:py-24">
+      <section className="bg-[#E3C29E] w-full py-16 lg:py-24">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           
           {/* A LA UNE */}

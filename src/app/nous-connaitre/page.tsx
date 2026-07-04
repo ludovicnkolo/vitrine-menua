@@ -9,7 +9,7 @@ export default function NousConnaitrePage() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-[#FDFDFD]">
+    <main className="flex flex-col w-full min-h-screen bg-transparent">
 
       {/* ── HERO ── */}
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
@@ -19,7 +19,7 @@ export default function NousConnaitrePage() {
             alt="Nous Connaître"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#122017] from-20% via-[#122017]/75 via-50% to-transparent to-70%" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#436850] from-20% via-[#436850]/75 via-50% to-transparent to-70%" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
@@ -53,8 +53,8 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 1. PRÉSENTATION DU CABINET ══ */}
-      <section id="presentation-du-cabinet" className="mt-12 mb-6 bg-white">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-[#F9F7F1] rounded-2xl py-12">
+      <section id="presentation-du-cabinet" className="bg-[#E3C29E] mt-12 mb-6 ">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
 
             {/* Text left */}
@@ -100,7 +100,7 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 2. NOTRE APPROCHE ══ */}
-      <section id="notre-approche" className="w-full bg-[#F6F3F0] py-16 lg:py-24">
+      <section id="notre-approche" className="bg-[#C2D5C4] w-full py-16 lg:py-24">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
 
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-6">
@@ -157,7 +157,7 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 3. NOTRE MÉTHODOLOGIE — Fond marron foncé, 5 cartes centrées ══ */}
-      <section id="notre-methodologie" className="w-full bg-[#462F1D] py-16 lg:py-24 mb-10 lg:mb-16 overflow-hidden">
+      <section id="notre-methodologie" className="bg-[#FDFBF7] w-full bg-[#462F1D] py-16 lg:py-24 mb-10 lg:mb-16 overflow-hidden">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start">
           <div className="mb-14">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-10">
@@ -187,7 +187,7 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 4. ACCRÉDITATIONS & CERTIFICATIONS — Composant pleine largeur avec image ══ */}
-      <section id="certifications" className="w-full bg-[#F6F3F0] py-16 lg:py-24 mb-10 lg:mb-16">
+      <section id="certifications" className="bg-[#E2E4E1] w-full py-16 lg:py-24 mb-10 lg:mb-16">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           {/* Main Text Block with Image Background and Green Overlay */}
           <div className="w-full max-w-[1000px] mx-auto relative rounded-2xl shadow-2xl overflow-hidden p-10 lg:p-16 flex flex-col justify-center">
@@ -196,7 +196,7 @@ export default function NousConnaitrePage() {
             <div className="absolute inset-0 bg-[url('/dark_stairs.png')] bg-cover bg-center" />
             
             {/* Green Gradient Overlay (same color #122017 with transparency) */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#122017]/95 via-[#122017]/85 to-[#122017]/60" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#436850]/95 via-[#436850]/85 to-[#436850]/60" />
             
             {/* Text Content */}
             <div className="relative z-10">
@@ -244,7 +244,7 @@ export default function NousConnaitrePage() {
 
       {/* ══ 5. NOTRE ÉQUIPE — Fond vert foncé, grand portrait ══ */}
       {/* ══ 5. NOTRE ÉQUIPE ══ */}
-      <section id="notre-equipe" className="w-full bg-[#122017] py-16 lg:py-24 mb-10 lg:mb-16">
+      <section id="notre-equipe" className="bg-[#E3C29E] w-full py-16 lg:py-24 mb-10 lg:mb-16">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-16">
             

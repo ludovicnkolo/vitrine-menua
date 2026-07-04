@@ -8,7 +8,7 @@ export default function NosSolutionsPage() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-[#FDFDFD]">
+    <main className="flex flex-col w-full min-h-screen bg-transparent">
 
       {/* ── HERO ── */}
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
@@ -18,7 +18,7 @@ export default function NosSolutionsPage() {
             alt="Nos Solutions"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#122017] from-20% via-[#122017]/75 via-50% to-transparent to-70%" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#436850] from-20% via-[#436850]/75 via-50% to-transparent to-70%" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
@@ -48,8 +48,8 @@ export default function NosSolutionsPage() {
         </div>
       </section>
       {/* ══ 1. URGENCE ══ */}
-      <section id="urgence" className="mt-12 mb-6 bg-white">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-[#F9F7F1] rounded-2xl py-12">
+      <section id="urgence" className="bg-[#E3C29E] mt-12 mb-6 ">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             
             {/* Text left */}
@@ -103,7 +103,7 @@ export default function NosSolutionsPage() {
       </section>
 
       {/* ══ 2. DURÉE ══ */}
-      <section id="duree" className="w-full bg-[#F6F3F0] py-12 lg:py-16 mb-10 lg:mb-16">
+      <section id="duree" className="bg-[#C2D5C4] w-full py-12 lg:py-16 mb-10 lg:mb-16">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start gap-16">
           {/* Text */}
           <div className="w-full flex flex-col">
@@ -139,7 +139,7 @@ export default function NosSolutionsPage() {
       </section>
 
       {/* ══ 3. VOLUME ══ */}
-      <section id="volume" className="w-full bg-[#F6F3F0] py-12 lg:py-16 mb-10 lg:mb-16">
+      <section id="volume" className="bg-[#FDFBF7] w-full py-12 lg:py-16 mb-10 lg:mb-16">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
             {t("03 — Dispositif", "03 — Solution")}
@@ -172,7 +172,7 @@ export default function NosSolutionsPage() {
       </section>
 
       {/* ══ 4. ORGANISATION ══ */}
-      <section id="organisation" className="w-full bg-[#F6F3F0] py-16 lg:py-24 mb-10 lg:mb-16">
+      <section id="organisation" className="bg-[#E2E4E1] w-full py-16 lg:py-24 mb-10 lg:mb-16">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           {/* Main Text Block with Image Background and Green Overlay */}
           <div className="w-full max-w-[1100px] mx-auto relative rounded-2xl shadow-2xl overflow-hidden p-10 lg:p-16 flex flex-col justify-center">
@@ -181,7 +181,7 @@ export default function NosSolutionsPage() {
             <div className="absolute inset-0 bg-[url('/dark_stairs.png')] bg-cover bg-center" />
             
             {/* Green Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#122017]/95 via-[#122017]/90 to-[#122017]/75" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#436850]/95 via-[#436850]/90 to-[#436850]/75" />
             
             {/* Text Content */}
             <div className="relative z-10">
@@ -227,7 +227,7 @@ export default function NosSolutionsPage() {
       </section>
 
       {/* ── LANGUES BANNER ── */}
-      <section className="w-full max-w-[1280px] mx-auto px-6 lg:px-12 pb-16 lg:pb-20">
+      <section className="bg-[#E3C29E] w-full max-w-[1280px] mx-auto px-6 lg:px-12 pb-16 lg:pb-20">
         <div className="bg-[#122017] py-10 px-10 flex flex-col md:flex-row items-center gap-8 rounded-2xl shadow-xl border border-white/10">
           <div className="flex gap-4 items-center shrink-0">
             {/* French Flag */}

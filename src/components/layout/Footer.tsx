@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#FDFDFD] pt-24 lg:pt-32 pb-12 lg:pb-16 px-8 text-[#272A2C] w-full border-t border-[#272A2C]/10">
+    <footer className="bg-white pt-24 lg:pt-32 pb-12 lg:pb-16 px-8 text-[#272A2C] w-full border-t border-[#272A2C]/10">
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-24 lg:mb-32">
         
         {/* Colonne 1: Branding */}

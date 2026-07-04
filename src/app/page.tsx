@@ -48,7 +48,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 2 : L'EXPERTISE D'UN CABINET SPÉCIALISÉ ── */}
-      <section className="bg-[#8e8478] mt-12 mb-6 ">
+      <section className="mt-12 bg-[#8e8478] ">
         <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             <div className="flex flex-col">
@@ -76,7 +76,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 3 : DES EXPERTISES OPÉRATIONNELLES ── */}
-      <section className="bg-[#1A0E08] mb-6 py-12">
+      <section className="mt-12 bg-[#1A0E08] py-12">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
           <h2 className="text-white text-2xl lg:text-[1.8rem] font-bold text-center mb-4">
             {t("Des expertises opérationnelles, au cœur de votre activité.", "Operational expertise, at the heart of your activity.")}
@@ -109,7 +109,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 4 : NOTRE APPROCHE ── */}
-      <section className="bg-[#e4dcf7] mb-6 ">
+      <section className="mt-12 bg-[#e4dcf7] ">
         <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
 
@@ -180,7 +180,7 @@ export default function Home() {
 
 
       {/* ── SECTION 5 : DES SOLUTIONS D'EXTERNALISATION ── */}
-      <section className="bg-[#1A0E08] mb-6 py-12">
+      <section className="mt-12 bg-[#1A0E08] py-12">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col max-w-5xl mx-auto">
             <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase mb-4 text-center lg:text-left">
@@ -217,7 +217,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 6 : ÉCLAIRAGES & ANALYSES ── */}
-      <section className="bg-white mb-6 py-12">
+      <section className="mt-12 bg-white py-12">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
           <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold text-center mb-2">
             {t("Éclairages & analyses", "Insights & analyses")}
@@ -258,7 +258,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 7 : L'EXPERTISE AU SERVICE DE VOTRE PERFORMANCE ── */}
-      <section className="bg-[#1A0E08] py-5">
+      <section className="mt-12 bg-[#1A0E08] py-5">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
             <div className="flex flex-col text-center lg:text-left">

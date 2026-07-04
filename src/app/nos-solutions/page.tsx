@@ -48,7 +48,7 @@ export default function NosSolutionsPage() {
         </div>
       </section>
       {/* ══ 1. URGENCE ══ */}
-      <section id="urgence" className="bg-[#E3C29E] mt-12 mb-6 ">
+      <section id="urgence" className="mt-12 bg-white ">
         <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             
@@ -103,7 +103,7 @@ export default function NosSolutionsPage() {
       </section>
 
       {/* ══ 2. DURÉE ══ */}
-      <section id="duree" className="bg-[#C2D5C4] w-full py-12 mb-6">
+      <section id="duree" className="mt-12 bg-[#e4dcf7] w-full py-12 ">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start gap-16">
           {/* Text */}
           <div className="w-full flex flex-col">
@@ -139,7 +139,7 @@ export default function NosSolutionsPage() {
       </section>
 
       {/* ══ 3. VOLUME ══ */}
-      <section id="volume" className="bg-[#FDFBF7] w-full py-12 mb-6">
+      <section id="volume" className="mt-12 bg-[#FDFBF7] w-full py-12 ">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
             {t("03 — Dispositif", "03 — Solution")}
@@ -172,16 +172,9 @@ export default function NosSolutionsPage() {
       </section>
 
       {/* ══ 4. ORGANISATION ══ */}
-      <section id="organisation" className="bg-[#E2E4E1] w-full py-12 mb-6">
+      <section id="organisation" className="mt-12 bg-[#1A0E08] w-full py-12 ">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
-          {/* Main Text Block with Image Background and Green Overlay */}
-          <div className="w-full max-w-[1100px] mx-auto relative rounded-2xl shadow-2xl overflow-hidden p-10 lg:p-16 flex flex-col justify-center">
-            
-            {/* Background Image */}
-            <div className="absolute inset-0 bg-[url('/dark_stairs.png')] bg-cover bg-center" />
-            
-            {/* Green Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#436850]/95 via-[#436850]/90 to-[#436850]/75" />
+          <div className="w-full max-w-[1100px] mx-auto p-10 lg:p-16 flex flex-col justify-center">
             
             {/* Text Content */}
             <div className="relative z-10">
@@ -227,8 +220,8 @@ export default function NosSolutionsPage() {
       </section>
 
       {/* ── LANGUES BANNER ── */}
-      <section className="bg-[#E3C29E] w-full mb-6 max-w-[1280px] mx-auto px-6 lg:px-12 pb-16 lg:pb-20">
-        <div className="bg-[#122017] py-10 px-10 flex flex-col md:flex-row items-center gap-8 rounded-2xl shadow-xl border border-white/10">
+      <section className="mt-12 bg-[#e4dcf7] w-full max-w-[1280px] mx-auto px-6 lg:px-12 pb-16 lg:pb-20">
+        <div className="bg-[#8e8478] py-10 px-10 flex flex-col md:flex-row items-center gap-8 rounded-2xl shadow-xl border border-white/10">
           <div className="flex gap-4 items-center shrink-0">
             {/* French Flag */}
             <div className="w-12 h-12 rounded-full overflow-hidden border border-white/20 flex shadow-sm">

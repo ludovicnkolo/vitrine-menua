@@ -51,7 +51,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 1. FINANCE & REPORTING ══ */}
-      <section id="finance-reporting" className="bg-[#E3C29E] mt-12 mb-6 ">
+      <section id="finance-reporting" className="mt-12 bg-[#e4dcf7] ">
         <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             
@@ -112,16 +112,16 @@ export default function VosBesoinsPage() {
         </div>
       </section>
       {/* ══ 2. CONTRÔLE DE GESTION ══ */}
-      <section id="controle-de-gestion" className="bg-[#C2D5C4] w-full py-12 mb-6">
+      <section id="controle-de-gestion" className="mt-12 bg-[#8e8478] w-full py-12 ">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
-          <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
+          <p className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151] mb-4">
             {t("02 — Domaine", "02 — Area")}
           </p>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-10">
             {t("Contrôle de gestion", "Management Control").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
           </h2>
           <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
-          <p className="text-[#122017]/75 text-[0.95rem] leading-[1.8] mb-8 max-w-3xl">
+          <p className="text-white/85 text-[0.95rem] leading-[1.8] mb-8 max-w-3xl">
             {t(
               "Appui opérationnel au suivi budgétaire, à l'analyse des écarts et au pilotage de la performance afin d'aider les organisations à mieux maîtriser leurs coûts, leurs marges et leurs ressources.",
               "Operational support for budget monitoring, variance analysis and performance management to help organizations better control their costs, margins and resources."
@@ -142,7 +142,7 @@ export default function VosBesoinsPage() {
               t("Consolidation des données de gestion", "Consolidation of management data"),
               t("Support aux directions financières et responsables opérationnels", "Support to financial directions and operational managers"),
             ].map((item, i) => (
-              <div key={i} className="flex items-start gap-3 text-[#122017]/70 text-[0.82rem]">
+              <div key={i} className="flex items-start gap-3 text-white/80 text-[0.82rem]">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
                 <span>{item}</span>
               </div>
@@ -152,7 +152,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 3. RISQUES & CONFORMITÉ ══ */}
-      <section id="risques-conformite" className="bg-[#FDFBF7] w-full flex flex-col mb-6 bg-pink-100">
+      <section id="risques-conformite" className="mt-12 bg-[#e4dcf7] w-full flex flex-col">
         {/* Top Banner */}
         <div className="w-full border-y border-[#E0D6C8]/50">
           <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row">
@@ -234,18 +234,18 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 4. SUPPORT COMPTABLE & DATA ══ */}
-      <section id="support-comptable-data" className="bg-[#E2E4E1] w-full py-12 mb-6">
+      <section id="support-comptable-data" className="mt-12 bg-[#1A0E08] w-full py-12 ">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start gap-16">
           {/* Text */}
           <div className="w-full flex flex-col">
-            <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
+            <p className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151] mb-4">
               {t("04 — Domaine", "04 — Area")}
             </p>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-10">
               {t("Support Comptable & Data", "Accounting & Data Support").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
             </h2>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
-            <p className="text-[#122017]/75 text-[0.95rem] leading-[1.8] mb-8 max-w-3xl">
+            <p className="text-white/85 text-[0.95rem] leading-[1.8] mb-8 max-w-3xl">
               {t(
                 "Appui opérationnel aux équipes comptables, administratives et data dans le traitement, la fiabilisation et la structuration des informations nécessaires à la production comptable et au reporting.",
                 "Operational support to accounting, administrative and data teams in processing, making reliable and structuring information necessary for accounting production and reporting."
@@ -268,7 +268,7 @@ export default function VosBesoinsPage() {
                 t("Consolidation de données comptables et opérationnelles", "Consolidation of accounting and operational data"),
                 t("Archivage et organisation documentaire", "Archiving and document organization"),
               ].map((item, i) => (
-                <div key={i} className="flex items-start gap-3 text-[#122017]/75 text-[0.82rem]">
+                <div key={i} className="flex items-start gap-3 text-white/80 text-[0.82rem]">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
                   <span>{item}</span>
                 </div>
@@ -279,7 +279,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 5. GESTION DE PATRIMOINE ══ */}
-      <section id="gestion-patrimoine" className="bg-[#E3C29E] w-full py-12 mb-6">
+      <section id="gestion-patrimoine" className="mt-12 bg-white w-full py-12 ">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start gap-16">
           {/* Text */}
           <div className="w-full flex flex-col">
@@ -323,7 +323,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 6. AUTRES BESOINS ══ */}
-      <section id="autres-besoins" className="bg-[#C2D5C4] w-full flex flex-col mb-6 bg-pink-100">
+      <section id="autres-besoins" className="mt-12 bg-[#e4dcf7] w-full flex flex-col">
         {/* Top Banner */}
         <div className="w-full border-y border-[#E0D6C8]/50">
           <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row">

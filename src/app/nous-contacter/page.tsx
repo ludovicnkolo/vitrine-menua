@@ -67,7 +67,7 @@ export default function NousContacter() {
       </section>
 
       {/* ── CONTENT SECTION ── */}
-      <section className="bg-[#E3C29E] w-full px-8 py-16 lg:py-24" id="contact-form">
+      <section className="mt-12 bg-[#E3C29E] w-full px-8 py-16 lg:py-24" id="contact-form">
         <div className="max-w-[1280px] mx-auto flex flex-col lg:flex-row gap-8">
           
           {/* Left Column (Info) */}

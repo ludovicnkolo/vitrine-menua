@@ -53,7 +53,7 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 1. PRÉSENTATION DU CABINET ══ */}
-      <section id="presentation-du-cabinet" className="bg-[#1A0E08] mt-12 mb-6 ">
+      <section id="presentation-du-cabinet" className="mt-12 bg-[#1A0E08] ">
         <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
 
@@ -100,7 +100,7 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 2. NOTRE APPROCHE ══ */}
-      <section id="notre-approche" className="bg-[#e4dcf7] w-full mb-6 py-12">
+      <section id="notre-approche" className="mt-12 bg-[#e4dcf7] w-full py-12">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
 
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-6">
@@ -157,7 +157,7 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 3. NOTRE MÉTHODOLOGIE — Fond marron foncé, 5 cartes centrées ══ */}
-      <section id="notre-methodologie" className="bg-[#e4dcf7] w-full py-12 mb-6 overflow-hidden">
+      <section id="notre-methodologie" className="mt-12 bg-[#e4dcf7] w-full py-12 overflow-hidden">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start">
           <div className="mb-14">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#1A0E08] mb-10">
@@ -187,7 +187,7 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 4. ACCRÉDITATIONS & CERTIFICATIONS — Composant pleine largeur avec image ══ */}
-      <section id="certifications" className="bg-[#8e8478] w-full py-12 mb-6">
+      <section id="certifications" className="mt-12 bg-[#8e8478] w-full py-12 ">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           <div className="w-full max-w-[1000px] mx-auto p-10 lg:p-16 flex flex-col justify-center">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-10">
@@ -232,7 +232,7 @@ export default function NousConnaitrePage() {
 
       {/* ══ 5. NOTRE ÉQUIPE — Fond vert foncé, grand portrait ══ */}
       {/* ══ 5. NOTRE ÉQUIPE ══ */}
-      <section id="notre-equipe" className="bg-[#e4dcf7] w-full py-12 mb-6">
+      <section id="notre-equipe" className="mt-12 bg-[#e4dcf7] w-full py-12 ">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-16">
             

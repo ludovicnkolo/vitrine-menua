@@ -10,7 +10,7 @@ export default function ActualitesPage() {
   return (
     <main className="flex flex-col w-full min-h-screen bg-[#FDFDFD]">
       {/* ── HERO ── */}
-      <section className="relative w-full min-h-[70vh] flex items-center overflow-hidden pt-16">
+      <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
           <img
             src="/actualites_hero.png"

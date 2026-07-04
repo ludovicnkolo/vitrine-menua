@@ -29,7 +29,7 @@ export default function NosSolutionsPage() {
               <p className="text-[#D9B151] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.2em] uppercase mb-6">
                 {t("Dispositifs", "Solutions")}
               </p>
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-[4rem] font-bold leading-[1.1] text-white mb-8 max-w-4xl">
+              <h1 className="font-serif text-4xl md:text-5xl lg:text-[2.5rem] font-bold leading-[1.1] text-white mb-8 max-w-4xl">
                 {t("Des solutions", "Outsourcing")}<br />
                 <span className="text-[#D9B151]">{t("d'externalisation", "solutions")}</span><br />
                 {t("conçues pour s'adapter", "designed to adapt")}<br />

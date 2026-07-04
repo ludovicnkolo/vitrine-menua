@@ -28,10 +28,10 @@ export default function PourquoiMenuaPage() {
               <p className="text-[#D9B151] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.2em] uppercase mb-6">
                 {t("Notre valeur ajoutée", "Our added value")}
               </p>
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] text-white mb-2">
+              <h1 className="font-serif text-4xl md:text-5xl lg:text-[2.5rem] font-bold leading-[1.1] text-white mb-2">
                 {t("Pourquoi nous choisir comme", "Why choose us as an")}
               </h1>
-              <h2 className="text-[#D9B151] italic text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-8">
+              <h2 className="text-[#D9B151] italic text-3xl md:text-4xl lg:text-[1.9rem] font-bold leading-[1.1] mb-8">
                 {t("partenaire opérationnel ?", "operational partner?")}
               </h2>
               <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-2xl font-normal space-y-3" style={{ color: 'white' }}>

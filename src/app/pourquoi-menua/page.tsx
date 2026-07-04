@@ -48,158 +48,160 @@ export default function PourquoiMenuaPage() {
       </section>
 
       {/* ══ 1. BÉNÉFICES — Layout as "Risques & Conformité" ══ */}
-      <section id="nos-benefices" className="mt-12 bg-[#e4dcf7] w-full flex flex-col">
-        {/* Top Banner */}
-        <div className="w-full border-y border-[#E0D6C8]/50">
-          <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row">
-            {/* Left Box (Title & Icon) */}
-            <div className="w-full md:w-1/2 p-6 lg:p-10 flex flex-col justify-center">
-              <p className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151] mb-1">
-                {t("01 — Valeur ajoutée", "01 — Added value")}
-              </p>
-              <h2 className="font-serif text-2xl lg:text-3xl font-bold text-[#122017] mb-2">
-                {t("Bénéfices", "Benefits")}
-              </h2>
-              <p className="text-[#4A4E5A] text-[0.9rem] leading-[1.5]">
-                {t(
-                  "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité et renforcez votre fiabilité.",
-                  "By outsourcing your back and middle office functions with MENUA CONSULTING, you save time, improve your productivity and strengthen your reliability."
-                )}
-              </p>
-            </div>
-            {/* Right Image */}
-            <div className="w-full md:w-1/2 h-[250px] md:h-[350px] p-4 lg:p-6">
-              <img
-                src="/office-lounge.jpg"
-                alt="Bénéfices"
-                className="w-full h-full object-cover rounded-2xl shadow-lg"
-                onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Details */}
-        <div className="w-full py-10 lg:py-12">
-          <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center gap-12 lg:gap-24">
-            
-            {/* Left Paragraph */}
-            <div className="w-full md:w-[35%] text-[#122017]/80 text-[0.95rem] leading-[1.8] font-medium">
-              <p className="mb-4">
-                {t(
-                  "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité, renforcez votre fiabilité et soutenez durablement votre chiffre d'affaires.",
-                  "By outsourcing your back and middle office functions with MENUA CONSULTING, you save time, improve your productivity, strengthen your reliability and sustainably support your turnover."
-                )}
-              </p>
-              <p>
-                {t(
-                  "Cette organisation vous permet de réduire vos charges internes, de mieux absorber vos volumes d'activité et de fidéliser durablement votre clientèle.",
-                  "This organization allows you to reduce your internal costs, better absorb your business volumes and sustainably build customer loyalty."
-                )}
-              </p>
-            </div>
-
-            {/* Right List */}
-            <div className="w-full md:w-[65%] border-t md:border-t-0 md:border-l border-[#D9B151] pt-12 md:pt-0 md:pl-12 lg:pl-16">
-              <h3 className="text-[#8B6240] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-10">
-                {t("Vos avantages", "Your advantages")}
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
-                {[
-                  t("Gain de temps", "Time saving"),
-                  t("Réduction des charges internes", "Reduction of internal costs"),
-                  t("Productivité accrue", "Increased productivity"),
-                  t("Efficacité renforcée", "Enhanced efficiency"),
-                  t("Fiabilité des opérations", "Reliability of operations"),
-                  t("Fidélisation de la clientèle", "Customer loyalty"),
-                  t("Chiffre d'affaires soutenu", "Sustained turnover"),
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    {/* Checkmark icon (Lucide Check path) */}
-                    <svg className="w-4 h-4 text-[#8B6240] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <span className="text-[#122017]/80 text-[0.85rem] leading-[1.5]">{item}</span>
-                  </div>
-                ))}
+      <section id="nos-benefices" className="mt-12 w-full max-w-[1100px] mx-auto px-6 lg:px-10">
+        <div className="bg-[#e4dcf7] w-full flex flex-col rounded-3xl overflow-hidden shadow-lg border border-black/5">
+          {/* Top Banner */}
+          <div className="w-full border-b border-[#E0D6C8]/50">
+            <div className="flex flex-col md:flex-row">
+              {/* Left Box (Title & Icon) */}
+              <div className="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
+                <p className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151] mb-1">
+                  {t("01 — Valeur ajoutée", "01 — Added value")}
+                </p>
+                <h2 className="font-serif text-2xl lg:text-3xl font-bold text-[#122017] mb-4">
+                  {t("Bénéfices", "Benefits")}
+                </h2>
+                <p className="text-[#4A4E5A] text-[0.95rem] leading-[1.6]">
+                  {t(
+                    "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité et renforcez votre fiabilité.",
+                    "By outsourcing your back and middle office functions with MENUA CONSULTING, you save time, improve your productivity and strengthen your reliability."
+                  )}
+                </p>
+              </div>
+              {/* Right Image */}
+              <div className="w-full md:w-1/2 h-[300px] md:h-auto min-h-[350px]">
+                <img
+                  src="/office-lounge.jpg"
+                  alt="Bénéfices"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
+                />
               </div>
             </div>
+          </div>
 
+          {/* Bottom Details */}
+          <div className="w-full py-10 lg:py-12 px-8 lg:px-12">
+            <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-16">
+              
+              {/* Left Paragraph */}
+              <div className="w-full md:w-[35%] text-[#122017]/80 text-[0.95rem] leading-[1.8] font-medium">
+                <p className="mb-4">
+                  {t(
+                    "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité, renforcez votre fiabilité et soutenez durablement votre chiffre d'affaires.",
+                    "By outsourcing your back and middle office functions with MENUA CONSULTING, you save time, improve your productivity, strengthen your reliability and sustainably support your turnover."
+                  )}
+                </p>
+                <p>
+                  {t(
+                    "Cette organisation vous permet de réduire vos charges internes, de mieux absorber vos volumes d'activité et de fidéliser durablement votre clientèle.",
+                    "This organization allows you to reduce your internal costs, better absorb your business volumes and sustainably build customer loyalty."
+                  )}
+                </p>
+              </div>
+
+              {/* Right List */}
+              <div className="w-full md:w-[65%] border-t md:border-t-0 md:border-l border-[#D9B151] pt-12 md:pt-0 md:pl-12 lg:pl-16">
+                <h3 className="text-[#8B6240] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-10">
+                  {t("Vos avantages", "Your advantages")}
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
+                  {[
+                    t("Gain de temps", "Time saving"),
+                    t("Réduction des charges internes", "Reduction of internal costs"),
+                    t("Productivité accrue", "Increased productivity"),
+                    t("Efficacité renforcée", "Enhanced efficiency"),
+                    t("Fiabilité des opérations", "Reliability of operations"),
+                    t("Fidélisation de la clientèle", "Customer loyalty"),
+                    t("Chiffre d'affaires soutenu", "Sustained turnover"),
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-start gap-4">
+                      <svg className="w-4 h-4 text-[#8B6240] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      <span className="text-[#122017]/80 text-[0.85rem] leading-[1.5]">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
       </section>
 
       {/* ══ 2. DIFFÉRENCIATION — Layout as "Risques & Conformité" (Image Left) ══ */}
-      <section id="notre-differenciation" className="mt-12 bg-[#8e8478] w-full flex flex-col">
-        {/* Top Banner */}
-        <div className="w-full border-y border-[#E0D6C8]/50">
-          <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row">
-            {/* Left Image (order 2 on mobile, order 1 on desktop) */}
-            <div className="w-full md:w-1/2 h-[250px] md:h-[350px] p-4 lg:p-6 order-2 md:order-1">
-              <img
-                src="/meeting.jpg"
-                alt="Différenciation"
-                className="w-full h-full object-cover rounded-2xl shadow-lg"
-                onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
-              />
-            </div>
-            {/* Right Box (Title & Icon) (order 1 on mobile, order 2 on desktop) */}
-            <div className="w-full md:w-1/2 p-6 lg:p-10 flex flex-col justify-center order-1 md:order-2">
-              <p className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151] mb-1">
-                {t("02 — Valeur ajoutée", "02 — Added value")}
-              </p>
-              <h2 className="font-serif text-2xl lg:text-3xl font-bold text-white mb-2">
-                {t("Différenciation", "Differentiation")}
-              </h2>
-              <p className="text-white/85 text-[0.9rem] leading-[1.5]">
-                {t(
-                  "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.",
-                  "As back and middle office specialists, we don't stop at analysis: we execute."
-                )}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Details */}
-        <div className="w-full py-10 lg:py-12">
-          <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center gap-12 lg:gap-24">
-            
-            {/* Left Paragraph */}
-            <div className="w-full md:w-[35%] text-white/90 text-[0.95rem] leading-[1.8] font-medium">
-              <p>
-                {t(
-                  "Notre approche 100% opérationnelle, notre intégration aux organisations clientes et notre capacité d'intervention en français comme en anglais nous permettent d'intervenir dans des environnements exigeants, structurés et ouverts à l'international.",
-                  "Our 100% operational approach, our integration into client organizations and our ability to intervene in both French and English allow us to operate in demanding, structured and internationally open environments."
-                )}
-              </p>
-            </div>
-
-            {/* Right List */}
-            <div className="w-full md:w-[65%] border-t md:border-t-0 md:border-l border-[#D9B151] pt-12 md:pt-0 md:pl-12 lg:pl-16">
-              <h3 className="text-[#D9B151] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-10">
-                {t("Nos points forts", "Our strengths")}
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
-                {[
-                  t("Spécialisation back et middle office", "Back and middle office specialization"),
-                  t("Approche 100% opérationnelle", "100% operational approach"),
-                  t("Intégration à votre organisation", "Integration into your organization"),
-                  t("Exécution fiable et continue", "Reliable and continuous execution"),
-                  t("Supervision qualité des livrables", "Quality supervision of deliverables"),
-                  t("Intervention bilingue français / anglais", "Bilingual intervention French / English"),
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    {/* Checkmark icon (Lucide Check path) */}
-                    <svg className="w-4 h-4 text-[#D9B151] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <span className="text-white/85 text-[0.85rem] leading-[1.5]">{item}</span>
-                  </div>
-                ))}
+      <section id="notre-differenciation" className="mt-12 w-full max-w-[1100px] mx-auto px-6 lg:px-10">
+        <div className="bg-[#8e8478] w-full flex flex-col rounded-3xl overflow-hidden shadow-lg border border-black/5">
+          {/* Top Banner */}
+          <div className="w-full border-b border-[#E0D6C8]/30">
+            <div className="flex flex-col md:flex-row">
+              {/* Left Image (order 2 on mobile, order 1 on desktop) */}
+              <div className="w-full md:w-1/2 h-[300px] md:h-auto min-h-[350px] order-2 md:order-1">
+                <img
+                  src="/meeting.jpg"
+                  alt="Différenciation"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
+                />
+              </div>
+              {/* Right Box (Title & Icon) (order 1 on mobile, order 2 on desktop) */}
+              <div className="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center order-1 md:order-2">
+                <p className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151] mb-1">
+                  {t("02 — Valeur ajoutée", "02 — Added value")}
+                </p>
+                <h2 className="font-serif text-2xl lg:text-3xl font-bold text-white mb-4">
+                  {t("Différenciation", "Differentiation")}
+                </h2>
+                <p className="text-white/85 text-[0.95rem] leading-[1.6]">
+                  {t(
+                    "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.",
+                    "As back and middle office specialists, we don't stop at analysis: we execute."
+                  )}
+                </p>
               </div>
             </div>
+          </div>
 
+          {/* Bottom Details */}
+          <div className="w-full py-10 lg:py-12 px-8 lg:px-12">
+            <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-16">
+              
+              {/* Left Paragraph */}
+              <div className="w-full md:w-[35%] text-white/90 text-[0.95rem] leading-[1.8] font-medium">
+                <p>
+                  {t(
+                    "Notre approche 100% opérationnelle, notre intégration aux organisations clientes et notre capacité d'intervention en français comme en anglais nous permettent d'intervenir dans des environnements exigeants, structurés et ouverts à l'international.",
+                    "Our 100% operational approach, our integration into client organizations and our ability to intervene in both French and English allow us to operate in demanding, structured and internationally open environments."
+                  )}
+                </p>
+              </div>
+
+              {/* Right List */}
+              <div className="w-full md:w-[65%] border-t md:border-t-0 md:border-l border-[#D9B151] pt-12 md:pt-0 md:pl-12 lg:pl-16">
+                <h3 className="text-[#D9B151] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-10">
+                  {t("Nos points forts", "Our strengths")}
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
+                  {[
+                    t("Spécialisation back et middle office", "Back and middle office specialization"),
+                    t("Approche 100% opérationnelle", "100% operational approach"),
+                    t("Intégration à votre organisation", "Integration into your organization"),
+                    t("Exécution fiable et continue", "Reliable and continuous execution"),
+                    t("Supervision qualité des livrables", "Quality supervision of deliverables"),
+                    t("Intervention bilingue français / anglais", "Bilingual intervention French / English"),
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-start gap-4">
+                      <svg className="w-4 h-4 text-[#D9B151] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      <span className="text-white/85 text-[0.85rem] leading-[1.5]">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
       </section>
@@ -253,11 +255,11 @@ export default function PourquoiMenuaPage() {
 
           {/* Full width box at bottom */}
           <div className="w-full max-w-5xl mx-auto mt-6">
-            <div className="flex flex-col items-center text-center bg-[#1A0E08] rounded-xl p-8 lg:p-10 border border-[#1A0E08]/10 shadow-xl">
+            <div className="flex flex-col items-center text-center p-8 lg:p-10">
               <div className="text-[#D9B151] mb-4">
                 <Shield size={36} strokeWidth={1.5} />
               </div>
-              <h3 className="font-serif text-2xl md:text-3xl font-bold text-white leading-tight max-w-2xl">
+              <h3 className="font-serif text-2xl md:text-3xl font-bold text-[#1A0E08] leading-tight max-w-2xl">
                 {t("Respect de vos exigences opérationnelles, qualité et réglementaires", "Respect of your operational, quality and regulatory requirements")}
               </h3>
             </div>

@@ -50,7 +50,7 @@ export default function ActualitesPage() {
       </section>
 
       {/* ── CONTENU PRINCIPAL ── */}
-      <section className="bg-[#E3C29E] w-full py-16 lg:py-24">
+      <section className="bg-[#E3C29E] w-full mb-6 py-12">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           
           {/* A LA UNE */}

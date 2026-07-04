@@ -7,7 +7,7 @@ export default function CallToAction() {
   const { t } = useLanguage();
 
   return (
-    <section className="w-full relative px-8 py-5 overflow-hidden bg-[#223930]">
+    <section className="w-full relative px-8 py-5 overflow-hidden bg-[#1A0E08]">
       <div className="max-w-[1280px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
         {/* Left: text */}
         <div className="flex flex-col text-left">
@@ -31,7 +31,7 @@ export default function CallToAction() {
           </Link>
           <Link
             href="/nous-rejoindre"
-            className="flex items-center justify-center gap-3 bg-transparent text-white border border-white px-6 py-3 text-[0.75rem] font-bold tracking-[0.1em] uppercase transition-all hover:bg-white hover:text-[#223930] whitespace-nowrap"
+            className="flex items-center justify-center gap-3 bg-transparent text-white border border-white px-6 py-3 text-[0.75rem] font-bold tracking-[0.1em] uppercase transition-all hover:bg-white hover:text-[#1A0E08] whitespace-nowrap"
           >
             {t("NOUS REJOINDRE", "JOIN US")} <ArrowRight size={16} />
           </Link>

@@ -48,23 +48,23 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 2 : L'EXPERTISE D'UN CABINET SPÉCIALISÉ ── */}
-      <section className="bg-[#c29772] mt-12 mb-6 ">
+      <section className="bg-[#8e8478] mt-12 mb-6 ">
         <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             <div className="flex flex-col">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[1px] bg-[#D9B151]" />
-                <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
+                <div className="w-8 h-[1px] bg-white/60" />
+                <span className="text-white/80 text-[0.7rem] font-bold tracking-[0.15em] uppercase">
                   {t("Le partenaire opérationnel de vos équipes", "The operational partner of your teams")}
                 </span>
               </div>
-              <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-8">
+              <h2 className="text-white text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-8">
                 {t("L'expertise d'un cabinet spécialisé, la fiabilité d'une équipe dédiée.", "The expertise of a specialized firm, the reliability of a dedicated team.")}
               </h2>
-              <p className="text-[#4A4E5A] text-[1.05rem] leading-[1.7] mb-10 max-w-xl">
+              <p className="text-white/85 text-[1.05rem] leading-[1.7] mb-10 max-w-xl">
                 {t("MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées. Notre mission: sécuriser et renforcer l'exécution de vos fonctions back et middle office pour vous permettre de vous concentrer sur votre cœur de métier.", "MENUA CONSULTING supports financial, accounting, wealth, data and regulated teams. Our mission: to secure and strengthen the execution of your back and middle office functions to allow you to focus on your core business.")}
               </p>
-              <Link href="/nous-connaitre" className="inline-flex items-center justify-center gap-3 bg-[#122017] text-white px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:bg-[#D9B151] hover:text-[#122017] w-fit rounded-sm shadow-md">
+              <Link href="/nous-connaitre" className="inline-flex items-center justify-center gap-3 bg-white text-[#1A0E08] px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:bg-[#D9B151] hover:text-white w-fit rounded-sm shadow-md">
                 {t("DÉCOUVRIR NOS EXPERTISES", "DISCOVER OUR EXPERTISE")} <ArrowRight size={16} />
               </Link>
             </div>
@@ -76,12 +76,12 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 3 : DES EXPERTISES OPÉRATIONNELLES ── */}
-      <section className="bg-[#C2D5C4] mb-6 ">
+      <section className="bg-[#1A0E08] mb-6 py-12">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
-          <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold text-center mb-4">
+          <h2 className="text-white text-2xl lg:text-[1.8rem] font-bold text-center mb-4">
             {t("Des expertises opérationnelles, au cœur de votre activité.", "Operational expertise, at the heart of your activity.")}
           </h2>
-          <p className="text-[#4A4E5A] text-center italic text-xl mb-8 font-serif">
+          <p className="text-white/70 text-center italic text-xl mb-8 font-serif">
             {t("Un appui ciblé pour chaque fonction de votre organisation.", "Targeted support for each function of your organization.")}
           </p>
           <div className="w-12 h-[2px] bg-[#D9B151] mb-10" />
@@ -93,16 +93,16 @@ export default function Home() {
               { icon: FileSpreadsheet, title: t("Support\ncomptable & Data", "Accounting\n& Data support"), desc: t("Des opérations fluides et des données structurées.", "Smooth operations and structured data.") },
               { icon: Building2, title: t("Gestion de\nPatrimoine & CGP", "Wealth Management\n& IFA"), desc: t("Un support administratif réactif pour vos conseillers.", "Responsive administrative support for your advisors.") },
             ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center text-center bg-[#F9F7F1] border border-[#E0D6C8] rounded-xl p-5 hover:shadow-xl transition-all">
-                <h3 className="text-[#122017] text-[1.1rem] font-bold mb-3 whitespace-pre-line leading-[1.2]">
+              <div key={i} className="flex flex-col items-center text-center bg-white/10 border border-white/20 rounded-xl p-5 hover:shadow-xl transition-all">
+                <h3 className="text-white text-[1.1rem] font-bold mb-3 whitespace-pre-line leading-[1.2]">
                   {item.title}
                 </h3>
-                <p className="text-[#646A66] text-[0.85rem] leading-[1.6]">{item.desc}</p>
+                <p className="text-white/70 text-[0.85rem] leading-[1.6]">{item.desc}</p>
               </div>
             ))}
           </div>
 
-          <Link href="/vos-besoins" className="inline-flex items-center justify-center gap-3 bg-[#F9F7F1] text-[#122017] border border-[#E0D6C8] px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:border-[#D9B151] w-fit rounded-sm shadow-sm">
+          <Link href="/vos-besoins" className="inline-flex items-center justify-center gap-3 bg-white/10 text-white border border-white/30 px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:border-[#D9B151] hover:text-[#D9B151] w-fit rounded-sm shadow-sm">
             {t("VOIR TOUS NOS DOMAINES D'INTERVENTION", "VIEW ALL OUR AREAS OF INTERVENTION")} <ArrowRight size={16} />
           </Link>
         </div>
@@ -180,7 +180,7 @@ export default function Home() {
 
 
       {/* ── SECTION 5 : DES SOLUTIONS D'EXTERNALISATION ── */}
-      <section className="bg-[#8e8478] mb-6 py-12">
+      <section className="bg-[#1A0E08] mb-6 py-12">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col max-w-5xl mx-auto">
             <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase mb-4 text-center lg:text-left">
@@ -217,7 +217,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 6 : ÉCLAIRAGES & ANALYSES ── */}
-      <section className="bg-[#E3C29E] mb-6 py-12">
+      <section className="bg-white mb-6 py-12">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
           <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold text-center mb-2">
             {t("Éclairages & analyses", "Insights & analyses")}
@@ -258,7 +258,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 7 : L'EXPERTISE AU SERVICE DE VOTRE PERFORMANCE ── */}
-      <section className="bg-[#C2D5C4] py-5">
+      <section className="bg-[#1A0E08] py-5">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
             <div className="flex flex-col text-center lg:text-left">

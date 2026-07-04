@@ -112,7 +112,7 @@ export default function VosBesoinsPage() {
         </div>
       </section>
       {/* ══ 2. CONTRÔLE DE GESTION ══ */}
-      <section id="controle-de-gestion" className="bg-[#C2D5C4] w-full py-12 lg:py-16 mb-10 lg:mb-16">
+      <section id="controle-de-gestion" className="bg-[#C2D5C4] w-full py-12 mb-6">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
           <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
             {t("02 — Domaine", "02 — Area")}
@@ -152,7 +152,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 3. RISQUES & CONFORMITÉ ══ */}
-      <section id="risques-conformite" className="bg-[#FDFBF7] w-full flex flex-col mb-10 lg:mb-16 bg-pink-100">
+      <section id="risques-conformite" className="bg-[#FDFBF7] w-full flex flex-col mb-6 bg-pink-100">
         {/* Top Banner */}
         <div className="w-full border-y border-[#E0D6C8]/50">
           <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row">
@@ -234,7 +234,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 4. SUPPORT COMPTABLE & DATA ══ */}
-      <section id="support-comptable-data" className="bg-[#E2E4E1] w-full py-12 lg:py-16 mb-10 lg:mb-16">
+      <section id="support-comptable-data" className="bg-[#E2E4E1] w-full py-12 mb-6">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start gap-16">
           {/* Text */}
           <div className="w-full flex flex-col">
@@ -279,7 +279,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 5. GESTION DE PATRIMOINE ══ */}
-      <section id="gestion-patrimoine" className="bg-[#E3C29E] w-full py-12 lg:py-16 mb-10 lg:mb-16">
+      <section id="gestion-patrimoine" className="bg-[#E3C29E] w-full py-12 mb-6">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start gap-16">
           {/* Text */}
           <div className="w-full flex flex-col">
@@ -323,7 +323,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 6. AUTRES BESOINS ══ */}
-      <section id="autres-besoins" className="bg-[#C2D5C4] w-full flex flex-col mb-10 lg:mb-16 bg-pink-100">
+      <section id="autres-besoins" className="bg-[#C2D5C4] w-full flex flex-col mb-6 bg-pink-100">
         {/* Top Banner */}
         <div className="w-full border-y border-[#E0D6C8]/50">
           <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row">

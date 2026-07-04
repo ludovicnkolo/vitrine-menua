@@ -53,9 +53,9 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 1. PRÉSENTATION DU CABINET ══ */}
-      <section id="presentation-du-cabinet" className="w-full bg-[#F9F7F1] py-24 lg:py-32">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section id="presentation-du-cabinet" className="mt-12 mb-6 bg-white">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-[#F9F7F1] rounded-2xl py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
 
             {/* Text left */}
             <div className="flex flex-col">
@@ -66,7 +66,7 @@ export default function NousConnaitrePage() {
                 </span>
               </div>
               <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-6">
-                {t("MENUA CONSULTING\nPRÉSENTATION\nDU CABINET", "MENUA CONSULTING\nFIRM\nPRESENTATION").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+                {t("MENUA CONSULTING PRÉSENTATION DU CABINET", "MENUA CONSULTING FIRM PRESENTATION").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
               </h2>
               <div className="w-16 h-[3px] bg-[#D9B151] mb-8" />
               <div className="text-[#4A4E5A] text-[1.05rem] leading-[1.8] space-y-5 font-normal">
@@ -86,7 +86,7 @@ export default function NousConnaitrePage() {
             </div>
 
             {/* Image right — same dimensions as homepage section 2 */}
-            <div className="w-full h-[450px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
               <img
                 src="/presentation_cabinet_desk.png"
                 alt="Cabinet Menua Consulting"
@@ -104,7 +104,7 @@ export default function NousConnaitrePage() {
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
 
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-6">
-            {t("NOTRE\nAPPROCHE", "OUR\nAPPROACH").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+            {t("NOTRE APPROCHE", "OUR APPROACH").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
           </h2>
           <div className="w-16 h-[3px] bg-[#D9B151] mb-10" />
 
@@ -161,7 +161,7 @@ export default function NousConnaitrePage() {
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start">
           <div className="mb-14">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-10">
-              {t("NOTRE\nMÉTHODOLOGIE", "OUR\nMETHODOLOGY").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+              {t("NOTRE MÉTHODOLOGIE", "OUR METHODOLOGY").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
             </h2>
             <div className="w-16 h-[3px] bg-[#D9B151]" />
           </div>
@@ -201,7 +201,7 @@ export default function NousConnaitrePage() {
             {/* Text Content */}
             <div className="relative z-10">
               <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-10">
-                {t("ACCRÉDITATIONS, CERTIFICATIONS &\nCADRE D'INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS &\nINTERVENTION FRAMEWORK").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+                {t("ACCRÉDITATIONS, CERTIFICATIONS & CADRE D'INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS & INTERVENTION FRAMEWORK").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
               </h2>
               <div className="w-12 h-[3px] bg-[#D9B151] mb-8" />
               

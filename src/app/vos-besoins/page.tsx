@@ -30,7 +30,7 @@ export default function VosBesoinsPage() {
                 {t("Expertises", "Expertise")}
               </p>
               <h1 className="font-serif text-4xl md:text-5xl lg:text-[2.5rem] font-bold leading-[1.1] text-white mb-8">
-                {t("Vos\nbesoins", "Your\nneeds").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+                {t("Vos besoins", "Your needs").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
               </h1>
               <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-xl font-normal space-y-3" style={{ color: 'white' }}>
                 <p>
@@ -51,9 +51,9 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 1. FINANCE & REPORTING ══ */}
-      <section id="finance-reporting" className="w-full bg-[#F9F7F1] py-24 lg:py-32">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section id="finance-reporting" className="mt-12 mb-6 bg-white">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-[#F9F7F1] rounded-2xl py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             
             {/* Text left */}
             <div className="flex flex-col">
@@ -64,7 +64,7 @@ export default function VosBesoinsPage() {
                 </span>
               </div>
               <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-6">
-                {t("Finance &\nReporting", "Finance &\nReporting").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+                {t("Finance & Reporting", "Finance & Reporting").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
               </h2>
               <div className="w-16 h-[3px] bg-[#D9B151] mb-8" />
               <div className="text-[#4A4E5A] text-[1.05rem] leading-[1.8] mb-8 font-normal">
@@ -100,7 +100,7 @@ export default function VosBesoinsPage() {
             </div>
 
             {/* Image right */}
-            <div className="w-full h-[450px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
               <img
                 src="/trust-circle.jpg"
                 alt="Finance & Reporting"
@@ -108,11 +108,9 @@ export default function VosBesoinsPage() {
                 onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
               />
             </div>
-
           </div>
         </div>
       </section>
-
       {/* ══ 2. CONTRÔLE DE GESTION ══ */}
       <section id="controle-de-gestion" className="w-full bg-[#F6F3F0] py-12 lg:py-16 mb-10 lg:mb-16">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
@@ -120,7 +118,7 @@ export default function VosBesoinsPage() {
             {t("02 — Domaine", "02 — Area")}
           </p>
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
-            {t("Contrôle\nde gestion", "Management\nControl").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+            {t("Contrôle de gestion", "Management Control").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
           </h2>
           <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
           <p className="text-[#122017]/75 text-[0.95rem] leading-[1.8] mb-8 max-w-3xl">
@@ -244,7 +242,7 @@ export default function VosBesoinsPage() {
               {t("04 — Domaine", "04 — Area")}
             </p>
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
-              {t("Support\nComptable & Data", "Accounting &\nData Support").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+              {t("Support Comptable & Data", "Accounting & Data Support").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
             </h2>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
             <p className="text-[#122017]/75 text-[0.95rem] leading-[1.8] mb-8 max-w-3xl">

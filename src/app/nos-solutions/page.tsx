@@ -48,9 +48,9 @@ export default function NosSolutionsPage() {
         </div>
       </section>
       {/* ══ 1. URGENCE ══ */}
-      <section id="urgence" className="w-full bg-[#F9F7F1] py-24 lg:py-32 my-10 lg:my-16">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section id="urgence" className="mt-12 mb-6 bg-white">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-[#F9F7F1] rounded-2xl py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             
             {/* Text left */}
             <div className="flex flex-col">
@@ -89,7 +89,7 @@ export default function NosSolutionsPage() {
             </div>
 
             {/* Image right */}
-            <div className="w-full h-[450px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
               <img
                 src="/trust-circle.jpg"
                 alt="Urgence"

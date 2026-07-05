@@ -96,7 +96,7 @@ export default function VosBesoinsPage() {
             {/* Image right */}
             <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="/trust-circle.jpg"
+                src="/finRepor.jpg"
                 alt="Finance et Reporting"
                 className="w-full h-full object-cover"
                 onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
@@ -114,7 +114,7 @@ export default function VosBesoinsPage() {
               {/* Left Image — negative mt to create upward offset */}
               <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
                 <img
-                  src="/meeting.jpg"
+                  src="/conGest.jpg"
                   alt="Contrôle de gestion"
                   className="w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
@@ -198,7 +198,7 @@ export default function VosBesoinsPage() {
               {/* Right Image — negative mt to create upward offset */}
               <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl">
                 <img
-                  src="/office-lounge.jpg"
+                  src="/risConfor.jpg"
                   alt="Risques et Conformité"
                   className="w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
@@ -342,7 +342,7 @@ export default function VosBesoinsPage() {
               {/* Left Image — negative mt to create upward offset */}
               <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
                 <img
-                  src="/meeting.jpg"
+                  src="/autrBes.jpg"
                   alt="Autres besoins opérationnels"
                   className="w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}

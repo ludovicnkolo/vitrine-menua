@@ -80,7 +80,7 @@ export default function NousConnaitrePage() {
             {/* Image right — same dimensions as homepage section 2 */}
             <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="/presentation_cabinet_desk.png"
+                src="/preCabinet.png"
                 alt="Cabinet Menua Consulting"
                 className="w-full h-full object-cover"
                 onError={(e) => { e.currentTarget.src = "/banner-desk.jpg"; }}
@@ -98,7 +98,7 @@ export default function NousConnaitrePage() {
 
             {/* Image à gauche */}
             <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
-              <img src="/office-lounge.jpg" alt="Notre approche" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} />
+              <img src="/notApproche.png" alt="Notre approche" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} />
             </div>
 
             {/* Texte à droite */}

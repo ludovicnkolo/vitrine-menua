@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, Globe, BarChart2, CheckCircle2, FileSpreadsheet, Building2, Zap, Clock, Maximize, Settings, Search, Lightbulb, CheckSquare, Network, ShieldCheck } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
+import CallToAction from "@/components/layout/CallToAction";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -14,7 +15,7 @@ export default function Home() {
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
           <img src="/office-lounge.jpg" alt="Hero" className="w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A0E08]/75 to-[#1A0E08]/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A0E08]/90 to-[#1A0E08]/70" />
         </div>
 
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
@@ -53,18 +54,18 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             <div className="flex flex-col">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[1px] bg-white/60" />
-                <span className="text-white/80 text-[0.7rem] font-bold tracking-[0.15em] uppercase">
+                <div className="w-8 h-[1px] bg-[#1A0E08]" />
+                <span className="text-[#1A0E08] text-[1.2rem] font-bold tracking-[0.15em] uppercase">
                   {t("Le partenaire opérationnel de vos équipes", "The operational partner of your teams")}
                 </span>
               </div>
-              <h2 className="text-white text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-8">
+              <h2 className="text-[#1A0E08] text-lg lg:text-[1.3rem] font-bold leading-[1.4] mb-6">
                 {t("L'expertise d'un cabinet spécialisé, la fiabilité d'une équipe dédiée.", "The expertise of a specialized firm, the reliability of a dedicated team.")}
               </h2>
-              <p className="text-white/85 text-[1.05rem] leading-[1.7] mb-10 max-w-xl">
+              <p className="text-[#1A0E08]/90 text-[1.05rem] leading-[1.7] font-normal mb-10 max-w-xl">
                 {t("MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées. Notre mission: sécuriser et renforcer l'exécution de vos fonctions back et middle office pour vous permettre de vous concentrer sur votre cœur de métier.", "MENUA CONSULTING supports financial, accounting, wealth, data and regulated teams. Our mission: to secure and strengthen the execution of your back and middle office functions to allow you to focus on your core business.")}
               </p>
-              <Link href="/nous-connaitre" className="inline-flex items-center justify-center gap-3 bg-white text-[#1A0E08] px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:bg-[#D9B151] hover:text-white w-fit rounded-sm shadow-md">
+              <Link href="/nous-connaitre" className="inline-flex items-center gap-3 text-[#1A0E08]/80 text-[0.85rem] tracking-widest font-bold uppercase transition-transform duration-300 hover:scale-[1.03] w-fit">
                 {t("DÉCOUVRIR NOS EXPERTISES", "DISCOVER OUR EXPERTISE")} <ArrowRight size={16} />
               </Link>
             </div>
@@ -77,14 +78,21 @@ export default function Home() {
 
       {/* ── SECTION 3 : DES EXPERTISES OPÉRATIONNELLES ── */}
       <section className="mt-12 bg-[#1A0E08] py-12">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
-          <h2 className="text-white text-2xl lg:text-[1.8rem] font-bold text-center mb-4">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 flex flex-col items-start">
+          
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-8 h-[1px] bg-white" />
+            <span className="text-white text-[1.2rem] font-bold tracking-[0.15em] uppercase">
+              {t("VOS BESOINS", "YOUR NEEDS")}
+            </span>
+          </div>
+          
+          <h2 className="text-white text-lg lg:text-[1.3rem] font-bold leading-[1.4] mb-6">
             {t("Des expertises opérationnelles, au cœur de votre activité.", "Operational expertise, at the heart of your activity.")}
           </h2>
-          <p className="text-white/70 text-center italic text-xl mb-8 font-serif">
+          <p className="text-white/70 italic text-xl mb-10 font-serif">
             {t("Un appui ciblé pour chaque fonction de votre organisation.", "Targeted support for each function of your organization.")}
           </p>
-          <div className="w-12 h-[2px] bg-[#D9B151] mb-10" />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full mb-10">
             {[
@@ -102,7 +110,7 @@ export default function Home() {
             ))}
           </div>
 
-          <Link href="/vos-besoins" className="inline-flex items-center justify-center gap-3 bg-white/10 text-white border border-white/30 px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:border-[#D9B151] hover:text-[#D9B151] w-fit rounded-sm shadow-sm">
+          <Link href="/vos-besoins" className="inline-flex items-center gap-3 text-white/80 text-[0.85rem] font-bold tracking-widest uppercase transition-transform duration-300 hover:scale-[1.03] w-fit mt-4">
             {t("VOIR TOUS NOS DOMAINES D'INTERVENTION", "VIEW ALL OUR AREAS OF INTERVENTION")} <ArrowRight size={16} />
           </Link>
         </div>
@@ -121,16 +129,13 @@ export default function Home() {
             {/* Texte à droite */}
             <div className="flex flex-col">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[1px] bg-[#D9B151]" />
-                <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
+                <div className="w-8 h-[1px] bg-[#1A0E08]" />
+                <span className="text-[#1A0E08] text-[1.2rem] font-bold tracking-[0.15em] uppercase">
                   {t("Notre approche", "Our approach")}
                 </span>
               </div>
-              <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-3">
-                {t("Une approche 100% opérationnelle,", "A 100% operational approach,")}
-              </h2>
-              <h2 className="text-[#D9B151] italic text-xl lg:text-[1.5rem] font-bold leading-[1.2] mb-6">
-                {t("intégrée à vos process.", "integrated into your processes.")}
+              <h2 className="text-[#1A0E08] text-lg lg:text-[1.3rem] font-bold leading-[1.4] mb-6">
+                {t("Une approche 100% opérationnelle, intégrée à vos process.", "A 100% operational approach, integrated into your processes.")}
               </h2>
               <p className="text-[#4A4E5A] text-[0.9rem] leading-[1.7] mb-8 italic">
                 {t(
@@ -163,14 +168,14 @@ export default function Home() {
                       <pilier.icon className="text-[#D9B151]" size={16} strokeWidth={1.5} />
                     </div>
                     <div>
-                      <h3 className="text-[#122017] text-[0.9rem] font-bold mb-1">{pilier.title}</h3>
+                      <h3 className="text-[#1A0E08] text-[0.9rem] font-bold mb-1">{pilier.title}</h3>
                       <p className="text-[#4A4E5A] text-[0.8rem] leading-[1.6]">{pilier.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <Link href="/pourquoi-menua" className="inline-flex items-center gap-3 text-[#122017] text-[0.8rem] font-bold tracking-wider uppercase hover:text-[#D9B151] transition-colors w-fit">
+              <Link href="/pourquoi-menua" className="inline-flex items-center gap-3 text-[#1A0E08]/80 text-[0.85rem] font-bold tracking-widest uppercase transition-transform duration-300 hover:scale-[1.03] w-fit mt-2">
                 {t("En savoir plus sur notre méthodologie", "Learn more about our methodology")} <ArrowRight size={16} />
               </Link>
             </div>
@@ -183,10 +188,13 @@ export default function Home() {
       <section className="mt-12 bg-[#1A0E08] py-12">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
           <div className="flex flex-col max-w-5xl mx-auto">
-            <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase mb-4 text-center lg:text-left">
-              {t("NOS SOLUTIONS", "OUR SOLUTIONS")}
-            </p>
-            <h2 className="text-white text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-8 text-center lg:text-left">
+            <div className="flex items-center gap-4 mb-6 justify-center lg:justify-start">
+              <div className="w-8 h-[1px] bg-white" />
+              <span className="text-white text-[1.2rem] font-bold tracking-[0.15em] uppercase">
+                {t("NOS SOLUTIONS", "OUR SOLUTIONS")}
+              </span>
+            </div>
+            <h2 className="text-white text-lg lg:text-[1.3rem] font-bold leading-[1.4] mb-8 text-center lg:text-left">
               {t("Des solutions d'externalisation conçues pour s'adapter à vos contraintes.", "Outsourcing solutions designed to adapt to your constraints.")}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 mb-16 pt-4">
@@ -198,7 +206,7 @@ export default function Home() {
               ].map((item, i) => (
                 <div key={i} className="flex flex-col border-t border-white/20 pt-6">
                   <div className="flex items-center gap-6 mb-4">
-                    <span className="text-[#D9B151] font-serif text-4xl font-bold italic leading-none shrink-0">
+                    <span className="text-white font-serif text-4xl font-bold italic leading-none shrink-0">
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <h3 className="text-white text-[1.1rem] font-bold uppercase tracking-widest">{item.title}</h3>
@@ -208,7 +216,7 @@ export default function Home() {
               ))}
             </div>
             <div className="flex justify-center lg:justify-start">
-              <Link href="/nos-solutions" className="inline-flex items-center justify-center gap-3 bg-[#122017] text-white px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:bg-[#D9B151] hover:text-[#122017] w-fit rounded-sm shadow-md">
+              <Link href="/nos-solutions" className="inline-flex items-center gap-3 text-white/80 text-[0.85rem] font-bold tracking-widest uppercase transition-transform duration-300 hover:scale-[1.03] w-fit">
                 {t("DÉCOUVRIR NOS SOLUTIONS", "DISCOVER OUR SOLUTIONS")} <ArrowRight size={16} />
               </Link>
             </div>
@@ -219,12 +227,12 @@ export default function Home() {
       {/* ── SECTION 6 : ÉCLAIRAGES & ANALYSES ── */}
       <section className="mt-12 bg-white py-12">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
-          <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold text-center mb-2">
-            {t("Éclairages & analyses", "Insights & analyses")}
-          </h2>
-          <p className="text-[#122017] text-2xl lg:text-3xl font-bold text-center mb-16">
-            {t("pour anticiper les évolutions du secteur.", "to anticipate industry developments.")}
-          </p>
+          <div className="flex items-center gap-4 mb-6 justify-center">
+            <div className="w-8 h-[1px] bg-[#1A0E08]" />
+            <span className="text-[#1A0E08] text-[1.2rem] font-bold tracking-[0.15em] uppercase">
+              {t("Éclairages & analyses", "Insights & analyses")}
+            </span>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mb-16">
             {[
@@ -243,7 +251,7 @@ export default function Home() {
                     <span>{news.tag}</span>
                   </div>
                   <h3 className="text-[#122017] text-[1.15rem] font-bold leading-[1.4] mb-8">{news.title}</h3>
-                  <Link href="/actualites" className="flex items-center gap-2 text-[#D9B151] text-[0.75rem] font-bold uppercase tracking-widest transition-all mt-auto w-fit hover:gap-4">
+                  <Link href="/actualites" className="flex items-center gap-3 text-[#1A0E08]/80 text-[0.8rem] font-bold uppercase tracking-widest transition-transform duration-300 hover:scale-[1.03] mt-auto w-fit">
                     {t("LIRE LA SUITE", "READ MORE")} <ArrowRight size={14} />
                   </Link>
                 </div>
@@ -251,35 +259,14 @@ export default function Home() {
             ))}
           </div>
 
-          <Link href="/actualites" className="inline-flex items-center justify-center gap-3 bg-white text-[#122017] border border-[#E0D6C8] px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:border-[#D9B151] hover:bg-[#F9F7F1] w-fit rounded-sm shadow-sm">
+          <Link href="/actualites" className="inline-flex items-center gap-3 text-[#1A0E08]/80 text-[0.85rem] font-bold tracking-widest uppercase transition-transform duration-300 hover:scale-[1.03] w-fit mt-6">
             {t("VOIR TOUTES LES ACTUALITÉS", "VIEW ALL NEWS")} <ArrowRight size={16} />
           </Link>
         </div>
       </section>
 
       {/* ── SECTION 7 : L'EXPERTISE AU SERVICE DE VOTRE PERFORMANCE ── */}
-      <section className="mt-12 bg-[#1A0E08] py-5">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
-            <div className="flex flex-col text-center lg:text-left">
-              <h2 className="text-white text-2xl lg:text-[1.8rem] font-bold mb-2">
-                {t("L'expertise au service de votre performance.", "Expertise serving your performance.")}
-              </h2>
-              <p className="text-white/70 text-lg font-normal">
-                {t("Des solutions d'externalisation sur-mesure, réactives et efficaces.", "Customized, reactive and efficient outsourcing solutions.")}
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/nous-contacter" className="inline-flex items-center justify-center gap-3 bg-[#D9B151] text-[#122017] border border-[#D9B151] px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:bg-transparent hover:text-[#D9B151] rounded-sm">
-                {t("PRÉSENTER UN BESOIN", "PRESENT A NEED")} <ArrowRight size={16} />
-              </Link>
-              <Link href="/nous-rejoindre" className="inline-flex items-center justify-center gap-3 bg-transparent text-white border border-white/30 px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:bg-white hover:text-[#122017] rounded-sm">
-                {t("NOUS REJOINDRE", "JOIN US")} <ArrowRight size={16} />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CallToAction />
 
     </main>
   );

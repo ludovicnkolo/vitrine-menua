@@ -100,7 +100,7 @@ export default function Home() {
               { icon: Building2, title: t("Gestion de\nPatrimoine et CGP", "Wealth Management\nand IFA"), desc: t("Un support administratif réactif pour vos conseillers.", "Responsive administrative support for your advisors.") },
             ].map((item, i) => (
               <div key={i} className="flex flex-col items-center text-center bg-white/10 border border-white/20 rounded-xl p-5 hover:shadow-xl transition-all">
-                <h4 className="text-white text-[1.1rem] font-bold mb-3 whitespace-pre-line leading-[1.2]">
+                <h4 className="h4-titre text-white mb-3 whitespace-pre-line">
                   {item.title}
                 </h4>
                 <p className="p-3">{item.desc}</p>
@@ -166,7 +166,7 @@ export default function Home() {
                       <pilier.icon className="text-[#D9B151]" size={16} strokeWidth={1.5} />
                     </div>
                     <div>
-                      <h3 className="text-[#1A0E08] text-[0.9rem] font-bold mb-1">{pilier.title}</h3>
+                      <h4 className="h4-titre text-[#1A0E08] mb-1">{pilier.title}</h4>
                       <p className="text-[#4A4E5A] text-[0.8rem] leading-[1.6]">{pilier.desc}</p>
                     </div>
                   </div>
@@ -207,7 +207,7 @@ export default function Home() {
                     <span className="text-white font-serif text-4xl font-bold italic leading-none shrink-0">
                       {String(i + 1).padStart(2, '0')}
                     </span>
-                    <h4 className="text-white text-[1.1rem] font-bold uppercase tracking-widest">{item.title}</h4>
+                    <h4 className="h4-titre text-white">{item.title}</h4>
                   </div>
                   <p className="p-2">{item.desc}</p>
                 </div>

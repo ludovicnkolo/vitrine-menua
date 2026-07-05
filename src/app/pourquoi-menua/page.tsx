@@ -120,7 +120,7 @@ export default function PourquoiMenuaPage() {
                       <svg className="w-4 h-4 text-[#8B6240] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12"></polyline>
                       </svg>
-                      <span className="text-[#122017]/80 text-[0.85rem] leading-[1.5]">{item}</span>
+                      <h4 className="h4-titre text-[#122017]">{item}</h4>
                     </div>
                   ))}
                 </div>
@@ -159,12 +159,12 @@ export default function PourquoiMenuaPage() {
                     {t("Différenciation", "Differentiation")}
                   </h2>
                 </div>
-                <p className="text-white/85 text-[0.95rem] leading-[1.6]">
+                <h3 className="h3-section text-white">
                   {t(
                     "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.",
                     "As back and middle office specialists, we don't stop at analysis: we execute."
                   )}
-                </p>
+                </h3>
               </div>
             </div>
           </div>
@@ -201,7 +201,7 @@ export default function PourquoiMenuaPage() {
                       <svg className="w-4 h-4 text-[#D9B151] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12"></polyline>
                       </svg>
-                      <span className="text-white/85 text-[0.85rem] leading-[1.5]">{item}</span>
+                      <h4 className="h4-titre text-white">{item}</h4>
                     </div>
                   ))}
                 </div>
@@ -254,7 +254,7 @@ export default function PourquoiMenuaPage() {
               t("Formation des ressources mobilisées", "Training of mobilized resources"),
             ].map((item, i) => (
               <div key={i} className="flex items-center justify-center text-center bg-white/40 border border-white/50 rounded-xl px-4 py-4 hover:shadow-md transition-all">
-                <span className="text-[#1A0E08] text-[0.9rem] font-semibold leading-[1.3]">{item}</span>
+                <h4 className="h4-titre text-[#1A0E08]">{item}</h4>
               </div>
             ))}
           </div>

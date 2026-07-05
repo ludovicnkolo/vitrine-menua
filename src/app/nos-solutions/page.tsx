@@ -82,9 +82,9 @@ export default function NosSolutionsPage() {
                   t("Traitement accéléré de dossiers en retard ou en attente", "Accelerated processing of overdue or pending files"),
                   t("Mise à disposition progressive de ressources pour sécuriser la montée en charge", "Progressive provision of resources to secure ramp-up"),
                 ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3 text-[#122017]/70 text-[0.85rem]">
+                  <div key={i} className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-2" />
-                    <span>{item}</span>
+                    <h4 className="h4-titre text-[#122017]">{item}</h4>
                   </div>
                 ))}
               </div>
@@ -133,9 +133,9 @@ export default function NosSolutionsPage() {
                 t("Intervention ponctuelle sur un volume de dossiers comptables, financiers, patrimoniaux ou administratifs", "Occasional intervention on a volume of accounting, financial, wealth or administrative files"),
                 t("Ajustement du dispositif selon l'évolution de la charge et des priorités du client", "Adjustment of the setup according to the evolution of the workload and the client's priorities"),
               ].map((item, i) => (
-                <div key={i} className="flex items-start gap-3 text-[#122017]/70 text-[0.82rem]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
-                  <span>{item}</span>
+                <div key={i} className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-2" />
+                  <h4 className="h4-titre text-[#122017]">{item}</h4>
                 </div>
               ))}
             </div>
@@ -218,9 +218,9 @@ export default function NosSolutionsPage() {
                     t("Traitement de dossiers, adhésions ou opérations selon des règles définies avec vos équipes", "Processing of files, memberships or operations according to rules defined with your teams"),
                     t("Suivi structuré avec points de contrôle réguliers", "Structured monitoring with regular control points"),
                   ].map((item, i) => (
-                    <div key={i} className="flex items-start gap-3 text-white/90 text-[0.85rem]">
+                    <div key={i} className="flex items-start gap-3">
                       <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-2" />
-                      <span>{item}</span>
+                      <h4 className="h4-titre text-white">{item}</h4>
                     </div>
                   ))}
                 </div>
@@ -255,7 +255,7 @@ export default function NosSolutionsPage() {
             </div>
           </div>
           <div>
-            <h3 className="text-white text-[1.15rem] font-bold mb-2">
+            <h3 className="h3-section text-white mb-2">
               {t("Nous intervenons en français et en anglais.", "We operate in French and English.")}
             </h3>
             <p className="text-white text-[0.95rem] font-medium">

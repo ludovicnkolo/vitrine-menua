@@ -91,9 +91,9 @@ export default function VosBesoinsPage() {
                   t("Reporting de rentabilité", "Profitability reporting"),
                   t("Suivi des indicateurs", "Indicator tracking"),
                 ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3 text-[#122017]/70 text-[0.82rem]">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
-                    <span>{item}</span>
+                  <div key={i} className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-2" />
+                    <h4 className="h4-titre text-[#122017]">{item}</h4>
                   </div>
                 ))}
               </div>
@@ -147,9 +147,9 @@ export default function VosBesoinsPage() {
               t("Consolidation des données de gestion", "Consolidation of management data"),
               t("Support aux directions financières et responsables opérationnels", "Support to financial directions and operational managers"),
             ].map((item, i) => (
-              <div key={i} className="flex items-start gap-3 text-white/80 text-[0.82rem]">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
-                <span>{item}</span>
+              <div key={i} className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-2" />
+                <h4 className="h4-titre text-white">{item}</h4>
               </div>
             ))}
           </div>
@@ -174,12 +174,12 @@ export default function VosBesoinsPage() {
                   {t("Risques et Conformité", "Risk and Compliance")}
                 </h2>
               </div>
-              <p className="text-[#4A4E5A] text-[0.9rem] leading-[1.5]">
+              <h3 className="h3-section text-[#122017]">
                 {t(
                   "Des processus fiabilisés au service de la conformité réglementaire.",
                   "Reliable processes serving regulatory compliance."
                 )}
-              </p>
+              </h3>
             </div>
             {/* Right Image */}
             <div className="w-full md:w-1/2 h-[250px] md:h-[350px] p-4 lg:p-6">
@@ -229,11 +229,10 @@ export default function VosBesoinsPage() {
                   t("Préparation de dossiers pour validation par les équipes habilitées", "Preparation of files for validation by authorized teams"),
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4">
-                    {/* Checkmark icon (Lucide Check path) */}
                     <svg className="w-4 h-4 text-[#8B6240] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="text-[#122017]/80 text-[0.85rem] leading-[1.5]">{item}</span>
+                    <h4 className="h4-titre text-[#122017]">{item}</h4>
                   </div>
                 ))}
               </div>
@@ -283,9 +282,9 @@ export default function VosBesoinsPage() {
                 t("Consolidation de données comptables et opérationnelles", "Consolidation of accounting and operational data"),
                 t("Archivage et organisation documentaire", "Archiving and document organization"),
               ].map((item, i) => (
-                <div key={i} className="flex items-start gap-3 text-white/80 text-[0.82rem]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
-                  <span>{item}</span>
+                <div key={i} className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-2" />
+                  <h4 className="h4-titre text-white">{item}</h4>
                 </div>
               ))}
             </div>
@@ -332,9 +331,9 @@ export default function VosBesoinsPage() {
                 t("Préparation de dossiers pour validation par les conseillers habilités", "Preparation of files for validation by authorized advisors"),
                 t("Suivi des opérations patrimoniales dans le respect des procédures internes", "Follow-up of wealth operations in compliance with internal procedures"),
               ].map((item, i) => (
-                <div key={i} className="flex items-start gap-3 text-[#122017]/75 text-[0.82rem]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-1.5" />
-                  <span>{item}</span>
+                <div key={i} className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-2" />
+                  <h4 className="h4-titre text-[#122017]">{item}</h4>
                 </div>
               ))}
             </div>
@@ -369,12 +368,12 @@ export default function VosBesoinsPage() {
                   {t("Autres besoins opérationnels", "Other operational needs")}
                 </h2>
               </div>
-              <p className="text-[#4A4E5A] text-[0.9rem] leading-[1.5]">
+              <h3 className="h3-section text-[#122017]">
                 {t(
                   "Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques.",
                   "Handling of occasional, transversal or specific operational needs."
                 )}
-              </p>
+              </h3>
               <div className="mt-6 flex items-center gap-3 text-[#122017] font-bold text-[0.85rem] border border-[#122017]/20 bg-white/60 px-4 py-3 rounded-lg w-fit">
                 <Globe size={18} className="text-[#8B6240]" />
                 {t("FR / EN — Bilingue", "FR / EN — Bilingual")}
@@ -418,11 +417,10 @@ export default function VosBesoinsPage() {
                   t("Étude de besoins spécifiques non listés dans les rubriques précédentes", "Study of specific needs not listed in previous sections"),
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4">
-                    {/* Checkmark icon (Lucide Check path) */}
                     <svg className="w-4 h-4 text-[#8B6240] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="text-[#122017]/80 text-[0.85rem] leading-[1.5]">{item}</span>
+                    <h4 className="h4-titre text-[#122017]">{item}</h4>
                   </div>
                 ))}
               </div>

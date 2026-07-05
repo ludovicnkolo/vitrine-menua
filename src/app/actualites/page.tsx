@@ -68,9 +68,9 @@ export default function ActualitesPage() {
                 <p className="text-[#D9B151] text-[0.75rem] font-bold tracking-[0.1em] uppercase mb-4">
                   RÉGLEMENTATION • 18 MAI 2024
                 </p>
-                <h3 className="font-serif text-2xl font-bold text-[#122017] mb-4 leading-tight">
+                <h4 className="h4-titre text-[#122017] mb-4">
                   Digitalisation des processus back office : enjeux et bonnes pratiques
-                </h3>
+                </h4>
                 <p className="text-[#122017]/80 text-[0.95rem] leading-[1.6] mb-8">
                   La digitalisation des processus back office transforme la gestion des données, renforce la fiabilité des opérations et améliore la performance globale des organisations financières.
                 </p>
@@ -115,9 +115,9 @@ export default function ActualitesPage() {
                   <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.1em] uppercase mb-3">
                     COMPTABILITÉ • 08 MAI 2024
                   </p>
-                  <h3 className="font-serif text-xl font-bold text-[#122017] leading-tight mb-3 group-hover:text-[#8B6240] transition-colors">
+                  <h4 className="h4-titre text-[#122017] mb-3 group-hover:text-[#8B6240] transition-colors">
                     Réforme des normes comptables 2024 : ce que les entreprises doivent anticiper
-                  </h3>
+                  </h4>
                   <p className="text-[#122017]/75 text-[0.85rem] leading-[1.6] mb-6 flex-1">
                     Panorama des évolutions majeures et de leurs impacts sur le reporting financier et la consolidation.
                   </p>
@@ -135,9 +135,9 @@ export default function ActualitesPage() {
                   <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.1em] uppercase mb-3">
                     RÉGLEMENTATION • 02 MAI 2024
                   </p>
-                  <h3 className="font-serif text-xl font-bold text-[#122017] leading-tight mb-3 group-hover:text-[#8B6240] transition-colors">
+                  <h4 className="h4-titre text-[#122017] mb-3 group-hover:text-[#8B6240] transition-colors">
                     LCB-FT : renforcer la vigilance dans un contexte réglementaire en mutation
-                  </h3>
+                  </h4>
                   <p className="text-[#122017]/75 text-[0.85rem] leading-[1.6] mb-6 flex-1">
                     Focus sur les dernières attentes des autorités et les bonnes pratiques pour sécuriser vos dispositifs.
                   </p>
@@ -155,9 +155,9 @@ export default function ActualitesPage() {
                   <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.1em] uppercase mb-3">
                     DIGITAL ET OUTILS • 25 AVRIL 2024
                   </p>
-                  <h3 className="font-serif text-xl font-bold text-[#122017] leading-tight mb-3 group-hover:text-[#8B6240] transition-colors">
+                  <h4 className="h4-titre text-[#122017] mb-3 group-hover:text-[#8B6240] transition-colors">
                     Automatisation et data : leviers de performance pour le middle office
-                  </h3>
+                  </h4>
                   <p className="text-[#122017]/75 text-[0.85rem] leading-[1.6] mb-6 flex-1">
                     Comment les outils digitaux et la data structurée optimisent les processus et la prise de décision.
                   </p>
@@ -178,7 +178,7 @@ export default function ActualitesPage() {
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
               </div>
               <div className="flex flex-col">
-                <h3 className="font-serif text-2xl lg:text-3xl font-bold text-white mb-2">
+                <h3 className="h3-section text-white mb-2">
                   Suivez notre actualité<br />et nos publications professionnelles
                 </h3>
                 <p className="text-white/80 text-[0.95rem]">

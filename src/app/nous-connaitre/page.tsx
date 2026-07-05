@@ -153,7 +153,7 @@ export default function NousConnaitrePage() {
                       <pilier.icon className="text-[#D9B151]" size={16} strokeWidth={1.5} />
                     </div>
                     <div>
-                      <h3 className="text-[#122017] text-[0.9rem] font-bold mb-1">{pilier.title}</h3>
+                      <h4 className="h4-titre text-[#122017] mb-1">{pilier.title}</h4>
                       <p className="text-[#4A4E5A] text-[0.8rem] leading-[1.6]">{pilier.desc}</p>
                     </div>
                   </div>
@@ -188,9 +188,9 @@ export default function NousConnaitrePage() {
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <div className="flex flex-col">
-                  <h3 className="text-white text-[0.9rem] md:text-[0.95rem] font-bold tracking-[0.1em] uppercase mb-1">
+                  <h4 className="h4-titre text-white mb-1">
                     {step.title}
-                  </h3>
+                  </h4>
                   <p className="text-white/80 text-[0.85rem] leading-[1.4] font-normal">
                     {step.desc}
                   </p>
@@ -213,9 +213,9 @@ export default function NousConnaitrePage() {
                   {t("Gage de qualité", "Quality assurance")}
                 </h2>
               </div>
-              <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-8 pr-4">
+              <h3 className="h3-section text-[#122017] pr-4">
                 {t("ACCRÉDITATIONS, CERTIFICATIONS ET CADRE D'INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS AND INTERVENTION FRAMEWORK")}
-              </h2>
+              </h3>
               <div className="text-[#4A4E5A] text-[0.95rem] leading-[1.7] mb-10 max-w-xl space-y-4">
                 <p>
                   {t(
@@ -285,9 +285,9 @@ export default function NousConnaitrePage() {
                 </h2>
               </div>
               
-              <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#122017] mb-3 leading-tight">
+              <h3 className="h3-section text-[#122017] mb-3">
                 {t("La dirigeante", "The Director")}
-              </h2>
+              </h3>
               
               <h3 className="text-[#8B6240] text-[1.05rem] mb-10 font-medium italic">
                 {t("Une direction impliquée au plus près des opérations", "Management closely involved with operations")}

@@ -283,6 +283,10 @@
     @apply text-white text-lg lg:text-[1.3rem] font-bold leading-[1.4] mb-6;
   }
 
+  .h4-titre {
+    @apply font-serif text-sm md:text-base font-bold leading-[1.4];
+  }
+
   /* ── Paragraphes Globaux (Blanc par défaut) ── */
   .p-1 {
     @apply text-[1rem] md:text-[1.1rem] leading-[1.7] font-normal;

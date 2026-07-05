@@ -61,8 +61,7 @@ export default function NousConnaitrePage() {
                   {t("MENUA CONSULTING PRÉSENTATION DU CABINET", "MENUA CONSULTING FIRM PRESENTATION").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
                 </h2>
               </div>
-              <div className="w-16 h-[3px] bg-[#D9B151] mb-8" />
-              <div className="text-white/80 text-[1.05rem] leading-[1.8] space-y-5 font-normal">
+              <div className="p-2 space-y-5">
                 <p>
                   {t("MENUA CONSULTING est un cabinet spécialisé dans l'externalisation opérationnelle des fonctions back et middle office en finance, comptabilité, conformité, de la gestion de patrimoine et data.", "MENUA CONSULTING is a firm specialized in operational outsourcing of back and middle office functions in finance, accounting, compliance, wealth management and data.")}
                 </p>
@@ -114,7 +113,7 @@ export default function NousConnaitrePage() {
                 {t("NOTRE APPROCHE", "OUR APPROACH")}
               </h2>
 
-              <div className="text-[#4A4E5A] text-[0.9rem] leading-[1.7] mb-8 space-y-3">
+              <div className="p-2 text-[#4A4E5A] mb-8 space-y-3">
                 <p>
                   {t(
                     "MENUA CONSULTING adopte une posture résolument opérationnelle : les clients définissent les besoins, les méthodes et les priorités, nous assurons l'exécution.",
@@ -216,7 +215,7 @@ export default function NousConnaitrePage() {
               <h3 className="h3-section text-[#122017] pr-4">
                 {t("ACCRÉDITATIONS, CERTIFICATIONS ET CADRE D'INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS AND INTERVENTION FRAMEWORK")}
               </h3>
-              <div className="text-[#4A4E5A] text-[0.95rem] leading-[1.7] mb-10 max-w-xl space-y-4">
+              <div className="p-2 text-[#4A4E5A] mb-10 max-w-xl space-y-4">
                 <p>
                   {t(
                     "MENUA CONSULTING intervient dans des environnements soumis à des exigences réglementaires élevées.",
@@ -294,7 +293,7 @@ export default function NousConnaitrePage() {
               </h3>
               
               {/* Body Text */}
-              <div className="text-[#4A4E5A] text-[0.95rem] leading-[1.8] space-y-4 font-normal">
+              <div className="p-2 text-[#4A4E5A] space-y-4">
                 <p className="text-[#122017] font-bold">
                   {t(
                     "Rosette Fouelefack est directrice générale de MENUA CONSULTING.",

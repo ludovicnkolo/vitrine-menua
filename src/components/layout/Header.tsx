@@ -15,7 +15,7 @@ export default function Header() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -105,7 +105,8 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled ? "bg-[#1A0E08]/95 backdrop-blur-md border-white/10 shadow-2xl" : "bg-[#1A0E08] border-transparent"}`}
+      className={`fixed top-0 left-0 w-full z-[9999] transition-colors duration-300 border-b ${scrolled ? "bg-[#1A0E08]/95 backdrop-blur-md border-white/10 shadow-2xl" : "bg-[#1A0E08] border-transparent"}`}
+      style={{ transform: "translateY(0)", visibility: "visible" }}
       onMouseLeave={() => setOpenMenu(null)}
     >
       {/* ── TOP BAR ── */}

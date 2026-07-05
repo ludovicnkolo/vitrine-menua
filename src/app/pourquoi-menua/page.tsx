@@ -51,11 +51,7 @@ export default function PourquoiMenuaPage() {
             <div className="flex flex-col md:flex-row items-stretch">
               {/* Left Box (Title & Icon) */}
               <div className="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
-                <div className="mb-1">
-                  <span className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151]">
-                    {t("01 — Valeur ajoutée", "01 — Added value")}
-                  </span>
-                </div>
+              
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-8 h-[2px] bg-[#122017]" />
                   <h2 className="h2-surtitre text-[#122017]">
@@ -86,7 +82,7 @@ export default function PourquoiMenuaPage() {
             <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-16">
               
               {/* Left Paragraph */}
-              <div className="w-full md:w-[35%] text-[#122017]/80 text-[0.95rem] leading-[1.8] font-medium">
+              <div className="p-2 text-[#122017]/90 w-full md:w-[35%] font-medium">
                 <p className="mb-4">
                   {t(
                     "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité, renforcez votre fiabilité et soutenez durablement votre chiffre d'affaires.",
@@ -102,7 +98,7 @@ export default function PourquoiMenuaPage() {
               </div>
 
               {/* Right List */}
-              <div className="w-full md:w-[65%] border-t md:border-t-0 md:border-l border-[#D9B151] pt-12 md:pt-0 md:pl-12 lg:pl-16">
+              <div className="w-full md:w-[65%] pt-12 md:pt-0 md:pl-12 lg:pl-16">
                 <h3 className="text-[#8B6240] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-10">
                   {t("Vos avantages", "Your advantages")}
                 </h3>
@@ -148,11 +144,7 @@ export default function PourquoiMenuaPage() {
               </div>
               {/* Right Box (Title & Icon) (order 1 on mobile, order 2 on desktop) */}
               <div className="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center order-1 md:order-2">
-                <div className="mb-1">
-                  <span className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151]">
-                    {t("02 — Valeur ajoutée", "02 — Added value")}
-                  </span>
-                </div>
+            
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-8 h-[2px] bg-white" />
                   <h2 className="h2-surtitre text-white">
@@ -174,7 +166,7 @@ export default function PourquoiMenuaPage() {
             <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-16">
               
               {/* Left Paragraph */}
-              <div className="w-full md:w-[35%] text-white/90 text-[0.95rem] leading-[1.8] font-medium">
+              <div className="p-2 w-full md:w-[35%] font-medium">
                 <p>
                   {t(
                     "Notre approche 100% opérationnelle, notre intégration aux organisations clientes et notre capacité d'intervention en français comme en anglais nous permettent d'intervenir dans des environnements exigeants, structurés et ouverts à l'international.",
@@ -184,7 +176,7 @@ export default function PourquoiMenuaPage() {
               </div>
 
               {/* Right List */}
-              <div className="w-full md:w-[65%] border-t md:border-t-0 md:border-l border-[#D9B151] pt-12 md:pt-0 md:pl-12 lg:pl-16">
+              <div className="w-full md:w-[65%] pt-12 md:pt-0 md:pl-12 lg:pl-16">
                 <h3 className="text-[#D9B151] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-10">
                   {t("Nos points forts", "Our strengths")}
                 </h3>
@@ -212,57 +204,44 @@ export default function PourquoiMenuaPage() {
         </div>
       </section>
 
-      {/* ══ 3. ENGAGEMENTS — compact, sans icônes ══ */}
-      <section id="nos-engagements" className="mt-12 bg-[#e4dcf7] w-full py-10">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 flex flex-col items-center">
-          
-          <div className="mb-3 text-center">
-            <span className="font-serif text-xl md:text-2xl font-bold text-[#D9B151]">
-              {t("03 — Valeur ajoutée", "03 — Added value")}
-            </span>
-          </div>
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <div className="w-8 h-[2px] bg-[#1A0E08]" />
-            <h2 className="h2-surtitre text-[#1A0E08]">
-              {t("Engagements", "Commitments")}
-            </h2>
-          </div>
-          <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
-
-          <div className="text-[#1A0E08]/80 text-[0.95rem] text-center max-w-2xl leading-[1.8] space-y-3 mb-10">
-            <p>
+      {/* ══ 3. ENGAGEMENTS ══ */}
+      <section id="nos-engagements" className="mt-12 bg-[#e4dcf7] w-full py-12">
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start">
+          <div className="w-full flex flex-col">
+            <div className="flex items-center gap-4 mb-10">
+              <div className="w-8 h-[2px] bg-[#1A0E08]" />
+              <h2 className="h2-surtitre text-[#1A0E08]">
+                {t("Engagements", "Commitments")}
+              </h2>
+            </div>
+            <p className="p-2 text-[#1A0E08]/90 mb-8 max-w-3xl">
               MENUA CONSULTING {t(
                 "s'engage sur l'essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
                 "commits to the essentials: quality of deliverables, respect of deadlines, traceability of operations and clear communication with your teams."
-              )}
-            </p>
-            <p>
+              )}{" "}
               {t(
                 "Nos interventions s'appuient sur un contrôle à quatre yeux, des méthodes de travail structurées, la formation des ressources mobilisées et le respect de vos exigences opérationnelles, qualité et réglementaires.",
                 "Our interventions are based on a four-eyes control, structured working methods, training of mobilized resources and respect for your operational, quality and regulatory requirements."
               )}
             </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 w-full mb-10">
+              {[
+                t("Qualité des livrables", "Quality of deliverables"),
+                t("Respect des délais", "Respect of deadlines"),
+                t("Traçabilité des opérations", "Traceability of operations"),
+                t("Contrôle à quatre yeux", "Four-eyes control"),
+                t("Communication claire et régulière", "Clear and regular communication"),
+                t("Formation des ressources mobilisées", "Training of mobilized resources"),
+                t("Respect de vos exigences opérationnelles, qualité et réglementaires", "Respect of your operational, quality and regulatory requirements"),
+              ].map((item, i) => (
+                <div key={i} className="flex flex-col items-center justify-center text-center bg-white/50 border border-black/5 rounded-xl p-5 hover:shadow-xl transition-all h-full">
+                  <h4 className="h4-titre text-[#1A0E08]">
+                    {item}
+                  </h4>
+                </div>
+              ))}
+            </div>
           </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-4xl mx-auto mb-8">
-            {[
-              t("Qualité des livrables", "Quality of deliverables"),
-              t("Respect des délais", "Respect of deadlines"),
-              t("Traçabilité des opérations", "Traceability of operations"),
-              t("Contrôle à quatre yeux", "Four-eyes control"),
-              t("Communication claire et régulière", "Clear and regular communication"),
-              t("Formation des ressources mobilisées", "Training of mobilized resources"),
-            ].map((item, i) => (
-              <div key={i} className="flex items-center justify-center text-center bg-white/40 border border-white/50 rounded-xl px-4 py-4 hover:shadow-md transition-all">
-                <h4 className="h4-titre text-[#1A0E08]">{item}</h4>
-              </div>
-            ))}
-          </div>
-
-          <p className="font-serif text-xl md:text-2xl font-bold text-[#1A0E08] text-center max-w-2xl">
-            {t("Respect de vos exigences opérationnelles, qualité et réglementaires", "Respect of your operational, quality and regulatory requirements")}
-          </p>
-
         </div>
       </section>
 

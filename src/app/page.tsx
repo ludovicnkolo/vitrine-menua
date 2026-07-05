@@ -195,21 +195,18 @@ export default function Home() {
             <h3 className="h3-section text-center lg:text-left">
               {t("Des solutions d'externalisation conçues pour s'adapter à vos contraintes.", "Outsourcing solutions designed to adapt to your constraints.")}
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 mb-16 pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full mb-16 pt-4">
               {[
                 { title: t("Urgence", "Emergency"), desc: t("Mobilisation rapide de ressources pour absorber un pic d'activité ou un besoin immédiat.", "Rapid mobilization of resources to absorb a peak in activity or an immediate need.") },
                 { title: t("Durée", "Duration"), desc: t("De la mission ponctuelle à l'externalisation continue, la flexibilité contractuelle que vous attendez.", "From ad hoc missions to continuous outsourcing, the contractual flexibility you expect.") },
                 { title: t("Volume", "Volume"), desc: t("Un dimensionnement d'équipe ajusté à la charge de travail, pour une efficacité optimale.", "Team sizing adjusted to the workload, for optimal efficiency.") },
                 { title: t("Organisation", "Organization"), desc: t("Intégration dédiée, prise en charge de processus métiers spécifiques, selon vos besoins.", "Dedicated integration, handling of specific business processes, according to your needs.") },
               ].map((item, i) => (
-                <div key={i} className="flex flex-col border-t border-white/20 pt-6">
-                  <div className="flex items-center gap-6 mb-4">
-                    <span className="text-white font-serif text-4xl font-bold italic leading-none shrink-0">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <h4 className="h4-titre text-white">{item.title}</h4>
-                  </div>
-                  <p className="p-2">{item.desc}</p>
+                <div key={i} className="flex flex-col items-center text-center bg-white/10 border border-white/20 rounded-xl p-5 hover:shadow-xl transition-all">
+                  <h4 className="h4-titre text-white mb-3 whitespace-pre-line">
+                    {item.title}
+                  </h4>
+                  <p className="p-3 text-white/90">{item.desc}</p>
                 </div>
               ))}
             </div>

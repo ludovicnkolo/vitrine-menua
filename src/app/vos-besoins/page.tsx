@@ -26,19 +26,17 @@ export default function VosBesoinsPage() {
             <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#D9B151]" />
             <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#D9B151]" />
             <div className="relative">
-              <p className="text-[#D9B151] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.2em] uppercase mb-6">
-                {t("Expertises", "Expertise")}
-              </p>
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-[2.5rem] font-bold leading-[1.1] text-white mb-8">
-                {t("Vos besoins", "Your needs").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+              <h1 className="h1-hero mb-8">
+                <span className="block">{t("Expertises", "Expertise")}</span>
+                <span className="block mt-2">{t("Vos besoins", "Your needs").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}</span>
               </h1>
-              <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-xl font-normal space-y-3" style={{ color: 'white' }}>
-                <p>
+              <div className="mb-8 max-w-xl">
+                <p className="p-1">
                   MENUA CONSULTING {t(
                     "intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l'ensemble des fonctions",
                     "supports financial, accounting, wealth, IT and regulated teams on all"
                   )}{" "}
-                  <span className="text-[#D9B151] font-semibold">back et middle office</span>{" "}
+                  back et middle office{" "}
                   {t(
                     "nécessitant rigueur, continuité et fiabilité opérationnelle.",
                     "requiring rigor, continuity and operational reliability."
@@ -57,15 +55,17 @@ export default function VosBesoinsPage() {
             
             {/* Text left */}
             <div className="flex flex-col">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[1px] bg-[#D9B151]" />
+              <div className="mb-4">
                 <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
                   {t("01 — Domaine", "01 — Area")}
                 </span>
               </div>
-              <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-6">
-                {t("Finance & Reporting", "Finance & Reporting").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-              </h2>
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-8 h-[2px] bg-[#122017]" />
+                <h2 className="h2-surtitre text-[#122017]">
+                  {t("Finance et Reporting", "Finance and Reporting")}
+                </h2>
+              </div>
               <div className="w-16 h-[3px] bg-[#D9B151] mb-8" />
               <div className="text-[#4A4E5A] text-[1.05rem] leading-[1.8] mb-8 font-normal">
                 <p>
@@ -103,7 +103,7 @@ export default function VosBesoinsPage() {
             <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
               <img
                 src="/trust-circle.jpg"
-                alt="Finance & Reporting"
+                alt="Finance et Reporting"
                 className="w-full h-full object-cover"
                 onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
               />
@@ -114,12 +114,17 @@ export default function VosBesoinsPage() {
       {/* ══ 2. CONTRÔLE DE GESTION ══ */}
       <section id="controle-de-gestion" className="mt-12 bg-[#8e8478] w-full py-12 ">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
-          <p className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151] mb-4">
-            {t("02 — Domaine", "02 — Area")}
-          </p>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-10">
-            {t("Contrôle de gestion", "Management Control").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-          </h2>
+          <div className="mb-4">
+            <span className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151]">
+              {t("02 — Domaine", "02 — Area")}
+            </span>
+          </div>
+          <div className="flex items-center gap-4 mb-10">
+            <div className="w-8 h-[2px] bg-white" />
+            <h2 className="h2-surtitre text-white">
+              {t("Contrôle de gestion", "Management Control")}
+            </h2>
+          </div>
           <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
           <p className="text-white/85 text-[0.95rem] leading-[1.8] mb-8 max-w-3xl">
             {t(
@@ -158,12 +163,17 @@ export default function VosBesoinsPage() {
           <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row">
             {/* Left Box (Title & Icon) */}
             <div className="w-full md:w-1/2 p-6 lg:p-10 flex flex-col justify-center">
-              <p className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151] mb-1">
-                03
-              </p>
-              <h2 className="font-serif text-2xl lg:text-3xl font-bold text-[#122017] mb-2">
-                {t("Risques & Conformité", "Risk & Compliance")}
-              </h2>
+              <div className="mb-2">
+                <span className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151]">
+                  03
+                </span>
+              </div>
+              <div className="flex items-center gap-4 mb-2">
+                <div className="w-8 h-[2px] bg-[#122017]" />
+                <h2 className="h2-surtitre text-[#122017]">
+                  {t("Risques et Conformité", "Risk and Compliance")}
+                </h2>
+              </div>
               <p className="text-[#4A4E5A] text-[0.9rem] leading-[1.5]">
                 {t(
                   "Des processus fiabilisés au service de la conformité réglementaire.",
@@ -175,7 +185,7 @@ export default function VosBesoinsPage() {
             <div className="w-full md:w-1/2 h-[250px] md:h-[350px] p-4 lg:p-6">
               <img
                 src="/office-lounge.jpg"
-                alt="Risques & Conformité"
+                alt="Risques et Conformité"
                 className="w-full h-full object-cover rounded-2xl shadow-lg"
                 onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
               />
@@ -238,12 +248,17 @@ export default function VosBesoinsPage() {
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start gap-16">
           {/* Text */}
           <div className="w-full flex flex-col">
-            <p className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151] mb-4">
-              {t("04 — Domaine", "04 — Area")}
-            </p>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-10">
-              {t("Support Comptable & Data", "Accounting & Data Support").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-            </h2>
+            <div className="mb-4">
+              <span className="font-serif text-2xl md:text-3xl font-bold text-[#D9B151]">
+                {t("04 — Domaine", "04 — Area")}
+              </span>
+            </div>
+            <div className="flex items-center gap-4 mb-10">
+              <div className="w-8 h-[2px] bg-white" />
+              <h2 className="h2-surtitre text-white">
+                {t("Support Comptable et Data", "Accounting and Data Support")}
+              </h2>
+            </div>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
             <p className="text-white/85 text-[0.95rem] leading-[1.8] mb-8 max-w-3xl">
               {t(
@@ -283,12 +298,17 @@ export default function VosBesoinsPage() {
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start gap-16">
           {/* Text */}
           <div className="w-full flex flex-col">
-            <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
-              {t("05 — Domaine", "05 — Area")}
-            </p>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
-              {t("Gestion de Patrimoine & CGP", "Wealth Management & IFA")}
-            </h2>
+            <div className="mb-4">
+              <span className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240]">
+                {t("05 — Domaine", "05 — Area")}
+              </span>
+            </div>
+            <div className="flex items-center gap-4 mb-10">
+              <div className="w-8 h-[2px] bg-[#122017]" />
+              <h2 className="h2-surtitre text-[#122017]">
+                {t("Gestion de Patrimoine et CGP", "Wealth Management and IFA")}
+              </h2>
+            </div>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
             <p className="text-[#122017]/75 text-[0.95rem] leading-[1.8] mb-8 max-w-3xl">
               {t(
@@ -338,12 +358,17 @@ export default function VosBesoinsPage() {
             </div>
             {/* Right Box (Title) (order 1 on mobile, order 2 on desktop) */}
             <div className="w-full md:w-1/2 p-6 lg:p-10 flex flex-col justify-center order-1 md:order-2">
-              <p className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151] mb-1">
-                06
-              </p>
-              <h2 className="font-serif text-2xl lg:text-3xl font-bold text-[#122017] mb-2">
-                {t("Autres besoins opérationnels", "Other operational needs")}
-              </h2>
+              <div className="mb-2">
+                <span className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151]">
+                  06
+                </span>
+              </div>
+              <div className="flex items-center gap-4 mb-2">
+                <div className="w-8 h-[2px] bg-[#122017]" />
+                <h2 className="h2-surtitre text-[#122017]">
+                  {t("Autres besoins opérationnels", "Other operational needs")}
+                </h2>
+              </div>
               <p className="text-[#4A4E5A] text-[0.9rem] leading-[1.5]">
                 {t(
                   "Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques.",

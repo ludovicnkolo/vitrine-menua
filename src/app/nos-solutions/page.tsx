@@ -26,17 +26,17 @@ export default function NosSolutionsPage() {
             <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#D9B151]" />
             <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#D9B151]" />
             <div className="relative">
-              <p className="text-[#D9B151] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.2em] uppercase mb-6">
-                {t("Dispositifs", "Solutions")}
-              </p>
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-[2.5rem] font-bold leading-[1.1] text-white mb-8 max-w-4xl">
-                {t("Des solutions", "Outsourcing")}<br />
-                <span className="text-[#D9B151]">{t("d'externalisation", "solutions")}</span><br />
-                {t("conçues pour s'adapter", "designed to adapt")}<br />
-                {t("à vos contraintes.", "to your constraints.")}
+              <h1 className="h1-hero mb-8 max-w-4xl">
+                <span className="block">{t("Dispositifs", "Solutions")}</span>
+                <span className="block mt-2">
+                  {t("Des solutions", "Outsourcing")}<br />
+                  {t("d'externalisation", "solutions")}<br />
+                  {t("conçues pour s'adapter", "designed to adapt")}<br />
+                  {t("à vos contraintes.", "to your constraints.")}
+                </span>
               </h1>
-              <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-2xl font-normal space-y-3" style={{ color: 'white' }}>
-                <p>
+              <div className="mb-8 max-w-2xl">
+                <p className="p-1">
                   {t(
                     "Nous concevons des dispositifs sur mesure, flexibles et évolutifs pour répondre à vos enjeux d'urgence, de durée, de volume et d'organisation.",
                     "We design tailor-made, flexible and scalable solutions to meet your challenges of emergency, duration, volume and organization."
@@ -54,15 +54,17 @@ export default function NosSolutionsPage() {
             
             {/* Text left */}
             <div className="flex flex-col">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[1px] bg-[#D9B151]" />
+              <div className="mb-4">
                 <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
                   {t("01 — Dispositif", "01 — Solution")}
                 </span>
               </div>
-              <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-6">
-                {t("Urgence", "Emergency")}
-              </h2>
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-8 h-[2px] bg-[#122017]" />
+                <h2 className="h2-surtitre text-[#122017]">
+                  {t("Urgence", "Emergency")}
+                </h2>
+              </div>
               <div className="w-16 h-[3px] bg-[#D9B151] mb-8" />
               <div className="text-[#4A4E5A] text-[1.05rem] leading-[1.8] mb-8 font-normal">
                 <p>
@@ -110,9 +112,12 @@ export default function NosSolutionsPage() {
             <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
               {t("02 — Dispositif", "02 — Solution")}
             </p>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
-              {t("Durée", "Duration")}
-            </h2>
+            <div className="flex items-center gap-4 mb-10">
+              <div className="w-8 h-[2px] bg-[#122017]" />
+              <h2 className="h2-surtitre text-[#122017]">
+                {t("Durée", "Duration")}
+              </h2>
+            </div>
             <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
             <p className="text-[#122017]/75 text-[0.95rem] leading-[1.8] mb-8 max-w-3xl">
               MENUA CONSULTING {t(
@@ -144,9 +149,12 @@ export default function NosSolutionsPage() {
           <p className="font-serif text-2xl md:text-3xl font-bold text-[#8B6240] mb-4">
             {t("03 — Dispositif", "03 — Solution")}
           </p>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#122017] mb-10">
-            {t("Volume", "Volume")}
-          </h2>
+          <div className="flex items-center gap-4 mb-10">
+            <div className="w-8 h-[2px] bg-[#122017]" />
+            <h2 className="h2-surtitre text-[#122017]">
+              {t("Volume", "Volume")}
+            </h2>
+          </div>
           <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
           <p className="text-[#122017]/75 text-[0.95rem] leading-[1.8] mb-8 max-w-3xl">
             MENUA CONSULTING {t(
@@ -181,9 +189,12 @@ export default function NosSolutionsPage() {
               <p className="font-serif text-xl md:text-2xl font-bold text-[#D9B151] mb-2">
                 {t("04 — Dispositif", "04 — Solution")}
               </p>
-              <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-8">
-                {t("Organisation", "Organization")}
-              </h2>
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-8 h-[2px] bg-white" />
+                <h2 className="h2-surtitre text-white">
+                  {t("Organisation", "Organization")}
+                </h2>
+              </div>
               <div className="w-12 h-[3px] bg-[#D9B151] mb-8" />
               
               <div className="text-white/90 text-[0.95rem] leading-[1.8] space-y-6 font-normal">

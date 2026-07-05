@@ -28,16 +28,16 @@ export default function ActualitesPage() {
             <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#D9B151]" />
             
             <div className="relative">
-              <p className="text-[#D9B151] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.2em] uppercase mb-6">
-                {t("ACTUALITÉS", "NEWS")}
-              </p>
-              <h1 className="font-serif text-2xl md:text-3xl lg:text-[1.8rem] font-bold leading-[1.2] text-white mb-8">
-                {t("Éclairages & analyses", "Insights & analyses")}<br />
-                <span className="text-[#D9B151]">{t("pour anticiper les", "to anticipate")}</span><br />
-                <span className="text-[#D9B151]">{t("évolutions du secteur.", "sector evolutions.")}</span>
+              <h1 className="h1-hero mb-8">
+                <span className="block">{t("ACTUALITÉS", "NEWS")}</span>
+                <span className="block mt-2">
+                  {t("Éclairages et analyses", "Insights and analyses")}<br />
+                  {t("pour anticiper les", "to anticipate")}<br />
+                  {t("évolutions du secteur.", "sector evolutions.")}
+                </span>
               </h1>
-              <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-2xl font-normal space-y-3" style={{ color: 'white' }}>
-                <p>
+              <div className="mb-8 max-w-2xl">
+                <p className="p-1">
                   MENUA CONSULTING {t(
                     "assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles afin d'éclairer ses clients sur les enjeux qui impactent leurs activités.",
                     "monitors financial, accounting, wealth, regulatory and operational developments on a regular basis to enlighten its clients on the issues impacting their activities."
@@ -55,8 +55,10 @@ export default function ActualitesPage() {
           
           {/* A LA UNE */}
           <div className="mb-20">
-            <h2 className="font-serif text-3xl font-bold text-[#122017] mb-4">{t("À la une", "Featured")}</h2>
-            <div className="w-12 h-[2px] bg-[#D9B151] mb-10" />
+            <div className="flex items-center gap-4 mb-10">
+              <div className="w-8 h-[2px] bg-[#122017]" />
+              <h2 className="h2-surtitre text-[#122017]">{t("À la une", "Featured")}</h2>
+            </div>
             
             <div className="bg-white rounded-2xl shadow-sm border border-[#E0D6C8]/50 overflow-hidden flex flex-col md:flex-row hover:shadow-md transition-shadow">
               <div className="w-full md:w-1/2 h-[300px] md:h-auto">
@@ -83,8 +85,10 @@ export default function ActualitesPage() {
           <div className="mb-20">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-4 gap-4">
               <div>
-                <h2 className="font-serif text-3xl font-bold text-[#122017] mb-4">Actualités financières & réglementaires</h2>
-                <div className="w-12 h-[2px] bg-[#D9B151]" />
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-8 h-[2px] bg-[#122017]" />
+                  <h2 className="h2-surtitre text-[#122017]">Actualités financières et réglementaires</h2>
+                </div>
               </div>
               <Link href="#" className="text-[#D9B151] text-[0.75rem] font-bold tracking-widest uppercase hover:text-[#8B6240] transition-colors flex items-center gap-2">
                 VOIR TOUTES LES ACTUALITÉS <ArrowRight size={14} />
@@ -94,10 +98,10 @@ export default function ActualitesPage() {
             {/* Filter Tabs */}
             <div className="flex flex-wrap gap-2 mt-8 mb-10 border-b border-[#E0D6C8]/50 pb-4">
               <button className="bg-[#122017] text-white px-5 py-2 text-[0.75rem] font-bold tracking-wider uppercase rounded-sm">TOUTES LES ACTUALITÉS</button>
-              <button className="bg-transparent text-[#122017]/70 border border-[#E0D6C8] px-5 py-2 text-[0.75rem] font-bold tracking-wider uppercase hover:bg-[#F6F3F0] rounded-sm transition-colors">FINANCE & COMPTABILITÉ</button>
+              <button className="bg-transparent text-[#122017]/70 border border-[#E0D6C8] px-5 py-2 text-[0.75rem] font-bold tracking-wider uppercase hover:bg-[#F6F3F0] rounded-sm transition-colors">FINANCE ET COMPTABILITÉ</button>
               <button className="bg-transparent text-[#122017]/70 border border-[#E0D6C8] px-5 py-2 text-[0.75rem] font-bold tracking-wider uppercase hover:bg-[#F6F3F0] rounded-sm transition-colors">RÉGLEMENTATION</button>
               <button className="bg-transparent text-[#122017]/70 border border-[#E0D6C8] px-5 py-2 text-[0.75rem] font-bold tracking-wider uppercase hover:bg-[#F6F3F0] rounded-sm transition-colors">GESTION DE PATRIMOINE</button>
-              <button className="bg-transparent text-[#122017]/70 border border-[#E0D6C8] px-5 py-2 text-[0.75rem] font-bold tracking-wider uppercase hover:bg-[#F6F3F0] rounded-sm transition-colors">OPÉRATIONS & OUTILS</button>
+              <button className="bg-transparent text-[#122017]/70 border border-[#E0D6C8] px-5 py-2 text-[0.75rem] font-bold tracking-wider uppercase hover:bg-[#F6F3F0] rounded-sm transition-colors">OPÉRATIONS ET OUTILS</button>
             </div>
 
             {/* Grid 3 cards */}
@@ -149,7 +153,7 @@ export default function ActualitesPage() {
                 </div>
                 <div className="p-6 flex flex-col flex-1">
                   <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.1em] uppercase mb-3">
-                    DIGITAL & OUTILS • 25 AVRIL 2024
+                    DIGITAL ET OUTILS • 25 AVRIL 2024
                   </p>
                   <h3 className="font-serif text-xl font-bold text-[#122017] leading-tight mb-3 group-hover:text-[#8B6240] transition-colors">
                     Automatisation et data : leviers de performance pour le middle office
@@ -182,7 +186,7 @@ export default function ActualitesPage() {
                 </p>
               </div>
             </div>
-            <a href="https://linkedin.com/company/menua-consulting" target="_blank" rel="noopener noreferrer" className="shrink-0 bg-[#D9B151] text-[#122017] px-8 py-4 text-[0.8rem] font-bold tracking-widest uppercase hover:bg-white transition-colors rounded-sm shadow-md">
+            <a href="https://linkedin.com/company/menua-consulting" target="_blank" rel="noopener noreferrer" className="link-action shrink-0">
               RETROUVEZ-NOUS SUR LINKEDIN <ArrowRight size={16} className="inline ml-2" />
             </a>
           </div>

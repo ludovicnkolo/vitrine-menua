@@ -25,17 +25,13 @@ export default function PourquoiMenuaPage() {
             <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#D9B151]" />
             <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#D9B151]" />
             <div className="relative">
-              <p className="text-[#D9B151] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.2em] uppercase mb-6">
-                {t("Notre valeur ajoutée", "Our added value")}
-              </p>
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-[2.5rem] font-bold leading-[1.1] text-white mb-2">
-                {t("Pourquoi nous choisir comme", "Why choose us as an")}
+              <h1 className="h1-hero mb-8">
+                <span className="block">{t("Notre valeur ajoutée", "Our added value")}</span>
+                <span className="block mt-2">{t("Pourquoi nous choisir comme", "Why choose us as an")}</span>
+                <span className="block mt-2">{t("partenaire opérationnel ?", "operational partner?")}</span>
               </h1>
-              <h2 className="text-[#D9B151] italic text-3xl md:text-4xl lg:text-[1.9rem] font-bold leading-[1.1] mb-8">
-                {t("partenaire opérationnel ?", "operational partner?")}
-              </h2>
-              <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-2xl font-normal space-y-3" style={{ color: 'white' }}>
-                <p>
+              <div className="mb-8 max-w-2xl">
+                <p className="p-1">
                   {t(
                     "Parce que nous transformons l'externalisation en un levier de performance, de fiabilité et de sérénité pour vos équipes.",
                     "Because we transform outsourcing into a lever of performance, reliability and peace of mind for your teams."
@@ -55,12 +51,17 @@ export default function PourquoiMenuaPage() {
             <div className="flex flex-col md:flex-row items-stretch">
               {/* Left Box (Title & Icon) */}
               <div className="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
-                <p className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151] mb-1">
-                  {t("01 — Valeur ajoutée", "01 — Added value")}
-                </p>
-                <h2 className="font-serif text-2xl lg:text-3xl font-bold text-[#122017] mb-4">
-                  {t("Bénéfices", "Benefits")}
-                </h2>
+                <div className="mb-1">
+                  <span className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151]">
+                    {t("01 — Valeur ajoutée", "01 — Added value")}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-8 h-[2px] bg-[#122017]" />
+                  <h2 className="h2-surtitre text-[#122017]">
+                    {t("Bénéfices", "Benefits")}
+                  </h2>
+                </div>
                 <p className="text-[#4A4E5A] text-[0.95rem] leading-[1.6]">
                   {t(
                     "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité et renforcez votre fiabilité.",
@@ -147,12 +148,17 @@ export default function PourquoiMenuaPage() {
               </div>
               {/* Right Box (Title & Icon) (order 1 on mobile, order 2 on desktop) */}
               <div className="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center order-1 md:order-2">
-                <p className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151] mb-1">
-                  {t("02 — Valeur ajoutée", "02 — Added value")}
-                </p>
-                <h2 className="font-serif text-2xl lg:text-3xl font-bold text-white mb-4">
-                  {t("Différenciation", "Differentiation")}
-                </h2>
+                <div className="mb-1">
+                  <span className="font-serif text-xl lg:text-2xl font-bold text-[#D9B151]">
+                    {t("02 — Valeur ajoutée", "02 — Added value")}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-8 h-[2px] bg-white" />
+                  <h2 className="h2-surtitre text-white">
+                    {t("Différenciation", "Differentiation")}
+                  </h2>
+                </div>
                 <p className="text-white/85 text-[0.95rem] leading-[1.6]">
                   {t(
                     "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.",
@@ -210,12 +216,17 @@ export default function PourquoiMenuaPage() {
       <section id="nos-engagements" className="mt-12 bg-[#e4dcf7] w-full py-10">
         <div className="max-w-[1100px] mx-auto px-6 lg:px-12 flex flex-col items-center">
           
-          <p className="font-serif text-xl md:text-2xl font-bold text-[#D9B151] mb-3 text-center">
-            {t("03 — Valeur ajoutée", "03 — Added value")}
-          </p>
-          <h2 className="text-[#1A0E08] text-2xl lg:text-[1.8rem] font-bold text-center mb-4">
-            {t("Engagements", "Commitments")}
-          </h2>
+          <div className="mb-3 text-center">
+            <span className="font-serif text-xl md:text-2xl font-bold text-[#D9B151]">
+              {t("03 — Valeur ajoutée", "03 — Added value")}
+            </span>
+          </div>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <div className="w-8 h-[2px] bg-[#1A0E08]" />
+            <h2 className="h2-surtitre text-[#1A0E08]">
+              {t("Engagements", "Commitments")}
+            </h2>
+          </div>
           <div className="w-12 h-[2px] bg-[#D9B151] mb-8" />
 
           <div className="text-[#1A0E08]/80 text-[0.95rem] text-center max-w-2xl leading-[1.8] space-y-3 mb-10">

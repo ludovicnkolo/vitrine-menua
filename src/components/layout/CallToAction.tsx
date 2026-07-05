@@ -14,20 +14,12 @@ export default function CallToAction() {
             {t("L'expertise au service de votre performance.", "Expertise serving your performance.")}
           </h2>
         </div>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            href="/nous-contacter"
-            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#E0D6C8] hover:text-white hover:bg-[#3E2510]/50 rounded-full"
-            style={{ border: "1px solid #5A3A1E" }}
-          >
-            {t("PRÉSENTER UN BESOIN", "PRESENT A NEED")} <ArrowRight size={12} />
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+          <Link href="/nous-contacter" className="link-action">
+            {t("PRÉSENTER UN BESOIN", "PRESENT A NEED")} <ArrowRight size={14} />
           </Link>
-          <Link
-            href="/nous-rejoindre"
-            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#C49A6C] hover:text-white hover:bg-[#8B6240]/40 rounded-full"
-            style={{ border: "1px solid #8B6240" }}
-          >
-            {t("NOUS REJOINDRE", "JOIN US")} <ArrowRight size={12} />
+          <Link href="/nous-rejoindre" className="link-action">
+            {t("NOUS REJOINDRE", "JOIN US")} <ArrowRight size={14} />
           </Link>
         </div>
       </div>

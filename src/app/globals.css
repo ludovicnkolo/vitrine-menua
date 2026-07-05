@@ -263,3 +263,46 @@
     rgba(11, 27, 61, 0.7) 100%
   );
 }
+
+@layer components {
+  /* ── Espacement des sections ── */
+  .section-gap {
+    @apply mt-12 py-12;
+  }
+
+  /* ── Titres Globaux (Blanc par défaut) ── */
+  .h1-hero {
+    @apply font-serif text-4xl md:text-5xl lg:text-[2.5rem] font-bold leading-[1.1] text-white mb-4;
+  }
+
+  .h2-surtitre {
+    @apply text-white text-[1.2rem] font-bold tracking-[0.15em] uppercase;
+  }
+
+  .h3-section {
+    @apply text-white text-lg lg:text-[1.3rem] font-bold leading-[1.4] mb-6;
+  }
+
+  /* ── Paragraphes Globaux (Blanc par défaut) ── */
+  .p-1 {
+    @apply text-[1rem] md:text-[1.1rem] leading-[1.7] font-normal;
+    color: #FFFFFF !important;
+  }
+
+  .p-2 {
+    @apply text-white/90 text-[1.05rem] leading-[1.7] font-normal;
+  }
+
+  .p-3 {
+    @apply text-white/70 text-[0.85rem] leading-[1.6];
+  }
+
+  .p-4 {
+    @apply text-white/70 italic text-xl font-serif;
+  }
+
+  /* ── Boutons/Liens (Type Découvrir nos expertises) ── */
+  .link-action {
+    @apply inline-flex items-center justify-center gap-3 text-white/80 text-[0.85rem] font-bold tracking-widest uppercase transition-transform duration-300 hover:scale-[1.03] w-fit;
+  }
+}

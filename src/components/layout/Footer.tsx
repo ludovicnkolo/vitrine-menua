@@ -16,7 +16,7 @@ export default function Footer() {
              </span>
           </div>
           <p className="text-[#272A2C]/80 text-[0.8rem] leading-relaxed max-w-[250px]">
-            Externalisation opérationnelle des fonctions back & middle office.
+            Externalisation opérationnelle des fonctions back et middle office.
           </p>
         </div>
 
@@ -24,10 +24,10 @@ export default function Footer() {
         <div className="flex flex-col">
           <h4 className="uppercase text-[0.8rem] font-bold tracking-[0.1em] mb-6 text-[#272A2C]">Expertises</h4>
           <ul className="flex flex-col space-y-3 text-[0.85rem] text-[#272A2C]/80 font-medium">
-            <li><Link href="/vos-besoins#finance-reporting" className="hover:text-[#D9B151] transition-colors">Finance & reporting</Link></li>
+            <li><Link href="/vos-besoins#finance-reporting" className="hover:text-[#D9B151] transition-colors">Finance et reporting</Link></li>
             <li><Link href="/vos-besoins#controle-de-gestion" className="hover:text-[#D9B151] transition-colors">Contrôle de gestion</Link></li>
-            <li><Link href="/vos-besoins#risques-conformite" className="hover:text-[#D9B151] transition-colors">Risques & conformité</Link></li>
-            <li><Link href="/vos-besoins#support-comptable-data" className="hover:text-[#D9B151] transition-colors">Support comptable & data</Link></li>
+            <li><Link href="/vos-besoins#risques-conformite" className="hover:text-[#D9B151] transition-colors">Risques et conformité</Link></li>
+            <li><Link href="/vos-besoins#support-comptable-data" className="hover:text-[#D9B151] transition-colors">Support comptable et data</Link></li>
             <li><Link href="/vos-besoins#gestion-patrimoine" className="hover:text-[#D9B151] transition-colors">Gestion de patrimoine</Link></li>
             <li><Link href="/vos-besoins#autres-besoins" className="hover:text-[#D9B151] transition-colors">Autres besoins</Link></li>
           </ul>
@@ -44,9 +44,9 @@ export default function Footer() {
           </ul>
         </div>
         
-        {/* Colonne 4: Contact & Légal */}
+        {/* Colonne 4: Contact et Légal */}
         <div className="flex flex-col">
-          <h4 className="uppercase text-[0.8rem] font-bold tracking-[0.1em] mb-6 text-[#272A2C]">Contact & Légal</h4>
+          <h4 className="uppercase text-[0.8rem] font-bold tracking-[0.1em] mb-6 text-[#272A2C]">Contact et Légal</h4>
           <ul className="flex flex-col space-y-3 text-[0.85rem] text-[#272A2C]/80 font-medium mb-6">
             <li><Link href="/nous-contacter" className="hover:text-[#D9B151] transition-colors">Nous contacter</Link></li>
             <li><Link href="/nous-rejoindre" className="hover:text-[#D9B151] transition-colors">Nous rejoindre</Link></li>

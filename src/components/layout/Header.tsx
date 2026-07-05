@@ -32,7 +32,7 @@ export default function Header() {
         { label: t("Présentation du cabinet", "Firm Presentation"), href: "/nous-connaitre#presentation-du-cabinet" },
         { label: t("Notre approche", "Our Approach"), href: "/nous-connaitre#notre-approche" },
         { label: t("Notre méthodologie", "Our Methodology"), href: "/nous-connaitre#notre-methodologie" },
-        { label: t("Certifications & cadre", "Certifications & framework"), href: "/nous-connaitre#certifications" },
+        { label: t("Certifications et cadre", "Certifications and framework"), href: "/nous-connaitre#certifications" },
         { label: t("Notre équipe", "Our Team"), href: "/nous-connaitre#notre-equipe" },
       ],
     },
@@ -40,11 +40,11 @@ export default function Header() {
       label: t("Vos besoins", "Your Needs"),
       href: "/vos-besoins",
       links: [
-        { label: t("Finance & reporting", "Finance & Reporting"), href: "/vos-besoins#finance-reporting" },
-        { label: t("Contrôle de gestion", "Management control"), href: "/vos-besoins#controle-de-gestion" },
-        { label: t("Risques & conformité", "Risk & Compliance"), href: "/vos-besoins#risques-conformite" },
-        { label: t("Support comptable & data", "Accounting & Data Support"), href: "/vos-besoins#support-comptable-data" },
-        { label: t("Gestion de patrimoine & CGP", "Wealth Management"), href: "/vos-besoins#gestion-patrimoine" },
+        { label: t("Finance et reporting", "Finance and Reporting"), href: "/vos-besoins#finance-reporting" },
+        { label: t("Contrôle de gestion", "Management Control"), href: "/vos-besoins#controle-de-gestion" },
+        { label: t("Risques et conformité", "Risk and Compliance"), href: "/vos-besoins#risques-conformite" },
+        { label: t("Support comptable et data", "Accounting and Data Support"), href: "/vos-besoins#support-comptable-data" },
+        { label: t("Gestion de patrimoine et CGP", "Wealth Management"), href: "/vos-besoins#gestion-patrimoine" },
         { label: t("Autres besoins opérationnels", "Other Operational Needs"), href: "/vos-besoins#autres-besoins" },
       ],
     },
@@ -145,7 +145,7 @@ export default function Header() {
             >
               <Link
                 href={menus[key].href}
-                className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[15px] leading-[25px] font-bold ${
+                className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[17px] leading-[25px] font-bold ${
                   openMenu === key
                     ? "text-[#E0D6C8]"
                     : "text-white hover:text-[#E0D6C8]"
@@ -235,7 +235,7 @@ export default function Header() {
           <nav className="flex-1 flex flex-col px-6 py-4 gap-2">
             {/* Accueil */}
             <div className="border-b border-[#E0D6C8]/30">
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#1A0E08] hover:text-[#E0D6C8] transition-colors">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.2rem] font-bold text-[#1A0E08] hover:text-[#E0D6C8] transition-colors">
                 {t("Accueil", "Home")}
               </Link>
             </div>
@@ -244,7 +244,7 @@ export default function Header() {
               <div key={key} className="flex flex-col border-b border-[#E0D6C8]/30">
                 <button
                   onClick={() => setOpenMobileSubmenu(openMobileSubmenu === key ? null : key)}
-                  className="flex items-center justify-between py-3 text-[1.1rem] font-bold text-[#1A0E08] hover:text-[#E0D6C8] transition-colors text-left"
+                  className="flex items-center justify-between py-3 text-[1.2rem] font-bold text-[#1A0E08] hover:text-[#E0D6C8] transition-colors text-left"
                 >
                   <span>{menus[key].label}</span>
                   <ChevronDown size={18} className={`text-[#E0D6C8] transition-transform ${openMobileSubmenu === key ? "rotate-180" : ""}`} />

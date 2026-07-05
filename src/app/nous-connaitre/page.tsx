@@ -27,24 +27,20 @@ export default function NousConnaitrePage() {
             <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#D9B151]" />
             <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#D9B151]" />
             <div className="relative">
-              <p className="text-[#D9B151] text-[0.8rem] md:text-[0.95rem] font-bold tracking-[0.2em] uppercase mb-6">
-                {t("Le cabinet", "The firm")}
-              </p>
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-[2.5rem] font-bold leading-[1.1] text-white mb-2">
-                {t("Un partenaire de confiance", "A trusted partner")}
+              <h1 className="h1-hero mb-8">
+                <span className="block">{t("Le cabinet", "The firm")}</span>
+                <span className="block mt-2">{t("Un partenaire de confiance", "A trusted partner")}</span>
+                <span className="block mt-2">{t("pour vos opérations financières.", "for your financial operations.")}</span>
               </h1>
-              <h2 className="text-[#D9B151] italic text-3xl md:text-4xl lg:text-[1.9rem] font-bold leading-[1.1] mb-8">
-                {t("pour vos opérations financières.", "for your financial operations.")}
-              </h2>
-              <div className="text-white text-[1rem] md:text-[1.1rem] leading-[1.7] max-w-xl font-normal space-y-3 mb-10">
-                <p>
+              <div className="mb-10 max-w-xl">
+                <p className="p-1">
                   {t(
                     "MENUA CONSULTING accompagne les entreprises dans l'externalisation opérationnelle de leurs fonctions back et middle office. Un engagement fondé sur la rigueur, la continuité et la fiabilité.",
                     "MENUA CONSULTING supports companies in the operational outsourcing of their back and middle office functions. A commitment based on rigor, continuity and reliability."
                   )}
                 </p>
               </div>
-              <Link href="/nous-connaitre#excellence" className="inline-flex items-center justify-center gap-3 bg-[#D9B151] text-[#122017] border border-[#D9B151] px-8 py-3.5 text-[0.85rem] font-bold tracking-wider uppercase transition-all hover:bg-transparent hover:text-[#D9B151] w-fit rounded-sm shadow-md">
+              <Link href="/nous-connaitre#excellence" className="link-action">
                 {t("DÉCOUVRIR NOTRE CABINET", "DISCOVER OUR FIRM")} <ArrowRight size={16} />
               </Link>
             </div>
@@ -60,14 +56,11 @@ export default function NousConnaitrePage() {
             {/* Text left */}
             <div className="flex flex-col">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[1px] bg-[#D9B151]" />
-                <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
-                  {t("Le cabinet", "The firm")}
-                </span>
+                <div className="w-8 h-[2px] bg-white" />
+                <h2 className="h2-surtitre text-white">
+                  {t("MENUA CONSULTING PRÉSENTATION DU CABINET", "MENUA CONSULTING FIRM PRESENTATION").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+                </h2>
               </div>
-              <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-6">
-                {t("MENUA CONSULTING PRÉSENTATION DU CABINET", "MENUA CONSULTING FIRM PRESENTATION").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-              </h2>
               <div className="w-16 h-[3px] bg-[#D9B151] mb-8" />
               <div className="text-white/80 text-[1.05rem] leading-[1.8] space-y-5 font-normal">
                 <p>
@@ -112,10 +105,10 @@ export default function NousConnaitrePage() {
             {/* Texte à droite */}
             <div className="flex flex-col">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[1px] bg-[#D9B151]" />
-                <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
+                <div className="w-8 h-[2px] bg-[#1A0E08]" />
+                <h2 className="h2-surtitre text-[#1A0E08]">
                   {t("Notre approche", "Our approach")}
-                </span>
+                </h2>
               </div>
               <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-6">
                 {t("NOTRE APPROCHE", "OUR APPROACH")}
@@ -175,11 +168,11 @@ export default function NousConnaitrePage() {
       {/* ══ 3. NOTRE MÉTHODOLOGIE — Fond marron foncé, 5 cartes centrées ══ */}
       <section id="notre-methodologie" className="mt-8 bg-[#1A0E08] w-full py-6 overflow-hidden">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start">
-          <div className="mb-5">
-            <h2 className="font-serif text-2xl md:text-3xl font-bold text-white mb-4">
+          <div className="mb-5 flex items-center gap-4">
+            <div className="w-8 h-[2px] bg-white" />
+            <h2 className="h2-surtitre text-white">
               {t("NOTRE MÉTHODOLOGIE", "OUR METHODOLOGY").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
             </h2>
-            <div className="w-12 h-[3px] bg-[#D9B151]" />
           </div>
 
           <div className="w-full flex flex-col gap-2 md:gap-3 max-w-4xl mx-auto pt-1">
@@ -187,7 +180,7 @@ export default function NousConnaitrePage() {
               { title: t("DÉCOUVERTE", "DISCOVERY"), desc: t("Analyse de votre organisation, de vos processus et de vos contraintes afin de définir précisément le périmètre d'intervention.", "Analysis of your organization, processes and constraints to precisely define the scope of intervention.") },
               { title: t("VÉRIFICATIONS PRÉALABLES", "PRELIMINARY CHECKS"), desc: t("Vérification de l'identité juridique, de la situation administrative et de la cohérence opérationnelle du client ou partenaire, afin de sécuriser l'entrée en relation.", "Verification of legal identity, administrative situation and operational coherence of the client or partner, to secure the entry into relation.") },
               { title: t("ANALYSE", "ANALYSIS"), desc: t("Construction d'une proposition opérationnelle adaptée à vos besoins, incluant les profils, le mode d'organisation et les livrables attendus.", "Construction of an operational proposal adapted to your needs, including profiles, organization mode and expected deliverables.") },
-              { title: t("MISE EN ŒUVRE & FORMATION", "IMPLEMENTATION & TRAINING"), desc: t("Déploiement des équipes et intégration aux outils, process et standards de votre organisation.", "Deployment of teams and integration into your organization's tools, processes and standards.") },
+              { title: t("MISE EN ŒUVRE ET FORMATION", "IMPLEMENTATION AND TRAINING"), desc: t("Déploiement des équipes et intégration aux outils, process et standards de votre organisation.", "Deployment of teams and integration into your organization's tools, processes and standards.") },
               { title: t("SUIVI DANS LA DURÉE", "LONG-TERM FOLLOW-UP"), desc: t("Pilotage continu de la mission, ajustements réguliers et contrôle qualité des livrables.", "Continuous mission management, regular adjustments and quality control of deliverables.") },
             ].map((step, i) => (
               <div key={i} className="flex flex-col md:flex-row md:items-start gap-3 md:gap-5 border-t border-white/20 pt-3">
@@ -215,13 +208,13 @@ export default function NousConnaitrePage() {
             
             <div className="flex flex-col">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[1px] bg-[#D9B151]" />
-                <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
+                <div className="w-8 h-[2px] bg-[#1A0E08]" />
+                <h2 className="h2-surtitre text-[#1A0E08]">
                   {t("Gage de qualité", "Quality assurance")}
-                </span>
+                </h2>
               </div>
               <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-8 pr-4">
-                {t("ACCRÉDITATIONS, CERTIFICATIONS & CADRE D'INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS & INTERVENTION FRAMEWORK")}
+                {t("ACCRÉDITATIONS, CERTIFICATIONS ET CADRE D'INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS AND INTERVENTION FRAMEWORK")}
               </h2>
               <div className="text-[#4A4E5A] text-[0.95rem] leading-[1.7] mb-10 max-w-xl space-y-4">
                 <p>
@@ -286,10 +279,10 @@ export default function NousConnaitrePage() {
             <div className="w-full flex flex-col">
               
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[1px] bg-[#D9B151]"></div>
-                <span className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.15em] uppercase">
+                <div className="w-8 h-[2px] bg-[#1A0E08]" />
+                <h2 className="h2-surtitre text-[#1A0E08]">
                   {t("NOTRE ÉQUIPE", "OUR TEAM")}
-                </span>
+                </h2>
               </div>
               
               <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#122017] mb-3 leading-tight">
@@ -310,8 +303,8 @@ export default function NousConnaitrePage() {
                 </p>
                 <p>
                   {t(
-                    "Elle dispose d'une expérience en finance, gestion des risques, gestion de patrimoine et opérations back & middle office acquise au sein d'environnements exigeants.",
-                    "She has experience in finance, risk management, wealth management, and back & middle office operations acquired in demanding environments."
+                    "Elle dispose d'une expérience en finance, gestion des risques, gestion de patrimoine et opérations back et middle office acquise au sein d'environnements exigeants.",
+                    "She has experience in finance, risk management, wealth management, and back and middle office operations acquired in demanding environments."
                   )}
                 </p>
                 <p>

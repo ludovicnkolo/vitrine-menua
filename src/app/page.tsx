@@ -47,8 +47,11 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 2 : L'EXPERTISE D'UN CABINET SPÉCIALISÉ ── */}
-      <section className="section-gap bg-[#8e8478]">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl">
+      <section className="relative section-gap">
+        {/* Arrière-plan asymétrique (décollé à gauche et ne couvrant qu'une partie de l'image à droite) */}
+        <div className="absolute inset-y-0 left-[max(1rem,calc(50vw-550px))] w-[calc(100%-2rem)] lg:w-[850px] bg-[#8e8478] z-0 rounded-3xl"></div>
+        
+        <div className="relative z-10 max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             <div className="flex flex-col">
               <div className="flex items-center gap-4 mb-6">
@@ -115,8 +118,11 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 4 : NOTRE APPROCHE ── */}
-      <section className="section-gap bg-[#e4dcf7]">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl">
+      <section className="relative section-gap">
+        {/* Arrière-plan asymétrique (décollé à droite et ne couvrant qu'une partie de l'image à gauche) */}
+        <div className="absolute inset-y-0 right-[max(1rem,calc(50vw-550px))] w-[calc(100%-2rem)] lg:w-[850px] bg-[#e4dcf7] z-0 rounded-3xl"></div>
+        
+        <div className="relative z-10 max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
 
             {/* Image à gauche */}

@@ -24,12 +24,12 @@ export default function Footer() {
         <div className="flex flex-col">
           <h4 className="uppercase text-[0.8rem] font-bold tracking-[0.1em] mb-6 text-[#272A2C]">Expertises</h4>
           <ul className="flex flex-col space-y-3 text-[0.85rem] text-[#272A2C]/80 font-medium">
-            <li><Link href="/vos-besoins#finance-reporting" className="hover:text-[#D9B151] transition-colors">Finance et reporting</Link></li>
-            <li><Link href="/vos-besoins#controle-de-gestion" className="hover:text-[#D9B151] transition-colors">Contrôle de gestion</Link></li>
-            <li><Link href="/vos-besoins#risques-conformite" className="hover:text-[#D9B151] transition-colors">Risques et conformité</Link></li>
-            <li><Link href="/vos-besoins#support-comptable-data" className="hover:text-[#D9B151] transition-colors">Support comptable et data</Link></li>
-            <li><Link href="/vos-besoins#gestion-patrimoine" className="hover:text-[#D9B151] transition-colors">Gestion de patrimoine</Link></li>
-            <li><Link href="/vos-besoins#autres-besoins" className="hover:text-[#D9B151] transition-colors">Autres besoins</Link></li>
+            <li><Link href="/vos-besoins#finance-reporting" className="hover:text-[#272A2C] transition-colors">Finance et reporting</Link></li>
+            <li><Link href="/vos-besoins#controle-de-gestion" className="hover:text-[#272A2C] transition-colors">Contrôle de gestion</Link></li>
+            <li><Link href="/vos-besoins#risques-conformite" className="hover:text-[#272A2C] transition-colors">Risques et conformité</Link></li>
+            <li><Link href="/vos-besoins#support-comptable-data" className="hover:text-[#272A2C] transition-colors">Support comptable et data</Link></li>
+            <li><Link href="/vos-besoins#gestion-patrimoine" className="hover:text-[#272A2C] transition-colors">Gestion de patrimoine</Link></li>
+            <li><Link href="/vos-besoins#autres-besoins" className="hover:text-[#272A2C] transition-colors">Autres besoins</Link></li>
           </ul>
         </div>
 
@@ -37,10 +37,10 @@ export default function Footer() {
         <div className="flex flex-col">
           <h4 className="uppercase text-[0.8rem] font-bold tracking-[0.1em] mb-6 text-[#272A2C]">Nos solutions</h4>
           <ul className="flex flex-col space-y-3 text-[0.85rem] text-[#272A2C]/80 font-medium">
-            <li><Link href="/nos-solutions#urgence" className="hover:text-[#D9B151] transition-colors">Urgence</Link></li>
-            <li><Link href="/nos-solutions#duree" className="hover:text-[#D9B151] transition-colors">Durée</Link></li>
-            <li><Link href="/nos-solutions#volume" className="hover:text-[#D9B151] transition-colors">Volume</Link></li>
-            <li><Link href="/nos-solutions#organisation" className="hover:text-[#D9B151] transition-colors">Organisation</Link></li>
+            <li><Link href="/nos-solutions#urgence" className="hover:text-[#272A2C] transition-colors">Urgence</Link></li>
+            <li><Link href="/nos-solutions#duree" className="hover:text-[#272A2C] transition-colors">Durée</Link></li>
+            <li><Link href="/nos-solutions#volume" className="hover:text-[#272A2C] transition-colors">Volume</Link></li>
+            <li><Link href="/nos-solutions#organisation" className="hover:text-[#272A2C] transition-colors">Organisation</Link></li>
           </ul>
         </div>
         
@@ -48,10 +48,10 @@ export default function Footer() {
         <div className="flex flex-col">
           <h4 className="uppercase text-[0.8rem] font-bold tracking-[0.1em] mb-6 text-[#272A2C]">Contact et Légal</h4>
           <ul className="flex flex-col space-y-3 text-[0.85rem] text-[#272A2C]/80 font-medium mb-6">
-            <li><Link href="/nous-contacter" className="hover:text-[#D9B151] transition-colors">Nous contacter</Link></li>
-            <li><Link href="/nous-rejoindre" className="hover:text-[#D9B151] transition-colors">Nous rejoindre</Link></li>
-            <li><Link href="/mentions-legales" className="hover:text-[#D9B151] transition-colors">Mentions légales</Link></li>
-            <li><Link href="/politique-de-confidentialite" className="hover:text-[#D9B151] transition-colors">Politique de confidentialité</Link></li>
+            <li><Link href="/nous-contacter" className="hover:text-[#272A2C] transition-colors">Nous contacter</Link></li>
+            <li><Link href="/nous-rejoindre" className="hover:text-[#272A2C] transition-colors">Nous rejoindre</Link></li>
+            <li><Link href="/mentions-legales" className="hover:text-[#272A2C] transition-colors">Mentions légales</Link></li>
+            <li><Link href="/politique-de-confidentialite" className="hover:text-[#272A2C] transition-colors">Politique de confidentialité</Link></li>
           </ul>
           
           <div className="flex items-center">

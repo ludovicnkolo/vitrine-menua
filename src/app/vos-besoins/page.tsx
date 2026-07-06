@@ -157,7 +157,7 @@ export default function VosBesoinsPage() {
                 t("Support aux directions financières et responsables opérationnels", "Support to financial directions and operational managers"),
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <svg className="w-4 h-4 text-[#D9B151] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <svg className="w-4 h-4 text-[#122017] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
                   <h4 className="h4-titre text-white">{item}</h4>
@@ -374,7 +374,7 @@ export default function VosBesoinsPage() {
 
           {/* Bottom Details */}
           <div className="relative z-10 w-full py-8 px-8 lg:pl-[16%] lg:pr-12">
-            <h3 className="text-[#D9B151] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-6">
+            <h3 className="text-[#122017] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-6">
               {t("Périmètre d'intervention", "Scope of intervention")}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 gap-x-6">
@@ -395,7 +395,7 @@ export default function VosBesoinsPage() {
                 t("Étude de besoins spécifiques non listés dans les rubriques précédentes", "Study of specific needs not listed in previous sections"),
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <svg className="w-4 h-4 text-[#D9B151] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <svg className="w-4 h-4 text-[#122017] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
                   <h4 className="h4-titre text-white">{item}</h4>

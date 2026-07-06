@@ -18,7 +18,7 @@
     font-family: var(--font-playfair), "Playfair Display", serif;
   }
   .home-hero-subtitle {
-    @apply text-[#D9B151] italic font-normal text-4xl md:text-5xl lg:text-6xl mt-4 mb-8 leading-[1.1];
+    @apply text-white italic font-normal text-4xl md:text-5xl lg:text-6xl mt-4 mb-8 leading-[1.1];
     font-family: var(--font-playfair), "Playfair Display", serif;
   }
   .home-hero-desc {
@@ -26,7 +26,7 @@
     font-family: var(--font-playfair), "Playfair Display", serif;
   }
   .home-hero-btn {
-    @apply inline-flex items-center justify-center gap-3 bg-[#D9B151] text-[#122017] border border-[#D9B151] px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:bg-transparent hover:text-[#D9B151] w-fit rounded-sm shadow-md;
+    @apply inline-flex items-center justify-center gap-3 bg-[#122017] text-white border border-[#122017] px-8 py-3.5 text-[0.8rem] font-bold tracking-wider uppercase transition-all hover:bg-transparent hover:text-[#122017] w-fit rounded-sm shadow-md;
     font-family: var(--font-playfair), "Playfair Display", serif;
   }
 

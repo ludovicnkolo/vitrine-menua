@@ -65,7 +65,7 @@ export default function ActualitesPage() {
                 <img src="/digitalisation.jpg" alt="A la une" className="w-full h-full object-cover" />
               </div>
               <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
-                <p className="text-[#D9B151] text-[0.75rem] font-bold tracking-[0.1em] uppercase mb-4">
+                <p className="text-[#122017] text-[0.75rem] font-bold tracking-[0.1em] uppercase mb-4">
                   DIGITALISATION • 18 MAI 2024
                 </p>
                 <h4 className="h4-titre text-[#122017] mb-4">
@@ -90,7 +90,7 @@ export default function ActualitesPage() {
                   <h2 className="h2-surtitre text-[#122017]">Actualités financières et réglementaires</h2>
                 </div>
               </div>
-              <Link href="#" className="text-[#D9B151] text-[0.75rem] font-bold tracking-widest uppercase hover:text-[#8B6240] transition-colors flex items-center gap-2">
+              <Link href="#" className="text-[#122017] text-[0.75rem] font-bold tracking-widest uppercase hover:text-[#8B6240] transition-colors flex items-center gap-2">
                 VOIR TOUTES LES ACTUALITÉS <ArrowRight size={14} />
               </Link>
             </div>
@@ -112,7 +112,7 @@ export default function ActualitesPage() {
                   <img src="/digitalisation.jpg" alt="Article 1" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-6 flex flex-col flex-1">
-                  <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.1em] uppercase mb-3">
+                  <p className="text-[#122017] text-[0.7rem] font-bold tracking-[0.1em] uppercase mb-3">
                     DIGITALISATION • 12 MAI 2024
                   </p>
                   <h4 className="h4-titre text-[#122017] mb-3 group-hover:text-[#8B6240] transition-colors">
@@ -121,7 +121,7 @@ export default function ActualitesPage() {
                   <p className="text-[#122017]/75 text-[0.85rem] leading-[1.6] mb-6 flex-1">
                     Panorama des évolutions majeures et de leurs impacts sur le reporting financier et la consolidation.
                   </p>
-                  <Link href="#" className="inline-flex items-center gap-2 text-[#D9B151] text-[0.75rem] font-bold tracking-widest uppercase group-hover:gap-3 transition-all mt-auto">
+                  <Link href="#" className="inline-flex items-center gap-2 text-[#122017] text-[0.75rem] font-bold tracking-widest uppercase group-hover:gap-3 transition-all mt-auto">
                     LIRE L'ARTICLE <ArrowRight size={14} />
                   </Link>
                 </div>
@@ -132,7 +132,7 @@ export default function ActualitesPage() {
                   <img src="/news-2.jpg" alt="Article 2" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-6 flex flex-col flex-1">
-                  <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.1em] uppercase mb-3">
+                  <p className="text-[#122017] text-[0.7rem] font-bold tracking-[0.1em] uppercase mb-3">
                     RÉGLEMENTATION • 06 MAI 2024
                   </p>
                   <h4 className="h4-titre text-[#122017] mb-3 group-hover:text-[#8B6240] transition-colors">
@@ -141,7 +141,7 @@ export default function ActualitesPage() {
                   <p className="text-[#122017]/75 text-[0.85rem] leading-[1.6] mb-6 flex-1">
                     Focus sur les dernières attentes des autorités et les bonnes pratiques pour sécuriser vos dispositifs.
                   </p>
-                  <Link href="#" className="inline-flex items-center gap-2 text-[#D9B151] text-[0.75rem] font-bold tracking-widest uppercase group-hover:gap-3 transition-all mt-auto">
+                  <Link href="#" className="inline-flex items-center gap-2 text-[#122017] text-[0.75rem] font-bold tracking-widest uppercase group-hover:gap-3 transition-all mt-auto">
                     LIRE L'ARTICLE <ArrowRight size={14} />
                   </Link>
                 </div>
@@ -152,7 +152,7 @@ export default function ActualitesPage() {
                   <img src="/news-3.jpg" alt="Article 3" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-6 flex flex-col flex-1">
-                  <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.1em] uppercase mb-3">
+                  <p className="text-[#122017] text-[0.7rem] font-bold tracking-[0.1em] uppercase mb-3">
                     REPORTING • 28 MAI 2024
                   </p>
                   <h4 className="h4-titre text-[#122017] mb-3 group-hover:text-[#8B6240] transition-colors">
@@ -161,7 +161,7 @@ export default function ActualitesPage() {
                   <p className="text-[#122017]/75 text-[0.85rem] leading-[1.6] mb-6 flex-1">
                     Comment les outils digitaux et la data structurée optimisent les processus et la prise de décision.
                   </p>
-                  <Link href="#" className="inline-flex items-center gap-2 text-[#D9B151] text-[0.75rem] font-bold tracking-widest uppercase group-hover:gap-3 transition-all mt-auto">
+                  <Link href="#" className="inline-flex items-center gap-2 text-[#122017] text-[0.75rem] font-bold tracking-widest uppercase group-hover:gap-3 transition-all mt-auto">
                     LIRE L'ARTICLE <ArrowRight size={14} />
                   </Link>
                 </div>
@@ -174,7 +174,7 @@ export default function ActualitesPage() {
           {/* LINKEDIN BANNER */}
           <div className="w-full bg-[#122017] rounded-xl p-8 lg:p-12 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl">
             <div className="flex items-center gap-6 lg:gap-8">
-              <div className="w-16 h-16 rounded-xl border border-[#D9B151]/30 flex items-center justify-center shrink-0 text-[#D9B151]">
+              <div className="w-16 h-16 rounded-xl border border-[white]/30 flex items-center justify-center shrink-0 text-[white]">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
               </div>
               <div className="flex flex-col">

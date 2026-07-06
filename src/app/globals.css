@@ -137,7 +137,7 @@
     --menua-navy-light:  #2C493D;
 
     /* 2. OR / ACCENT */
-    --menua-gold:        #D9B151;
+    --menua-gold:        #122017;
     --menua-gold-light:  #E0D6C8;
     --menua-gold-pale:   #F5F2EB;
 
@@ -160,7 +160,7 @@
     --menua-border:      #E0D6C8;
     --menua-border-warm: #E0D6C8;
     --menua-link:        #223930;
-    --menua-link-hover:  #D9B151;
+    --menua-link-hover:  #122017;
 
     /* 7. NUNITO SANS token */
     --font-body: 'Standard Ampersand', var(--font-playfair), "Playfair Display", serif;

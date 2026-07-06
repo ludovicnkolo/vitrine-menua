@@ -148,8 +148,8 @@ export default function NousConnaitrePage() {
                   },
                 ].map((pilier, i) => (
                   <div key={i} className="flex items-start gap-4">
-                    <div className="w-9 h-9 rounded-full border border-[#D9B151] bg-white flex items-center justify-center shrink-0 shadow-sm">
-                      <pilier.icon className="text-[#D9B151]" size={16} strokeWidth={1.5} />
+                    <div className="w-9 h-9 rounded-full border border-[#122017] bg-white flex items-center justify-center shrink-0 shadow-sm">
+                      <pilier.icon className="text-[#122017]" size={16} strokeWidth={1.5} />
                     </div>
                     <div>
                       <h4 className="h4-titre text-[#122017] mb-1">{pilier.title}</h4>

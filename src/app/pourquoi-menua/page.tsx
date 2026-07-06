@@ -149,7 +149,7 @@ export default function PourquoiMenuaPage() {
                 t("Intervention bilingue français / anglais", "Bilingual intervention French / English"),
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <svg className="w-4 h-4 text-[#D9B151] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <svg className="w-4 h-4 text-[#122017] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
                   <h4 className="h4-titre text-white">{item}</h4>

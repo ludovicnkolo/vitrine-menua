@@ -185,7 +185,7 @@ export default function NousRejoindre() {
                       t("Autre", "Other"),
                     ].map((opt, i) => (
                       <label key={i} className="flex items-start gap-2 text-[0.8rem] text-black cursor-pointer font-medium">
-                        <input type="checkbox" className="accent-[#D9B151] mt-1 shrink-0" /> {opt}
+                        <input type="checkbox" className="accent-[black] mt-1 shrink-0" /> {opt}
                       </label>
                     ))}
                   </div>
@@ -203,7 +203,7 @@ export default function NousRejoindre() {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-3 gap-x-6">
                   {["Français", "Anglais", "Espagnol", "Arabe", "Portugais", "Allemand", t("Autre", "Other")].map((lang, i) => (
                     <label key={i} className="flex items-center gap-2 text-[0.8rem] text-black cursor-pointer font-medium">
-                      <input type="checkbox" className="accent-[#D9B151]" /> {lang}
+                      <input type="checkbox" className="accent-[black]" /> {lang}
                     </label>
                   ))}
                 </div>
@@ -232,7 +232,7 @@ export default function NousRejoindre() {
               </div>
 
               <label className="flex items-start gap-3 text-[0.8rem] text-black cursor-pointer font-medium pt-2">
-                <input type="checkbox" className="accent-[#D9B151] mt-0.5 shrink-0" />
+                <input type="checkbox" className="accent-[black] mt-0.5 shrink-0" />
                 <span>
                   {t("J'accepte la", "I accept the")} <Link href="/politique-de-confidentialite" className="text-[black] hover:underline">{t("politique de confidentialité", "privacy policy")}</Link> {t("et le traitement de mes données personnelles dans le cadre de ma candidature.", "and the processing of my personal data as part of my application.")} <span className="text-[black]">*</span>
                 </span>

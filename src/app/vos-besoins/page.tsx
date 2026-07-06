@@ -18,7 +18,7 @@ export default function VosBesoinsPage() {
             alt="Vos Besoins"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/90 to-[#0D1B2A]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/60 to-[#0D1B2A]/30" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
@@ -57,8 +57,8 @@ export default function VosBesoinsPage() {
             {/* Text left */}
             <div className="flex flex-col">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[2px] bg-[#122017]" />
-                <h2 className="h2-surtitre text-[#122017]">
+                <div className="w-8 h-[2px] bg-[#0D1B2A]" />
+                <h2 className="h2-surtitre text-[#0D1B2A]">
                   {t("Finance et Reporting", "Finance and Reporting")}
                 </h2>
               </div>
@@ -88,7 +88,7 @@ export default function VosBesoinsPage() {
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#0D1B2A] shrink-0 mt-2" />
-                    <h4 className="h4-titre text-[#122017]">{item}</h4>
+                    <h4 className="h4-titre text-[#0D1B2A]">{item}</h4>
                   </div>
                 ))}
               </div>
@@ -157,7 +157,7 @@ export default function VosBesoinsPage() {
                 t("Support aux directions financières et responsables opérationnels", "Support to financial directions and operational managers"),
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <svg className="w-4 h-4 text-[#122017] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <svg className="w-4 h-4 text-[#0D1B2A] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
                   <h4 className="h4-titre text-white">{item}</h4>
@@ -178,18 +178,18 @@ export default function VosBesoinsPage() {
               {/* Left Box (Title & Icon) */}
               <div className="w-full md:w-1/2 p-6 lg:p-10 flex flex-col justify-center">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-8 h-[2px] bg-[#122017]" />
-                  <h2 className="h2-surtitre text-[#122017]">
+                  <div className="w-8 h-[2px] bg-[#0D1B2A]" />
+                  <h2 className="h2-surtitre text-[#0D1B2A]">
                     {t("Risques et Conformité", "Risk and Compliance")}
                   </h2>
                 </div>
-                <h3 className="h3-section text-[#122017] mb-4">
+                <h3 className="h3-section text-[#0D1B2A] mb-4">
                   {t(
                     "Des processus fiabilisés au service de la conformité réglementaire.",
                     "Reliable processes serving regulatory compliance."
                   )}
                 </h3>
-                <p className="text-[#122017]/90 text-[0.95rem] leading-[1.6]">
+                <p className="text-[#0D1B2A]/90 text-[0.95rem] leading-[1.6]">
                   {t(
                     "Appui opérationnel aux équipes risques et conformité dans le traitement, le contrôle et la fiabilisation des dossiers sensibles, dans le respect des procédures internes et des exigences réglementaires applicables.",
                     "Operational support to risk and compliance teams in the processing, control and reliability of sensitive files, in compliance with internal procedures and applicable regulatory requirements."
@@ -235,7 +235,7 @@ export default function VosBesoinsPage() {
                   <svg className="w-4 h-4 text-[#8B6240] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
-                  <h4 className="h4-titre text-[#122017]">{item}</h4>
+                  <h4 className="h4-titre text-[#0D1B2A]">{item}</h4>
                 </div>
               ))}
             </div>
@@ -294,12 +294,12 @@ export default function VosBesoinsPage() {
           {/* Text */}
           <div className="w-full flex flex-col">
             <div className="flex items-center gap-4 mb-10">
-              <div className="w-8 h-[2px] bg-[#122017]" />
-              <h2 className="h2-surtitre text-[#122017]">
+              <div className="w-8 h-[2px] bg-[#0D1B2A]" />
+              <h2 className="h2-surtitre text-[#0D1B2A]">
                 {t("Gestion de Patrimoine et CGP", "Wealth Management and IFA")}
               </h2>
             </div>
-            <p className="p-2 text-[#122017]/90 mb-8 max-w-3xl">
+            <p className="p-2 text-[#0D1B2A]/90 mb-8 max-w-3xl">
               {t(
                 "Appui opérationnel aux cabinets de gestion de patrimoine, family offices et structures patrimoniales dans le traitement, la préparation et le suivi administratif des dossiers clients.",
                 "Operational support to wealth management firms, family offices and wealth structures in the processing, preparation and administrative follow-up of client files."
@@ -322,7 +322,7 @@ export default function VosBesoinsPage() {
                 t("Suivi des opérations patrimoniales dans le respect des procédures internes", "Follow-up of wealth operations in compliance with internal procedures"),
               ].map((item, i) => (
                 <div key={i} className="flex flex-col items-center justify-center text-center bg-[#F8F9FA] border border-black/5 rounded-xl p-5 hover:shadow-xl transition-all h-full">
-                  <h4 className="h4-titre text-[#122017]">
+                  <h4 className="h4-titre text-[#0D1B2A]">
                     {item}
                   </h4>
                 </div>
@@ -374,7 +374,7 @@ export default function VosBesoinsPage() {
 
           {/* Bottom Details */}
           <div className="relative z-10 w-full py-8 px-8 lg:pl-[16%] lg:pr-12">
-            <h3 className="text-[#122017] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-6">
+            <h3 className="text-[#0D1B2A] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-6">
               {t("Périmètre d'intervention", "Scope of intervention")}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 gap-x-6">
@@ -395,7 +395,7 @@ export default function VosBesoinsPage() {
                 t("Étude de besoins spécifiques non listés dans les rubriques précédentes", "Study of specific needs not listed in previous sections"),
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <svg className="w-4 h-4 text-[#122017] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <svg className="w-4 h-4 text-[#0D1B2A] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
                   <h4 className="h4-titre text-white">{item}</h4>

@@ -19,7 +19,7 @@ export default function NousConnaitrePage() {
             alt="Nous Connaître"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/90 to-[#0D1B2A]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/60 to-[#0D1B2A]/30" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
@@ -148,11 +148,11 @@ export default function NousConnaitrePage() {
                   },
                 ].map((pilier, i) => (
                   <div key={i} className="flex items-start gap-4">
-                    <div className="w-9 h-9 rounded-full border border-[#122017] bg-white flex items-center justify-center shrink-0 shadow-sm">
-                      <pilier.icon className="text-[#122017]" size={16} strokeWidth={1.5} />
+                    <div className="w-9 h-9 rounded-full border border-[#0D1B2A] bg-white flex items-center justify-center shrink-0 shadow-sm">
+                      <pilier.icon className="text-[#0D1B2A]" size={16} strokeWidth={1.5} />
                     </div>
                     <div>
-                      <h4 className="h4-titre text-[#122017] mb-1">{pilier.title}</h4>
+                      <h4 className="h4-titre text-[#0D1B2A] mb-1">{pilier.title}</h4>
                       <p className="p-3 !text-[#4A4E5A] !text-[0.85rem]">{pilier.desc}</p>
                     </div>
                   </div>
@@ -210,7 +210,7 @@ export default function NousConnaitrePage() {
                   {t("Gage de qualité", "Quality assurance")}
                 </h2>
               </div>
-              <h3 className="h3-section text-[#122017] pr-4">
+              <h3 className="h3-section text-[#0D1B2A] pr-4">
                 {t("ACCRÉDITATIONS, CERTIFICATIONS ET CADRE D'INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS AND INTERVENTION FRAMEWORK")}
               </h3>
               <div className="p-2 text-[#4A4E5A] mb-10 max-w-xl space-y-4">
@@ -238,7 +238,7 @@ export default function NousConnaitrePage() {
                     "MENUA CONSULTING does not carry out regulated activities in its own name. The firm provides specialized operational resources integrated into its clients' approval and supervision frameworks."
                   )}
                 </p>
-                <p className="font-bold text-[#122017]">
+                <p className="font-bold text-[#0D1B2A]">
                   {t(
                     "Ce dispositif garantit la conformité, la qualité des opérations et la sécurité des processus.",
                     "This system guarantees compliance, operational quality, and process security."
@@ -282,7 +282,7 @@ export default function NousConnaitrePage() {
                 </h2>
               </div>
               
-              <h3 className="h3-section text-[#122017] mb-3">
+              <h3 className="h3-section text-[#0D1B2A] mb-3">
                 {t("La presidente", "The President")}
               </h3>
               
@@ -292,7 +292,7 @@ export default function NousConnaitrePage() {
               
               {/* Body Text */}
               <div className="p-2 text-[#4A4E5A] space-y-4">
-                <p className="text-[#122017] font-bold">
+                <p className="text-[#0D1B2A] font-bold">
                   {t(
                     "Rosette Fouelefack est directrice générale de MENUA CONSULTING.",
                     "Rosette Fouelefack is the chief executive officer of MENUA CONSULTING."

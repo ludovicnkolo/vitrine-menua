@@ -18,7 +18,7 @@ export default function NosSolutionsPage() {
             alt="Nos Solutions"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/90 to-[#0D1B2A]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/60 to-[#0D1B2A]/30" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
@@ -57,8 +57,8 @@ export default function NosSolutionsPage() {
             <div className="flex flex-col">
       
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[2px] bg-[#122017]" />
-                <h2 className="h2-surtitre text-[#122017]">
+                <div className="w-8 h-[2px] bg-[#0D1B2A]" />
+                <h2 className="h2-surtitre text-[#0D1B2A]">
                   {t("Urgence", "Emergency")}
                 </h2>
               </div>
@@ -80,7 +80,7 @@ export default function NosSolutionsPage() {
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#0D1B2A] shrink-0 mt-2" />
-                    <h4 className="h4-titre text-[#122017]">{item}</h4>
+                    <h4 className="h4-titre text-[#0D1B2A]">{item}</h4>
                   </div>
                 ))}
               </div>
@@ -111,12 +111,12 @@ export default function NosSolutionsPage() {
               <div className="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
             
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-8 h-[2px] bg-[#122017]" />
-                  <h2 className="h2-surtitre text-[#122017]">
+                  <div className="w-8 h-[2px] bg-[#0D1B2A]" />
+                  <h2 className="h2-surtitre text-[#0D1B2A]">
                     {t("Durée", "Duration")}
                   </h2>
                 </div>
-                <p className="text-[#122017]/90 text-[0.95rem] leading-[1.6]">
+                <p className="text-[#0D1B2A]/90 text-[0.95rem] leading-[1.6]">
                   MENUA CONSULTING {t(
                     "propose des dispositifs d'externalisation flexibles, adaptés au traitement d'un nombre défini de dossiers comme à la gestion récurrente d'un portefeuille plus important.",
                     "offers flexible outsourcing solutions, adapted to the processing of a defined number of files as well as the recurring management of a larger portfolio."
@@ -149,7 +149,7 @@ export default function NosSolutionsPage() {
                   <svg className="w-4 h-4 text-[#8B6240] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
-                  <h4 className="h4-titre text-[#122017]">{item}</h4>
+                  <h4 className="h4-titre text-[#0D1B2A]">{item}</h4>
                 </div>
               ))}
             </div>
@@ -202,7 +202,7 @@ export default function NosSolutionsPage() {
                 t("Une organisation permettant d'assurer la continuité du traitement en cas d'absence ou de variation d'activité", "An organization ensuring processing continuity in case of absence or variation in activity"),
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <svg className="w-4 h-4 text-[#122017] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <svg className="w-4 h-4 text-[#0D1B2A] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
                   <h4 className="h4-titre text-white">{item}</h4>

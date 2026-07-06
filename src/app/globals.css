@@ -31,7 +31,7 @@
     font-weight: 400;
     font-size: 1rem;
     line-height: 1.49;
-    color: #223930;
+    color: #0D1B2A;
     background-color: #F5F2EB;
   }
 
@@ -42,7 +42,7 @@
     font-size: clamp(1.75rem, 4vw, 2.44rem);
     line-height: 1;
     letter-spacing: -0.01em;
-    color: #122017;
+    color: #0D1B2A;
     margin-top: 0;
     margin-bottom: 0.25rem;
   }
@@ -54,7 +54,7 @@
     font-size: clamp(1.35rem, 2.5vw, 1.953rem);
     line-height: 1;
     letter-spacing: -0.01em;
-    color: #122017;
+    color: #0D1B2A;
     margin-top: 0;
     margin-bottom: 0.25rem;
   }
@@ -65,7 +65,7 @@
     font-weight: 700;
     font-size: clamp(1.2rem, 1.8vw, 1.5625rem);
     line-height: 1;
-    color: #122017;
+    color: #0D1B2A;
     margin-top: 0;
     margin-bottom: 0.25rem;
   }
@@ -76,7 +76,7 @@
     font-weight: 700;
     font-size: 1.25rem;
     line-height: 1;
-    color: #122017;
+    color: #0D1B2A;
     margin-top: 0;
     margin-bottom: 0.25rem;
   }
@@ -87,7 +87,7 @@
     font-weight: 700;
     font-size: 1rem;
     line-height: 1;
-    color: #122017;
+    color: #0D1B2A;
     margin-top: 0;
     margin-bottom: 0.25rem;
   }
@@ -98,7 +98,7 @@
     font-weight: 700;
     font-size: 0.8rem;
     line-height: 1;
-    color: #122017;
+    color: #0D1B2A;
     margin-top: 0;
     margin-bottom: 0.25rem;
   }
@@ -132,12 +132,12 @@
        ══════════════════════════════════════════════════════════ */
 
     /* 1. VERT SAPIN (Primary) */
-    --menua-navy:        #223930;
-    --menua-navy-night:  #122017;
-    --menua-navy-light:  #2C493D;
+    --menua-navy:        #0D1B2A;
+    --menua-navy-night:  #0D1B2A;
+    --menua-navy-light:  #0D1B2A;
 
     /* 2. OR / ACCENT */
-    --menua-gold:        #122017;
+    --menua-gold:        #0D1B2A;
     --menua-gold-light:  #E0D6C8;
     --menua-gold-pale:   #F5F2EB;
 
@@ -148,19 +148,19 @@
     /* 4. FONDS */
     --menua-bg:          #FFFFFF;
     --menua-bg-warm:     #FAF9F6;
-    --menua-bg-deep:     #122017;
+    --menua-bg-deep:     #0D1B2A;
 
     /* 5. TEXTES */
-    --menua-text:        #223930;
-    --menua-text-light:  #3A5448;
+    --menua-text:        #0D1B2A;
+    --menua-text-light:  #0D1B2A;
     --menua-text-muted:  #6B7794;
     --menua-text-white:  #FFFFFF;
 
     /* 6. BORDURES & LIENS */
     --menua-border:      #E0D6C8;
     --menua-border-warm: #E0D6C8;
-    --menua-link:        #223930;
-    --menua-link-hover:  #122017;
+    --menua-link:        #0D1B2A;
+    --menua-link-hover:  #0D1B2A;
 
     /* 7. NUNITO SANS token */
     --font-body: 'Standard Ampersand', var(--font-playfair), "Playfair Display", serif;
@@ -185,7 +185,7 @@
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.49;
-  color: #223930;
+  color: #0D1B2A;
 }
 
 /* Force inheritance in white-text containers (hero sections, dark cards) */

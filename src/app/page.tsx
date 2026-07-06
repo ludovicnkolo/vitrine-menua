@@ -15,7 +15,7 @@ export default function Home() {
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
           <img src="/office-lounge.jpg" alt="Hero" className="w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/90 to-[#0D1B2A]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/60 to-[#0D1B2A]/30" />
         </div>
 
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
@@ -35,7 +35,7 @@ export default function Home() {
                 </p>
               </div>
               <div className="flex items-center gap-3 text-white text-[0.95rem] mb-10 font-medium">
-                <Globe className="text-[#122017]" size={20} />
+                <Globe className="text-[#0D1B2A]" size={20} />
                 <span>{t("Interventions en français et en anglais", "Interventions in French and English")}</span>
               </div>
               <Link href="/nous-contacter" className="link-action">
@@ -168,8 +168,8 @@ export default function Home() {
                   },
                 ].map((pilier, i) => (
                   <div key={i} className="flex items-start gap-4">
-                    <div className="w-9 h-9 rounded-full border border-[#122017] bg-white flex items-center justify-center shrink-0 shadow-sm">
-                      <pilier.icon className="text-[#122017]" size={16} strokeWidth={1.5} />
+                    <div className="w-9 h-9 rounded-full border border-[#0D1B2A] bg-white flex items-center justify-center shrink-0 shadow-sm">
+                      <pilier.icon className="text-[#0D1B2A]" size={16} strokeWidth={1.5} />
                     </div>
                     <div>
                       <h4 className="h4-titre text-[#0D1B2A] mb-1">{pilier.title}</h4>
@@ -251,7 +251,7 @@ export default function Home() {
                     <span>|</span>
                     <span>{news.tag}</span>
                   </div>
-                  <h3 className="text-[#122017] text-[1.15rem] font-bold leading-[1.4] mb-8">{news.title}</h3>
+                  <h3 className="text-[#0D1B2A] text-[1.15rem] font-bold leading-[1.4] mb-8">{news.title}</h3>
                   <Link href="/actualites" className="link-action text-[#0D1B2A] mt-auto text-[0.8rem] gap-2">
                     {t("LIRE LA SUITE", "READ MORE")} <ArrowRight size={14} />
                   </Link>

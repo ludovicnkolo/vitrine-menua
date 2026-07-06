@@ -36,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`${playfair.variable} font-sans min-h-screen flex flex-col antialiased bg-[#F5F2EB] text-[#223930]`}>
+      <body className={`${playfair.variable} font-sans min-h-screen flex flex-col antialiased bg-[#F5F2EB] text-[#0D1B2A]`}>
         <LanguageProvider>
           <Header />
           {children}

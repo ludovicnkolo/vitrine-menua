@@ -6,7 +6,7 @@ export default function MentionsLegales() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full bg-[#223930] text-white pt-24">
+    <main className="flex flex-col w-full bg-[#0D1B2A] text-white pt-24">
       <section className="px-8 py-24">
         <div className="max-w-3xl mx-auto">
           <div className="text-[#E0D6C8] text-[0.65rem] tracking-[0.05em] uppercase font-semibold text-[14px] mb-4">
@@ -21,7 +21,7 @@ export default function MentionsLegales() {
               "Le présent site est édité par MENUA CONSULTING, société par actions simplifiée unipersonnelle (SASU), au capital social de 15 000 €, dont le siège social est situé au 92 rue des Pyrénées – 75020 Paris, immatriculée au Registre du commerce et des sociétés de Paris sous le numéro 993 749 779 R.C.S. Paris.",
               "This site is published by MENUA CONSULTING, a simplified single-shareholder joint-stock company (SASU), with a share capital of €15,000, headquartered at 92 rue des Pyrénées – 75020 Paris, registered with the Paris Trade and Companies Register under number 993 749 779 R.C.S. Paris."
             )}</p>
-            <div className="bg-[#223930] rounded-lg p-8 space-y-2">
+            <div className="bg-[#0D1B2A] rounded-lg p-8 space-y-2">
               <div><span className="text-gray-500 text-xs uppercase tracking-wider">SIREN :</span> <span className="text-white font-medium">993 749 779</span></div>
               <div><span className="text-gray-500 text-xs uppercase tracking-wider">SIRET :</span> <span className="text-white font-medium">993 749 779 00019</span></div>
               <div><span className="text-gray-500 text-xs uppercase tracking-wider">{t("TVA intracommunautaire","VAT number")} :</span> <span className="text-white font-medium">FR36993749779</span></div>

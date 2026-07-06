@@ -86,7 +86,7 @@ export default function PolitiqueConfidentialite() {
   ];
 
   return (
-    <main className="flex flex-col w-full bg-[#223930] text-white pt-24">
+    <main className="flex flex-col w-full bg-[#0D1B2A] text-white pt-24">
       <section className="px-8 py-24">
         <div className="max-w-3xl mx-auto">
           <div className="text-[#E0D6C8] text-[0.65rem] tracking-[0.05em] uppercase font-semibold text-[14px] mb-4">

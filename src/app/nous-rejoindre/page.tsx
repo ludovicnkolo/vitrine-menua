@@ -13,7 +13,7 @@ export default function NousRejoindre() {
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
           <img src="/nous-contacter-hero.jpg" alt="Nous Rejoindre" className="w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/90 to-[#0D1B2A]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/60 to-[#0D1B2A]/30" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">

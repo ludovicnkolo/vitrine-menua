@@ -49,8 +49,9 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 1. PRÉSENTATION DU CABINET ══ */}
-      <section id="presentation-du-cabinet" className="mt-12 bg-[#1A0E08] ">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
+      <section id="presentation-du-cabinet" className="relative mt-12 py-12">
+        <div className="absolute inset-y-0 left-[max(1rem,calc(50vw-550px))] w-[calc(100%-2rem)] lg:w-[850px] bg-[#1A0E08] z-0 rounded-3xl shadow-sm"></div>
+        <div className="relative z-10 max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
 
             {/* Text left */}
@@ -92,8 +93,9 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 2. NOTRE APPROCHE ══ */}
-      <section id="notre-approche" className="mt-12 bg-[#e4dcf7]">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
+      <section id="notre-approche" className="relative mt-12 py-12">
+        <div className="absolute inset-y-0 right-[max(1rem,calc(50vw-550px))] w-[calc(100%-2rem)] lg:w-[850px] bg-[#e4dcf7] z-0 rounded-3xl shadow-sm"></div>
+        <div className="relative z-10 max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
 
             {/* Image à gauche */}
@@ -199,8 +201,9 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 4. ACCRÉDITATIONS & CERTIFICATIONS ══ */}
-      <section id="certifications" className="mt-12 bg-white w-full">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
+      <section id="certifications" className="relative mt-12 py-12 w-full">
+        <div className="absolute inset-y-0 left-[max(1rem,calc(50vw-550px))] w-[calc(100%-2rem)] lg:w-[850px] bg-white z-0 rounded-3xl shadow-sm"></div>
+        <div className="relative z-10 max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             
             <div className="flex flex-col">

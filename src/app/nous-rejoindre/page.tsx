@@ -13,7 +13,7 @@ export default function NousRejoindre() {
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
           <img src="/nous-contacter-hero.jpg" alt="Nous Rejoindre" className="w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#304239]/90 to-[#304239]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/90 to-[#0D1B2A]/70" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
@@ -239,7 +239,7 @@ export default function NousRejoindre() {
               </label>
 
               <div className="flex justify-end">
-                <button type="submit" className="inline-flex items-center gap-3 bg-[#304239] text-white border border-[#304239] px-8 py-3.5 text-xs font-bold tracking-[0.1em] uppercase hover:bg-transparent hover:text-[#304239] transition-colors rounded-sm shadow-md w-fit">
+                <button type="submit" className="inline-flex items-center gap-3 bg-[#0D1B2A] text-white border border-[#0D1B2A] px-8 py-3.5 text-xs font-bold tracking-[0.1em] uppercase hover:bg-transparent hover:text-[#0D1B2A] transition-colors rounded-sm shadow-md w-fit">
                   {t("Envoyer ma candidature", "Send my application")} <ArrowRight size={16} />
                 </button>
               </div>

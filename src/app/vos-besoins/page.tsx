@@ -18,7 +18,7 @@ export default function VosBesoinsPage() {
             alt="Vos Besoins"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#304239]/90 to-[#304239]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/90 to-[#0D1B2A]/70" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
@@ -87,7 +87,7 @@ export default function VosBesoinsPage() {
                   t("Suivi des indicateurs", "Indicator tracking"),
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#304239] shrink-0 mt-2" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#0D1B2A] shrink-0 mt-2" />
                     <h4 className="h4-titre text-[#122017]">{item}</h4>
                   </div>
                 ))}
@@ -244,7 +244,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ══ 4. SUPPORT COMPTABLE & DATA ══ */}
-      <section id="support-comptable-data" className="mt-12 bg-[#304239] w-full py-12 ">
+      <section id="support-comptable-data" className="mt-12 bg-[#0D1B2A] w-full py-12 ">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start gap-16">
           {/* Text */}
           <div className="w-full flex flex-col">

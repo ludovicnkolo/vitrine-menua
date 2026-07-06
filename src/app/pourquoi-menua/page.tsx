@@ -17,7 +17,7 @@ export default function PourquoiMenuaPage() {
             alt="Pourquoi Menua"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#304239]/90 to-[#304239]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/90 to-[#0D1B2A]/70" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
@@ -165,12 +165,12 @@ export default function PourquoiMenuaPage() {
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start">
           <div className="w-full flex flex-col">
             <div className="flex items-center gap-4 mb-10">
-              <div className="w-8 h-[2px] bg-[#304239]" />
-              <h2 className="h2-surtitre text-[#304239]">
+              <div className="w-8 h-[2px] bg-[#0D1B2A]" />
+              <h2 className="h2-surtitre text-[#0D1B2A]">
                 {t("Engagements", "Commitments")}
               </h2>
             </div>
-            <p className="p-2 text-[#304239]/90 mb-8 max-w-3xl">
+            <p className="p-2 text-[#0D1B2A]/90 mb-8 max-w-3xl">
               MENUA CONSULTING {t(
                 "s'engage sur l'essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
                 "commits to the essentials: quality of deliverables, respect of deadlines, traceability of operations and clear communication with your teams."
@@ -191,7 +191,7 @@ export default function PourquoiMenuaPage() {
                 t("Respect de vos exigences opérationnelles, qualité et réglementaires", "Respect of your operational, quality and regulatory requirements"),
               ].map((item, i) => (
                 <div key={i} className="flex flex-col items-center justify-center text-center bg-white/50 border border-black/5 rounded-xl p-5 hover:shadow-xl transition-all h-full">
-                  <h4 className="h4-titre text-[#304239]">
+                  <h4 className="h4-titre text-[#0D1B2A]">
                     {item}
                   </h4>
                 </div>

@@ -7,7 +7,7 @@ export default function CallToAction() {
   const { t } = useLanguage();
 
   return (
-    <section className="mt-12 w-full relative overflow-hidden bg-[#304239] py-5">
+    <section className="mt-12 w-full relative overflow-hidden bg-[#0D1B2A] py-5">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center justify-between gap-10 relative z-10">
         <div className="flex flex-col text-center lg:text-left">
           <h3 className="h3-section mb-0">

@@ -13,7 +13,7 @@ export default function ActualitesPage() {
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
           <img
-            src="/actualites_hero.png"
+            src="/actualite.png"
             alt="Actualités"
             className="w-full h-full object-cover object-center"
             onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
@@ -62,11 +62,11 @@ export default function ActualitesPage() {
             
             <div className="bg-white rounded-2xl shadow-sm border border-[#E0D6C8]/50 overflow-hidden flex flex-col md:flex-row hover:shadow-md transition-shadow">
               <div className="w-full md:w-1/2 h-[300px] md:h-auto">
-                <img src="/trust-circle.jpg" alt="A la une" className="w-full h-full object-cover" />
+                <img src="/digitalisation.jpg" alt="A la une" className="w-full h-full object-cover" />
               </div>
               <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
                 <p className="text-[#D9B151] text-[0.75rem] font-bold tracking-[0.1em] uppercase mb-4">
-                  RÉGLEMENTATION • 18 MAI 2024
+                  DIGITALISATION • 18 MAI 2024
                 </p>
                 <h4 className="h4-titre text-[#122017] mb-4">
                   Digitalisation des processus back office : enjeux et bonnes pratiques
@@ -109,14 +109,14 @@ export default function ActualitesPage() {
               {/* Card 1 */}
               <div className="flex flex-col bg-white rounded-xl overflow-hidden border border-[#E0D6C8]/50 shadow-sm hover:shadow-md transition-all group">
                 <div className="h-[200px] w-full overflow-hidden">
-                  <img src="/office-lounge.jpg" alt="Article 1" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src="/digitalisation.jpg" alt="Article 1" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-6 flex flex-col flex-1">
                   <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.1em] uppercase mb-3">
-                    COMPTABILITÉ • 08 MAI 2024
+                    DIGITALISATION • 12 MAI 2024
                   </p>
                   <h4 className="h4-titre text-[#122017] mb-3 group-hover:text-[#8B6240] transition-colors">
-                    Réforme des normes comptables 2024 : ce que les entreprises doivent anticiper
+                    {t("Digitalisation des processus back office : enjeux et bonnes pratiques", "Digitalization of back office processes: challenges and best practices")}
                   </h4>
                   <p className="text-[#122017]/75 text-[0.85rem] leading-[1.6] mb-6 flex-1">
                     Panorama des évolutions majeures et de leurs impacts sur le reporting financier et la consolidation.
@@ -129,14 +129,14 @@ export default function ActualitesPage() {
               {/* Card 2 */}
               <div className="flex flex-col bg-white rounded-xl overflow-hidden border border-[#E0D6C8]/50 shadow-sm hover:shadow-md transition-all group">
                 <div className="h-[200px] w-full overflow-hidden">
-                  <img src="/presentation_cabinet_desk.png" alt="Article 2" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src="/news-2.jpg" alt="Article 2" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-6 flex flex-col flex-1">
                   <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.1em] uppercase mb-3">
-                    RÉGLEMENTATION • 02 MAI 2024
+                    RÉGLEMENTATION • 06 MAI 2024
                   </p>
                   <h4 className="h4-titre text-[#122017] mb-3 group-hover:text-[#8B6240] transition-colors">
-                    LCB-FT : renforcer la vigilance dans un contexte réglementaire en mutation
+                    {t("Conformité réglementaire : les évolutions dès à anticiper en 2025", "Regulatory compliance: key developments to anticipate in 2025")}
                   </h4>
                   <p className="text-[#122017]/75 text-[0.85rem] leading-[1.6] mb-6 flex-1">
                     Focus sur les dernières attentes des autorités et les bonnes pratiques pour sécuriser vos dispositifs.
@@ -149,14 +149,14 @@ export default function ActualitesPage() {
               {/* Card 3 */}
               <div className="flex flex-col bg-white rounded-xl overflow-hidden border border-[#E0D6C8]/50 shadow-sm hover:shadow-md transition-all group">
                 <div className="h-[200px] w-full overflow-hidden">
-                  <img src="/meeting.jpg" alt="Article 3" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src="/news-3.jpg" alt="Article 3" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-6 flex flex-col flex-1">
                   <p className="text-[#D9B151] text-[0.7rem] font-bold tracking-[0.1em] uppercase mb-3">
-                    DIGITAL ET OUTILS • 25 AVRIL 2024
+                    REPORTING • 28 MAI 2024
                   </p>
                   <h4 className="h4-titre text-[#122017] mb-3 group-hover:text-[#8B6240] transition-colors">
-                    Automatisation et data : leviers de performance pour le middle office
+                    {t("Reporting financier : améliorer la qualité des données opérationnelles", "Financial reporting: improving the quality of operational data")}
                   </h4>
                   <p className="text-[#122017]/75 text-[0.85rem] leading-[1.6] mb-6 flex-1">
                     Comment les outils digitaux et la data structurée optimisent les processus et la prise de décision.

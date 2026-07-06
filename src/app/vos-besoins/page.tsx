@@ -14,7 +14,7 @@ export default function VosBesoinsPage() {
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
           <img
-            src="/vos_besoins_hero.png"
+            src="/besoins.png"
             alt="Vos Besoins"
             className="w-full h-full object-cover object-center"
           />
@@ -96,7 +96,7 @@ export default function VosBesoinsPage() {
             {/* Image right */}
             <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="/finRepor.jpg"
+                src="/finance.png"
                 alt="Finance et Reporting"
                 className="w-full h-full object-cover"
                 onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}

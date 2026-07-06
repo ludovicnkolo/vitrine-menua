@@ -88,7 +88,7 @@ export default function Home() {
           <h3 className="h3-section">
             {t("Des expertises opérationnelles, au cœur de votre activité.", "Operational expertise, at the heart of your activity.")}
           </h3>
-          <p className="p-4 mb-10">
+          <p className="p-2 mb-10">
             {t("Un appui ciblé pour chaque fonction de votre organisation.", "Targeted support for each function of your organization.")}
           </p>
 
@@ -135,7 +135,7 @@ export default function Home() {
               <h3 className="h3-section text-[#1A0E08]">
                 {t("Une approche 100% opérationnelle, intégrée à vos process.", "A 100% operational approach, integrated into your processes.")}
               </h3>
-              <p className="text-[#4A4E5A] text-[0.9rem] leading-[1.7] mb-8 italic">
+              <p className="p-2 !text-[#4A4E5A] mb-8">
                 {t(
                   "Nous ne sommes pas des consultants. Nous sommes les bras et l'expertise qui exécutent.",
                   "We are not consultants. We are the hands and expertise that execute."
@@ -167,7 +167,7 @@ export default function Home() {
                     </div>
                     <div>
                       <h4 className="h4-titre text-[#1A0E08] mb-1">{pilier.title}</h4>
-                      <p className="text-[#4A4E5A] text-[0.8rem] leading-[1.6]">{pilier.desc}</p>
+                      <p className="p-3 !text-[#4A4E5A] !text-[0.85rem]">{pilier.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -206,7 +206,7 @@ export default function Home() {
                   <h4 className="h4-titre text-white mb-3 whitespace-pre-line">
                     {item.title}
                   </h4>
-                  <p className="p-3 text-white/90">{item.desc}</p>
+                  <p className="p-3">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -231,7 +231,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mb-16">
             {[
-              { img: "/news-1.jpg", tag: "DIGITALISATION", date: "12 MAI 2024", title: t("Digitalisation des processus back office : enjeux et bonnes pratiques", "Digitalization of back office processes: challenges and best practices") },
+              { img: "/digitalisation.jpg", tag: "DIGITALISATION", date: "12 MAI 2024", title: t("Digitalisation des processus back office : enjeux et bonnes pratiques", "Digitalization of back office processes: challenges and best practices") },
               { img: "/news-2.jpg", tag: "RÉGLEMENTATION", date: "06 MAI 2024", title: t("Conformité réglementaire : les évolutions dès à anticiper en 2025", "Regulatory compliance: key developments to anticipate in 2025") },
               { img: "/news-3.jpg", tag: "REPORTING", date: "28 MAI 2024", title: t("Reporting financier : améliorer la qualité des données opérationnelles", "Financial reporting: improving the quality of operational data") },
             ].map((news, i) => (

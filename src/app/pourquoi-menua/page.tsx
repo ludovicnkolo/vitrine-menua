@@ -13,7 +13,7 @@ export default function PourquoiMenuaPage() {
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
           <img
-            src="/pourquoi_menua_hero.png"
+            src="/pourquoi.png"
             alt="Pourquoi Menua"
             className="w-full h-full object-cover object-center"
           />
@@ -68,7 +68,7 @@ export default function PourquoiMenuaPage() {
               {/* Right Image — negative mt to create upward offset */}
               <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl">
                 <img
-                  src="/office-lounge.jpg"
+                  src="/benefice.png"
                   alt="Bénéfices"
                   className="w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
@@ -136,7 +136,7 @@ export default function PourquoiMenuaPage() {
               {/* Left Image — negative mt to create upward offset */}
               <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
                 <img
-                  src="/meeting.jpg"
+                  src="/difference.png"
                   alt="Différenciation"
                   className="w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}

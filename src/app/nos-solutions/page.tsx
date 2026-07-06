@@ -14,7 +14,7 @@ export default function NosSolutionsPage() {
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
           <img
-            src="/nos_solutions_hero.png"
+            src="/solution.png"
             alt="Nos Solutions"
             className="w-full h-full object-cover object-center"
           />
@@ -88,7 +88,7 @@ export default function NosSolutionsPage() {
             {/* Image right */}
             <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="/trust-circle.jpg"
+                src="/urgence.png"
                 alt="Urgence"
                 className="w-full h-full object-cover"
                 onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
@@ -124,7 +124,7 @@ export default function NosSolutionsPage() {
               {/* Right Image — negative mt to create upward offset */}
               <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl">
                 <img
-                  src="/office-lounge.jpg"
+                  src="/duree.png"
                   alt="Durée"
                   className="w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
@@ -165,7 +165,7 @@ export default function NosSolutionsPage() {
               {/* Left Image — negative mt to create upward offset */}
               <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
                 <img
-                  src="/meeting.jpg"
+                  src="/volume.png"
                   alt="Volume"
                   className="w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}

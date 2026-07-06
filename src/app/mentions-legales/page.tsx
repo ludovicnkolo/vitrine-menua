@@ -39,7 +39,7 @@ export default function MentionsLegales() {
 
             <div>
               <h2 className="font-serif text-xl font-bold text-white mb-4">{t("Hébergement","Hosting")}</h2>
-              <p className="text-gray-500 italic">{t("Le site est hébergé par : (à compléter ultérieurement)","The site is hosted by: (to be completed later)")}</p>
+              <p className="p-2 !text-gray-500">{t("Le site est hébergé par : (à compléter ultérieurement)","The site is hosted by: (to be completed later)")}</p>
             </div>
 
             <div>

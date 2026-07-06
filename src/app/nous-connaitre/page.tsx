@@ -109,9 +109,7 @@ export default function NousConnaitrePage() {
                   {t("Notre approche", "Our approach")}
                 </h2>
               </div>
-              <h2 className="text-[#122017] text-2xl lg:text-[1.8rem] font-bold leading-[1.2] mb-6">
-                {t("NOTRE APPROCHE", "OUR APPROACH")}
-              </h2>
+          
 
               <div className="p-2 text-[#4A4E5A] mb-8 space-y-3">
                 <p>
@@ -153,7 +151,7 @@ export default function NousConnaitrePage() {
                     </div>
                     <div>
                       <h4 className="h4-titre text-[#122017] mb-1">{pilier.title}</h4>
-                      <p className="text-[#4A4E5A] text-[0.8rem] leading-[1.6]">{pilier.desc}</p>
+                      <p className="p-3 !text-[#4A4E5A] !text-[0.85rem]">{pilier.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -190,7 +188,7 @@ export default function NousConnaitrePage() {
                   <h4 className="h4-titre text-white mb-1">
                     {step.title}
                   </h4>
-                  <p className="text-white/80 text-[0.85rem] leading-[1.4] font-normal">
+                  <p className="p-3">
                     {step.desc}
                   </p>
                 </div>
@@ -288,7 +286,7 @@ export default function NousConnaitrePage() {
                 {t("La dirigeante", "The Director")}
               </h3>
               
-              <h3 className="text-[#8B6240] text-[1.05rem] mb-10 font-medium italic">
+              <h3 className="p-2 !text-[#8B6240] mb-10">
                 {t("Une direction impliquée au plus près des opérations", "Management closely involved with operations")}
               </h3>
               

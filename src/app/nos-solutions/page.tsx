@@ -48,8 +48,9 @@ export default function NosSolutionsPage() {
         </div>
       </section>
       {/* ══ 1. URGENCE ══ */}
-      <section id="urgence" className="mt-12 bg-white ">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent rounded-2xl py-12">
+      <section id="urgence" className="relative mt-12 py-12">
+        <div className="absolute inset-y-0 left-[max(1rem,calc(50vw-550px))] w-[calc(100%-2rem)] lg:w-[850px] bg-white z-0 rounded-3xl shadow-sm"></div>
+        <div className="relative z-10 max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
             
             {/* Text left */}
@@ -101,9 +102,10 @@ export default function NosSolutionsPage() {
 
       {/* ══ 2. DURÉE ══ */}
       <section id="duree" className="mt-12 w-full max-w-[1100px] mx-auto px-6 lg:px-10 pt-10">
-        <div className="bg-[#e4dcf7] w-full flex flex-col rounded-3xl shadow-lg border border-black/5">
+        <div className="relative w-full flex flex-col rounded-3xl">
+          <div className="absolute inset-y-0 left-0 w-full lg:w-[85%] bg-[#e4dcf7] z-0 rounded-3xl shadow-lg border border-black/5"></div>
           {/* Top Banner */}
-          <div className="w-full border-b border-[#E0D6C8]/50">
+          <div className="relative z-10 w-full border-b border-[#E0D6C8]/50">
             <div className="flex flex-col md:flex-row items-stretch">
               {/* Left Box (Title & Icon) */}
               <div className="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
@@ -134,7 +136,7 @@ export default function NosSolutionsPage() {
           </div>
 
           {/* Bottom Details */}
-          <div className="w-full py-12 px-8 lg:px-12">
+          <div className="relative z-10 w-full py-12 px-8 lg:px-12">
             <div className="w-full">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                 {[
@@ -158,9 +160,10 @@ export default function NosSolutionsPage() {
       </section>
 
       <section id="volume" className="mt-12 w-full max-w-[1100px] mx-auto px-6 lg:px-10 pt-10">
-        <div className="bg-[#8e8478] w-full flex flex-col rounded-3xl shadow-lg border border-black/5">
+        <div className="relative w-full flex flex-col rounded-3xl">
+          <div className="absolute inset-y-0 right-0 w-full lg:w-[85%] bg-[#8e8478] z-0 rounded-3xl shadow-lg border border-black/5"></div>
           {/* Top Banner */}
-          <div className="w-full border-b border-[#E0D6C8]/30">
+          <div className="relative z-10 w-full border-b border-[#E0D6C8]/30">
             <div className="flex flex-col md:flex-row items-stretch">
               {/* Left Image — negative mt to create upward offset */}
               <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
@@ -191,7 +194,7 @@ export default function NosSolutionsPage() {
           </div>
 
           {/* Bottom Details */}
-          <div className="w-full py-12 px-8 lg:px-12">
+          <div className="relative z-10 w-full py-12 px-8 lg:px-12">
             <div className="w-full">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                 {[

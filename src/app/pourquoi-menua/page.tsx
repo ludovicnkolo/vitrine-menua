@@ -45,9 +45,10 @@ export default function PourquoiMenuaPage() {
 
       {/* ══ 1. BÉNÉFICES — Layout as "Risques & Conformité" ══ */}
       <section id="nos-benefices" className="mt-12 w-full max-w-[1100px] mx-auto px-6 lg:px-10 pt-10">
-        <div className="bg-[#e4dcf7] w-full flex flex-col rounded-3xl shadow-lg border border-black/5">
+        <div className="relative w-full flex flex-col rounded-3xl">
+          <div className="absolute inset-y-0 left-0 w-full lg:w-[85%] bg-[#e4dcf7] z-0 rounded-3xl shadow-lg border border-black/5"></div>
           {/* Top Banner */}
-          <div className="w-full border-b border-[#E0D6C8]/50">
+          <div className="relative z-10 w-full border-b border-[#E0D6C8]/50">
             <div className="flex flex-col md:flex-row items-stretch">
               {/* Left Box (Title & Icon) */}
               <div className="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
@@ -78,7 +79,7 @@ export default function PourquoiMenuaPage() {
           </div>
 
           {/* Bottom Details */}
-          <div className="w-full pt-20 pb-14 px-8 lg:px-12">
+          <div className="relative z-10 w-full pt-20 pb-14 px-8 lg:px-12">
             <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-16">
               
               {/* Left Paragraph */}
@@ -129,9 +130,10 @@ export default function PourquoiMenuaPage() {
 
       {/* ══ 2. DIFFÉRENCIATION — Layout as "Risques & Conformité" (Image Left) ══ */}
       <section id="notre-differenciation" className="mt-12 w-full max-w-[1100px] mx-auto px-6 lg:px-10 pt-10">
-        <div className="bg-[#8e8478] w-full flex flex-col rounded-3xl shadow-lg border border-black/5">
+        <div className="relative w-full flex flex-col rounded-3xl">
+          <div className="absolute inset-y-0 right-0 w-full lg:w-[85%] bg-[#8e8478] z-0 rounded-3xl shadow-lg border border-black/5"></div>
           {/* Top Banner */}
-          <div className="w-full border-b border-[#E0D6C8]/30">
+          <div className="relative z-10 w-full border-b border-[#E0D6C8]/30">
             <div className="flex flex-col md:flex-row items-stretch">
               {/* Left Image — negative mt to create upward offset */}
               <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
@@ -162,7 +164,7 @@ export default function PourquoiMenuaPage() {
           </div>
 
           {/* Bottom Details */}
-          <div className="w-full pt-20 pb-14 px-8 lg:px-12">
+          <div className="relative z-10 w-full pt-20 pb-14 px-8 lg:px-12">
             <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-16">
               
               {/* Left Paragraph */}

@@ -106,7 +106,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-[9998] transition-colors duration-300 border-b ${scrolled ? "bg-[#1A0E08]/95 backdrop-blur-md border-white/10 shadow-2xl" : "bg-[#1A0E08] border-transparent"}`}
+        className={`fixed top-0 left-0 w-full z-[9998] transition-colors duration-300 border-b ${scrolled ? "bg-[#304239]/95 backdrop-blur-md border-white/10 shadow-2xl" : "bg-[#304239] border-transparent"}`}
         onMouseLeave={() => setOpenMenu(null)}
       >
       {/* ── TOP BAR ── */}
@@ -164,7 +164,7 @@ export default function Header() {
                 <div className="absolute left-0 top-full pt-0">
                   <div className="bg-white border border-[#E0D6C8]/30 shadow-xl min-w-[280px] py-3">
                     <div className="px-5 py-2 border-b border-[#E0D6C8]/30 mb-2">
-                      <span className="text-[#1A0E08] text-[1.1rem] leading-[1.5rem] font-bold">
+                      <span className="text-[#304239] text-[1.1rem] leading-[1.5rem] font-bold">
                         {menus[key].label}
                       </span>
                     </div>
@@ -174,9 +174,9 @@ export default function Header() {
                           <Link
                             href={link.href}
                             onClick={() => setOpenMenu(null)}
-                            className="flex items-center gap-3 px-5 py-2.5 text-[#1A0E08]/80 hover:text-[#1A0E08] hover:bg-[#F5F2EB]/40 text-[13px] leading-[1rem] transition-colors group"
+                            className="flex items-center gap-3 px-5 py-2.5 text-[#304239]/80 hover:text-[#304239] hover:bg-[#F5F2EB]/40 text-[13px] leading-[1rem] transition-colors group"
                           >
-                            <span className="w-4 h-px bg-[#1A0E08] shrink-0" />
+                            <span className="w-4 h-px bg-[#304239] shrink-0" />
                             {link.label}
                           </Link>
                         </li>
@@ -245,7 +245,7 @@ export default function Header() {
           <nav className="flex-1 flex flex-col px-6 py-4 gap-2">
             {/* Accueil */}
             <div className="border-b border-[#E0D6C8]/30">
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.2rem] font-bold text-[#1A0E08] hover:text-[#E0D6C8] transition-colors">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.2rem] font-bold text-[#304239] hover:text-[#E0D6C8] transition-colors">
                 {t("Accueil", "Home")}
               </Link>
             </div>
@@ -254,7 +254,7 @@ export default function Header() {
               <div key={key} className="flex flex-col border-b border-[#E0D6C8]/30">
                 <button
                   onClick={() => setOpenMobileSubmenu(openMobileSubmenu === key ? null : key)}
-                  className="flex items-center justify-between py-3 text-[1.2rem] font-bold text-[#1A0E08] hover:text-[#E0D6C8] transition-colors text-left"
+                  className="flex items-center justify-between py-3 text-[1.2rem] font-bold text-[#304239] hover:text-[#E0D6C8] transition-colors text-left"
                 >
                   <span>{menus[key].label}</span>
                   <ChevronDown size={18} className={`text-[#E0D6C8] transition-transform ${openMobileSubmenu === key ? "rotate-180" : ""}`} />
@@ -265,7 +265,7 @@ export default function Header() {
                     <Link
                       href={menus[key].href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="text-[#1A0E08] text-[0.95rem] font-bold mb-1"
+                      className="text-[#304239] text-[0.95rem] font-bold mb-1"
                     >
                       {t("Vue d'ensemble", "Overview")}
                     </Link>
@@ -285,12 +285,12 @@ export default function Header() {
             ))}
 
             <div className="border-b border-[#E0D6C8]/30">
-              <Link href="/nous-rejoindre" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#E0D6C8] hover:text-[#1A0E08] transition-colors">
+              <Link href="/nous-rejoindre" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#E0D6C8] hover:text-[#304239] transition-colors">
                 {t("Nous rejoindre", "Join Us")}
               </Link>
             </div>
             <div className="border-b border-[#E0D6C8]/30">
-              <Link href="/nous-contacter" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#1A0E08] hover:text-[#E0D6C8] transition-colors">
+              <Link href="/nous-contacter" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#304239] hover:text-[#E0D6C8] transition-colors">
                 {t("Nous contacter", "Contact Us")}
               </Link>
             </div>
@@ -302,7 +302,7 @@ export default function Header() {
               <button
                 onClick={() => setLang("FR")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
-                  lang === "FR" ? "border-[#1A0E08] text-[#1A0E08]" : "border-[#E0D6C8]/30 text-[#1D2D44]"
+                  lang === "FR" ? "border-[#304239] text-[#304239]" : "border-[#E0D6C8]/30 text-[#1D2D44]"
                 }`}
               >
                 <FlagFR /> FR
@@ -310,7 +310,7 @@ export default function Header() {
               <button
                 onClick={() => setLang("EN")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
-                  lang === "EN" ? "border-[#1A0E08] text-[#1A0E08]" : "border-[#E0D6C8]/30 text-[#1D2D44]"
+                  lang === "EN" ? "border-[#304239] text-[#304239]" : "border-[#E0D6C8]/30 text-[#1D2D44]"
                 }`}
               >
                 <FlagEN /> EN

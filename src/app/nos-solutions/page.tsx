@@ -18,7 +18,7 @@ export default function NosSolutionsPage() {
             alt="Nos Solutions"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A0E08]/90 to-[#1A0E08]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#304239]/90 to-[#304239]/70" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
@@ -79,7 +79,7 @@ export default function NosSolutionsPage() {
                   t("Mise à disposition progressive de ressources pour sécuriser la montée en charge", "Progressive provision of resources to secure ramp-up"),
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#1A0E08] shrink-0 mt-2" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#304239] shrink-0 mt-2" />
                     <h4 className="h4-titre text-[#122017]">{item}</h4>
                   </div>
                 ))}
@@ -103,7 +103,7 @@ export default function NosSolutionsPage() {
       {/* ══ 2. DURÉE ══ */}
       <section id="duree" className="mt-12 w-full max-w-[1100px] mx-auto px-6 lg:px-10 pt-10">
         <div className="relative w-full flex flex-col rounded-3xl">
-          <div className="absolute inset-y-0 left-0 w-full lg:w-[85%] bg-[#e4dcf7] z-0 rounded-3xl shadow-lg border border-black/5"></div>
+          <div className="absolute inset-y-0 left-0 w-full lg:w-[85%] bg-[#CFC9C6] z-0 rounded-3xl shadow-lg border border-black/5"></div>
           {/* Top Banner */}
           <div className="relative z-10 w-full border-b border-[#E0D6C8]/50">
             <div className="flex flex-col md:flex-row items-stretch">
@@ -214,7 +214,7 @@ export default function NosSolutionsPage() {
       </section>
 
       {/* ══ 4. ORGANISATION ══ */}
-      <section id="organisation" className="mt-12 bg-[#1A0E08] w-full py-12">
+      <section id="organisation" className="mt-12 bg-[#304239] w-full py-12">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start">
           <div className="w-full flex flex-col">
             <div className="flex items-center gap-4 mb-10">

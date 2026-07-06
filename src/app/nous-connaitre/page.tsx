@@ -19,7 +19,7 @@ export default function NousConnaitrePage() {
             alt="Nous Connaître"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A0E08]/90 to-[#1A0E08]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#304239]/90 to-[#304239]/70" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
@@ -50,7 +50,7 @@ export default function NousConnaitrePage() {
 
       {/* ══ 1. PRÉSENTATION DU CABINET ══ */}
       <section id="presentation-du-cabinet" className="relative mt-12 py-12">
-        <div className="absolute inset-y-0 left-[max(1rem,calc(50vw-550px))] w-[calc(100%-2rem)] lg:w-[850px] bg-[#1A0E08] z-0 rounded-3xl shadow-sm"></div>
+        <div className="absolute inset-y-0 left-[max(1rem,calc(50vw-550px))] w-[calc(100%-2rem)] lg:w-[850px] bg-[#304239] z-0 rounded-3xl shadow-sm"></div>
         <div className="relative z-10 max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
 
@@ -94,7 +94,7 @@ export default function NousConnaitrePage() {
 
       {/* ══ 2. NOTRE APPROCHE ══ */}
       <section id="notre-approche" className="relative mt-12 py-12">
-        <div className="absolute inset-y-0 right-[max(1rem,calc(50vw-550px))] w-[calc(100%-2rem)] lg:w-[850px] bg-[#e4dcf7] z-0 rounded-3xl shadow-sm"></div>
+        <div className="absolute inset-y-0 right-[max(1rem,calc(50vw-550px))] w-[calc(100%-2rem)] lg:w-[850px] bg-[#CFC9C6] z-0 rounded-3xl shadow-sm"></div>
         <div className="relative z-10 max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
 
@@ -106,8 +106,8 @@ export default function NousConnaitrePage() {
             {/* Texte à droite */}
             <div className="flex flex-col">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[2px] bg-[#1A0E08]" />
-                <h2 className="h2-surtitre text-[#1A0E08]">
+                <div className="w-8 h-[2px] bg-[#304239]" />
+                <h2 className="h2-surtitre text-[#304239]">
                   {t("Notre approche", "Our approach")}
                 </h2>
               </div>
@@ -165,7 +165,7 @@ export default function NousConnaitrePage() {
 
 
       {/* ══ 3. NOTRE MÉTHODOLOGIE — Fond marron foncé, 5 cartes centrées ══ */}
-      <section id="notre-methodologie" className="mt-12 bg-[#1A0E08] w-full py-12">
+      <section id="notre-methodologie" className="mt-12 bg-[#304239] w-full py-12">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start">
           <div className="w-full flex flex-col">
             <div className="flex items-center gap-4 mb-10">
@@ -205,8 +205,8 @@ export default function NousConnaitrePage() {
             
             <div className="flex flex-col">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[2px] bg-[#1A0E08]" />
-                <h2 className="h2-surtitre text-[#1A0E08]">
+                <div className="w-8 h-[2px] bg-[#304239]" />
+                <h2 className="h2-surtitre text-[#304239]">
                   {t("Gage de qualité", "Quality assurance")}
                 </h2>
               </div>
@@ -256,7 +256,7 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ══ 5. NOTRE ÉQUIPE ══ */}
-      <section id="notre-equipe" className="mt-12 bg-[#e4dcf7] w-full py-16 lg:py-24">
+      <section id="notre-equipe" className="mt-12 bg-[#CFC9C6] w-full py-16 lg:py-24">
         <div className="max-w-[1100px] mx-auto px-6 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-12 lg:gap-20 items-center">
             
@@ -276,8 +276,8 @@ export default function NousConnaitrePage() {
             <div className="w-full flex flex-col">
               
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[2px] bg-[#1A0E08]" />
-                <h2 className="h2-surtitre text-[#1A0E08]">
+                <div className="w-8 h-[2px] bg-[#304239]" />
+                <h2 className="h2-surtitre text-[#304239]">
                   {t("NOTRE ÉQUIPE", "OUR TEAM")}
                 </h2>
               </div>

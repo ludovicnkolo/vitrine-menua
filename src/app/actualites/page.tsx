@@ -18,7 +18,7 @@ export default function ActualitesPage() {
             className="w-full h-full object-cover object-center"
             onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A0E08]/90 to-[#1A0E08]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#304239]/90 to-[#304239]/70" />
         </div>
         
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">

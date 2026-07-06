@@ -95,7 +95,7 @@ export default function VosBesoinsPage() {
             </div>
 
             {/* Image right */}
-            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl order-first lg:order-none">
               <img
                 src="/finance.png"
                 alt="Finance et Reporting"
@@ -114,7 +114,7 @@ export default function VosBesoinsPage() {
           <div className="relative z-10 w-full border-b border-[#E0D6C8]/30">
             <div className="flex flex-col md:flex-row items-stretch">
               {/* Left Image — negative mt to create upward offset */}
-              <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
+              <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl">
                 <img
                   src="/conGest.jpg"
                   alt="Contrôle de gestion"
@@ -122,7 +122,7 @@ export default function VosBesoinsPage() {
                   onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
                 />
               </div>
-              <div className="w-full md:w-1/2 p-6 lg:p-10 flex flex-col justify-center order-1 md:order-2">
+              <div className="w-full md:w-1/2 p-6 lg:p-10 flex flex-col justify-center">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-8 h-[2px] bg-white" />
                   <h2 className="h2-surtitre text-white">
@@ -140,31 +140,29 @@ export default function VosBesoinsPage() {
           </div>
 
           {/* Bottom Details */}
-          <div className="relative z-10 w-full py-12 px-8 lg:px-12">
-            <div className="w-full">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
-                {[
-                  t("Suivi budgétaire", "Budget tracking"),
-                  t("Analyse des écarts entre réalisé, budget et prévisionnel", "Variance analysis between actual, budget and forecast"),
-                  t("Tableaux de bord", "Dashboards"),
-                  t("Pilotage de performance", "Performance management"),
-                  t("Suivi des coûts, charges et marges", "Tracking of costs, expenses and margins"),
-                  t("Analyse de rentabilité", "Profitability analysis"),
-                  t("Suivi des indicateurs opérationnels", "Tracking of operational indicators"),
-                  t("Préparation de reportings de gestion", "Preparation of management reporting"),
-                  t("Suivi du chiffre d'affaires et des objectifs", "Tracking of turnover and objectives"),
-                  t("Mise à jour de fichiers de pilotage", "Update of management files"),
-                  t("Consolidation des données de gestion", "Consolidation of management data"),
-                  t("Support aux directions financières et responsables opérationnels", "Support to financial directions and operational managers"),
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    <svg className="w-4 h-4 text-[#D9B151] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <h4 className="h4-titre text-white">{item}</h4>
-                  </div>
-                ))}
-              </div>
+          <div className="relative z-10 w-full py-8 px-8 lg:pl-[16%] lg:pr-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 gap-x-6">
+              {[
+                t("Suivi budgétaire", "Budget tracking"),
+                t("Analyse des écarts entre réalisé, budget et prévisionnel", "Variance analysis between actual, budget and forecast"),
+                t("Tableaux de bord", "Dashboards"),
+                t("Pilotage de performance", "Performance management"),
+                t("Suivi des coûts, charges et marges", "Tracking of costs, expenses and margins"),
+                t("Analyse de rentabilité", "Profitability analysis"),
+                t("Suivi des indicateurs opérationnels", "Tracking of operational indicators"),
+                t("Préparation de reportings de gestion", "Preparation of management reporting"),
+                t("Suivi du chiffre d'affaires et des objectifs", "Tracking of turnover and objectives"),
+                t("Mise à jour de fichiers de pilotage", "Update of management files"),
+                t("Consolidation des données de gestion", "Consolidation of management data"),
+                t("Support aux directions financières et responsables opérationnels", "Support to financial directions and operational managers"),
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <svg className="w-4 h-4 text-[#D9B151] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <h4 className="h4-titre text-white">{item}</h4>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -199,7 +197,7 @@ export default function VosBesoinsPage() {
                 </p>
               </div>
               {/* Right Image — negative mt to create upward offset */}
-              <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl">
+              <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl order-first md:order-none">
                 <img
                   src="/risConfor.jpg"
                   alt="Risques et Conformité"
@@ -211,37 +209,35 @@ export default function VosBesoinsPage() {
           </div>
 
           {/* Bottom Details */}
-          <div className="relative z-10 w-full py-12 px-8 lg:px-12">
-            <div className="w-full">
-              <h3 className="text-[#8B6240] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-10">
-                {t("Périmètre d'intervention", "Scope of intervention")}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
-                {[
-                  "KYC",
-                  "LCB-FT",
-                  "AML",
-                  t("Contrôle documentaire", "Documentary control"),
-                  t("Analyse et complétude des dossiers clients", "Analysis and completeness of client files"),
-                  t("Vérification des pièces justificatives", "Verification of supporting documents"),
-                  t("Entrée en relation client", "Client onboarding"),
-                  t("Revue périodique des dossiers", "Periodic review of files"),
-                  t("Remédiation KYC", "KYC Remediation"),
-                  t("Traitement des alertes de conformité", "Processing of compliance alerts"),
-                  t("Analyse des mouvements inhabituels", "Analysis of unusual movements"),
-                  t("Support aux équipes risques", "Support to risk teams"),
-                  t("Support aux équipes conformité", "Support to compliance teams"),
-                  t("Suivi des procédures internes", "Monitoring of internal procedures"),
-                  t("Préparation de dossiers pour validation par les équipes habilitées", "Preparation of files for validation by authorized teams"),
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    <svg className="w-4 h-4 text-[#8B6240] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <h4 className="h4-titre text-[#122017]">{item}</h4>
-                  </div>
-                ))}
-              </div>
+          <div className="relative z-10 w-full py-8 px-8 lg:pl-12 lg:pr-[16%]">
+            <h3 className="text-[#8B6240] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-6">
+              {t("Périmètre d'intervention", "Scope of intervention")}
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 gap-x-6">
+              {[
+                "KYC",
+                "LCB-FT",
+                "AML",
+                t("Contrôle documentaire", "Documentary control"),
+                t("Analyse et complétude des dossiers clients", "Analysis and completeness of client files"),
+                t("Vérification des pièces justificatives", "Verification of supporting documents"),
+                t("Entrée en relation client", "Client onboarding"),
+                t("Revue périodique des dossiers", "Periodic review of files"),
+                t("Remédiation KYC", "KYC Remediation"),
+                t("Traitement des alertes de conformité", "Processing of compliance alerts"),
+                t("Analyse des mouvements inhabituels", "Analysis of unusual movements"),
+                t("Support aux équipes risques", "Support to risk teams"),
+                t("Support aux équipes conformité", "Support to compliance teams"),
+                t("Suivi des procédures internes", "Monitoring of internal procedures"),
+                t("Préparation de dossiers pour validation par les équipes habilitées", "Preparation of files for validation by authorized teams"),
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <svg className="w-4 h-4 text-[#8B6240] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <h4 className="h4-titre text-[#122017]">{item}</h4>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -344,7 +340,7 @@ export default function VosBesoinsPage() {
           <div className="relative z-10 w-full border-b border-[#E0D6C8]/30">
             <div className="flex flex-col md:flex-row items-stretch">
               {/* Left Image — negative mt to create upward offset */}
-              <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
+              <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl">
                 <img
                   src="/autrBes.jpg"
                   alt="Autres besoins opérationnels"
@@ -352,8 +348,8 @@ export default function VosBesoinsPage() {
                   onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
                 />
               </div>
-              {/* Right Box (Title & Icon) (order 1 on mobile, order 2 on desktop) */}
-              <div className="w-full md:w-1/2 p-6 lg:p-10 flex flex-col justify-center order-1 md:order-2">
+              {/* Right Box (Title & Icon) */}
+              <div className="w-full md:w-1/2 p-6 lg:p-10 flex flex-col justify-center">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-8 h-[2px] bg-white" />
                   <h2 className="h2-surtitre text-white">
@@ -377,36 +373,34 @@ export default function VosBesoinsPage() {
           </div>
 
           {/* Bottom Details */}
-          <div className="relative z-10 w-full py-12 px-8 lg:px-12">
-            <div className="w-full">
-              <h3 className="text-[#D9B151] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-10">
-                {t("Périmètre d'intervention", "Scope of intervention")}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
-                {[
-                  t("Missions ponctuelles de renfort opérationnel", "Occasional operational reinforcement missions"),
-                  t("Support administratif financier", "Financial administrative support"),
-                  t("Traitement de dossiers en volume", "Volume file processing"),
-                  t("Classement, archivage et organisation documentaire", "Filing, archiving and document organization"),
-                  t("Préparation et mise à jour de fichiers de suivi", "Preparation and update of tracking files"),
-                  t("Support à la gestion d'opérations transverses", "Support for the management of transverse operations"),
-                  t("Assistance à la formalisation de procédures internes", "Assistance in the formalization of internal procedures"),
-                  t("Aide à la structuration de process opérationnels", "Help in structuring operational processes"),
-                  t("Préparation de documents administratifs", "Preparation of administrative documents"),
-                  t("Suivi de demandes internes ou clients", "Follow-up of internal or client requests"),
-                  t("Support en période de surcharge d'activité", "Support during periods of activity overload"),
-                  t("Remplacement ou appui temporaire d'équipe", "Replacement or temporary team support"),
-                  t("Coordination entre équipes internes et prestataires externalisés", "Coordination between internal teams and external providers"),
-                  t("Étude de besoins spécifiques non listés dans les rubriques précédentes", "Study of specific needs not listed in previous sections"),
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    <svg className="w-4 h-4 text-[#D9B151] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <h4 className="h4-titre text-white">{item}</h4>
-                  </div>
-                ))}
-              </div>
+          <div className="relative z-10 w-full py-8 px-8 lg:pl-[16%] lg:pr-12">
+            <h3 className="text-[#D9B151] text-[0.85rem] font-bold tracking-[0.15em] uppercase mb-6">
+              {t("Périmètre d'intervention", "Scope of intervention")}
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 gap-x-6">
+              {[
+                t("Missions ponctuelles de renfort opérationnel", "Occasional operational reinforcement missions"),
+                t("Support administratif financier", "Financial administrative support"),
+                t("Traitement de dossiers en volume", "Volume file processing"),
+                t("Classement, archivage et organisation documentaire", "Filing, archiving and document organization"),
+                t("Préparation et mise à jour de fichiers de suivi", "Preparation and update of tracking files"),
+                t("Support à la gestion d'opérations transverses", "Support for the management of transverse operations"),
+                t("Assistance à la formalisation de procédures internes", "Assistance in the formalization of internal procedures"),
+                t("Aide à la structuration de process opérationnels", "Help in structuring operational processes"),
+                t("Préparation de documents administratifs", "Preparation of administrative documents"),
+                t("Suivi de demandes internes ou clients", "Follow-up of internal or client requests"),
+                t("Support en période de surcharge d'activité", "Support during periods of activity overload"),
+                t("Remplacement ou appui temporaire d'équipe", "Replacement or temporary team support"),
+                t("Coordination entre équipes internes et prestataires externalisés", "Coordination between internal teams and external providers"),
+                t("Étude de besoins spécifiques non listés dans les rubriques précédentes", "Study of specific needs not listed in previous sections"),
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <svg className="w-4 h-4 text-[#D9B151] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <h4 className="h4-titre text-white">{item}</h4>
+                </div>
+              ))}
             </div>
           </div>
         </div>

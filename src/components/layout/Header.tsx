@@ -104,17 +104,17 @@ export default function Header() {
   );
 
   return (
-    <header
-      className={`fixed top-0 left-0 w-full z-[9999] transition-colors duration-300 border-b ${scrolled ? "bg-[#1A0E08]/95 backdrop-blur-md border-white/10 shadow-2xl" : "bg-[#1A0E08] border-transparent"}`}
-      style={{ transform: "translateY(0)", visibility: "visible" }}
-      onMouseLeave={() => setOpenMenu(null)}
-    >
+    <>
+      <header
+        className={`fixed top-0 left-0 w-full z-[9998] transition-colors duration-300 border-b ${scrolled ? "bg-[#1A0E08]/95 backdrop-blur-md border-white/10 shadow-2xl" : "bg-[#1A0E08] border-transparent"}`}
+        onMouseLeave={() => setOpenMenu(null)}
+      >
       {/* ── TOP BAR ── */}
       <div className="flex items-center justify-between px-6 lg:px-10 h-20 lg:h-[80px] max-w-[1440px] mx-auto relative">
 
         {/* MOBILE TOGGLE */}
         <button
-          className="lg:hidden text-white hover:text-[#E0D6C8] transition-colors z-50 p-2 -ml-2"
+          className="lg:hidden text-white hover:text-[#E0D6C8] transition-colors relative z-[100] p-2 -ml-2"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Menu"
         >
@@ -229,9 +229,18 @@ export default function Header() {
         </nav>
       </div>
 
-      {/* ── MOBILE MENU ── */}
+      </header>
+
+      {/* ── MOBILE MENU OVERLAY ── */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed top-[3.6rem] left-1/2 -translate-x-1/2 w-[92%] max-w-[400px] bottom-4 bg-white z-[9999] border border-[#E0D6C8]/30 rounded-lg shadow-[0_10px_40px_rgba(27,54,128,0.15)] flex flex-col overflow-y-auto">
+        <>
+          {/* Backdrop */}
+          <div 
+            className="lg:hidden fixed inset-0 bg-black/40 z-[9998] backdrop-blur-sm"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          {/* Menu Box */}
+          <div className="lg:hidden fixed left-1/2 -translate-x-1/2 top-[85px] w-[92%] max-w-[400px] max-h-[calc(100vh-110px)] bg-white z-[9999] border border-[#E0D6C8]/30 rounded-xl shadow-2xl flex flex-col overflow-y-auto">
           
           <nav className="flex-1 flex flex-col px-6 py-4 gap-2">
             {/* Accueil */}
@@ -309,7 +318,8 @@ export default function Header() {
             </div>
           </div>
         </div>
+        </>
       )}
-    </header>
+    </>
   );
 }

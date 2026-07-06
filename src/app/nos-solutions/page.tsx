@@ -87,7 +87,7 @@ export default function NosSolutionsPage() {
             </div>
 
             {/* Image right */}
-            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl order-first lg:order-none">
               <img
                 src="/urgence.png"
                 alt="Urgence"
@@ -124,7 +124,7 @@ export default function NosSolutionsPage() {
                 </p>
               </div>
               {/* Right Image — negative mt to create upward offset */}
-              <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl">
+              <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl order-first md:order-none">
                 <img
                   src="/duree.png"
                   alt="Durée"
@@ -136,24 +136,22 @@ export default function NosSolutionsPage() {
           </div>
 
           {/* Bottom Details */}
-          <div className="relative z-10 w-full py-12 px-8 lg:px-12">
-            <div className="w-full">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
-                {[
-                  t("Mission courte pour traiter un besoin identifié sur une période limitée", "Short mission to address an identified need over a limited period"),
-                  t("Mission longue pour accompagner la gestion d'un portefeuille de dossiers dans la durée", "Long mission to support the management of a portfolio of files over time"),
-                  t("Externalisation continue pour confier durablement tout ou partie de vos activités opérationnelles", "Continuous outsourcing to permanently entrust all or part of your operational activities"),
-                  t("Intervention ponctuelle sur un volume de dossiers comptables, financiers, patrimoniaux ou administratifs", "Occasional intervention on a volume of accounting, financial, wealth or administrative files"),
-                  t("Ajustement du dispositif selon l'évolution de la charge et des priorités du client", "Adjustment of the setup according to the evolution of the workload and the client's priorities"),
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    <svg className="w-4 h-4 text-[#8B6240] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <h4 className="h4-titre text-[#122017]">{item}</h4>
-                  </div>
-                ))}
-              </div>
+          <div className="relative z-10 w-full py-8 px-8 lg:pl-12 lg:pr-[16%]">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 gap-x-6">
+              {[
+                t("Mission courte pour traiter un besoin identifié sur une période limitée", "Short mission to address an identified need over a limited period"),
+                t("Mission longue pour accompagner la gestion d'un portefeuille de dossiers dans la durée", "Long mission to support the management of a portfolio of files over time"),
+                t("Externalisation continue pour confier durablement tout ou partie de vos activités opérationnelles", "Continuous outsourcing to permanently entrust all or part of your operational activities"),
+                t("Intervention ponctuelle sur un volume de dossiers comptables, financiers, patrimoniaux ou administratifs", "Occasional intervention on a volume of accounting, financial, wealth or administrative files"),
+                t("Ajustement du dispositif selon l'évolution de la charge et des priorités du client", "Adjustment of the setup according to the evolution of the workload and the client's priorities"),
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <svg className="w-4 h-4 text-[#8B6240] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <h4 className="h4-titre text-[#122017]">{item}</h4>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -166,7 +164,7 @@ export default function NosSolutionsPage() {
           <div className="relative z-10 w-full border-b border-[#E0D6C8]/30">
             <div className="flex flex-col md:flex-row items-stretch">
               {/* Left Image — negative mt to create upward offset */}
-              <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
+              <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl">
                 <img
                   src="/volume.png"
                   alt="Volume"
@@ -174,8 +172,8 @@ export default function NosSolutionsPage() {
                   onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
                 />
               </div>
-              {/* Right Box (Title & Icon) (order 1 on mobile, order 2 on desktop) */}
-              <div className="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center order-1 md:order-2">
+              {/* Right Box (Title & Icon) */}
+              <div className="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
             
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-8 h-[2px] bg-white" />
@@ -194,24 +192,22 @@ export default function NosSolutionsPage() {
           </div>
 
           {/* Bottom Details */}
-          <div className="relative z-10 w-full py-12 px-8 lg:px-12">
-            <div className="w-full">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
-                {[
-                  t("Une ressource dédiée sur un périmètre précis", "A dedicated resource on a specific scope"),
-                  t("Un renfort ponctuel pour absorber une surcharge d'activité", "Occasional reinforcement to absorb an activity overload"),
-                  t("Une équipe opérationnelle pour gérer un volume important ou plusieurs flux simultanés", "An operational team to manage a large volume or several simultaneous flows"),
-                  t("Un dispositif évolutif ajusté selon la charge, les priorités et les exigences du client", "A scalable setup adjusted according to the workload, priorities and client requirements"),
-                  t("Une organisation permettant d'assurer la continuité du traitement en cas d'absence ou de variation d'activité", "An organization ensuring processing continuity in case of absence or variation in activity"),
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    <svg className="w-4 h-4 text-[#D9B151] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <h4 className="h4-titre text-white">{item}</h4>
-                  </div>
-                ))}
-              </div>
+          <div className="relative z-10 w-full py-8 px-8 lg:pl-[16%] lg:pr-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 gap-x-6">
+              {[
+                t("Une ressource dédiée sur un périmètre précis", "A dedicated resource on a specific scope"),
+                t("Un renfort ponctuel pour absorber une surcharge d'activité", "Occasional reinforcement to absorb an activity overload"),
+                t("Une équipe opérationnelle pour gérer un volume important ou plusieurs flux simultanés", "An operational team to manage a large volume or several simultaneous flows"),
+                t("Un dispositif évolutif ajusté selon la charge, les priorités et les exigences du client", "A scalable setup adjusted according to the workload, priorities and client requirements"),
+                t("Une organisation permettant d'assurer la continuité du traitement en cas d'absence ou de variation d'activité", "An organization ensuring processing continuity in case of absence or variation in activity"),
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <svg className="w-4 h-4 text-[#D9B151] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <h4 className="h4-titre text-white">{item}</h4>
+                </div>
+              ))}
             </div>
           </div>
         </div>

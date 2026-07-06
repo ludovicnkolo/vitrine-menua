@@ -79,7 +79,7 @@ export default function NousConnaitrePage() {
             </div>
 
             {/* Image right — same dimensions as homepage section 2 */}
-            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl order-first lg:order-none">
               <img
                 src="/preCabinet.png"
                 alt="Cabinet Menua Consulting"
@@ -165,37 +165,34 @@ export default function NousConnaitrePage() {
 
 
       {/* ══ 3. NOTRE MÉTHODOLOGIE — Fond marron foncé, 5 cartes centrées ══ */}
-      <section id="notre-methodologie" className="mt-8 bg-[#1A0E08] w-full py-6 overflow-hidden">
+      <section id="notre-methodologie" className="mt-12 bg-[#1A0E08] w-full py-12">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start">
-          <div className="mb-5 flex items-center gap-4">
-            <div className="w-8 h-[2px] bg-white" />
-            <h2 className="h2-surtitre text-white">
-              {t("NOTRE MÉTHODOLOGIE", "OUR METHODOLOGY").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
-            </h2>
-          </div>
+          <div className="w-full flex flex-col">
+            <div className="flex items-center gap-4 mb-10">
+              <div className="w-8 h-[2px] bg-white" />
+              <h2 className="h2-surtitre text-white">
+                {t("NOTRE MÉTHODOLOGIE", "OUR METHODOLOGY").split('\n').map((l, i) => <span key={i} className="block">{l}</span>)}
+              </h2>
+            </div>
 
-          <div className="w-full flex flex-col gap-2 md:gap-3 max-w-4xl mx-auto pt-1">
-            {[
-              { title: t("DÉCOUVERTE", "DISCOVERY"), desc: t("Analyse de votre organisation, de vos processus et de vos contraintes afin de définir précisément le périmètre d'intervention.", "Analysis of your organization, processes and constraints to precisely define the scope of intervention.") },
-              { title: t("VÉRIFICATIONS PRÉALABLES", "PRELIMINARY CHECKS"), desc: t("Vérification de l'identité juridique, de la situation administrative et de la cohérence opérationnelle du client ou partenaire, afin de sécuriser l'entrée en relation.", "Verification of legal identity, administrative situation and operational coherence of the client or partner, to secure the entry into relation.") },
-              { title: t("ANALYSE", "ANALYSIS"), desc: t("Construction d'une proposition opérationnelle adaptée à vos besoins, incluant les profils, le mode d'organisation et les livrables attendus.", "Construction of an operational proposal adapted to your needs, including profiles, organization mode and expected deliverables.") },
-              { title: t("MISE EN ŒUVRE ET FORMATION", "IMPLEMENTATION AND TRAINING"), desc: t("Déploiement des équipes et intégration aux outils, process et standards de votre organisation.", "Deployment of teams and integration into your organization's tools, processes and standards.") },
-              { title: t("SUIVI DANS LA DURÉE", "LONG-TERM FOLLOW-UP"), desc: t("Pilotage continu de la mission, ajustements réguliers et contrôle qualité des livrables.", "Continuous mission management, regular adjustments and quality control of deliverables.") },
-            ].map((step, i) => (
-              <div key={i} className="flex flex-col md:flex-row md:items-start gap-3 md:gap-5 border-t border-white/20 pt-3">
-                <span className="text-[#D9B151] font-serif text-2xl md:text-3xl font-bold italic shrink-0 w-8 md:w-12 leading-none mt-1 md:mt-0">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <div className="flex flex-col">
-                  <h4 className="h4-titre text-white mb-1">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 w-full mb-10">
+              {[
+                { title: t("DÉCOUVERTE", "DISCOVERY"), desc: t("Analyse de votre organisation, de vos processus et de vos contraintes afin de définir précisément le périmètre d'intervention.", "Analysis of your organization, processes and constraints to precisely define the scope of intervention.") },
+                { title: t("VÉRIFICATIONS PRÉALABLES", "PRELIMINARY CHECKS"), desc: t("Vérification de l'identité juridique, de la situation administrative et de la cohérence opérationnelle du client ou partenaire, afin de sécuriser l'entrée en relation.", "Verification of legal identity, administrative situation and operational coherence of the client or partner, to secure the entry into relation.") },
+                { title: t("ANALYSE", "ANALYSIS"), desc: t("Construction d'une proposition opérationnelle adaptée à vos besoins, incluant les profils, le mode d'organisation et les livrables attendus.", "Construction of an operational proposal adapted to your needs, including profiles, organization mode and expected deliverables.") },
+                { title: t("MISE EN ŒUVRE ET FORMATION", "IMPLEMENTATION AND TRAINING"), desc: t("Déploiement des équipes et intégration aux outils, process et standards de votre organisation.", "Deployment of teams and integration into your organization's tools, processes and standards.") },
+                { title: t("SUIVI DANS LA DURÉE", "LONG-TERM FOLLOW-UP"), desc: t("Pilotage continu de la mission, ajustements réguliers et contrôle qualité des livrables.", "Continuous mission management, regular adjustments and quality control of deliverables.") },
+              ].map((step, i) => (
+                <div key={i} className="flex flex-col items-center justify-start text-center bg-white/10 border border-white/20 rounded-xl p-5 hover:shadow-xl transition-all h-full">
+                  <h4 className="h4-titre text-white mb-3">
                     {step.title}
                   </h4>
-                  <p className="p-3">
+                  <p className="text-white/90 text-[0.85rem] leading-[1.6]">
                     {step.desc}
                   </p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -250,7 +247,7 @@ export default function NousConnaitrePage() {
               </div>
             </div>
 
-            <div className="w-full h-[450px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="w-full h-[450px] rounded-2xl overflow-hidden shadow-2xl order-first lg:order-none">
               <img src="/certification.jpg" alt="Certifications" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} />
             </div>
 

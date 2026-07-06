@@ -12,7 +12,7 @@ export default function NousRejoindre() {
       {/* ── HERO INTRO ── */}
       <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0 z-0">
-          <img src="/nous-rejoindre-hero.jpg" alt="Nous Rejoindre" className="w-full h-full object-cover object-center" />
+          <img src="/nous-contacter-hero.jpg" alt="Nous Rejoindre" className="w-full h-full object-cover object-center" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1A0E08]/90 to-[#1A0E08]/70" />
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">

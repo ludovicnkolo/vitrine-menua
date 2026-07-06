@@ -222,7 +222,7 @@ export default function NousConnaitrePage() {
                 </p>
                 <p>
                   {t(
-                    "La dirigeante dispose notamment de la certification AMF, d'une certification en Contrôle Interne et Gestion des Risques des institutions financières, ainsi que d'une expérience acquise au sein d'environnements financiers, patrimoniaux et réglementés.",
+                    "La presidente dispose notamment de la certification AMF, d'une certification en Contrôle Interne et Gestion des Risques des institutions financières, ainsi que d'une expérience acquise au sein d'environnements financiers, patrimoniaux et réglementés.",
                     "The CEO holds an AMF certification, a certification in Internal Control and Risk Management of financial institutions, and experience in financial, wealth and regulated environments."
                   )}
                 </p>
@@ -283,7 +283,7 @@ export default function NousConnaitrePage() {
               </div>
               
               <h3 className="h3-section text-[#122017] mb-3">
-                {t("La dirigeante", "The Director")}
+                {t("La presidente", "The President")}
               </h3>
               
               <h3 className="p-2 !text-[#8B6240] mb-10">

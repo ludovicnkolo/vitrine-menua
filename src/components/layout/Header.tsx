@@ -114,11 +114,11 @@ export default function Header() {
 
         {/* MOBILE TOGGLE */}
         <button
-          className="lg:hidden text-white hover:text-[#E0D6C8] transition-colors relative z-[100] p-2 -ml-2"
+          className="lg:hidden text-white hover:text-[#E0D6C8] transition-colors relative z-[100] p-4 -ml-4"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Menu"
         >
-          {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+          {isMobileMenuOpen ? <X size={30} /> : <Menu size={30} />}
         </button>
 
         {/* LOGO */}
@@ -130,7 +130,7 @@ export default function Header() {
           <img
             src="/logoSlogan.png"
             alt="MENUA Consulting"
-            className="h-[72px] lg:h-[90px] w-auto object-contain brightness-0 invert"
+            className="h-[60px] lg:h-[90px] max-w-[200px] lg:max-w-none w-auto object-contain brightness-0 invert"
           />
         </Link>
 
@@ -176,7 +176,7 @@ export default function Header() {
                             onClick={() => setOpenMenu(null)}
                             className="flex items-center gap-3 px-5 py-2.5 text-[#1A0E08]/80 hover:text-[#1A0E08] hover:bg-[#F5F2EB]/40 text-[13px] leading-[1rem] transition-colors group"
                           >
-                            <span className="w-4 h-px bg-[#E0D6C8] shrink-0" />
+                            <span className="w-4 h-px bg-[#1A0E08] shrink-0" />
                             {link.label}
                           </Link>
                         </li>

@@ -22,9 +22,9 @@ export default function NosSolutionsPage() {
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
-            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-[#D9B151]" />
-            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#D9B151]" />
-            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#D9B151]" />
+            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-white" />
+            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-white" />
+            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-white" />
             <div className="relative">
               <h1 className="h1-hero mb-8 max-w-4xl">
                 <span className="block">{t("Dispositifs", "Solutions")}</span>
@@ -79,7 +79,7 @@ export default function NosSolutionsPage() {
                   t("Mise à disposition progressive de ressources pour sécuriser la montée en charge", "Progressive provision of resources to secure ramp-up"),
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#D9B151] shrink-0 mt-2" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#1A0E08] shrink-0 mt-2" />
                     <h4 className="h4-titre text-[#122017]">{item}</h4>
                   </div>
                 ))}

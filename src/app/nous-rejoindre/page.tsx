@@ -17,9 +17,9 @@ export default function NousRejoindre() {
         </div>
         <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
           <div className="relative py-12 pl-10">
-            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-[#E0D6C8]" />
-            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-[#E0D6C8]" />
-            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-[#E0D6C8]" />
+            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-white" />
+            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-white" />
+            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-white" />
             <div className="relative">
               <h1 className="h1-hero mb-8">
                 <span className="block">{t("Carrières et Prestataires", "Careers and Providers")}</span>

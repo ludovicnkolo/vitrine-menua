@@ -29,7 +29,7 @@ export default function Footer() {
               <li><Link href="/nous-connaitre" className="hover:text-[#141824] transition-colors">Nous connaître</Link></li>
               <li><Link href="/vos-besoins" className="hover:text-[#141824] transition-colors">Vos besoins</Link></li>
               <li><Link href="/nos-solutions" className="hover:text-[#141824] transition-colors">Nos solutions</Link></li>
-              <li><Link href="/pourquoi-menua" className="hover:text-[#141824] transition-colors">Pourquoi Menua ?</Link></li>
+              <li><Link href="/pourquoi-menua" className="hover:text-[#141824] transition-colors">Pourquoi Menua Consulting ?</Link></li>
             </ul>
           </div>
         </div>

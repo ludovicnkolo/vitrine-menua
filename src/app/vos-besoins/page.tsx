@@ -81,7 +81,7 @@ export default function VosBesoinsPage() {
         </div>
         <div className="laplace-container relative z-10 pt-32 pb-20 mt-16">
           <div className="max-w-4xl">
-            <h1 className="animate-fade-in-up stagger-1 text-white text-[3rem] md:text-[4.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+            <h1 className="animate-fade-in-up stagger-1 text-white text-[1.8rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Vos besoins", "Your needs")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>

@@ -60,7 +60,7 @@ export default function Header() {
       ],
     },
     "pourquoi-menua": {
-      label: t("Pourquoi Menua ?", "Why Menua?"),
+      label: t("Pourquoi Menua Consulting ?", "Why Menua Consulting ?"),
       href: "/pourquoi-menua",
       links: [
         { label: t("Nos bénéfices", "Our Benefits"), href: "/pourquoi-menua#nos-benefices" },

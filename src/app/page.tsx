@@ -236,7 +236,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 6 : ACTUALITÉS (3 article cards) ── */}
-      <section className="relative w-full bg-white section-padding">
+      <section className="relative w-full bg-[#f5f7fa] section-padding">
         <div className="laplace-container">
           
           {/* Header */}

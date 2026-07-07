@@ -39,6 +39,7 @@ export const metadata: Metadata = {
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { LanguageProvider } from "@/components/LanguageProvider";
+import ScrollObserver from "@/components/ScrollObserver";
 
 export default function RootLayout({
   children,
@@ -49,6 +50,7 @@ export default function RootLayout({
     <html lang="fr" data-scroll-behavior="smooth">
       <body className={`${inter.variable} ${playfair.variable} min-h-screen flex flex-col antialiased bg-[#f5f7fa] text-[#141824]`}>
         <LanguageProvider>
+          <ScrollObserver />
           <Header />
           {children}
           <Footer />

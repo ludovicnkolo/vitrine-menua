@@ -1,17 +1,26 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Newspaper, BookOpen, LineChart } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 
 export default function ActualitesPage() {
   const { t } = useLanguage();
+  const [activeFilter, setActiveFilter] = useState("TOUTES LES ACTUALITÉS");
+
+  const filters = [
+    "TOUTES LES ACTUALITÉS",
+    "FINANCE ET COMPTABILITÉ",
+    "RÉGLEMENTATION",
+    "GESTION DE PATRIMOINE",
+    "OPÉRATIONS ET DATA"
+  ];
 
   return (
-    <main className="flex flex-col w-full min-h-screen">
+    <main className="flex flex-col w-full min-h-screen bg-white">
       
       {/* ── 6.1 INTRODUCTION (Full Bleed Hero) ── */}
-      <section className="relative w-full min-h-[60vh] flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-[50vh] flex flex-col justify-center overflow-hidden mb-20 lg:mb-32">
         <div className="absolute inset-0 z-0">
           <img 
             src="/banner-desk.jpg" 
@@ -19,7 +28,7 @@ export default function ActualitesPage() {
             className="w-full h-full object-cover" 
             onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} 
           />
-          <div className="absolute inset-0 bg-[#141824]/70"></div>
+          <div className="absolute inset-0 bg-[#141824]/80"></div>
         </div>
         <div className="laplace-container relative z-10 pt-32 pb-20 mt-16 text-center">
           <div className="max-w-4xl mx-auto">
@@ -36,75 +45,195 @@ export default function ActualitesPage() {
         </div>
       </section>
 
-      {/* ── 6.2 SECTIONS (Laplace Beige/Dark Cards) ── */}
-      <section className="relative w-full bg-[#f5f7fa] pt-24 pb-32">
-        <div className="laplace-container">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      {/* ── 6.2 À LA UNE (Dark Section) ── */}
+      <section className="relative w-full bg-[#141824] section-padding">
+        <div className="laplace-container max-w-6xl mx-auto">
+          {/* Section Header */}
+          <div className="mb-12">
+            <div className="w-16 h-[3px] bg-white mb-5"></div>
+            <h2 className="text-white text-[1.2rem] font-bold uppercase tracking-widest mb-3">
+              {t("À la une", "Featured")}
+            </h2>
+          </div>
+
+          {/* Single Card */}
+          <div className="bg-white/5 border border-white/10 p-5 w-full md:w-[362px] hover:bg-white/10 transition-colors group">
+            <div className="w-full h-[220px] overflow-hidden mb-6">
+              <img src="/office-lounge.jpg" alt="À la une" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            </div>
             
-            {/* À la une */}
-            <div className="bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 hover:shadow-xl transition-shadow duration-300 flex flex-col h-full animate-fade-in-up">
-              <Newspaper size={40} className="text-[#141824] mb-8" strokeWidth={1.5} />
-              <h2 className="text-[1.6rem] mb-6 text-[#141824] font-bold">{t("À la une", "Featured")}</h2>
-              <div className="w-16 h-1 bg-[#141824] mb-6" />
-              <p className="text-[#6e7891] leading-relaxed text-[1.05rem] font-light flex-grow">
-                {t(
-                  "Sélection d’articles, de contenus et d’analyses mis en avant sur les sujets les plus récents ou les plus structurants pour vos activités.",
-                  "Selection of articles, content and analyzes highlighted on the most recent or structuring subjects for your activities."
-                )}
-              </p>
+            <h3 className="text-white text-[1.1rem] font-bold mb-4 leading-snug uppercase">
+              {t("Sélection d’articles, de contenus et d’analyses mis en avant", "Selection of featured articles, content and analysis")}
+            </h3>
+            <p className="text-[#e5e9f0] font-light text-[0.95rem] leading-relaxed mb-8">
+              {t("Sur les sujets les plus récents ou les plus structurants pour vos activités.", "On the most recent or structuring subjects for your activities.")}
+            </p>
+            
+            <div className="flex justify-end">
+              <a href="#" className="text-white/50 text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 group-hover:text-white transition-colors">
+                {t("LIRE L'ARTICLE", "READ ARTICLE")} 
+                <span className="w-5 h-5 rounded-full border border-white/50 flex items-center justify-center group-hover:border-white">
+                  <ArrowRight size={10} />
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6.3 ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES ── */}
+      <section className="relative w-full bg-white section-padding">
+        <div className="laplace-container max-w-6xl mx-auto">
+          <div>
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+              <h3 className="text-[#141824] text-[1.4rem] font-bold uppercase tracking-wider flex items-center gap-4">
+                <span className="w-8 h-[2px] bg-[#141824]"></span>
+                {t("ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES", "FINANCIAL AND REGULATORY NEWS")}
+              </h3>
             </div>
 
-            {/* Actualités financières et réglementaires */}
-            <div className="bg-[#141824] text-white border-t-4 border-t-[#e8e1d7] p-10 hover:shadow-xl transition-shadow duration-300 flex flex-col h-full animate-fade-in-up stagger-1">
-              <LineChart size={40} className="text-[#e8e1d7] mb-8" strokeWidth={1.5} />
-              <h2 className="text-[1.6rem] mb-6 text-white font-bold">{t("Actualités financières et réglementaires", "Financial and Regulatory News")}</h2>
-              <div className="w-16 h-1 bg-[#e8e1d7] mb-6" />
-              <p className="text-[#e8e1d7] leading-relaxed font-bold mb-4 text-[1.05rem]">
-                {t(
-                  "Actualités financières, comptables, patrimoniales et réglementaires",
-                  "Financial, accounting, wealth and regulatory news"
-                )}
-              </p>
-              <p className="text-[#e5e9f0] leading-relaxed text-[1.05rem] font-light flex-grow">
-                {t(
-                  "Analyse et décryptage des évolutions susceptibles d’avoir un impact sur vos organisations : finance, comptabilité, gestion de patrimoine, conformité, réglementation et pratiques opérationnelles.",
-                  "Analysis and decoding of developments likely to have an impact on your organizations: finance, accounting, wealth management, compliance, regulation and operational practices."
-                )}
-              </p>
+            {/* Filters */}
+            <div className="flex flex-wrap gap-2 md:gap-4 mb-12">
+              {filters.map((filter) => (
+                <button 
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={`px-4 py-2 text-[0.7rem] font-bold tracking-widest uppercase transition-colors border ${
+                    activeFilter === filter 
+                      ? "bg-[#141824] text-white border-[#141824]" 
+                      : "bg-white text-[#141824] border-[#e8e1d7] hover:border-[#141824]"
+                  }`}
+                >
+                  {t(filter, filter)}
+                </button>
+              ))}
             </div>
 
-            {/* Nos publications */}
-            <div className="bg-[#e8e1d7] text-[#141824] border-t-4 border-t-[#141824] p-10 hover:shadow-xl transition-shadow duration-300 flex flex-col h-full animate-fade-in-up stagger-2">
-              <BookOpen size={40} className="text-[#141824] mb-8" strokeWidth={1.5} />
-              <h2 className="text-[1.6rem] mb-6 text-[#141824] font-bold">{t("Nos publications", "Our publications")}</h2>
-              <div className="w-16 h-1 bg-[#141824] mb-6" />
-              <p className="text-[#141824] leading-relaxed text-[1.05rem] font-light flex-grow">
-                {t(
-                  "Retrouvez les prises de parole, analyses et contenus publiés par MENUA CONSULTING sur les enjeux opérationnels, réglementaires et sectoriels.",
-                  "Find the speeches, analyzes and content published by MENUA CONSULTING on operational, regulatory and sector issues."
-                )}
-              </p>
-            </div>
+            {/* Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              
+              {/* Card 1 */}
+              <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:shadow-md transition-shadow">
+                <div className="w-full h-[220px] overflow-hidden mb-6">
+                  <img src="/meeting.jpg" alt="Actualités" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div className="flex flex-col flex-grow">
+                  <p className="text-[#141824] text-[0.65rem] font-bold tracking-widest uppercase mb-4">
+                    {t("FINANCE ET COMPTABILITÉ •", "FINANCE AND ACCOUNTING •")} 
+                  </p>
+                  <h4 className="text-[#141824] text-[1.1rem] font-bold mb-4 leading-snug uppercase">
+                    {t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news")}
+                  </h4>
+                  <p className="text-[#6e7891] text-[0.95rem] font-light leading-relaxed mb-8 flex-grow">
+                    {t(
+                      "Analyse et décryptage des évolutions susceptibles d’avoir un impact sur vos organisations : finance, comptabilité, gestion de patrimoine, conformité, réglementation et pratiques opérationnelles.",
+                      "Analysis and decoding of developments likely to have an impact on your organizations: finance, accounting, wealth management, compliance, regulation and operational practices."
+                    )}
+                  </p>
+                  <div className="flex justify-end mt-auto">
+                    <a href="#" className="text-[#141824] text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 group-hover:text-[#6e7891] transition-colors">
+                      {t("LIRE L'ARTICLE", "READ ARTICLE")} 
+                      <span className="w-5 h-5 rounded-full border border-[#141824] flex items-center justify-center group-hover:border-[#6e7891]">
+                        <ArrowRight size={10} />
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
 
+              {/* Card 2 */}
+              <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:shadow-md transition-shadow">
+                <div className="w-full h-[220px] overflow-hidden mb-6">
+                  <img src="/certification.jpg" alt="Publications" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div className="flex flex-col flex-grow">
+                  <p className="text-[#141824] text-[0.65rem] font-bold tracking-widest uppercase mb-4">
+                    {t("PUBLICATIONS •", "PUBLICATIONS •")} 
+                  </p>
+                  <h4 className="text-[#141824] text-[1.1rem] font-bold mb-4 leading-snug uppercase">
+                    {t("Nos publications et prises de parole", "Our publications and speeches")}
+                  </h4>
+                  <p className="text-[#6e7891] text-[0.95rem] font-light leading-relaxed mb-8 flex-grow">
+                    {t(
+                      "Retrouvez les prises de parole, analyses et contenus publiés par MENUA CONSULTING sur les enjeux opérationnels, réglementaires et sectoriels.",
+                      "Find the speeches, analyzes and content published by MENUA CONSULTING on operational, regulatory and sector issues."
+                    )}
+                  </p>
+                  <div className="flex justify-end mt-auto">
+                    <a href="#" className="text-[#141824] text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 group-hover:text-[#6e7891] transition-colors">
+                      {t("LIRE L'ARTICLE", "READ ARTICLE")} 
+                      <span className="w-5 h-5 rounded-full border border-[#141824] flex items-center justify-center group-hover:border-[#6e7891]">
+                        <ArrowRight size={10} />
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3 (Placeholder for grid symmetry) */}
+              <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:shadow-md transition-shadow">
+                <div className="w-full h-[220px] overflow-hidden mb-6">
+                  <img src="/office-lounge.jpg" alt="Veille" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div className="flex flex-col flex-grow">
+                  <p className="text-[#141824] text-[0.65rem] font-bold tracking-widest uppercase mb-4">
+                    {t("RÉGLEMENTATION •", "REGULATION •")} 
+                  </p>
+                  <h4 className="text-[#141824] text-[1.1rem] font-bold mb-4 leading-snug uppercase">
+                    {t("Veille réglementaire et conformité", "Regulatory watch and compliance")}
+                  </h4>
+                  <p className="text-[#6e7891] text-[0.95rem] font-light leading-relaxed mb-8 flex-grow">
+                    {t(
+                      "Restez informés des dernières évolutions réglementaires et découvrez nos conseils pour adapter vos processus opérationnels en toute sécurité.",
+                      "Stay informed of the latest regulatory developments and discover our advice to safely adapt your operational processes."
+                    )}
+                  </p>
+                  <div className="flex justify-end mt-auto">
+                    <a href="#" className="text-[#141824] text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 group-hover:text-[#6e7891] transition-colors">
+                      {t("LIRE L'ARTICLE", "READ ARTICLE")} 
+                      <span className="w-5 h-5 rounded-full border border-[#141824] flex items-center justify-center group-hover:border-[#6e7891]">
+                        <ArrowRight size={10} />
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── LINKEDIN BANNER ── */}
-      <section className="relative w-full bg-[#141824] text-white section-padding">
-        <div className="laplace-container flex flex-col md:flex-row items-center justify-center gap-8 text-center md:text-left">
-          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-[#e8e1d7] shrink-0 opacity-80">
-            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-            <rect x="2" y="9" width="4" height="12"></rect>
-            <circle cx="4" cy="4" r="2"></circle>
-          </svg>
-          <div className="max-w-2xl">
-            <p className="text-[#e5e9f0] text-[1.1rem] font-light">
+      <section className="relative w-full bg-[#141824] section-padding">
+        <div className="laplace-container max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex items-center gap-6">
+            <div className="w-16 h-16 rounded-md border border-[#e8e1d7]/30 flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                <rect x="2" y="9" width="4" height="12"></rect>
+                <circle cx="4" cy="4" r="2"></circle>
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-white text-[1.2rem] font-bold mb-2">
+                {t("Suivez notre actualité et nos publications professionnelles", "Follow our news and professional publications")}
+              </h3>
+              <p className="text-[#e5e9f0] text-[0.95rem] font-light">
+                {t("Retrouvez nos articles, analyses et retours d'expériences sur LinkedIn.", "Find our articles, analyzes and feedback on LinkedIn.")}
+              </p>
+            </div>
+          </div>
+          <div className="shrink-0 text-center md:text-right mt-4 md:mt-0">
+            <p className="text-[#e8e1d7] text-[0.8rem] font-light mb-2 max-w-xs ml-auto">
               {t(
                 "(Le lien vers la page LinkedIn officielle de MENUA CONSULTING sera intégré dès sa création)",
                 "(The link to the official MENUA CONSULTING LinkedIn page will be integrated as soon as it is created)"
               )}
             </p>
+            <a href="#" className="text-white text-[0.75rem] font-bold tracking-widest uppercase flex items-center gap-3 justify-end hover:text-[#e8e1d7] transition-colors">
+              {t("RETROUVEZ-NOUS SUR LINKEDIN", "FIND US ON LINKEDIN")} <ArrowRight size={14} />
+            </a>
           </div>
         </div>
       </section>

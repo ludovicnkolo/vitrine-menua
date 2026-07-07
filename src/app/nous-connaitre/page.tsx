@@ -10,7 +10,7 @@ export default function NousConnaitrePage() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── 2.1 INTRODUCTION (Full Bleed Hero) ── */}
-      <section className="relative w-full min-h-[50vh] flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-[50vh] flex flex-col justify-center overflow-hidden mb-20 lg:mb-32">
         <div className="absolute inset-0 z-0">
           <img 
             src="/office-lounge.jpg" 
@@ -36,15 +36,15 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ── 2.2 PRÉSENTATION DU CABINET (Layout 4 - Les belles rencontres...) ── */}
-      <section className="relative w-full bg-[#e8e1d7] pt-24 pb-20 overflow-hidden">
+      <section className="relative w-full bg-[#e8e1d7] section-padding overflow-hidden">
         <div className="laplace-container relative z-10">
           <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 items-start">
             {/* Text on the Left */}
             <div className="w-full lg:w-1/2 pt-10">
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] mb-6 font-bold uppercase tracking-wider">
                 {t("MENUA CONSULTING", "MENUA CONSULTING")}
               </h2>
-              <div className="w-16 h-[1px] bg-[#141824] mb-8" />
               <p className="text-[#141824] text-[1.1rem] font-medium leading-relaxed mb-8">
                 {t(
                   "Cabinet spécialisé dans l’externalisation opérationnelle des fonctions back et middle office en finance, comptabilité, conformité, gestion de patrimoine et data.",
@@ -102,8 +102,10 @@ export default function NousConnaitrePage() {
       <section className="relative w-full bg-white section-padding">
         <div className="laplace-container">
           <div className="text-center mb-20 animate-fade-in-up">
-            <h2 className="text-[#141824] text-[2rem] font-bold mb-6">{t("Notre méthodologie", "Our methodology")}</h2>
-            <div className="w-16 h-[1px] bg-[#141824] mx-auto" />
+            <div className="inline-block text-left">
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+              <h2 className="text-[#141824] text-[2rem] font-bold mb-6">{t("Notre méthodologie", "Our methodology")}</h2>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
@@ -145,14 +147,14 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ── 2.5 ACCRÉDITATIONS ET NOTRE ÉQUIPE (Layout 2 - Le groupe Crystal célébrait...) ── */}
-      <section className="relative w-full bg-[#f5f7fa] py-32 flex justify-center">
+      <section className="relative w-full bg-[#f5f7fa] section-padding flex justify-center">
         <div className="flex flex-col lg:flex-row w-full max-w-[1400px]">
           {/* Beige block with list (Left) */}
           <div className="w-full lg:w-1/2 bg-[#e8e1d7] p-12 lg:p-24 flex flex-col justify-center">
+            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.6rem] md:text-[2rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
               {t("ACCRÉDITATIONS, CERTIFICATIONS ET CADRE D’INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS AND INTERVENTION FRAMEWORK")}
             </h2>
-            <div className="w-16 h-[1px] bg-[#141824] mb-10" />
             
             <ul className="space-y-4 text-[#141824] text-[1.05rem] font-medium">
               <li className="flex items-start gap-4">
@@ -200,11 +202,13 @@ export default function NousConnaitrePage() {
       <section id="equipe" className="relative w-full bg-[#141824] section-padding text-[#e8e1d7] scroll-mt-20">
         <div className="laplace-container max-w-4xl mx-auto text-center">
           <Users size={48} className="text-[#e8e1d7] mx-auto mb-8 opacity-80" />
-          <h2 className="mb-4 text-white text-[2rem] font-bold">{t("Notre équipe", "Our team")}</h2>
-          <p className="text-[#e8e1d7] font-bold tracking-widest uppercase text-[0.85rem] mb-6 opacity-70">
-            {t("Une direction impliquée au plus près des opérations", "Management closely involved in operations")}
-          </p>
-          <div className="w-16 h-[1px] bg-[#e8e1d7] mx-auto mb-10" />
+          <div className="inline-block text-left">
+            <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
+            <h2 className="mb-4 text-white text-[2rem] font-bold">{t("Notre équipe", "Our team")}</h2>
+            <p className="text-[#e8e1d7] font-bold tracking-widest uppercase text-[0.85rem] mb-6 opacity-70">
+              {t("Une direction impliquée au plus près des opérations", "Management closely involved in operations")}
+            </p>
+          </div>
           
           <div className="bg-white/5 p-12 border border-white/10 text-left">
             <h3 className="text-[1.6rem] font-bold mb-4 text-white">La dirigeante</h3>

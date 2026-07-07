@@ -11,7 +11,7 @@ export default function Home() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── SECTION 1 : HERO ── */}
-      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden mb-20 lg:mb-32">
         <div className="absolute inset-0 z-0">
           <img 
             src="/paris-aerial.jpg" 
@@ -24,40 +24,22 @@ export default function Home() {
         
         <div className="laplace-container relative z-10 pt-32 pb-20 mt-16">
           <div className="max-w-4xl">
-            <h1 className="animate-fade-in-up stagger-1 text-white text-[3rem] md:text-[4.5rem] leading-[1.1] mb-8 font-bold">
-              {t(
-                "Externalisation opérationnelle des fonctions back et middle office",
-                "Operational outsourcing of back and middle office functions"
-              )}
+            <h1 className="animate-fade-in-up stagger-1 text-white text-[3rem] md:text-[4.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+              MENUA CONSULTING
             </h1>
-            <p className="animate-fade-in-up stagger-2 text-[1.2rem] lg:text-[1.4rem] text-[#e5e9f0] mb-12 max-w-2xl font-light">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
+            <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
-                "Nous sécurisons l’exécution de vos opérations back et middle office afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
-                "We secure the execution of your back and middle office operations to allow your teams to focus on strategic decisions."
+                "L'externalisation opérationnelle des fonctions back et middle office.",
+                "Operational outsourcing of back and middle office functions."
               )}
             </p>
-            
-            <div className="animate-fade-in-up stagger-3 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              <Link href="/nous-contacter" className="inline-flex items-center gap-4 bg-[#e8e1d7] text-[#141824] px-8 py-4 text-[0.9rem] font-bold tracking-[0.2em] uppercase hover:bg-white transition-colors">
-                {t("Présenter un besoin", "Present a need")} <ArrowRight size={18} />
-              </Link>
-            </div>
-
-            <div className="animate-fade-in-up stagger-4 mt-16 flex items-center gap-4 text-[#e5e9f0] text-[1rem] border-t border-white/20 pt-8 max-w-2xl">
-              <Globe className="text-[#e8e1d7]" size={24} />
-              <span className="font-light">
-                {t(
-                  "Interventions en français et en anglais – profils opérationnels bilingues.",
-                  "Interventions in French and English – bilingual operational profiles."
-                )}
-              </span>
-            </div>
           </div>
         </div>
       </section>
 
       {/* ── SECTION 2 : INTRO (Overlapping Laplace style) ── */}
-      <section className="relative w-full bg-white pt-24 pb-32">
+      <section className="relative w-full bg-white section-padding">
         <div className="laplace-container relative">
           <div className="flex flex-col lg:flex-row items-center">
             {/* Left Image */}
@@ -71,15 +53,28 @@ export default function Home() {
             </div>
             
             {/* Right Overlapping Beige Box */}
-            <div className="w-full lg:w-6/12 bg-[#e8e1d7] p-12 lg:p-20 z-20 -mt-16 lg:mt-0 lg:-ml-24 shadow-2xl">
-              <div className="w-16 h-1 bg-[#141824] mb-10" />
-              <h2 className="leading-relaxed text-[#141824] text-[1.6rem] md:text-[2rem] font-light mb-8">
-                <strong className="font-bold block mb-6 text-[1.8rem] md:text-[2.2rem]">MENUA CONSULTING</strong>
-                {t(
-                  "intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l’exécution des fonctions back et middle office.",
-                  "supports financial, accounting, wealth, data and regulated teams to secure and strengthen the execution of back and middle office functions."
-                )}
-              </h2>
+            <div className="w-full lg:w-6/12 bg-[#e8e1d7] px-12 lg:px-20 pt-8 lg:pt-12 pb-12 lg:pb-20 z-20 -mt-16 lg:mt-0 lg:-ml-24 shadow-2xl">
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+              <div className="leading-relaxed text-[#141824] text-[1.1rem] md:text-[1.2rem] font-light mb-8 space-y-6">
+                <h2 className="font-bold text-[1.6rem] md:text-[2rem] leading-tight mb-4">
+                  {t(
+                    "Externalisation back et middle office",
+                    "Back and middle office outsourcing"
+                  )}
+                </h2>
+                <p>
+                  {t(
+                    "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l’exécution des fonctions back et middle office.",
+                    "MENUA CONSULTING supports financial, accounting, wealth, data and regulated teams to secure and strengthen the execution of back and middle office functions."
+                  )}
+                </p>
+                <p>
+                  {t(
+                    "Nous sécurisons l’exécution de vos opérations afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
+                    "We secure the execution of your operations to allow your teams to focus on strategic decisions."
+                  )}
+                </p>
+              </div>
               <Link href="/nous-connaitre" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
                 {t("Nous connaître", "About Us")} 
                 <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
@@ -91,54 +86,57 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 3 : POURQUOI MENUA (Dark Navy block) ── */}
-      <section className="relative w-full bg-[#141824] text-white py-24">
-        <div className="laplace-container grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div>
-             <h2 className="text-[1.8rem] md:text-[2.2rem] font-bold mb-6">
-               {t("Pourquoi MENUA CONSULTING ?", "Why MENUA CONSULTING?")}
-             </h2>
-             <div className="w-16 h-1 bg-[#e8e1d7] mb-8" />
-             <p className="text-[1.1rem] text-[#e5e9f0] font-light leading-relaxed mb-8">
-               {t(
-                 "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants.",
-                 "MENUA CONSULTING supports organizations facing demanding operational execution challenges."
-               )}
-             </p>
-             <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.85rem] hover:text-white transition-colors group">
-                {t("Nos atouts et engagements", "Our strengths and commitments")} 
-                <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
-                <ChevronRight size={16} className="-ml-2" />
-              </Link>
+      <section className="relative w-full bg-[#141824] text-white section-padding">
+        <div className="laplace-container max-w-4xl mx-auto">
+          <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
+          <h2 className="text-white text-[1.8rem] md:text-[2.2rem] font-bold mb-6">
+            {t("Pourquoi MENUA CONSULTING ?", "Why MENUA CONSULTING?")}
+          </h2>
+          <p className="text-[1.1rem] text-[#e5e9f0] font-light leading-relaxed mb-8">
+            {t(
+              "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants.",
+              "MENUA CONSULTING supports organizations facing demanding operational execution challenges."
+            )}
+          </p>
+          <div className="mb-12">
+            <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.85rem] hover:text-white transition-colors group">
+               {t("Nos atouts et engagements", "Our strengths and commitments")} 
+               <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
+               <ChevronRight size={16} className="-ml-2" />
+             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-             <div className="bg-white/5 p-8 border border-white/10 hover:bg-white/10 transition-colors">
-                <h3 className="text-[#e8e1d7] font-bold mb-3">{t("Spécialisation", "Specialization")}</h3>
-                <p className="text-white/70 text-sm font-light">Back et Middle Office</p>
+
+          <div className="flex flex-col gap-8 pt-8 border-t border-white/20">
+             <div>
+                <h3 className="text-[#e8e1d7] font-bold text-[1.2rem] mb-2">{t("Spécialisation", "Specialization")}</h3>
+                <p className="text-white/70 font-light">Back et Middle Office</p>
              </div>
-             <div className="bg-white/5 p-8 border border-white/10 hover:bg-white/10 transition-colors">
-                <h3 className="text-[#e8e1d7] font-bold mb-3">{t("Exécution", "Execution")}</h3>
-                <p className="text-white/70 text-sm font-light">100% Opérationnelle</p>
+             <div>
+                <h3 className="text-[#e8e1d7] font-bold text-[1.2rem] mb-2">{t("Exécution", "Execution")}</h3>
+                <p className="text-white/70 font-light">100% Opérationnelle</p>
              </div>
-             <div className="bg-white/5 p-8 border border-white/10 hover:bg-white/10 transition-colors">
-                <h3 className="text-[#e8e1d7] font-bold mb-3">{t("Fiabilité", "Reliability")}</h3>
-                <p className="text-white/70 text-sm font-light">Continuité de service</p>
+             <div>
+                <h3 className="text-[#e8e1d7] font-bold text-[1.2rem] mb-2">{t("Fiabilité", "Reliability")}</h3>
+                <p className="text-white/70 font-light">Continuité de service</p>
              </div>
-             <div className="bg-white/5 p-8 border border-white/10 hover:bg-white/10 transition-colors">
-                <h3 className="text-[#e8e1d7] font-bold mb-3">{t("Bilingue", "Bilingual")}</h3>
-                <p className="text-white/70 text-sm font-light">Français / Anglais</p>
+             <div>
+                <h3 className="text-[#e8e1d7] font-bold text-[1.2rem] mb-2">{t("Bilingue", "Bilingual")}</h3>
+                <p className="text-white/70 font-light">Français / Anglais</p>
              </div>
           </div>
         </div>
       </section>
 
       {/* ── SECTION 4 : VOS BESOINS (Light section with cards) ── */}
-      <section className="relative w-full bg-[#f5f7fa] py-24">
+      <section className="relative w-full bg-[#f5f7fa] section-padding">
         <div className="laplace-container">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6">
-              {t("Vos besoins", "Your Needs")}
-            </h2>
-            <div className="w-16 h-1 bg-[#141824] mx-auto mb-6" />
+            <div className="inline-block text-left">
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+              <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6">
+                {t("Vos besoins", "Your Needs")}
+              </h2>
+            </div>
             <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed">
               {t(
                 "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l’ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
@@ -188,9 +186,10 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 5 : NOS SOLUTIONS (Beige Minimal Section) ── */}
-      <section className="relative w-full bg-[#e8e1d7] py-24">
+      <section className="relative w-full bg-[#e8e1d7] section-padding">
         <div className="laplace-container flex flex-col md:flex-row items-center justify-between gap-12">
            <div className="max-w-2xl">
+             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
              <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6">
                {t("Nos solutions d'externalisation", "Our outsourcing solutions")}
              </h2>
@@ -228,12 +227,14 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 6 : ACTUALITÉS (Minimal visual representation) ── */}
-      <section className="relative w-full bg-white py-24">
+      <section className="relative w-full bg-white section-padding">
         <div className="laplace-container text-center max-w-4xl mx-auto">
-          <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6">
-            {t("Actualités et Veille", "News and Monitoring")}
-          </h2>
-          <div className="w-16 h-1 bg-[#141824] mx-auto mb-6" />
+          <div className="inline-block text-left">
+            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6">
+              {t("Actualités et Veille", "News and Monitoring")}
+            </h2>
+          </div>
           <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-12">
             {t(
               "MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles afin d’éclairer ses clients sur les enjeux qui impactent leurs activités.",

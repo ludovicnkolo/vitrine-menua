@@ -49,7 +49,7 @@ export default function NosSolutionsPage() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── 4.1 INTRODUCTION (Full Bleed Hero) ── */}
-      <section className="relative w-full min-h-[50vh] flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-[50vh] flex flex-col justify-center overflow-hidden mb-20 lg:mb-32">
         <div className="absolute inset-0 z-0">
           <img 
             src="/banner-desk.jpg" 
@@ -75,13 +75,13 @@ export default function NosSolutionsPage() {
       </section>
 
       {/* ── LAYOUT 1: BEIGE CARDS ROW (Nos solutions placements style) ── */}
-      <section className="relative w-full bg-[#e8e1d7] pt-24 pb-32">
+      <section className="relative w-full bg-[#e8e1d7] section-padding">
         <div className="laplace-container">
           <div className="mb-12">
+            <div className="w-16 h-[3px] bg-white/60 mb-5" />
             <h2 className="text-[1.2rem] text-[#141824] font-bold uppercase tracking-widest mb-4">
               {t("NOS SOLUTIONS D'EXTERNALISATION", "OUR OUTSOURCING SOLUTIONS")}
             </h2>
-            <div className="w-16 h-[2px] bg-white/60" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
@@ -109,11 +109,11 @@ export default function NosSolutionsPage() {
           {solutions.map((sol, idx) => (
             <div key={idx} id={sol.id} className="bg-white p-10 md:p-16 shadow-sm border border-gray-100 flex flex-col lg:flex-row gap-12 scroll-mt-32">
                <div className="lg:w-5/12">
+                  <div className="w-16 h-[3px] bg-[#141824] mb-5" />
                   <h3 className="text-[2rem] text-[#141824] font-bold mb-6 flex items-center gap-4">
                     <sol.icon className="text-[#141824]" size={36} />
                     {sol.title}
                   </h3>
-                  <div className="w-16 h-1 bg-[#141824] mb-8" />
                   <p className="font-bold text-[#141824] mb-4 text-[1.1rem]">
                     {sol.role}
                   </p>

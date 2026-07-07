@@ -1,17 +1,18 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Briefcase, BarChart2, Shield, User, Globe, Users } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 
 export default function NousRejoindre() {
   const { t } = useLanguage();
+  const [profileType, setProfileType] = useState<"individual" | "company">("individual");
 
   return (
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── 7.1 INTRODUCTION (Full Bleed Hero) ── */}
-      <section className="relative w-full min-h-[60vh] flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-[60vh] flex flex-col justify-center overflow-hidden mb-20 lg:mb-32">
         <div className="absolute inset-0 z-0">
           <img 
             src="/office-lounge.jpg" 
@@ -45,14 +46,14 @@ export default function NousRejoindre() {
       </section>
 
       {/* ── CONTENT SECTION (Laplace Styling) ── */}
-      <section className="relative w-full bg-[#f5f7fa] pt-24 pb-32">
+      <section className="relative w-full bg-[#f5f7fa] section-padding">
         <div className="laplace-container flex flex-col lg:flex-row gap-12 lg:gap-16">
 
           {/* Left Column (Profiles) */}
           <div className="w-full lg:w-[40%] flex flex-col gap-8">
             <div className="bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 shadow-xl">
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <h2 className="text-[1.8rem] font-bold text-[#141824] mb-6">{t("Profils recherchés", "Profiles Sought")}</h2>
-              <div className="w-16 h-1 bg-[#141824] mb-10" />
 
               <div className="flex flex-col gap-6 mb-8">
                 {[
@@ -94,12 +95,55 @@ export default function NousRejoindre() {
             
             <form className="space-y-10">
 
+              {/* ── Type de profil ── */}
+              <div>
+                <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Type de profil", "Profile type")}</p>
+                <div className="flex flex-col sm:flex-row gap-6">
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input 
+                      type="radio" 
+                      name="profileType" 
+                      value="individual" 
+                      checked={profileType === "individual"} 
+                      onChange={() => setProfileType("individual")}
+                      className="accent-[#141824] w-5 h-5 cursor-pointer"
+                    />
+                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Candidat individuel", "Individual candidate")}</span>
+                  </label>
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input 
+                      type="radio" 
+                      name="profileType" 
+                      value="company" 
+                      checked={profileType === "company"} 
+                      onChange={() => setProfileType("company")}
+                      className="accent-[#141824] w-5 h-5 cursor-pointer"
+                    />
+                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Entreprise prestataire", "Provider company")}</span>
+                  </label>
+                </div>
+              </div>
+
               {/* ── Identité ── */}
               <div>
                 <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Identité", "Identity")}</p>
+                
+                {profileType === "company" && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div>
+                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Nom de l'entreprise", "Company Name")} <span className="text-red-500">*</span></label>
+                      <input type="text" placeholder={t("Nom de votre structure", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
+                    </div>
+                    <div>
+                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("SIRET / Numéro d'identification", "SIRET / ID Number")} <span className="text-red-500">*</span></label>
+                      <input type="text" placeholder={t("Ex: 123 456 789 00012", "E.g. 123 456 789 00012")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
+                    </div>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
-                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Nom", "Last Name")} <span className="text-red-500">*</span></label>
+                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{profileType === "company" ? t("Nom du contact", "Contact Last Name") : t("Nom", "Last Name")} <span className="text-red-500">*</span></label>
                     <input type="text" placeholder={t("Votre nom", "Your last name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
                   </div>
                   <div>

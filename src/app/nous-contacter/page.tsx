@@ -11,7 +11,7 @@ export default function NousContacter() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── 6.1 INTRODUCTION (Full Bleed Hero) ── */}
-      <section className="relative w-full min-h-[60vh] flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-[60vh] flex flex-col justify-center overflow-hidden mb-20 lg:mb-32">
         <div className="absolute inset-0 z-0">
           <img 
             src="/meeting.jpg" 
@@ -40,14 +40,14 @@ export default function NousContacter() {
       </section>
 
       {/* ── CONTENT SECTION (Laplace Styling) ── */}
-      <section className="relative w-full bg-[#f5f7fa] pt-24 pb-32">
+      <section className="relative w-full bg-[#f5f7fa] section-padding">
         <div className="laplace-container flex flex-col lg:flex-row gap-12 lg:gap-16">
 
           {/* Left Column (Coordonnées) */}
           <div className="w-full lg:w-[40%] flex flex-col gap-8">
             <div className="bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 shadow-xl">
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <h2 className="text-[1.8rem] font-bold text-[#141824] mb-6">{t("Contact Rapide", "Quick Contact")}</h2>
-              <div className="w-16 h-1 bg-[#141824] mb-10" />
               
               <div className="flex items-start gap-5 mb-10">
                 <div className="w-14 h-14 rounded-full bg-[#e8e1d7]/30 text-[#141824] flex items-center justify-center shrink-0">

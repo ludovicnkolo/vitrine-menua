@@ -11,7 +11,7 @@ export default function PourquoiMenuaPage() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── 2.1 INTRODUCTION (Full Bleed Hero) ── */}
-      <section className="relative w-full min-h-[60vh] flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-[60vh] flex flex-col justify-center overflow-hidden mb-20 lg:mb-32">
         <div className="absolute inset-0 z-0">
           <img 
             src="/difference.png" 
@@ -42,9 +42,11 @@ export default function PourquoiMenuaPage() {
       {/* ── 2.2 BÉNÉFICES (Beige Cards) ── */}
       <section className="relative w-full section-padding bg-[#f5f7fa]">
         <div className="laplace-container">
-          <div className="animate-fade-in-up mb-16 text-center flex flex-col items-center">
-            <h2 className="mb-6 text-[2rem] text-[#141824]">{t("Bénéfices", "Benefits")}</h2>
-            <div className="w-16 h-1 bg-[#141824]" />
+          <div className="animate-fade-in-up mb-16 text-center">
+            <div className="inline-block text-left">
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+              <h2 className="mb-6 text-[2rem] text-[#141824]">{t("Bénéfices", "Benefits")}</h2>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
@@ -67,7 +69,7 @@ export default function PourquoiMenuaPage() {
       </section>
 
       {/* ── 2.3 NOTRE DIFFÉRENCIATION (Overlapping Beige Box) ── */}
-      <section className="relative w-full bg-white pt-24 pb-32">
+      <section className="relative w-full bg-white section-padding">
         <div className="laplace-container relative">
           <div className="flex flex-col lg:flex-row items-center">
             {/* Left Image */}
@@ -80,10 +82,10 @@ export default function PourquoiMenuaPage() {
               <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-4 opacity-70">
                 {t("Notre différenciation", "Our Differentiation")}
               </p>
+              <div className="w-16 h-[3px] bg-[#141824] mb-5 animate-fade-in-up" />
               <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] mb-8 font-bold leading-tight">
                 {t("Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.", "As back and middle office specialists, we don't stop at analysis: we execute.")}
               </h2>
-              <div className="w-16 h-1 bg-[#141824] mb-10 animate-fade-in-up" />
               
               <ul className="space-y-6 text-[#141824] text-[1.05rem] font-light">
                 {[
@@ -108,14 +110,16 @@ export default function PourquoiMenuaPage() {
       {/* ── 2.4 NOS ENGAGEMENTS (Dark Blue Section) ── */}
       <section className="relative w-full bg-[#141824] text-white section-padding">
         <div className="laplace-container">
-          <div className="animate-fade-in-up mb-16 text-center flex flex-col items-center max-w-4xl mx-auto">
-            <p className="text-[#e8e1d7] text-[0.85rem] font-bold tracking-widest uppercase mb-4">
-              {t("Nos engagements", "Our Commitments")}
-            </p>
-            <h2 className="mb-6 text-[2rem] text-white">
-              {t("Une garantie de qualité et de sérénité", "A guarantee of quality and peace of mind")}
-            </h2>
-            <div className="w-16 h-1 bg-[#e8e1d7] mb-10" />
+          <div className="animate-fade-in-up mb-16 text-center max-w-4xl mx-auto">
+            <div className="inline-block text-left mb-6">
+              <p className="text-[#e8e1d7] text-[0.85rem] font-bold tracking-widest uppercase mb-4">
+                {t("Nos engagements", "Our Commitments")}
+              </p>
+              <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
+              <h2 className="text-[2rem] text-white">
+                {t("Une garantie de qualité et de sérénité", "A guarantee of quality and peace of mind")}
+              </h2>
+            </div>
             <p className="text-[#e5e9f0] text-[1.1rem] leading-relaxed mb-6 font-light">
               {t("MENUA CONSULTING s'engage sur l'essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.", "MENUA CONSULTING commits to the essentials: quality of deliverables, respect of deadlines, traceability of operations and clear communication with your teams.")}
             </p>

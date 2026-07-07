@@ -69,7 +69,7 @@ export default function VosBesoinsPage() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── 3.1 INTRODUCTION (Full Bleed Hero) ── */}
-      <section className="relative w-full min-h-[50vh] flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-[50vh] flex flex-col justify-center overflow-hidden mb-20 lg:mb-32">
         <div className="absolute inset-0 z-0">
           <img 
             src="/meeting.jpg" 
@@ -95,13 +95,15 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ── GRID LAYOUT (Nos expertises singulières style) ── */}
-      <section className="relative w-full bg-white pt-24 pb-32">
+      <section className="relative w-full bg-white section-padding">
         <div className="laplace-container">
           <div className="text-center mb-16">
-             <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold uppercase tracking-wider mb-6">
-                {t("Nos domaines d'intervention", "Our areas of intervention")}
-             </h2>
-             <div className="w-16 h-[1px] bg-[#141824] mx-auto mb-6" />
+             <div className="inline-block text-left">
+               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+               <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold uppercase tracking-wider mb-6">
+                  {t("Nos domaines d'intervention", "Our areas of intervention")}
+               </h2>
+             </div>
           </div>
 
           <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto">
@@ -129,19 +131,21 @@ export default function VosBesoinsPage() {
       <div className="bg-[#f5f7fa] py-20">
         <div className="laplace-container">
           <div className="text-center mb-16">
-            <h2 className="text-[1.8rem] md:text-[2rem] text-[#141824] font-bold">{t("Détail de nos interventions", "Details of our interventions")}</h2>
-            <div className="w-16 h-1 bg-[#141824] mx-auto mt-6" />
+            <div className="inline-block text-left">
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+              <h2 className="text-[1.8rem] md:text-[2rem] text-[#141824] font-bold">{t("Détail de nos interventions", "Details of our interventions")}</h2>
+            </div>
           </div>
           
           <div className="space-y-12 max-w-5xl mx-auto">
             {needs.map((need, idx) => (
               <div key={idx} id={need.id} className="bg-white p-10 md:p-16 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-12 scroll-mt-32">
                 <div className="md:w-1/3">
+                  <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
                   <h3 className="text-[1.8rem] text-[#141824] font-bold mb-6 flex items-center gap-4">
                     <need.icon className="text-[#141824]" size={32} />
                     {need.title}
                   </h3>
-                  <div className="w-12 h-1 bg-[#e8e1d7] mb-6" />
                   <p className="text-[#6e7891] text-[1.05rem] font-light leading-relaxed">
                     {need.desc}
                   </p>

@@ -22,13 +22,13 @@ export default function NousRejoindre() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16">
-          <div className="max-w-4xl">
+        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="animate-fade-in-up stagger-1 text-white text-[1.8rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Nous rejoindre", "Join Us")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
+            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "Rejoignez une équipe experte valorisant la rigueur, la fiabilité et l'esprit d'équipe.",
                 "Join an expert team valuing rigor, reliability and team spirit."
@@ -49,7 +49,7 @@ export default function NousRejoindre() {
           <div className="w-full lg:w-[40%] flex flex-col gap-8">
             <div className="bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 shadow-xl">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.8rem] font-bold text-[#141824] mb-6 uppercase tracking-wider">{t("Profils recherchés", "Profiles Sought")}</h2>
+              <h2 className="text-[1.3rem] md:text-[1.5rem] font-bold text-[#141824] mb-6 uppercase tracking-wider">{t("Profils recherchés", "Profiles Sought")}</h2>
 
               <div className="flex flex-col gap-6 mb-8">
                 {[
@@ -73,7 +73,7 @@ export default function NousRejoindre() {
             <div className="bg-[#141824] text-white p-10 shadow-xl border-t-4 border-t-[#e8e1d7]">
               <div className="flex items-center gap-4 mb-6">
                 <Users size={32} className="text-[#e8e1d7]" />
-                <h3 className="text-[1.4rem] font-bold">{t("Aucun CV requis", "No CV required")}</h3>
+                <h3 className="text-[1.4rem] font-semibold">{t("Aucun CV requis", "No CV required")}</h3>
               </div>
               <p className="text-[#e5e9f0] text-[1.05rem] font-light leading-relaxed">
                 {t(
@@ -86,7 +86,7 @@ export default function NousRejoindre() {
 
           {/* Right Column (Form) */}
           <div className="w-full lg:w-[60%] bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 lg:p-16 shadow-xl">
-            <h3 className="text-[1.8rem] font-bold text-[#141824] mb-2">{t("Formulaire de candidature / prestataire", "Application / Provider Form")}</h3>
+            <h3 className="text-[1.8rem] font-semibold text-[#141824] mb-2">{t("Formulaire de candidature / prestataire", "Application / Provider Form")}</h3>
             <p className="text-[#6e7891] mb-10 text-[1.05rem]">{t("Candidat individuel ou structure prestataire", "Individual candidate or provider structure")}</p>
             
             <form className="space-y-10">

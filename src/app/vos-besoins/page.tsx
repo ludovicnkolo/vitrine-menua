@@ -79,13 +79,13 @@ export default function VosBesoinsPage() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16">
-          <div className="max-w-4xl">
+        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="animate-fade-in-up stagger-1 text-white text-[1.8rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Vos besoins", "Your needs")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
+            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "Un appui opérationnel rigoureux pour vos équipes financières, comptables et réglementées.",
                 "Rigorous operational support for your financial, accounting and regulated teams."
@@ -104,7 +104,7 @@ export default function VosBesoinsPage() {
           <div className="text-center mb-16">
              <div className="inline-block text-left">
                <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-               <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold uppercase tracking-wider mb-6">
+               <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase tracking-wider mb-6">
                   {t("Nos domaines d'intervention", "Our areas of intervention")}
                </h2>
              </div>
@@ -113,7 +113,7 @@ export default function VosBesoinsPage() {
           <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto">
             {needs.map((need, idx) => (
               <div key={idx} className="bg-white border border-gray-200 p-10 flex flex-col w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1.5rem)] group hover:bg-[#141824] hover:border-[#141824] hover:shadow-2xl transition-all duration-500 cursor-pointer">
-                 <h3 className="text-[#141824] group-hover:text-white text-[1.2rem] font-bold mb-4 min-h-[3rem] transition-colors duration-500">
+                 <h3 className="text-[#141824] group-hover:text-white text-[1.2rem] font-semibold mb-4 min-h-[3rem] transition-colors duration-500">
                    {need.title}
                  </h3>
                  <p className="text-[#6e7891] group-hover:text-white/80 font-light text-[0.95rem] leading-relaxed mb-8 flex-grow transition-colors duration-500">
@@ -140,7 +140,7 @@ export default function VosBesoinsPage() {
           <div className="text-center mb-16">
             <div className="inline-block text-left">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.8rem] md:text-[2rem] text-[#141824] font-bold uppercase tracking-wider">{t("Détail de nos interventions", "Details of our interventions")}</h2>
+              <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase tracking-wider">{t("Détail de nos interventions", "Details of our interventions")}</h2>
             </div>
           </div>
           
@@ -149,7 +149,7 @@ export default function VosBesoinsPage() {
               <div key={idx} id={need.id} className="bg-white shadow-xl flex flex-col lg:flex-row scroll-mt-32 overflow-hidden mb-12 border border-gray-100">
                 <div className="lg:w-5/12 bg-[#e8e1d7] p-10 md:p-16 flex flex-col justify-center">
                   <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-                  <h3 className="text-[2rem] text-[#141824] font-bold mb-6 flex items-center gap-4">
+                  <h3 className="text-[2rem] text-[#141824] font-semibold mb-6 flex items-center gap-4">
                     <need.icon className="text-[#141824]" size={36} />
                     {need.title}
                   </h3>

@@ -21,13 +21,13 @@ export default function NousContacter() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16">
-          <div className="max-w-4xl">
+        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="animate-fade-in-up stagger-1 text-white text-[1.8rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Nous contacter", "Contact us")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
+            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "Une réponse experte et sur mesure à vos besoins d'externalisation.",
                 "An expert and tailor-made response to your outsourcing needs."
@@ -48,7 +48,7 @@ export default function NousContacter() {
           <div className="w-full lg:w-[40%] flex flex-col gap-8">
             <div className="bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 shadow-xl">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.8rem] font-bold text-[#141824] mb-6 uppercase tracking-wider">{t("Contact Rapide", "Quick Contact")}</h2>
+              <h2 className="text-[1.3rem] md:text-[1.5rem] font-bold text-[#141824] mb-6 uppercase tracking-wider">{t("Contact Rapide", "Quick Contact")}</h2>
               
               <div className="flex items-start gap-5 mb-10">
                 <div className="w-14 h-14 rounded-full bg-[#e8e1d7]/30 text-[#141824] flex items-center justify-center shrink-0">
@@ -88,7 +88,7 @@ export default function NousContacter() {
             </div>
 
             <div className="bg-[#141824] text-white p-10 shadow-xl border-t-4 border-t-[#e8e1d7] text-center">
-              <h3 className="text-[1.4rem] font-bold mb-6 leading-snug">{t("Retrouvez nos analyses et publications.", "Find our analyses and publications.")}</h3>
+              <h3 className="text-[1.4rem] font-semibold mb-6 leading-snug">{t("Retrouvez nos analyses et publications.", "Find our analyses and publications.")}</h3>
               <p className="text-[#e5e9f0] mb-8 font-light text-[1.05rem]">
                 {t("Suivez notre actualité professionnelle sur LinkedIn.", "Follow our professional news on LinkedIn.")}
               </p>
@@ -100,7 +100,7 @@ export default function NousContacter() {
 
           {/* Right Column (Formulaire) */}
           <div className="w-full lg:w-[60%] bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 lg:p-16 shadow-xl">
-            <h2 className="text-[1.8rem] font-bold text-[#141824] mb-10 text-center uppercase tracking-wider">{t("Formulaire de contact", "Contact Form")}</h2>
+            <h2 className="text-[1.3rem] md:text-[1.5rem] font-bold text-[#141824] mb-10 text-center uppercase tracking-wider">{t("Formulaire de contact", "Contact Form")}</h2>
             
             <form className="space-y-8">
               

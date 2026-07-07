@@ -21,13 +21,13 @@ export default function PourquoiMenuaPage() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16">
-          <div className="max-w-4xl">
+        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="animate-fade-in-up stagger-1 text-white text-[1.8rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Pourquoi Menua Consulting ?", "Why Menua Consulting ?")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
+            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "L'externalisation comme levier de performance, de fiabilité et de sérénité.",
                 "Outsourcing as a lever for performance, reliability and peace of mind."
@@ -57,7 +57,7 @@ export default function PourquoiMenuaPage() {
           {/* Text block — full width on mobile, leaves room for image on right on desktop */}
           <div className="bg-[#f5f7fa] shadow-xl relative z-30 lg:z-10 px-10 lg:px-16 pt-12 pb-14 lg:pr-[38%] -mt-16 lg:mt-0">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
+            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("Bénéfices", "Benefits")}
             </h2>
             <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-4">
@@ -120,7 +120,7 @@ export default function PourquoiMenuaPage() {
           {/* Beige block with content (Left) */}
           <div className="w-full lg:w-1/2 bg-[#e8e1d7] p-10 lg:p-16 flex flex-col justify-center shadow-xl">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[1.6rem] md:text-[2rem] text-[#141824] font-bold uppercase mb-4 leading-tight">
+            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-4 leading-tight">
               {t("DIFFÉRENCIATION", "DIFFERENTIATION")}
             </h2>
             <p className="text-[#141824] font-bold text-[0.85rem] uppercase tracking-widest mb-6 opacity-70">
@@ -179,7 +179,7 @@ export default function PourquoiMenuaPage() {
           {/* Left Column: Narrative */}
           <div className="w-full md:w-5/12">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[#141824] text-[1.8rem] md:text-[2.2rem] font-bold mb-6 uppercase tracking-wider">
+            <h2 className="text-[#141824] text-[1.3rem] md:text-[1.5rem] font-bold mb-6 uppercase tracking-wider">
               {t("ENGAGEMENTS", "COMMITMENTS")}
             </h2>
             <p className="text-[1.1rem] text-[#6e7891] font-light leading-relaxed mb-6">
@@ -209,7 +209,7 @@ export default function PourquoiMenuaPage() {
             ].map((item, i) => (
               <div key={i} className={`border-l-2 border-[#141824]/20 pl-6 ${item.span ? 'sm:col-span-2 sm:max-w-[50%] sm:mx-auto sm:w-full' : ''}`}>
                 <item.icon size={22} className="text-[#141824] mb-3" strokeWidth={1.5} />
-                <h3 className="text-[#141824] font-bold text-[1.05rem] leading-snug">{item.title}</h3>
+                <h3 className="text-[#141824] font-semibold text-[1.05rem] leading-snug">{item.title}</h3>
               </div>
             ))}
           </div>

@@ -30,13 +30,13 @@ export default function ActualitesPage() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16">
-          <div className="max-w-4xl">
+        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="animate-fade-in-up stagger-1 text-white text-[1.8rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Actualités", "News")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
+            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "L'essentiel de l'actualité financière, comptable et réglementaire.",
                 "The essentials of financial, accounting and regulatory news."
@@ -66,7 +66,7 @@ export default function ActualitesPage() {
               <img src="/office-lounge.jpg" alt="À la une" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             
-            <h3 className="text-white text-[1.1rem] font-bold mb-4 leading-snug uppercase">
+            <h3 className="text-white text-[1.1rem] font-semibold mb-4 leading-snug uppercase">
               {t("Sélection d’articles, de contenus et d’analyses mis en avant", "Selection of featured articles, content and analysis")}
             </h3>
             <p className="text-[#e5e9f0] font-light text-[0.95rem] leading-relaxed mb-8">
@@ -93,7 +93,7 @@ export default function ActualitesPage() {
         <div className="laplace-container max-w-6xl mx-auto">
           <div>
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-              <h3 className="text-[#141824] text-[1.4rem] font-bold uppercase tracking-wider flex items-center gap-4">
+              <h3 className="text-[#141824] text-[1.4rem] font-semibold uppercase tracking-wider flex items-center gap-4">
                 <span className="w-8 h-[2px] bg-[#141824]"></span>
                 {t("ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES", "FINANCIAL AND REGULATORY NEWS")}
               </h3>
@@ -226,7 +226,7 @@ export default function ActualitesPage() {
               </svg>
             </div>
             <div>
-              <h3 className="text-white text-[1.2rem] font-bold mb-2">
+              <h3 className="text-white text-[1.2rem] font-semibold mb-2">
                 {t("Suivez notre actualité et nos publications professionnelles", "Follow our news and professional publications")}
               </h3>
               <p className="text-[#e5e9f0] text-[0.95rem] font-light">

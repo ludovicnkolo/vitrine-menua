@@ -22,13 +22,13 @@ export default function Home() {
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
         
-        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16">
-          <div className="max-w-4xl">
+        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="animate-fade-in-up stagger-1 text-white text-[1.8rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               MENUA CONSULTING
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
+            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "L'externalisation opérationnelle des fonctions back et middle office.",
                 "Operational outsourcing of back and middle office functions."
@@ -59,7 +59,7 @@ export default function Home() {
             <div className="w-full lg:w-9/12 bg-[#e8e1d7] px-12 lg:pr-20 lg:pl-32 pt-8 lg:pt-16 pb-12 lg:pb-16 relative z-30 lg:z-10 -mt-16 lg:mt-0 lg:-ml-24 shadow-xl">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <div className="leading-relaxed text-[#141824] text-[1.1rem] md:text-[1.2rem] font-light mb-8 space-y-6">
-                <h2 className="font-bold text-[1.6rem] md:text-[2rem] leading-tight mb-4 uppercase tracking-wider">
+                <h2 className="font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
                   {t(
                     "Externalisation back et middle office",
                     "Back and middle office outsourcing"
@@ -98,7 +98,7 @@ export default function Home() {
           {/* Left Column: Narrative */}
           <div className="w-full md:w-5/12">
             <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
-            <h2 className="text-white text-[1.8rem] md:text-[2.2rem] font-bold mb-6 uppercase tracking-wider">
+            <h2 className="text-white text-[1.3rem] md:text-[1.5rem] font-bold mb-6 uppercase tracking-wider">
               {t("Pourquoi MENUA CONSULTING ?", "Why MENUA CONSULTING?")}
             </h2>
             <p className="text-[1.1rem] text-[#e5e9f0] font-light leading-relaxed mb-8">
@@ -119,19 +119,19 @@ export default function Home() {
           {/* Right Column: 4 Assets in a Grid */}
           <div className="w-full md:w-7/12 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-12">
              <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
-                <h3 className="text-[#e8e1d7] font-bold text-[1.3rem] mb-2">{t("Spécialisation", "Specialization")}</h3>
+                <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Spécialisation", "Specialization")}</h3>
                 <p className="text-white/80 font-light text-[1.05rem]">Back et Middle Office</p>
              </div>
              <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
-                <h3 className="text-[#e8e1d7] font-bold text-[1.3rem] mb-2">{t("Exécution", "Execution")}</h3>
+                <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Exécution", "Execution")}</h3>
                 <p className="text-white/80 font-light text-[1.05rem]">100% Opérationnelle</p>
              </div>
              <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
-                <h3 className="text-[#e8e1d7] font-bold text-[1.3rem] mb-2">{t("Fiabilité", "Reliability")}</h3>
+                <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Fiabilité", "Reliability")}</h3>
                 <p className="text-white/80 font-light text-[1.05rem]">Continuité de service</p>
              </div>
              <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
-                <h3 className="text-[#e8e1d7] font-bold text-[1.3rem] mb-2">{t("Bilingue", "Bilingual")}</h3>
+                <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Bilingue", "Bilingual")}</h3>
                 <p className="text-white/80 font-light text-[1.05rem]">Français / Anglais</p>
               </div>
           </div>
@@ -159,7 +159,7 @@ export default function Home() {
           {/* Text block — full width on mobile, leaves room for image on desktop */}
           <div className="bg-[#f5f7fa] shadow-xl relative z-30 lg:z-10 px-10 lg:px-16 pt-12 pb-14 lg:pr-[38%] -mt-16 lg:mt-0">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
+            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("Vos besoins", "Your Needs")}
             </h2>
             <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-10">
@@ -177,7 +177,7 @@ export default function Home() {
                 { title: t("Support Comptable et Data", "Accounting and Data Support"), desc: t("Appui opérationnel aux équipes comptables, administratives et data...", "Operational support for accounting, administrative and data teams..."), href: "/vos-besoins#support-comptable-data" },
               ].map((item, i, arr) => (
                 <Link key={i} href={item.href} className={`flex flex-col gap-2 group flex-1 pr-6 ${i < arr.length - 1 ? "md:border-r border-[#e8e1d7] md:mr-6" : ""}`}>
-                  <h3 className="text-[#141824] font-bold text-[1rem] group-hover:text-[#6e7891] transition-colors">{item.title}</h3>
+                  <h3 className="text-[#141824] font-semibold text-[1rem] group-hover:text-[#6e7891] transition-colors">{item.title}</h3>
                   <p className="text-[#6e7891] text-[0.85rem] font-light leading-snug flex-grow">{item.desc}</p>
                   <span className="inline-flex items-center gap-1 text-[#141824] text-[0.75rem] font-bold uppercase tracking-wider mt-2 group-hover:gap-2 transition-all">
                     {t("Découvrir", "Discover")} <ArrowRight size={14} />
@@ -216,7 +216,7 @@ export default function Home() {
           {/* Left Column: Narrative */}
           <div className="w-full md:w-5/12">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
+            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("Nos solutions d'externalisation", "Our outsourcing solutions")}
             </h2>
             <p className="text-[#141824] text-[1.1rem] font-light leading-relaxed mb-8">
@@ -237,19 +237,19 @@ export default function Home() {
           {/* Right Column: 4 constraints in a 2x2 grid */}
           <div className="w-full md:w-7/12 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-12">
              <div className="border-l-2 border-[#141824]/30 pl-6">
-                <h3 className="text-[#141824] font-bold text-[1.3rem] mb-2">{t("Urgence", "Urgency")}</h3>
+                <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Urgence", "Urgency")}</h3>
                 <p className="text-[#141824]/70 font-light text-[1.05rem]">Réactivité</p>
              </div>
              <div className="border-l-2 border-[#141824]/30 pl-6">
-                <h3 className="text-[#141824] font-bold text-[1.3rem] mb-2">{t("Durée", "Duration")}</h3>
+                <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Durée", "Duration")}</h3>
                 <p className="text-[#141824]/70 font-light text-[1.05rem]">Flexibilité</p>
              </div>
              <div className="border-l-2 border-[#141824]/30 pl-6">
-                <h3 className="text-[#141824] font-bold text-[1.3rem] mb-2">{t("Volume", "Volume")}</h3>
+                <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Volume", "Volume")}</h3>
                 <p className="text-[#141824]/70 font-light text-[1.05rem]">Agilité</p>
              </div>
               <div className="border-l-2 border-[#141824]/30 pl-6">
-                 <h3 className="text-[#141824] font-bold text-[1.3rem] mb-2">{t("Format", "Format")}</h3>
+                 <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Format", "Format")}</h3>
                  <p className="text-[#141824]/70 font-light text-[1.05rem]">Sur Mesure</p>
               </div>
           </div>
@@ -268,7 +268,7 @@ export default function Home() {
           <div className="text-center mb-14">
             <div className="inline-block text-left">
               <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
-              <h2 className="text-[1.8rem] md:text-[2.2rem] text-white font-bold mb-4 uppercase tracking-wider">
+              <h2 className="text-[1.3rem] md:text-[1.5rem] text-white font-bold mb-4 uppercase tracking-wider">
                 {t("Actualités et Veille", "News and Monitoring")}
               </h2>
             </div>
@@ -316,7 +316,7 @@ export default function Home() {
                 {/* Content */}
                 <div className="flex flex-col flex-grow p-6">
                   <span className="text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[#e8e1d7] mb-3">{card.category}</span>
-                  <h3 className="text-white font-bold text-[1rem] leading-snug mb-3 group-hover:text-[#e8e1d7] transition-colors">{card.title}</h3>
+                  <h3 className="text-white font-semibold text-[1rem] leading-snug mb-3 group-hover:text-[#e8e1d7] transition-colors">{card.title}</h3>
                   <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4">{card.desc}</p>
                   <span className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
                     {t("Lire l'article", "Read article")} <ArrowRight size={14} />

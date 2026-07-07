@@ -59,13 +59,13 @@ export default function NosSolutionsPage() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16">
-          <div className="max-w-4xl">
+        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="animate-fade-in-up stagger-1 text-white text-[1.8rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Nos solutions", "Our solutions")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
+            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "Des dispositifs d’externalisation sur mesure, adaptés à vos contraintes opérationnelles.",
                 "Tailor-made outsourcing systems, adapted to your operational constraints."
@@ -91,7 +91,7 @@ export default function NosSolutionsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {solutions.map((sol, idx) => (
               <div key={idx} className="bg-white/40 border border-white/40 p-8 flex flex-col group hover:bg-white transition-all duration-500">
-                <h3 className="text-[#141824] text-[1.4rem] font-bold mb-4">{sol.title}</h3>
+                <h3 className="text-[#141824] text-[1.4rem] font-semibold mb-4">{sol.title}</h3>
                 <p className="text-[#141824]/80 font-light text-[0.95rem] leading-relaxed mb-10 flex-grow">
                   {sol.desc}
                 </p>
@@ -117,7 +117,7 @@ export default function NosSolutionsPage() {
             <div key={idx} id={sol.id} className="bg-white shadow-xl flex flex-col lg:flex-row scroll-mt-32 overflow-hidden mb-12 border border-gray-100">
                <div className="lg:w-5/12 bg-[#e8e1d7] p-10 md:p-16 flex flex-col justify-center">
                   <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-                  <h3 className="text-[2rem] text-[#141824] font-bold mb-6 flex items-center gap-4">
+                  <h3 className="text-[2rem] text-[#141824] font-semibold mb-6 flex items-center gap-4">
                     <sol.icon className="text-[#141824]" size={36} />
                     {sol.title}
                   </h3>
@@ -148,7 +148,7 @@ export default function NosSolutionsPage() {
         <div className="laplace-container flex flex-col md:flex-row items-center justify-center gap-8 text-center md:text-left">
           <Globe size={64} className="text-[#e8e1d7] shrink-0 opacity-80" strokeWidth={1} />
           <div className="max-w-2xl">
-            <h3 className="text-[1.4rem] font-bold text-white mb-2">
+            <h3 className="text-[1.4rem] font-semibold text-white mb-2">
               {t("Nous intervenons en français et en anglais.", "We operate in French and English.")}
             </h3>
             <p className="text-[#e5e9f0] font-light text-[1.1rem]">

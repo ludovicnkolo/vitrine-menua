@@ -56,7 +56,7 @@ export default function NousConnaitrePage() {
           {/* Text block — full width on mobile, leaves room for image on left on desktop */}
           <div className="bg-[#f5f7fa] shadow-xl relative z-30 lg:z-10 px-10 lg:px-16 pt-12 pb-14 lg:pl-[38%] -mt-16 lg:mt-0">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
+            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("MENUA CONSULTING", "MENUA CONSULTING")}
             </h2>
             <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-8">
@@ -124,7 +124,7 @@ export default function NousConnaitrePage() {
           <div className="text-center mb-20 animate-fade-in-up">
             <div className="inline-block text-left">
               <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
-              <h2 className="text-white text-[2rem] font-bold mb-6 uppercase tracking-wider">{t("Notre méthodologie", "Our methodology")}</h2>
+              <h2 className="text-white text-[1.3rem] md:text-[1.5rem] font-bold mb-6 uppercase tracking-wider">{t("Notre méthodologie", "Our methodology")}</h2>
             </div>
           </div>
 
@@ -175,7 +175,7 @@ export default function NousConnaitrePage() {
           {/* Beige block with list (Left) */}
           <div className="w-full lg:w-7/12 bg-[#e8e1d7] p-10 lg:p-16 flex flex-col justify-center shadow-xl">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[1.6rem] md:text-[2rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
+            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
               {t("ACCRÉDITATIONS, CERTIFICATIONS ET CADRE D’INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS AND INTERVENTION FRAMEWORK")}
             </h2>
             
@@ -227,14 +227,14 @@ export default function NousConnaitrePage() {
         <div className="laplace-container max-w-4xl mx-auto text-center">
           <div className="inline-block text-left">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="mb-4 text-[#141824] text-[2rem] font-bold uppercase tracking-wider">{t("Notre équipe", "Our team")}</h2>
+            <h2 className="mb-4 text-[#141824] text-[1.3rem] md:text-[1.5rem] font-bold uppercase tracking-wider">{t("Notre équipe", "Our team")}</h2>
             <p className="text-[#141824] font-bold tracking-widest uppercase text-[0.85rem] mb-6 opacity-70">
               {t("Une direction impliquée au plus près des opérations", "Management closely involved in operations")}
             </p>
           </div>
           
           <div className="bg-[#141824] text-[#e8e1d7] p-10 md:p-14 shadow-xl text-left">
-            <h3 className="text-[1.6rem] font-bold mb-8 text-white">La Présidente</h3>
+            <h3 className="text-[1.6rem] font-semibold mb-8 text-white">La Présidente</h3>
             
             <div className="flex flex-col md:flex-row gap-10 items-start">
               {/* Discreet Photo */}

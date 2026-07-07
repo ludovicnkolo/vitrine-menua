@@ -118,29 +118,29 @@ export default function ActualitesPage() {
 
             {/* Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              
+
               {/* Card 1 */}
-              <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:shadow-md transition-shadow">
+              <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:bg-[#141824] hover:border-[#141824] transition-all duration-300">
                 <div className="w-full h-[220px] overflow-hidden mb-6">
                   <img src="/meeting.jpg" alt="Actualités" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="flex flex-col flex-grow">
-                  <p className="text-[#141824] text-[0.65rem] font-bold tracking-widest uppercase mb-4">
+                  <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
                     {t("FINANCE ET COMPTABILITÉ •", "FINANCE AND ACCOUNTING •")} 
                   </p>
-                  <h4 className="text-[#141824] text-[1.1rem] font-bold mb-4 leading-snug uppercase">
+                  <h4 className="text-[#141824] group-hover:text-white text-[1.1rem] font-bold mb-4 leading-snug uppercase transition-colors duration-300">
                     {t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news")}
                   </h4>
-                  <p className="text-[#6e7891] text-[0.95rem] font-light leading-relaxed mb-8 flex-grow">
+                  <p className="text-[#6e7891] group-hover:text-white/70 text-[0.95rem] font-light leading-relaxed mb-8 flex-grow transition-colors duration-300">
                     {t(
-                      "Analyse et décryptage des évolutions susceptibles d’avoir un impact sur vos organisations : finance, comptabilité, gestion de patrimoine, conformité, réglementation et pratiques opérationnelles.",
+                      "Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations : finance, comptabilité, gestion de patrimoine, conformité, réglementation et pratiques opérationnelles.",
                       "Analysis and decoding of developments likely to have an impact on your organizations: finance, accounting, wealth management, compliance, regulation and operational practices."
                     )}
                   </p>
                   <div className="flex justify-end mt-auto">
-                    <a href="#" className="text-[#141824] text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 group-hover:text-[#6e7891] transition-colors">
+                    <a href="#" className="text-[#141824] group-hover:text-white text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 transition-colors duration-300">
                       {t("LIRE L'ARTICLE", "READ ARTICLE")} 
-                      <span className="w-5 h-5 rounded-full border border-[#141824] flex items-center justify-center group-hover:border-[#6e7891]">
+                      <span className="w-5 h-5 rounded-full border border-[#141824] group-hover:border-white flex items-center justify-center transition-colors duration-300">
                         <ArrowRight size={10} />
                       </span>
                     </a>
@@ -149,27 +149,27 @@ export default function ActualitesPage() {
               </div>
 
               {/* Card 2 */}
-              <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:shadow-md transition-shadow">
+              <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:bg-[#141824] hover:border-[#141824] transition-all duration-300">
                 <div className="w-full h-[220px] overflow-hidden mb-6">
                   <img src="/certification.jpg" alt="Publications" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="flex flex-col flex-grow">
-                  <p className="text-[#141824] text-[0.65rem] font-bold tracking-widest uppercase mb-4">
+                  <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
                     {t("PUBLICATIONS •", "PUBLICATIONS •")} 
                   </p>
-                  <h4 className="text-[#141824] text-[1.1rem] font-bold mb-4 leading-snug uppercase">
+                  <h4 className="text-[#141824] group-hover:text-white text-[1.1rem] font-bold mb-4 leading-snug uppercase transition-colors duration-300">
                     {t("Nos publications et prises de parole", "Our publications and speeches")}
                   </h4>
-                  <p className="text-[#6e7891] text-[0.95rem] font-light leading-relaxed mb-8 flex-grow">
+                  <p className="text-[#6e7891] group-hover:text-white/70 text-[0.95rem] font-light leading-relaxed mb-8 flex-grow transition-colors duration-300">
                     {t(
                       "Retrouvez les prises de parole, analyses et contenus publiés par MENUA CONSULTING sur les enjeux opérationnels, réglementaires et sectoriels.",
                       "Find the speeches, analyzes and content published by MENUA CONSULTING on operational, regulatory and sector issues."
                     )}
                   </p>
                   <div className="flex justify-end mt-auto">
-                    <a href="#" className="text-[#141824] text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 group-hover:text-[#6e7891] transition-colors">
+                    <a href="#" className="text-[#141824] group-hover:text-white text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 transition-colors duration-300">
                       {t("LIRE L'ARTICLE", "READ ARTICLE")} 
-                      <span className="w-5 h-5 rounded-full border border-[#141824] flex items-center justify-center group-hover:border-[#6e7891]">
+                      <span className="w-5 h-5 rounded-full border border-[#141824] group-hover:border-white flex items-center justify-center transition-colors duration-300">
                         <ArrowRight size={10} />
                       </span>
                     </a>
@@ -178,27 +178,27 @@ export default function ActualitesPage() {
               </div>
 
               {/* Card 3 (Placeholder for grid symmetry) */}
-              <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:shadow-md transition-shadow">
+              <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:bg-[#141824] hover:border-[#141824] transition-all duration-300">
                 <div className="w-full h-[220px] overflow-hidden mb-6">
                   <img src="/office-lounge.jpg" alt="Veille" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="flex flex-col flex-grow">
-                  <p className="text-[#141824] text-[0.65rem] font-bold tracking-widest uppercase mb-4">
+                  <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
                     {t("RÉGLEMENTATION •", "REGULATION •")} 
                   </p>
-                  <h4 className="text-[#141824] text-[1.1rem] font-bold mb-4 leading-snug uppercase">
+                  <h4 className="text-[#141824] group-hover:text-white text-[1.1rem] font-bold mb-4 leading-snug uppercase transition-colors duration-300">
                     {t("Veille réglementaire et conformité", "Regulatory watch and compliance")}
                   </h4>
-                  <p className="text-[#6e7891] text-[0.95rem] font-light leading-relaxed mb-8 flex-grow">
+                  <p className="text-[#6e7891] group-hover:text-white/70 text-[0.95rem] font-light leading-relaxed mb-8 flex-grow transition-colors duration-300">
                     {t(
                       "Restez informés des dernières évolutions réglementaires et découvrez nos conseils pour adapter vos processus opérationnels en toute sécurité.",
                       "Stay informed of the latest regulatory developments and discover our advice to safely adapt your operational processes."
                     )}
                   </p>
                   <div className="flex justify-end mt-auto">
-                    <a href="#" className="text-[#141824] text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 group-hover:text-[#6e7891] transition-colors">
+                    <a href="#" className="text-[#141824] group-hover:text-white text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 transition-colors duration-300">
                       {t("LIRE L'ARTICLE", "READ ARTICLE")} 
-                      <span className="w-5 h-5 rounded-full border border-[#141824] flex items-center justify-center group-hover:border-[#6e7891]">
+                      <span className="w-5 h-5 rounded-full border border-[#141824] group-hover:border-white flex items-center justify-center transition-colors duration-300">
                         <ArrowRight size={10} />
                       </span>
                     </a>

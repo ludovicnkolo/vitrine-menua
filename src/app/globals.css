@@ -2,7 +2,7 @@
 
 @layer base {
   html {
-    font-family: var(--font-nunito), "Nunito Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-playfair), "Playfair Display", serif;
     font-size: 16px;
     line-height: 1.49;
     -webkit-font-smoothing: antialiased;
@@ -11,7 +11,7 @@
   }
 
   body {
-    font-family: var(--font-nunito), "Nunito Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-playfair), "Playfair Display", serif;
     font-weight: 400;
     font-size: 1rem;
     line-height: 1.49;
@@ -19,8 +19,9 @@
     background-color: #f5f7fa;
   }
 
-  /* Headings - Laplace Style (Nunito Sans Bold, very dark blue/grey) */
+  /* Headings - Laplace Style (Playfair Display, very dark blue/grey) */
   h1, .h1-like {
+    font-family: var(--font-playfair), "Playfair Display", serif;
     font-weight: 700;
     font-size: clamp(2rem, 4vw, 3.5rem);
     line-height: 1.1;
@@ -31,6 +32,7 @@
   }
 
   h2, .h2-like {
+    font-family: var(--font-playfair), "Playfair Display", serif;
     font-weight: 700;
     font-size: clamp(1.5rem, 3vw, 2.5rem);
     line-height: 1.1;
@@ -41,6 +43,7 @@
   }
 
   h3 {
+    font-family: var(--font-playfair), "Playfair Display", serif;
     font-weight: 700;
     font-size: clamp(1.25rem, 2vw, 1.75rem);
     line-height: 1.2;

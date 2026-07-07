@@ -1,17 +1,23 @@
 import type { Metadata } from "next";
-import { Nunito_Sans } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-/* ── Nunito Sans = police principale Laplace Groupe ── */
-const fontNunito = Nunito_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-nunito",
-  weight: ["300", "400", "600", "700", "800"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Menua Consulting | Externalisation Back & Middle Office",
+  title: "Menua Consulting | Externalisation Back et Middle Office",
   description:
     "Menua Consulting sécurise l'exécution de vos opérations back et middle office pour banques, cabinets de gestion de patrimoine, sociétés financières et experts-comptables en France.",
   keywords: [
@@ -22,7 +28,7 @@ export const metadata: Metadata = {
     "cabinets financiers France",
   ],
   openGraph: {
-    title: "Menua Consulting | Externalisation Back & Middle Office",
+    title: "Menua Consulting | Externalisation Back et Middle Office",
     description:
       "Nous sécurisons l'exécution de vos opérations back et middle office afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
     type: "website",
@@ -41,7 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`${fontNunito.variable} font-sans min-h-screen flex flex-col antialiased bg-[#f5f7fa] text-[#31374a]`}>
+      <body className={`${inter.variable} ${playfair.variable} min-h-screen flex flex-col antialiased bg-[#f5f7fa] text-[#141824]`}>
         <LanguageProvider>
           <Header />
           {children}

@@ -24,7 +24,7 @@ export default function NousRejoindre() {
         <div className="laplace-container relative z-10 pt-32 pb-20 mt-16 text-center">
           <div className="max-w-4xl mx-auto">
             <p className="animate-fade-in-up stagger-1 text-[#e8e1d7] text-[0.9rem] font-bold tracking-widest uppercase mb-6">
-              {t("Carrières & Prestataires", "Careers & Providers")}
+              {t("Carrières et Prestataires", "Careers and Providers")}
             </p>
             <h1 className="animate-fade-in-up stagger-1 text-white text-[3rem] md:text-[4rem] leading-tight mb-8 font-bold">
               {t("Nous rejoindre", "Join Us")}
@@ -56,10 +56,10 @@ export default function NousRejoindre() {
 
               <div className="flex flex-col gap-6 mb-8">
                 {[
-                  { icon: Briefcase, title: t("Back & middle office", "Back & middle office") },
-                  { icon: BarChart2, title: t("Comptabilité & support administratif", "Accounting & admin support") },
-                  { icon: Shield, title: t("Reporting & data", "Reporting & data") },
-                  { icon: User, title: t("Risques & Conformité (KYC / AML)", "Risk & Compliance (KYC / AML)") },
+                  { icon: Briefcase, title: t("Back et middle office", "Back and middle office") },
+                  { icon: BarChart2, title: t("Comptabilité et support administratif", "Accounting and admin support") },
+                  { icon: Shield, title: t("Reporting et data", "Reporting and data") },
+                  { icon: User, title: t("Risques et Conformité (KYC / AML)", "Risk and Compliance (KYC / AML)") },
                   { icon: Briefcase, title: t("Support opérationnel CGP", "Operational support CGP") },
                   { icon: Globe, title: t("Profils bilingues français / anglais", "Bilingual profiles French / English") },
                 ].map((p, i) => (
@@ -162,10 +162,10 @@ export default function NousRejoindre() {
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
                     {[
-                      t("Back & middle office", "Back & middle office"),
+                      t("Back et middle office", "Back and middle office"),
                       t("Comptabilité", "Accounting"),
                       t("Data", "Data"),
-                      t("Risques & Conformité", "Risk & Compliance"),
+                      t("Risques et Conformité", "Risk and Compliance"),
                       t("Support CGP", "Operational support CGP"),
                     ].map((opt, i) => (
                       <label key={i} className="flex items-start gap-3 text-[1.05rem] text-[#141824] font-light cursor-pointer group">

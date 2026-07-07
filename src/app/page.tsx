@@ -26,8 +26,8 @@ export default function Home() {
           <div className="max-w-4xl">
             <h1 className="animate-fade-in-up stagger-1 text-white text-[3rem] md:text-[4.5rem] leading-[1.1] mb-8 font-bold">
               {t(
-                "Externalisation opérationnelle des fonctions back & middle office",
-                "Operational outsourcing of back & middle office functions"
+                "Externalisation opérationnelle des fonctions back et middle office",
+                "Operational outsourcing of back and middle office functions"
               )}
             </h1>
             <p className="animate-fade-in-up stagger-2 text-[1.2rem] lg:text-[1.4rem] text-[#e5e9f0] mb-12 max-w-2xl font-light">
@@ -105,7 +105,7 @@ export default function Home() {
                )}
              </p>
              <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.85rem] hover:text-white transition-colors group">
-                {t("Nos atouts & engagements", "Our strengths & commitments")} 
+                {t("Nos atouts et engagements", "Our strengths and commitments")} 
                 <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
                 <ChevronRight size={16} className="-ml-2" />
               </Link>
@@ -113,7 +113,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
              <div className="bg-white/5 p-8 border border-white/10 hover:bg-white/10 transition-colors">
                 <h3 className="text-[#e8e1d7] font-bold mb-3">{t("Spécialisation", "Specialization")}</h3>
-                <p className="text-white/70 text-sm font-light">Back & Middle Office</p>
+                <p className="text-white/70 text-sm font-light">Back et Middle Office</p>
              </div>
              <div className="bg-white/5 p-8 border border-white/10 hover:bg-white/10 transition-colors">
                 <h3 className="text-[#e8e1d7] font-bold mb-3">{t("Exécution", "Execution")}</h3>
@@ -149,7 +149,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-10 shadow-lg border border-[#e8e1d7]/50 flex flex-col group">
-               <h3 className="text-[#141824] text-[1.3rem] font-bold mb-4">{t("Finance & Reporting", "Finance & Reporting")}</h3>
+               <h3 className="text-[#141824] text-[1.3rem] font-bold mb-4">{t("Finance et Reporting", "Finance and Reporting")}</h3>
                <p className="text-[#6e7891] font-light text-sm flex-grow mb-8">
                  {t("Production, structuration et fiabilisation de reportings financiers...", "Production, structuring and reliability of financial reports...")}
                </p>
@@ -158,7 +158,7 @@ export default function Home() {
                </Link>
             </div>
             <div className="bg-white p-10 shadow-lg border border-[#e8e1d7]/50 flex flex-col group">
-               <h3 className="text-[#141824] text-[1.3rem] font-bold mb-4">{t("Risques & Conformité", "Risk & Compliance")}</h3>
+               <h3 className="text-[#141824] text-[1.3rem] font-bold mb-4">{t("Risques et Conformité", "Risk and Compliance")}</h3>
                <p className="text-[#6e7891] font-light text-sm flex-grow mb-8">
                  {t("Appui opérationnel aux équipes risques et conformité dans le traitement...", "Operational support for risk and compliance teams in processing...")}
                </p>
@@ -167,7 +167,7 @@ export default function Home() {
                </Link>
             </div>
             <div className="bg-white p-10 shadow-lg border border-[#e8e1d7]/50 flex flex-col group">
-               <h3 className="text-[#141824] text-[1.3rem] font-bold mb-4">{t("Support Comptable & Data", "Accounting & Data Support")}</h3>
+               <h3 className="text-[#141824] text-[1.3rem] font-bold mb-4">{t("Support Comptable et Data", "Accounting and Data Support")}</h3>
                <p className="text-[#6e7891] font-light text-sm flex-grow mb-8">
                  {t("Appui opérationnel aux équipes comptables, administratives et data...", "Operational support for accounting, administrative and data teams...")}
                </p>
@@ -231,7 +231,7 @@ export default function Home() {
       <section className="relative w-full bg-white py-24">
         <div className="laplace-container text-center max-w-4xl mx-auto">
           <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6">
-            {t("Actualités & Veille", "News & Monitoring")}
+            {t("Actualités et Veille", "News and Monitoring")}
           </h2>
           <div className="w-16 h-1 bg-[#141824] mx-auto mb-6" />
           <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-12">

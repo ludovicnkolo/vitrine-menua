@@ -54,15 +54,15 @@ export default function ActualitesPage() {
               </p>
             </div>
 
-            {/* Actualités financières & réglementaires */}
+            {/* Actualités financières et réglementaires */}
             <div className="bg-[#141824] text-white border-t-4 border-t-[#e8e1d7] p-10 hover:shadow-xl transition-shadow duration-300 flex flex-col h-full animate-fade-in-up stagger-1">
               <LineChart size={40} className="text-[#e8e1d7] mb-8" strokeWidth={1.5} />
-              <h2 className="text-[1.6rem] mb-6 text-white font-bold">{t("Actualités financières & réglementaires", "Financial & Regulatory News")}</h2>
+              <h2 className="text-[1.6rem] mb-6 text-white font-bold">{t("Actualités financières et réglementaires", "Financial and Regulatory News")}</h2>
               <div className="w-16 h-1 bg-[#e8e1d7] mb-6" />
               <p className="text-[#e8e1d7] leading-relaxed font-bold mb-4 text-[1.05rem]">
                 {t(
-                  "Actualités financières, comptables, patrimoniales & réglementaires",
-                  "Financial, accounting, wealth & regulatory news"
+                  "Actualités financières, comptables, patrimoniales et réglementaires",
+                  "Financial, accounting, wealth and regulatory news"
                 )}
               </p>
               <p className="text-[#e5e9f0] leading-relaxed text-[1.05rem] font-light flex-grow">

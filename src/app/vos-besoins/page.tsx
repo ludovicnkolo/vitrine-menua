@@ -153,9 +153,6 @@ export default function VosBesoinsPage() {
                     <need.icon className="text-[#141824]" size={32} />
                     {need.title}
                   </h3>
-                  <p className="text-[#6e7891] text-[1.05rem] font-light leading-relaxed">
-                    {need.desc}
-                  </p>
                 </div>
                 <div className="md:w-2/3">
                   <p className="font-bold text-[#141824] mb-6 text-[1.1rem] uppercase tracking-wider text-sm">

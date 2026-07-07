@@ -115,7 +115,7 @@ export default function PourquoiMenuaPage() {
 
       {/* ── 2.3 NOTRE DIFFÉRENCIATION (Accréditations style) ── */}
       <section className="relative w-full bg-white section-padding">
-        <div className="laplace-container max-w-[1200px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <div className="laplace-container max-w-[1200px] mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
           
           {/* Beige block with content (Left) */}
           <div className="w-full lg:w-1/2 bg-[#e8e1d7] p-10 lg:p-16 flex flex-col justify-center shadow-xl">

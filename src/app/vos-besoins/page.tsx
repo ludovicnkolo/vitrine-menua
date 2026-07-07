@@ -112,16 +112,16 @@ export default function VosBesoinsPage() {
 
           <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto">
             {needs.map((need, idx) => (
-              <div key={idx} className="bg-white border border-gray-200 p-10 flex flex-col w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1.5rem)] group hover:shadow-xl transition-all duration-500">
-                 <h3 className="text-[#141824] text-[1.2rem] font-bold mb-4 min-h-[3rem]">
+              <div key={idx} className="bg-white border border-gray-200 p-10 flex flex-col w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1.5rem)] group hover:bg-[#141824] hover:border-[#141824] hover:shadow-2xl transition-all duration-500 cursor-pointer">
+                 <h3 className="text-[#141824] group-hover:text-white text-[1.2rem] font-bold mb-4 min-h-[3rem] transition-colors duration-500">
                    {need.title}
                  </h3>
-                 <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed mb-8 flex-grow">
+                 <p className="text-[#6e7891] group-hover:text-white/80 font-light text-[0.95rem] leading-relaxed mb-8 flex-grow transition-colors duration-500">
                    {need.desc}
                  </p>
-                 <a href={`#${need.id}`} className="mt-auto flex items-center gap-3 text-[#141824] font-bold uppercase tracking-widest text-[0.7rem] group-hover:text-[#6e7891] transition-colors">
+                 <a href={`#${need.id}`} className="mt-auto flex items-center gap-3 text-[#141824] group-hover:text-white font-bold uppercase tracking-widest text-[0.7rem] transition-colors duration-500">
                    {t("DÉCOUVRIR", "DISCOVER")} 
-                   <span className="w-8 h-8 rounded-full border border-[#141824] flex items-center justify-center group-hover:bg-[#141824] group-hover:text-white transition-colors">
+                   <span className="w-8 h-8 rounded-full border border-[#141824] group-hover:border-white group-hover:bg-white text-[#141824] flex items-center justify-center transition-colors duration-500">
                      <ArrowRight size={14} />
                    </span>
                  </a>

@@ -46,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html lang="fr" data-scroll-behavior="smooth">
       <body className={`${inter.variable} ${playfair.variable} min-h-screen flex flex-col antialiased bg-[#f5f7fa] text-[#141824]`}>
         <LanguageProvider>
           <Header />

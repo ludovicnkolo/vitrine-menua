@@ -171,51 +171,49 @@ export default function NousConnaitrePage() {
 
       {/* ── 2.5 ACCRÉDITATIONS ET NOTRE ÉQUIPE ── */}
       <section className="relative w-full bg-white section-padding">
-        <div className="laplace-container max-w-[1200px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <div className="laplace-container max-w-[1200px] mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
           {/* Beige block with list (Left) */}
-          <div className="w-full lg:w-1/2 bg-[#e8e1d7] p-10 lg:p-16 flex flex-col justify-center shadow-xl">
+          <div className="w-full lg:w-7/12 bg-[#e8e1d7] p-10 lg:p-16 flex flex-col justify-center shadow-xl">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.6rem] md:text-[2rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
               {t("ACCRÉDITATIONS, CERTIFICATIONS ET CADRE D’INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS AND INTERVENTION FRAMEWORK")}
             </h2>
             
-            <ul className="space-y-4 text-[#141824] text-[1.05rem] font-medium">
-              <li className="flex items-start gap-4">
-                <ArrowRight size={18} className="shrink-0 mt-1" />
-                <span className="font-light">{t("Environnements soumis à des exigences réglementaires élevées", "Environments subject to high regulatory requirements")}</span>
-              </li>
-              <li className="flex items-start gap-4">
-                <ArrowRight size={18} className="shrink-0 mt-1" />
-                <span className="font-light">{t("Certification AMF et Gestion des Risques", "AMF certification and Risk Management")}</span>
-              </li>
-              <li className="flex items-start gap-4">
-                <ArrowRight size={18} className="shrink-0 mt-1" />
-                <span className="font-light">{t("Coordination avec les équipes habilitées des clients", "Coordination with clients' authorized teams")}</span>
-              </li>
-              <li className="flex items-start gap-4">
-                <ArrowRight size={18} className="shrink-0 mt-1" />
-                <span className="font-light">{t("Intégration aux cadres d’agrément et de supervision", "Integration into approval and supervision frameworks")}</span>
-              </li>
-              <li className="flex items-start gap-4">
-                <ArrowRight size={18} className="shrink-0 mt-1" />
-                <span className="font-light">{t("Garantie de la conformité et de la sécurité des processus", "Guarantee of compliance and process security")}</span>
-              </li>
-            </ul>
-
-            <div className="mt-16 flex justify-end">
-              <div className="text-right">
-                <p className="text-[#141824] uppercase tracking-widest text-[0.7rem] font-bold mb-4">
-                  {t("PLUS D'INFORMATIONS SUR NOTRE ÉQUIPE", "MORE INFORMATION ABOUT OUR TEAM")}
+            <div className="space-y-4 text-[#141824] text-[1.05rem] font-light leading-relaxed">
+              <p>
+                {t("MENUA CONSULTING intervient dans des environnements soumis à des exigences réglementaires élevées.", "MENUA CONSULTING operates in environments subject to high regulatory requirements.")}
+              </p>
+              <p>
+                {t("Le cabinet intervient en coordination avec les équipes habilitées de ses clients (banques, cabinets, structures réglementées).", "The firm operates in coordination with the authorized teams of its clients (banks, firms, regulated structures).")}
+              </p>
+              <div className="bg-white/40 border-l-4 border-[#141824] p-5 my-2 shadow-sm">
+                <p className="font-bold text-[#141824] text-[1rem]">
+                  {t("MENUA CONSULTING n’exerce pas d’activité réglementée en son nom propre. Le cabinet met à disposition des ressources opérationnelles spécialisées intégrées aux cadres d’agrément et de supervision de ses clients.", "MENUA CONSULTING does not carry out regulated activities in its own name. The firm provides specialized operational resources integrated into the approval and supervision frameworks of its clients.")}
                 </p>
-                <a href="#equipe" className="inline-flex w-10 h-10 rounded-full border border-[#141824] items-center justify-center hover:bg-[#141824] hover:text-white transition-colors">
-                  <ArrowRight size={18} />
-                </a>
+              </div>
+              <p className="font-medium pt-2">
+                {t("Ce dispositif garantit la conformité, la qualité des opérations et la sécurité des processus.", "This system guarantees compliance, quality of operations, and process security.")}
+              </p>
+              <div className="pt-4 border-t border-[#141824]/10">
+                <p className="mb-4">
+                  {t("Forte d’une expérience acquise au sein d’environnements financiers, patrimoniaux et réglementés, la dirigeante dispose notamment :", "With experience acquired within financial, wealth, and regulated environments, the director notably holds:")}
+                </p>
+                <ul className="space-y-3 pl-2">
+                  <li className="flex items-center gap-3">
+                    <ShieldCheck size={18} className="text-[#141824] shrink-0" />
+                    <span className="font-medium">{t("De la certification AMF", "The AMF certification")}</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <ShieldCheck size={18} className="text-[#141824] shrink-0 mt-1" />
+                    <span className="font-medium">{t("D’une certification en Contrôle Interne et Gestion des Risques des institutions financières", "A certification in Internal Control and Risk Management of financial institutions")}</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
           
           {/* Image (Right) */}
-          <div className="w-full lg:w-1/2 h-[300px] lg:h-[450px] shadow-xl">
+          <div className="w-full lg:w-5/12 h-[300px] lg:h-[450px] shadow-xl">
              <img src="/certification.jpg" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} />
           </div>
         </div>
@@ -225,17 +223,17 @@ export default function NousConnaitrePage() {
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── NOTRE ÉQUIPE DETAILS ── */}
-      <section id="equipe" className="relative w-full bg-[#141824] section-padding text-[#e8e1d7] scroll-mt-20">
+      <section id="equipe" className="relative w-full bg-white section-padding scroll-mt-20">
         <div className="laplace-container max-w-4xl mx-auto text-center">
           <div className="inline-block text-left">
-            <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
-            <h2 className="mb-4 text-white text-[2rem] font-bold uppercase tracking-wider">{t("Notre équipe", "Our team")}</h2>
-            <p className="text-[#e8e1d7] font-bold tracking-widest uppercase text-[0.85rem] mb-6 opacity-70">
+            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+            <h2 className="mb-4 text-[#141824] text-[2rem] font-bold uppercase tracking-wider">{t("Notre équipe", "Our team")}</h2>
+            <p className="text-[#141824] font-bold tracking-widest uppercase text-[0.85rem] mb-6 opacity-70">
               {t("Une direction impliquée au plus près des opérations", "Management closely involved in operations")}
             </p>
           </div>
           
-          <div className="bg-white/5 p-10 md:p-14 border border-white/10 text-left">
+          <div className="bg-[#141824] text-[#e8e1d7] p-10 md:p-14 shadow-xl text-left">
             <h3 className="text-[1.6rem] font-bold mb-8 text-white">La Présidente</h3>
             
             <div className="flex flex-col md:flex-row gap-10 items-start">

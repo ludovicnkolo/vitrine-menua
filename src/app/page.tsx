@@ -87,43 +87,49 @@ export default function Home() {
 
       {/* ── SECTION 3 : POURQUOI MENUA (Dark Navy block) ── */}
       <section className="relative w-full bg-[#141824] text-white section-padding">
-        <div className="laplace-container max-w-4xl mx-auto">
-          <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
-          <h2 className="text-white text-[1.8rem] md:text-[2.2rem] font-bold mb-6 uppercase tracking-wider">
-            {t("Pourquoi MENUA CONSULTING ?", "Why MENUA CONSULTING?")}
-          </h2>
-          <p className="text-[1.1rem] text-[#e5e9f0] font-light leading-relaxed mb-8">
-            {t(
-              "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants.",
-              "MENUA CONSULTING supports organizations facing demanding operational execution challenges."
-            )}
-          </p>
-          <div className="mb-12">
-            <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.85rem] hover:text-white transition-colors group">
-               {t("Nos atouts et engagements", "Our strengths and commitments")} 
-               <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
-               <ChevronRight size={16} className="-ml-2" />
-             </Link>
+        <div className="laplace-container max-w-[1200px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
+          
+          {/* Left Column: Narrative */}
+          <div className="w-full md:w-5/12">
+            <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
+            <h2 className="text-white text-[1.8rem] md:text-[2.2rem] font-bold mb-6 uppercase tracking-wider">
+              {t("Pourquoi MENUA CONSULTING ?", "Why MENUA CONSULTING?")}
+            </h2>
+            <p className="text-[1.1rem] text-[#e5e9f0] font-light leading-relaxed mb-8">
+              {t(
+                "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants.",
+                "MENUA CONSULTING supports organizations facing demanding operational execution challenges."
+              )}
+            </p>
+            <div className="mb-12 md:mb-0">
+              <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.85rem] hover:text-white transition-colors group">
+                 {t("Nos atouts et engagements", "Our strengths and commitments")} 
+                 <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
+                 <ChevronRight size={16} className="-ml-2" />
+               </Link>
+            </div>
+          </div>
+          
+          {/* Right Column: 4 Assets in a Grid */}
+          <div className="w-full md:w-7/12 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-12">
+             <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
+                <h3 className="text-[#e8e1d7] font-bold text-[1.3rem] mb-2">{t("Spécialisation", "Specialization")}</h3>
+                <p className="text-white/80 font-light text-[1.05rem]">Back et Middle Office</p>
+             </div>
+             <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
+                <h3 className="text-[#e8e1d7] font-bold text-[1.3rem] mb-2">{t("Exécution", "Execution")}</h3>
+                <p className="text-white/80 font-light text-[1.05rem]">100% Opérationnelle</p>
+             </div>
+             <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
+                <h3 className="text-[#e8e1d7] font-bold text-[1.3rem] mb-2">{t("Fiabilité", "Reliability")}</h3>
+                <p className="text-white/80 font-light text-[1.05rem]">Continuité de service</p>
+             </div>
+             <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
+                <h3 className="text-[#e8e1d7] font-bold text-[1.3rem] mb-2">{t("Bilingue", "Bilingual")}</h3>
+                <p className="text-white/80 font-light text-[1.05rem]">Français / Anglais</p>
+             </div>
           </div>
 
-          <div className="flex flex-col gap-8 pt-8 border-t border-white/20">
-             <div>
-                <h3 className="text-[#e8e1d7] font-bold text-[1.2rem] mb-2">{t("Spécialisation", "Specialization")}</h3>
-                <p className="text-white/70 font-light">Back et Middle Office</p>
-             </div>
-             <div>
-                <h3 className="text-[#e8e1d7] font-bold text-[1.2rem] mb-2">{t("Exécution", "Execution")}</h3>
-                <p className="text-white/70 font-light">100% Opérationnelle</p>
-             </div>
-             <div>
-                <h3 className="text-[#e8e1d7] font-bold text-[1.2rem] mb-2">{t("Fiabilité", "Reliability")}</h3>
-                <p className="text-white/70 font-light">Continuité de service</p>
-             </div>
-             <div>
-                <h3 className="text-[#e8e1d7] font-bold text-[1.2rem] mb-2">{t("Bilingue", "Bilingual")}</h3>
-                <p className="text-white/70 font-light">Français / Anglais</p>
-             </div>
-          </div>
         </div>
       </section>
 
@@ -187,42 +193,49 @@ export default function Home() {
 
       {/* ── SECTION 5 : NOS SOLUTIONS (Beige Minimal Section) ── */}
       <section className="relative w-full bg-[#e8e1d7] section-padding">
-        <div className="laplace-container flex flex-col md:flex-row items-center justify-between gap-12">
-           <div className="max-w-2xl">
-             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-             <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
-               {t("Nos solutions d'externalisation", "Our outsourcing solutions")}
-             </h2>
-             <p className="text-[#141824] text-[1.1rem] font-light leading-relaxed mb-8">
-               {t(
-                 "Nous concevons des dispositifs d’externalisation sur mesure, adaptés à vos contraintes opérationnelles d’urgence, de durée, de volume et d’organisation.",
-                 "We design tailor-made outsourcing systems, adapted to your operational constraints of urgency, duration, volume and organization."
-               )}
-             </p>
-             <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
-                {t("Découvrir nos solutions", "Discover our solutions")} 
-                <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
-                <ChevronRight size={16} className="-ml-2" />
-              </Link>
-           </div>
-           <div className="w-full md:w-auto grid grid-cols-2 gap-4">
-              <div className="bg-white/40 p-6 text-center border border-[#141824]/10">
-                 <span className="block text-[#141824] font-bold text-lg mb-1">{t("Urgence", "Urgency")}</span>
-                 <span className="text-[#141824]/70 text-xs uppercase tracking-wider">Réactivité</span>
-              </div>
-              <div className="bg-white/40 p-6 text-center border border-[#141824]/10">
-                 <span className="block text-[#141824] font-bold text-lg mb-1">{t("Durée", "Duration")}</span>
-                 <span className="text-[#141824]/70 text-xs uppercase tracking-wider">Flexibilité</span>
-              </div>
-              <div className="bg-white/40 p-6 text-center border border-[#141824]/10">
-                 <span className="block text-[#141824] font-bold text-lg mb-1">{t("Volume", "Volume")}</span>
-                 <span className="text-[#141824]/70 text-xs uppercase tracking-wider">Agilité</span>
-              </div>
-              <div className="bg-white/40 p-6 text-center border border-[#141824]/10">
-                 <span className="block text-[#141824] font-bold text-lg mb-1">{t("Format", "Format")}</span>
-                 <span className="text-[#141824]/70 text-xs uppercase tracking-wider">Sur Mesure</span>
-              </div>
-           </div>
+        <div className="laplace-container max-w-[1200px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
+          
+          {/* Left Column: Narrative */}
+          <div className="w-full md:w-5/12">
+            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
+              {t("Nos solutions d'externalisation", "Our outsourcing solutions")}
+            </h2>
+            <p className="text-[#141824] text-[1.1rem] font-light leading-relaxed mb-8">
+              {t(
+                "Nous concevons des dispositifs d'externalisation sur mesure, adaptés à vos contraintes opérationnelles d'urgence, de durée, de volume et d'organisation.",
+                "We design tailor-made outsourcing systems, adapted to your operational constraints of urgency, duration, volume and organization."
+              )}
+            </p>
+            <div className="mb-12 md:mb-0">
+              <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
+                 {t("Découvrir nos solutions", "Discover our solutions")} 
+                 <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+                 <ChevronRight size={16} className="-ml-2" />
+               </Link>
+            </div>
+          </div>
+
+          {/* Right Column: 4 constraints in a 2x2 grid */}
+          <div className="w-full md:w-7/12 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-12">
+             <div className="border-l-2 border-[#141824]/30 pl-6">
+                <h3 className="text-[#141824] font-bold text-[1.3rem] mb-2">{t("Urgence", "Urgency")}</h3>
+                <p className="text-[#141824]/70 font-light text-[1.05rem]">Réactivité</p>
+             </div>
+             <div className="border-l-2 border-[#141824]/30 pl-6">
+                <h3 className="text-[#141824] font-bold text-[1.3rem] mb-2">{t("Durée", "Duration")}</h3>
+                <p className="text-[#141824]/70 font-light text-[1.05rem]">Flexibilité</p>
+             </div>
+             <div className="border-l-2 border-[#141824]/30 pl-6">
+                <h3 className="text-[#141824] font-bold text-[1.3rem] mb-2">{t("Volume", "Volume")}</h3>
+                <p className="text-[#141824]/70 font-light text-[1.05rem]">Agilité</p>
+             </div>
+             <div className="border-l-2 border-[#141824]/30 pl-6">
+                <h3 className="text-[#141824] font-bold text-[1.3rem] mb-2">{t("Format", "Format")}</h3>
+                <p className="text-[#141824]/70 font-light text-[1.05rem]">Sur Mesure</p>
+             </div>
+          </div>
+
         </div>
       </section>
 

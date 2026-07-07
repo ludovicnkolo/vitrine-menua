@@ -128,14 +128,15 @@ export default function Header() {
         {/* LOGO */}
         <Link
           href="/"
-          className="flex items-center z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0 lg:-ml-6"
+          className="flex flex-col items-center justify-center z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0 lg:-ml-6"
           onClick={() => { setOpenMenu(null); setIsMobileMenuOpen(false); }}
         >
-          <img
-            src="/logoSlogan.png"
-            alt="MENUA Consulting"
-            className="h-[60px] lg:h-[90px] max-w-[200px] lg:max-w-none w-auto object-contain brightness-0 invert"
-          />
+          <span className="text-white text-[2rem] lg:text-[2.4rem] tracking-[-0.03em] leading-[0.85]" style={{ fontFamily: "var(--font-playfair)", fontWeight: 400 }}>
+            Menua
+          </span>
+          <span className="text-white/80 text-[0.55rem] lg:text-[0.65rem] tracking-[0.3em] font-medium uppercase mt-1">
+            Consulting
+          </span>
         </Link>
 
         <div className="w-10 lg:hidden" />

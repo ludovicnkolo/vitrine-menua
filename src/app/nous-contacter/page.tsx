@@ -29,8 +29,8 @@ export default function NousContacter() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
             <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
-                "Présentez votre besoin, nous vous répondons avec une première analyse et une proposition adaptée.",
-                "Present your need, we will respond with an initial analysis and a tailored proposal."
+                "Une réponse experte et sur mesure à vos besoins d'externalisation.",
+                "An expert and tailor-made response to your outsourcing needs."
               )}
             </p>
           </div>

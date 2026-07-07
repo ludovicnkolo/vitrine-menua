@@ -38,8 +38,8 @@ export default function ActualitesPage() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
             <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
-                "MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles afin d’éclairer ses clients sur les enjeux qui impactent leurs activités.",
-                "MENUA CONSULTING regularly monitors financial, accounting, wealth, regulatory and operational developments to enlighten its clients on the issues that impact their activities."
+                "L'essentiel de l'actualité financière, comptable et réglementaire.",
+                "The essentials of financial, accounting and regulatory news."
               )}
             </p>
           </div>

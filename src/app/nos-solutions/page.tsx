@@ -67,8 +67,8 @@ export default function NosSolutionsPage() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
             <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
-                "Nous concevons des dispositifs d’externalisation sur mesure, adaptés à vos contraintes opérationnelles d’urgence, de durée, de volume et d’organisation.",
-                "We design tailor-made outsourcing systems, adapted to your operational constraints of urgency, duration, volume and organization."
+                "Des dispositifs d’externalisation sur mesure, adaptés à vos contraintes opérationnelles.",
+                "Tailor-made outsourcing systems, adapted to your operational constraints."
               )}
             </p>
           </div>

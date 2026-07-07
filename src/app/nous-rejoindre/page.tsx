@@ -30,13 +30,8 @@ export default function NousRejoindre() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
             <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
-                "MENUA CONSULTING recrute des profils opérationnels autonomes, rigoureux, fiables et organisés.",
-                "MENUA CONSULTING recruits autonomous, rigorous, reliable and organized operational profiles."
-              )}
-              <br className="hidden lg:block" />
-              {t(
-                "Nous valorisons la rigueur, l'esprit d'équipe, la discrétion et la volonté de s'inscrire dans la durée aux côtés de nos clients.",
-                "We value rigor, team spirit, discretion and the desire to build long-term relationships with our clients."
+                "Rejoignez une équipe experte valorisant la rigueur, la fiabilité et l'esprit d'équipe.",
+                "Join an expert team valuing rigor, reliability and team spirit."
               )}
             </p>
           </div>

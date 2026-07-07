@@ -162,43 +162,48 @@ export default function PourquoiMenuaPage() {
       {/* ── SEPARATOR ── */}
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
-      {/* ── 2.4 NOS ENGAGEMENTS (Dark Blue Section) ── */}
-      <section className="relative w-full bg-[#141824] text-white section-padding">
-        <div className="laplace-container">
-          <div className="animate-fade-in-up mb-16 text-center max-w-4xl mx-auto">
-            <div className="inline-block text-left mb-6">
-              <p className="text-[#e8e1d7] text-[0.85rem] font-bold tracking-widest uppercase mb-4">
-                {t("Nos engagements", "Our Commitments")}
-              </p>
-              <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
-              <h2 className="text-[2rem] text-white font-bold uppercase tracking-wider">
-                {t("Une garantie de qualité et de sérénité", "A guarantee of quality and peace of mind")}
-              </h2>
-            </div>
-            <p className="text-[#e5e9f0] text-[1.1rem] leading-relaxed mb-6 font-light">
-              {t("MENUA CONSULTING s'engage sur l'essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.", "MENUA CONSULTING commits to the essentials: quality of deliverables, respect of deadlines, traceability of operations and clear communication with your teams.")}
+      {/* ── 2.4 NOS ENGAGEMENTS (Pourquoi MENUA style, light gray) ── */}
+      <section className="relative w-full bg-[#f5f7fa] text-[#141824] section-padding">
+        <div className="laplace-container max-w-[1200px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
+
+          {/* Left Column: Narrative */}
+          <div className="w-full md:w-5/12">
+            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+            <h2 className="text-[#141824] text-[1.8rem] md:text-[2.2rem] font-bold mb-6 uppercase tracking-wider">
+              {t("ENGAGEMENTS", "COMMITMENTS")}
+            </h2>
+            <p className="text-[1.1rem] text-[#6e7891] font-light leading-relaxed mb-6">
+              {t(
+                "MENUA CONSULTING s'engage sur l'essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
+                "MENUA CONSULTING commits to the essentials: quality of deliverables, respect of deadlines, traceability of operations and clear communication with your teams."
+              )}
             </p>
-            <p className="text-[#e5e9f0] text-[1.1rem] leading-relaxed font-light">
-              {t("Nos interventions s'appuient sur un contrôle à quatre yeux, des méthodes de travail structurées, la formation des ressources mobilisées et le respect de vos exigences opérationnelles, qualité et réglementaires.", "Our interventions are based on a four-eyes control, structured working methods, training of mobilized resources and respect for your operational, quality and regulatory requirements.")}
+            <p className="text-[1.1rem] text-[#6e7891] font-light leading-relaxed mb-10">
+              {t(
+                "Nos interventions s'appuient sur un contrôle à quatre yeux, des méthodes de travail structurées, la formation des ressources mobilisées et le respect de vos exigences opérationnelles, qualité et réglementaires.",
+                "Our interventions are based on a four-eyes control, structured working methods, training of mobilized resources and respect for your operational, quality and regulatory requirements."
+              )}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          {/* Right Column: Grid of commitments */}
+          <div className="w-full md:w-7/12 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10">
             {[
-              { icon: Award, text: t("Qualité des livrables", "Quality of deliverables") },
-              { icon: Calendar, text: t("Respect des délais", "Respect of deadlines") },
-              { icon: FileText, text: t("Traçabilité des opérations", "Traceability of operations") },
-              { icon: Eye, text: t("Contrôle à quatre yeux", "Four-eyes control") },
-              { icon: MessageCircle, text: t("Communication claire et régulière", "Clear and regular communication") },
-              { icon: BookOpen, text: t("Formation des ressources mobilisées", "Training of mobilized resources") },
-              { icon: FileCheck, text: t("Respect de vos exigences opérationnelles, qualité et réglementaires", "Respect of your operational, quality and regulatory requirements"), colSpan: "sm:col-span-2 lg:col-span-3 xl:col-span-1" },
+              { icon: Award, title: t("Qualité des livrables", "Quality of deliverables") },
+              { icon: Calendar, title: t("Respect des délais", "Respect of deadlines") },
+              { icon: FileText, title: t("Traçabilité des opérations", "Traceability of operations") },
+              { icon: Eye, title: t("Contrôle à quatre yeux", "Four-eyes control") },
+              { icon: MessageCircle, title: t("Communication claire et régulière", "Clear and regular communication") },
+              { icon: BookOpen, title: t("Formation des ressources mobilisées", "Training of mobilized resources") },
+              { icon: FileCheck, title: t("Respect de vos exigences opérationnelles", "Respect of your operational requirements") },
             ].map((item, i) => (
-              <div key={i} className={`bg-white/5 border border-white/10 p-6 flex flex-col items-start gap-4 hover:bg-white/10 transition-colors ${item.colSpan || ''}`}>
-                <item.icon size={28} className="text-[#e8e1d7]" strokeWidth={1} />
-                <span className="font-bold text-white leading-snug">{item.text}</span>
+              <div key={i} className="border-l-2 border-[#141824]/20 pl-6">
+                <item.icon size={22} className="text-[#141824] mb-3" strokeWidth={1.5} />
+                <h3 className="text-[#141824] font-bold text-[1.05rem] leading-snug">{item.title}</h3>
               </div>
             ))}
           </div>
+
         </div>
       </section>
 

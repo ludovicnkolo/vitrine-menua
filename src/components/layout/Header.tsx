@@ -132,11 +132,11 @@ export default function Header() {
           onClick={() => { setOpenMenu(null); setIsMobileMenuOpen(false); }}
         >
           {/* Cropped MCM ONLY - strictly hides "COI" and "VOS OPÉRATIONS, NOTRE EXPERTISE" */}
-          <div className="relative overflow-hidden w-[65px] lg:w-[90px] h-[28px] lg:h-[40px] shrink-0">
+          <div className="relative overflow-hidden w-[150px] lg:w-[198px] h-[67px] lg:h-[88px] shrink-0 -mt-3 lg:-mt-5">
              <img 
                src="/logoSlogan.png" 
                alt="MCM" 
-               className="absolute top-[-2px] lg:top-[-4px] left-[0px] h-[55px] lg:h-[75px] w-auto max-w-none brightness-0 invert" 
+               className="absolute top-[-5px] lg:top-[-8px] left-[0px] h-[126px] lg:h-[168px] w-auto max-w-none brightness-0 invert" 
              />
           </div>
         </Link>

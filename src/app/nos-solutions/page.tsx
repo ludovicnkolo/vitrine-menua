@@ -124,9 +124,6 @@ export default function NosSolutionsPage() {
                   <p className="font-bold text-[#141824] mb-4 text-[1.1rem]">
                     {sol.role}
                   </p>
-                  <p className="text-[#6e7891] text-[1.05rem] font-light leading-relaxed">
-                    {sol.desc}
-                  </p>
                </div>
                <div className="lg:w-7/12 bg-[#f9fafb] p-8 border border-gray-100">
                  <p className="font-bold text-[#141824] mb-6 text-[1.1rem]">

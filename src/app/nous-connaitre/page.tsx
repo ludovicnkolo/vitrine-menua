@@ -39,79 +39,82 @@ export default function NousConnaitrePage() {
       {/* ── SEPARATOR ── */}
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
-      {/* ── 2.2 PRÉSENTATION DU CABINET (Layout 4 - Les belles rencontres...) ── */}
-      <section className="relative w-full bg-[#e8e1d7] section-padding overflow-hidden">
-        <div className="laplace-container relative z-10">
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 items-start">
-            {/* Text on the Left */}
-            <div className="w-full lg:w-1/2 pt-10">
-              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] mb-6 font-bold uppercase tracking-wider">
-                {t("MENUA CONSULTING", "MENUA CONSULTING")}
-              </h2>
-              <p className="text-[#141824] text-[1.1rem] font-medium leading-relaxed mb-8">
+      {/* ── 2.2 PRÉSENTATION DU CABINET (Overlapping style, image left) ── */}
+      <section className="relative w-full bg-white section-padding">
+        <div className="laplace-container relative">
+          
+          {/* Text block — full width on mobile, leaves room for image on left on desktop */}
+          <div className="bg-[#f5f7fa] shadow-xl relative z-10 px-10 lg:px-16 pt-12 pb-14 lg:pl-[38%]">
+            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
+              {t("MENUA CONSULTING", "MENUA CONSULTING")}
+            </h2>
+            <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-8">
+              {t(
+                "Cabinet spécialisé dans l’externalisation opérationnelle des fonctions back et middle office en finance, comptabilité, conformité, gestion de patrimoine et data.",
+                "Firm specializing in the operational outsourcing of back and middle office functions in finance, accounting, compliance, wealth management and data."
+              )}
+            </p>
+            <div className="space-y-4 text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
+              <p>
                 {t(
-                  "Cabinet spécialisé dans l’externalisation opérationnelle des fonctions back et middle office en finance, comptabilité, conformité, gestion de patrimoine et data.",
-                  "Firm specializing in the operational outsourcing of back and middle office functions in finance, accounting, compliance, wealth management and data."
+                  "Nous mettons à disposition des entreprises, cabinets et acteurs financiers des équipes opérationnelles dédiées, capables d’exécuter des missions exigeantes avec rigueur, continuité et fiabilité.",
+                  "We provide companies, firms and financial players with dedicated operational teams, capable of executing demanding missions with rigor, continuity and reliability."
                 )}
               </p>
-              <div className="space-y-4 text-[#141824]/80 text-[1rem] font-light leading-relaxed">
-                <p>
-                  {t(
-                    "Nous mettons à disposition des entreprises, cabinets et acteurs financiers des équipes opérationnelles dédiées, capables d’exécuter des missions exigeantes avec rigueur, continuité et fiabilité.",
-                    "We provide companies, firms and financial players with dedicated operational teams, capable of executing demanding missions with rigor, continuity and reliability."
-                  )}
-                </p>
-                <p>
-                  {t(
-                    "Nos collaborateurs s’intègrent aux organisations clientes afin de prendre en charge l’exécution opérationnelle, d’optimiser les charges internes et de sécuriser la continuité des opérations.",
-                    "Our employees integrate into client organizations to take charge of operational execution, optimize internal costs and secure business continuity."
-                  )}
-                </p>
-              </div>
+              <p>
+                {t(
+                  "Nos collaborateurs s’intègrent aux organisations clientes afin de prendre en charge l’exécution opérationnelle, d’optimiser les charges internes et de sécuriser la continuité des opérations.",
+                  "Our employees integrate into client organizations to take charge of operational execution, optimize internal costs and secure business continuity."
+                )}
+              </p>
             </div>
-            
-            {/* Image on the Right (Floating style) */}
-            <div className="w-full lg:w-1/2 relative lg:-mt-12">
-              <div className="shadow-xl">
-                <img src="/preCabinet.png" alt="Cabinet" className="w-full h-[350px] md:h-[450px] object-cover" onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} />
+
+            {/* Notre approche */}
+            <div className="border-t border-[#e8e1d7] pt-8 mt-8">
+              <p className="text-[#141824] font-bold text-[1.1rem] mb-8">
+                {t("Notre approche repose sur trois piliers :", "Our approach is based on three pillars:")}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-8 sm:gap-4 text-[#141824] font-medium uppercase tracking-widest text-[0.75rem]">
+                <div className="flex flex-col items-start gap-3 flex-1">
+                  <Network size={24} className="text-[#6e7891]" />
+                  <span>{t("Continuité opérationnelle", "Operational continuity")}</span>
+                </div>
+                <div className="flex flex-col items-start gap-3 flex-1">
+                  <ShieldCheck size={24} className="text-[#6e7891]" />
+                  <span>{t("Traçabilité des actions", "Traceability of actions")}</span>
+                </div>
+                <div className="flex flex-col items-start gap-3 flex-1">
+                  <CheckCircle size={24} className="text-[#6e7891]" />
+                  <span>{t("Fiabilité des livrables", "Reliability of deliverables")}</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Multi-column list style (Layout 5 style) for "Notre approche" */}
-          <div className="mt-24 text-center">
-            <p className="text-[#141824] font-bold text-[1.1rem] mb-12">
-              {t("Notre approche repose sur trois piliers :", "Our approach is based on three pillars:")}
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-[#141824] font-medium uppercase tracking-widest text-[0.85rem]">
-              <div className="flex flex-col items-center gap-4">
-                <Network size={32} className="text-[#141824]/50" />
-                <span>{t("Continuité opérationnelle", "Operational continuity")}</span>
-              </div>
-              <div className="flex flex-col items-center gap-4">
-                <ShieldCheck size={32} className="text-[#141824]/50" />
-                <span>{t("Traçabilité des actions", "Traceability of actions")}</span>
-              </div>
-              <div className="flex flex-col items-center gap-4">
-                <CheckCircle size={32} className="text-[#141824]/50" />
-                <span>{t("Fiabilité des livrables", "Reliability of deliverables")}</span>
-              </div>
-            </div>
+          {/* Image — absolutely overlapping the left side of the white box */}
+          <div className="hidden lg:block absolute -top-24 left-0 w-[36%] h-[75%] z-20">
+            <img
+              src="/preCabinet.png"
+              alt="Cabinet"
+              className="w-full h-full object-cover"
+              onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
+            />
           </div>
+
         </div>
       </section>
 
       {/* ── SEPARATOR ── */}
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
-      {/* ── 2.4 NOTRE MÉTHODOLOGIE (White Section) ── */}
-      <section className="relative w-full bg-white section-padding">
+      {/* ── 2.4 NOTRE MÉTHODOLOGIE (Dark Navy Section) ── */}
+      <section className="relative w-full bg-[#141824] section-padding">
         <div className="laplace-container">
           <div className="text-center mb-20 animate-fade-in-up">
             <div className="inline-block text-left">
-              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[#141824] text-[2rem] font-bold mb-6 uppercase tracking-wider">{t("Notre méthodologie", "Our methodology")}</h2>
+              <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
+              <h2 className="text-white text-[2rem] font-bold mb-6 uppercase tracking-wider">{t("Notre méthodologie", "Our methodology")}</h2>
             </div>
           </div>
 
@@ -143,10 +146,10 @@ export default function NousConnaitrePage() {
                 desc: t("Pilotage continu de la mission, ajustements et contrôle qualité des livrables.", "Continuous steering of the mission, adjustments and quality control of deliverables.")
               }
             ].map((step, idx) => (
-              <div key={idx} className="bg-white border border-[#e8e1d7] p-8 hover:shadow-xl transition-shadow duration-300 flex flex-col items-center text-center">
-                <step.icon className="text-[#141824] mb-6" size={32} strokeWidth={1} />
-                <h4 className="text-[1.1rem] font-bold text-[#141824] mb-4 min-h-[3rem]">{step.title}</h4>
-                <p className="text-[#6e7891] text-[0.95rem] font-light leading-relaxed">{step.desc}</p>
+              <div key={idx} className="bg-white/5 border border-[#e8e1d7]/20 p-8 hover:bg-white/10 transition-all duration-300 flex flex-col items-center text-center">
+                <step.icon className="text-[#e8e1d7] mb-6" size={32} strokeWidth={1} />
+                <h4 className="text-[1.1rem] font-bold text-white mb-4 min-h-[3rem]">{step.title}</h4>
+                <p className="text-white/70 text-[0.95rem] font-light leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -156,11 +159,11 @@ export default function NousConnaitrePage() {
       {/* ── SEPARATOR ── */}
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
-      {/* ── 2.5 ACCRÉDITATIONS ET NOTRE ÉQUIPE (Layout 2 - Le groupe Crystal célébrait...) ── */}
-      <section className="relative w-full bg-[#f5f7fa] section-padding flex justify-center">
-        <div className="flex flex-col lg:flex-row w-full max-w-[1400px]">
+      {/* ── 2.5 ACCRÉDITATIONS ET NOTRE ÉQUIPE ── */}
+      <section className="relative w-full bg-white section-padding">
+        <div className="laplace-container max-w-[1200px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           {/* Beige block with list (Left) */}
-          <div className="w-full lg:w-1/2 bg-[#e8e1d7] p-12 lg:p-24 flex flex-col justify-center">
+          <div className="w-full lg:w-1/2 bg-[#e8e1d7] p-10 lg:p-16 flex flex-col justify-center shadow-xl">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.6rem] md:text-[2rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
               {t("ACCRÉDITATIONS, CERTIFICATIONS ET CADRE D’INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS AND INTERVENTION FRAMEWORK")}
@@ -202,7 +205,7 @@ export default function NousConnaitrePage() {
           </div>
           
           {/* Image (Right) */}
-          <div className="w-full lg:w-1/2 h-[500px] lg:h-auto">
+          <div className="w-full lg:w-1/2 h-[300px] lg:h-[450px] shadow-xl">
              <img src="/certification.jpg" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} />
           </div>
         </div>
@@ -214,7 +217,6 @@ export default function NousConnaitrePage() {
       {/* ── NOTRE ÉQUIPE DETAILS ── */}
       <section id="equipe" className="relative w-full bg-[#141824] section-padding text-[#e8e1d7] scroll-mt-20">
         <div className="laplace-container max-w-4xl mx-auto text-center">
-          <Users size={48} className="text-[#e8e1d7] mx-auto mb-8 opacity-80" />
           <div className="inline-block text-left">
             <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
             <h2 className="mb-4 text-white text-[2rem] font-bold uppercase tracking-wider">{t("Notre équipe", "Our team")}</h2>
@@ -223,32 +225,53 @@ export default function NousConnaitrePage() {
             </p>
           </div>
           
-          <div className="bg-white/5 p-12 border border-white/10 text-left">
-            <h3 className="text-[1.6rem] font-bold mb-4 text-white">La dirigeante</h3>
-            <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
-              {t(
-                "Rosette Fouelefack est directrice générale de MENUA CONSULTING.",
-                "Rosette Fouelefack is the General Manager of MENUA CONSULTING."
-              )}
-            </p>
-            <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
-              {t(
-                "Forte d’une expérience confirmée dans les domaines du back-office, du middle-office, de la conformité et de la gestion de patrimoine, elle a développé une expertise pointue de l’exécution opérationnelle en environnement réglementé.",
-                "With confirmed experience in the fields of back-office, middle-office, compliance and wealth management, she has developed in-depth expertise in operational execution in a regulated environment."
-              )}
-            </p>
-            <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
-              {t(
-                "La dirigeante est personnellement impliquée dans chaque mission : de la phase d’audit et de définition des besoins jusqu’au déploiement et à la supervision des équipes.",
-                "The director is personally involved in each mission: from the audit phase and defining needs to deployment and team supervision."
-              )}
-            </p>
-            <p className="text-[#e8e1d7] font-bold">
-              {t(
-                "Cet engagement garantit aux clients un niveau de qualité constant, une réactivité maximale et une adaptation permanente du dispositif à leurs exigences.",
-                "This commitment guarantees clients a constant level of quality, maximum responsiveness and permanent adaptation of the system to their requirements."
-              )}
-            </p>
+          <div className="bg-white/5 p-10 md:p-14 border border-white/10 text-left">
+            <h3 className="text-[1.6rem] font-bold mb-8 text-white">La Présidente</h3>
+            
+            <div className="flex flex-col md:flex-row gap-10 items-start">
+              {/* Discreet Photo */}
+              <div className="shrink-0 flex flex-col items-center mx-auto md:mx-0">
+                <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-[#e8e1d7]/30 bg-[#141824] mb-4">
+                  <img 
+                    src="/rosette.jpg" 
+                    alt="Rosette Fouelefack" 
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 
+                  />
+                </div>
+                <span className="text-[#e8e1d7] text-[0.85rem] font-bold uppercase tracking-wider text-center leading-tight">
+                  Rosette<br/>Fouelefack
+                </span>
+              </div>
+
+              {/* Text content (main focus) */}
+              <div className="flex-1">
+                <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
+                  {t(
+                    "Rosette Fouelefack est Présidente de MENUA CONSULTING.",
+                    "Rosette Fouelefack is the President of MENUA CONSULTING."
+                  )}
+                </p>
+                <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
+                  {t(
+                    "Forte d’une expérience confirmée dans les domaines du back-office, du middle-office, de la conformité et de la gestion de patrimoine, elle a développé une expertise pointue de l’exécution opérationnelle en environnement réglementé.",
+                    "With confirmed experience in the fields of back-office, middle-office, compliance and wealth management, she has developed in-depth expertise in operational execution in a regulated environment."
+                  )}
+                </p>
+                <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
+                  {t(
+                    "La Présidente est personnellement impliquée dans chaque mission : de la phase d’audit et de définition des besoins jusqu’au déploiement et à la supervision des équipes.",
+                    "The President is personally involved in each mission: from the audit phase and defining needs to deployment and team supervision."
+                  )}
+                </p>
+                <p className="text-[#e8e1d7] font-bold">
+                  {t(
+                    "Cet engagement garantit aux clients un niveau de qualité constant, une réactivité maximale et une adaptation permanente du dispositif à leurs exigences.",
+                    "This commitment guarantees clients a constant level of quality, maximum responsiveness and permanent adaptation of the system to their requirements."
+                  )}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

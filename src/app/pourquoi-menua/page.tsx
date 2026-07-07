@@ -103,42 +103,59 @@ export default function PourquoiMenuaPage() {
       {/* ── SEPARATOR ── */}
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
-      {/* ── 2.3 NOTRE DIFFÉRENCIATION (Overlapping Beige Box) ── */}
+      {/* ── 2.3 NOTRE DIFFÉRENCIATION (Accréditations style) ── */}
       <section className="relative w-full bg-white section-padding">
-        <div className="laplace-container relative">
-          <div className="flex flex-col lg:flex-row items-center">
-            {/* Left Image */}
-            <div className="w-full lg:w-7/12 h-[500px] lg:h-[700px] z-10 shadow-xl">
-              <img src="/office-lounge.jpg" alt="Notre différenciation" className="w-full h-full object-cover" />
-            </div>
-            
-            {/* Right Overlapping Beige Box */}
-            <div className="w-full lg:w-6/12 bg-[#e8e1d7] p-12 lg:p-20 z-20 -mt-16 lg:mt-0 lg:-ml-24 shadow-2xl">
-              <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-4 opacity-70">
-                {t("Notre différenciation", "Our Differentiation")}
-              </p>
-              <div className="w-16 h-[3px] bg-[#141824] mb-5 animate-fade-in-up" />
-              <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] mb-8 font-bold leading-tight uppercase tracking-wider">
-                {t("Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.", "As back and middle office specialists, we don't stop at analysis: we execute.")}
-              </h2>
-              
-              <ul className="space-y-6 text-[#141824] text-[1.05rem] font-light">
-                {[
-                  { icon: Star, text: t("Spécialisation back et middle office", "Back and middle office specialization") },
-                  { icon: Target, text: t("Approche 100% opérationnelle", "100% operational approach") },
-                  { icon: LinkIcon, text: t("Intégration à votre organisation", "Integration into your organization") },
-                  { icon: RefreshCw, text: t("Exécution fiable et continue", "Reliable and continuous execution") },
-                  { icon: CheckSquare, text: t("Supervision qualité des livrables", "Quality supervision of deliverables") },
-                  { icon: Globe, text: t("Intervention bilingue français / anglais", "Bilingual intervention French / English") },
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-4">
-                    <item.icon size={20} className="text-[#141824] mt-1 shrink-0" strokeWidth={1.5} />
-                    <span className="font-bold leading-relaxed">{item.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+        <div className="laplace-container max-w-[1200px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+          
+          {/* Beige block with content (Left) */}
+          <div className="w-full lg:w-1/2 bg-[#e8e1d7] p-10 lg:p-16 flex flex-col justify-center shadow-xl">
+            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+            <h2 className="text-[1.6rem] md:text-[2rem] text-[#141824] font-bold uppercase mb-4 leading-tight">
+              {t("DIFFÉRENCIATION", "DIFFERENTIATION")}
+            </h2>
+            <p className="text-[#141824] font-bold text-[0.85rem] uppercase tracking-widest mb-6 opacity-70">
+              {t("Pourquoi nous choisir ?", "Why choose us?")}
+            </p>
+
+            <p className="text-[#141824] text-[1.05rem] font-light leading-relaxed mb-4">
+              {t(
+                "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.",
+                "As back and middle office specialists, we don't stop at analysis: we execute."
+              )}
+            </p>
+            <p className="text-[#141824] text-[1.05rem] font-light leading-relaxed mb-8">
+              {t(
+                "Notre approche 100% opérationnelle, notre intégration aux organisations clientes et notre capacité d'intervention en français comme en anglais nous permettent d'intervenir dans des environnements exigeants, structurés et ouverts à l'international.",
+                "Our 100% operational approach, our integration into client organizations and our ability to intervene in French and English allow us to operate in demanding, structured and internationally open environments."
+              )}
+            </p>
+
+            <ul className="space-y-4 text-[#141824] text-[1.05rem] font-medium">
+              {[
+                { icon: Star, text: t("Spécialisation back et middle office", "Back and middle office specialization") },
+                { icon: Target, text: t("Approche 100% opérationnelle", "100% operational approach") },
+                { icon: LinkIcon, text: t("Intégration à votre organisation", "Integration into your organization") },
+                { icon: RefreshCw, text: t("Exécution fiable et continue", "Reliable and continuous execution") },
+                { icon: CheckSquare, text: t("Supervision qualité des livrables", "Quality supervision of deliverables") },
+                { icon: Globe, text: t("Intervention bilingue français / anglais", "Bilingual intervention French / English") },
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-4">
+                  <item.icon size={18} className="text-[#141824] mt-1 shrink-0" strokeWidth={1.5} />
+                  <span className="font-light">{item.text}</span>
+                </li>
+              ))}
+            </ul>
           </div>
+
+          {/* Image (Right) */}
+          <div className="w-full lg:w-1/2 h-[300px] lg:h-[500px] shadow-xl">
+            <img
+              src="/office-lounge.jpg"
+              alt="Notre différenciation"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
         </div>
       </section>
 

@@ -36,6 +36,9 @@ export default function NousConnaitrePage() {
         </div>
       </section>
 
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
+
       {/* ── 2.2 PRÉSENTATION DU CABINET (Layout 4 - Les belles rencontres...) ── */}
       <section className="relative w-full bg-[#e8e1d7] section-padding overflow-hidden">
         <div className="laplace-container relative z-10">
@@ -99,6 +102,9 @@ export default function NousConnaitrePage() {
         </div>
       </section>
 
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
+
       {/* ── 2.4 NOTRE MÉTHODOLOGIE (White Section) ── */}
       <section className="relative w-full bg-white section-padding">
         <div className="laplace-container">
@@ -146,6 +152,9 @@ export default function NousConnaitrePage() {
           </div>
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── 2.5 ACCRÉDITATIONS ET NOTRE ÉQUIPE (Layout 2 - Le groupe Crystal célébrait...) ── */}
       <section className="relative w-full bg-[#f5f7fa] section-padding flex justify-center">
@@ -199,6 +208,9 @@ export default function NousConnaitrePage() {
         </div>
       </section>
 
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
+
       {/* ── NOTRE ÉQUIPE DETAILS ── */}
       <section id="equipe" className="relative w-full bg-[#141824] section-padding text-[#e8e1d7] scroll-mt-20">
         <div className="laplace-container max-w-4xl mx-auto text-center">
@@ -240,6 +252,9 @@ export default function NousConnaitrePage() {
           </div>
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
     </main>
   );

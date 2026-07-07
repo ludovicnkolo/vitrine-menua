@@ -75,6 +75,9 @@ export default function NosSolutionsPage() {
         </div>
       </section>
 
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
+
       {/* ── LAYOUT 1: BEIGE CARDS ROW (Nos solutions placements style) ── */}
       <section className="relative w-full bg-[#e8e1d7] section-padding">
         <div className="laplace-container">
@@ -103,6 +106,9 @@ export default function NosSolutionsPage() {
           </div>
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── DETAILED SECTIONS ── */}
       <div className="bg-[#f5f7fa] py-20">
@@ -154,6 +160,9 @@ export default function NosSolutionsPage() {
           </div>
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
     </main>
   );

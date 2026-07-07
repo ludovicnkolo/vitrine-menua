@@ -37,6 +37,9 @@ export default function NousContacter() {
         </div>
       </section>
 
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
+
       {/* ── CONTENT SECTION (Laplace Styling) ── */}
       <section className="relative w-full bg-[#f5f7fa] section-padding">
         <div className="laplace-container flex flex-col lg:flex-row gap-12 lg:gap-16">
@@ -162,6 +165,9 @@ export default function NousContacter() {
 
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
     </main>
   );

@@ -46,6 +46,9 @@ export default function ActualitesPage() {
         </div>
       </section>
 
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
+
       {/* ── 6.2 À LA UNE (Dark Section) ── */}
       <section className="relative w-full bg-[#141824] section-padding">
         <div className="laplace-container max-w-6xl mx-auto">
@@ -81,6 +84,9 @@ export default function ActualitesPage() {
           </div>
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── 6.3 ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES ── */}
       <section className="relative w-full bg-white section-padding">
@@ -205,6 +211,9 @@ export default function ActualitesPage() {
         </div>
       </section>
 
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
+
       {/* ── LINKEDIN BANNER ── */}
       <section className="relative w-full bg-[#141824] section-padding">
         <div className="laplace-container max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
@@ -238,6 +247,9 @@ export default function ActualitesPage() {
           </div>
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
     </main>
   );

@@ -117,6 +117,9 @@ export default function PolitiqueConfidentialite() {
           </div>
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
     </main>
   );
 }

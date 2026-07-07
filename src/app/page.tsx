@@ -38,6 +38,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
+
       {/* ── SECTION 2 : INTRO (Overlapping Laplace style) ── */}
       <section className="relative w-full bg-white section-padding">
         <div className="laplace-container relative">
@@ -84,6 +87,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── SECTION 3 : POURQUOI MENUA (Dark Navy block) ── */}
       <section className="relative w-full bg-[#141824] text-white section-padding">
@@ -132,6 +138,9 @@ export default function Home() {
 
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── SECTION 4 : VOS BESOINS (Light section with image overlap) ── */}
       <section className="relative w-full bg-white section-padding">
@@ -186,6 +195,9 @@ export default function Home() {
 
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── SECTION 5 : NOS SOLUTIONS (Beige Minimal Section) ── */}
       <section className="relative w-full bg-[#e8e1d7] section-padding">

@@ -95,6 +95,9 @@ export default function VosBesoinsPage() {
         </div>
       </section>
 
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
+
       {/* ── GRID LAYOUT (Nos expertises singulières style) ── */}
       <section className="relative w-full bg-white section-padding">
         <div className="laplace-container">
@@ -127,6 +130,9 @@ export default function VosBesoinsPage() {
           </div>
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── DETAILED SECTIONS BELOW ── */}
       <div className="bg-[#f5f7fa] py-20">

@@ -37,6 +37,9 @@ export default function PourquoiMenuaPage() {
         </div>
       </section>
 
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
+
       {/* ── 2.2 BÉNÉFICES (Beige Cards) ── */}
       <section className="relative w-full section-padding bg-[#f5f7fa]">
         <div className="laplace-container">
@@ -65,6 +68,9 @@ export default function PourquoiMenuaPage() {
           </div>
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── 2.3 NOTRE DIFFÉRENCIATION (Overlapping Beige Box) ── */}
       <section className="relative w-full bg-white section-padding">
@@ -105,6 +111,9 @@ export default function PourquoiMenuaPage() {
         </div>
       </section>
 
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
+
       {/* ── 2.4 NOS ENGAGEMENTS (Dark Blue Section) ── */}
       <section className="relative w-full bg-[#141824] text-white section-padding">
         <div className="laplace-container">
@@ -144,6 +153,9 @@ export default function PourquoiMenuaPage() {
           </div>
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
       <CallToAction />
     </main>

@@ -104,7 +104,7 @@ export default function NousConnaitrePage() {
           <div className="text-center mb-20 animate-fade-in-up">
             <div className="inline-block text-left">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[#141824] text-[2rem] font-bold mb-6">{t("Notre méthodologie", "Our methodology")}</h2>
+              <h2 className="text-[#141824] text-[2rem] font-bold mb-6 uppercase tracking-wider">{t("Notre méthodologie", "Our methodology")}</h2>
             </div>
           </div>
 
@@ -204,7 +204,7 @@ export default function NousConnaitrePage() {
           <Users size={48} className="text-[#e8e1d7] mx-auto mb-8 opacity-80" />
           <div className="inline-block text-left">
             <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
-            <h2 className="mb-4 text-white text-[2rem] font-bold">{t("Notre équipe", "Our team")}</h2>
+            <h2 className="mb-4 text-white text-[2rem] font-bold uppercase tracking-wider">{t("Notre équipe", "Our team")}</h2>
             <p className="text-[#e8e1d7] font-bold tracking-widest uppercase text-[0.85rem] mb-6 opacity-70">
               {t("Une direction impliquée au plus près des opérations", "Management closely involved in operations")}
             </p>

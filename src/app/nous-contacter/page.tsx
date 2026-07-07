@@ -47,7 +47,7 @@ export default function NousContacter() {
           <div className="w-full lg:w-[40%] flex flex-col gap-8">
             <div className="bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 shadow-xl">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.8rem] font-bold text-[#141824] mb-6">{t("Contact Rapide", "Quick Contact")}</h2>
+              <h2 className="text-[1.8rem] font-bold text-[#141824] mb-6 uppercase tracking-wider">{t("Contact Rapide", "Quick Contact")}</h2>
               
               <div className="flex items-start gap-5 mb-10">
                 <div className="w-14 h-14 rounded-full bg-[#e8e1d7]/30 text-[#141824] flex items-center justify-center shrink-0">
@@ -99,7 +99,7 @@ export default function NousContacter() {
 
           {/* Right Column (Formulaire) */}
           <div className="w-full lg:w-[60%] bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 lg:p-16 shadow-xl">
-            <h2 className="text-[1.8rem] font-bold text-[#141824] mb-10 text-center">{t("Formulaire de contact", "Contact Form")}</h2>
+            <h2 className="text-[1.8rem] font-bold text-[#141824] mb-10 text-center uppercase tracking-wider">{t("Formulaire de contact", "Contact Form")}</h2>
             
             <form className="space-y-8">
               

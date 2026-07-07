@@ -53,7 +53,7 @@ export default function NousRejoindre() {
           <div className="w-full lg:w-[40%] flex flex-col gap-8">
             <div className="bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 shadow-xl">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.8rem] font-bold text-[#141824] mb-6">{t("Profils recherchés", "Profiles Sought")}</h2>
+              <h2 className="text-[1.8rem] font-bold text-[#141824] mb-6 uppercase tracking-wider">{t("Profils recherchés", "Profiles Sought")}</h2>
 
               <div className="flex flex-col gap-6 mb-8">
                 {[

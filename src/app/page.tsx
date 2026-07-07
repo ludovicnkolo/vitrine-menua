@@ -43,7 +43,7 @@ export default function Home() {
         <div className="laplace-container relative">
           <div className="flex flex-col lg:flex-row items-center">
             {/* Left Image */}
-            <div className="w-full lg:w-7/12 h-[400px] lg:h-[600px] z-10 shadow-xl">
+            <div className="w-full lg:w-4/12 h-[250px] lg:h-[360px] z-20 relative">
               <img 
                 src="/rosette.jpg" 
                 alt="Intro" 
@@ -53,10 +53,10 @@ export default function Home() {
             </div>
             
             {/* Right Overlapping Beige Box */}
-            <div className="w-full lg:w-6/12 bg-[#e8e1d7] px-12 lg:px-20 pt-8 lg:pt-12 pb-12 lg:pb-20 z-20 -mt-16 lg:mt-0 lg:-ml-24 shadow-2xl">
+            <div className="w-full lg:w-9/12 bg-[#e8e1d7] px-12 lg:pr-20 lg:pl-32 pt-8 lg:pt-16 pb-12 lg:pb-16 z-10 -mt-16 lg:mt-0 lg:-ml-24 shadow-xl">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <div className="leading-relaxed text-[#141824] text-[1.1rem] md:text-[1.2rem] font-light mb-8 space-y-6">
-                <h2 className="font-bold text-[1.6rem] md:text-[2rem] leading-tight mb-4">
+                <h2 className="font-bold text-[1.6rem] md:text-[2rem] leading-tight mb-4 uppercase tracking-wider">
                   {t(
                     "Externalisation back et middle office",
                     "Back and middle office outsourcing"
@@ -89,7 +89,7 @@ export default function Home() {
       <section className="relative w-full bg-[#141824] text-white section-padding">
         <div className="laplace-container max-w-4xl mx-auto">
           <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
-          <h2 className="text-white text-[1.8rem] md:text-[2.2rem] font-bold mb-6">
+          <h2 className="text-white text-[1.8rem] md:text-[2.2rem] font-bold mb-6 uppercase tracking-wider">
             {t("Pourquoi MENUA CONSULTING ?", "Why MENUA CONSULTING?")}
           </h2>
           <p className="text-[1.1rem] text-[#e5e9f0] font-light leading-relaxed mb-8">
@@ -133,7 +133,7 @@ export default function Home() {
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-block text-left">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6">
+              <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
                 {t("Vos besoins", "Your Needs")}
               </h2>
             </div>
@@ -190,7 +190,7 @@ export default function Home() {
         <div className="laplace-container flex flex-col md:flex-row items-center justify-between gap-12">
            <div className="max-w-2xl">
              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-             <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6">
+             <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
                {t("Nos solutions d'externalisation", "Our outsourcing solutions")}
              </h2>
              <p className="text-[#141824] text-[1.1rem] font-light leading-relaxed mb-8">
@@ -231,7 +231,7 @@ export default function Home() {
         <div className="laplace-container text-center max-w-4xl mx-auto">
           <div className="inline-block text-left">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6">
+            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("Actualités et Veille", "News and Monitoring")}
             </h2>
           </div>

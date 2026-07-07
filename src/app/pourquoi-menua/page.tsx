@@ -45,7 +45,7 @@ export default function PourquoiMenuaPage() {
           <div className="animate-fade-in-up mb-16 text-center">
             <div className="inline-block text-left">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="mb-6 text-[2rem] text-[#141824]">{t("Bénéfices", "Benefits")}</h2>
+              <h2 className="mb-6 text-[2rem] text-[#141824] font-bold uppercase tracking-wider">{t("Bénéfices", "Benefits")}</h2>
             </div>
           </div>
 
@@ -83,7 +83,7 @@ export default function PourquoiMenuaPage() {
                 {t("Notre différenciation", "Our Differentiation")}
               </p>
               <div className="w-16 h-[3px] bg-[#141824] mb-5 animate-fade-in-up" />
-              <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] mb-8 font-bold leading-tight">
+              <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] mb-8 font-bold leading-tight uppercase tracking-wider">
                 {t("Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.", "As back and middle office specialists, we don't stop at analysis: we execute.")}
               </h2>
               
@@ -116,7 +116,7 @@ export default function PourquoiMenuaPage() {
                 {t("Nos engagements", "Our Commitments")}
               </p>
               <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
-              <h2 className="text-[2rem] text-white">
+              <h2 className="text-[2rem] text-white font-bold uppercase tracking-wider">
                 {t("Une garantie de qualité et de sérénité", "A guarantee of quality and peace of mind")}
               </h2>
             </div>

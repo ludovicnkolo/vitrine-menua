@@ -133,7 +133,7 @@ export default function VosBesoinsPage() {
           <div className="text-center mb-16">
             <div className="inline-block text-left">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.8rem] md:text-[2rem] text-[#141824] font-bold">{t("Détail de nos interventions", "Details of our interventions")}</h2>
+              <h2 className="text-[1.8rem] md:text-[2rem] text-[#141824] font-bold uppercase tracking-wider">{t("Détail de nos interventions", "Details of our interventions")}</h2>
             </div>
           </div>
           

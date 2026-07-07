@@ -114,9 +114,13 @@ export default function Header() {
 
         {/* MOBILE TOGGLE */}
         <button
-          className="lg:hidden text-white hover:text-[#e8e1d7] transition-colors relative z-[100] p-4 -ml-4"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          type="button"
+          className="lg:hidden text-white hover:text-[#e8e1d7] transition-colors relative z-[9999] p-4 -ml-4 min-w-[48px] min-h-[48px] flex items-center justify-center"
+          style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
+          onClick={() => setIsMobileMenuOpen(prev => !prev)}
+          onTouchEnd={(e) => { e.preventDefault(); setIsMobileMenuOpen(prev => !prev); }}
           aria-label="Menu"
+          aria-expanded={isMobileMenuOpen}
         >
           {isMobileMenuOpen ? <X size={30} /> : <Menu size={30} />}
         </button>
@@ -235,11 +239,12 @@ export default function Header() {
         <>
           {/* Backdrop */}
           <div 
-            className="lg:hidden fixed inset-0 bg-black/40 z-[9998] backdrop-blur-sm"
+            className="lg:hidden fixed inset-0 bg-black/40 z-[9990] backdrop-blur-sm"
             onClick={() => setIsMobileMenuOpen(false)}
+            style={{ touchAction: 'manipulation' }}
           />
           {/* Menu Box */}
-          <div className="lg:hidden fixed left-1/2 -translate-x-1/2 top-[85px] w-[92%] max-w-[400px] max-h-[calc(100vh-110px)] bg-white z-[9999] border border-[#e8e1d7] rounded-xl shadow-2xl flex flex-col overflow-y-auto">
+          <div className="lg:hidden fixed left-1/2 -translate-x-1/2 top-[85px] w-[92%] max-w-[400px] max-h-[calc(100vh-110px)] bg-white z-[9995] border border-[#e8e1d7] rounded-xl shadow-2xl flex flex-col overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
           
           <nav className="flex-1 flex flex-col px-6 py-4 gap-2">
             {/* Accueil */}

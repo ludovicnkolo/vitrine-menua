@@ -128,25 +128,16 @@ export default function Header() {
         {/* LOGO */}
         <Link
           href="/"
-          className="flex items-center gap-3 lg:gap-4 z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0 lg:-ml-6"
+          className="flex items-center z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0 lg:-ml-6"
           onClick={() => { setOpenMenu(null); setIsMobileMenuOpen(false); }}
         >
-          {/* Cropped Monogram */}
-          <div className="relative overflow-hidden w-[35px] lg:w-[45px] h-[35px] lg:h-[45px] shrink-0">
+          {/* Cropped MCM ONLY - hides "COI" and "VOS OPERATIONS" */}
+          <div className="relative overflow-hidden w-[75px] lg:w-[105px] h-[35px] lg:h-[48px] shrink-0">
              <img 
                src="/logoSlogan.png" 
-               alt="Icon" 
-               className="absolute top-1/2 -translate-y-1/2 left-0 h-[40px] lg:h-[55px] w-auto max-w-none brightness-0 invert origin-left" 
+               alt="MCM" 
+               className="absolute top-[2px] left-[1px] h-[55px] lg:h-[75px] w-auto max-w-none brightness-0 invert" 
              />
-          </div>
-          {/* Elegant Text */}
-          <div className="flex flex-col items-start justify-center">
-            <span className="text-white text-[1.8rem] lg:text-[2.2rem] tracking-[-0.03em] leading-[0.85]" style={{ fontFamily: "var(--font-playfair)", fontWeight: 400 }}>
-              Menua
-            </span>
-            <span className="text-white/80 text-[0.55rem] lg:text-[0.65rem] tracking-[0.3em] font-medium uppercase mt-1">
-              Consulting
-            </span>
           </div>
         </Link>
 

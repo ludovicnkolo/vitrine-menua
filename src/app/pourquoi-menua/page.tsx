@@ -40,32 +40,63 @@ export default function PourquoiMenuaPage() {
       {/* ── SEPARATOR ── */}
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
-      {/* ── 2.2 BÉNÉFICES (Beige Cards) ── */}
-      <section className="relative w-full section-padding bg-[#f5f7fa]">
-        <div className="laplace-container">
-          <div className="animate-fade-in-up mb-16 text-center">
-            <div className="inline-block text-left">
-              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="mb-6 text-[2rem] text-[#141824] font-bold uppercase tracking-wider">{t("Bénéfices", "Benefits")}</h2>
+      {/* ── 2.2 BÉNÉFICES (Overlapping style, image right) ── */}
+      <section className="relative w-full bg-white section-padding">
+        <div className="laplace-container relative">
+
+          {/* Text block — full width on mobile, leaves room for image on right on desktop */}
+          <div className="bg-[#f5f7fa] shadow-xl relative z-10 px-10 lg:px-16 pt-12 pb-14 lg:pr-[38%]">
+            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
+              {t("Bénéfices", "Benefits")}
+            </h2>
+            <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-4">
+              {t(
+                "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité, renforcez votre fiabilité et soutenez durablement votre chiffre d'affaires.",
+                "By outsourcing your back and middle office functions with MENUA CONSULTING, you save time, improve your productivity, strengthen your reliability and sustainably support your turnover."
+              )}
+            </p>
+            <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-10">
+              {t(
+                "Cette organisation vous permet de réduire vos charges internes, de mieux absorber vos volumes d'activité et de fidéliser durablement votre clientèle.",
+                "This organization allows you to reduce your internal costs, better absorb your activity volumes and sustainably retain your customers."
+              )}
+            </p>
+
+            {/* Benefits list */}
+            <div className="border-t border-[#e8e1d7] pt-8">
+              <p className="text-[#141824] font-bold text-[0.85rem] uppercase tracking-widest mb-6">
+                {t("Bénéfices pour votre organisation :", "Benefits for your organization:")}
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-8">
+                {[
+                  { icon: Clock, label: t("Gain de temps", "Time saving") },
+                  { icon: TrendingDown, label: t("Réduction des charges internes", "Reduction of internal costs") },
+                  { icon: TrendingUp, label: t("Productivité accrue", "Increased productivity") },
+                  { icon: Target, label: t("Efficacité renforcée", "Enhanced efficiency") },
+                  { icon: ShieldCheck, label: t("Fiabilité des opérations", "Reliability of operations") },
+                  { icon: Heart, label: t("Fidélisation de la clientèle", "Customer loyalty") },
+                  { icon: DollarSign, label: t("Chiffre d'affaires soutenu", "Sustained turnover") },
+                ].map((b, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <b.icon size={16} className="text-[#141824] shrink-0" strokeWidth={2} />
+                    <span className="text-[#141824] text-[0.95rem] font-medium">{b.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {[
-              { icon: Clock, title: t("Gain de temps", "Time saving") },
-              { icon: TrendingDown, title: t("Réduction des charges internes", "Reduction of internal costs") },
-              { icon: TrendingUp, title: t("Productivité accrue", "Increased productivity") },
-              { icon: Target, title: t("Efficacité renforcée", "Enhanced efficiency") },
-              { icon: ShieldCheck, title: t("Fiabilité des opérations", "Reliability of operations") },
-              { icon: Heart, title: t("Fidélisation de la clientèle", "Customer loyalty") },
-              { icon: DollarSign, title: t("Chiffre d'affaires soutenu", "Sustained turnover") },
-            ].map((b, i) => (
-              <div key={i} className="bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-8 flex flex-col items-center text-center hover:shadow-xl transition-shadow duration-300">
-                <b.icon size={36} className="text-[#141824] mb-6" strokeWidth={1.5} />
-                <h3 className="font-bold text-[#141824] text-[1.1rem] leading-snug">{b.title}</h3>
-              </div>
-            ))}
+          {/* Image — absolutely overlapping the right side */}
+          <div className="hidden lg:block absolute -top-24 right-0 w-[36%] h-[75%] z-20">
+            <img
+              src="/difference.png"
+              alt="Bénéfices"
+              className="w-full h-full object-cover shadow-xl"
+              onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
+            />
           </div>
+
         </div>
       </section>
 

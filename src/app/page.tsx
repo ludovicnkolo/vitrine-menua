@@ -138,7 +138,7 @@ export default function Home() {
         <div className="laplace-container relative">
 
           {/* Text block — full width on mobile, leaves room for image on desktop */}
-          <div className="bg-white shadow-xl relative z-10 px-10 lg:px-16 pt-12 pb-14 lg:pr-[38%]">
+          <div className="bg-[#f5f7fa] shadow-xl relative z-10 px-10 lg:px-16 pt-12 pb-14 lg:pr-[38%]">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("Vos besoins", "Your Needs")}

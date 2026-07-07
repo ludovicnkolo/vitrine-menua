@@ -151,18 +151,18 @@ export default function Home() {
             </p>
 
             {/* 3 need items */}
-            <div className="flex flex-col gap-6 mb-10 border-t border-[#e8e1d7] pt-8">
+            <div className="flex flex-col md:flex-row gap-0 mb-10 border-t border-[#e8e1d7] pt-8">
               {[
                 { title: t("Finance et Reporting", "Finance and Reporting"), desc: t("Production, structuration et fiabilisation de reportings financiers...", "Production, structuring and reliability of financial reports..."), href: "/vos-besoins#finance-reporting" },
                 { title: t("Risques et Conformité", "Risk and Compliance"), desc: t("Appui opérationnel aux équipes risques et conformité dans le traitement...", "Operational support for risk and compliance teams in processing..."), href: "/vos-besoins#risques-conformite" },
                 { title: t("Support Comptable et Data", "Accounting and Data Support"), desc: t("Appui opérationnel aux équipes comptables, administratives et data...", "Operational support for accounting, administrative and data teams..."), href: "/vos-besoins#support-comptable-data" },
-              ].map((item, i) => (
-                <Link key={i} href={item.href} className="flex items-start justify-between gap-4 group">
-                  <div>
-                    <h3 className="text-[#141824] font-bold text-[1.05rem] mb-1 group-hover:text-[#6e7891] transition-colors">{item.title}</h3>
-                    <p className="text-[#6e7891] text-[0.9rem] font-light">{item.desc}</p>
-                  </div>
-                  <ArrowRight size={18} className="text-[#141824] shrink-0 mt-1 group-hover:translate-x-1 transition-transform" />
+              ].map((item, i, arr) => (
+                <Link key={i} href={item.href} className={`flex flex-col gap-2 group flex-1 pr-6 ${i < arr.length - 1 ? "md:border-r border-[#e8e1d7] md:mr-6" : ""}`}>
+                  <h3 className="text-[#141824] font-bold text-[1rem] group-hover:text-[#6e7891] transition-colors">{item.title}</h3>
+                  <p className="text-[#6e7891] text-[0.85rem] font-light leading-snug flex-grow">{item.desc}</p>
+                  <span className="inline-flex items-center gap-1 text-[#141824] text-[0.75rem] font-bold uppercase tracking-wider mt-2 group-hover:gap-2 transition-all">
+                    {t("Découvrir", "Discover")} <ArrowRight size={14} />
+                  </span>
                 </Link>
               ))}
             </div>
@@ -175,7 +175,7 @@ export default function Home() {
           </div>
 
           {/* Image — absolutely overlapping the right side of the white box */}
-          <div className="hidden lg:block absolute top-1/2 -translate-y-1/2 right-0 w-[36%] h-[75%] z-20">
+          <div className="hidden lg:block absolute -top-24 right-0 w-[36%] h-[75%] z-20">
             <img
               src="/meeting.jpg"
               alt="Vos besoins"
@@ -226,35 +226,90 @@ export default function Home() {
                 <h3 className="text-[#141824] font-bold text-[1.3rem] mb-2">{t("Volume", "Volume")}</h3>
                 <p className="text-[#141824]/70 font-light text-[1.05rem]">Agilité</p>
              </div>
-             <div className="border-l-2 border-[#141824]/30 pl-6">
-                <h3 className="text-[#141824] font-bold text-[1.3rem] mb-2">{t("Format", "Format")}</h3>
-                <p className="text-[#141824]/70 font-light text-[1.05rem]">Sur Mesure</p>
-             </div>
+              <div className="border-l-2 border-[#141824]/30 pl-6">
+                 <h3 className="text-[#141824] font-bold text-[1.3rem] mb-2">{t("Format", "Format")}</h3>
+                 <p className="text-[#141824]/70 font-light text-[1.05rem]">Sur Mesure</p>
+              </div>
           </div>
 
         </div>
       </section>
 
-      {/* ── SECTION 6 : ACTUALITÉS (Minimal visual representation) ── */}
+      {/* ── SECTION 6 : ACTUALITÉS (3 article cards) ── */}
       <section className="relative w-full bg-white section-padding">
-        <div className="laplace-container text-center max-w-4xl mx-auto">
-          <div className="inline-block text-left">
-            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
-              {t("Actualités et Veille", "News and Monitoring")}
-            </h2>
+        <div className="laplace-container">
+          
+          {/* Header */}
+          <div className="text-center mb-14">
+            <div className="inline-block text-left">
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+              <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-4 uppercase tracking-wider">
+                {t("Actualités et Veille", "News and Monitoring")}
+              </h2>
+            </div>
+
           </div>
-          <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-12">
-            {t(
-              "MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles afin d’éclairer ses clients sur les enjeux qui impactent leurs activités.",
-              "MENUA CONSULTING ensures regular monitoring of financial, accounting, wealth, regulatory and operational developments to enlighten its clients on the issues that impact their activities."
-            )}
-          </p>
-          <Link href="/actualites" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
-            {t("Lire nos actualités", "Read our news")} 
-            <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
-            <ChevronRight size={16} className="-ml-2" />
-          </Link>
+
+          {/* 3 Article Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {[
+              {
+                category: t("Finance et Comptabilité", "Finance & Accounting"),
+                img: "/article-finance.jpg",
+                fallback: "/meeting.jpg",
+                title: t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news"),
+                desc: t("Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations.", "Analysis of developments likely to impact your organizations."),
+                href: "/actualites",
+              },
+              {
+                category: t("Publications", "Publications"),
+                img: "/article-publications.jpg",
+                fallback: "/rosette.jpg",
+                title: t("Nos publications et prises de parole", "Our publications and statements"),
+                desc: t("Retrouvez les analyses et contenus publiés par MENUA CONSULTING sur les enjeux opérationnels et sectoriels.", "Find analyses and content published by MENUA CONSULTING on operational and sector issues."),
+                href: "/actualites",
+              },
+              {
+                category: t("Réglementation", "Regulation"),
+                img: "/article-reglementation.jpg",
+                fallback: "/office-lounge.jpg",
+                title: t("Veille réglementaire et conformité", "Regulatory watch and compliance"),
+                desc: t("Restez informés des dernières évolutions réglementaires et adaptez vos processus opérationnels.", "Stay informed of the latest regulatory developments and adapt your operational processes."),
+                href: "/actualites",
+              },
+            ].map((card, i) => (
+              <Link key={i} href={card.href} className="group flex flex-col bg-white border border-[#e8e1d7]/60 hover:shadow-lg transition-shadow duration-300">
+                {/* Image */}
+                <div className="h-[180px] overflow-hidden">
+                  <img
+                    src={card.img}
+                    alt={card.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => { e.currentTarget.src = card.fallback; }}
+                  />
+                </div>
+                {/* Content */}
+                <div className="flex flex-col flex-grow p-6">
+                  <span className="text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[#6e7891] mb-3">{card.category}</span>
+                  <h3 className="text-[#141824] font-bold text-[1rem] leading-snug mb-3 group-hover:text-[#6e7891] transition-colors">{card.title}</h3>
+                  <p className="text-[#6e7891] text-[0.85rem] font-light leading-relaxed flex-grow mb-4">{card.desc}</p>
+                  <span className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
+                    {t("Lire l'article", "Read article")} <ArrowRight size={14} />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="text-center">
+            <Link href="/actualites" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
+              {t("Voir toutes nos actualités", "See all our news")} 
+              <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+              <ChevronRight size={16} className="-ml-2" />
+            </Link>
+          </div>
+
         </div>
       </section>
 

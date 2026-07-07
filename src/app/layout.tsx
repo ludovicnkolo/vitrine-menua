@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { Playfair_Display } from "next/font/google";
+import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 
-/* ── Playfair Display (titres) ── */
-const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair", weight: ["400", "500", "600", "700"], style: ["normal", "italic"], display: "swap" });
+/* ── Nunito Sans = police principale Laplace Groupe ── */
+const fontNunito = Nunito_Sans({
+  subsets: ["latin"],
+  variable: "--font-nunito",
+  weight: ["300", "400", "600", "700", "800"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Menua Consulting | Externalisation Back & Middle Office",
@@ -36,7 +41,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`${playfair.variable} font-sans min-h-screen flex flex-col antialiased bg-[#F5F2EB] text-[#0D1B2A]`}>
+      <body className={`${fontNunito.variable} font-sans min-h-screen flex flex-col antialiased bg-[#f5f7fa] text-[#31374a]`}>
         <LanguageProvider>
           <Header />
           {children}

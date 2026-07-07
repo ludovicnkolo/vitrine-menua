@@ -1,246 +1,191 @@
 "use client";
+import React from "react";
 import Link from "next/link";
 import { ArrowRight, Briefcase, BarChart2, Shield, User, Globe, Users } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
-import CallToAction from "@/components/layout/CallToAction";
 
 export default function NousRejoindre() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-white">
-      {/* ── HERO INTRO ── */}
-      <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
+    <main className="flex flex-col w-full min-h-screen">
+      
+      {/* ── 7.1 INTRODUCTION (Full Bleed Hero) ── */}
+      <section className="relative w-full min-h-[60vh] flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src="/nous-contacter-hero.jpg" alt="Nous Rejoindre" className="w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/60 to-[#0D1B2A]/30" />
+          <img 
+            src="/office-lounge.jpg" 
+            alt="Nous rejoindre" 
+            className="w-full h-full object-cover" 
+            onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 
+          />
+          <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
-          <div className="relative py-12 pl-10">
-            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-white" />
-            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-white" />
-            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-white" />
-            <div className="relative">
-              <h1 className="h1-hero mb-8">
-                <span className="block">{t("Carrières et Prestataires", "Careers and Providers")}</span>
-                <span className="block mt-2">{t("Nous rejoindre", "Join Us")}</span>
-              </h1>
-              <div className="mb-8 max-w-2xl">
-                <p className="p-1">{t("MENUA CONSULTING recrute des profils opérationnels autonomes, rigoureux, fiables et organisés.", "MENUA CONSULTING recruits autonomous, rigorous, reliable, and organized operational profiles.")}</p>
-              </div>
-
-            </div>
+        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16 text-center">
+          <div className="max-w-4xl mx-auto">
+            <p className="animate-fade-in-up stagger-1 text-[#e8e1d7] text-[0.9rem] font-bold tracking-widest uppercase mb-6">
+              {t("Carrières & Prestataires", "Careers & Providers")}
+            </p>
+            <h1 className="animate-fade-in-up stagger-1 text-white text-[3rem] md:text-[4rem] leading-tight mb-8 font-bold">
+              {t("Nous rejoindre", "Join Us")}
+            </h1>
+            <p className="animate-fade-in-up stagger-2 text-[1.2rem] lg:text-[1.4rem] text-[#e5e9f0] leading-relaxed mb-6 font-light">
+              {t(
+                "MENUA CONSULTING recrute des profils opérationnels autonomes, rigoureux, fiables et organisés.",
+                "MENUA CONSULTING recruits autonomous, rigorous, reliable and organized operational profiles."
+              )}
+              <br className="hidden lg:block" />
+              {t(
+                "Nous valorisons la rigueur, l'esprit d'équipe, la discrétion et la volonté de s'inscrire dans la durée aux côtés de nos clients.",
+                "We value rigor, team spirit, discretion and the desire to build long-term relationships with our clients."
+              )}
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ── CONTENT SECTION ── */}
-      <section className="mt-12 bg-white w-full px-8 py-16 lg:py-24">
-        <div className="max-w-[1280px] mx-auto flex flex-col lg:flex-row gap-8">
+      {/* ── CONTENT SECTION (Laplace Styling) ── */}
+      <section className="relative w-full bg-[#f5f7fa] pt-24 pb-32">
+        <div className="laplace-container flex flex-col lg:flex-row gap-12 lg:gap-16">
 
           {/* Left Column (Profiles) */}
-          <div className="w-full lg:w-1/3 bg-[#8e8478] p-8 md:p-12 rounded-2xl">
-            <h2 className="text-black text-[1.1rem] font-bold uppercase mb-8 text-center tracking-wider">{t("Profils recherchés", "Profiles Sought")}</h2>
-            <div className="w-10 h-[1.5px] bg-[black] mx-auto mb-10" />
+          <div className="w-full lg:w-[40%] flex flex-col gap-8">
+            <div className="bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 shadow-xl">
+              <h2 className="text-[1.8rem] font-bold text-[#141824] mb-6">{t("Profils recherchés", "Profiles Sought")}</h2>
+              <div className="w-16 h-1 bg-[#141824] mb-10" />
 
-            <div className="grid grid-cols-2 gap-x-4 gap-y-10 mb-16">
-              {[
-                { icon: Briefcase, title: t("Back et\nmiddle office", "Back and\nmiddle office") },
-                { icon: Briefcase, title: t("Comptabilité et\nsupport administratif", "Accounting and\nadmin support") },
-                { icon: BarChart2, title: t("Reporting et\ndata", "Reporting and\ndata") },
-                { icon: Shield, title: t("Risques et\nconformité (KYC / AML)", "Risk and\ncompliance (KYC / AML)") },
-                { icon: User, title: t("Support opérationnel CGP /\ngestion de patrimoine", "Operational support CGP /\nwealth management") },
-                { icon: Globe, title: t("Profils bilingues\nfrançais / anglais", "Bilingual profiles\nFrench / English") },
-              ].map((p, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full border border-white/30 bg-white/10 text-white flex items-center justify-center shrink-0">
-                    <p.icon size={20} />
+              <div className="flex flex-col gap-6 mb-8">
+                {[
+                  { icon: Briefcase, title: t("Back & middle office", "Back & middle office") },
+                  { icon: BarChart2, title: t("Comptabilité & support administratif", "Accounting & admin support") },
+                  { icon: Shield, title: t("Reporting & data", "Reporting & data") },
+                  { icon: User, title: t("Risques & Conformité (KYC / AML)", "Risk & Compliance (KYC / AML)") },
+                  { icon: Briefcase, title: t("Support opérationnel CGP", "Operational support CGP") },
+                  { icon: Globe, title: t("Profils bilingues français / anglais", "Bilingual profiles French / English") },
+                ].map((p, i) => (
+                  <div key={i} className="flex items-center gap-5">
+                    <div className="w-12 h-12 rounded-full bg-[#e8e1d7]/30 text-[#141824] flex items-center justify-center shrink-0">
+                      <p.icon size={20} />
+                    </div>
+                    <h4 className="font-bold text-[#141824] text-[1.05rem] leading-snug">{p.title}</h4>
                   </div>
-                  <h3 className="font-semibold text-black text-[0.8rem] leading-snug whitespace-pre-line">{p.title}</h3>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
-            <div className="w-full h-px bg-white/20 mb-10" />
-
-            <div className="flex items-center gap-4 mb-6">
-              <Users size={32} className="text-white font-light" strokeWidth={1} />
-              <h2 className="font-serif text-2xl font-bold text-black">{t("Notre engagement", "Our commitment")}</h2>
-            </div>
-            <div className="w-10 h-[1.5px] bg-[black] mb-6" />
-            <p className="text-black text-sm leading-relaxed font-medium">
-              {t("Nous valorisons la rigueur, l'esprit d'équipe, la discrétion et la volonté de s'inscrire dans la durée aux côtés de nos clients.", "We value rigor, team spirit, discretion and the desire to build long-term relationships with our clients.")}
-            </p>
-
-            <div className="mt-8 p-5 bg-white/10 border border-white/20 rounded-lg">
-              <p className="text-black text-[0.8rem] font-bold mb-2">{t("Pas de document", "No document")}</p>
-              <p className="text-black/70 text-[0.75rem] leading-relaxed">
-                {t("Si votre profil retient notre attention, nous vous contacterons par e-mail pour vous demander les documents complémentaires.", "If your profile catches our attention, we will contact you by email to request additional documents.")}
+            <div className="bg-[#141824] text-white p-10 shadow-xl border-t-4 border-t-[#e8e1d7]">
+              <div className="flex items-center gap-4 mb-6">
+                <Users size={32} className="text-[#e8e1d7]" />
+                <h3 className="text-[1.4rem] font-bold">{t("Aucun CV requis", "No CV required")}</h3>
+              </div>
+              <p className="text-[#e5e9f0] text-[1.05rem] font-light leading-relaxed">
+                {t(
+                  "Présentez-vous brièvement dans le formulaire. Si votre profil retient notre attention, nous vous contacterons par email pour demander des documents complémentaires.",
+                  "Briefly introduce yourself in the form. If your profile catches our attention, we will contact you by email to request additional documents."
+                )}
               </p>
             </div>
           </div>
 
           {/* Right Column (Form) */}
-          <div id="candidature-form" className="w-full lg:w-2/3 bg-[#8e8478] p-8 md:p-12 rounded-2xl">
-            <h2 className="font-serif text-2xl font-bold text-center text-black mb-2">{t("Formulaire de candidature / prestataire", "Application / Provider Form")}</h2>
-            <p className="text-center text-black/70 text-[0.8rem] mb-4">{t("Candidat individuel ou structure prestataire", "Individual candidate or provider structure")}</p>
-            <div className="w-10 h-[2px] bg-[black] mx-auto mb-10" />
-
-            <form className="space-y-6">
+          <div className="w-full lg:w-[60%] bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 lg:p-16 shadow-xl">
+            <h3 className="text-[1.8rem] font-bold text-[#141824] mb-2">{t("Formulaire de candidature / prestataire", "Application / Provider Form")}</h3>
+            <p className="text-[#6e7891] mb-10 text-[1.05rem]">{t("Candidat individuel ou structure prestataire", "Individual candidate or provider structure")}</p>
+            
+            <form className="space-y-10">
 
               {/* ── Identité ── */}
-              <div className="pb-2 border-b border-white/20">
-                <p className="text-[0.65rem] font-bold text-black/50 uppercase tracking-widest mb-4">{t("Identité", "Identity")}</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Identité", "Identity")}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
-                    <label className="text-xs font-bold text-black mb-2 block">{t("Nom", "Last Name")} <span className="text-[black]">*</span></label>
-                    <input type="text" placeholder={t("Votre nom", "Your last name")} className="w-full border border-white/30 bg-white/5 placeholder:text-white/40 px-4 py-3 text-sm text-white focus:outline-none focus:border-white rounded-sm" />
+                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Nom", "Last Name")} <span className="text-red-500">*</span></label>
+                    <input type="text" placeholder={t("Votre nom", "Your last name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-black mb-2 block">{t("Prénom", "First Name")} <span className="text-[black]">*</span></label>
-                    <input type="text" placeholder={t("Votre prénom", "Your first name")} className="w-full border border-white/30 bg-white/5 placeholder:text-white/40 px-4 py-3 text-sm text-white focus:outline-none focus:border-white rounded-sm" />
+                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Prénom", "First Name")} <span className="text-red-500">*</span></label>
+                    <input type="text" placeholder={t("Votre prénom", "Your first name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                   <div>
-                    <label className="text-xs font-bold text-black mb-2 block">Email <span className="text-[black]">*</span></label>
-                    <input type="email" placeholder="votre.email@exemple.com" className="w-full border border-white/30 bg-white/5 placeholder:text-white/40 px-4 py-3 text-sm text-white focus:outline-none focus:border-white rounded-sm" />
+                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">Email <span className="text-red-500">*</span></label>
+                    <input type="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-black mb-2 block">{t("Téléphone", "Phone")} <span className="text-[black]">*</span></label>
-                    <input type="tel" placeholder="+33 6 12 34 56 78" className="w-full border border-white/30 bg-white/5 placeholder:text-white/40 px-4 py-3 text-sm text-white focus:outline-none focus:border-white rounded-sm" />
+                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")} <span className="text-red-500">*</span></label>
+                    <input type="tel" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
                   </div>
                 </div>
               </div>
 
               {/* ── Localisation et Disponibilité ── */}
-              <div className="mb-8">
-                <p className="text-[0.65rem] font-bold text-black/50 uppercase tracking-widest mb-4">{t("Localisation et Disponibilité", "Location and Availability")}</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Localisation et Disponibilité", "Location and Availability")}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
-                    <label className="text-xs font-bold text-black mb-2 block">{t("Pays", "Country")} <span className="text-[black]">*</span></label>
-                    <select className="w-full border border-white/30 bg-white/5 px-4 py-3 text-sm text-white focus:outline-none focus:border-white rounded-sm">
-                      <option value="" className="text-black">{t("Sélectionnez votre pays", "Select your country")}</option>
-                      <option className="text-black">France</option><option className="text-black">Belgique</option><option className="text-black">Suisse</option>
-                      <option className="text-black">Luxembourg</option><option className="text-black">Canada</option><option className="text-black">Maroc</option>
-                      <option className="text-black">Tunisie</option><option className="text-black">Algérie</option><option className="text-black">Sénégal</option>
-                      <option className="text-black">Côte d&apos;Ivoire</option><option className="text-black">Cameroun</option><option className="text-black">Royaume-Uni</option>
-                      <option className="text-black">Allemagne</option><option className="text-black">Espagne</option><option className="text-black">Italie</option><option className="text-black">Autre</option>
-                    </select>
+                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Pays", "Country")} <span className="text-red-500">*</span></label>
+                    <input type="text" placeholder={t("Votre pays", "Your country")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-black mb-2 block">{t("Ville", "City")} <span className="text-[black]">*</span></label>
-                    <input type="text" placeholder={t("Votre ville", "Your city")} className="w-full border border-white/30 bg-white/5 placeholder:text-white/40 px-4 py-3 text-sm text-white focus:outline-none focus:border-white rounded-sm" />
+                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Ville", "City")} <span className="text-red-500">*</span></label>
+                    <input type="text" placeholder={t("Votre ville", "Your city")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
                   </div>
                 </div>
-                <div className="mt-6">
-                  <label className="text-xs font-bold text-black mb-2 block">{t("Disponibilité", "Availability")} <span className="text-[black]">*</span></label>
-                  <select className="w-full border border-white/30 bg-white/5 px-4 py-3 text-sm text-white focus:outline-none focus:border-white rounded-sm">
-                    <option value="" className="text-black">{t("Sélectionnez votre disponibilité", "Select your availability")}</option>
-                    <option className="text-black">{t("Immédiate", "Immediate")}</option>
-                    <option className="text-black">{t("Sous 15 jours", "Within 15 days")}</option>
-                    <option className="text-black">{t("Sous 1 mois", "Within 1 month")}</option>
-                    <option className="text-black">{t("Sous 2 à 3 mois", "Within 2 to 3 months")}</option>
-                    <option className="text-black">{t("À définir", "To be defined")}</option>
+                <div className="mt-8">
+                  <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Disponibilité", "Availability")} <span className="text-red-500">*</span></label>
+                  <select className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none">
+                    <option value="">{t("Sélectionnez votre disponibilité", "Select your availability")}</option>
+                    <option>{t("Immédiate", "Immediate")}</option>
+                    <option>{t("Sous 15 jours", "Within 15 days")}</option>
+                    <option>{t("Sous 1 mois", "Within 1 month")}</option>
+                    <option>{t("À définir", "To be defined")}</option>
                   </select>
                 </div>
               </div>
 
               {/* ── Profil et Compétences ── */}
-              <div className="mb-8">
-                <p className="text-[0.65rem] font-bold text-black/50 uppercase tracking-widest mb-4">{t("Profil et Compétences", "Profile and Skills")}</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="text-xs font-bold text-black mb-2 block">{t("Type de contrat souhaité", "Desired contract type")} <span className="text-[black]">*</span></label>
-                    <select className="w-full border border-white/30 bg-white/5 px-4 py-3 text-sm text-white focus:outline-none focus:border-white rounded-sm">
-                      <option value="" className="text-black">{t("Sélectionnez un type", "Select a type")}</option>
-                      <option className="text-black">CDI</option><option className="text-black">CDD</option><option className="text-black">Freelance / Indépendant</option>
-                      <option className="text-black">Stage</option><option className="text-black">Alternance</option><option className="text-black">Prestataire / Structure</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-black mb-2 block">{t("Années d'expérience", "Years of experience")}</label>
-                    <select className="w-full border border-white/30 bg-white/5 px-4 py-3 text-sm text-white focus:outline-none focus:border-white rounded-sm">
-                      <option value="" className="text-black">{t("Sélectionnez", "Select")}</option>
-                      <option className="text-black">{t("Moins de 2 ans", "Less than 2 years")}</option>
-                      <option className="text-black">2 – 5 {t("ans", "years")}</option>
-                      <option className="text-black">5 – 10 {t("ans", "years")}</option>
-                      <option className="text-black">{t("Plus de 10 ans", "More than 10 years")}</option>
-                    </select>
-                  </div>
+              <div>
+                <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Profil et Compétences", "Profile and Skills")}</p>
+                <div className="mt-6">
+                  <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Type de contrat souhaité", "Desired contract type")} <span className="text-red-500">*</span></label>
+                  <select className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none">
+                    <option value="">{t("Sélectionnez un type", "Select a type")}</option>
+                    <option>CDI</option><option>CDD</option><option>Freelance / Indépendant</option>
+                    <option>Prestataire</option>
+                  </select>
                 </div>
 
-                <div className="mt-6">
-                  <label className="text-xs font-bold text-black mb-3 block">
-                    {t("Domaines d'expertise", "Areas of expertise")} <span className="text-[black]">*</span> <span className="font-normal italic text-white/50">({t("plusieurs choix possibles", "multiple choices possible")})</span>
+                <div className="mt-8">
+                  <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-4 block">
+                    {t("Compétences", "Skills")} <span className="text-red-500">*</span> <span className="font-light normal-case tracking-normal text-[#6e7891]">({t("plusieurs choix possibles", "multiple choices possible")})</span>
                   </label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
                     {[
-                      t("Back et middle office", "Back and middle office"),
-                      t("Comptabilité et support administratif", "Accounting and admin support"),
-                      t("Reporting et data", "Reporting and data"),
-                      t("Contrôle de gestion", "Management control"),
-                      t("Risques et conformité (KYC / AML)", "Risk and compliance (KYC / AML)"),
-                      t("Support opérationnel CGP / gestion de patrimoine", "Operational support CGP / wealth management"),
-                      t("Autre", "Other"),
+                      t("Back & middle office", "Back & middle office"),
+                      t("Comptabilité", "Accounting"),
+                      t("Data", "Data"),
+                      t("Risques & Conformité", "Risk & Compliance"),
+                      t("Support CGP", "Operational support CGP"),
                     ].map((opt, i) => (
-                      <label key={i} className="flex items-start gap-2 text-[0.8rem] text-black cursor-pointer font-medium">
-                        <input type="checkbox" className="accent-[black] mt-1 shrink-0" /> {opt}
+                      <label key={i} className="flex items-start gap-3 text-[1.05rem] text-[#141824] font-light cursor-pointer group">
+                        <input type="checkbox" className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]" /> 
+                        <span className="group-hover:text-[#6e7891] transition-colors">{opt}</span>
                       </label>
                     ))}
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <label className="text-xs font-bold text-black mb-2 block">{t("Compétences clés", "Key skills")}</label>
-                  <textarea rows={3} placeholder={t("Ex : Excel avancé, VBA, Power BI, SAP, gestion KYC, réconciliation, consolidation...", "Ex: Advanced Excel, VBA, Power BI, SAP, KYC management, reconciliation, consolidation...")} className="w-full border border-white/30 bg-white/5 placeholder:text-white/40 px-4 py-3 text-sm text-white focus:outline-none focus:border-white resize-none rounded-sm"></textarea>
-                </div>
-              </div>
-
-              {/* ── Langues ── */}
-              <div className="pb-4 border-b border-white/20">
-                <p className="text-[0.65rem] font-bold text-black/50 uppercase tracking-widest mb-4">{t("Langues pratiquées", "Languages spoken")}</p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-3 gap-x-6">
-                  {["Français", "Anglais", "Espagnol", "Arabe", "Portugais", "Allemand", t("Autre", "Other")].map((lang, i) => (
-                    <label key={i} className="flex items-center gap-2 text-[0.8rem] text-black cursor-pointer font-medium">
-                      <input type="checkbox" className="accent-[black]" /> {lang}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* ── Liens ── */}
-              <div className="pb-4 border-b border-white/20">
-                <p className="text-[0.65rem] font-bold text-black/50 uppercase tracking-widest mb-4">{t("Liens professionnels", "Professional links")}</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="text-xs font-bold text-black mb-2 block">LinkedIn <span className="font-normal italic text-white/50 text-[0.7rem]">({t("optionnel", "optional")})</span></label>
-                    <input type="url" placeholder="https://linkedin.com/in/votre-profil" className="w-full border border-white/30 bg-white/5 placeholder:text-white/40 px-4 py-3 text-sm text-white focus:outline-none focus:border-white rounded-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-black mb-2 block">{t("Portfolio / Site web", "Portfolio / Website")} <span className="font-normal italic text-white/50 text-[0.7rem]">({t("optionnel", "optional")})</span></label>
-                    <input type="url" placeholder="https://votre-site.com" className="w-full border border-white/30 bg-white/5 placeholder:text-white/40 px-4 py-3 text-sm text-white focus:outline-none focus:border-white rounded-sm" />
                   </div>
                 </div>
               </div>
 
               {/* ── Message ── */}
               <div>
-                <label className="text-xs font-bold text-black mb-2 block">{t("Message de présentation", "Presentation message")} <span className="text-[black]">*</span></label>
-                <textarea rows={5} placeholder={t("Présentez-vous brièvement : votre parcours, vos motivations, le type de mission recherché, votre valeur ajoutée...", "Briefly introduce yourself: your background, motivations, the type of mission sought, your added value...")} className="w-full border border-white/30 bg-white/5 placeholder:text-white/40 px-4 py-3 text-sm text-white focus:outline-none focus:border-white resize-none rounded-sm"></textarea>
-                <p className="text-[0.7rem] text-black/70 mt-1">{t("Aucun CV requis. Si votre profil retient notre attention, nous vous contacterons par e-mail.", "No CV required. If your profile catches our attention, we will contact you by email.")}</p>
+                <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Message", "Message")} <span className="text-red-500">*</span></label>
+                <textarea rows={5} placeholder={t("Présentez-vous brièvement. Aucun CV requis. Si votre profil retient notre attention, nous vous contacterons par email pour demander des documents complémentaires.", "Briefly introduce yourself. No CV required. If your profile catches our attention, we will contact you by email to request additional documents.")} className="w-full border border-[#d1d5db] bg-transparent p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf]"></textarea>
               </div>
 
-              <label className="flex items-start gap-3 text-[0.8rem] text-black cursor-pointer font-medium pt-2">
-                <input type="checkbox" className="accent-[black] mt-0.5 shrink-0" />
-                <span>
-                  {t("J'accepte la", "I accept the")} <Link href="/politique-de-confidentialite" className="text-[black] hover:underline">{t("politique de confidentialité", "privacy policy")}</Link> {t("et le traitement de mes données personnelles dans le cadre de ma candidature.", "and the processing of my personal data as part of my application.")} <span className="text-[black]">*</span>
-                </span>
-              </label>
-
-              <div className="flex justify-end">
-                <button type="submit" className="inline-flex items-center gap-3 bg-[#0D1B2A] text-white border border-[#0D1B2A] px-8 py-3.5 text-xs font-bold tracking-[0.1em] uppercase hover:bg-transparent hover:text-[#0D1B2A] transition-colors rounded-sm shadow-md w-fit">
-                  {t("Envoyer ma candidature", "Send my application")} <ArrowRight size={16} />
+              <div className="flex justify-end pt-6">
+                <button type="submit" className="inline-flex items-center justify-center bg-[#141824] text-white px-10 py-4 font-bold uppercase tracking-wider text-[0.85rem] hover:bg-[#1f2638] transition-colors duration-300 w-full md:w-auto">
+                  {t("Envoyer ma candidature", "Send my application")}
                 </button>
               </div>
             </form>
@@ -248,7 +193,6 @@ export default function NousRejoindre() {
         </div>
       </section>
 
-      <CallToAction />
     </main>
   );
 }

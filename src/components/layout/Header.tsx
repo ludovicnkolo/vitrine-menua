@@ -106,7 +106,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-[9998] transition-colors duration-300 border-b ${scrolled ? "bg-[#0D1B2A]/95 backdrop-blur-md border-white/10 shadow-2xl" : "bg-[#0D1B2A] border-transparent"}`}
+        className={`fixed top-0 left-0 w-full z-[9998] transition-colors duration-300 border-b ${scrolled ? "bg-[#141824]/95 backdrop-blur-md border-[#e8e1d7]/10 shadow-2xl" : "bg-[#141824] border-transparent"}`}
         onMouseLeave={() => setOpenMenu(null)}
       >
       {/* ── TOP BAR ── */}
@@ -114,7 +114,7 @@ export default function Header() {
 
         {/* MOBILE TOGGLE */}
         <button
-          className="lg:hidden text-white hover:text-[#E0D6C8] transition-colors relative z-[100] p-4 -ml-4"
+          className="lg:hidden text-white hover:text-[#e8e1d7] transition-colors relative z-[100] p-4 -ml-4"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Menu"
         >
@@ -148,8 +148,8 @@ export default function Header() {
                 href={menus[key].href}
                 className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[17px] leading-[25px] font-bold ${
                   openMenu === key
-                    ? "text-[#E0D6C8]"
-                    : "text-white hover:text-[#E0D6C8]"
+                    ? "text-[#e8e1d7]"
+                    : "text-white hover:text-[#e8e1d7]"
                 }`}
               >
                 {menus[key].label}
@@ -162,9 +162,9 @@ export default function Header() {
               {/* DROPDOWN */}
               {openMenu === key && (
                 <div className="absolute left-0 top-full pt-0">
-                  <div className="bg-white border border-[#E0D6C8]/30 shadow-xl min-w-[280px] py-3">
-                    <div className="px-5 py-2 border-b border-[#E0D6C8]/30 mb-2">
-                      <span className="text-[#0D1B2A] text-[1.1rem] leading-[1.5rem] font-bold">
+                  <div className="bg-[#e8e1d7] border-t-4 border-[#141824] shadow-xl min-w-[280px] py-3">
+                    <div className="px-5 py-2 border-b border-[#141824]/10 mb-2">
+                      <span className="text-[#141824] text-[1.1rem] leading-[1.5rem] font-bold">
                         {menus[key].label}
                       </span>
                     </div>
@@ -174,9 +174,9 @@ export default function Header() {
                           <Link
                             href={link.href}
                             onClick={() => setOpenMenu(null)}
-                            className="flex items-center gap-3 px-5 py-2.5 text-[#0D1B2A]/80 hover:text-[#0D1B2A] hover:bg-[#F5F2EB]/40 text-[13px] leading-[1rem] transition-colors group"
+                            className="flex items-center gap-3 px-5 py-2.5 text-[#141824]/80 hover:text-[#141824] hover:bg-white/40 text-[13px] leading-[1rem] transition-colors group"
                           >
-                            <span className="w-4 h-px bg-[#0D1B2A] shrink-0" />
+                            <span className="w-4 h-px bg-[#141824] shrink-0" />
                             {link.label}
                           </Link>
                         </li>
@@ -189,7 +189,7 @@ export default function Header() {
           ))}
 
           {/* LANG SWITCHER — placed right after Actualités */}
-          <div className="flex items-center gap-2 border-l border-[#E0D6C8]/30 pl-4 ml-2 mr-2" onMouseEnter={() => setOpenMenu(null)}>
+          <div className="flex items-center gap-2 border-l border-[#e8e1d7]/30 pl-4 ml-2 mr-2" onMouseEnter={() => setOpenMenu(null)}>
             <button
               onClick={() => setLang("FR")}
               className={`flex items-center gap-1.5 text-xs font-bold transition-all ${
@@ -212,16 +212,15 @@ export default function Header() {
           {/* "Nous rejoindre" & "Nous contacter" as plain nav links */}
           <Link
             href="/nous-rejoindre"
-            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#C49A6C] hover:text-white hover:bg-[#8B6240]/40 rounded-full"
-            style={{ border: "1px solid #8B6240" }}
+            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#e8e1d7] hover:text-[#141824] hover:bg-[#e8e1d7] rounded-full"
+            style={{ border: "1px solid #e8e1d7" }}
             onMouseEnter={() => setOpenMenu(null)}
           >
             {t("Nous rejoindre", "Join Us")}
           </Link>
           <Link
             href="/nous-contacter"
-            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#E0D6C8] hover:text-white hover:bg-[#3E2510]/50 rounded-full"
-            style={{ border: "1px solid #5A3A1E" }}
+            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#141824] bg-[#e8e1d7] hover:bg-white rounded-full ml-1"
             onMouseEnter={() => setOpenMenu(null)}
           >
             {t("Nous contacter", "Contact Us")}
@@ -240,32 +239,32 @@ export default function Header() {
             onClick={() => setIsMobileMenuOpen(false)}
           />
           {/* Menu Box */}
-          <div className="lg:hidden fixed left-1/2 -translate-x-1/2 top-[85px] w-[92%] max-w-[400px] max-h-[calc(100vh-110px)] bg-white z-[9999] border border-[#E0D6C8]/30 rounded-xl shadow-2xl flex flex-col overflow-y-auto">
+          <div className="lg:hidden fixed left-1/2 -translate-x-1/2 top-[85px] w-[92%] max-w-[400px] max-h-[calc(100vh-110px)] bg-white z-[9999] border border-[#e8e1d7] rounded-xl shadow-2xl flex flex-col overflow-y-auto">
           
           <nav className="flex-1 flex flex-col px-6 py-4 gap-2">
             {/* Accueil */}
-            <div className="border-b border-[#E0D6C8]/30">
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.2rem] font-bold text-[#0D1B2A] hover:text-[#E0D6C8] transition-colors">
+            <div className="border-b border-[#e8e1d7]/50">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.2rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors">
                 {t("Accueil", "Home")}
               </Link>
             </div>
 
             {(Object.keys(menus) as MenuKey[]).map((key) => (
-              <div key={key} className="flex flex-col border-b border-[#E0D6C8]/30">
+              <div key={key} className="flex flex-col border-b border-[#e8e1d7]/50">
                 <button
                   onClick={() => setOpenMobileSubmenu(openMobileSubmenu === key ? null : key)}
-                  className="flex items-center justify-between py-3 text-[1.2rem] font-bold text-[#0D1B2A] hover:text-[#E0D6C8] transition-colors text-left"
+                  className="flex items-center justify-between py-3 text-[1.2rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors text-left"
                 >
                   <span>{menus[key].label}</span>
-                  <ChevronDown size={18} className={`text-[#E0D6C8] transition-transform ${openMobileSubmenu === key ? "rotate-180" : ""}`} />
+                  <ChevronDown size={18} className={`text-[#141824] transition-transform ${openMobileSubmenu === key ? "rotate-180" : ""}`} />
                 </button>
                 
                 {openMobileSubmenu === key && (
-                  <div className="flex flex-col gap-3 pb-4 pl-4 border-l-2 border-[#E0D6C8]/20 mt-1">
+                  <div className="flex flex-col gap-3 pb-4 pl-4 border-l-2 border-[#141824]/20 mt-1">
                     <Link
                       href={menus[key].href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="text-[#0D1B2A] text-[0.95rem] font-bold mb-1"
+                      className="text-[#141824] text-[0.95rem] font-bold mb-1"
                     >
                       {t("Vue d'ensemble", "Overview")}
                     </Link>
@@ -274,7 +273,7 @@ export default function Header() {
                         key={j}
                         href={link.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="text-[#4A4E5A] text-[0.9rem] hover:text-[#E0D6C8] transition-colors"
+                        className="text-[#6e7891] text-[0.9rem] hover:text-[#141824] transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -284,25 +283,25 @@ export default function Header() {
               </div>
             ))}
 
-            <div className="border-b border-[#E0D6C8]/30">
-              <Link href="/nous-rejoindre" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#E0D6C8] hover:text-[#0D1B2A] transition-colors">
+            <div className="border-b border-[#e8e1d7]/50">
+              <Link href="/nous-rejoindre" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors">
                 {t("Nous rejoindre", "Join Us")}
               </Link>
             </div>
-            <div className="border-b border-[#E0D6C8]/30">
-              <Link href="/nous-contacter" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#0D1B2A] hover:text-[#E0D6C8] transition-colors">
+            <div className="border-b border-[#e8e1d7]/50">
+              <Link href="/nous-contacter" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors">
                 {t("Nous contacter", "Contact Us")}
               </Link>
             </div>
           </nav>
 
           {/* Bottom: Lang */}
-          <div className="px-6 pb-6 pt-3 border-t border-[#E0D6C8]/30 space-y-3">
+          <div className="px-6 pb-6 pt-3 border-t border-[#e8e1d7]/50 space-y-3">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setLang("FR")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
-                  lang === "FR" ? "border-[#0D1B2A] text-[#0D1B2A]" : "border-[#E0D6C8]/30 text-[#1D2D44]"
+                  lang === "FR" ? "border-[#141824] text-[#141824]" : "border-[#e8e1d7] text-[#6e7891]"
                 }`}
               >
                 <FlagFR /> FR
@@ -310,7 +309,7 @@ export default function Header() {
               <button
                 onClick={() => setLang("EN")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
-                  lang === "EN" ? "border-[#0D1B2A] text-[#0D1B2A]" : "border-[#E0D6C8]/30 text-[#1D2D44]"
+                  lang === "EN" ? "border-[#141824] text-[#141824]" : "border-[#e8e1d7] text-[#6e7891]"
                 }`}
               >
                 <FlagEN /> EN

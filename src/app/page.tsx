@@ -1,273 +1,252 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Globe, BarChart2, CheckCircle2, FileSpreadsheet, Building2, Zap, Clock, Maximize, Settings, Search, Lightbulb, CheckSquare, Network, ShieldCheck } from "lucide-react";
+import { ArrowRight, Globe, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
-import CallToAction from "@/components/layout/CallToAction";
 
 export default function Home() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-white">
-
+    <main className="flex flex-col w-full min-h-screen">
+      
       {/* ── SECTION 1 : HERO ── */}
-      <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
+      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src="/office-lounge.jpg" alt="Hero" className="w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/60 to-[#0D1B2A]/30" />
+          <img 
+            src="/paris-aerial.jpg" 
+            alt="Paris Aerial" 
+            className="w-full h-full object-cover" 
+            onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} 
+          />
+          <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-
-        <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
-          <div className="relative py-12 pl-10">
-            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-white" />
-            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-white" />
-            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-white" />
-            <div className="relative">
-              <h1 className="h1-hero mb-8">
-                <span className="block">{t("Externalisation", "Outsourcing")}</span>
-                <span className="block">{t("opérationnelle.", "operational.")}</span>
-                <span className="block mt-2">{t("Sérénité garantie.", "Guaranteed serenity.")}</span>
-              </h1>
-              <div className="mb-8 max-w-xl">
-                <p className="p-1">
-                  {t("Nous sécurisons l'exécution de vos opérations back et middle office pour que vos équipes se concentrent sur les décisions stratégiques qui comptent.", "We secure the execution of your back and middle office operations so your teams can focus on strategic decisions that matter.")}
-                </p>
-              </div>
-              <div className="flex items-center gap-3 text-white text-[0.95rem] mb-10 font-medium">
-                <Globe className="text-[#0D1B2A]" size={20} />
-                <span>{t("Interventions en français et en anglais", "Interventions in French and English")}</span>
-              </div>
-              <Link href="/nous-contacter" className="link-action">
-                {t("PRÉSENTER UN BESOIN", "PRESENT A NEED")} <ArrowRight size={16} />
+        
+        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16">
+          <div className="max-w-4xl">
+            <h1 className="animate-fade-in-up stagger-1 text-white text-[3rem] md:text-[4.5rem] leading-[1.1] mb-8 font-bold">
+              {t(
+                "Externalisation opérationnelle des fonctions back & middle office",
+                "Operational outsourcing of back & middle office functions"
+              )}
+            </h1>
+            <p className="animate-fade-in-up stagger-2 text-[1.2rem] lg:text-[1.4rem] text-[#e5e9f0] mb-12 max-w-2xl font-light">
+              {t(
+                "Nous sécurisons l’exécution de vos opérations back et middle office afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
+                "We secure the execution of your back and middle office operations to allow your teams to focus on strategic decisions."
+              )}
+            </p>
+            
+            <div className="animate-fade-in-up stagger-3 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+              <Link href="/nous-contacter" className="inline-flex items-center gap-4 bg-[#e8e1d7] text-[#141824] px-8 py-4 text-[0.9rem] font-bold tracking-[0.2em] uppercase hover:bg-white transition-colors">
+                {t("Présenter un besoin", "Present a need")} <ArrowRight size={18} />
               </Link>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ── SECTION 2 : L'EXPERTISE D'UN CABINET SPÉCIALISÉ ── */}
-      <section className="relative section-gap">
-        {/* Arrière-plan asymétrique (décollé à gauche et ne couvrant qu'une partie de l'image à droite) */}
-        <div className="absolute inset-y-0 left-[max(1rem,calc(50vw-550px))] w-[calc(100%-2rem)] lg:w-[850px] bg-[#8e8478] z-0 rounded-3xl"></div>
-        
-        <div className="relative z-10 max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
-            <div className="flex flex-col">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[2px] bg-[#0D1B2A]" />
-                <h2 className="h2-surtitre text-[#0D1B2A]">
-                  {t("Le partenaire opérationnel de vos équipes", "The operational partner of your teams")}
-                </h2>
-              </div>
-              <h3 className="h3-section text-[#0D1B2A]">
-                {t("L'expertise d'un cabinet spécialisé, la fiabilité d'une équipe dédiée.", "The expertise of a specialized firm, the reliability of a dedicated team.")}
-              </h3>
-              <p className="p-2 text-[#0D1B2A] mb-10 max-w-xl">
-                {t("MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées. Notre mission: sécuriser et renforcer l'exécution de vos fonctions back et middle office pour vous permettre de vous concentrer sur votre cœur de métier.", "MENUA CONSULTING supports financial, accounting, wealth, data and regulated teams. Our mission: to secure and strengthen the execution of your back and middle office functions to allow you to focus on your core business.")}
-              </p>
-              <Link href="/nous-connaitre" className="link-action text-[#0D1B2A]">
-                {t("DÉCOUVRIR NOS EXPERTISES", "DISCOVER OUR EXPERTISE")} <ArrowRight size={16} />
-              </Link>
-            </div>
-            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl order-first lg:order-none">
-              <img src="/banner-desk.jpg" alt="Expertise" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 3 : DES EXPERTISES OPÉRATIONNELLES ── */}
-      <section className="section-gap bg-[#0D1B2A]">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-12 flex flex-col items-start">
-          
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-8 h-[2px] bg-white" />
-            <h2 className="h2-surtitre text-white">
-              {t("VOS BESOINS", "YOUR NEEDS")}
-            </h2>
-          </div>
-          
-          <h3 className="h3-section">
-            {t("Des expertises opérationnelles, au cœur de votre activité.", "Operational expertise, at the heart of your activity.")}
-          </h3>
-          <p className="p-2 mb-10">
-            {t("Un appui ciblé pour chaque fonction de votre organisation.", "Targeted support for each function of your organization.")}
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full mb-10">
-            {[
-              { icon: BarChart2, title: t("Finance et\nReporting", "Finance and\nReporting"), desc: t("Des données fiabilisées pour un pilotage éclairé.", "Reliable data for informed management.") },
-              { icon: CheckCircle2, title: t("Contrôle\nde gestion", "Management\ncontrol"), desc: t("Une maîtrise accrue des coûts et de la performance.", "Increased control of costs and performance.") },
-              { icon: FileSpreadsheet, title: t("Support\ncomptable et Data", "Accounting\nand Data support"), desc: t("Des opérations fluides et des données structurées.", "Smooth operations and structured data.") },
-              { icon: Building2, title: t("Gestion de\nPatrimoine et CGP", "Wealth Management\nand IFA"), desc: t("Un support administratif réactif pour vos conseillers.", "Responsive administrative support for your advisors.") },
-            ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center text-center bg-white/10 border border-white/20 rounded-xl p-5 hover:shadow-xl transition-all">
-                <h4 className="h4-titre text-white mb-3 whitespace-pre-line">
-                  {item.title}
-                </h4>
-                <p className="p-3">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          <Link href="/vos-besoins" className="link-action mt-4">
-            {t("VOIR TOUS NOS DOMAINES D'INTERVENTION", "VIEW ALL OUR AREAS OF INTERVENTION")} <ArrowRight size={16} />
-          </Link>
-        </div>
-      </section>
-
-      {/* ── SECTION 4 : NOTRE APPROCHE ── */}
-      <section className="relative section-gap">
-        {/* Arrière-plan asymétrique (décollé à droite et ne couvrant qu'une partie de l'image à gauche) */}
-        <div className="absolute inset-y-0 right-[max(1rem,calc(50vw-550px))] w-[calc(100%-2rem)] lg:w-[850px] bg-[#CFC9C6] z-0 rounded-3xl"></div>
-        
-        <div className="relative z-10 max-w-[1100px] mx-auto px-6 lg:px-12 bg-transparent">
-          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
-
-            {/* Image à gauche */}
-            <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-2xl">
-              <img src="/meeting.jpg" alt="Notre approche" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} />
-            </div>
-
-            {/* Texte à droite */}
-            <div className="flex flex-col">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-8 h-[2px] bg-[#0D1B2A]" />
-                <h2 className="h2-surtitre text-[#0D1B2A]">
-                  {t("Notre approche", "Our approach")}
-                </h2>
-              </div>
-              <h3 className="h3-section text-[#0D1B2A]">
-                {t("Une approche 100% opérationnelle, intégrée à vos process.", "A 100% operational approach, integrated into your processes.")}
-              </h3>
-              <p className="p-2 !text-[#4A4E5A] mb-8">
+            <div className="animate-fade-in-up stagger-4 mt-16 flex items-center gap-4 text-[#e5e9f0] text-[1rem] border-t border-white/20 pt-8 max-w-2xl">
+              <Globe className="text-[#e8e1d7]" size={24} />
+              <span className="font-light">
                 {t(
-                  "Nous ne sommes pas des consultants. Nous sommes les bras et l'expertise qui exécutent.",
-                  "We are not consultants. We are the hands and expertise that execute."
+                  "Interventions en français et en anglais – profils opérationnels bilingues.",
+                  "Interventions in French and English – bilingual operational profiles."
                 )}
-              </p>
-
-              {/* 3 piliers */}
-              <div className="flex flex-col gap-5 mb-8">
-                {[
-                  {
-                    icon: Network,
-                    title: t("Intégration Fluide", "Seamless Integration"),
-                    desc: t("Vos méthodes, vos outils, vos procédures. Nous nous adaptons à votre organisation pour un renfort immédiatement opérationnel.", "Your methods, tools, procedures. We adapt to your organization for immediately operational support."),
-                  },
-                  {
-                    icon: ShieldCheck,
-                    title: t("Contrôle Qualité Permanent", "Permanent Quality Control"),
-                    desc: t("Une supervision continue et un contrôle à quatre yeux sur chaque livrable, garantissant une fiabilité et une traçabilité sans faille.", "Continuous supervision and four-eyes control on every deliverable, ensuring flawless reliability and traceability."),
-                  },
-                  {
-                    icon: Globe,
-                    title: t("Intervention Bilingue", "Bilingual Intervention"),
-                    desc: t("Une capacité d'intervention en français et en anglais pour une gestion fluide de vos opérations et reportings dans un contexte international.", "Ability to intervene in French and English for smooth management of your operations and reporting in an international context."),
-                  },
-                ].map((pilier, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    <div className="w-9 h-9 rounded-full border border-[#0D1B2A] bg-white flex items-center justify-center shrink-0 shadow-sm">
-                      <pilier.icon className="text-[#0D1B2A]" size={16} strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <h4 className="h4-titre text-[#0D1B2A] mb-1">{pilier.title}</h4>
-                      <p className="p-3 !text-[#4A4E5A] !text-[0.85rem]">{pilier.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <Link href="/pourquoi-menua" className="link-action text-[#0D1B2A] mt-2">
-                {t("En savoir plus sur notre méthodologie", "Learn more about our methodology")} <ArrowRight size={16} />
-              </Link>
+              </span>
             </div>
           </div>
         </div>
       </section>
 
-
-      {/* ── SECTION 5 : DES SOLUTIONS D'EXTERNALISATION ── */}
-      <section className="section-gap bg-[#0D1B2A]">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-          <div className="flex flex-col max-w-5xl mx-auto">
-            <div className="flex items-center gap-4 mb-6 justify-center lg:justify-start">
-              <div className="w-8 h-[2px] bg-white" />
-              <h2 className="h2-surtitre text-white">
-                {t("NOS SOLUTIONS", "OUR SOLUTIONS")}
+      {/* ── SECTION 2 : INTRO (Overlapping Laplace style) ── */}
+      <section className="relative w-full bg-white pt-24 pb-32">
+        <div className="laplace-container relative">
+          <div className="flex flex-col lg:flex-row items-center">
+            {/* Left Image */}
+            <div className="w-full lg:w-7/12 h-[400px] lg:h-[600px] z-10 shadow-xl">
+              <img 
+                src="/rosette.jpg" 
+                alt="Intro" 
+                className="w-full h-full object-cover" 
+                onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 
+              />
+            </div>
+            
+            {/* Right Overlapping Beige Box */}
+            <div className="w-full lg:w-6/12 bg-[#e8e1d7] p-12 lg:p-20 z-20 -mt-16 lg:mt-0 lg:-ml-24 shadow-2xl">
+              <div className="w-16 h-1 bg-[#141824] mb-10" />
+              <h2 className="leading-relaxed text-[#141824] text-[1.6rem] md:text-[2rem] font-light mb-8">
+                <strong className="font-bold block mb-6 text-[1.8rem] md:text-[2.2rem]">MENUA CONSULTING</strong>
+                {t(
+                  "intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l’exécution des fonctions back et middle office.",
+                  "supports financial, accounting, wealth, data and regulated teams to secure and strengthen the execution of back and middle office functions."
+                )}
               </h2>
-            </div>
-            <h3 className="h3-section text-center lg:text-left">
-              {t("Des solutions d'externalisation conçues pour s'adapter à vos contraintes.", "Outsourcing solutions designed to adapt to your constraints.")}
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full mb-16 pt-4">
-              {[
-                { title: t("Urgence", "Emergency"), desc: t("Mobilisation rapide de ressources pour absorber un pic d'activité ou un besoin immédiat.", "Rapid mobilization of resources to absorb a peak in activity or an immediate need.") },
-                { title: t("Durée", "Duration"), desc: t("De la mission ponctuelle à l'externalisation continue, la flexibilité contractuelle que vous attendez.", "From ad hoc missions to continuous outsourcing, the contractual flexibility you expect.") },
-                { title: t("Volume", "Volume"), desc: t("Un dimensionnement d'équipe ajusté à la charge de travail, pour une efficacité optimale.", "Team sizing adjusted to the workload, for optimal efficiency.") },
-                { title: t("Organisation", "Organization"), desc: t("Intégration dédiée, prise en charge de processus métiers spécifiques, selon vos besoins.", "Dedicated integration, handling of specific business processes, according to your needs.") },
-              ].map((item, i) => (
-                <div key={i} className="flex flex-col items-center text-center bg-white/10 border border-white/20 rounded-xl p-5 hover:shadow-xl transition-all">
-                  <h4 className="h4-titre text-white mb-3 whitespace-pre-line">
-                    {item.title}
-                  </h4>
-                  <p className="p-3">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-center lg:justify-start">
-              <Link href="/nos-solutions" className="link-action">
-                {t("DÉCOUVRIR NOS SOLUTIONS", "DISCOVER OUR SOLUTIONS")} <ArrowRight size={16} />
+              <Link href="/nous-connaitre" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
+                {t("Nous connaître", "About Us")} 
+                <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+                <ChevronRight size={16} className="-ml-2" />
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 6 : ÉCLAIRAGES & ANALYSES ── */}
-      <section className="section-gap bg-white">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center">
-          <div className="flex items-center gap-4 mb-6 justify-center">
-            <div className="w-8 h-[2px] bg-[#0D1B2A]" />
-            <h2 className="h2-surtitre text-[#0D1B2A]">
-              {t("Éclairages et analyses", "Insights and analyses")}
+      {/* ── SECTION 3 : POURQUOI MENUA (Dark Navy block) ── */}
+      <section className="relative w-full bg-[#141824] text-white py-24">
+        <div className="laplace-container grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <div>
+             <h2 className="text-[1.8rem] md:text-[2.2rem] font-bold mb-6">
+               {t("Pourquoi MENUA CONSULTING ?", "Why MENUA CONSULTING?")}
+             </h2>
+             <div className="w-16 h-1 bg-[#e8e1d7] mb-8" />
+             <p className="text-[1.1rem] text-[#e5e9f0] font-light leading-relaxed mb-8">
+               {t(
+                 "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants.",
+                 "MENUA CONSULTING supports organizations facing demanding operational execution challenges."
+               )}
+             </p>
+             <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.85rem] hover:text-white transition-colors group">
+                {t("Nos atouts & engagements", "Our strengths & commitments")} 
+                <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
+                <ChevronRight size={16} className="-ml-2" />
+              </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+             <div className="bg-white/5 p-8 border border-white/10 hover:bg-white/10 transition-colors">
+                <h3 className="text-[#e8e1d7] font-bold mb-3">{t("Spécialisation", "Specialization")}</h3>
+                <p className="text-white/70 text-sm font-light">Back & Middle Office</p>
+             </div>
+             <div className="bg-white/5 p-8 border border-white/10 hover:bg-white/10 transition-colors">
+                <h3 className="text-[#e8e1d7] font-bold mb-3">{t("Exécution", "Execution")}</h3>
+                <p className="text-white/70 text-sm font-light">100% Opérationnelle</p>
+             </div>
+             <div className="bg-white/5 p-8 border border-white/10 hover:bg-white/10 transition-colors">
+                <h3 className="text-[#e8e1d7] font-bold mb-3">{t("Fiabilité", "Reliability")}</h3>
+                <p className="text-white/70 text-sm font-light">Continuité de service</p>
+             </div>
+             <div className="bg-white/5 p-8 border border-white/10 hover:bg-white/10 transition-colors">
+                <h3 className="text-[#e8e1d7] font-bold mb-3">{t("Bilingue", "Bilingual")}</h3>
+                <p className="text-white/70 text-sm font-light">Français / Anglais</p>
+             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SECTION 4 : VOS BESOINS (Light section with cards) ── */}
+      <section className="relative w-full bg-[#f5f7fa] py-24">
+        <div className="laplace-container">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6">
+              {t("Vos besoins", "Your Needs")}
             </h2>
+            <div className="w-16 h-1 bg-[#141824] mx-auto mb-6" />
+            <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed">
+              {t(
+                "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l’ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
+                "MENUA CONSULTING supports financial, accounting, wealth, IT and regulated teams on all back and middle office functions requiring rigor, continuity and operational reliability."
+              )}
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mb-16">
-            {[
-              { img: "/digitalisation.jpg", tag: "DIGITALISATION", date: "12 MAI 2024", title: t("Digitalisation des processus back office : enjeux et bonnes pratiques", "Digitalization of back office processes: challenges and best practices") },
-              { img: "/news-2.jpg", tag: "RÉGLEMENTATION", date: "06 MAI 2024", title: t("Conformité réglementaire : les évolutions dès à anticiper en 2025", "Regulatory compliance: key developments to anticipate in 2025") },
-              { img: "/news-3.jpg", tag: "REPORTING", date: "28 MAI 2024", title: t("Reporting financier : améliorer la qualité des données opérationnelles", "Financial reporting: improving the quality of operational data") },
-            ].map((news, i) => (
-              <div key={i} className="flex flex-col bg-white overflow-hidden shadow-sm hover:shadow-xl transition-all rounded-lg group">
-                <div className="h-[220px] overflow-hidden">
-                  <img src={news.img} alt={news.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                </div>
-                <div className="p-8 flex flex-col flex-1">
-                  <div className="flex items-center gap-2 text-[#918279] text-[0.65rem] font-bold mb-4 uppercase tracking-widest">
-                    <span>{news.date}</span>
-                    <span>|</span>
-                    <span>{news.tag}</span>
-                  </div>
-                  <h3 className="text-[#0D1B2A] text-[1.15rem] font-bold leading-[1.4] mb-8">{news.title}</h3>
-                  <Link href="/actualites" className="link-action text-[#0D1B2A] mt-auto text-[0.8rem] gap-2">
-                    {t("LIRE LA SUITE", "READ MORE")} <ArrowRight size={14} />
-                  </Link>
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white p-10 shadow-lg border border-[#e8e1d7]/50 flex flex-col group">
+               <h3 className="text-[#141824] text-[1.3rem] font-bold mb-4">{t("Finance & Reporting", "Finance & Reporting")}</h3>
+               <p className="text-[#6e7891] font-light text-sm flex-grow mb-8">
+                 {t("Production, structuration et fiabilisation de reportings financiers...", "Production, structuring and reliability of financial reports...")}
+               </p>
+               <Link href="/vos-besoins#finance-reporting" className="mt-auto flex items-center justify-between text-[#141824] font-bold uppercase tracking-wider text-[0.75rem] group-hover:text-[#8B6240] transition-colors">
+                 {t("Découvrir", "Discover")} <ArrowRight size={16} />
+               </Link>
+            </div>
+            <div className="bg-white p-10 shadow-lg border border-[#e8e1d7]/50 flex flex-col group">
+               <h3 className="text-[#141824] text-[1.3rem] font-bold mb-4">{t("Risques & Conformité", "Risk & Compliance")}</h3>
+               <p className="text-[#6e7891] font-light text-sm flex-grow mb-8">
+                 {t("Appui opérationnel aux équipes risques et conformité dans le traitement...", "Operational support for risk and compliance teams in processing...")}
+               </p>
+               <Link href="/vos-besoins#risques-conformite" className="mt-auto flex items-center justify-between text-[#141824] font-bold uppercase tracking-wider text-[0.75rem] group-hover:text-[#8B6240] transition-colors">
+                 {t("Découvrir", "Discover")} <ArrowRight size={16} />
+               </Link>
+            </div>
+            <div className="bg-white p-10 shadow-lg border border-[#e8e1d7]/50 flex flex-col group">
+               <h3 className="text-[#141824] text-[1.3rem] font-bold mb-4">{t("Support Comptable & Data", "Accounting & Data Support")}</h3>
+               <p className="text-[#6e7891] font-light text-sm flex-grow mb-8">
+                 {t("Appui opérationnel aux équipes comptables, administratives et data...", "Operational support for accounting, administrative and data teams...")}
+               </p>
+               <Link href="/vos-besoins#support-comptable-data" className="mt-auto flex items-center justify-between text-[#141824] font-bold uppercase tracking-wider text-[0.75rem] group-hover:text-[#8B6240] transition-colors">
+                 {t("Découvrir", "Discover")} <ArrowRight size={16} />
+               </Link>
+            </div>
+          </div>
+          
+          <div className="text-center mt-12">
+            <Link href="/vos-besoins" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
+              {t("Voir tous vos besoins", "See all your needs")} 
+              <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+              <ChevronRight size={16} className="-ml-2" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SECTION 5 : NOS SOLUTIONS (Beige Minimal Section) ── */}
+      <section className="relative w-full bg-[#e8e1d7] py-24">
+        <div className="laplace-container flex flex-col md:flex-row items-center justify-between gap-12">
+           <div className="max-w-2xl">
+             <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6">
+               {t("Nos solutions d'externalisation", "Our outsourcing solutions")}
+             </h2>
+             <p className="text-[#141824] text-[1.1rem] font-light leading-relaxed mb-8">
+               {t(
+                 "Nous concevons des dispositifs d’externalisation sur mesure, adaptés à vos contraintes opérationnelles d’urgence, de durée, de volume et d’organisation.",
+                 "We design tailor-made outsourcing systems, adapted to your operational constraints of urgency, duration, volume and organization."
+               )}
+             </p>
+             <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
+                {t("Découvrir nos solutions", "Discover our solutions")} 
+                <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+                <ChevronRight size={16} className="-ml-2" />
+              </Link>
+           </div>
+           <div className="w-full md:w-auto grid grid-cols-2 gap-4">
+              <div className="bg-white/40 p-6 text-center border border-[#141824]/10">
+                 <span className="block text-[#141824] font-bold text-lg mb-1">{t("Urgence", "Urgency")}</span>
+                 <span className="text-[#141824]/70 text-xs uppercase tracking-wider">Réactivité</span>
               </div>
-            ))}
-          </div>
+              <div className="bg-white/40 p-6 text-center border border-[#141824]/10">
+                 <span className="block text-[#141824] font-bold text-lg mb-1">{t("Durée", "Duration")}</span>
+                 <span className="text-[#141824]/70 text-xs uppercase tracking-wider">Flexibilité</span>
+              </div>
+              <div className="bg-white/40 p-6 text-center border border-[#141824]/10">
+                 <span className="block text-[#141824] font-bold text-lg mb-1">{t("Volume", "Volume")}</span>
+                 <span className="text-[#141824]/70 text-xs uppercase tracking-wider">Agilité</span>
+              </div>
+              <div className="bg-white/40 p-6 text-center border border-[#141824]/10">
+                 <span className="block text-[#141824] font-bold text-lg mb-1">{t("Format", "Format")}</span>
+                 <span className="text-[#141824]/70 text-xs uppercase tracking-wider">Sur Mesure</span>
+              </div>
+           </div>
+        </div>
+      </section>
 
-          <Link href="/actualites" className="link-action text-[#0D1B2A] mt-6">
-            {t("VOIR TOUTES LES ACTUALITÉS", "VIEW ALL NEWS")} <ArrowRight size={16} />
+      {/* ── SECTION 6 : ACTUALITÉS (Minimal visual representation) ── */}
+      <section className="relative w-full bg-white py-24">
+        <div className="laplace-container text-center max-w-4xl mx-auto">
+          <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6">
+            {t("Actualités & Veille", "News & Monitoring")}
+          </h2>
+          <div className="w-16 h-1 bg-[#141824] mx-auto mb-6" />
+          <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-12">
+            {t(
+              "MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles afin d’éclairer ses clients sur les enjeux qui impactent leurs activités.",
+              "MENUA CONSULTING ensures regular monitoring of financial, accounting, wealth, regulatory and operational developments to enlighten its clients on the issues that impact their activities."
+            )}
+          </p>
+          <Link href="/actualites" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
+            {t("Lire nos actualités", "Read our news")} 
+            <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+            <ChevronRight size={16} className="-ml-2" />
           </Link>
         </div>
       </section>
-
-      {/* ── SECTION 7 : L'EXPERTISE AU SERVICE DE VOTRE PERFORMANCE ── */}
-      <CallToAction />
 
     </main>
   );

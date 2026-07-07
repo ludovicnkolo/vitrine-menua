@@ -1,6 +1,6 @@
 "use client";
-import Link from "next/link";
-import { Clock, Users, TrendingUp, ShieldCheck, Handshake, DollarSign, Target, Settings, Network, Globe, Award, Calendar, FileCheck, CheckCircle2, MessageCircle, BookOpen, Shield } from "lucide-react";
+import React from "react";
+import { CheckCircle2, Clock, TrendingDown, TrendingUp, ShieldCheck, Heart, DollarSign, Star, Target, Link as LinkIcon, RefreshCw, CheckSquare, Globe, Award, Calendar, FileText, Eye, MessageCircle, BookOpen, FileCheck } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import CallToAction from "@/components/layout/CallToAction";
 
@@ -8,195 +8,137 @@ export default function PourquoiMenuaPage() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex flex-col w-full min-h-screen bg-white">
-      {/* ── HERO ── */}
-      <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden pt-16">
+    <main className="flex flex-col w-full min-h-screen">
+      
+      {/* ── 2.1 INTRODUCTION (Full Bleed Hero) ── */}
+      <section className="relative w-full min-h-[60vh] flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img
-            src="/pourquoi.png"
-            alt="Pourquoi Menua"
-            className="w-full h-full object-cover object-center"
+          <img 
+            src="/difference.png" 
+            alt="Pourquoi nous choisir" 
+            className="w-full h-full object-cover" 
+            onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/60 to-[#0D1B2A]/30" />
+          <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 md:px-16 lg:px-24">
-          <div className="relative py-12 pl-10">
-            <div className="absolute top-0 left-0 w-[85%] md:w-[65%] h-[1.5px] bg-white" />
-            <div className="absolute top-0 left-0 w-[1.5px] h-full bg-white" />
-            <div className="absolute bottom-0 left-0 w-[20%] md:w-[15%] h-[1.5px] bg-white" />
-            <div className="relative">
-              <h1 className="h1-hero mb-8">
-                <span className="block">{t("Notre valeur ajoutée", "Our added value")}</span>
-                <span className="block mt-2">{t("Pourquoi nous choisir comme", "Why choose us as an")}</span>
-                <span className="block mt-2">{t("partenaire opérationnel ?", "operational partner?")}</span>
-              </h1>
-              <div className="mb-8 max-w-2xl">
-                <p className="p-1">
-                  {t(
-                    "Parce que nous transformons l'externalisation en un levier de performance, de fiabilité et de sérénité pour vos équipes.",
-                    "Because we transform outsourcing into a lever of performance, reliability and peace of mind for your teams."
-                  )}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ══ 1. BÉNÉFICES — Layout as "Risques & Conformité" ══ */}
-      <section id="nos-benefices" className="mt-12 w-full max-w-[1100px] mx-auto px-6 lg:px-10 pt-10">
-        <div className="relative w-full flex flex-col rounded-3xl">
-          <div className="absolute inset-y-0 left-0 w-full lg:w-[85%] bg-[#CFC9C6] z-0 rounded-3xl shadow-lg border border-black/5"></div>
-          {/* Top Banner */}
-          <div className="relative z-10 w-full border-b border-[#E0D6C8]/50">
-            <div className="flex flex-col md:flex-row items-stretch">
-              {/* Left Box (Title & Icon) */}
-              <div className="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
-              
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-8 h-[2px] bg-[#0D1B2A]" />
-                  <h2 className="h2-surtitre text-[#0D1B2A]">
-                    {t("Bénéfices", "Benefits")}
-                  </h2>
-                </div>
-                <p className="text-[#4A4E5A] text-[0.95rem] leading-[1.6]">
-                  {t(
-                    "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité et renforcez votre fiabilité.",
-                    "By outsourcing your back and middle office functions with MENUA CONSULTING, you save time, improve your productivity and strengthen your reliability."
-                  )}
-                </p>
-              </div>
-              {/* Right Image — negative mt to create upward offset */}
-              <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl order-first md:order-none">
-                <img
-                  src="/benefice.png"
-                  alt="Bénéfices"
-                  className="w-full h-full object-cover"
-                  onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Details */}
-          <div className="relative z-10 w-full py-8 px-8 lg:pl-12 lg:pr-[16%]">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 gap-x-6">
-              {[
-                t("Gain de temps", "Time saving"),
-                t("Réduction des charges internes", "Reduction of internal costs"),
-                t("Productivité accrue", "Increased productivity"),
-                t("Efficacité renforcée", "Enhanced efficiency"),
-                t("Fiabilité des opérations", "Reliability of operations"),
-                t("Fidélisation de la clientèle", "Customer loyalty"),
-                t("Chiffre d'affaires soutenu", "Sustained turnover"),
-              ].map((item, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <svg className="w-4 h-4 text-[#8B6240] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  <h4 className="h4-titre text-[#0D1B2A]">{item}</h4>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ══ 2. DIFFÉRENCIATION — Layout as "Risques & Conformité" (Image Left) ══ */}
-      <section id="notre-differenciation" className="mt-12 w-full max-w-[1100px] mx-auto px-6 lg:px-10 pt-10">
-        <div className="relative w-full flex flex-col rounded-3xl">
-          <div className="absolute inset-y-0 right-0 w-full lg:w-[85%] bg-[#8e8478] z-0 rounded-3xl shadow-lg border border-black/5"></div>
-          {/* Top Banner */}
-          <div className="relative z-10 w-full border-b border-[#E0D6C8]/30">
-            <div className="flex flex-col md:flex-row items-stretch">
-              {/* Left Image — negative mt to create upward offset */}
-              <div className="w-full md:w-1/2 h-[300px] md:h-[420px] -mt-10 rounded-2xl overflow-hidden shadow-xl">
-                <img
-                  src="/difference.png"
-                  alt="Différenciation"
-                  className="w-full h-full object-cover"
-                  onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
-                />
-              </div>
-              {/* Right Box (Title & Icon) */}
-              <div className="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
-            
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-8 h-[2px] bg-white" />
-                  <h2 className="h2-surtitre text-white">
-                    {t("Différenciation", "Differentiation")}
-                  </h2>
-                </div>
-                <h3 className="h3-section text-white">
-                  {t(
-                    "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.",
-                    "As back and middle office specialists, we don't stop at analysis: we execute."
-                  )}
-                </h3>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Details */}
-          <div className="relative z-10 w-full py-8 px-8 lg:pl-[16%] lg:pr-12">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 gap-x-6">
-              {[
-                t("Spécialisation back et middle office", "Back and middle office specialization"),
-                t("Approche 100% opérationnelle", "100% operational approach"),
-                t("Intégration à votre organisation", "Integration into your organization"),
-                t("Exécution fiable et continue", "Reliable and continuous execution"),
-                t("Supervision qualité des livrables", "Quality supervision of deliverables"),
-                t("Intervention bilingue français / anglais", "Bilingual intervention French / English"),
-              ].map((item, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <svg className="w-4 h-4 text-[#0D1B2A] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  <h4 className="h4-titre text-white">{item}</h4>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ══ 3. ENGAGEMENTS ══ */}
-      <section id="nos-engagements" className="mt-12 bg-[#CFC9C6] w-full py-12">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-12 flex flex-col items-start">
-          <div className="w-full flex flex-col">
-            <div className="flex items-center gap-4 mb-10">
-              <div className="w-8 h-[2px] bg-[#0D1B2A]" />
-              <h2 className="h2-surtitre text-[#0D1B2A]">
-                {t("Engagements", "Commitments")}
-              </h2>
-            </div>
-            <p className="p-2 text-[#0D1B2A]/90 mb-8 max-w-3xl">
-              MENUA CONSULTING {t(
-                "s'engage sur l'essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
-                "commits to the essentials: quality of deliverables, respect of deadlines, traceability of operations and clear communication with your teams."
-              )}{" "}
+        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16 text-center">
+          <div className="max-w-4xl mx-auto">
+            <p className="animate-fade-in-up stagger-1 text-[#e8e1d7] text-[0.9rem] font-bold tracking-widest uppercase mb-6">
+              {t("Notre valeur ajoutée", "Our added value")}
+            </p>
+            <h1 className="animate-fade-in-up stagger-1 text-white text-[3rem] md:text-[4rem] leading-tight mb-8 font-bold">
+              {t("Pourquoi nous choisir comme partenaire opérationnel ?", "Why choose us as an operational partner?")}
+            </h1>
+            <p className="animate-fade-in-up stagger-2 text-[1.2rem] lg:text-[1.4rem] text-[#e5e9f0] leading-relaxed mb-6 font-light">
               {t(
-                "Nos interventions s'appuient sur un contrôle à quatre yeux, des méthodes de travail structurées, la formation des ressources mobilisées et le respect de vos exigences opérationnelles, qualité et réglementaires.",
-                "Our interventions are based on a four-eyes control, structured working methods, training of mobilized resources and respect for your operational, quality and regulatory requirements."
+                "Parce que nous transformons l'externalisation en un levier de performance, de fiabilité et de sérénité pour vos équipes.",
+                "Because we transform outsourcing into a lever of performance, reliability and peace of mind for your teams."
               )}
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 w-full mb-10">
-              {[
-                t("Qualité des livrables", "Quality of deliverables"),
-                t("Respect des délais", "Respect of deadlines"),
-                t("Traçabilité des opérations", "Traceability of operations"),
-                t("Contrôle à quatre yeux", "Four-eyes control"),
-                t("Communication claire et régulière", "Clear and regular communication"),
-                t("Formation des ressources mobilisées", "Training of mobilized resources"),
-                t("Respect de vos exigences opérationnelles, qualité et réglementaires", "Respect of your operational, quality and regulatory requirements"),
-              ].map((item, i) => (
-                <div key={i} className="flex flex-col items-center justify-center text-center bg-white/50 border border-black/5 rounded-xl p-5 hover:shadow-xl transition-all h-full">
-                  <h4 className="h4-titre text-[#0D1B2A]">
-                    {item}
-                  </h4>
-                </div>
-              ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 2.2 BÉNÉFICES (Beige Cards) ── */}
+      <section className="relative w-full section-padding bg-[#f5f7fa]">
+        <div className="laplace-container">
+          <div className="animate-fade-in-up mb-16 text-center flex flex-col items-center">
+            <h2 className="mb-6 text-[2rem] text-[#141824]">{t("Bénéfices", "Benefits")}</h2>
+            <div className="w-16 h-1 bg-[#141824]" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {[
+              { icon: Clock, title: t("Gain de temps", "Time saving") },
+              { icon: TrendingDown, title: t("Réduction des charges internes", "Reduction of internal costs") },
+              { icon: TrendingUp, title: t("Productivité accrue", "Increased productivity") },
+              { icon: Target, title: t("Efficacité renforcée", "Enhanced efficiency") },
+              { icon: ShieldCheck, title: t("Fiabilité des opérations", "Reliability of operations") },
+              { icon: Heart, title: t("Fidélisation de la clientèle", "Customer loyalty") },
+              { icon: DollarSign, title: t("Chiffre d'affaires soutenu", "Sustained turnover") },
+            ].map((b, i) => (
+              <div key={i} className="bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-8 flex flex-col items-center text-center hover:shadow-xl transition-shadow duration-300">
+                <b.icon size={36} className="text-[#141824] mb-6" strokeWidth={1.5} />
+                <h3 className="font-bold text-[#141824] text-[1.1rem] leading-snug">{b.title}</h3>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 2.3 NOTRE DIFFÉRENCIATION (Overlapping Beige Box) ── */}
+      <section className="relative w-full bg-white pt-24 pb-32">
+        <div className="laplace-container relative">
+          <div className="flex flex-col lg:flex-row items-center">
+            {/* Left Image */}
+            <div className="w-full lg:w-7/12 h-[500px] lg:h-[700px] z-10 shadow-xl">
+              <img src="/office-lounge.jpg" alt="Notre différenciation" className="w-full h-full object-cover" />
             </div>
+            
+            {/* Right Overlapping Beige Box */}
+            <div className="w-full lg:w-6/12 bg-[#e8e1d7] p-12 lg:p-20 z-20 -mt-16 lg:mt-0 lg:-ml-24 shadow-2xl">
+              <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-4 opacity-70">
+                {t("Notre différenciation", "Our Differentiation")}
+              </p>
+              <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] mb-8 font-bold leading-tight">
+                {t("Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.", "As back and middle office specialists, we don't stop at analysis: we execute.")}
+              </h2>
+              <div className="w-16 h-1 bg-[#141824] mb-10 animate-fade-in-up" />
+              
+              <ul className="space-y-6 text-[#141824] text-[1.05rem] font-light">
+                {[
+                  { icon: Star, text: t("Spécialisation back et middle office", "Back and middle office specialization") },
+                  { icon: Target, text: t("Approche 100% opérationnelle", "100% operational approach") },
+                  { icon: LinkIcon, text: t("Intégration à votre organisation", "Integration into your organization") },
+                  { icon: RefreshCw, text: t("Exécution fiable et continue", "Reliable and continuous execution") },
+                  { icon: CheckSquare, text: t("Supervision qualité des livrables", "Quality supervision of deliverables") },
+                  { icon: Globe, text: t("Intervention bilingue français / anglais", "Bilingual intervention French / English") },
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-4">
+                    <item.icon size={20} className="text-[#141824] mt-1 shrink-0" strokeWidth={1.5} />
+                    <span className="font-bold leading-relaxed">{item.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 2.4 NOS ENGAGEMENTS (Dark Blue Section) ── */}
+      <section className="relative w-full bg-[#141824] text-white section-padding">
+        <div className="laplace-container">
+          <div className="animate-fade-in-up mb-16 text-center flex flex-col items-center max-w-4xl mx-auto">
+            <p className="text-[#e8e1d7] text-[0.85rem] font-bold tracking-widest uppercase mb-4">
+              {t("Nos engagements", "Our Commitments")}
+            </p>
+            <h2 className="mb-6 text-[2rem] text-white">
+              {t("Une garantie de qualité et de sérénité", "A guarantee of quality and peace of mind")}
+            </h2>
+            <div className="w-16 h-1 bg-[#e8e1d7] mb-10" />
+            <p className="text-[#e5e9f0] text-[1.1rem] leading-relaxed mb-6 font-light">
+              {t("MENUA CONSULTING s'engage sur l'essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.", "MENUA CONSULTING commits to the essentials: quality of deliverables, respect of deadlines, traceability of operations and clear communication with your teams.")}
+            </p>
+            <p className="text-[#e5e9f0] text-[1.1rem] leading-relaxed font-light">
+              {t("Nos interventions s'appuient sur un contrôle à quatre yeux, des méthodes de travail structurées, la formation des ressources mobilisées et le respect de vos exigences opérationnelles, qualité et réglementaires.", "Our interventions are based on a four-eyes control, structured working methods, training of mobilized resources and respect for your operational, quality and regulatory requirements.")}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {[
+              { icon: Award, text: t("Qualité des livrables", "Quality of deliverables") },
+              { icon: Calendar, text: t("Respect des délais", "Respect of deadlines") },
+              { icon: FileText, text: t("Traçabilité des opérations", "Traceability of operations") },
+              { icon: Eye, text: t("Contrôle à quatre yeux", "Four-eyes control") },
+              { icon: MessageCircle, text: t("Communication claire et régulière", "Clear and regular communication") },
+              { icon: BookOpen, text: t("Formation des ressources mobilisées", "Training of mobilized resources") },
+              { icon: FileCheck, text: t("Respect de vos exigences opérationnelles, qualité et réglementaires", "Respect of your operational, quality and regulatory requirements"), colSpan: "sm:col-span-2 lg:col-span-3 xl:col-span-1" },
+            ].map((item, i) => (
+              <div key={i} className={`bg-white/5 border border-white/10 p-6 flex flex-col items-start gap-4 hover:bg-white/10 transition-colors ${item.colSpan || ''}`}>
+                <item.icon size={28} className="text-[#e8e1d7]" strokeWidth={1} />
+                <span className="font-bold text-white leading-snug">{item.text}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>

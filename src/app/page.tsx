@@ -281,7 +281,7 @@ export default function Home() {
                 href: "/actualites",
               },
             ].map((card, i) => (
-              <Link key={i} href={card.href} className="group flex flex-col bg-white border border-[#e8e1d7]/60 hover:shadow-lg transition-shadow duration-300">
+              <Link key={i} href={card.href} className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300">
                 {/* Image */}
                 <div className="h-[180px] overflow-hidden">
                   <img
@@ -293,10 +293,10 @@ export default function Home() {
                 </div>
                 {/* Content */}
                 <div className="flex flex-col flex-grow p-6">
-                  <span className="text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[#6e7891] mb-3">{card.category}</span>
-                  <h3 className="text-[#141824] font-bold text-[1rem] leading-snug mb-3 group-hover:text-[#6e7891] transition-colors">{card.title}</h3>
-                  <p className="text-[#6e7891] text-[0.85rem] font-light leading-relaxed flex-grow mb-4">{card.desc}</p>
-                  <span className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
+                  <span className="text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[#e8e1d7] mb-3">{card.category}</span>
+                  <h3 className="text-white font-bold text-[1rem] leading-snug mb-3 group-hover:text-[#e8e1d7] transition-colors">{card.title}</h3>
+                  <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4">{card.desc}</p>
+                  <span className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
                     {t("Lire l'article", "Read article")} <ArrowRight size={14} />
                   </span>
                 </div>

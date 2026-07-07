@@ -12,7 +12,7 @@ export default function NousRejoindre() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── 7.1 INTRODUCTION (Full Bleed Hero) ── */}
-      <section className="relative w-full min-h-[60vh] flex flex-col justify-center overflow-hidden mb-20 lg:mb-32">
+      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="/office-lounge.jpg" 
@@ -22,15 +22,13 @@ export default function NousRejoindre() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16 text-center">
-          <div className="max-w-4xl mx-auto">
-            <p className="animate-fade-in-up stagger-1 text-[#e8e1d7] text-[0.9rem] font-bold tracking-widest uppercase mb-6">
-              {t("Carrières et Prestataires", "Careers and Providers")}
-            </p>
-            <h1 className="animate-fade-in-up stagger-1 text-white text-[3rem] md:text-[4rem] leading-tight mb-8 font-bold">
+        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16">
+          <div className="max-w-4xl">
+            <h1 className="animate-fade-in-up stagger-1 text-white text-[3rem] md:text-[4.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Nous rejoindre", "Join Us")}
             </h1>
-            <p className="animate-fade-in-up stagger-2 text-[1.2rem] lg:text-[1.4rem] text-[#e5e9f0] leading-relaxed mb-6 font-light">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
+            <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "MENUA CONSULTING recrute des profils opérationnels autonomes, rigoureux, fiables et organisés.",
                 "MENUA CONSULTING recruits autonomous, rigorous, reliable and organized operational profiles."

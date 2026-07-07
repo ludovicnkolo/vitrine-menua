@@ -20,7 +20,7 @@ export default function ActualitesPage() {
     <main className="flex flex-col w-full min-h-screen bg-white">
       
       {/* ── 6.1 INTRODUCTION (Full Bleed Hero) ── */}
-      <section className="relative w-full min-h-[50vh] flex flex-col justify-center overflow-hidden mb-20 lg:mb-32">
+      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="/banner-desk.jpg" 
@@ -28,14 +28,15 @@ export default function ActualitesPage() {
             className="w-full h-full object-cover" 
             onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} 
           />
-          <div className="absolute inset-0 bg-[#141824]/80"></div>
+          <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="animate-fade-in-up stagger-1 text-white text-[3rem] md:text-[4rem] leading-tight mb-8 font-bold">
+        <div className="laplace-container relative z-10 pt-32 pb-20 mt-16">
+          <div className="max-w-4xl">
+            <h1 className="animate-fade-in-up stagger-1 text-white text-[3rem] md:text-[4.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Actualités", "News")}
             </h1>
-            <p className="animate-fade-in-up stagger-2 text-[1.2rem] lg:text-[1.4rem] text-[#e5e9f0] leading-relaxed mb-6 font-light">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
+            <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles afin d’éclairer ses clients sur les enjeux qui impactent leurs activités.",
                 "MENUA CONSULTING regularly monitors financial, accounting, wealth, regulatory and operational developments to enlighten its clients on the issues that impact their activities."

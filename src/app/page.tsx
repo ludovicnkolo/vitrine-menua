@@ -235,15 +235,18 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
+
       {/* ── SECTION 6 : ACTUALITÉS (3 article cards) ── */}
-      <section className="relative w-full bg-[#f5f7fa] section-padding">
+      <section className="relative w-full bg-[#141824] section-padding">
         <div className="laplace-container">
           
           {/* Header */}
           <div className="text-center mb-14">
             <div className="inline-block text-left">
-              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-4 uppercase tracking-wider">
+              <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
+              <h2 className="text-[1.8rem] md:text-[2.2rem] text-white font-bold mb-4 uppercase tracking-wider">
                 {t("Actualités et Veille", "News and Monitoring")}
               </h2>
             </div>
@@ -303,15 +306,18 @@ export default function Home() {
 
           {/* CTA */}
           <div className="text-center">
-            <Link href="/actualites" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
+            <Link href="/actualites" className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#e8e1d7] transition-colors group">
               {t("Voir toutes nos actualités", "See all our news")} 
-              <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+              <span className="w-8 h-[1px] bg-white group-hover:w-12 transition-all duration-300"></span>
               <ChevronRight size={16} className="-ml-2" />
             </Link>
           </div>
 
         </div>
       </section>
+
+      {/* ── SEPARATOR ── */}
+      <div className="w-full h-8 md:h-16 bg-white"></div>
 
     </main>
   );

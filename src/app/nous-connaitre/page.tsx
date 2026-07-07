@@ -21,7 +21,7 @@ export default function NousConnaitrePage() {
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
         <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
-          <div className="max-w-4xl -ml-2 md:-ml-8 lg:-ml-16">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="animate-fade-in-up stagger-1 text-white text-[1.8rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Nous connaître", "About us")}
             </h1>

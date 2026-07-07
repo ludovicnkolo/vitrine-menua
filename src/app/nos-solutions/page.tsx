@@ -114,18 +114,18 @@ export default function NosSolutionsPage() {
       <div className="bg-[#f5f7fa] py-20">
         <div className="laplace-container space-y-16 max-w-5xl mx-auto">
           {solutions.map((sol, idx) => (
-            <div key={idx} id={sol.id} className="bg-white p-10 md:p-16 shadow-sm border border-gray-100 flex flex-col lg:flex-row gap-12 scroll-mt-32">
-               <div className="lg:w-5/12">
+            <div key={idx} id={sol.id} className="bg-white shadow-xl flex flex-col lg:flex-row scroll-mt-32 overflow-hidden mb-12 border border-gray-100">
+               <div className="lg:w-5/12 bg-[#e8e1d7] p-10 md:p-16 flex flex-col justify-center">
                   <div className="w-16 h-[3px] bg-[#141824] mb-5" />
                   <h3 className="text-[2rem] text-[#141824] font-bold mb-6 flex items-center gap-4">
                     <sol.icon className="text-[#141824]" size={36} />
                     {sol.title}
                   </h3>
-                  <p className="font-bold text-[#141824] mb-4 text-[1.1rem]">
+                  <p className="font-bold text-[#141824] text-[1.1rem]">
                     {sol.role}
                   </p>
                </div>
-               <div className="lg:w-7/12 bg-[#f9fafb] p-8 border border-gray-100">
+               <div className="lg:w-7/12 p-10 md:p-16 bg-white flex flex-col justify-center">
                  <p className="font-bold text-[#141824] mb-6 text-[1.1rem]">
                     {t(sol.how, sol.how)}
                  </p>

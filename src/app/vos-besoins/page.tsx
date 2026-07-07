@@ -146,19 +146,19 @@ export default function VosBesoinsPage() {
           
           <div className="space-y-12 max-w-5xl mx-auto">
             {needs.map((need, idx) => (
-              <div key={idx} id={need.id} className="bg-white p-10 md:p-16 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-12 scroll-mt-32">
-                <div className="md:w-1/3">
-                  <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
-                  <h3 className="text-[1.8rem] text-[#141824] font-bold mb-6 flex items-center gap-4">
-                    <need.icon className="text-[#141824]" size={32} />
+              <div key={idx} id={need.id} className="bg-white shadow-xl flex flex-col lg:flex-row scroll-mt-32 overflow-hidden mb-12 border border-gray-100">
+                <div className="lg:w-5/12 bg-[#e8e1d7] p-10 md:p-16 flex flex-col justify-center">
+                  <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+                  <h3 className="text-[2rem] text-[#141824] font-bold mb-6 flex items-center gap-4">
+                    <need.icon className="text-[#141824]" size={36} />
                     {need.title}
                   </h3>
                 </div>
-                <div className="md:w-2/3">
+                <div className="lg:w-7/12 p-10 md:p-16 bg-white flex flex-col justify-center">
                   <p className="font-bold text-[#141824] mb-6 text-[1.1rem] uppercase tracking-wider text-sm">
                     {t("Périmètre d'action", "Scope of action")}
                   </p>
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[#31374a] text-[1rem] font-light">
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[#31374a] text-[1.05rem] font-light">
                     {need.bullets.map((bullet, bIdx) => (
                       <li key={bIdx} className="flex items-start gap-3">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#141824] shrink-0 mt-2" />

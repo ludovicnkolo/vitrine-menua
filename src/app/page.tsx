@@ -56,7 +56,7 @@ export default function Home() {
             </div>
             
             {/* Right Overlapping Beige Box */}
-            <div className="w-full lg:w-9/12 bg-[#e8e1d7] px-12 lg:pr-20 lg:pl-32 pt-8 lg:pt-16 pb-12 lg:pb-16 z-10 -mt-16 lg:mt-0 lg:-ml-24 shadow-xl">
+            <div className="w-full lg:w-9/12 bg-[#e8e1d7] px-12 lg:pr-20 lg:pl-32 pt-8 lg:pt-16 pb-12 lg:pb-16 relative z-30 lg:z-10 -mt-16 lg:mt-0 lg:-ml-24 shadow-xl">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <div className="leading-relaxed text-[#141824] text-[1.1rem] md:text-[1.2rem] font-light mb-8 space-y-6">
                 <h2 className="font-bold text-[1.6rem] md:text-[2rem] leading-tight mb-4 uppercase tracking-wider">
@@ -146,8 +146,18 @@ export default function Home() {
       <section className="relative w-full bg-white section-padding">
         <div className="laplace-container relative">
 
+          {/* Mobile Image */}
+          <div className="block lg:hidden w-full h-[250px] relative z-20">
+            <img
+              src="/meeting.jpg"
+              alt="Vos besoins"
+              className="w-full h-full object-cover"
+              onError={(e) => { e.currentTarget.src = "/rosette.jpg"; }}
+            />
+          </div>
+
           {/* Text block — full width on mobile, leaves room for image on desktop */}
-          <div className="bg-[#f5f7fa] shadow-xl relative z-10 px-10 lg:px-16 pt-12 pb-14 lg:pr-[38%]">
+          <div className="bg-[#f5f7fa] shadow-xl relative z-30 lg:z-10 px-10 lg:px-16 pt-12 pb-14 lg:pr-[38%] -mt-16 lg:mt-0">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("Vos besoins", "Your Needs")}

@@ -41,11 +41,21 @@ export default function PourquoiMenuaPage() {
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── 2.2 BÉNÉFICES (Overlapping style, image right) ── */}
-      <section className="relative w-full bg-white section-padding">
+      <section className="relative w-full bg-white section-padding mt-16 lg:mt-0">
         <div className="laplace-container relative">
 
+          {/* Mobile Image */}
+          <div className="block lg:hidden w-full h-[250px] relative z-20">
+            <img
+              src="/difference.png"
+              alt="Bénéfices"
+              className="w-full h-full object-cover shadow-xl"
+              onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
+            />
+          </div>
+
           {/* Text block — full width on mobile, leaves room for image on right on desktop */}
-          <div className="bg-[#f5f7fa] shadow-xl relative z-10 px-10 lg:px-16 pt-12 pb-14 lg:pr-[38%]">
+          <div className="bg-[#f5f7fa] shadow-xl relative z-30 lg:z-10 px-10 lg:px-16 pt-12 pb-14 lg:pr-[38%] -mt-16 lg:mt-0">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("Bénéfices", "Benefits")}

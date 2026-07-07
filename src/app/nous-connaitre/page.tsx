@@ -40,11 +40,21 @@ export default function NousConnaitrePage() {
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── 2.2 PRÉSENTATION DU CABINET (Overlapping style, image left) ── */}
-      <section className="relative w-full bg-white section-padding">
+      <section className="relative w-full bg-white section-padding mt-16 lg:mt-0">
         <div className="laplace-container relative">
           
+          {/* Mobile Image */}
+          <div className="block lg:hidden w-full h-[250px] relative z-20">
+            <img
+              src="/preCabinet.png"
+              alt="Cabinet"
+              className="w-full h-full object-cover"
+              onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
+            />
+          </div>
+
           {/* Text block — full width on mobile, leaves room for image on left on desktop */}
-          <div className="bg-[#f5f7fa] shadow-xl relative z-10 px-10 lg:px-16 pt-12 pb-14 lg:pl-[38%]">
+          <div className="bg-[#f5f7fa] shadow-xl relative z-30 lg:z-10 px-10 lg:px-16 pt-12 pb-14 lg:pl-[38%] -mt-16 lg:mt-0">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("MENUA CONSULTING", "MENUA CONSULTING")}

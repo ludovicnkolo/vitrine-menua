@@ -26,7 +26,7 @@ export default function NousConnaitrePage() {
               {t("Nous connaître", "About us")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.2rem] lg:text-[1.5rem] text-[#e5e9f0] font-light max-w-2xl">
+            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "Votre partenaire expert en externalisation back et middle office.",
                 "Your expert partner in back and middle office outsourcing."

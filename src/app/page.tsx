@@ -11,7 +11,7 @@ export default function Home() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── SECTION 1 : HERO ── */}
-      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden mb-20 lg:mb-32">
+      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="/paris-aerial.jpg" 
@@ -134,7 +134,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 4 : VOS BESOINS (Light section with image overlap) ── */}
-      <section className="relative w-full bg-[#f5f7fa] section-padding">
+      <section className="relative w-full bg-white section-padding">
         <div className="laplace-container relative">
 
           {/* Text block — full width on mobile, leaves room for image on desktop */}

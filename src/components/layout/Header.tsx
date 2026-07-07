@@ -131,12 +131,12 @@ export default function Header() {
           className="flex items-center z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0 lg:-ml-6"
           onClick={() => { setOpenMenu(null); setIsMobileMenuOpen(false); }}
         >
-          {/* Cropped MCM ONLY - hides "COI" and "VOS OPERATIONS" */}
-          <div className="relative overflow-hidden w-[75px] lg:w-[105px] h-[35px] lg:h-[48px] shrink-0">
+          {/* Cropped MCM ONLY - strictly hides "COI" and "VOS OPÉRATIONS, NOTRE EXPERTISE" */}
+          <div className="relative overflow-hidden w-[65px] lg:w-[90px] h-[28px] lg:h-[40px] shrink-0">
              <img 
                src="/logoSlogan.png" 
                alt="MCM" 
-               className="absolute top-[2px] left-[1px] h-[55px] lg:h-[75px] w-auto max-w-none brightness-0 invert" 
+               className="absolute top-[-2px] lg:top-[-4px] left-[0px] h-[55px] lg:h-[75px] w-auto max-w-none brightness-0 invert" 
              />
           </div>
         </Link>

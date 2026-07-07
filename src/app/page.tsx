@@ -14,7 +14,7 @@ export default function Home() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/paris-aerial.jpg" 
+            src="/office-lounge.jpg" 
             alt="Paris Aerial" 
             className="w-full h-full object-cover" 
             onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} 

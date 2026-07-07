@@ -128,23 +128,21 @@ export default function Header() {
         {/* LOGO */}
         <Link
           href="/"
-          className="flex items-center z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0 lg:-ml-6"
+          className="flex flex-col items-center justify-center z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0 lg:-ml-6"
           onClick={() => { setOpenMenu(null); setIsMobileMenuOpen(false); }}
         >
-          {/* Cropped MCM ONLY - strictly hides "COI" and "VOS OPÉRATIONS, NOTRE EXPERTISE" */}
-          <div className="relative overflow-hidden w-[150px] lg:w-[198px] h-[67px] lg:h-[88px] shrink-0 -mt-3 lg:-mt-5">
-             <img 
-               src="/logoSlogan.png" 
-               alt="MCM" 
-               className="absolute top-[-5px] lg:top-[-8px] left-[0px] h-[126px] lg:h-[168px] w-auto max-w-none brightness-0 invert" 
-             />
-          </div>
+          {/* Clean extracted logo */}
+          <img 
+            src="/logo-clean.png" 
+            alt="Menua Consulting" 
+            className="h-[90px] lg:h-[150px] w-auto" 
+          />
         </Link>
 
         <div className="w-10 lg:hidden" />
 
         {/* DESKTOP NAV */}
-        <nav className="hidden lg:flex items-center gap-0.5 lg:ml-auto">
+        <nav className="hidden lg:flex flex-1 items-center gap-0.5 lg:ml-8">
           {(Object.keys(menus) as MenuKey[]).map((key) => (
             <div
               key={key}
@@ -153,7 +151,7 @@ export default function Header() {
             >
               <Link
                 href={menus[key].href}
-                className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[17px] leading-[25px] font-bold ${
+                className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[15px] leading-[22px] font-bold ${
                   openMenu === key
                     ? "text-[#e8e1d7]"
                     : "text-white hover:text-[#e8e1d7]"
@@ -194,6 +192,9 @@ export default function Header() {
               )}
             </div>
           ))}
+
+          {/* SPACER: Pushes the tabs to the left (near logo) and buttons to the right */}
+          <div className="flex-1" />
 
           {/* LANG SWITCHER — placed right after Actualités */}
           <div className="flex items-center gap-2 border-l border-[#e8e1d7]/30 pl-4 ml-2 mr-2" onMouseEnter={() => setOpenMenu(null)}>

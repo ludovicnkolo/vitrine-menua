@@ -127,67 +127,63 @@ export default function Home() {
              <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
                 <h3 className="text-[#e8e1d7] font-bold text-[1.3rem] mb-2">{t("Bilingue", "Bilingual")}</h3>
                 <p className="text-white/80 font-light text-[1.05rem]">Français / Anglais</p>
-             </div>
+              </div>
           </div>
 
         </div>
       </section>
 
-      {/* ── SECTION 4 : VOS BESOINS (Light section with cards) ── */}
+      {/* ── SECTION 4 : VOS BESOINS (Light section with image overlap) ── */}
       <section className="relative w-full bg-[#f5f7fa] section-padding">
-        <div className="laplace-container">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-block text-left">
-              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
-                {t("Vos besoins", "Your Needs")}
-              </h2>
-            </div>
-            <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed">
+        <div className="laplace-container relative">
+
+          {/* Text block — full width on mobile, leaves room for image on desktop */}
+          <div className="bg-white shadow-xl relative z-10 px-10 lg:px-16 pt-12 pb-14 lg:pr-[38%]">
+            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+            <h2 className="text-[1.8rem] md:text-[2.2rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
+              {t("Vos besoins", "Your Needs")}
+            </h2>
+            <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-10">
               {t(
-                "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l’ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
+                "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l'ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
                 "MENUA CONSULTING supports financial, accounting, wealth, IT and regulated teams on all back and middle office functions requiring rigor, continuity and operational reliability."
               )}
             </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-10 shadow-lg border border-[#e8e1d7]/50 flex flex-col group">
-               <h3 className="text-[#141824] text-[1.3rem] font-bold mb-4">{t("Finance et Reporting", "Finance and Reporting")}</h3>
-               <p className="text-[#6e7891] font-light text-sm flex-grow mb-8">
-                 {t("Production, structuration et fiabilisation de reportings financiers...", "Production, structuring and reliability of financial reports...")}
-               </p>
-               <Link href="/vos-besoins#finance-reporting" className="mt-auto flex items-center justify-between text-[#141824] font-bold uppercase tracking-wider text-[0.75rem] group-hover:text-[#8B6240] transition-colors">
-                 {t("Découvrir", "Discover")} <ArrowRight size={16} />
-               </Link>
+            {/* 3 need items */}
+            <div className="flex flex-col gap-6 mb-10 border-t border-[#e8e1d7] pt-8">
+              {[
+                { title: t("Finance et Reporting", "Finance and Reporting"), desc: t("Production, structuration et fiabilisation de reportings financiers...", "Production, structuring and reliability of financial reports..."), href: "/vos-besoins#finance-reporting" },
+                { title: t("Risques et Conformité", "Risk and Compliance"), desc: t("Appui opérationnel aux équipes risques et conformité dans le traitement...", "Operational support for risk and compliance teams in processing..."), href: "/vos-besoins#risques-conformite" },
+                { title: t("Support Comptable et Data", "Accounting and Data Support"), desc: t("Appui opérationnel aux équipes comptables, administratives et data...", "Operational support for accounting, administrative and data teams..."), href: "/vos-besoins#support-comptable-data" },
+              ].map((item, i) => (
+                <Link key={i} href={item.href} className="flex items-start justify-between gap-4 group">
+                  <div>
+                    <h3 className="text-[#141824] font-bold text-[1.05rem] mb-1 group-hover:text-[#6e7891] transition-colors">{item.title}</h3>
+                    <p className="text-[#6e7891] text-[0.9rem] font-light">{item.desc}</p>
+                  </div>
+                  <ArrowRight size={18} className="text-[#141824] shrink-0 mt-1 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              ))}
             </div>
-            <div className="bg-white p-10 shadow-lg border border-[#e8e1d7]/50 flex flex-col group">
-               <h3 className="text-[#141824] text-[1.3rem] font-bold mb-4">{t("Risques et Conformité", "Risk and Compliance")}</h3>
-               <p className="text-[#6e7891] font-light text-sm flex-grow mb-8">
-                 {t("Appui opérationnel aux équipes risques et conformité dans le traitement...", "Operational support for risk and compliance teams in processing...")}
-               </p>
-               <Link href="/vos-besoins#risques-conformite" className="mt-auto flex items-center justify-between text-[#141824] font-bold uppercase tracking-wider text-[0.75rem] group-hover:text-[#8B6240] transition-colors">
-                 {t("Découvrir", "Discover")} <ArrowRight size={16} />
-               </Link>
-            </div>
-            <div className="bg-white p-10 shadow-lg border border-[#e8e1d7]/50 flex flex-col group">
-               <h3 className="text-[#141824] text-[1.3rem] font-bold mb-4">{t("Support Comptable et Data", "Accounting and Data Support")}</h3>
-               <p className="text-[#6e7891] font-light text-sm flex-grow mb-8">
-                 {t("Appui opérationnel aux équipes comptables, administratives et data...", "Operational support for accounting, administrative and data teams...")}
-               </p>
-               <Link href="/vos-besoins#support-comptable-data" className="mt-auto flex items-center justify-between text-[#141824] font-bold uppercase tracking-wider text-[0.75rem] group-hover:text-[#8B6240] transition-colors">
-                 {t("Découvrir", "Discover")} <ArrowRight size={16} />
-               </Link>
-            </div>
-          </div>
-          
-          <div className="text-center mt-12">
+
             <Link href="/vos-besoins" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
               {t("Voir tous vos besoins", "See all your needs")} 
               <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
               <ChevronRight size={16} className="-ml-2" />
             </Link>
           </div>
+
+          {/* Image — absolutely overlapping the right side of the white box */}
+          <div className="hidden lg:block absolute top-1/2 -translate-y-1/2 right-0 w-[36%] h-[75%] z-20">
+            <img
+              src="/meeting.jpg"
+              alt="Vos besoins"
+              className="w-full h-full object-cover"
+              onError={(e) => { e.currentTarget.src = "/rosette.jpg"; }}
+            />
+          </div>
+
         </div>
       </section>
 

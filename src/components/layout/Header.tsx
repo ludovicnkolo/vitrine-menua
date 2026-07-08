@@ -154,7 +154,7 @@ export default function Header() {
                 className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[15px] leading-[22px] font-bold ${
                   openMenu === key
                     ? "text-[#e8e1d7]"
-                    : "text-white hover:text-[#e8e1d7]"
+                    : "text-white/80 hover:text-[#e8e1d7]"
                 }`}
               >
                 {menus[key].label}
@@ -220,8 +220,7 @@ export default function Header() {
           {/* "Nous rejoindre" & "Nous contacter" as plain nav links */}
           <Link
             href="/nous-rejoindre"
-            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#e8e1d7] hover:text-[#141824] hover:bg-[#e8e1d7] rounded-full"
-            style={{ border: "1px solid #e8e1d7" }}
+            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#141824] bg-[#e8e1d7] hover:bg-white rounded-full"
             onMouseEnter={() => setOpenMenu(null)}
           >
             {t("Nous rejoindre", "Join Us")}

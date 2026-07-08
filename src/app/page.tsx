@@ -107,7 +107,7 @@ export default function Home() {
                 "MENUA CONSULTING supports organizations facing demanding operational execution challenges."
               )}
             </p>
-            <div className="mb-12 md:mb-0">
+            <div className="hidden md:block">
               <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.85rem] hover:text-white transition-colors group">
                  {t("Nos atouts et engagements", "Our strengths and commitments")} 
                  <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
@@ -134,6 +134,15 @@ export default function Home() {
                 <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Bilingue", "Bilingual")}</h3>
                 <p className="text-white/80 font-light text-[1.05rem]">Français / Anglais</p>
               </div>
+          </div>
+          
+          {/* Mobile Button */}
+          <div className="mt-8 md:hidden">
+            <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.85rem] hover:text-white transition-colors group">
+               {t("Nos atouts et engagements", "Our strengths and commitments")} 
+               <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
+               <ChevronRight size={16} className="-ml-2" />
+             </Link>
           </div>
 
         </div>
@@ -225,7 +234,7 @@ export default function Home() {
                 "We design tailor-made outsourcing systems, adapted to your operational constraints of urgency, duration, volume and organization."
               )}
             </p>
-            <div className="mb-12 md:mb-0">
+            <div className="hidden md:block">
               <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
                  {t("Découvrir nos solutions", "Discover our solutions")} 
                  <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
@@ -252,6 +261,15 @@ export default function Home() {
                  <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Format", "Format")}</h3>
                  <p className="text-[#141824]/70 font-light text-[1.05rem]">Sur Mesure</p>
               </div>
+          </div>
+          
+          {/* Mobile Button */}
+          <div className="mt-8 md:hidden">
+            <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
+               {t("Découvrir nos solutions", "Discover our solutions")} 
+               <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+               <ChevronRight size={16} className="-ml-2" />
+             </Link>
           </div>
 
         </div>

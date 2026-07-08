@@ -60,26 +60,31 @@ export default function ActualitesPage() {
             </h2>
           </div>
 
-          {/* Single Card */}
-          <div className="bg-white/5 border border-white/10 p-5 w-full md:w-[362px] hover:bg-white/10 transition-colors group">
-            <div className="w-full h-[220px] overflow-hidden mb-6">
+          {/* Featured Card */}
+          <div className="bg-white border border-[#e8e1d7] flex flex-col md:flex-row w-full group hover:border-[#141824] transition-all duration-300">
+            <div className="w-full md:w-1/2 h-[250px] md:h-auto overflow-hidden">
               <img src="/img/news-featured.jpg" alt="À la une" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             
-            <h3 className="text-white text-[1.1rem] font-semibold mb-4 leading-snug uppercase">
-              {t("Sélection d’articles, de contenus et d’analyses mis en avant", "Selection of featured articles, content and analysis")}
-            </h3>
-            <p className="text-[#e5e9f0] font-light text-[0.95rem] leading-relaxed mb-8">
-              {t("Sur les sujets les plus récents ou les plus structurants pour vos activités.", "On the most recent or structuring subjects for your activities.")}
-            </p>
-            
-            <div className="flex justify-end">
-              <a href="#" className="text-white/50 text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 group-hover:text-white transition-colors">
-                {t("LIRE L'ARTICLE", "READ ARTICLE")} 
-                <span className="w-5 h-5 rounded-full border border-white/50 flex items-center justify-center group-hover:border-white">
-                  <ArrowRight size={10} />
-                </span>
-              </a>
+            <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white group-hover:bg-[#141824] transition-colors duration-300">
+              <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
+                {t("À LA UNE • RÉGLEMENTATION", "FEATURED • REGULATION")} 
+              </p>
+              <h3 className="text-[#141824] group-hover:text-white text-[1.3rem] md:text-[1.5rem] font-bold mb-6 leading-snug uppercase transition-colors duration-300">
+                {t("Veille réglementaire et conformité", "Regulatory Watch and Compliance")}
+              </h3>
+              <p className="text-[#6e7891] group-hover:text-white/70 text-[1rem] font-light leading-relaxed mb-8 transition-colors duration-300">
+                {t("Restez informés des dernières évolutions réglementaires et découvrez nos conseils pour adapter vos processus opérationnels en toute sécurité.", "Stay informed of the latest regulatory developments and discover our advice to adapt your operational processes securely.")}
+              </p>
+              
+              <div className="flex justify-end mt-auto">
+                <a href="#" className="text-[#141824] group-hover:text-white text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 transition-colors duration-300">
+                  {t("LIRE L'ARTICLE", "READ ARTICLE")} 
+                  <span className="w-5 h-5 rounded-full border border-[#141824] group-hover:border-white flex items-center justify-center transition-colors duration-300">
+                    <ArrowRight size={10} />
+                  </span>
+                </a>
+              </div>
             </div>
           </div>
         </div>

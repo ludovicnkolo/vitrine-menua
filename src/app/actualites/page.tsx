@@ -63,7 +63,7 @@ export default function ActualitesPage() {
           {/* Single Card */}
           <div className="bg-white/5 border border-white/10 p-5 w-full md:w-[362px] hover:bg-white/10 transition-colors group">
             <div className="w-full h-[220px] overflow-hidden mb-6">
-              <img src="/office-lounge.jpg" alt="À la une" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <img src="/img/news-featured.jpg" alt="À la une" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             
             <h3 className="text-white text-[1.1rem] font-semibold mb-4 leading-snug uppercase">
@@ -122,7 +122,7 @@ export default function ActualitesPage() {
               {/* Card 1 */}
               <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:bg-[#141824] hover:border-[#141824] transition-all duration-300">
                 <div className="w-full h-[220px] overflow-hidden mb-6">
-                  <img src="/meeting.jpg" alt="Actualités" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src="/img/article-finance.jpg" alt="Actualités" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="flex flex-col flex-grow">
                   <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
@@ -151,7 +151,7 @@ export default function ActualitesPage() {
               {/* Card 2 */}
               <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:bg-[#141824] hover:border-[#141824] transition-all duration-300">
                 <div className="w-full h-[220px] overflow-hidden mb-6">
-                  <img src="/certification.jpg" alt="Publications" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src="/img/article-publications.jpg" alt="Publications" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="flex flex-col flex-grow">
                   <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
@@ -180,7 +180,7 @@ export default function ActualitesPage() {
               {/* Card 3 (Placeholder for grid symmetry) */}
               <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:bg-[#141824] hover:border-[#141824] transition-all duration-300">
                 <div className="w-full h-[220px] overflow-hidden mb-6">
-                  <img src="/office-lounge.jpg" alt="Veille" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src="/img/news-veille.jpg" alt="Veille" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="flex flex-col flex-grow">
                   <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">

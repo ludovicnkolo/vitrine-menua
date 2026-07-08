@@ -72,10 +72,10 @@ export default function VosBesoinsPage() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/meeting.jpg" 
-            alt="Vos besoins" 
+            src="/img/besoins-hero.jpg" 
+            alt="Hero Background" 
             className="w-full h-full object-cover" 
-            onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} 
+            onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>

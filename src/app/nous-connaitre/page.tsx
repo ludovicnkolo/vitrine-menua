@@ -13,7 +13,7 @@ export default function NousConnaitrePage() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/office-lounge.jpg" 
+            src="/img/connaitre-hero.jpg" 
             alt="Hero Background" 
             className="w-full h-full object-cover" 
             onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 
@@ -46,7 +46,7 @@ export default function NousConnaitrePage() {
           {/* Mobile Image */}
           <div className="block lg:hidden w-full h-[250px] relative z-20">
             <img
-              src="/preCabinet.png"
+              src="/img/connaitre-office.jpg"
               alt="Cabinet"
               className="w-full h-full object-cover"
               onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
@@ -105,7 +105,7 @@ export default function NousConnaitrePage() {
           {/* Image — absolutely overlapping the left side of the white box */}
           <div className="hidden lg:block absolute -top-24 left-0 w-[36%] h-[75%] z-20">
             <img
-              src="/preCabinet.png"
+              src="/img/connaitre-approche.jpg"
               alt="Cabinet"
               className="w-full h-full object-cover"
               onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
@@ -214,7 +214,7 @@ export default function NousConnaitrePage() {
           
           {/* Image (Right) */}
           <div className="w-full lg:w-5/12 h-[300px] lg:h-[450px] shadow-xl">
-             <img src="/certification.jpg" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} />
+             <img src="/img/connaitre-cert.jpg" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} />
           </div>
         </div>
       </section>
@@ -241,7 +241,7 @@ export default function NousConnaitrePage() {
               <div className="shrink-0 flex flex-col items-center mx-auto md:mx-0">
                 <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-[#e8e1d7]/30 bg-[#141824] mb-4">
                   <img 
-                    src="/rosette.jpg" 
+                    src="/img/rosette.jpg" 
                     alt="Rosette Fouelefack" 
                     className="w-full h-full object-cover"
                     onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 

@@ -52,12 +52,12 @@ export default function NosSolutionsPage() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/banner-desk.jpg" 
-            alt="Nos solutions" 
+            src="/img/solutions-hero.jpg" 
+            alt="Nos Solutions" 
             className="w-full h-full object-cover" 
-            onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} 
+            onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 
           />
-          <div className="absolute inset-0 bg-[#141824]/70"></div>
+          <div className="absolute inset-0 bg-[#141824]/80"></div>
         </div>
         <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">

@@ -15,7 +15,7 @@ export default function NousRejoindre() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/office-lounge.jpg" 
+            src="/img/rejoindre-hero.jpg" 
             alt="Nous rejoindre" 
             className="w-full h-full object-cover" 
             onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 

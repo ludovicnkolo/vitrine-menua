@@ -133,7 +133,7 @@ export default function Header() {
         >
           {/* Clean extracted logo */}
           <img 
-            src="/logo-clean.png" 
+            src="/img/logo-clean.png" 
             alt="Menua Consulting" 
             className="h-[90px] lg:h-[150px] w-auto" 
           />

@@ -14,10 +14,10 @@ export default function Home() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/office-lounge.jpg" 
+            src="/img/hero-paris.jpg" 
             alt="Paris Aerial" 
             className="w-full h-full object-cover" 
-            onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} 
+            onError={(e) => { e.currentTarget.src = "/img/hero-paris.jpg"; }} 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
@@ -48,10 +48,10 @@ export default function Home() {
             {/* Left Image */}
             <div className="w-full lg:w-4/12 h-[250px] lg:h-[360px] z-20 relative">
               <img 
-                src="/rosette.jpg" 
+                src="/img/intro-office.jpg" 
                 alt="Intro" 
                 className="w-full h-full object-cover" 
-                onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 
+                onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} 
               />
             </div>
             
@@ -149,10 +149,10 @@ export default function Home() {
           {/* Mobile Image */}
           <div className="block lg:hidden w-full h-[250px] relative z-20">
             <img
-              src="/meeting.jpg"
+              src="/img/besoins-meeting.jpg"
               alt="Vos besoins"
               className="w-full h-full object-cover"
-              onError={(e) => { e.currentTarget.src = "/rosette.jpg"; }}
+              onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
             />
           </div>
 
@@ -196,10 +196,10 @@ export default function Home() {
           {/* Image — absolutely overlapping the right side of the white box */}
           <div className="hidden lg:block absolute -top-24 right-0 w-[36%] h-[75%] z-20">
             <img
-              src="/meeting.jpg"
+              src="/img/besoins-meeting.jpg"
               alt="Vos besoins"
               className="w-full h-full object-cover"
-              onError={(e) => { e.currentTarget.src = "/rosette.jpg"; }}
+              onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
             />
           </div>
 
@@ -280,24 +280,24 @@ export default function Home() {
             {[
               {
                 category: t("Finance et Comptabilité", "Finance & Accounting"),
-                img: "/article-finance.jpg",
-                fallback: "/meeting.jpg",
+                img: "/img/article-finance.jpg",
+                fallback: "/img/besoins-meeting.jpg",
                 title: t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news"),
                 desc: t("Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations.", "Analysis of developments likely to impact your organizations."),
                 href: "/actualites",
               },
               {
                 category: t("Publications", "Publications"),
-                img: "/article-publications.jpg",
-                fallback: "/rosette.jpg",
+                img: "/img/article-publications.jpg",
+                fallback: "/img/intro-office.jpg",
                 title: t("Nos publications et prises de parole", "Our publications and statements"),
                 desc: t("Retrouvez les analyses et contenus publiés par MENUA CONSULTING sur les enjeux opérationnels et sectoriels.", "Find analyses and content published by MENUA CONSULTING on operational and sector issues."),
                 href: "/actualites",
               },
               {
                 category: t("Réglementation", "Regulation"),
-                img: "/article-reglementation.jpg",
-                fallback: "/office-lounge.jpg",
+                img: "/img/article-reglementation.jpg",
+                fallback: "/img/hero-paris.jpg",
                 title: t("Veille réglementaire et conformité", "Regulatory watch and compliance"),
                 desc: t("Restez informés des dernières évolutions réglementaires et adaptez vos processus opérationnels.", "Stay informed of the latest regulatory developments and adapt your operational processes."),
                 href: "/actualites",

@@ -14,7 +14,7 @@ export default function PourquoiMenuaPage() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/difference.png" 
+            src="/img/pourquoi-hero.jpg" 
             alt="Pourquoi nous choisir" 
             className="w-full h-full object-cover" 
             onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 
@@ -47,9 +47,9 @@ export default function PourquoiMenuaPage() {
           {/* Mobile Image */}
           <div className="block lg:hidden w-full h-[250px] relative z-20">
             <img
-              src="/difference.png"
-              alt="Bénéfices"
-              className="w-full h-full object-cover shadow-xl"
+              src="/img/pourquoi-precision.jpg"
+              alt="Résultats tangibles"
+              className="w-full h-full object-cover"
               onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
             />
           </div>
@@ -100,10 +100,10 @@ export default function PourquoiMenuaPage() {
           {/* Image — absolutely overlapping the right side */}
           <div className="hidden lg:block absolute -top-24 right-0 w-[36%] h-[75%] z-20">
             <img
-              src="/difference.png"
-              alt="Bénéfices"
-              className="w-full h-full object-cover shadow-xl"
-              onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
+              src="/img/pourquoi-bridge.jpg"
+              alt="Différenciation"
+              className="w-full h-full object-cover"
+              onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
             />
           </div>
 
@@ -160,7 +160,7 @@ export default function PourquoiMenuaPage() {
           {/* Image (Right) */}
           <div className="w-full lg:w-1/2 h-[300px] lg:h-[500px] shadow-xl">
             <img
-              src="/office-lounge.jpg"
+              src="/img/pourquoi-portfolio.jpg"
               alt="Notre différenciation"
               className="w-full h-full object-cover"
             />

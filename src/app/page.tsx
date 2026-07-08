@@ -78,11 +78,13 @@ export default function Home() {
                   )}
                 </p>
               </div>
-              <Link href="/nous-connaitre" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
-                {t("Nous connaître", "About Us")} 
-                <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
-                <ChevronRight size={16} className="-ml-2" />
-              </Link>
+              <div className="flex justify-end">
+                <Link href="/nous-connaitre" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
+                  {t("Nous connaître", "About Us")} 
+                  <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+                  <ChevronRight size={18} className="-ml-2" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -107,11 +109,11 @@ export default function Home() {
                 "MENUA CONSULTING supports organizations facing demanding operational execution challenges."
               )}
             </p>
-            <div className="hidden md:block">
-              <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.85rem] hover:text-white transition-colors group">
+            <div className="hidden md:flex justify-end">
+              <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
                  {t("Nos atouts et engagements", "Our strengths and commitments")} 
                  <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
-                 <ChevronRight size={16} className="-ml-2" />
+                 <ChevronRight size={18} className="-ml-2" />
                </Link>
             </div>
           </div>
@@ -137,11 +139,11 @@ export default function Home() {
           </div>
           
           {/* Mobile Button */}
-          <div className="mt-8 md:hidden">
-            <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.85rem] hover:text-white transition-colors group">
+          <div className="mt-8 md:hidden flex justify-end">
+            <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
                {t("Nos atouts et engagements", "Our strengths and commitments")} 
                <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
-               <ChevronRight size={16} className="-ml-2" />
+               <ChevronRight size={18} className="-ml-2" />
              </Link>
           </div>
 
@@ -195,11 +197,13 @@ export default function Home() {
               ))}
             </div>
 
-            <Link href="/vos-besoins" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
-              {t("Voir tous vos besoins", "See all your needs")} 
-              <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
-              <ChevronRight size={16} className="-ml-2" />
-            </Link>
+            <div className="flex justify-end mt-4">
+              <Link href="/vos-besoins" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
+                {t("Voir tous vos besoins", "See all your needs")} 
+                <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+                <ChevronRight size={18} className="-ml-2" />
+              </Link>
+            </div>
           </div>
 
           {/* Image — absolutely overlapping the right side of the white box */}
@@ -234,11 +238,11 @@ export default function Home() {
                 "We design tailor-made outsourcing systems, adapted to your operational constraints of urgency, duration, volume and organization."
               )}
             </p>
-            <div className="hidden md:block">
-              <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
+            <div className="hidden md:flex justify-end">
+              <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
                  {t("Découvrir nos solutions", "Discover our solutions")} 
                  <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
-                 <ChevronRight size={16} className="-ml-2" />
+                 <ChevronRight size={18} className="-ml-2" />
                </Link>
             </div>
           </div>
@@ -264,11 +268,11 @@ export default function Home() {
           </div>
           
           {/* Mobile Button */}
-          <div className="mt-8 md:hidden">
-            <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#6e7891] transition-colors group">
+          <div className="mt-8 md:hidden flex justify-end">
+            <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
                {t("Découvrir nos solutions", "Discover our solutions")} 
                <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
-               <ChevronRight size={16} className="-ml-2" />
+               <ChevronRight size={18} className="-ml-2" />
              </Link>
           </div>
 
@@ -345,11 +349,11 @@ export default function Home() {
           </div>
 
           {/* CTA */}
-          <div className="text-center">
-            <Link href="/actualites" className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[0.85rem] hover:text-[#e8e1d7] transition-colors group">
+          <div className="flex justify-end mt-4">
+            <Link href="/actualites" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
               {t("Voir toutes nos actualités", "See all our news")} 
               <span className="w-8 h-[1px] bg-white group-hover:w-12 transition-all duration-300"></span>
-              <ChevronRight size={16} className="-ml-2" />
+              <ChevronRight size={18} className="-ml-2" />
             </Link>
           </div>
 

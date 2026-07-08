@@ -63,18 +63,18 @@ export default function ActualitesPage() {
           {/* Featured Card */}
           <div className="bg-white border border-[#e8e1d7] flex flex-col md:flex-row w-full group hover:border-[#141824] transition-all duration-300">
             <div className="w-full md:w-1/2 h-[250px] md:h-auto overflow-hidden">
-              <img src="/img/news-featured.jpg" alt="À la une" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <img src="/img/article-finance.jpg" alt="À la une" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             
             <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white group-hover:bg-[#141824] transition-colors duration-300">
               <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
-                {t("À LA UNE • RÉGLEMENTATION", "FEATURED • REGULATION")} 
+                {t("À LA UNE • FINANCE ET COMPTABILITÉ", "FEATURED • FINANCE AND ACCOUNTING")} 
               </p>
               <h3 className="text-[#141824] group-hover:text-white text-[1.3rem] md:text-[1.5rem] font-bold mb-6 leading-snug uppercase transition-colors duration-300">
-                {t("Veille réglementaire et conformité", "Regulatory Watch and Compliance")}
+                {t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news")}
               </h3>
               <p className="text-[#6e7891] group-hover:text-white/70 text-[1rem] font-light leading-relaxed mb-8 transition-colors duration-300">
-                {t("Restez informés des dernières évolutions réglementaires et découvrez nos conseils pour adapter vos processus opérationnels en toute sécurité.", "Stay informed of the latest regulatory developments and discover our advice to adapt your operational processes securely.")}
+                {t("Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations : finance, comptabilité, gestion de patrimoine, conformité, réglementation et pratiques opérationnelles.", "Analysis and decoding of developments likely to have an impact on your organizations: finance, accounting, wealth management, compliance, regulation and operational practices.")}
               </p>
               
               <div className="flex justify-end mt-auto">

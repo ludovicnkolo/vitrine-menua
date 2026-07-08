@@ -50,7 +50,6 @@ export default function PourquoiMenuaPage() {
               src="/img/pourquoi-precision.jpg"
               alt="Résultats tangibles"
               className="w-full h-full object-cover"
-              onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }}
             />
           </div>
 
@@ -100,10 +99,9 @@ export default function PourquoiMenuaPage() {
           {/* Image — absolutely overlapping the right side */}
           <div className="hidden lg:block absolute -top-24 right-0 w-[36%] h-[75%] z-20">
             <img
-              src="/img/pourquoi-bridge.jpg"
+              src="/img/pourquoi-precision.jpg"
               alt="Différenciation"
               className="w-full h-full object-cover"
-              onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
             />
           </div>
 

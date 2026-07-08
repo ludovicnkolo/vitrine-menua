@@ -17,7 +17,6 @@ export default function NousContacter() {
             src="/img/contact-hero.jpg" 
             alt="Nous contacter" 
             className="w-full h-full object-cover" 
-            onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>

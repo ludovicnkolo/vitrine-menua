@@ -26,7 +26,6 @@ export default function ActualitesPage() {
             src="/img/news-hero.jpg" 
             alt="Actualités et Veille" 
             className="w-full h-full object-cover" 
-            onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }} 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>

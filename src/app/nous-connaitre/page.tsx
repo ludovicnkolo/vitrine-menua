@@ -49,7 +49,6 @@ export default function NousConnaitrePage() {
               src="/img/connaitre-office.jpg"
               alt="Cabinet"
               className="w-full h-full object-cover"
-              onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
             />
           </div>
 
@@ -108,7 +107,6 @@ export default function NousConnaitrePage() {
               src="/img/connaitre-approche.jpg"
               alt="Cabinet"
               className="w-full h-full object-cover"
-              onError={(e) => { e.currentTarget.src = "/office-lounge.jpg"; }}
             />
           </div>
 

@@ -106,7 +106,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-[9998] transition-colors duration-300 border-b ${scrolled ? "bg-[#141824]/95 backdrop-blur-md border-[#e8e1d7]/10 shadow-2xl" : "bg-[#141824] border-transparent"}`}
+        className={`fixed top-0 left-0 w-full z-[9998] transition-colors duration-300 border-b ${scrolled ? "bg-[#1a1f2e] border-[#e8e1d7]/10 shadow-2xl" : "bg-[#1a1f2e] border-transparent"}`}
         onMouseLeave={() => setOpenMenu(null)}
       >
       {/* ── TOP BAR ── */}
@@ -194,28 +194,27 @@ export default function Header() {
             </div>
           ))}
 
-          {/* SPACER: Pushes the tabs to the left (near logo) and buttons to the right */}
-          <div className="flex-1" />
-
-          {/* LANG SWITCHER — placed right after Actualités */}
-          <div className="flex items-center gap-2 border-l border-[#e8e1d7]/30 pl-4 ml-2 mr-2" onMouseEnter={() => setOpenMenu(null)}>
-            <button
-              onClick={() => setLang("FR")}
-              className={`flex items-center gap-1.5 text-xs font-bold transition-all ${
-                lang === "FR" ? "text-white opacity-100" : "text-white/50 hover:text-white"
-              }`}
-            >
-              <FlagFR /> FR
-            </button>
-            <span className="text-[#D8DCE8] text-xs">|</span>
-            <button
-              onClick={() => setLang("EN")}
-              className={`flex items-center gap-1.5 text-xs font-bold transition-all ${
-                lang === "EN" ? "text-white opacity-100" : "text-white/50 hover:text-white"
-              }`}
-            >
-              <FlagEN /> EN
-            </button>
+          {/* SPACER with LANG SWITCHER CENTERED inside it */}
+          <div className="flex-1 flex justify-center items-center" onMouseEnter={() => setOpenMenu(null)}>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setLang("FR")}
+                className={`flex items-center gap-1.5 text-[0.75rem] font-bold transition-all tracking-wider ${
+                  lang === "FR" ? "text-white opacity-100" : "text-white/50 hover:text-white"
+                }`}
+              >
+                <FlagFR /> FR
+              </button>
+              <span className="text-[#D8DCE8] text-xs mx-1">|</span>
+              <button
+                onClick={() => setLang("EN")}
+                className={`flex items-center gap-1.5 text-[0.75rem] font-bold transition-all tracking-wider ${
+                  lang === "EN" ? "text-white opacity-100" : "text-white/50 hover:text-white"
+                }`}
+              >
+                <FlagEN /> EN
+              </button>
+            </div>
           </div>
 
           {/* "Nous rejoindre" & "Nous contacter" as plain nav links */}

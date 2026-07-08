@@ -13,8 +13,14 @@ export default function NosSolutionsPage() {
       role: t("Rôle : Capacité de réaction", "Role: Response capacity"),
       desc: t("Mobilisation rapide de ressources opérationnelles pour répondre à un besoin immédiat et assurer la continuité de votre service.", "Rapid mobilization of operational resources to meet an immediate need and ensure the continuity of your service."),
       icon: Clock,
-      how: "Comment ?",
-      bullets: ["Surcharge d’activité ou pic de dossiers", "Remplacement temporaire d’un collaborateur absent", "Renfort ponctuel en période de clôture", "Traitement accéléré de dossiers en retard", "Mise à disposition progressive de ressources"]
+      how: t("Comment ?", "How?"),
+      bullets: [
+        t("Surcharge d’activité ou pic de dossiers", "Activity overload or peak in files"),
+        t("Remplacement temporaire d’un collaborateur absent", "Temporary replacement of an absent employee"),
+        t("Renfort ponctuel en période de clôture", "Occasional reinforcement during closing periods"),
+        t("Traitement accéléré de dossiers en retard", "Accelerated processing of overdue files"),
+        t("Mise à disposition progressive de ressources", "Progressive provision of resources")
+      ]
     },
     {
       id: "duree",
@@ -22,8 +28,14 @@ export default function NosSolutionsPage() {
       role: t("Rôle : Flexibilité contractuelle", "Role: Contractual flexibility"),
       desc: t("Des dispositifs d’externalisation flexibles, adaptés au traitement d’un nombre défini de dossiers comme à la gestion récurrente.", "Flexible outsourcing systems, adapted to the processing of a defined number of files as well as to recurring management."),
       icon: Briefcase,
-      how: "Garanties :",
-      bullets: ["Mission courte sur une période limitée", "Mission longue dans la durée", "Externalisation continue", "Intervention ponctuelle sur un volume de dossiers", "Ajustement du dispositif selon la charge"]
+      how: t("Garanties :", "Guarantees:"),
+      bullets: [
+        t("Mission courte sur une période limitée", "Short mission over a limited period"),
+        t("Mission longue dans la durée", "Long-term mission"),
+        t("Externalisation continue", "Continuous outsourcing"),
+        t("Intervention ponctuelle sur un volume de dossiers", "One-off intervention on a volume of files"),
+        t("Ajustement du dispositif selon la charge", "Adjustment of the system according to the workload")
+      ]
     },
     {
       id: "volume",
@@ -31,8 +43,14 @@ export default function NosSolutionsPage() {
       role: t("Rôle : Dimensionnement", "Role: Sizing"),
       desc: t("Adaptation du dimensionnement de nos ressources au volume de dossiers ou d’opérations à traiter, tout en sécurisant l’exécution.", "Adaptation of the sizing of our resources to the volume of files or operations to be processed..."),
       icon: FileStack,
-      how: "Nos dispositifs :",
-      bullets: ["Ressource dédiée sur un périmètre précis", "Renfort ponctuel pour absorber une surcharge", "Équipe opérationnelle pour flux simultanés", "Dispositif évolutif", "Organisation permettant la continuité"]
+      how: t("Nos dispositifs :", "Our systems:"),
+      bullets: [
+        t("Ressource dédiée sur un périmètre précis", "Dedicated resource on a specific scope"),
+        t("Renfort ponctuel pour absorber une surcharge", "Occasional reinforcement to absorb an overload"),
+        t("Équipe opérationnelle pour flux simultanés", "Operational team for simultaneous flows"),
+        t("Dispositif évolutif", "Scalable system"),
+        t("Organisation permettant la continuité", "Organization enabling continuity")
+      ]
     },
     {
       id: "organisation",
@@ -40,8 +58,14 @@ export default function NosSolutionsPage() {
       role: t("Rôle : Comment le travail est exécuté", "Role: How work is executed"),
       desc: t("Intégration de nos équipes à vos modes de fonctionnement pour garantir une exécution fluide et conforme à vos standards.", "Integration of our teams into your operating modes to guarantee smooth execution in compliance with your standards."),
       icon: Settings,
-      how: "Mode d'interventions :",
-      bullets: ["Dispositif dédié clairement identifié", "Intervention par mission bornée dans le temps", "Prise en charge de flux récurrents", "Traitement selon des règles définies", "Suivi structuré avec points de contrôle"]
+      how: t("Mode d'interventions :", "Intervention mode:"),
+      bullets: [
+        t("Dispositif dédié clairement identifié", "Clearly identified dedicated system"),
+        t("Intervention par mission bornée dans le temps", "Time-bound mission intervention"),
+        t("Prise en charge de flux récurrents", "Management of recurring flows"),
+        t("Traitement selon des règles définies", "Processing according to defined rules"),
+        t("Suivi structuré avec points de contrôle", "Structured monitoring with control points")
+      ]
     }
   ];
 
@@ -127,13 +151,13 @@ export default function NosSolutionsPage() {
                </div>
                <div className="lg:w-7/12 p-10 md:p-16 bg-white flex flex-col justify-center">
                  <p className="font-bold text-[#141824] mb-6 text-[1.1rem]">
-                    {t(sol.how, sol.how)}
+                    {sol.how}
                  </p>
                  <ul className="space-y-4 text-[#31374a] text-[1.05rem] font-light">
                    {sol.bullets.map((bullet, bIdx) => (
                      <li key={bIdx} className="flex items-start gap-3">
                        <span className="w-1.5 h-1.5 rounded-full bg-[#141824] shrink-0 mt-2" />
-                       <span>{t(bullet, bullet)}</span>
+                       <span>{bullet}</span>
                      </li>
                    ))}
                  </ul>

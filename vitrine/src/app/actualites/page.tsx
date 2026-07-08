@@ -239,12 +239,7 @@ export default function ActualitesPage() {
             </div>
           </div>
           <div className="shrink-0 text-center md:text-right mt-4 md:mt-0">
-            <p className="text-[#e8e1d7] text-[0.8rem] font-light mb-2 max-w-xs ml-auto">
-              {t(
-                "(Le lien vers la page LinkedIn officielle de MENUA CONSULTING sera intégré dès sa création)",
-                "(The link to the official MENUA CONSULTING LinkedIn page will be integrated as soon as it is created)"
-              )}
-            </p>
+
             <a href="#" className="text-white text-[0.75rem] font-bold tracking-widest uppercase flex items-center gap-3 justify-end hover:text-[#e8e1d7] transition-colors">
               {t("RETROUVEZ-NOUS SUR LINKEDIN", "FIND US ON LINKEDIN")} <ArrowRight size={14} />
             </a>

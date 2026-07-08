@@ -44,7 +44,7 @@ export default function Header() {
         { label: t("Contrôle de gestion", "Management Control"), href: "/vos-besoins#controle-de-gestion" },
         { label: t("Risques et conformité", "Risk and Compliance"), href: "/vos-besoins#risques-conformite" },
         { label: t("Support comptable et data", "Accounting and Data Support"), href: "/vos-besoins#support-comptable-data" },
-        { label: t("Gestion de patrimoine et CGP", "Wealth Management"), href: "/vos-besoins#gestion-patrimoine" },
+        { label: t("Gestion de patrimoine et CGP", "Wealth Management Support"), href: "/vos-besoins#gestion-patrimoine" },
         { label: t("Autres besoins opérationnels", "Other Operational Needs"), href: "/vos-besoins#autres-besoins" },
       ],
     },

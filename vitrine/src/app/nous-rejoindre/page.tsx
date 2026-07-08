@@ -57,7 +57,7 @@ export default function NousRejoindre() {
                   { icon: BarChart2, title: t("Comptabilité et support administratif", "Accounting and admin support") },
                   { icon: Shield, title: t("Reporting et data", "Reporting and data") },
                   { icon: User, title: t("Risques et Conformité (KYC / AML)", "Risk and Compliance (KYC / AML)") },
-                  { icon: Briefcase, title: t("Support opérationnel CGP", "Operational support CGP") },
+                  { icon: Briefcase, title: t("Support opérationnel CGP", "Wealth Management Support") },
                   { icon: Globe, title: t("Profils bilingues français / anglais", "Bilingual profiles French / English") },
                 ].map((p, i) => (
                   <div key={i} className="flex items-center gap-5">
@@ -206,7 +206,7 @@ export default function NousRejoindre() {
                       t("Comptabilité", "Accounting"),
                       t("Data", "Data"),
                       t("Risques et Conformité", "Risk and Compliance"),
-                      t("Support CGP", "Operational support CGP"),
+                      t("Support CGP", "Wealth Management Support"),
                     ].map((opt, i) => (
                       <label key={i} className="flex items-start gap-3 text-[1.05rem] text-[#141824] font-light cursor-pointer group">
                         <input type="checkbox" className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]" /> 

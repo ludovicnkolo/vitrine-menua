@@ -23,7 +23,7 @@ export default function VosBesoinsPage() {
     },
     {
       id: "moa-it-finance",
-      title: t("MOA / IT Finance", "MOA / IT Finance"),
+      title: t("MOA / IT Finance", "Business Analysis / IT Finance"),
       desc: t("Accompagnement dans l’intégration, le paramétrage et l’optimisation des outils financiers, comptables et data.", "Support in the integration, configuration and optimization of financial, accounting and data tools."),
       icon: TrendingUp,
       bullets: ["Recueil des besoins métiers", "Rédaction de cahiers des charges", "Paramétrage d'outils", "Tests de recette (UAT)", "Formation des utilisateurs", "Support post-déploiement"]

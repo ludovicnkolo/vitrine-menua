@@ -4,6 +4,25 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 
 export default function Footer() {
+  const LinkedinIcon = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect width="4" height="12" x="2" y="9" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+
   const { t } = useLanguage();
 
   return (
@@ -20,9 +39,14 @@ export default function Footer() {
                Consulting
              </span>
           </div>
-          <p className="text-[#6e7891] text-[0.95rem] leading-relaxed max-w-[250px]">
+          <p className="text-[#6e7891] text-[0.95rem] leading-relaxed max-w-[250px] mb-6">
             {t("Externalisation opérationnelle des fonctions back et middle office.", "Operational outsourcing of back and middle office functions.")}
           </p>
+          <div className="flex items-center gap-4 mt-auto">
+            <a href="https://www.linkedin.com/company/menua-consulting" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-[#141824]/5 flex items-center justify-center text-[#141824] hover:bg-[#141824] hover:text-white transition-all duration-300" aria-label="LinkedIn">
+              <LinkedinIcon size={18} />
+            </a>
+          </div>
         </div>
 
         {/* Colonne 2: Navigation rapide */}

@@ -41,7 +41,7 @@ export default function PourquoiMenuaPage() {
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── 2.2 BÉNÉFICES (Overlapping style, image right) ── */}
-      <section className="relative w-full bg-white section-padding mt-16 lg:mt-0">
+      <section id="nos-benefices" className="relative w-full bg-white section-padding mt-16 lg:mt-0 scroll-mt-20">
         <div className="laplace-container relative">
 
           {/* Mobile Image */}
@@ -112,7 +112,7 @@ export default function PourquoiMenuaPage() {
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── 2.3 NOTRE DIFFÉRENCIATION (Accréditations style) ── */}
-      <section className="relative w-full bg-white section-padding">
+      <section id="notre-differenciation" className="relative w-full bg-white section-padding scroll-mt-20">
         <div className="laplace-container max-w-[1200px] mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
           
           {/* Beige block with content (Left) */}
@@ -171,7 +171,7 @@ export default function PourquoiMenuaPage() {
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── 2.4 NOS ENGAGEMENTS (Pourquoi MENUA style, light gray) ── */}
-      <section className="relative w-full bg-[#f5f7fa] text-[#141824] section-padding">
+      <section id="nos-engagements" className="relative w-full bg-[#f5f7fa] text-[#141824] section-padding scroll-mt-20">
         <div className="laplace-container max-w-[1200px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
 
           {/* Left Column: Narrative */}

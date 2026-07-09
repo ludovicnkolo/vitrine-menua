@@ -49,7 +49,7 @@ export default function ActualitesPage() {
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── 6.2 À LA UNE (Dark Section) ── */}
-      <section className="relative w-full bg-[#141824] section-padding">
+      <section id="articles" className="relative w-full bg-[#141824] section-padding scroll-mt-20">
         <div className="laplace-container max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="mb-12">
@@ -219,7 +219,7 @@ export default function ActualitesPage() {
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── LINKEDIN BANNER ── */}
-      <section className="relative w-full bg-[#141824] section-padding">
+      <section id="linkedin" className="relative w-full bg-[#141824] section-padding scroll-mt-20">
         <div className="laplace-container max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-6">
             <div className="w-16 h-16 rounded-md border border-[#e8e1d7]/30 flex items-center justify-center shrink-0">

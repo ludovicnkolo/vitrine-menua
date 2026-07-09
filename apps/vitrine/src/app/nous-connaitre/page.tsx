@@ -40,7 +40,7 @@ export default function NousConnaitrePage() {
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── 2.2 PRÉSENTATION DU CABINET (Overlapping style, image left) ── */}
-      <section className="relative w-full bg-white section-padding mt-16 lg:mt-0">
+      <section id="presentation-du-cabinet" className="relative w-full bg-white section-padding mt-16 lg:mt-0 scroll-mt-20">
         <div className="laplace-container relative">
           
           {/* Mobile Image */}
@@ -111,7 +111,7 @@ export default function NousConnaitrePage() {
         </div>
 
         {/* Notre approche - Pleine largeur */}
-        <div className="laplace-container mt-16 lg:mt-24">
+        <div id="notre-approche" className="laplace-container mt-16 lg:mt-24 scroll-mt-20">
           <div className="border-t border-[#141824]/10 pt-16">
             <div className="max-w-4xl mx-auto text-center mb-12">
               <p className="text-[#141824] font-bold text-[1.2rem] md:text-[1.4rem] uppercase tracking-wider">
@@ -147,7 +147,7 @@ export default function NousConnaitrePage() {
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── 2.4 NOTRE MÉTHODOLOGIE (Dark Navy Section) ── */}
-      <section className="relative w-full bg-[#141824] section-padding">
+      <section id="notre-methodologie" className="relative w-full bg-[#141824] section-padding scroll-mt-20">
         <div className="laplace-container">
           <div className="text-center mb-20 animate-fade-in-up">
             <div className="inline-block text-left">
@@ -198,7 +198,7 @@ export default function NousConnaitrePage() {
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── 2.5 ACCRÉDITATIONS ET NOTRE ÉQUIPE ── */}
-      <section className="relative w-full bg-white section-padding">
+      <section id="certifications" className="relative w-full bg-white section-padding scroll-mt-20">
         <div className="laplace-container max-w-[1200px] mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
           {/* Beige block with list (Left) */}
           <div className="w-full lg:w-7/12 bg-[#e8e1d7] p-10 lg:p-16 flex flex-col justify-center shadow-xl">
@@ -244,7 +244,7 @@ export default function NousConnaitrePage() {
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── NOTRE ÉQUIPE DETAILS ── */}
-      <section id="equipe" className="relative w-full bg-white section-padding scroll-mt-20">
+      <section id="notre-equipe" className="relative w-full bg-white section-padding scroll-mt-20">
         <div className="laplace-container max-w-4xl mx-auto text-center">
           <div className="inline-block text-left">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />

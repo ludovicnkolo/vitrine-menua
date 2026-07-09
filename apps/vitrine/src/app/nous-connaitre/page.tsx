@@ -15,7 +15,7 @@ export default function NousConnaitrePage() {
           <img 
             src="/img/connaitre-hero-v3.jpg" 
             alt="Hero Background" 
-            className="w-full h-full object-cover object-[center_25%]" 
+            className="w-full h-full object-cover object-[center_65%]" 
             onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>

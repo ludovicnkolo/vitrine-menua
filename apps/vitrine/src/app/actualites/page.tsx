@@ -19,7 +19,7 @@ export default function ActualitesPage() {
   return (
     <main className="flex flex-col w-full min-h-screen bg-white">
       
-      {/* ── 6.1 INTRODUCTION (Full BleedHero) ── */}
+      {/* ── 6.1 INTRODUCTION (Full BleedHero) ─*/}
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 

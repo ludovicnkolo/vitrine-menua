@@ -61,32 +61,32 @@ export default function PourquoiMenuaPage() {
             </h2>
             <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-4">
               {t(
-                "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité, renforcez votre fiabilité et soutenez durablement votre chiffre d'affaires.",
-                "By outsourcing your back and middle office functions with MENUA CONSULTING, you save time, improve your productivity, strengthen your reliability and sustainably support your turnover."
+                "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité, renforcez votre fiabilité et soutenez durablement votre chiffre d'affaires. 🔴",
+                "By outsourcing your back and middle office functions with MENUA CONSULTING, you save time, improve your productivity, strengthen your reliability and sustainably support your turnover. 🔴"
               )}
             </p>
             <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-10">
               {t(
-                "Cette organisation vous permet de réduire vos charges internes, de mieux absorber vos volumes d'activité et de fidéliser durablement votre clientèle.",
-                "This organization allows you to reduce your internal costs, better absorb your activity volumes and sustainably retain your customers."
+                "Cette organisation vous permet de réduire vos charges internes, de mieux absorber vos volumes d'activité et de fidéliser durablement votre clientèle. 🔴",
+                "This organization allows you to reduce your internal costs, better absorb your activity volumes and sustainably retain your customers. 🔴"
               )}
             </p>
 
             {/* Benefits list */}
             <div className="border-t border-[#e8e1d7] pt-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
                 {[
-                  { icon: Clock, label: t("Gain de temps", "Time saving") },
-                  { icon: TrendingDown, label: t("Réduction des charges internes", "Reduction of internal costs") },
-                  { icon: TrendingUp, label: t("Productivité accrue", "Increased productivity") },
-                  { icon: Target, label: t("Efficacité renforcée", "Enhanced efficiency") },
-                  { icon: ShieldCheck, label: t("Fiabilité des opérations", "Reliability of operations") },
-                  { icon: Heart, label: t("Fidélisation de la clientèle", "Customer loyalty") },
-                  { icon: DollarSign, label: t("Chiffre d'affaires soutenu", "Sustained turnover") },
-                ].map((b, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <b.icon size={16} className="text-[#141824] shrink-0" strokeWidth={2} />
-                    <span className="text-[#141824] text-[0.95rem] font-medium">{b.label}</span>
+                  t("Gain de temps", "Time saving"),
+                  t("Réduction des charges internes", "Reduction of internal costs"),
+                  t("Productivité accrue", "Increased productivity"),
+                  t("Efficacité renforcée", "Enhanced efficiency"),
+                  t("Fiabilité des opérations", "Reliability of operations"),
+                  t("Fidélisation de la clientèle", "Customer loyalty"),
+                  t("Chiffre d'affaires soutenu", "Sustained turnover"),
+                ].map((label, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#141824] shrink-0 mt-2" />
+                    <span className="text-[#141824] text-[1.05rem] font-light">{label}</span>
                   </div>
                 ))}
               </div>
@@ -121,8 +121,8 @@ export default function PourquoiMenuaPage() {
 
             <p className="text-[#141824] text-[1.05rem] font-light leading-relaxed mb-4">
               {t(
-                "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.",
-                "As back and middle office specialists, we don't stop at analysis: we execute."
+                "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons. 🔴",
+                "As back and middle office specialists, we don't stop at analysis: we execute. 🔴"
               )}
             </p>
             <p className="text-[#141824] text-[1.05rem] font-light leading-relaxed mb-8">
@@ -176,8 +176,8 @@ export default function PourquoiMenuaPage() {
             </h2>
             <p className="text-[1.1rem] text-[#6e7891] font-light leading-relaxed mb-6">
               {t(
-                "MENUA CONSULTING s'engage sur l'essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
-                "MENUA CONSULTING commits to the essentials: quality of deliverables, respect of deadlines, traceability of operations and clear communication with your teams."
+                "MENUA CONSULTING s'engage sur l'essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes. 🔴",
+                "MENUA CONSULTING commits to the essentials: quality of deliverables, respect of deadlines, traceability of operations and clear communication with your teams. 🔴"
               )}
             </p>
             <p className="text-[1.1rem] text-[#6e7891] font-light leading-relaxed mb-10">

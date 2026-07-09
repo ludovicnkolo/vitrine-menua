@@ -10,7 +10,7 @@ export default function VosBesoinsPage() {
     {
       id: "finance-reporting",
       title: t("FINANCE & REPORTING", "FINANCE & REPORTING"),
-      desc: t("Production, structuration et fiabilisation de reportings financiers destinés au pilotage de la performance, au suivi de l'activité et à l'aide à la décision.", "Production, structuring and reliability of financial reporting intended for performance management..."),
+      desc: t("Production, structuration et fiabilisation de reportings financiers destinés au pilotage de la performance, au suivi de l'activité et à l'aide à la décision. 🔴", "Production, structuring and reliability of financial reporting intended for performance management... 🔴"),
       icon: BarChart2,
       bullets: [
         { fr: "Reporting financier", en: "Financial reporting" },
@@ -30,7 +30,7 @@ export default function VosBesoinsPage() {
     {
       id: "controle-de-gestion",
       title: t("CONTRÔLE DE GESTION", "MANAGEMENT CONTROL"),
-      desc: t("Appui opérationnel au suivi budgétaire, à l'analyse des écarts et au pilotage de la performance afin d'aider les organisations à mieux maîtriser leurs coûts, leurs marges et leurs ressources.", "Operational support for budget monitoring, variance analysis and performance management to help organizations..."),
+      desc: t("Appui opérationnel au suivi budgétaire, à l'analyse des écarts et au pilotage de la performance afin d'aider les organisations à mieux maîtriser leurs coûts, leurs marges et leurs ressources. 🔴", "Operational support for budget monitoring, variance analysis and performance management to help organizations... 🔴"),
       icon: CheckCircle,
       bullets: [
         { fr: "Suivi budgétaire", en: "Budget monitoring" },
@@ -50,7 +50,7 @@ export default function VosBesoinsPage() {
     {
       id: "risques-conformite",
       title: t("RISQUES & CONFORMITÉ", "RISKS & COMPLIANCE"),
-      desc: t("Appui opérationnel aux équipes risques et conformité dans le traitement, le contrôle et la fiabilisation des dossiers sensibles, dans le respect des procédures internes et des exigences réglementaires applicables.", "Operational support for risk and compliance teams in the processing, control and reliability of sensitive files..."),
+      desc: t("Appui opérationnel aux équipes risques et conformité dans le traitement, le contrôle et la fiabilisation des dossiers sensibles, dans le respect des procédures internes et des exigences réglementaires applicables. 🔴", "Operational support for risk and compliance teams in the processing, control and reliability of sensitive files... 🔴"),
       icon: ShieldCheck,
       bullets: [
         { fr: "LCB-FT", en: "AML-CFT" },
@@ -72,7 +72,7 @@ export default function VosBesoinsPage() {
     {
       id: "support-comptable",
       title: t("SUPPORT COMPTABLE & DATA", "ACCOUNTING & DATA SUPPORT"),
-      desc: t("Appui opérationnel aux équipes comptables, administratives et data dans le traitement, la fiabilisation et la structuration des informations nécessaires à la production comptable et au reporting.", "Operational support for accounting, administrative and data teams in the processing, reliability and structuring..."),
+      desc: t("Appui opérationnel aux équipes comptables, administratives et data dans le traitement, la fiabilisation et la structuration des informations nécessaires à la production comptable et au reporting. 🔴", "Operational support for accounting, administrative and data teams in the processing, reliability and structuring... 🔴"),
       icon: Database,
       bullets: [
         { fr: "Saisie comptable", en: "Accounting entry" },
@@ -115,7 +115,7 @@ export default function VosBesoinsPage() {
     {
       id: "autres-besoins",
       title: t("AUTRES BESOINS OPÉRATIONNELS", "OTHER OPERATIONAL NEEDS"),
-      desc: t("Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques ne relevant pas exclusivement d'une fonction financière, comptable, patrimoniale, conformité ou data.", "Management of specific, cross-functional or one-off operational needs that do not relate exclusively..."),
+      desc: t("Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques ne relevant pas exclusivement d'une fonction financière, comptable, patrimoniale, conformité ou data. 🔴", "Management of specific, cross-functional or one-off operational needs that do not relate exclusively... 🔴"),
       icon: MoreHorizontal,
       bullets: [
         { fr: "Missions ponctuelles de renfort opérationnel", en: "Ad-hoc operational reinforcement missions" },

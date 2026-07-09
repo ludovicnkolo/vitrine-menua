@@ -72,14 +72,14 @@ export default function NousRejoindre() {
             <div className="bg-[#141824] text-white p-10 shadow-xl border-t-4 border-t-[#e8e1d7]">
               <p className="text-[#e5e9f0] text-[1.05rem] font-light leading-relaxed mb-6">
                 {t(
-                  "MENUA CONSULTING recherche des profils opérationnels autonomes, rigoureux, fiables et organisés, capables d'intervenir à distance sur des fonctions back et middle office, principalement dans un cadre international.",
-                  "MENUA CONSULTING is looking for autonomous, rigorous, reliable and organized operational profiles, capable of intervening remotely on back and middle office functions, mainly in an international context."
+                  "MENUA CONSULTING recherche des profils opérationnels autonomes, rigoureux, fiables et organisés, capables d'intervenir à distance sur des fonctions back et middle office, principalement dans un cadre international. 🔴",
+                  "MENUA CONSULTING is looking for autonomous, rigorous, reliable and organized operational profiles, capable of intervening remotely on back and middle office functions, mainly in an international context. 🔴"
                 )}
               </p>
               <p className="text-[#e5e9f0] text-[1.05rem] font-light leading-relaxed">
                 {t(
-                  "Les profils recherchés doivent être orientés exécution, à l'aise avec le travail à distance et capables de respecter des procédures, des délais et des standards de qualité élevés.",
-                  "The profiles sought must be execution-oriented, comfortable with remote work and capable of respecting procedures, deadlines and high quality standards."
+                  "Les profils recherchés doivent être orientés exécution, à l'aise avec le travail à distance et capables de respecter des procédures, des délais et des standards de qualité élevés. 🔴",
+                  "The profiles sought must be execution-oriented, comfortable with remote work and capable of respecting procedures, deadlines and high quality standards. 🔴"
                 )}
               </p>
             </div>

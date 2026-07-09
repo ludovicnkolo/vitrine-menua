@@ -49,10 +49,9 @@ export default function NousConnaitrePage() {
       <section id="presentation-du-cabinet" className="relative w-full bg-white section-padding mt-16 lg:mt-0 scroll-mt-20">
         <div className="laplace-container relative">
           
-          {/* Mobile Image */}
           <div className="block lg:hidden w-full h-[350px] relative z-20">
             <img
-              src="/img/connaitre-approche-v3.webp"
+              src="/img/connaitre-approche-v3.jpg"
               alt="Cabinet"
               className="w-full h-full object-cover object-center"
             />

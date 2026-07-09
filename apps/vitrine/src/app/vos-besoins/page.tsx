@@ -30,7 +30,7 @@ export default function VosBesoinsPage() {
     {
       id: "controle-de-gestion",
       title: t("Contrôle de gestion", "Management control"),
-      desc: t("Appui opérationnel au suivi budgétaire, à l’analyse des écarts et au pilotage de la performance afin d’aider les organisations à mieux maîtriser leurs coûts.", "Operational support for budget monitoring, variance analysis and performance management to help organizations..."),
+      desc: t("Appui opérationnel au suivi budgétaire, à l’analyse des écarts et au pilotage de la performance afin d’aider les organisations à mieux maîtriser leurs coûts, leurs marges et leurs ressources.", "Operational support for budget monitoring, variance analysis and performance management to help organizations..."),
       icon: CheckCircle,
       bullets: [
         { fr: "Suivi budgétaire", en: "Budget monitoring" },
@@ -115,7 +115,7 @@ export default function VosBesoinsPage() {
     },
     {
       id: "autres-besoins",
-      title: t("Autres besoins", "Other needs"),
+      title: t("Autres besoins opérationnels", "Other operational needs"),
       desc: t("Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques ne relevant pas exclusivement d’une fonction financière, comptable, patrimoniale ou data.", "Management of specific, cross-functional or one-off operational needs that do not relate exclusively..."),
       icon: MoreHorizontal,
       bullets: [

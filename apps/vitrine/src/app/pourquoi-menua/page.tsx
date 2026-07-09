@@ -203,7 +203,7 @@ export default function PourquoiMenuaPage() {
               { icon: Eye, title: t("Contrôle à quatre yeux", "Four-eyes control") },
               { icon: MessageCircle, title: t("Communication claire et régulière", "Clear and regular communication") },
               { icon: BookOpen, title: t("Formation des ressources mobilisées", "Training of mobilized resources") },
-              { icon: FileCheck, title: t("Respect de vos exigences opérationnelles", "Respect of your operational requirements"), span: true },
+              { icon: FileCheck, title: t("Respect de vos exigences opérationnelles, qualité et réglementaires", "Respect of your operational, quality and regulatory requirements"), span: true },
             ].map((item, i) => (
               <div key={i} className={`border-l-2 border-[#141824]/20 pl-6 ${item.span ? 'sm:col-span-2 sm:max-w-[50%] sm:mx-auto sm:w-full' : ''}`}>
                 <item.icon size={22} className="text-[#141824] mb-3" strokeWidth={1.5} />

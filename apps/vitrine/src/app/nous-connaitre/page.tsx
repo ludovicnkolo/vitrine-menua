@@ -77,6 +77,24 @@ export default function NousConnaitrePage() {
                   "Our employees integrate into client organizations to take charge of operational execution, optimize internal costs and secure business continuity."
                 )}
               </p>
+              <p>
+                {t(
+                  "Cette organisation permet aux clients de se concentrer sur leur cœur de métier, tout en garantissant des processus maîtrisés, fluides et pérennes.",
+                  "This organization allows clients to focus on their core business, while guaranteeing controlled, fluid and sustainable processes."
+                )}
+              </p>
+              <p>
+                {t(
+                  "MENUA CONSULTING adopte une posture résolument opérationnelle : les clients définissent les besoins, les méthodes et les priorités, nous assurons l’exécution.",
+                  "MENUA CONSULTING adopts a resolutely operational posture: clients define needs, methods and priorities, we ensure execution."
+                )}
+              </p>
+              <p>
+                {t(
+                  "Nous intervenons dans des environnements financiers, comptables, patrimoniaux et réglementés, en respectant strictement les procédures internes, les circuits de validation et les exigences de qualité propres à chaque organisation.",
+                  "We operate in financial, accounting, wealth and regulated environments, strictly respecting internal procedures, validation circuits and the quality requirements specific to each organization."
+                )}
+              </p>
             </div>
 
           </div>
@@ -95,28 +113,31 @@ export default function NousConnaitrePage() {
         {/* Notre approche - Pleine largeur */}
         <div className="laplace-container mt-16 lg:mt-24">
           <div className="border-t border-[#141824]/10 pt-16">
-            <p className="text-[#141824] font-bold text-[1.2rem] md:text-[1.4rem] text-center mb-12 uppercase tracking-wider">
-              {t("Notre approche repose sur trois piliers :", "Our approach is based on three pillars:")}
-            </p>
-            <div className="flex flex-col md:flex-row justify-around items-center gap-12 text-[#141824] font-bold uppercase tracking-widest text-[0.85rem] text-center">
-              <div className="flex flex-col items-center gap-5 flex-1 w-full p-8 bg-[#f5f7fa] border border-[#e8e1d7] hover:bg-[#141824] hover:text-[#e8e1d7] transition-colors duration-300 group">
-                <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center border border-[#e8e1d7] group-hover:border-transparent group-hover:bg-[#e8e1d7]/10 transition-colors">
-                  <Network size={28} className="text-[#141824] group-hover:text-[#e8e1d7]" />
-                </div>
+            <div className="max-w-4xl mx-auto text-center mb-12">
+              <p className="text-[#141824] font-bold text-[1.2rem] md:text-[1.4rem] uppercase tracking-wider">
+                {t("Notre approche repose sur trois piliers :", "Our approach is based on three pillars:")}
+              </p>
+            </div>
+
+            <div className="flex flex-col md:flex-row justify-around items-center gap-12 text-[#141824] font-bold uppercase tracking-widest text-[0.85rem] text-center mb-12">
+              <div className="flex flex-col items-center justify-center flex-1 w-full p-8 bg-[#f5f7fa] border border-[#e8e1d7] hover:bg-[#141824] hover:text-[#e8e1d7] transition-colors duration-300 group min-h-[100px]">
                 <span>{t("Continuité opérationnelle", "Operational continuity")}</span>
               </div>
-              <div className="flex flex-col items-center gap-5 flex-1 w-full p-8 bg-[#f5f7fa] border border-[#e8e1d7] hover:bg-[#141824] hover:text-[#e8e1d7] transition-colors duration-300 group">
-                <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center border border-[#e8e1d7] group-hover:border-transparent group-hover:bg-[#e8e1d7]/10 transition-colors">
-                  <ShieldCheck size={28} className="text-[#141824] group-hover:text-[#e8e1d7]" />
-                </div>
+              <div className="flex flex-col items-center justify-center flex-1 w-full p-8 bg-[#f5f7fa] border border-[#e8e1d7] hover:bg-[#141824] hover:text-[#e8e1d7] transition-colors duration-300 group min-h-[100px]">
                 <span>{t("Traçabilité des actions", "Traceability of actions")}</span>
               </div>
-              <div className="flex flex-col items-center gap-5 flex-1 w-full p-8 bg-[#f5f7fa] border border-[#e8e1d7] hover:bg-[#141824] hover:text-[#e8e1d7] transition-colors duration-300 group">
-                <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center border border-[#e8e1d7] group-hover:border-transparent group-hover:bg-[#e8e1d7]/10 transition-colors">
-                  <CheckCircle size={28} className="text-[#141824] group-hover:text-[#e8e1d7]" />
-                </div>
+              <div className="flex flex-col items-center justify-center flex-1 w-full p-8 bg-[#f5f7fa] border border-[#e8e1d7] hover:bg-[#141824] hover:text-[#e8e1d7] transition-colors duration-300 group min-h-[100px]">
                 <span>{t("Fiabilité des livrables", "Reliability of deliverables")}</span>
               </div>
+            </div>
+
+            <div className="max-w-4xl mx-auto text-center">
+              <p className="text-[#141824] text-[1.1rem] leading-relaxed font-light">
+                {t(
+                  "Nos équipes peuvent intervenir en français et en anglais, garantissant une gestion fluide des échanges, des reportings et des opérations dans un contexte international.",
+                  "Our teams can intervene in French and English, guaranteeing smooth management of exchanges, reporting and operations in an international context."
+                )}
+              </p>
             </div>
           </div>
         </div>
@@ -140,27 +161,27 @@ export default function NousConnaitrePage() {
               {
                 title: t("Découverte", "Discovery"),
                 icon: Search,
-                desc: t("Analyse de votre organisation, processus et contraintes pour définir le périmètre d’intervention.", "Analysis of your organization, processes and constraints to define the scope of intervention.")
+                desc: t("Analyse de votre organisation, de vos processus et de vos contraintes afin de définir précisément le périmètre d’intervention.", "Analysis of your organization, your processes and your constraints in order to precisely define the scope of intervention.")
               },
               {
                 title: t("Vérifications préalables", "Preliminary checks"),
                 icon: UserCheck,
-                desc: t("Vérification de l’identité juridique et cohérence opérationnelle du partenaire.", "Verification of the legal identity and operational consistency of the partner.")
+                desc: t("Vérification de l’identité juridique, de la situation administrative et de la cohérence opérationnelle du client ou partenaire, afin de sécuriser l’entrée en relation.", "Verification of the legal identity, the administrative situation and the operational consistency of the client or partner, in order to secure the onboarding.")
               },
               {
                 title: t("Analyse", "Analysis"),
                 icon: BarChart2,
-                desc: t("Construction d’une proposition adaptée à vos besoins (profils, organisation, livrables).", "Construction of a proposal adapted to your needs (profiles, organization, deliverables).")
+                desc: t("Construction d’une proposition opérationnelle adaptée à vos besoins, incluant les profils, le mode d’organisation et les livrables attendus.", "Construction of an operational proposal adapted to your needs, including profiles, organization mode and expected deliverables.")
               },
               {
-                title: t("Mise en œuvre", "Implementation"),
+                title: t("Mise en œuvre & formation", "Implementation & training"),
                 icon: Settings,
-                desc: t("Déploiement des équipes et intégration aux outils et standards de votre organisation.", "Deployment of teams and integration into your organization's tools and standards.")
+                desc: t("Déploiement des équipes et intégration aux outils, process et standards de votre organisation.", "Deployment of teams and integration into the tools, processes and standards of your organization.")
               },
               {
                 title: t("Suivi dans la durée", "Long-term monitoring"),
                 icon: ShieldCheck,
-                desc: t("Pilotage continu de la mission, ajustements et contrôle qualité des livrables.", "Continuous steering of the mission, adjustments and quality control of deliverables.")
+                desc: t("Pilotage continu de la mission, ajustements réguliers et contrôle qualité des livrables.", "Continuous steering of the mission, regular adjustments and quality control of deliverables.")
               }
             ].map((step, idx) => (
               <div key={idx} className="bg-white/5 border border-[#e8e1d7]/20 p-8 hover:bg-white/10 transition-all duration-300 flex flex-col items-center text-center">
@@ -202,19 +223,12 @@ export default function NousConnaitrePage() {
                 {t("Ce dispositif garantit la conformité, la qualité des opérations et la sécurité des processus.", "This system guarantees compliance, quality of operations, and process security.")}
               </p>
               <div className="pt-4 border-t border-[#141824]/10">
-                <p className="mb-4">
-                  {t("Forte d’une expérience acquise au sein d’environnements financiers, patrimoniaux et réglementés, la dirigeante dispose notamment :", "With experience acquired within financial, wealth, and regulated environments, the director notably holds:")}
+                <p className="font-medium leading-relaxed">
+                  {t(
+                    "La dirigeante dispose notamment de la certification AMF, d’une certification en Contrôle Interne et Gestion des Risques des institutions financières, ainsi que d’une expérience acquise au sein d’environnements financiers, patrimoniaux et réglementés.",
+                    "The director notably holds the AMF certification, a certification in Internal Control and Risk Management of financial institutions, as well as experience acquired within financial, wealth and regulated environments."
+                  )}
                 </p>
-                <ul className="space-y-3 pl-2">
-                  <li className="flex items-center gap-3">
-                    <ShieldCheck size={18} className="text-[#141824] shrink-0" />
-                    <span className="font-medium">{t("De la certification AMF", "The AMF certification")}</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <ShieldCheck size={18} className="text-[#141824] shrink-0 mt-1" />
-                    <span className="font-medium">{t("D’une certification en Contrôle Interne et Gestion des Risques des institutions financières", "A certification in Internal Control and Risk Management of financial institutions")}</span>
-                  </li>
-                </ul>
               </div>
             </div>
           </div>
@@ -241,7 +255,7 @@ export default function NousConnaitrePage() {
           </div>
           
           <div className="bg-[#141824] text-[#e8e1d7] p-10 md:p-14 shadow-xl text-left">
-            <h3 className="text-[1.6rem] font-semibold mb-8 text-white">La Présidente</h3>
+            <h3 className="text-[1.6rem] font-semibold mb-8 text-white">{t("La dirigeante", "The director")}</h3>
             
             <div className="flex flex-col md:flex-row gap-10 items-start">
               {/* Discreet Photo */}
@@ -263,8 +277,20 @@ export default function NousConnaitrePage() {
               <div className="flex-1">
                 <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
                   {t(
-                    "Rosette Fouelefack est Présidente de MENUA CONSULTING.",
-                    "Rosette Fouelefack is the President of MENUA CONSULTING."
+                    "Rosette Fouelefack est directrice générale de MENUA CONSULTING.",
+                    "Rosette Fouelefack is the General Manager of MENUA CONSULTING."
+                  )}
+                </p>
+                <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
+                  {t(
+                    "Elle dispose d’une expérience en finance, gestion des risques, gestion de patrimoine et opérations back & middle office acquise au sein d’environnements exigeants.",
+                    "She has experience in finance, risk management, wealth management and back & middle office operations acquired in demanding environments."
+                  )}
+                </p>
+                <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
+                  {t(
+                    "Elle supervise directement la structuration des missions, la constitution des équipes, la validation des livrables et le dispositif de contrôle qualité.",
+                    "She directly supervises the structuring of missions, the constitution of teams, the validation of deliverables and the quality control system."
                   )}
                 </p>
                 <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">

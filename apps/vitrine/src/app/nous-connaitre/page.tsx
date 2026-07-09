@@ -170,32 +170,26 @@ export default function NousConnaitrePage() {
             {[
               {
                 title: t("Découverte", "Discovery"),
-                icon: Search,
                 desc: t("Analyse de votre organisation, de vos processus et de vos contraintes afin de définir précisément le périmètre d’intervention.", "Analysis of your organization, your processes and your constraints in order to precisely define the scope of intervention.")
               },
               {
                 title: t("Vérifications préalables", "Preliminary checks"),
-                icon: UserCheck,
                 desc: t("Vérification de l’identité juridique, de la situation administrative et de la cohérence opérationnelle du client ou partenaire, afin de sécuriser l’entrée en relation.", "Verification of the legal identity, the administrative situation and the operational consistency of the client or partner, in order to secure the onboarding.")
               },
               {
                 title: t("Analyse", "Analysis"),
-                icon: BarChart2,
                 desc: t("Construction d’une proposition opérationnelle adaptée à vos besoins, incluant les profils, le mode d’organisation et les livrables attendus.", "Construction of an operational proposal adapted to your needs, including profiles, organization mode and expected deliverables.")
               },
               {
                 title: t("Mise en œuvre et formation", "Implementation and training"),
-                icon: Settings,
                 desc: t("Déploiement des équipes et intégration aux outils, process et standards de votre organisation.", "Deployment of teams and integration into the tools, processes and standards of your organization.")
               },
               {
                 title: t("Suivi dans la durée", "Long-term monitoring"),
-                icon: ShieldCheck,
                 desc: t("Pilotage continu de la mission, ajustements réguliers et contrôle qualité des livrables.", "Continuous steering of the mission, regular adjustments and quality control of deliverables.")
               }
             ].map((step, idx) => (
               <div key={idx} className="bg-white/5 border border-[#e8e1d7]/20 p-8 hover:bg-white/10 transition-all duration-300 flex flex-col items-center text-center">
-                <step.icon className="text-[#e8e1d7] mb-6" size={32} strokeWidth={1} />
                 <h4 className="text-[1.1rem] font-bold text-white mb-4 min-h-[3rem]">{step.title}</h4>
                 <p className="text-white/70 text-[0.95rem] font-light leading-relaxed">{step.desc}</p>
               </div>

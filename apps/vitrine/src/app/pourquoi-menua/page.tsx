@@ -191,16 +191,15 @@ export default function PourquoiMenuaPage() {
           {/* Right Column: Grid of commitments */}
           <div className="w-full md:w-7/12 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10">
             {[
-              { icon: Award, title: t("Qualité des livrables", "Quality of deliverables") },
-              { icon: Calendar, title: t("Respect des délais", "Respect of deadlines") },
-              { icon: FileText, title: t("Traçabilité des opérations", "Traceability of operations") },
-              { icon: Eye, title: t("Contrôle à quatre yeux", "Four-eyes control") },
-              { icon: MessageCircle, title: t("Communication claire et régulière", "Clear and regular communication") },
-              { icon: BookOpen, title: t("Formation des ressources mobilisées", "Training of mobilized resources") },
-              { icon: FileCheck, title: t("Respect de vos exigences opérationnelles, qualité et réglementaires", "Respect of your operational, quality and regulatory requirements"), span: true },
+              { title: t("Qualité des livrables", "Quality of deliverables") },
+              { title: t("Respect des délais", "Respect of deadlines") },
+              { title: t("Traçabilité des opérations", "Traceability of operations") },
+              { title: t("Contrôle à quatre yeux", "Four-eyes control") },
+              { title: t("Communication claire et régulière", "Clear and regular communication") },
+              { title: t("Formation des ressources mobilisées", "Training of mobilized resources") },
+              { title: t("Respect de vos exigences opérationnelles, qualité et réglementaires", "Respect of your operational, quality and regulatory requirements"), span: true },
             ].map((item, i) => (
-              <div key={i} className={`border-l-2 border-[#141824]/20 pl-6 ${item.span ? 'sm:col-span-2 sm:max-w-[50%] sm:mx-auto sm:w-full' : ''}`}>
-                <item.icon size={22} className="text-[#141824] mb-3" strokeWidth={1.5} />
+              <div key={i} className={`border-l-2 border-[#141824]/20 pl-6 flex items-center ${item.span ? 'sm:col-span-2 sm:max-w-[50%] sm:mx-auto sm:w-full' : ''}`}>
                 <h3 className="text-[#141824] font-semibold text-[1.05rem] leading-snug">{item.title}</h3>
               </div>
             ))}

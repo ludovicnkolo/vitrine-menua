@@ -10,10 +10,10 @@ export default function ActualitesPage() {
 
   const filters = [
     { key: "TOUTES LES ACTUALITÉS", fr: "TOUTES LES ACTUALITÉS", en: "ALL NEWS" },
-    { key: "FINANCE ET COMPTABILITÉ", fr: "FINANCE ET COMPTABILITÉ", en: "FINANCE AND ACCOUNTING" },
-    { key: "RÉGLEMENTATION", fr: "RÉGLEMENTATION", en: "REGULATION" },
-    { key: "GESTION DE PATRIMOINE", fr: "GESTION DE PATRIMOINE", en: "WEALTH MANAGEMENT" },
-    { key: "OPÉRATIONS ET DATA", fr: "OPÉRATIONS ET DATA", en: "OPERATIONS AND DATA" }
+    { key: "FINANCIÈRES", fr: "FINANCIÈRES", en: "FINANCIAL" },
+    { key: "COMPTABLES", fr: "COMPTABLES", en: "ACCOUNTING" },
+    { key: "PATRIMONIALES", fr: "PATRIMONIALES", en: "WEALTH" },
+    { key: "RÉGLEMENTAIRES", fr: "RÉGLEMENTAIRES", en: "REGULATORY" }
   ];
 
   return (
@@ -37,8 +37,8 @@ export default function ActualitesPage() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
             <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
-                "L'essentiel de l'actualité financière, comptable et réglementaire.",
-                "The essentials of financial, accounting and regulatory news."
+                "MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles afin d'éclairer ses clients sur les enjeux qui impactent leurs activités.",
+                "MENUA CONSULTING ensures a regular watch on financial, accounting, wealth, regulatory and operational developments to enlighten its clients on the issues that impact their activities."
               )}
             </p>
           </div>
@@ -57,6 +57,9 @@ export default function ActualitesPage() {
             <h2 className="text-white text-[1.2rem] font-bold uppercase tracking-widest mb-3">
               {t("À la une", "Featured")}
             </h2>
+            <p className="text-[#e5e9f0] text-[1.05rem] font-light max-w-3xl">
+              {t("Sélection d'articles, de contenus et d'analyses mis en avant sur les sujets les plus récents ou les plus structurants pour vos activités.", "Selection of articles, content and analyzes highlighted on the most recent or structuring subjects for your activities.")}
+            </p>
           </div>
 
           {/* Featured Card */}
@@ -67,10 +70,10 @@ export default function ActualitesPage() {
             
             <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white group-hover:bg-[#141824] transition-colors duration-300">
               <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
-                {t("À LA UNE • FINANCE ET COMPTABILITÉ", "FEATURED • FINANCE AND ACCOUNTING")} 
+                {t("ACTUALITÉS FINANCIÈRES & RÉGLEMENTAIRES", "FINANCIAL & REGULATORY NEWS")} 
               </p>
               <h3 className="text-[#141824] group-hover:text-white text-[1.3rem] md:text-[1.5rem] font-bold mb-6 leading-snug uppercase transition-colors duration-300">
-                {t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news")}
+                {t("Actualités financières, comptables, patrimoniales & réglementaires", "Financial, accounting, wealth & regulatory news")}
               </h3>
               <p className="text-[#6e7891] group-hover:text-white/70 text-[1rem] font-light leading-relaxed mb-8 transition-colors duration-300">
                 {t("Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations : finance, comptabilité, gestion de patrimoine, conformité, réglementation et pratiques opérationnelles.", "Analysis and decoding of developments likely to have an impact on your organizations: finance, accounting, wealth management, compliance, regulation and operational practices.")}
@@ -99,7 +102,7 @@ export default function ActualitesPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
               <h3 className="text-[#141824] text-[1.4rem] font-semibold uppercase tracking-wider flex items-center gap-4">
                 <span className="w-8 h-[2px] bg-[#141824]"></span>
-                {t("ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES", "FINANCIAL AND REGULATORY NEWS")}
+                {t("ACTUALITÉS FINANCIÈRES & RÉGLEMENTAIRES", "FINANCIAL & REGULATORY NEWS")}
               </h3>
             </div>
 
@@ -130,7 +133,7 @@ export default function ActualitesPage() {
                 </div>
                 <div className="flex flex-col flex-grow">
                   <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
-                    {t("FINANCE ET COMPTABILITÉ •", "FINANCE AND ACCOUNTING •")} 
+                    {t("FINANCE ET COMPTABILITÉ", "FINANCE AND ACCOUNTING")} 
                   </p>
                   <h4 className="text-[#141824] group-hover:text-white text-[1.1rem] font-bold mb-4 leading-snug uppercase transition-colors duration-300">
                     {t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news")}
@@ -159,10 +162,10 @@ export default function ActualitesPage() {
                 </div>
                 <div className="flex flex-col flex-grow">
                   <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
-                    {t("PUBLICATIONS •", "PUBLICATIONS •")} 
+                    {t("PUBLICATIONS", "PUBLICATIONS")} 
                   </p>
                   <h4 className="text-[#141824] group-hover:text-white text-[1.1rem] font-bold mb-4 leading-snug uppercase transition-colors duration-300">
-                    {t("Nos publications et prises de parole", "Our publications and speeches")}
+                    {t("Nos publications", "Our publications")}
                   </h4>
                   <p className="text-[#6e7891] group-hover:text-white/70 text-[0.95rem] font-light leading-relaxed mb-8 flex-grow transition-colors duration-300">
                     {t(
@@ -188,15 +191,15 @@ export default function ActualitesPage() {
                 </div>
                 <div className="flex flex-col flex-grow">
                   <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
-                    {t("RÉGLEMENTATION •", "REGULATION •")} 
+                    {t("RÉGLEMENTATION", "REGULATION")} 
                   </p>
                   <h4 className="text-[#141824] group-hover:text-white text-[1.1rem] font-bold mb-4 leading-snug uppercase transition-colors duration-300">
                     {t("Veille réglementaire et conformité", "Regulatory watch and compliance")}
                   </h4>
                   <p className="text-[#6e7891] group-hover:text-white/70 text-[0.95rem] font-light leading-relaxed mb-8 flex-grow transition-colors duration-300">
                     {t(
-                      "Restez informés des dernières évolutions réglementaires et découvrez nos conseils pour adapter vos processus opérationnels en toute sécurité.",
-                      "Stay informed of the latest regulatory developments and discover our advice to safely adapt your operational processes."
+                      "Restez informés des dernières évolutions réglementaires et adaptez vos processus opérationnels.",
+                      "Stay informed of the latest regulatory developments and adapt your operational processes."
                     )}
                   </p>
                   <div className="flex justify-end mt-auto">

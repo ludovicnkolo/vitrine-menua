@@ -29,8 +29,8 @@ export default function PourquoiMenuaPage() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
             <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
-                "L'externalisation comme levier de performance, de fiabilité et de sérénité.",
-                "Outsourcing as a lever for performance, reliability and peace of mind."
+                "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d'exécution opérationnelle exigeants.",
+                "MENUA CONSULTING supports organizations facing demanding operational execution challenges."
               )}
             </p>
           </div>
@@ -74,9 +74,6 @@ export default function PourquoiMenuaPage() {
 
             {/* Benefits list */}
             <div className="border-t border-[#e8e1d7] pt-8">
-              <p className="text-[#141824] font-bold text-[0.85rem] uppercase tracking-widest mb-6">
-                {t("Bénéfices pour votre organisation :", "Benefits for your organization:")}
-              </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-8">
                 {[
                   { icon: Clock, label: t("Gain de temps", "Time saving") },
@@ -121,9 +118,6 @@ export default function PourquoiMenuaPage() {
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-4 leading-tight">
               {t("DIFFÉRENCIATION", "DIFFERENTIATION")}
             </h2>
-            <p className="text-[#141824] font-bold text-[0.85rem] uppercase tracking-widest mb-6 opacity-70">
-              {t("Pourquoi nous choisir ?", "Why choose us?")}
-            </p>
 
             <p className="text-[#141824] text-[1.05rem] font-light leading-relaxed mb-4">
               {t(
@@ -140,16 +134,16 @@ export default function PourquoiMenuaPage() {
 
             <ul className="space-y-4 text-[#141824] text-[1.05rem] font-medium">
               {[
-                { icon: Star, text: t("Spécialisation back et middle office", "Back and middle office specialization") },
-                { icon: Target, text: t("Approche 100% opérationnelle", "100% operational approach") },
-                { icon: LinkIcon, text: t("Intégration à votre organisation", "Integration into your organization") },
-                { icon: RefreshCw, text: t("Exécution fiable et continue", "Reliable and continuous execution") },
-                { icon: CheckSquare, text: t("Supervision qualité des livrables", "Quality supervision of deliverables") },
-                { icon: Globe, text: t("Intervention bilingue français / anglais", "Bilingual intervention French / English") },
-              ].map((item, i) => (
+                t("Spécialisation back et middle office", "Back and middle office specialization"),
+                t("Approche 100% opérationnelle", "100% operational approach"),
+                t("Intégration à votre organisation", "Integration into your organization"),
+                t("Exécution fiable et continue", "Reliable and continuous execution"),
+                t("Supervision qualité des livrables", "Quality supervision of deliverables"),
+                t("Intervention bilingue français / anglais", "Bilingual intervention French / English"),
+              ].map((text, i) => (
                 <li key={i} className="flex items-start gap-4">
-                  <item.icon size={18} className="text-[#141824] mt-1 shrink-0" strokeWidth={1.5} />
-                  <span className="font-light">{item.text}</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#141824] shrink-0 mt-2" />
+                  <span className="font-light">{text}</span>
                 </li>
               ))}
             </ul>

@@ -9,18 +9,18 @@ export default function VosBesoinsPage() {
   const needs = [
     {
       id: "finance-reporting",
-      title: t("Finance et Reporting", "Finance and Reporting"),
-      desc: t("Production, structuration et fiabilisation de reportings financiers destinés au pilotage de la performance, au suivi de l’activité et à l’aide à la décision.", "Production, structuring and reliability of financial reporting intended for performance management..."),
+      title: t("FINANCE & REPORTING", "FINANCE & REPORTING"),
+      desc: t("Production, structuration et fiabilisation de reportings financiers destinés au pilotage de la performance, au suivi de l'activité et à l'aide à la décision.", "Production, structuring and reliability of financial reporting intended for performance management..."),
       icon: BarChart2,
       bullets: [
         { fr: "Reporting financier", en: "Financial reporting" },
-        { fr: "KPI | Dashboard", en: "KPI | Dashboard" },
+        { fr: "KPI", en: "KPI" },
+        { fr: "Tableaux de bord", en: "Dashboards" },
         { fr: "Analyse de performance", en: "Performance analysis" },
-        { fr: "Support direction financière", en: "Financial management support" },
         { fr: "Analyse financière", en: "Financial analysis" },
         { fr: "Consolidation des données", en: "Data consolidation" },
         { fr: "Préparation de reportings pour direction financière", en: "Preparation of reporting for financial management" },
-        { fr: "Suivi d’activité", en: "Activity tracking" },
+        { fr: "Suivi d'activité", en: "Activity tracking" },
         { fr: "Reporting mensuel / trimestriel", en: "Monthly / quarterly reporting" },
         { fr: "Reporting de trésorerie", en: "Cash flow reporting" },
         { fr: "Reporting de rentabilité", en: "Profitability reporting" },
@@ -29,19 +29,19 @@ export default function VosBesoinsPage() {
     },
     {
       id: "controle-de-gestion",
-      title: t("Contrôle de gestion", "Management control"),
-      desc: t("Appui opérationnel au suivi budgétaire, à l’analyse des écarts et au pilotage de la performance afin d’aider les organisations à mieux maîtriser leurs coûts, leurs marges et leurs ressources.", "Operational support for budget monitoring, variance analysis and performance management to help organizations..."),
+      title: t("CONTRÔLE DE GESTION", "MANAGEMENT CONTROL"),
+      desc: t("Appui opérationnel au suivi budgétaire, à l'analyse des écarts et au pilotage de la performance afin d'aider les organisations à mieux maîtriser leurs coûts, leurs marges et leurs ressources.", "Operational support for budget monitoring, variance analysis and performance management to help organizations..."),
       icon: CheckCircle,
       bullets: [
         { fr: "Suivi budgétaire", en: "Budget monitoring" },
         { fr: "Analyse des écarts entre réalisé, budget et prévisionnel", en: "Variance analysis between actual, budget and forecast" },
-        { fr: "Tableaux de bord", en: "Dashboards" },
-        { fr: "Pilotage de performance", en: "Performance management" },
+        { fr: "Tableaux de bord de gestion", en: "Management dashboards" },
+        { fr: "Pilotage de la performance", en: "Performance management" },
         { fr: "Suivi des coûts, charges et marges", en: "Cost, expense and margin tracking" },
         { fr: "Analyse de rentabilité", en: "Profitability analysis" },
         { fr: "Suivi des indicateurs opérationnels", en: "Operational indicator tracking" },
         { fr: "Préparation de reportings de gestion", en: "Preparation of management reports" },
-        { fr: "Suivi du chiffre d’affaires et des objectifs", en: "Tracking of turnover and objectives" },
+        { fr: "Suivi du chiffre d'affaires et des objectifs", en: "Tracking of turnover and objectives" },
         { fr: "Mise à jour de fichiers de pilotage", en: "Updating of management files" },
         { fr: "Consolidation des données de gestion", en: "Consolidation of management data" },
         { fr: "Support aux directions financières et responsables opérationnels", en: "Support for financial departments and operational managers" }
@@ -49,11 +49,10 @@ export default function VosBesoinsPage() {
     },
     {
       id: "risques-conformite",
-      title: t("Risques et Conformité", "Risks and Compliance"),
-      desc: t("Appui opérationnel aux équipes risques et conformité dans le traitement, le contrôle et la fiabilisation des dossiers sensibles.", "Operational support for risk and compliance teams in the processing, control and reliability of sensitive files."),
+      title: t("RISQUES & CONFORMITÉ", "RISKS & COMPLIANCE"),
+      desc: t("Appui opérationnel aux équipes risques et conformité dans le traitement, le contrôle et la fiabilisation des dossiers sensibles, dans le respect des procédures internes et des exigences réglementaires applicables.", "Operational support for risk and compliance teams in the processing, control and reliability of sensitive files..."),
       icon: ShieldCheck,
       bullets: [
-        { fr: "KYC", en: "KYC" },
         { fr: "LCB-FT", en: "AML-CFT" },
         { fr: "AML", en: "AML" },
         { fr: "Contrôle documentaire", en: "Documentary control" },
@@ -72,8 +71,8 @@ export default function VosBesoinsPage() {
     },
     {
       id: "support-comptable",
-      title: t("Support comptable et data", "Accounting and data support"),
-      desc: t("Appui opérationnel aux équipes comptables, administratives et data dans le traitement, la fiabilisation et la structuration des informations.", "Operational support for accounting, administrative and data teams in the processing, reliability and structuring..."),
+      title: t("SUPPORT COMPTABLE & DATA", "ACCOUNTING & DATA SUPPORT"),
+      desc: t("Appui opérationnel aux équipes comptables, administratives et data dans le traitement, la fiabilisation et la structuration des informations nécessaires à la production comptable et au reporting.", "Operational support for accounting, administrative and data teams in the processing, reliability and structuring..."),
       icon: Database,
       bullets: [
         { fr: "Saisie comptable", en: "Accounting entry" },
@@ -94,15 +93,15 @@ export default function VosBesoinsPage() {
     },
     {
       id: "gestion-patrimoine",
-      title: t("Gestion de Patrimoine", "Wealth Management"),
-      desc: t("Appui opérationnel aux cabinets de gestion de patrimoine, famille offices et structures patrimoniales dans le suivi administratif des dossiers clients.", "Operational support for wealth management firms, family offices and wealth structures in the administrative monitoring..."),
+      title: t("GESTION DE PATRIMOINE & SUPPORT CGP", "WEALTH MANAGEMENT & CGP SUPPORT"),
+      desc: t("Appui opérationnel aux cabinets de gestion de patrimoine, family offices et structures patrimoniales dans le traitement, la préparation et le suivi administratif des dossiers clients.", "Operational support for wealth management firms, family offices and wealth structures in the administrative monitoring..."),
       icon: Building2,
       bullets: [
-        { fr: "Préparation des dossiers d’entrée en relation", en: "Preparation of onboarding files" },
+        { fr: "Préparation des dossiers d'entrée en relation", en: "Preparation of onboarding files" },
         { fr: "Collecte et contrôle des pièces justificatives", en: "Collection and control of supporting documents" },
         { fr: "Contrôle de complétude des dossiers clients", en: "Completeness check of client files" },
         { fr: "Mise à jour des informations clients", en: "Updating of client information" },
-        { fr: "Préparation et pré-remplissage de formulaires", en: "Preparation and pre-filling of forms" },
+        { fr: "Préparation et préremplissage de formulaires", en: "Preparation and pre-filling of forms" },
         { fr: "Support administratif aux souscriptions", en: "Administrative support for subscriptions" },
         { fr: "Support aux arbitrages", en: "Support for arbitrations" },
         { fr: "Support aux rachats partiels ou totaux", en: "Support for partial or total surrenders" },
@@ -115,8 +114,8 @@ export default function VosBesoinsPage() {
     },
     {
       id: "autres-besoins",
-      title: t("Autres besoins opérationnels", "Other operational needs"),
-      desc: t("Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques ne relevant pas exclusivement d’une fonction financière, comptable, patrimoniale ou data.", "Management of specific, cross-functional or one-off operational needs that do not relate exclusively..."),
+      title: t("AUTRES BESOINS OPÉRATIONNELS", "OTHER OPERATIONAL NEEDS"),
+      desc: t("Prise en charge de besoins opérationnels ponctuels, transverses ou spécifiques ne relevant pas exclusivement d'une fonction financière, comptable, patrimoniale, conformité ou data.", "Management of specific, cross-functional or one-off operational needs that do not relate exclusively..."),
       icon: MoreHorizontal,
       bullets: [
         { fr: "Missions ponctuelles de renfort opérationnel", en: "Ad-hoc operational reinforcement missions" },
@@ -124,13 +123,13 @@ export default function VosBesoinsPage() {
         { fr: "Traitement de dossiers en volume", en: "Volume file processing" },
         { fr: "Classement, archivage et organisation documentaire", en: "Filing, archiving and documentary organization" },
         { fr: "Préparation et mise à jour de fichiers de suivi", en: "Preparation and updating of tracking files" },
-        { fr: "Support à la gestion d’opérations transverses", en: "Support for the management of cross-functional operations" },
+        { fr: "Support à la gestion d'opérations transverses", en: "Support for the management of cross-functional operations" },
         { fr: "Assistance à la formalisation de procédures internes", en: "Assistance with the formalization of internal procedures" },
         { fr: "Aide à la structuration de process opérationnels", en: "Assistance with the structuring of operational processes" },
         { fr: "Préparation de documents administratifs", en: "Preparation of administrative documents" },
         { fr: "Suivi de demandes internes ou clients", en: "Monitoring of internal or client requests" },
-        { fr: "Support en période de surcharge d’activité", en: "Support during periods of workload peak" },
-        { fr: "Remplacement ou appui temporaire d’équipe", en: "Temporary replacement or team support" },
+        { fr: "Support en période de surcharge d'activité", en: "Support during periods of workload peak" },
+        { fr: "Remplacement ou appui temporaire d'équipe", en: "Temporary replacement or team support" },
         { fr: "Coordination entre équipes internes et prestataires externalisés", en: "Coordination between internal teams and outsourced providers" },
         { fr: "Étude de besoins spécifiques non listés dans les rubriques précédentes", en: "Study of specific needs not listed in previous sections" }
       ]
@@ -159,8 +158,8 @@ export default function VosBesoinsPage() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
             <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
-                "Un appui opérationnel rigoureux pour vos équipes financières, comptables et réglementées.",
-                "Rigorous operational support for your financial, accounting and regulated teams."
+                "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l'ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
+                "MENUA CONSULTING supports financial, accounting, wealth, IT and regulated teams on all back and middle office functions requiring rigor, continuity and operational reliability."
               )}
             </p>
           </div>

@@ -9,62 +9,54 @@ export default function NosSolutionsPage() {
   const solutions = [
     {
       id: "urgence",
-      title: t("Urgence", "Urgency"),
-      role: t("Rôle : Capacité de réaction", "Role: Response capacity"),
-      desc: t("Mobilisation rapide de ressources opérationnelles pour répondre à un besoin immédiat et assurer la continuité de votre service.", "Rapid mobilization of operational resources to meet an immediate need and ensure the continuity of your service."),
+      title: t("URGENCE", "URGENCY"),
+      desc: t("Mobilisation rapide de ressources opérationnelles pour répondre à un besoin immédiat, absorber une surcharge d'activité et assurer la continuité de votre service.", "Rapid mobilization of operational resources to meet an immediate need, absorb an activity overload and ensure the continuity of your service."),
       icon: Clock,
-      how: t("Comment ?", "How?"),
       bullets: [
-        t("Surcharge d’activité ou pic de dossiers", "Activity overload or peak in files"),
-        t("Remplacement temporaire d’un collaborateur absent", "Temporary replacement of an absent employee"),
-        t("Renfort ponctuel en période de clôture", "Occasional reinforcement during closing periods"),
-        t("Traitement accéléré de dossiers en retard", "Accelerated processing of overdue files"),
-        t("Mise à disposition progressive de ressources", "Progressive provision of resources")
+        t("Surcharge d'activité ou pic de dossiers", "Activity overload or peak in files"),
+        t("Remplacement temporaire d'un collaborateur absent", "Temporary replacement of an absent employee"),
+        t("Renfort ponctuel en période de clôture ou de reporting", "Occasional reinforcement during closing or reporting periods"),
+        t("Traitement accéléré de dossiers en retard ou en attente", "Accelerated processing of overdue or pending files"),
+        t("Mise à disposition progressive de ressources pour sécuriser la montée en charge", "Progressive provision of resources to secure the ramp-up")
       ]
     },
     {
       id: "duree",
-      title: t("Durée", "Duration"),
-      role: t("Rôle : Flexibilité contractuelle", "Role: Contractual flexibility"),
-      desc: t("Des dispositifs d’externalisation flexibles, adaptés au traitement d’un nombre défini de dossiers comme à la gestion récurrente.", "Flexible outsourcing systems, adapted to the processing of a defined number of files as well as to recurring management."),
+      title: t("DURÉE", "DURATION"),
+      desc: t("MENUA CONSULTING propose des dispositifs d'externalisation flexibles, adaptés au traitement d'un nombre défini de dossiers comme à la gestion récurrente d'un portefeuille plus important.", "MENUA CONSULTING offers flexible outsourcing systems, adapted to the processing of a defined number of files as well as to recurring management of a larger portfolio."),
       icon: Briefcase,
-      how: t("Garanties :", "Guarantees:"),
       bullets: [
-        t("Mission courte sur une période limitée", "Short mission over a limited period"),
-        t("Mission longue dans la durée", "Long-term mission"),
-        t("Externalisation continue", "Continuous outsourcing"),
-        t("Intervention ponctuelle sur un volume de dossiers", "One-off intervention on a volume of files"),
-        t("Ajustement du dispositif selon la charge", "Adjustment of the system according to the workload")
+        t("Mission courte pour traiter un besoin identifié sur une période limitée", "Short mission to address an identified need over a limited period"),
+        t("Mission longue pour accompagner la gestion d'un portefeuille de dossiers dans la durée", "Long-term mission to support the management of a portfolio of files over time"),
+        t("Externalisation continue pour confier durablement tout ou partie de vos activités opérationnelles", "Continuous outsourcing to permanently entrust all or part of your operational activities"),
+        t("Intervention ponctuelle sur un volume de dossiers comptables, financiers, patrimoniaux ou administratifs", "One-off intervention on a volume of accounting, financial, wealth or administrative files"),
+        t("Ajustement du dispositif selon l'évolution de la charge et des priorités du client", "Adjustment of the system according to the evolution of the workload and the client's priorities")
       ]
     },
     {
       id: "volume",
-      title: t("Volume", "Volume"),
-      role: t("Rôle : Dimensionnement", "Role: Sizing"),
-      desc: t("Adaptation du dimensionnement de nos ressources au volume de dossiers ou d’opérations à traiter, tout en sécurisant l’exécution.", "Adaptation of the sizing of our resources to the volume of files or operations to be processed..."),
+      title: t("VOLUME", "VOLUME"),
+      desc: t("MENUA CONSULTING adapte le dimensionnement de ses ressources au volume de dossiers, de flux ou d'opérations à traiter, tout en veillant à la continuité et à la sécurisation de l'exécution.", "MENUA CONSULTING adapts the sizing of its resources to the volume of files, flows or operations to be processed, while ensuring continuity and securing execution."),
       icon: FileStack,
-      how: t("Nos dispositifs :", "Our systems:"),
       bullets: [
-        t("Ressource dédiée sur un périmètre précis", "Dedicated resource on a specific scope"),
-        t("Renfort ponctuel pour absorber une surcharge", "Occasional reinforcement to absorb an overload"),
-        t("Équipe opérationnelle pour flux simultanés", "Operational team for simultaneous flows"),
-        t("Dispositif évolutif", "Scalable system"),
-        t("Organisation permettant la continuité", "Organization enabling continuity")
+        t("Une ressource dédiée sur un périmètre précis", "A dedicated resource on a specific scope"),
+        t("Un renfort ponctuel pour absorber une surcharge d'activité", "Occasional reinforcement to absorb an activity overload"),
+        t("Une équipe opérationnelle pour gérer un volume important ou plusieurs flux simultanés", "An operational team to manage a large volume or several simultaneous flows"),
+        t("Un dispositif évolutif ajusté selon la charge, les priorités et les exigences du client", "A scalable system adjusted according to the workload, priorities and requirements of the client"),
+        t("Une organisation permettant d'assurer la continuité du traitement en cas d'absence ou de variation d'activité", "An organization ensuring continuity of processing in case of absence or variation in activity")
       ]
     },
     {
       id: "organisation",
-      title: t("Mode d’organisation", "Organization"),
-      role: t("Rôle : Comment le travail est exécuté", "Role: How work is executed"),
-      desc: t("Intégration de nos équipes à vos modes de fonctionnement pour garantir une exécution fluide et conforme à vos standards.", "Integration of our teams into your operating modes to guarantee smooth execution in compliance with your standards."),
+      title: t("MODE D'ORGANISATION", "ORGANIZATION MODE"),
+      desc: t("MENUA CONSULTING structure ses interventions selon le format le plus adapté à vos contraintes : dispositif dédié, fonctionnement par mission ou prise en charge de flux et de process définis.\n\nNous intégrons nos équipes à vos modes de fonctionnement existants afin de garantir une exécution fluide, traçable et conforme à vos standards internes.", "MENUA CONSULTING structures its interventions according to the most suitable format for your constraints: dedicated system, mission-based operation or management of defined flows and processes.\n\nWe integrate our teams into your existing operating modes to guarantee smooth, traceable execution in compliance with your internal standards."),
       icon: Settings,
-      how: t("Mode d'interventions :", "Intervention mode:"),
       bullets: [
-        t("Dispositif dédié clairement identifié", "Clearly identified dedicated system"),
-        t("Intervention par mission bornée dans le temps", "Time-bound mission intervention"),
-        t("Prise en charge de flux récurrents", "Management of recurring flows"),
-        t("Traitement selon des règles définies", "Processing according to defined rules"),
-        t("Suivi structuré avec points de contrôle", "Structured monitoring with control points")
+        t("Dispositif dédié pour un service ou un périmètre clairement identifié", "Dedicated system for a clearly identified service or scope"),
+        t("Intervention par mission pour un besoin borné dans le temps ou un projet spécifique", "Mission intervention for a time-bound need or specific project"),
+        t("Prise en charge de flux ou de process récurrents", "Management of recurring flows or processes"),
+        t("Traitement de dossiers, adhésions ou opérations selon des règles définies avec vos équipes", "Processing of files, memberships or operations according to rules defined with your teams"),
+        t("Suivi structuré avec points de contrôle réguliers", "Structured monitoring with regular control points")
       ]
     }
   ];
@@ -91,8 +83,8 @@ export default function NosSolutionsPage() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
             <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
-                "Des dispositifs d’externalisation sur mesure, adaptés à vos contraintes opérationnelles.",
-                "Tailor-made outsourcing systems, adapted to your operational constraints."
+                "Nous concevons des dispositifs d'externalisation sur mesure, adaptés à vos contraintes opérationnelles d'urgence, de durée, de volume et d'organisation.",
+                "We design tailor-made outsourcing systems, adapted to your operational constraints of urgency, duration, volume and organization."
               )}
             </p>
           </div>
@@ -116,9 +108,11 @@ export default function NosSolutionsPage() {
             {solutions.map((sol, idx) => (
               <div key={idx} className="bg-white/40 border border-white/40 p-8 flex flex-col group hover:bg-white transition-all duration-500">
                 <h3 className="text-[#141824] text-[1.4rem] font-semibold mb-4">{sol.title}</h3>
-                <p className="text-[#141824]/80 font-light text-[0.95rem] leading-relaxed mb-10 flex-grow">
-                  {sol.desc}
-                </p>
+                <div className="text-[#141824]/80 font-light text-[0.95rem] leading-relaxed mb-10 flex-grow space-y-3">
+                  {sol.desc.split('\n\n').map((p, i) => (
+                    <p key={i}>{p}</p>
+                  ))}
+                </div>
                 <a href={`#${sol.id}`} className="mt-auto flex items-center justify-between text-[#141824] font-bold uppercase tracking-widest text-[0.7rem] group-hover:text-[#6e7891] transition-colors">
                   {t("PLUS D'INFORMATIONS", "MORE INFORMATION")}
                   <span className="w-8 h-8 rounded-full border border-[#141824] flex items-center justify-center group-hover:bg-[#141824] group-hover:text-white transition-colors">
@@ -145,14 +139,8 @@ export default function NosSolutionsPage() {
                     <sol.icon className="text-[#141824]" size={36} />
                     {sol.title}
                   </h3>
-                  <p className="font-bold text-[#141824] text-[1.1rem]">
-                    {sol.role}
-                  </p>
                </div>
                <div className="lg:w-7/12 p-10 md:p-16 bg-white flex flex-col justify-center">
-                 <p className="font-bold text-[#141824] mb-6 text-[1.1rem]">
-                    {sol.how}
-                 </p>
                  <ul className="space-y-4 text-[#31374a] text-[1.05rem] font-light">
                    {sol.bullets.map((bullet, bIdx) => (
                      <li key={bIdx} className="flex items-start gap-3">
@@ -176,7 +164,7 @@ export default function NosSolutionsPage() {
               {t("Nous intervenons en français et en anglais.", "We operate in French and English.")}
             </h3>
             <p className="text-[#e5e9f0] font-light text-[1.1rem]">
-              {t("D’autres langues peuvent être étudiées selon les besoins spécifiques de vos équipes.", "Other languages can be studied according to the specific needs of your teams.")}
+              {t("D'autres langues peuvent être étudiées selon les besoins spécifiques de vos équipes.", "Other languages can be studied according to the specific needs of your teams.")}
             </p>
           </div>
         </div>

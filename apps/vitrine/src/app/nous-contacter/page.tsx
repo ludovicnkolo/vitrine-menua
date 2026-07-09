@@ -1,11 +1,12 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, MapPin, Mail, Phone, Building2 } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 
 export default function NousContacter() {
   const { t } = useLanguage();
+  const [clientType, setClientType] = useState<"company" | "individual">("company");
 
   return (
     <main className="flex flex-col w-full min-h-screen">
@@ -28,8 +29,8 @@ export default function NousContacter() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
             <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
-                "Une réponse experte et sur mesure à vos besoins d'externalisation.",
-                "An expert and tailor-made response to your outsourcing needs."
+                "Présentez votre besoin opérationnel, nous vous répondons avec une première analyse et une proposition adaptée.",
+                "Present your operational need, we will answer you with a first analysis and a suitable proposal."
               )}
             </p>
           </div>
@@ -47,7 +48,7 @@ export default function NousContacter() {
           <div className="w-full lg:w-[40%] flex flex-col gap-8">
             <div className="bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 shadow-xl">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.3rem] md:text-[1.5rem] font-bold text-[#141824] mb-6 uppercase tracking-wider">{t("Contact Rapide", "Quick Contact")}</h2>
+              <h2 className="text-[1.3rem] md:text-[1.5rem] font-bold text-[#141824] mb-6 uppercase tracking-wider">{t("Coordonnées", "Contact details")}</h2>
               
               <div className="flex items-start gap-5 mb-10 pb-10 border-b border-[#e8e1d7]">
                 <div className="w-14 shrink-0"></div>
@@ -92,36 +93,77 @@ export default function NousContacter() {
             
             <form className="space-y-8">
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Nom et Prénom", "Full Name")} <span className="text-red-500">*</span></label>
-                  <input type="text" placeholder={t("Votre nom et prénom", "Your full name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
+              <div>
+                <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Vous êtes", "You are")}</p>
+                <div className="flex flex-col sm:flex-row gap-6">
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input 
+                      type="radio" 
+                      name="clientType" 
+                      value="company" 
+                      checked={clientType === "company"} 
+                      onChange={() => setClientType("company")}
+                      className="accent-[#141824] w-5 h-5 cursor-pointer"
+                    />
+                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Une entreprise (cliente, partenaire ou prestataire)", "A company (client, partner or provider)")}</span>
+                  </label>
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input 
+                      type="radio" 
+                      name="clientType" 
+                      value="individual" 
+                      checked={clientType === "individual"} 
+                      onChange={() => setClientType("individual")}
+                      className="accent-[#141824] w-5 h-5 cursor-pointer"
+                    />
+                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Une personne physique / particulier", "An individual")}</span>
+                  </label>
                 </div>
-                <div>
-                  <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Société", "Company")} <span className="text-red-500">*</span></label>
-                  <input type="text" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
+              </div>
+
+              <div>
+                <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Vos coordonnées", "Your contact details")}</p>
+                
+                {clientType === "company" && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div>
+                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Société", "Company")} <span className="text-red-500">*</span></label>
+                      <input type="text" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                    </div>
+                    <div>
+                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("SIRET / Numéro d'identification", "SIRET / ID Number")} <span className="text-red-500">*</span></label>
+                      <input type="text" placeholder={t("Ex: 123 456 789 00012", "E.g. 123 456 789 00012")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                    </div>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{clientType === "company" ? t("Nom du contact", "Contact Name") : t("Nom", "Name")} <span className="text-red-500">*</span></label>
+                    <input type="text" placeholder={t("Votre nom", "Your name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                  </div>
+                  <div>
+                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Fonction", "Position")} <span className="text-red-500">*</span></label>
+                    <input type="text" placeholder={t("Votre fonction", "Your position")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                  </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Fonction", "Position")} <span className="text-red-500">*</span></label>
-                  <input type="text" placeholder={t("Votre fonction", "Your position")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
+                  <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Email professionnel", "Professional email")} <span className="text-red-500">*</span></label>
+                  <input type="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                 </div>
-                <div>
-                  <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Adresse email professionnelle", "Professional email address")} <span className="text-red-500">*</span></label>
-                  <input type="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                   <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")} <span className="text-red-500">*</span></label>
-                  <input type="tel" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
+                  <input type="tel" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-8">
                 <div>
                   <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Niveau d'urgence", "Urgency level")} <span className="text-red-500">*</span></label>
-                  <select className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none">
+                  <select className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
                     <option value="">{t("Sélectionnez l'urgence", "Select urgency")}</option>
                     <option value="Immédiat">{t("Immédiat", "Immediate")}</option>
                     <option value="Sous quelques jours">{t("Sous quelques jours", "Within a few days")}</option>
@@ -154,8 +196,8 @@ export default function NousContacter() {
               </div>
 
               <div>
-                <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Message", "Message")} <span className="text-red-500">*</span></label>
-                <textarea rows={5} placeholder={t("Texte libre", "Free text")} className="w-full border border-[#d1d5db] bg-transparent p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf]"></textarea>
+                <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Décrivez votre besoin", "Describe your need")} <span className="text-red-500">*</span></label>
+                <textarea rows={5} placeholder={t("Décrivez votre besoin", "Describe your need")} className="w-full border border-[#d1d5db] bg-transparent p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf]"></textarea>
               </div>
 
               <div>
@@ -167,8 +209,8 @@ export default function NousContacter() {
                 </label>
                 <p className="text-[0.85rem] text-[#6e7891] font-light mt-4 leading-relaxed">
                   {t(
-                    "Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin de répondre à votre demande et d'en assurer le suivi. Elles peuvent être conservées jusqu'à 3 ans après notre dernier échange. Conformément à la réglementation applicable, vous disposez d'un droit d'accès, de rectification, d'effacement et de portabilité de vos données, ainsi que d'un droit d'opposition et de limitation de leur traitement. Pour en savoir plus, consultez notre",
-                    "The information collected via this form is processed by MENUA CONSULTING in order to respond to your request and ensure its follow-up. It may be kept for up to 3 years after our last exchange. In accordance with applicable regulations, you have a right of access, rectification, erasure and portability of your data, as well as a right to object to and restrict its processing. To learn more, consult our"
+                    "Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin de répondre à votre demande et d'en assurer le suivi. Elles peuvent être conservées jusqu'à 3 ans après le dernier échange. Vous disposez de droits sur vos données personnelles et pouvez les exercer à l'adresse : contact@menuaconsulting.com. Pour en savoir plus, consultez notre",
+                    "The information collected via this form is processed by MENUA CONSULTING in order to respond to your request and ensure its follow-up. They can be kept for up to 3 years after the last exchange. You have rights over your personal data and can exercise them at the address: contact@menuaconsulting.com. To learn more, consult our"
                   )}{" "}<Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("Politique de confidentialité", "Privacy Policy")}</Link>.
                 </p>
               </div>

@@ -30,7 +30,7 @@ export default function Home() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
             <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
-                "L'externalisation opérationnelle des fonctions back et middle office.",
+                "Externalisation opérationnelle des fonctions back et middle office.",
                 "Operational outsourcing of back and middle office functions."
               )}
             </p>
@@ -76,13 +76,13 @@ export default function Home() {
                 </h2>
                 <p>
                   {t(
-                    "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l’exécution des fonctions back et middle office.",
+                    "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l'exécution des fonctions back et middle office.",
                     "MENUA CONSULTING supports financial, accounting, wealth, data and regulated teams to secure and strengthen the execution of back and middle office functions."
                   )}
                 </p>
                 <p>
                   {t(
-                    "Nous sécurisons l’exécution de vos opérations afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
+                    "Nous sécurisons l'exécution de vos opérations afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
                     "We secure the execution of your operations to allow your teams to focus on strategic decisions."
                   )}
                 </p>

@@ -76,8 +76,8 @@ export default function Home() {
                 </h2>
                 <p>
                   {t(
-                    "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l'exécution des fonctions back et middle office. 🔴",
-                    "MENUA CONSULTING supports financial, accounting, wealth, data and regulated teams to secure and strengthen the execution of back and middle office functions. 🔴"
+                    "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l'exécution des fonctions back et middle office.",
+                    "MENUA CONSULTING supports financial, accounting, wealth, data and regulated teams to secure and strengthen the execution of back and middle office functions."
                   )}
                 </p>
                 <p>
@@ -310,7 +310,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {[
               {
-                category: t("Finance et Comptabilité", "Finance & Accounting"),
+                category: t("Finance et Comptabilité", "Finance and Accounting"),
                 img: "/img/article-finance.jpg",
                 fallback: "/img/besoins-meeting.jpg",
                 title: t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news"),

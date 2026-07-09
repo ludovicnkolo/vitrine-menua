@@ -58,7 +58,7 @@ export default function ActualitesPage() {
               {t("À la une", "Featured")}
             </h2>
             <p className="text-[#e5e9f0] text-[1.05rem] font-light max-w-3xl">
-              {t("Sélection d'articles, de contenus et d'analyses mis en avant sur les sujets les plus récents ou les plus structurants pour vos activités. 🔴", "Selection of articles, content and analyzes highlighted on the most recent or structuring subjects for your activities. 🔴")}
+              {t("Sélection d'articles, de contenus et d'analyses mis en avant sur les sujets les plus récents ou les plus structurants pour vos activités.", "Selection of articles, content and analyzes highlighted on the most recent or structuring subjects for your activities.")}
             </p>
           </div>
 
@@ -70,13 +70,13 @@ export default function ActualitesPage() {
             
             <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white group-hover:bg-[#141824] transition-colors duration-300">
               <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
-                {t("ACTUALITÉS FINANCIÈRES & RÉGLEMENTAIRES", "FINANCIAL & REGULATORY NEWS")} 
+                {t("ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES", "FINANCIAL AND REGULATORY NEWS")} 
               </p>
               <h3 className="text-[#141824] group-hover:text-white text-[1.3rem] md:text-[1.5rem] font-bold mb-6 leading-snug uppercase transition-colors duration-300">
-                {t("Actualités financières, comptables, patrimoniales & réglementaires", "Financial, accounting, wealth & regulatory news")}
+                {t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news")}
               </h3>
               <p className="text-[#6e7891] group-hover:text-white/70 text-[1rem] font-light leading-relaxed mb-8 transition-colors duration-300">
-                {t("Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations : finance, comptabilité, gestion de patrimoine, conformité, réglementation et pratiques opérationnelles. 🔴", "Analysis and decoding of developments likely to have an impact on your organizations: finance, accounting, wealth management, compliance, regulation and operational practices. 🔴")}
+                {t("Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations : finance, comptabilité, gestion de patrimoine, conformité, réglementation et pratiques opérationnelles.", "Analysis and decoding of developments likely to have an impact on your organizations: finance, accounting, wealth management, compliance, regulation and operational practices.")}
               </p>
               
               <div className="flex justify-end mt-auto">
@@ -102,7 +102,7 @@ export default function ActualitesPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
               <h3 className="text-[#141824] text-[1.4rem] font-semibold uppercase tracking-wider flex items-center gap-4">
                 <span className="w-8 h-[2px] bg-[#141824]"></span>
-                {t("ACTUALITÉS FINANCIÈRES & RÉGLEMENTAIRES", "FINANCIAL & REGULATORY NEWS")}
+                {t("ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES", "FINANCIAL AND REGULATORY NEWS")}
               </h3>
             </div>
 
@@ -140,8 +140,8 @@ export default function ActualitesPage() {
                   </h4>
                   <p className="text-[#6e7891] group-hover:text-white/70 text-[0.95rem] font-light leading-relaxed mb-8 flex-grow transition-colors duration-300">
                     {t(
-                      "Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations : finance, comptabilité, gestion de patrimoine, conformité, réglementation et pratiques opérationnelles. 🔴",
-                      "Analysis and decoding of developments likely to have an impact on your organizations: finance, accounting, wealth management, compliance, regulation and operational practices. 🔴"
+                      "Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations : finance, comptabilité, gestion de patrimoine, conformité, réglementation et pratiques opérationnelles.",
+                      "Analysis and decoding of developments likely to have an impact on your organizations: finance, accounting, wealth management, compliance, regulation and operational practices."
                     )}
                   </p>
                   <div className="flex justify-end mt-auto">
@@ -169,8 +169,8 @@ export default function ActualitesPage() {
                   </h4>
                   <p className="text-[#6e7891] group-hover:text-white/70 text-[0.95rem] font-light leading-relaxed mb-8 flex-grow transition-colors duration-300">
                     {t(
-                      "Retrouvez les prises de parole, analyses et contenus publiés par MENUA CONSULTING sur les enjeux opérationnels, réglementaires et sectoriels. 🔴",
-                      "Find the speeches, analyzes and content published by MENUA CONSULTING on operational, regulatory and sector issues. 🔴"
+                      "Retrouvez les prises de parole, analyses et contenus publiés par MENUA CONSULTING sur les enjeux opérationnels, réglementaires et sectoriels.",
+                      "Find the speeches, analyzes and content published by MENUA CONSULTING on operational, regulatory and sector issues."
                     )}
                   </p>
                   <div className="flex justify-end mt-auto">
@@ -237,7 +237,7 @@ export default function ActualitesPage() {
                 {t("Suivez notre actualité et nos publications professionnelles", "Follow our news and professional publications")}
               </h3>
               <p className="text-[#e5e9f0] text-[0.95rem] font-light">
-                {t("Retrouvez nos articles, analyses et retours d'expériences sur LinkedIn. 🔴", "Find our articles, analyzes and feedback on LinkedIn. 🔴")}
+                {t("Retrouvez nos articles, analyses et retours d'expériences sur LinkedIn.", "Find our articles, analyzes and feedback on LinkedIn.")}
               </p>
             </div>
           </div>

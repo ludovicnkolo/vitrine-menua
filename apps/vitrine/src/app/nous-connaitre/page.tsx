@@ -184,7 +184,7 @@ export default function NousConnaitrePage() {
                 desc: t("Construction d’une proposition opérationnelle adaptée à vos besoins, incluant les profils, le mode d’organisation et les livrables attendus.", "Construction of an operational proposal adapted to your needs, including profiles, organization mode and expected deliverables.")
               },
               {
-                title: t("Mise en œuvre & formation", "Implementation & training"),
+                title: t("Mise en œuvre et formation", "Implementation and training"),
                 icon: Settings,
                 desc: t("Déploiement des équipes et intégration aux outils, process et standards de votre organisation.", "Deployment of teams and integration into the tools, processes and standards of your organization.")
               },
@@ -214,7 +214,7 @@ export default function NousConnaitrePage() {
           <div className="w-full lg:w-7/12 bg-[#e8e1d7] p-10 lg:p-16 flex flex-col justify-center shadow-xl">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
-              {t("ACCRÉDITATIONS, CERTIFICATIONS & CADRE D'INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS & INTERVENTION FRAMEWORK")}
+              {t("ACCRÉDITATIONS, CERTIFICATIONS ET CADRE D'INTERVENTION", "ACCREDITATIONS, CERTIFICATIONS AND INTERVENTION FRAMEWORK")}
             </h2>
             
             <div className="space-y-4 text-[#141824] text-[1.05rem] font-light leading-relaxed">
@@ -293,8 +293,8 @@ export default function NousConnaitrePage() {
                 </p>
                 <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
                   {t(
-                    "Elle dispose d’une expérience en finance, gestion des risques, gestion de patrimoine et opérations back & middle office acquise au sein d’environnements exigeants.",
-                    "She has experience in finance, risk management, wealth management and back & middle office operations acquired in demanding environments."
+                    "Elle dispose d’une expérience en finance, gestion des risques, gestion de patrimoine et opérations back et middle office acquise au sein d’environnements exigeants.",
+                    "She has experience in finance, risk management, wealth management and back et middle office operations acquired in demanding environments."
                   )}
                 </p>
                 <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">

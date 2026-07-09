@@ -61,14 +61,14 @@ export default function PourquoiMenuaPage() {
             </h2>
             <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-4">
               {t(
-                "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité, renforcez votre fiabilité et soutenez durablement votre chiffre d'affaires. 🔴",
-                "By outsourcing your back and middle office functions with MENUA CONSULTING, you save time, improve your productivity, strengthen your reliability and sustainably support your turnover. 🔴"
+                "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité, renforcez votre fiabilité et soutenez durablement votre chiffre d'affaires.",
+                "By outsourcing your back and middle office functions with MENUA CONSULTING, you save time, improve your productivity, strengthen your reliability and sustainably support your turnover."
               )}
             </p>
             <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-10">
               {t(
-                "Cette organisation vous permet de réduire vos charges internes, de mieux absorber vos volumes d'activité et de fidéliser durablement votre clientèle. 🔴",
-                "This organization allows you to reduce your internal costs, better absorb your activity volumes and sustainably retain your customers. 🔴"
+                "Cette organisation vous permet de réduire vos charges internes, de mieux absorber vos volumes d'activité et de fidéliser durablement votre clientèle.",
+                "This organization allows you to reduce your internal costs, better absorb your activity volumes and sustainably retain your customers."
               )}
             </p>
 
@@ -121,8 +121,8 @@ export default function PourquoiMenuaPage() {
 
             <p className="text-[#141824] text-[1.05rem] font-light leading-relaxed mb-4">
               {t(
-                "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons. 🔴",
-                "As back and middle office specialists, we don't stop at analysis: we execute. 🔴"
+                "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l'analyse : nous exécutons.",
+                "As back and middle office specialists, we don't stop at analysis: we execute."
               )}
             </p>
             <p className="text-[#141824] text-[1.05rem] font-light leading-relaxed mb-8">
@@ -176,8 +176,8 @@ export default function PourquoiMenuaPage() {
             </h2>
             <p className="text-[1.1rem] text-[#6e7891] font-light leading-relaxed mb-6">
               {t(
-                "MENUA CONSULTING s'engage sur l'essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes. 🔴",
-                "MENUA CONSULTING commits to the essentials: quality of deliverables, respect of deadlines, traceability of operations and clear communication with your teams. 🔴"
+                "MENUA CONSULTING s'engage sur l'essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
+                "MENUA CONSULTING commits to the essentials: quality of deliverables, respect of deadlines, traceability of operations and clear communication with your teams."
               )}
             </p>
             <p className="text-[1.1rem] text-[#6e7891] font-light leading-relaxed mb-10">

@@ -10,7 +10,7 @@ export default function NosSolutionsPage() {
     {
       id: "urgence",
       title: t("URGENCE", "URGENCY"),
-      desc: t("Mobilisation rapide de ressources opérationnelles pour répondre à un besoin immédiat, absorber une surcharge d'activité et assurer la continuité de votre service. 🔴", "Rapid mobilization of operational resources to meet an immediate need, absorb an activity overload and ensure the continuity of your service. 🔴"),
+      desc: t("Mobilisation rapide de ressources opérationnelles pour répondre à un besoin immédiat, absorber une surcharge d'activité et assurer la continuité de votre service.", "Rapid mobilization of operational resources to meet an immediate need, absorb an activity overload and ensure the continuity of your service."),
       icon: Clock,
       bullets: [
         t("Surcharge d'activité ou pic de dossiers", "Activity overload or peak in files"),
@@ -23,7 +23,7 @@ export default function NosSolutionsPage() {
     {
       id: "duree",
       title: t("DURÉE", "DURATION"),
-      desc: t("MENUA CONSULTING propose des dispositifs d'externalisation flexibles, adaptés au traitement d'un nombre défini de dossiers comme à la gestion récurrente d'un portefeuille plus important. 🔴", "MENUA CONSULTING offers flexible outsourcing systems, adapted to the processing of a defined number of files as well as to recurring management of a larger portfolio. 🔴"),
+      desc: t("MENUA CONSULTING propose des dispositifs d'externalisation flexibles, adaptés au traitement d'un nombre défini de dossiers comme à la gestion récurrente d'un portefeuille plus important.", "MENUA CONSULTING offers flexible outsourcing systems, adapted to the processing of a defined number of files as well as to recurring management of a larger portfolio."),
       icon: Briefcase,
       bullets: [
         t("Mission courte pour traiter un besoin identifié sur une période limitée", "Short mission to address an identified need over a limited period"),
@@ -36,7 +36,7 @@ export default function NosSolutionsPage() {
     {
       id: "volume",
       title: t("VOLUME", "VOLUME"),
-      desc: t("MENUA CONSULTING adapte le dimensionnement de ses ressources au volume de dossiers, de flux ou d'opérations à traiter, tout en veillant à la continuité et à la sécurisation de l'exécution. 🔴", "MENUA CONSULTING adapts the sizing of its resources to the volume of files, flows or operations to be processed, while ensuring continuity and securing execution. 🔴"),
+      desc: t("MENUA CONSULTING adapte le dimensionnement de ses ressources au volume de dossiers, de flux ou d'opérations à traiter, tout en veillant à la continuité et à la sécurisation de l'exécution.", "MENUA CONSULTING adapts the sizing of its resources to the volume of files, flows or operations to be processed, while ensuring continuity and securing execution."),
       icon: FileStack,
       bullets: [
         t("Une ressource dédiée sur un périmètre précis", "A dedicated resource on a specific scope"),
@@ -49,7 +49,7 @@ export default function NosSolutionsPage() {
     {
       id: "organisation",
       title: t("MODE D'ORGANISATION", "ORGANIZATION MODE"),
-      desc: t("MENUA CONSULTING structure ses interventions selon le format le plus adapté à vos contraintes : dispositif dédié, fonctionnement par mission ou prise en charge de flux et de process définis. 🔴\n\nNous intégrons nos équipes à vos modes de fonctionnement existants afin de garantir une exécution fluide, traçable et conforme à vos standards internes. 🔴", "MENUA CONSULTING structures its interventions according to the most suitable format for your constraints: dedicated system, mission-based operation or management of defined flows and processes. 🔴\n\nWe integrate our teams into your existing operating modes to guarantee smooth, traceable execution in compliance with your internal standards. 🔴"),
+      desc: t("MENUA CONSULTING structure ses interventions selon le format le plus adapté à vos contraintes : dispositif dédié, fonctionnement par mission ou prise en charge de flux et de process définis.\n\nNous intégrons nos équipes à vos modes de fonctionnement existants afin de garantir une exécution fluide, traçable et conforme à vos standards internes.", "MENUA CONSULTING structures its interventions according to the most suitable format for your constraints: dedicated system, mission-based operation or management of defined flows and processes.\n\nWe integrate our teams into your existing operating modes to guarantee smooth, traceable execution in compliance with your internal standards."),
       icon: Settings,
       bullets: [
         t("Dispositif dédié pour un service ou un périmètre clairement identifié", "Dedicated system for a clearly identified service or scope"),

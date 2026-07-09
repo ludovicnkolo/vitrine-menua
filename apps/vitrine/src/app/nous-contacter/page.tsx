@@ -180,10 +180,10 @@ export default function NousContacter() {
                     t("Renfort opérationnel", "Operational reinforcement"),
                     t("Externalisation back office", "Back office outsourcing"),
                     t("Externalisation middle office", "Middle office outsourcing"),
-                    t("Finance & reporting", "Finance & reporting"),
+                    t("Finance et reporting", "Finance and reporting"),
                     t("Contrôle de gestion", "Management control"),
-                    t("Risques & conformité", "Risk & compliance"),
-                    t("Support comptable & data", "Accounting & data support"),
+                    t("Risques et conformité", "Risk and compliance"),
+                    t("Support comptable et data", "Accounting and data support"),
                     t("Support opérationnel CGP / gestion de patrimoine", "Wealth Management Support"),
                     t("Autre besoin opérationnel", "Other operational need"),
                   ].map((opt, i) => (

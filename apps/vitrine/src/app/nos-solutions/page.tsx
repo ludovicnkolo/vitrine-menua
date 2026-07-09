@@ -156,14 +156,14 @@ export default function NosSolutionsPage() {
       </div>
 
       {/* ── 4.6 LANGUES (Beige Full Width Block) ── */}
-      <section className="relative w-full bg-[#141824] section-padding text-[#e8e1d7]">
-        <div className="laplace-container flex flex-col md:flex-row items-center justify-center gap-8 text-center md:text-left">
-          <Globe size={64} className="text-[#e8e1d7] shrink-0 opacity-80" strokeWidth={1} />
+      <section className="relative w-full bg-[#141824] py-4 md:py-6 text-[#e8e1d7]">
+        <div className="laplace-container flex flex-col md:flex-row items-center justify-center gap-6 text-center md:text-left">
+          <Globe size={40} className="text-[#e8e1d7] shrink-0 opacity-80" strokeWidth={1} />
           <div className="max-w-2xl">
-            <h3 className="text-[1.4rem] font-semibold text-white mb-2">
+            <h3 className="text-[1.1rem] font-semibold text-white mb-0.5">
               {t("Nous intervenons en français et en anglais.", "We operate in French and English.")}
             </h3>
-            <p className="text-[#e5e9f0] font-light text-[1.1rem]">
+            <p className="text-[#e5e9f0] font-light text-[1rem]">
               {t("D'autres langues peuvent être étudiées selon les besoins spécifiques de vos équipes.", "Other languages can be studied according to the specific needs of your teams.")}
             </p>
           </div>

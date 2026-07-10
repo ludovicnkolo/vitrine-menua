@@ -42,23 +42,26 @@ export default function PourquoiMenuaPage() {
 
       {/* ── 2.2 BÉNÉFICES (Overlapping style, image right) ── */}
       <section id="nos-benefices" className="relative w-full bg-white section-padding mt-16 lg:mt-0 scroll-mt-20">
-        <div className="laplace-container relative">
-
-          {/* Mobile Image */}
-          <div className="block lg:hidden w-full h-[250px] relative z-20">
-            <img
-              src="/img/pourquoi-precision.jpg"
-              alt="Résultats tangibles"
-              className="w-full h-full object-cover"
-            />
-          </div>
+        <div className="laplace-container relative z-10">
 
           {/* Text block — full width on mobile, leaves room for image on right on desktop */}
-          <div className="bg-[#f5f7fa] shadow-xl relative z-30 lg:z-10 px-10 lg:px-16 pt-12 pb-14 lg:pr-[38%] -mt-16 lg:mt-0">
+          <div className="px-6 py-10 lg:px-16 lg:pt-12 lg:pb-14 lg:pr-[38%] relative z-30 lg:z-10 lg:mt-0">
+            {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
+            <div className="absolute left-0 right-0 bottom-0 top-[220px] lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
+
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("Bénéfices", "Benefits")}
             </h2>
+
+            {/* Mobile Image (Visible only on mobile) */}
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
+              <img
+                src="/img/pourquoi-precision.jpg"
+                alt="Résultats tangibles"
+                className="w-full h-full object-cover"
+              />
+            </div>
             <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-4">
               {t(
                 "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité, renforcez votre fiabilité et soutenez durablement votre chiffre d'affaires.",

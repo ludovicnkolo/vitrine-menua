@@ -54,8 +54,8 @@ export default function Home() {
       <section className="relative w-full bg-white section-padding">
         <div className="laplace-container relative">
           <div className="flex flex-col lg:flex-row items-center">
-            {/* Left Image */}
-            <div className="w-full lg:w-4/12 h-[250px] lg:h-[360px] z-20 relative">
+            {/* Left Image (Desktop only) */}
+            <div className="hidden lg:block w-full lg:w-4/12 lg:h-[360px] z-20 relative">
               <img 
                 src="/img/intro-office.jpg" 
                 alt="Intro" 
@@ -65,7 +65,10 @@ export default function Home() {
             </div>
             
             {/* Right Overlapping Beige Box */}
-            <div className="w-full lg:w-9/12 bg-[#e8e1d7] px-12 lg:pr-20 lg:pl-32 pt-8 lg:pt-16 pb-12 lg:pb-16 relative z-30 lg:z-10 -mt-16 lg:mt-0 lg:-ml-24 shadow-xl">
+            <div className="w-full lg:w-9/12 px-6 py-10 lg:px-12 lg:pr-20 lg:pl-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-ml-24">
+              {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
+              <div className="absolute left-0 right-0 bottom-0 top-[220px] lg:top-0 bg-[#e8e1d7] rounded-sm shadow-xl -z-10" />
+
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <div className="leading-relaxed text-[#141824] text-[1.1rem] md:text-[1.2rem] font-light mb-8 space-y-6">
                 <h2 className="font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
@@ -74,6 +77,17 @@ export default function Home() {
                     "Back and middle office outsourcing"
                   )}
                 </h2>
+
+                {/* Mobile Image (Visible only on mobile) */}
+                <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[200px] my-6 z-20 relative shadow-md">
+                  <img 
+                    src="/img/intro-office.jpg" 
+                    alt="Intro" 
+                    className="w-full h-full object-cover" 
+                    onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} 
+                  />
+                </div>
+
                 <p>
                   {t(
                     "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l'exécution des fonctions back et middle office.",
@@ -87,7 +101,7 @@ export default function Home() {
                   )}
                 </p>
               </div>
-              <div className="flex justify-end">
+              <div className="flex justify-end mt-8">
                 <Link href="/nous-connaitre" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
                   {t("Nous connaître", "About Us")} 
                   <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
@@ -166,22 +180,25 @@ export default function Home() {
       <section className="relative w-full bg-white section-padding">
         <div className="laplace-container relative">
 
-          {/* Mobile Image */}
-          <div className="block lg:hidden w-full h-[250px] relative z-20">
-            <img
-              src="/img/besoins-meeting.jpg"
-              alt="Vos besoins"
-              className="w-full h-full object-cover"
-              onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
-            />
-          </div>
-
           {/* Text block — full width on mobile, leaves room for image on desktop */}
-          <div className="bg-[#f5f7fa] shadow-xl relative z-30 lg:z-10 px-10 lg:px-16 pt-12 pb-14 lg:pr-[38%] -mt-16 lg:mt-0">
+          <div className="px-6 py-10 lg:px-16 lg:pt-12 lg:pb-14 lg:pr-[38%] relative z-30 lg:z-10 lg:mt-0">
+            {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
+            <div className="absolute left-0 right-0 bottom-0 top-[220px] lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
+
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("Vos besoins", "Your Needs")}
             </h2>
+
+            {/* Mobile Image (Visible only on mobile) */}
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[200px] my-6 z-20 relative shadow-md">
+              <img
+                src="/img/besoins-meeting.jpg"
+                alt="Vos besoins"
+                className="w-full h-full object-cover"
+                onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
+              />
+            </div>
             <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-10">
               {t(
                 "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l'ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",

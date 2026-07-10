@@ -171,15 +171,26 @@ export default function VosBesoinsPage() {
 
       {/* ── GRID LAYOUT (Nos expertises singulières style) ── */}
       <section className="relative w-full bg-white section-padding">
-        <div className="laplace-container">
-          <div className="text-center mb-16">
-             <div className="inline-block text-left">
-               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-               <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase tracking-wider mb-6">
-                  {t("Nos domaines d'intervention", "Our areas of intervention")}
-               </h2>
-             </div>
-          </div>
+        <div className="laplace-container relative z-10">
+          {/* Absolute background drops down on mobile so image overlaps it */}
+          <div className="absolute left-0 right-0 bottom-0 top-[180px] md:top-0 bg-[#f5f7fa] rounded-sm shadow-sm -z-10 mt-8" />
+          
+          <div className="max-w-[1200px] mx-auto px-6 py-8 md:px-10 md:pb-10 lg:px-16 pt-6 lg:pt-8 lg:pb-16 mt-8">
+            <div className="flex flex-col md:flex-row items-center justify-start mb-12 px-4 lg:px-0 gap-8 md:gap-24 lg:gap-32">
+               <div className="text-left w-full md:w-auto flex-shrink-0">
+                 <div className="w-16 h-[3px] bg-[#141824] mb-4" />
+                 <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase tracking-wider md:mb-0">
+                    {t("Nos domaines d'intervention", "Our areas of intervention")}
+                 </h2>
+               </div>
+               <div className="w-full md:w-auto flex justify-start mt-4 md:mt-0 md:-mt-16 lg:-mt-20">
+                 <img 
+                   src="/img/connaitre-hero-v3.jpg" 
+                   alt="Domaines d'intervention" 
+                   className="w-[85%] sm:w-80 md:w-56 h-auto object-cover rounded-sm shadow-md" 
+                 />
+               </div>
+            </div>
 
           <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto">
             {needs.map((need, idx) => (
@@ -195,6 +206,7 @@ export default function VosBesoinsPage() {
                  </div>
               </a>
             ))}
+          </div>
           </div>
         </div>
       </section>

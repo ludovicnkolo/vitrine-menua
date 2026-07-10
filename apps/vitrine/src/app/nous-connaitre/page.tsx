@@ -47,22 +47,26 @@ export default function NousConnaitrePage() {
 
       {/* ── 2.2 PRÉSENTATION DU CABINET (Overlapping style, image left) ── */}
       <section id="presentation-du-cabinet" className="relative w-full bg-white section-padding mt-16 lg:mt-0 scroll-mt-20">
-        <div className="laplace-container relative">
-          
-          <div className="block lg:hidden w-full h-[350px] relative z-20">
-            <img
-              src="/img/connaitre-approche-v3.jpg"
-              alt="Cabinet"
-              className="w-full h-full object-cover object-center"
-            />
-          </div>
+        <div className="laplace-container relative z-10">
 
           {/* Text block — full width on mobile, leaves room for image on left on desktop */}
-          <div className="bg-[#f5f7fa] shadow-xl relative z-30 lg:z-10 px-10 lg:px-16 pt-12 pb-14 lg:pl-[38%] -mt-16 lg:mt-0">
+          <div className="px-6 py-10 lg:px-16 lg:pt-12 lg:pb-14 lg:pl-[38%] relative z-30 lg:z-10 lg:mt-0">
+            {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
+            <div className="absolute left-0 right-0 bottom-0 top-[220px] lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
+
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("MENUA CONSULTING", "MENUA CONSULTING")}
             </h2>
+
+            {/* Mobile Image (Visible only on mobile) */}
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
+              <img
+                src="/img/connaitre-approche-v3.jpg"
+                alt="Cabinet"
+                className="w-full h-full object-cover object-center"
+              />
+            </div>
             <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-8">
               {t(
                 "MENUA CONSULTING est un cabinet spécialisé dans l'externalisation opérationnelle des fonctions back et middle office pour des acteurs de la finance, de la comptabilité, de la conformité, de la gestion de patrimoine et de la data.",

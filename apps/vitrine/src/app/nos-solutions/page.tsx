@@ -94,15 +94,26 @@ export default function NosSolutionsPage() {
       {/* ── SEPARATOR ── */}
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
-      {/* ── LAYOUT 1: BEIGE CARDS ROW (Nos solutions placements style) ── */}
-      <section className="relative w-full bg-[#e8e1d7] section-padding">
-        <div className="laplace-container">
-          <div className="mb-12">
-            <div className="w-16 h-[3px] bg-white/60 mb-5" />
-            <h2 className="text-[1.2rem] text-[#141824] font-bold uppercase tracking-widest mb-4">
-              {t("NOS SOLUTIONS D'EXTERNALISATION", "OUR OUTSOURCING SOLUTIONS")}
-            </h2>
-          </div>
+      {/* ── LAYOUT 1: GRID STYLE ── */}
+      <section className="relative w-full bg-white section-padding">
+        <div className="laplace-container relative z-10">
+          <div className="absolute left-0 right-0 bottom-0 top-[180px] md:top-0 bg-[#f5f7fa] rounded-sm shadow-sm -z-10 mt-8" />
+          <div className="max-w-[1200px] mx-auto px-6 py-8 md:px-10 md:pb-10 lg:px-16 pt-6 lg:pt-8 lg:pb-16 mt-8">
+            <div className="flex flex-col-reverse md:flex-row items-center justify-start mb-12 px-4 lg:px-0 gap-8 md:gap-24 lg:gap-32">
+               <div className="w-full md:w-auto flex justify-start mt-4 md:mt-0 md:-mt-16 lg:-mt-20">
+                 <img 
+                   src="/img/intro-office.jpg" 
+                   alt="Solutions d'externalisation" 
+                   className="w-[85%] sm:w-80 md:w-56 h-auto object-cover rounded-sm shadow-md" 
+                 />
+               </div>
+               <div className="text-left w-full md:w-auto flex-shrink-0">
+                 <div className="w-16 h-[3px] bg-[#141824] mb-4" />
+                 <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase tracking-wider md:mb-0">
+                    {t("Nos solutions d'externalisation", "Our outsourcing solutions")}
+                 </h2>
+               </div>
+            </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {solutions.map((sol, idx) => (
@@ -121,6 +132,7 @@ export default function NosSolutionsPage() {
                 </a>
               </div>
             ))}
+          </div>
           </div>
         </div>
       </section>

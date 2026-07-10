@@ -152,7 +152,7 @@ export default function PourquoiMenuaPage() {
             </ul>
           </div>
 
-          {/* Image (Right) */}
+          {/*  Image (Right) */}
           <div className="w-full lg:w-1/2 h-[300px] lg:h-[500px] shadow-xl">
             <img
               src="/img/pourquoimenua_3.jpg"

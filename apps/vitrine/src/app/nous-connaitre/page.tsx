@@ -107,18 +107,27 @@ export default function NousConnaitrePage() {
 
         </div>
 
-        {/* Notre approche - Pleine largeur */}
-        <div id="notre-approche" className="laplace-container mt-16 lg:mt-24 scroll-mt-20">
-          <div className="border-t border-[#141824]/10 pt-16">
-            <div className="max-w-4xl mx-auto text-center mb-12">
-              <h2 className="text-[#141824] text-[1.3rem] md:text-[1.5rem] font-bold uppercase tracking-wider mb-6">
+        {/* Notre approche - Premium Sober Layout */}
+        <div id="notre-approche" className="laplace-container mt-16 lg:mt-32 scroll-mt-20">
+          <div className="max-w-6xl mx-auto border-t border-[#141824]/10 pt-16 lg:pt-24 flex flex-col lg:flex-row gap-12 lg:gap-24">
+            
+            {/* Left Col: Title & Main Text */}
+            <div className="w-full lg:w-5/12">
+              <div className="w-16 h-[3px] bg-[#141824] mb-6" />
+              <h2 className="text-[#141824] text-[1.5rem] md:text-[1.8rem] font-bold uppercase tracking-widest mb-8">
                 {t("Notre approche", "Our approach")}
               </h2>
-              <div className="text-[#141824] text-[1.1rem] leading-relaxed font-light mb-8 space-y-4">
+              <div className="text-[#6e7891] text-[1.1rem] leading-relaxed font-light space-y-6">
                 <p>
+                  <strong className="font-semibold text-[#141824]">
+                    {t(
+                      "MENUA CONSULTING adopte une posture résolument opérationnelle",
+                      "MENUA CONSULTING adopts a resolutely operational posture"
+                    )}
+                  </strong>
                   {t(
-                    "MENUA CONSULTING adopte une posture résolument opérationnelle : les clients définissent les besoins, les méthodes et les priorités, nous assurons l'exécution.",
-                    "MENUA CONSULTING adopts a resolutely operational posture: clients define needs, methods and priorities, we ensure execution."
+                    " : les clients définissent les besoins, les méthodes et les priorités, nous assurons l'exécution.",
+                    " : clients define needs, methods and priorities, we ensure execution."
                   )}
                 </p>
                 <p>
@@ -128,30 +137,40 @@ export default function NousConnaitrePage() {
                   )}
                 </p>
               </div>
-              <p className="text-[#141824] font-bold text-[1.1rem] md:text-[1.2rem] mb-8">
-                {t("Notre approche repose sur trois piliers :", "Our approach is based on three pillars:")}
-              </p>
             </div>
 
-            <div className="flex flex-col md:flex-row justify-around items-center gap-12 text-[#141824] font-bold uppercase tracking-widest text-[0.85rem] text-center mb-12">
-              <div className="flex flex-col items-center justify-center flex-1 w-full p-8 bg-[#f5f7fa] border border-[#e8e1d7] hover:bg-[#141824] hover:text-[#e8e1d7] transition-colors duration-300 group min-h-[100px]">
-                <span>{t("continuité opérationnelle", "operational continuity")}</span>
+            {/* Right Col: Pillars & Bilingual Note */}
+            <div className="w-full lg:w-7/12 flex flex-col justify-center">
+              
+              <div className="bg-[#f5f7fa] p-10 md:p-14 border-l-4 border-[#141824]">
+                <p className="text-[#141824] font-bold text-[1.1rem] uppercase tracking-wider mb-8">
+                  {t("Notre approche repose sur trois piliers :", "Our approach is based on three pillars:")}
+                </p>
+                
+                <ul className="space-y-6">
+                  {[
+                    t("Continuité opérationnelle", "Operational continuity"),
+                    t("Traçabilité des actions", "Traceability of actions"),
+                    t("Fiabilité des livrables", "Reliability of deliverables")
+                  ].map((pillar, idx) => (
+                    <li key={idx} className="flex items-center gap-4">
+                      <span className="w-2 h-2 bg-[#141824] rounded-full flex-shrink-0" />
+                      <span className="text-[#31374a] text-[1.2rem] font-medium tracking-wide">{pillar}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="flex flex-col items-center justify-center flex-1 w-full p-8 bg-[#f5f7fa] border border-[#e8e1d7] hover:bg-[#141824] hover:text-[#e8e1d7] transition-colors duration-300 group min-h-[100px]">
-                <span>{t("traçabilité des actions", "traceability of actions")}</span>
-              </div>
-              <div className="flex flex-col items-center justify-center flex-1 w-full p-8 bg-[#f5f7fa] border border-[#e8e1d7] hover:bg-[#141824] hover:text-[#e8e1d7] transition-colors duration-300 group min-h-[100px]">
-                <span>{t("fiabilité des livrables", "reliability of deliverables")}</span>
-              </div>
-            </div>
 
-            <div className="max-w-4xl mx-auto text-center">
-              <p className="text-[#141824] text-[1.1rem] leading-relaxed font-light">
-                {t(
-                  "Nos équipes peuvent intervenir en français et en anglais, garantissant une gestion fluide des échanges, des reportings et des opérations dans un contexte international.",
-                  "Our teams can intervene in French and English, guaranteeing smooth management of exchanges, reporting and operations in an international context."
-                )}
-              </p>
+              <div className="mt-10 flex items-start gap-4 px-4">
+                <div className="w-8 h-[1px] bg-[#6e7891] mt-3 flex-shrink-0" />
+                <p className="text-[#6e7891] text-[1.05rem] font-light leading-relaxed">
+                  {t(
+                    "Nos équipes peuvent intervenir en français et en anglais, garantissant une gestion fluide des échanges, des reportings et des opérations dans un contexte international.",
+                    "Our teams can intervene in French and English, guaranteeing smooth management of exchanges, reporting and operations in an international context."
+                  )}
+                </p>
+              </div>
+
             </div>
           </div>
         </div>

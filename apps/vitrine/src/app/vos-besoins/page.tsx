@@ -185,7 +185,7 @@ export default function VosBesoinsPage() {
                </div>
                <div className="w-full md:w-auto flex justify-start mt-4 md:mt-0 md:-mt-16 lg:-mt-20">
                  <img 
-                   src="/img/connaitre-hero-v3.jpg" 
+                   src="/img/vosbensoin_2.jpg" 
                    alt="Domaines d'intervention" 
                    className="w-[85%] sm:w-80 md:w-56 h-auto object-cover rounded-sm shadow-md" 
                  />

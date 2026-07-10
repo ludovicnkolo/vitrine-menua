@@ -102,7 +102,7 @@ export default function NosSolutionsPage() {
             <div className="flex flex-col-reverse md:flex-row items-center justify-start mb-12 px-4 lg:px-0 gap-8 md:gap-24 lg:gap-32">
                <div className="w-full md:w-auto flex justify-start mt-4 md:mt-0 md:-mt-16 lg:-mt-20">
                  <img 
-                   src="/img/intro-office.jpg" 
+                   src="/img/nossolution_2.jpg" 
                    alt="Solutions d'externalisation" 
                    className="w-[85%] sm:w-80 md:w-56 h-auto object-cover rounded-sm shadow-md" 
                  />

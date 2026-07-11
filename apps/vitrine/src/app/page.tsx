@@ -25,16 +25,27 @@ export default function Home() {
         <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="animate-fade-in-up stagger-1 text-white text-[1.8rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
-              MENUA CONSULTING
+              {t(
+                "Externalisation opérationnelle des fonctions back & middle office",
+                "Operational outsourcing of back & middle office functions"
+              )}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
+            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
               {t(
-                "Externalisation opérationnelle des fonctions back et middle office.",
-                "Operational outsourcing of back and middle office functions."
+                "Nous sécurisons l'exécution de vos opérations back et middle office afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
+                "We secure the execution of your back and middle office operations to allow your teams to focus on strategic decisions."
               )}
             </p>
-            <div className="animate-fade-in-up stagger-4 mt-1 flex items-center gap-2 text-white">
+            <div className="animate-fade-in-up stagger-4 mb-6">
+              <Link 
+                href="/nous-contacter" 
+                className="inline-flex items-center justify-center px-8 py-3 bg-[#e8e1d7] text-[#141824] font-bold uppercase tracking-wider text-[0.95rem] hover:bg-white transition-colors"
+              >
+                {t("Présenter un besoin", "Submit a need")}
+              </Link>
+            </div>
+            <div className="animate-fade-in-up stagger-5 flex items-center gap-2 text-white">
               <Globe size={16} />
               <p className="text-[0.9rem] lg:text-[0.95rem] text-white font-light italic tracking-wide">
                 {t(
@@ -73,8 +84,8 @@ export default function Home() {
               <div className="leading-relaxed text-[#141824] text-[1.1rem] md:text-[1.2rem] font-light mb-8 space-y-6">
                 <h2 className="font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
                   {t(
-                    "Externalisation back et middle office",
-                    "Back and middle office outsourcing"
+                    "MENUA CONSULTING",
+                    "MENUA CONSULTING"
                   )}
                 </h2>
 
@@ -90,14 +101,8 @@ export default function Home() {
 
                 <p>
                   {t(
-                    "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l'exécution des fonctions back et middle office.",
-                    "MENUA CONSULTING supports financial, accounting, wealth, data and regulated teams to secure and strengthen the execution of back and middle office functions."
-                  )}
-                </p>
-                <p>
-                  {t(
-                    "Nous sécurisons l'exécution de vos opérations afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
-                    "We secure the execution of your operations to allow your teams to focus on strategic decisions."
+                    "MENUA CONSULTING intervient en appui des équipes financières, comptables et réglementées pour sécuriser et renforcer l'exécution des fonctions back et middle office.",
+                    "MENUA CONSULTING supports financial, accounting and regulated teams to secure and strengthen the execution of back and middle office functions."
                   )}
                 </p>
               </div>

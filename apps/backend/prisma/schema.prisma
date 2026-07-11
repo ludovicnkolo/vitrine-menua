@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("COLLABORATOR") // ADMIN, SUPERVISOR, COLLABORATOR, PRESTATAIRE, READ_ONLY
+  isBlocked Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  assignedTasks Task[]       @relation("AssignedTasks")
+  createdTasks  Task[]       @relation("CreatedTasks")
+  documents     Document[]
+  comments      Comment[]
+  auditLogs     AuditLog[]
+}
+
+model Dossier {
+  id         String   @id @default(uuid())
+  clientName String
+  contact    String?
+  country    String?
+  needType   String?
+  siret      String?
+  status     String   @default("NEW") // NEW, TO_QUALIFY, TO_ASSIGN, IN_PROGRESS, WAITING_DOCS, IN_REVIEW, CORRECTION_REQUESTED, VALIDATED, SENT, CLOSED
+  priority   String   @default("NORMAL") // URGENT, NORMAL, LOW
+  receivedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tasks     Task[]
+  documents Document[]
+  comments  Comment[]
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  dossierId   String
+  dossier     Dossier   @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+  assignedToId String?
+  assignedTo  User?     @relation("AssignedTasks", fields: [assignedToId], references: [id])
+  createdById String
+  createdBy   User      @relation("CreatedTasks", fields: [createdById], references: [id])
+  
+  description String
+  deadline    DateTime?
+  type        String    @default("INTERNAL") // INTERNAL, MISSION
+  status      String    @default("TO_ASSIGN") // TO_ASSIGN, IN_PROGRESS, IN_REVIEW, CORRECTION_REQUESTED, VALIDATED
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  documents Document[]
+  comments  Comment[]
+}
+
+model Document {
+  id           String   @id @default(uuid())
+  name         String
+  url          String
+  uploadedById String
+  uploadedBy   User     @relation(fields: [uploadedById], references: [id])
+  dossierId    String?
+  dossier      Dossier? @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+  taskId       String?
+  task         Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  
+  createdAt    DateTime @default(now())
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  dossierId String?
+  dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+  taskId    String?
+  task      Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action     String   // LOGIN, VIEW_DOSSIER, CHANGE_STATUS, etc.
+  targetId   String?  // ID of the modified entity
+  targetType String?  // User, Dossier, Task, Document
+  details    String?  // JSON stringified details
+  createdAt  DateTime @default(now())
+}

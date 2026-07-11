@@ -9,6 +9,37 @@ export default function NousContacter() {
   const [clientType, setClientType] = useState<"company" | "individual">("company");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error", message: string } | null>(null);
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.type !== "application/pdf") {
+         setSubmitStatus({ type: "error", message: "Seuls les fichiers au format PDF sont acceptés." });
+         setSelectedFileName(null);
+         e.target.value = "";
+      } else if (file.size > 10 * 1024 * 1024) {
+         setSubmitStatus({ type: "error", message: "Le fichier PDF est trop volumineux (maximum 10 Mo)." });
+         setSelectedFileName(null);
+         e.target.value = "";
+      } else {
+         setSelectedFileName(file.name);
+         setSubmitStatus(null);
+      }
+    } else {
+      setSelectedFileName(null);
+    }
+  };
+
+  const handleRemoveFile = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedFileName(null);
+    const fileInput = document.querySelector('input[name="file"]') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = "";
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,6 +48,22 @@ export default function NousContacter() {
     
     try {
       const formData = new FormData(e.currentTarget);
+      
+      // Validation du fichier PDF s'il est fourni
+      const fileField = formData.get("file") as File | null;
+      if (fileField && fileField.size > 0) {
+        if (fileField.type !== "application/pdf") {
+          setSubmitStatus({ type: "error", message: "Seuls les fichiers au format PDF sont acceptés." });
+          setIsSubmitting(false);
+          return;
+        }
+        if (fileField.size > 10 * 1024 * 1024) { // Limite de 10 Mo
+          setSubmitStatus({ type: "error", message: "Le fichier PDF est trop volumineux (maximum 10 Mo)." });
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
       const res = await fetch(`${apiUrl}/api/forms/contact`, {
         method: "POST",
@@ -231,13 +278,28 @@ export default function NousContacter() {
                     "Describe your operational need or attach a mission sheet in pdf of course, a specification or a scoping document to facilitate our initial analysis."
                   )}
                 </p>
-                <textarea name="description" rows={5} placeholder={t("Saisissez ou collez votre descriptif ici...", "Type or paste your description here...")} className="w-full border border-[#d1d5db] bg-transparent p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf] mb-4" required></textarea>
+                <textarea name="description" rows={5} placeholder={t("Saisissez ou collez votre descriptif ici...", "Type or paste your description here...")} className="w-full border border-[#d1d5db] bg-transparent p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf] mb-4"></textarea>
                 
-                <div className="w-full border-2 border-dashed border-[#d1d5db] bg-[#f5f7fa] p-6 text-center hover:bg-[#e8e1d7]/30 transition-colors cursor-pointer rounded-sm">
+                <div className={`w-full border-2 border-dashed ${selectedFileName ? 'border-green-500 bg-green-50/30' : 'border-[#d1d5db] bg-[#f5f7fa]'} p-6 text-center hover:bg-[#e8e1d7]/30 transition-colors cursor-pointer rounded-sm`}>
                    <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
-                     <span className="text-[#141824] font-medium text-[1rem] mb-2">{t("Joindre un document (PDF, Word...)", "Attach a document (PDF, Word...)")}</span>
-                     <span className="text-[#6e7891] text-[0.85rem]">{t("Cliquez ici pour parcourir vos fichiers", "Click here to browse your files")}</span>
-                     <input type="file" name="file" className="hidden" accept=".pdf,.doc,.docx" />
+                     {selectedFileName ? (
+                       <div className="flex flex-col items-center">
+                         <span className="text-green-700 font-bold text-[1rem] mb-2">{selectedFileName}</span>
+                         <span className="text-[#6e7891] text-[0.85rem]">{t("Cliquez ici pour remplacer le document", "Click here to replace the document")}</span>
+                         <button 
+                           onClick={handleRemoveFile}
+                           className="mt-4 px-4 py-1.5 text-[0.75rem] font-bold uppercase tracking-wider text-red-600 bg-red-50 hover:bg-red-100 rounded-full transition-colors border border-red-200"
+                         >
+                           {t("Supprimer ce document", "Remove this document")}
+                         </button>
+                       </div>
+                     ) : (
+                       <div className="flex flex-col items-center">
+                         <span className="text-[#141824] font-medium text-[1rem] mb-2">{t("Ou joignez un document (PDF uniquement)", "Or attach a document (PDF only)")}</span>
+                         <span className="text-[#6e7891] text-[0.85rem]">{t("Cliquez ici pour parcourir vos fichiers", "Click here to browse your files")}</span>
+                       </div>
+                     )}
+                     <input type="file" name="file" className="hidden" accept=".pdf" onChange={handleFileChange} />
                    </label>
                 </div>
               </div>

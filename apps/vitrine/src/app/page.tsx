@@ -22,7 +22,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
         
-        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
+        <div className="laplace-container relative z-10 pt-40 md:pt-48 pb-20 mt-8">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="animate-fade-in-up stagger-1 text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Externalisation opérationnelle des fonctions back ", "Operational outsourcing of back ")}
@@ -37,9 +37,9 @@ export default function Home() {
               )}
             </p>
             <div className="animate-fade-in-up stagger-4 mb-8">
-              <Link href="/nous-contacter" className="inline-flex items-center gap-3 px-8 py-4 bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
+              <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-6 py-3 bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.85rem] font-bold hover:bg-white transition-colors group">
                 {t("Présenter un besoin", "Submit a need")}
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
             <div className="animate-fade-in-up stagger-4 mt-1 flex items-center gap-2 text-white">

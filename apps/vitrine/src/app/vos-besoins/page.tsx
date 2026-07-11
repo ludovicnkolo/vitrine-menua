@@ -106,7 +106,7 @@ export default function VosBesoinsPage() {
       <section className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
-             <img src="/img/finance-v3.jpg" alt="Finance & Reporting" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+             <img src="/img/vos-besoins_3.jpg" alt="Finance & Reporting" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
           </div>
           <div className="w-full lg:w-7/12 bg-white p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
             <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">

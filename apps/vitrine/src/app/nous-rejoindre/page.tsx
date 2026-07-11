@@ -67,7 +67,7 @@ export default function NousRejoindre() {
       </section>
 
       {/* ── CONTENT SECTION (Laplace Styling) ── */}
-      <section className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.75rem] pb-16 md:pb-24">
+      <section className="relative w-full bg-white pt-12 md:pt-[5.75rem] pb-16 md:pb-24">
         <div className="laplace-container flex flex-col lg:flex-row gap-12 lg:gap-16">
 
           {/* Left Column (Profiles) */}
@@ -112,7 +112,7 @@ export default function NousRejoindre() {
           </div>
 
           {/* Right Column (Form) */}
-          <div className="w-full lg:w-[60%] bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 lg:p-16 shadow-xl">
+          <div className="w-full lg:w-[60%] bg-[#e8e1d7] border-t-4 border-t-[#141824] p-10 lg:p-16 shadow-xl">
             <h3 className="text-[1.8rem] font-semibold text-[#141824] mb-10 uppercase tracking-wider">{t("Formulaire de recrutement", "Recruitment Form")}</h3>
             
             <form className="space-y-10" onSubmit={handleSubmit}>
@@ -260,7 +260,7 @@ export default function NousRejoindre() {
 
               <div>
                 <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Message", "Message")} <span className="text-red-500">*</span></label>
-                <textarea name="message" rows={5} className="w-full border border-[#d1d5db] bg-transparent p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors" required></textarea>
+                <textarea name="message" rows={5} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors" required></textarea>
               </div>
 
               <div>
@@ -284,7 +284,7 @@ export default function NousRejoindre() {
                 </div>
               )}
 
-              <div className="flex justify-end pt-6">
+              <div className="flex justify-center pt-6">
                 <button type="submit" disabled={isSubmitting} className="inline-flex items-center justify-center bg-[#141824] text-white px-10 py-4 font-bold uppercase tracking-wider text-[0.85rem] hover:bg-[#1f2638] transition-colors duration-300 w-full md:w-auto disabled:opacity-70 disabled:cursor-not-allowed">
                   {isSubmitting ? t("Envoi en cours...", "Sending...") : t("Envoyer ma candidature", "Send my application")}
                 </button>

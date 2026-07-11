@@ -151,11 +151,11 @@ export default function NousConnaitrePage() {
               <p className="text-[#141824] font-bold text-[1.1rem] uppercase tracking-wider mb-8">
                 {t("Notre approche repose sur quatre principes :", "Our approach is based on four principles:")}
               </p>
-              <div className="w-full aspect-[4/5] rounded-sm overflow-hidden shadow-lg hidden lg:block">
+              <div className="w-[85%] aspect-[4/5] rounded-sm overflow-hidden shadow-lg hidden lg:block">
                 <img 
-                  src="/img/intro-office.jpg" 
+                  src="/img/connaitre_3.jpg" 
                   alt="Notre approche" 
-                  className="w-full h-full object-cover" 
+                  className="w-full h-full object-cover object-left" 
                   onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} 
                 />
               </div>

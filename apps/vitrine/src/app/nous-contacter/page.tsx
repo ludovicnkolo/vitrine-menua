@@ -7,6 +7,35 @@ import { useLanguage } from "@/components/LanguageProvider";
 export default function NousContacter() {
   const { t } = useLanguage();
   const [clientType, setClientType] = useState<"company" | "individual">("company");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error", message: string } | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+    
+    try {
+      const formData = new FormData(e.currentTarget);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const res = await fetch(`${apiUrl}/api/forms/contact`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      
+      if (res.ok && data.success) {
+        setSubmitStatus({ type: "success", message: data.message || "Votre demande a été envoyée avec succès." });
+        (e.target as HTMLFormElement).reset();
+      } else {
+        setSubmitStatus({ type: "error", message: data.error || "Une erreur s'est produite." });
+      }
+    } catch (error) {
+      setSubmitStatus({ type: "error", message: "Impossible d'envoyer le formulaire." });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <main className="flex flex-col w-full min-h-screen">
@@ -23,7 +52,7 @@ export default function NousContacter() {
         </div>
         <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="animate-fade-in-up stagger-1 text-white text-[1.8rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+            <h1 className="animate-fade-in-up stagger-1 text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Nous contacter", "Contact us")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
@@ -37,11 +66,8 @@ export default function NousContacter() {
         </div>
       </section>
 
-      {/* ── SEPARATOR ── */}
-      <div className="w-full h-8 md:h-16 bg-white"></div>
-
       {/* ── CONTENT SECTION (Laplace Styling) ── */}
-      <section className="relative w-full bg-[#f5f7fa] section-padding">
+      <section className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.75rem] pb-16 md:pb-24">
         <div className="laplace-container flex flex-col lg:flex-row gap-12 lg:gap-16">
 
           {/* Left Column (Coordonnées) */}
@@ -91,7 +117,7 @@ export default function NousContacter() {
           <div className="w-full lg:w-[60%] bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 lg:p-16 shadow-xl">
             <h2 className="text-[1.3rem] md:text-[1.5rem] font-bold text-[#141824] mb-10 text-center uppercase tracking-wider">{t("Formulaire de contact", "Contact Form")}</h2>
             
-            <form className="space-y-8">
+            <form className="space-y-8" onSubmit={handleSubmit}>
               
               <div>
                 <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Vous êtes", "You are")}</p>
@@ -128,11 +154,11 @@ export default function NousContacter() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     <div>
                       <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Société", "Company")} <span className="text-red-500">*</span></label>
-                      <input type="text" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                      <input type="text" name="company" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                     </div>
                     <div>
                       <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("SIRET / Numéro d'identification", "SIRET / ID Number")} <span className="text-red-500">*</span></label>
-                      <input type="text" placeholder={t("Ex: 123 456 789 00012", "E.g. 123 456 789 00012")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                      <input type="text" name="siret" placeholder={t("Ex: 123 456 789 00012", "E.g. 123 456 789 00012")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                     </div>
                   </div>
                 )}
@@ -140,11 +166,11 @@ export default function NousContacter() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
                     <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{clientType === "company" ? t("Nom du contact", "Contact Name") : t("Nom", "Name")} <span className="text-red-500">*</span></label>
-                    <input type="text" placeholder={t("Votre nom", "Your name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                    <input type="text" name="name" placeholder={t("Votre nom", "Your name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                   </div>
                   <div>
                     <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Fonction", "Position")} <span className="text-red-500">*</span></label>
-                    <input type="text" placeholder={t("Votre fonction", "Your position")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                    <input type="text" name="position" placeholder={t("Votre fonction", "Your position")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                   </div>
                 </div>
               </div>
@@ -152,18 +178,18 @@ export default function NousContacter() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                   <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Email professionnel", "Professional email")} <span className="text-red-500">*</span></label>
-                  <input type="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                  <input type="email" name="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                 </div>
                 <div>
                   <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")} <span className="text-red-500">*</span></label>
-                  <input type="tel" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                  <input type="tel" name="phone" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 gap-8">
                 <div>
                   <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Niveau d'urgence", "Urgency level")} <span className="text-red-500">*</span></label>
-                  <select className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
+                  <select name="urgency" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
                     <option value="">{t("Sélectionnez l'urgence", "Select urgency")}</option>
                     <option value="Immédiat">{t("Immédiat", "Immediate")}</option>
                     <option value="Sous quelques jours">{t("Sous quelques jours", "Within a few days")}</option>
@@ -188,7 +214,7 @@ export default function NousContacter() {
                     t("Autre besoin opérationnel", "Other operational need"),
                   ].map((opt, i) => (
                     <label key={i} className="flex items-start gap-3 text-[1.05rem] text-[#141824] font-light cursor-pointer group">
-                      <input type="checkbox" className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]" /> 
+                      <input type="checkbox" name="needs" value={opt} className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]" /> 
                       <span className="group-hover:text-[#6e7891] transition-colors">{opt}</span>
                     </label>
                   ))}
@@ -196,8 +222,24 @@ export default function NousContacter() {
               </div>
 
               <div>
-                <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Décrivez votre besoin", "Describe your need")} <span className="text-red-500">*</span></label>
-                <textarea rows={5} placeholder={t("Décrivez votre besoin", "Describe your need")} className="w-full border border-[#d1d5db] bg-transparent p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf]"></textarea>
+                <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">
+                  {t("Décrivez votre besoin", "Describe your need")} <span className="text-red-500">*</span>
+                </label>
+                <p className="text-[0.95rem] text-[#6e7891] font-light mb-4 leading-relaxed">
+                  {t(
+                    "Décrivez votre besoin opérationnel ou joignez une fiche de mission en pdf bien sûr, un cahier des charges ou un document de cadrage afin de faciliter notre première analyse.",
+                    "Describe your operational need or attach a mission sheet in pdf of course, a specification or a scoping document to facilitate our initial analysis."
+                  )}
+                </p>
+                <textarea name="description" rows={5} placeholder={t("Saisissez ou collez votre descriptif ici...", "Type or paste your description here...")} className="w-full border border-[#d1d5db] bg-transparent p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf] mb-4" required></textarea>
+                
+                <div className="w-full border-2 border-dashed border-[#d1d5db] bg-[#f5f7fa] p-6 text-center hover:bg-[#e8e1d7]/30 transition-colors cursor-pointer rounded-sm">
+                   <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
+                     <span className="text-[#141824] font-medium text-[1rem] mb-2">{t("Joindre un document (PDF, Word...)", "Attach a document (PDF, Word...)")}</span>
+                     <span className="text-[#6e7891] text-[0.85rem]">{t("Cliquez ici pour parcourir vos fichiers", "Click here to browse your files")}</span>
+                     <input type="file" name="file" className="hidden" accept=".pdf,.doc,.docx" />
+                   </label>
+                </div>
               </div>
 
               <div>
@@ -215,9 +257,15 @@ export default function NousContacter() {
                 </p>
               </div>
 
+              {submitStatus && (
+                <div className={`p-4 font-bold border-l-4 ${submitStatus.type === "success" ? "bg-green-50 text-green-800 border-green-500" : "bg-red-50 text-red-800 border-red-500"}`}>
+                  {submitStatus.message}
+                </div>
+              )}
+
               <div className="flex justify-end pt-6">
-                <button type="submit" className="inline-flex items-center justify-center bg-[#141824] text-white px-10 py-4 font-bold uppercase tracking-wider text-[0.85rem] hover:bg-[#1f2638] transition-colors duration-300 w-full md:w-auto">
-                  {t("Envoyer ma demande", "Send my request")} <ArrowRight size={20} className="ml-3" />
+                <button type="submit" disabled={isSubmitting} className="inline-flex items-center justify-center bg-[#141824] text-white px-10 py-4 font-bold uppercase tracking-wider text-[0.85rem] hover:bg-[#1f2638] transition-colors duration-300 w-full md:w-auto disabled:opacity-70 disabled:cursor-not-allowed">
+                  {isSubmitting ? t("Envoi en cours...", "Sending...") : t("Envoyer ma demande", "Send my request")} {!isSubmitting && <ArrowRight size={20} className="ml-3" />}
                 </button>
               </div>
             </form>
@@ -226,8 +274,7 @@ export default function NousContacter() {
         </div>
       </section>
 
-      {/* ── SEPARATOR ── */}
-      <div className="w-full h-8 md:h-16 bg-white"></div>
+
 
     </main>
   );

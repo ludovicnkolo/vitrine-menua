@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./apps/backend
+    container_name: menua_backend
+    volumes:
+      - menua_db_data:/app/data
+      - menua_secure_docs:/var/menua/documents
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    networks:
+      - menua_network
+
+  vitrine:
+    build: ./apps/vitrine
+    container_name: menua_vitrine
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    networks:
+      - menua_network
+
+  admin:
+    build: ./apps/admin
+    container_name: menua_admin
+    ports:
+      - "5173:80"  # Map local port 5173 to nginx container port 80
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    networks:
+      - menua_network
+
+  menua_nginx:
+    image: nginx:alpine
+    container_name: menua_nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker_nginx/conf.d:/etc/nginx/conf.d
+      - /etc/letsencrypt:/etc/nginx/ssl:ro
+      - ./docker_nginx/certbot/www:/var/www/certbot
+    depends_on:
+      - vitrine
+      - backend
+    networks:
+      - menua_network
+
+volumes:
+  menua_db_data:
+  menua_secure_docs:
+
+networks:
+  menua_network:
+    driver: bridge

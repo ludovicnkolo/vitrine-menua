@@ -62,7 +62,7 @@ export default function Footer() {
           </div>
         </div>
         
-        {/* Colonne 3: Contact Rapide (1.3 SECTION CONTACT RAPIDE) */}
+        {/* Colonne 3: Contact Rapide (1.2 SECTION CONTACT RAPIDE) */}
         <div className="flex flex-col md:w-1/3 md:items-end">
           <div className="w-fit">
             <h4 className="text-[1.1rem] font-bold mb-6 text-[#141824]">{t("Nous trouver", "Find us")}</h4>
@@ -71,8 +71,7 @@ export default function Footer() {
                 <MapPin size={20} className="text-[#141824] shrink-0 mt-0.5" />
                 <div>
                   <p className="font-semibold text-[#141824] mb-1">{t("MENUA CONSULTING", "MENUA CONSULTING")}</p>
-                  <p>{t("92 rue des Pyrénées", "92 rue des Pyrénées")}</p>
-                  <p>{t("75020 Paris", "75020 Paris")}</p>
+                  <p>{t("92 rue des Pyrénées – 75020 Paris", "92 rue des Pyrénées – 75020 Paris")}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">

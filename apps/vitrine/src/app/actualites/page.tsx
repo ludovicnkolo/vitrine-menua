@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 
 export default function ActualitesPage() {
@@ -31,25 +31,31 @@ export default function ActualitesPage() {
         </div>
         <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="animate-fade-in-up stagger-1 text-white text-[1.8rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+            <h1 className="animate-fade-in-up stagger-1 text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Actualités", "News")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
+            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
               {t(
                 "MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles afin d'éclairer ses clients sur les enjeux qui impactent leurs activités.",
                 "MENUA CONSULTING ensures a regular watch on financial, accounting, wealth, regulatory and operational developments to enlighten its clients on the issues that impact their activities."
               )}
             </p>
+            <div className="animate-fade-in-up stagger-4">
+              <Link href="#articles" className="inline-flex items-center gap-3 px-8 py-4 bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
+                {t("Découvrir nos articles", "Discover our articles")}
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── SEPARATOR ── */}
-      <div className="w-full h-8 md:h-16 bg-white"></div>
+      {/* ── SEPARATION BLANC ── */}
+      <div className="w-full h-8 md:h-[5.75rem] bg-white"></div>
 
       {/* ── 6.2 À LA UNE (Dark Section) ── */}
-      <section id="articles" className="relative w-full bg-[#141824] section-padding scroll-mt-20">
+      <section id="articles" className="relative w-full bg-[#141824] pt-12 md:pt-[5.75rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="mb-12">
@@ -80,11 +86,10 @@ export default function ActualitesPage() {
               </p>
               
               <div className="flex justify-end mt-auto">
-                <a href="#" className="text-[#141824] group-hover:text-white text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 transition-colors duration-300">
+                <a href="#" className="inline-flex items-center gap-2 text-[#141824] group-hover:text-white font-bold tracking-wider uppercase text-[0.7rem] transition-colors duration-300">
                   {t("LIRE L'ARTICLE", "READ ARTICLE")} 
-                  <span className="w-5 h-5 rounded-full border border-[#141824] group-hover:border-white flex items-center justify-center transition-colors duration-300">
-                    <ArrowRight size={10} />
-                  </span>
+                  <span className="w-6 h-[1px] bg-[#141824] group-hover:bg-white group-hover:w-10 transition-all duration-300"></span>
+                  <ChevronRight size={14} className="-ml-2 group-hover:text-white transition-colors duration-300" />
                 </a>
               </div>
             </div>
@@ -92,11 +97,8 @@ export default function ActualitesPage() {
         </div>
       </section>
 
-      {/* ── SEPARATOR ── */}
-      <div className="w-full h-8 md:h-16 bg-white"></div>
-
       {/* ── 6.3 ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES ── */}
-      <section className="relative w-full bg-white section-padding">
+      <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24">
         <div className="laplace-container max-w-6xl mx-auto">
           <div>
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
@@ -145,11 +147,10 @@ export default function ActualitesPage() {
                     )}
                   </p>
                   <div className="flex justify-end mt-auto">
-                    <a href="#" className="text-[#141824] group-hover:text-white text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 transition-colors duration-300">
+                    <a href="#" className="inline-flex items-center gap-2 text-[#141824] group-hover:text-white font-bold tracking-wider uppercase text-[0.7rem] transition-colors duration-300">
                       {t("LIRE L'ARTICLE", "READ ARTICLE")} 
-                      <span className="w-5 h-5 rounded-full border border-[#141824] group-hover:border-white flex items-center justify-center transition-colors duration-300">
-                        <ArrowRight size={10} />
-                      </span>
+                      <span className="w-6 h-[1px] bg-[#141824] group-hover:bg-white group-hover:w-10 transition-all duration-300"></span>
+                      <ChevronRight size={14} className="-ml-2 group-hover:text-white transition-colors duration-300" />
                     </a>
                   </div>
                 </div>
@@ -218,12 +219,9 @@ export default function ActualitesPage() {
         </div>
       </section>
 
-      {/* ── SEPARATOR ── */}
-      <div className="w-full h-8 md:h-16 bg-white"></div>
-
       {/* ── LINKEDIN BANNER ── */}
-      <section id="linkedin" className="relative w-full bg-[#141824] section-padding scroll-mt-20">
-        <div className="laplace-container max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+      <section id="linkedin" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
+        <div className="laplace-container max-w-5xl mx-auto bg-[#141824] p-8 md:p-12 shadow-2xl border-t-4 border-t-[#e8e1d7] flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-6">
             <div className="w-16 h-16 rounded-md border border-[#e8e1d7]/30 flex items-center justify-center shrink-0">
               <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
@@ -243,15 +241,16 @@ export default function ActualitesPage() {
           </div>
           <div className="shrink-0 text-center md:text-right mt-4 md:mt-0">
 
-            <a href="#" className="text-white text-[0.75rem] font-bold tracking-widest uppercase flex items-center gap-3 justify-end hover:text-[#e8e1d7] transition-colors">
-              {t("RETROUVEZ-NOUS SUR LINKEDIN", "FIND US ON LINKEDIN")} <ArrowRight size={14} />
+            <a href="#" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[0.85rem] font-bold justify-end hover:text-[#e8e1d7] transition-colors group">
+              {t("RETROUVEZ-NOUS SUR LINKEDIN", "FIND US ON LINKEDIN")} 
+              <span className="w-8 h-[1px] bg-white group-hover:w-12 transition-all duration-300"></span>
+              <ChevronRight size={18} className="-ml-2" />
             </a>
           </div>
         </div>
       </section>
 
-      {/* ── SEPARATOR ── */}
-      <div className="w-full h-8 md:h-16 bg-white"></div>
+
 
     </main>
   );

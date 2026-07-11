@@ -33,6 +33,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'MENUA CRM Backend is running' });
 });
 
+// Forms routes (Contact & Join)
+const formsRouter = require('./routes/forms');
+app.use('/api/forms', formsRouter);
+
 // Get all dossiers
 app.get('/api/dossiers', async (req, res) => {
   try {

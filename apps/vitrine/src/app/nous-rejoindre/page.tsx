@@ -6,6 +6,35 @@ import { useLanguage } from "@/components/LanguageProvider";
 export default function NousRejoindre() {
   const { t } = useLanguage();
   const [profileType, setProfileType] = useState<"individual" | "company">("individual");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error", message: string } | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+    
+    try {
+      const formData = new FormData(e.currentTarget);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const res = await fetch(`${apiUrl}/api/forms/join`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      
+      if (res.ok && data.success) {
+        setSubmitStatus({ type: "success", message: data.message || "Votre candidature a été envoyée avec succès." });
+        (e.target as HTMLFormElement).reset();
+      } else {
+        setSubmitStatus({ type: "error", message: data.error || "Une erreur s'est produite." });
+      }
+    } catch (error) {
+      setSubmitStatus({ type: "error", message: "Impossible d'envoyer la candidature." });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <main className="flex flex-col w-full min-h-screen">
@@ -23,7 +52,7 @@ export default function NousRejoindre() {
         </div>
         <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="animate-fade-in-up stagger-1 text-white text-[1.8rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+            <h1 className="animate-fade-in-up stagger-1 text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Nous rejoindre", "Join Us")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
@@ -37,11 +66,8 @@ export default function NousRejoindre() {
         </div>
       </section>
 
-      {/* ── SEPARATOR ── */}
-      <div className="w-full h-8 md:h-16 bg-white"></div>
-
       {/* ── CONTENT SECTION (Laplace Styling) ── */}
-      <section className="relative w-full bg-[#f5f7fa] section-padding">
+      <section className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.75rem] pb-16 md:pb-24">
         <div className="laplace-container flex flex-col lg:flex-row gap-12 lg:gap-16">
 
           {/* Left Column (Profiles) */}
@@ -89,7 +115,7 @@ export default function NousRejoindre() {
           <div className="w-full lg:w-[60%] bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 lg:p-16 shadow-xl">
             <h3 className="text-[1.8rem] font-semibold text-[#141824] mb-10 uppercase tracking-wider">{t("Formulaire de recrutement", "Recruitment Form")}</h3>
             
-            <form className="space-y-10">
+            <form className="space-y-10" onSubmit={handleSubmit}>
 
               <div>
                 <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Vous êtes", "You are")}</p>
@@ -126,11 +152,11 @@ export default function NousRejoindre() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     <div>
                       <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Nom de l'entreprise", "Company Name")} <span className="text-red-500">*</span></label>
-                      <input type="text" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                      <input type="text" name="company" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
                     </div>
                     <div>
                       <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("SIRET / Numéro d'identification", "SIRET / ID Number")} <span className="text-red-500">*</span></label>
-                      <input type="text" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                      <input type="text" name="siret" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
                     </div>
                   </div>
                 )}
@@ -138,22 +164,22 @@ export default function NousRejoindre() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
                     <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Nom", "Last Name")} <span className="text-red-500">*</span></label>
-                    <input type="text" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                    <input type="text" name="lastName" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
                   </div>
                   <div>
                     <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Prénom", "First Name")} <span className="text-red-500">*</span></label>
-                    <input type="text" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                    <input type="text" name="firstName" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                   <div>
                     <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">Email <span className="text-red-500">*</span></label>
-                    <input type="email" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                    <input type="email" name="email" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
                   </div>
                   <div>
                     <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")} <span className="text-red-500">*</span></label>
-                    <input type="tel" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                    <input type="tel" name="phone" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
                   </div>
                 </div>
               </div>
@@ -176,7 +202,7 @@ export default function NousRejoindre() {
                       t("Autre", "Other")
                     ].map((opt, i) => (
                       <label key={i} className="flex items-start gap-3 text-[1.05rem] text-[#141824] font-light cursor-pointer group">
-                        <input type="checkbox" className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]" /> 
+                        <input type="checkbox" name="skills" value={opt} className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]" /> 
                         <span className="group-hover:text-[#6e7891] transition-colors">{opt}</span>
                       </label>
                     ))}
@@ -186,7 +212,7 @@ export default function NousRejoindre() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                   <div>
                     <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Années d'expérience", "Years of experience")} <span className="text-red-500">*</span></label>
-                    <select className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
+                    <select name="experience" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
                       <option value="">{t("Sélectionnez", "Select")}</option>
                       <option>Moins de 2 ans</option>
                       <option>2 à 5 ans</option>
@@ -196,18 +222,18 @@ export default function NousRejoindre() {
                   </div>
                   <div>
                     <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Langues parlées", "Languages spoken")} <span className="text-red-500">*</span></label>
-                    <input type="text" placeholder={t("Ex: Français, Anglais...", "E.g. French, English...")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                    <input type="text" name="languages" placeholder={t("Ex: Français, Anglais...", "E.g. French, English...")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                   <div>
                     <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Pays / Ville", "Country / City")} <span className="text-red-500">*</span></label>
-                    <input type="text" placeholder={t("Ex: France, Paris", "E.g. France, Paris")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                    <input type="text" name="location" placeholder={t("Ex: France, Paris", "E.g. France, Paris")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
                   </div>
                   <div>
                     <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Disponibilité", "Availability")} <span className="text-red-500">*</span></label>
-                    <select className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
+                    <select name="availability" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
                       <option value="">{t("Sélectionnez votre disponibilité", "Select your availability")}</option>
                       <option>{t("Immédiate", "Immediate")}</option>
                       <option>{t("Sous 15 jours", "Within 15 days")}</option>
@@ -219,7 +245,7 @@ export default function NousRejoindre() {
 
                 <div className="mt-8">
                   <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Lien LinkedIn ou Portfolio", "LinkedIn Link or Portfolio")}</label>
-                  <input type="url" placeholder="https://" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" />
+                  <input type="url" name="linkedin" placeholder="https://" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" />
                 </div>
               </div>
 
@@ -234,7 +260,7 @@ export default function NousRejoindre() {
 
               <div>
                 <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Message", "Message")} <span className="text-red-500">*</span></label>
-                <textarea rows={5} className="w-full border border-[#d1d5db] bg-transparent p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors" required></textarea>
+                <textarea name="message" rows={5} className="w-full border border-[#d1d5db] bg-transparent p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors" required></textarea>
               </div>
 
               <div>
@@ -252,9 +278,15 @@ export default function NousRejoindre() {
                 </p>
               </div>
 
+              {submitStatus && (
+                <div className={`p-4 font-bold border-l-4 ${submitStatus.type === "success" ? "bg-green-50 text-green-800 border-green-500" : "bg-red-50 text-red-800 border-red-500"}`}>
+                  {submitStatus.message}
+                </div>
+              )}
+
               <div className="flex justify-end pt-6">
-                <button type="submit" className="inline-flex items-center justify-center bg-[#141824] text-white px-10 py-4 font-bold uppercase tracking-wider text-[0.85rem] hover:bg-[#1f2638] transition-colors duration-300 w-full md:w-auto">
-                  {t("Envoyer ma candidature", "Send my application")}
+                <button type="submit" disabled={isSubmitting} className="inline-flex items-center justify-center bg-[#141824] text-white px-10 py-4 font-bold uppercase tracking-wider text-[0.85rem] hover:bg-[#1f2638] transition-colors duration-300 w-full md:w-auto disabled:opacity-70 disabled:cursor-not-allowed">
+                  {isSubmitting ? t("Envoi en cours...", "Sending...") : t("Envoyer ma candidature", "Send my application")}
                 </button>
               </div>
             </form>
@@ -262,8 +294,7 @@ export default function NousRejoindre() {
         </div>
       </section>
 
-      {/* ── SEPARATOR ── */}
-      <div className="w-full h-8 md:h-16 bg-white"></div>
+
 
     </main>
   );

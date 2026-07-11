@@ -54,7 +54,12 @@ export default function MentionsLegales() {
 
             <div>
               <h2 className="text-[1.2rem] font-bold text-[#141824] mb-4">{t("Hébergement", "Hosting")}</h2>
-              <p className="italic text-[#a0aabf]">{t("Le site est hébergé par : (à compléter ultérieurement)", "The site is hosted by: (to be completed later)")}</p>
+              <p className="text-[#6e7891]">
+                {t("Le site est hébergé par :", "The site is hosted by:")} <br/>
+                <strong className="text-[#141824]">Infomaniak Network SA</strong><br/>
+                Rue Eugène-Marziano 25, 1227 Genève - Suisse<br/>
+                {t("IDE ", "IDE ")}<span className="font-sans font-medium">&amp;</span>{t(" TVA", " VAT")} : CHE-103.167.648
+              </p>
             </div>
 
             <div>

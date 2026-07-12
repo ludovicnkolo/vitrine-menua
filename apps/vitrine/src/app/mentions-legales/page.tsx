@@ -54,11 +54,11 @@ export default function MentionsLegales() {
 
             <div>
               <h2 className="text-[1.2rem] font-bold text-[#141824] mb-4">{t("Hébergement", "Hosting")}</h2>
-              <p className="text-[#6e7891]">
+              <p className="text-[#6e7891] mb-6">
                 {t("Le site est hébergé par :", "The site is hosted by:")} <br/>
-                <strong className="text-[#141824]">Infomaniak Network SA</strong><br/>
-                Rue Eugène-Marziano 25, 1227 Genève - Suisse<br/>
-                {t("IDE ", "IDE ")}<span className="font-sans font-medium">&amp;</span>{t(" TVA", " VAT")} : CHE-103.167.648
+                <strong className="text-[#141824]">OVH SAS (OVHcloud)</strong><br/>
+                2 rue Kellermann, 59100 Roubaix - France<br/>
+                {t("Site web :", "Website:")} <a href="https://www.ovhcloud.com" target="_blank" rel="noreferrer" className="text-[#3874ff] hover:underline">www.ovhcloud.com</a>
               </p>
             </div>
 

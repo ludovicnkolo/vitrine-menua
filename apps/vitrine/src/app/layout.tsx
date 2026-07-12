@@ -17,7 +17,11 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Menua Consulting",
+  metadataBase: new URL('https://menuaconsulting.com'),
+  title: {
+    default: "Menua Consulting | Externalisation Back et Middle Office",
+    template: "%s | Menua Consulting",
+  },
   description:
     "Menua Consulting sécurise l'exécution de vos opérations back et middle office pour banques, cabinets de gestion de patrimoine, sociétés financières et experts-comptables en France.",
   keywords: [
@@ -27,12 +31,22 @@ export const metadata: Metadata = {
     "gestion de patrimoine",
     "cabinets financiers France",
   ],
+  alternates: {
+    canonical: '/',
+    languages: {
+      'fr-FR': '/',
+      'en-US': '/en',
+    },
+  },
   openGraph: {
     title: "Menua Consulting | Externalisation Back et Middle Office",
     description:
       "Nous sécurisons l'exécution de vos opérations back et middle office afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
+    url: 'https://menuaconsulting.com',
+    siteName: 'Menua Consulting',
     type: "website",
     locale: "fr_FR",
+    alternateLocale: "en_US",
   },
 };
 

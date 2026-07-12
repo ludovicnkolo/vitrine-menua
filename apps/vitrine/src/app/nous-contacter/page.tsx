@@ -91,7 +91,7 @@ export default function NousContacter() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/img/contact-hero.jpg" 
+            src="/img/connaitre-intro.jpg" 
             alt="Nous contacter" 
             className="w-full h-full object-cover" 
           />

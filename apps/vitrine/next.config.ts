@@ -1,8 +1,24 @@
 import type { NextConfig } from "next";
+import os from "os";
+
+// Fonction pour récupérer dynamiquement toutes les adresses IP locales de la machine
+function getLocalIPs() {
+  const interfaces = os.networkInterfaces();
+  const ips: string[] = ['localhost'];
+  
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name] || []) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        ips.push(iface.address);
+      }
+    }
+  }
+  return ips;
+}
 
 const nextConfig: NextConfig = {
-  // Autoriser l'accès depuis l'autre appareil du réseau pour éviter le blocage du Javascript (menu)
-  allowedDevOrigins: ['192.168.0.68', '10.223.2.62', '10.223.0.0/16', '10.151.202.62', 'localhost', '10.10.1.68', '192.168.1.0/24', '10.10.1.0/24', '192.168.0.0/16', '10.0.0.0/8', '172.16.0.0/12'],
+  // Autoriser automatiquement l'accès HMR depuis toutes les IP de la machine (évite le blocage sur réseau local)
+  allowedDevOrigins: getLocalIPs(),
   output: "standalone",
   /* config options here */
 };

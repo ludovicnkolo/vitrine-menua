@@ -14,7 +14,7 @@ export default function NosSolutionsPage() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/img/solutions-hero-v3.jpg" 
+            src="/img/solutions-hero.jpg" 
             alt="Nos solutions" 
             className="w-full h-full object-cover object-[center_35%]" 
             onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} 
@@ -51,7 +51,7 @@ export default function NosSolutionsPage() {
             {/* Left Image (Desktop only) */}
             <div className="hidden lg:block w-full lg:w-4/12 lg:h-[350px] lg:-mt-12 z-20 relative shrink-0">
               <img 
-                src="/img/solutions-hero-v3.jpg" 
+                src="/img/solutions-hero.jpg" 
                 alt="Nos solutions" 
                 className="w-full h-full object-cover shadow-xl" 
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} 
@@ -72,7 +72,7 @@ export default function NosSolutionsPage() {
                 {/* Mobile Image (Visible only on mobile) */}
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
                   <img
-                    src="/img/solutions-hero-v3.jpg"
+                    src="/img/solutions-hero.jpg"
                     alt="Nos solutions"
                     className="w-full h-full object-cover object-center"
                     onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
@@ -131,7 +131,7 @@ export default function NosSolutionsPage() {
           {/* Right Column: Features Card */}
           <div className="w-full lg:w-7/12 relative">
             <div className="relative bg-white p-10 lg:p-14 shadow-2xl border border-[#e8e1d7] border-t-8 border-t-[#e8e1d7]">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
+              <h4 className="text-center text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
                 {t("Exemples de besoins :", "Examples of needs:")}
               </h4>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-[#6e7891] font-medium text-[0.95rem]">
@@ -174,9 +174,14 @@ export default function NosSolutionsPage() {
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
               {t("La durée de la mission est définie selon le périmètre, les volumes à traiter, les objectifs attendus et les contraintes propres à l’organisation du client.", "The duration of the mission is defined according to the scope, the volumes to be processed, the expected objectives and the constraints specific to the client's organization.")}
             </p>
+            
+            {/* Mobile Image */}
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
+              <img src="/img/solutions-duree.jpg" alt="Durée" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+            </div>
             <div className="w-full aspect-[4/5] rounded-sm overflow-hidden shadow-lg hidden lg:block">
               <img 
-                src="/img/duree-v3.jpg" 
+                src="/img/solutions-duree.jpg" 
                 alt="Durée" 
                 className="w-full h-full object-cover" 
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} 
@@ -252,7 +257,7 @@ export default function NosSolutionsPage() {
           {/* Features Card (Left side visually) */}
           <div className="w-full lg:w-7/12 relative">
             <div className="relative bg-white p-10 lg:p-14 shadow-2xl border border-[#e8e1d7] border-t-8 border-t-[#e8e1d7]">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
+              <h4 className="text-center text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
                 {t("Dispositifs possibles :", "Possible systems:")}
               </h4>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-[#6e7891] font-medium text-[0.95rem]">
@@ -308,7 +313,7 @@ export default function NosSolutionsPage() {
           {/* Features Card (Right side visually) */}
           <div className="w-full lg:w-7/12 relative">
             <div className="relative bg-white p-10 lg:p-14 shadow-2xl border border-[#e8e1d7] border-t-8 border-t-[#141824]">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
+              <h4 className="text-center text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
                 {t("Modes d’intervention possibles :", "Possible intervention modes:")}
               </h4>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-[#6e7891] font-medium text-[0.95rem]">

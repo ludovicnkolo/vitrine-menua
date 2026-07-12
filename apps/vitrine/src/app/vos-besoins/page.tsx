@@ -14,7 +14,7 @@ export default function VosBesoinsPage() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/img/besoins-hero-v3.jpg" 
+            src="/img/besoins-hero.jpg" 
             alt="Hero Vos Besoins" 
             className="w-full h-full object-cover object-[center_35%]" 
             onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} 
@@ -60,7 +60,7 @@ export default function VosBesoinsPage() {
             {/* Mobile Image (Visible only on mobile) */}
             <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
               <img
-                src="/img/besoins-meeting.jpg"
+                src="/img/besoins-intro.jpg"
                 alt="Vos besoins"
                 className="w-full h-full object-cover object-center"
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
@@ -92,7 +92,7 @@ export default function VosBesoinsPage() {
           {/* Image — absolutely overlapping the right side of the white box */}
           <div className="hidden lg:block absolute -top-24 right-0 w-[36%] h-[75%] z-20">
             <img
-              src="/img/besoins-meeting.jpg"
+              src="/img/besoins-intro.jpg"
               alt="Vos besoins"
               className="w-full h-full object-cover shadow-xl"
               onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
@@ -106,7 +106,7 @@ export default function VosBesoinsPage() {
       <section className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
-             <img src="/img/vos-besoins_3.jpg" alt="Finance & Reporting" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+             <img src="/img/besoins-finance.jpg" alt="Finance & Reporting" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
           </div>
           <div className="w-full lg:w-7/12 bg-white p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
             <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">
@@ -118,7 +118,7 @@ export default function VosBesoinsPage() {
                 "MENUA CONSULTING supports financial teams in the production, structuring and reliability of reports intended for activity management, performance monitoring and decision-making support."
               )}
             </p>
-            <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>
+            <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-[#6e7891] font-light text-[0.95rem]">
               {[
                 t("reporting financier", "financial reporting"),
@@ -144,13 +144,18 @@ export default function VosBesoinsPage() {
         <div className="laplace-container max-w-6xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
           <div className="w-full lg:w-7/12 bg-[#f5f7fa] p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
             <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">{t("Contrôle de gestion", "Management control")}</h3>
+            
+            {/* Mobile Image */}
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
+              <img src="/img/besoins-gestion.jpg" alt="Contrôle de gestion" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
+            </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
               {t(
                 "MENUA CONSULTING intervient en appui opérationnel des équipes de contrôle de gestion pour renforcer le suivi budgétaire, l’analyse des écarts et le pilotage de la performance. L’objectif est d’aider les organisations à mieux suivre leurs coûts, leurs marges, leurs objectifs et leurs indicateurs, à partir de données structurées et fiables.",
                 "MENUA CONSULTING provides operational support to management control teams to strengthen budget monitoring, variance analysis and performance management. The objective is to help organizations better monitor their costs, margins, objectives and indicators, based on structured and reliable data."
               )}
             </p>
-            <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>
+            <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-[#6e7891] font-light text-[0.95rem]">
               {[
                 t("suivi budgétaire", "budget tracking"),
@@ -168,8 +173,8 @@ export default function VosBesoinsPage() {
               ))}
             </ul>
           </div>
-          <div className="w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
-             <img src="/img/gestion-v3.jpg" alt="Contrôle de gestion" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
+          <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
+             <img src="/img/besoins-gestion.jpg" alt="Contrôle de gestion" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
           </div>
         </div>
       </section>
@@ -208,7 +213,7 @@ export default function VosBesoinsPage() {
           {/* Right Column: Features Card */}
           <div className="w-full lg:w-7/12 relative">
             <div className="relative bg-white p-10 lg:p-14 shadow-2xl border border-[#e8e1d7] border-t-8 border-t-[#e8e1d7]">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
+              <h4 className="text-center text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
                 {t("Besoins couverts :", "Needs covered:")}
               </h4>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-[#6e7891] font-medium text-[0.95rem]">
@@ -245,20 +250,25 @@ export default function VosBesoinsPage() {
       {/* ── 3.6 SUPPORT COMPTABLE & DATA (Image Left, Card Right) ── */}
       <section className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          <div className="w-full lg:w-5/12 h-[400px] lg:h-[650px] shadow-xl">
-             <img src="/img/data-v3.jpg" alt="Support comptable & Data" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+          <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[650px] shadow-xl">
+             <img src="/img/besoins-data.jpg" alt="Support comptable & Data" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
           </div>
           <div className="w-full lg:w-7/12 bg-white p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
             <h3 className="text-[#141824] font-bold text-[1.4rem] mb-6">
               {t("Support comptable", "Accounting")} <span className="font-sans font-medium">&amp;</span> {t("Data", "Data Support")}
             </h3>
+            
+            {/* Mobile Image */}
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
+              <img src="/img/besoins-data.jpg" alt="Support comptable & Data" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+            </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
               {t(
                 "MENUA CONSULTING intervient en support opérationnel des équipes comptables, administratives et data dans le traitement, la fiabilisation, le classement et la structuration des informations nécessaires au suivi comptable, administratif et opérationnel.",
                 "MENUA CONSULTING acts as operational support for accounting, administrative and data teams in the processing, reliability, classification and structuring of information necessary for accounting, administrative and operational monitoring."
               )}
             </p>
-            <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>
+            <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-[#6e7891] font-medium text-[0.95rem]">
               {[
                 t("collecte, classement et contrôle des pièces comptables", "collection, classification and control of accounting documents"),
@@ -298,7 +308,7 @@ export default function VosBesoinsPage() {
                 "MENUA CONSULTING supports wealth management firms, family offices and wealth structures in the processing, preparation and administrative monitoring of client files."
               )}
             </p>
-            <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>
+            <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-[#6e7891] font-medium text-[0.95rem]">
               {[
                 t("montage des dossiers d’entrée en relation", "assembly of onboarding files"),
@@ -319,7 +329,7 @@ export default function VosBesoinsPage() {
             </ul>
           </div>
           <div className="w-full lg:w-5/12 h-[400px] lg:h-[600px] shadow-xl">
-             <img src="/img/cgp-v3.jpg" alt="Support aux CGP" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+             <img src="/img/besoins-cgp.jpg" alt="Support aux CGP" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
           </div>
         </div>
       </section>
@@ -348,7 +358,7 @@ export default function VosBesoinsPage() {
           {/* Right Column: Features Card */}
           <div className="w-full lg:w-7/12 relative">
             <div className="relative bg-white p-10 lg:p-14 shadow-2xl border border-[#e8e1d7] border-t-8 border-t-[#141824]">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
+              <h4 className="text-center text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
                 {t("Besoins couverts :", "Needs covered:")}
               </h4>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-[#6e7891] font-medium text-[0.95rem]">

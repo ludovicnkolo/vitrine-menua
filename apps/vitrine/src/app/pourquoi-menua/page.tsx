@@ -14,7 +14,7 @@ export default function PourquoiMenuaPage() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/img/pourquoi-hero-v3.jpg" 
+            src="/img/pourquoi-hero.jpg" 
             alt="Pourquoi Menua Consulting" 
             className="w-full h-full object-cover object-[center_35%]" 
             onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} 
@@ -60,7 +60,7 @@ export default function PourquoiMenuaPage() {
             {/* Mobile Image (Visible only on mobile) */}
             <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
               <img
-                src="/img/pourquoi-hero-v3.jpg"
+                src="/img/pourquoi-hero.jpg"
                 alt="Pourquoi Menua"
                 className="w-full h-full object-cover object-center"
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
@@ -86,7 +86,7 @@ export default function PourquoiMenuaPage() {
           {/* Image — absolutely overlapping the right side of the white box */}
           <div className="hidden lg:block absolute -top-24 right-0 w-[36%] h-[75%] z-20">
             <img
-              src="/img/pourquoi-hero-v3.jpg"
+              src="/img/pourquoi-hero.jpg"
               alt="Pourquoi Menua"
               className="w-full h-full object-cover shadow-xl"
               onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
@@ -99,11 +99,16 @@ export default function PourquoiMenuaPage() {
       {/* ── 5.3 BÉNÉFICES (Image Left, Card Right) ── */}
       <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          <div className="w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
-             <img src="/img/benefices-v3.jpg" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
+          <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
+             <img src="/img/besoins-finance.jpg" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
           </div>
           <div className="w-full lg:w-7/12 bg-white p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
             <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">{t("Bénéfices", "Benefits")}</h3>
+            
+            {/* Mobile Image */}
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
+              <img src="/img/besoins-finance.jpg" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
+            </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
               {t(
                 "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité, renforcez votre fiabilité et soutenez durablement votre chiffre d’affaires.",
@@ -116,18 +121,18 @@ export default function PourquoiMenuaPage() {
                 "This organization allows you to reduce your internal costs, better absorb your business volumes and sustainably build customer loyalty."
               )}
             </p>
-            <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Bénéfices clés :", "Key benefits:")}</h4>
+            <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Bénéfices clés :", "Key benefits:")}</h4>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-[#6e7891] font-light text-[0.95rem]">
               {[
-                t("gain de temps ;", "time saving;"),
-                t("réduction des charges internes ;", "reduction of internal costs;"),
-                t("productivité renforcée ;", "enhanced productivity;"),
-                t("meilleure continuité opérationnelle ;", "better operational continuity;"),
-                t("fiabilité accrue des traitements ;", "increased processing reliability;"),
-                t("meilleure absorption des pics d’activité ;", "better absorption of activity peaks;"),
-                t("suivi plus structuré des dossiers ;", "more structured monitoring of files;"),
-                t("amélioration de la qualité de service ;", "improvement of service quality;"),
-                t("contribution à la fidélisation de vos clients.", "contribution to building customer loyalty."),
+                t("gain de temps", "time saving"),
+                t("réduction des charges internes", "reduction of internal costs"),
+                t("productivité renforcée", "enhanced productivity"),
+                t("meilleure continuité opérationnelle", "better operational continuity"),
+                t("fiabilité accrue des traitements", "increased processing reliability"),
+                t("meilleure absorption des pics d’activité", "better absorption of activity peaks"),
+                t("suivi plus structuré des dossiers", "more structured monitoring of files"),
+                t("amélioration de la qualité de service", "improvement of service quality"),
+                t("contribution à la fidélisation de vos clients", "contribution to building customer loyalty"),
                 t("Chiffre d’affaires soutenu", "Supported turnover")
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3"><span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span><span>{item}</span></li>
@@ -213,24 +218,29 @@ export default function PourquoiMenuaPage() {
                 "Our interventions are based on a four-eyes control, structured working methods, training of mobilized resources and compliance with your operational, quality and regulatory requirements."
               )}
             </p>
+            {/* Mobile Image */}
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
+              <img src="/img/connaitre-approche.jpg" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+            </div>
+            
             <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Nos engagements :", "Our commitments:")}</h4>
             <ul className="space-y-3 text-[#6e7891] font-light text-[0.95rem]">
               {[
-                t("qualité des livrables ;", "quality of deliverables;"),
-                t("respect des délais;", "respect for deadlines;"),
-                t("traçabilité des opérations réalisées ;", "traceability of operations carried out;"),
-                t("contrôle à quatre yeux lorsque le périmètre le nécessite ;", "four-eyes control when the scope requires it;"),
-                t("communication claire et régulière ;", "clear and regular communication;"),
-                t("confidentialité des informations confiées ;", "confidentiality of entrusted information;"),
-                t("respect des procédures internes du client ;", "compliance with the client's internal procedures;"),
-                t("intervention sous supervision des équipes ou professionnels habilités lorsque cela est requis.", "intervention under the supervision of authorized teams or professionals when required.")
+                t("qualité des livrables", "quality of deliverables"),
+                t("respect des délais", "respect for deadlines"),
+                t("traçabilité des opérations réalisées", "traceability of operations carried out"),
+                t("contrôle à quatre yeux lorsque le périmètre le nécessite", "four-eyes control when the scope requires it"),
+                t("communication claire et régulière", "clear and regular communication"),
+                t("confidentialité des informations confiées", "confidentiality of entrusted information"),
+                t("respect des procédures internes du client", "compliance with the client's internal procedures"),
+                t("intervention sous supervision des équipes ou professionnels habilités lorsque cela est requis", "intervention under the supervision of authorized teams or professionals when required")
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3"><span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span><span>{item}</span></li>
               ))}
             </ul>
           </div>
-          <div className="w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
-             <img src="/img/engagements-v3.jpg" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+          <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
+             <img src="/img/connaitre-approche.jpg" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
           </div>
         </div>
       </section>
@@ -253,12 +263,7 @@ export default function PourquoiMenuaPage() {
               )}
             </p>
             
-            <div className="mt-12 text-center">
-              <Link href="/nous-contacter" className="inline-flex items-center gap-3 px-8 py-4 bg-[#141824] text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-[#1f2638] transition-colors group">
-                {t("Présenter un besoin", "Submit a need")}
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
+
           </div>
         </div>
       </section>

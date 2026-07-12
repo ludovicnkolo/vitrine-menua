@@ -62,7 +62,7 @@ export default function Home() {
             {/* Left Image (Desktop only) */}
             <div className="hidden lg:block w-full lg:w-4/12 lg:h-[420px] z-20 relative shrink-0">
               <img 
-                src="/img/intro-office.jpg" 
+                src="/img/accueil-intro.jpg" 
                 alt="Intro" 
                 className="w-full h-full object-cover" 
                 onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} 
@@ -86,7 +86,7 @@ export default function Home() {
                 {/* Mobile Image (Visible only on mobile) */}
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[200px] my-6 z-20 relative shadow-md">
                   <img 
-                    src="/img/intro-office.jpg" 
+                    src="/img/accueil-intro.jpg" 
                     alt="Intro" 
                     className="w-full h-full object-cover" 
                     onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} 
@@ -117,7 +117,7 @@ export default function Home() {
         <div className="laplace-container max-w-[1200px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
           
           {/* Left Column: Narrative */}
-          <div className="w-full md:w-5/12 -translate-y-16">
+          <div className="w-full md:w-5/12 md:-translate-y-16">
             <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
             <h2 className="text-white text-[1.3rem] md:text-[1.5rem] font-bold mb-6 uppercase tracking-wider">
               {t("Pourquoi MENUA CONSULTING ?", "Why MENUA CONSULTING?")}
@@ -247,7 +247,7 @@ export default function Home() {
         <div className="laplace-container max-w-[1200px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
           
           {/* Left Column: Narrative */}
-          <div className="w-full md:w-5/12 -translate-y-16">
+          <div className="w-full md:w-5/12 md:-translate-y-16">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("Nos solutions d'externalisation", "Our outsourcing solutions")}
@@ -325,15 +325,15 @@ export default function Home() {
             {[
               {
                 category: t("Finance et Comptabilité", "Finance and Accounting"),
-                img: "/img/article-finance.jpg",
+                img: "/img/accueil-actus.jpg",
                 fallback: "/img/besoins-meeting.jpg",
                 title: t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news"),
                 desc: t("Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations.", "Analysis of developments likely to impact your organizations."),
                 href: "/actualites",
               },
               {
-                category: t("Publications", "Publications"),
-                img: "/img/article-publications.jpg",
+                category: t("Finance", "Finance"),
+                img: "/img/accueil-actus.jpg",
                 fallback: "/img/intro-office.jpg",
                 title: t("Nos publications et prises de parole", "Our publications and statements"),
                 desc: t("Retrouvez les analyses et contenus publiés par MENUA CONSULTING sur les enjeux opérationnels et sectoriels.", "Find analyses and content published by MENUA CONSULTING on operational and sector issues."),
@@ -341,7 +341,7 @@ export default function Home() {
               },
               {
                 category: t("Réglementation", "Regulation"),
-                img: "/img/article-reglementation.jpg",
+                img: "/img/accueil-actus.jpg",
                 fallback: "/img/hero-paris.jpg",
                 title: t("Veille réglementaire et conformité", "Regulatory watch and compliance"),
                 desc: t("Restez informés des dernières évolutions réglementaires et adaptez vos processus opérationnels.", "Stay informed of the latest regulatory developments and adapt your operational processes."),

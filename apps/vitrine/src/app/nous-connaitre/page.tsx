@@ -14,7 +14,7 @@ export default function NousConnaitrePage() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/img/connaitre-hero-v3.jpg" 
+            src="/img/connaitre-hero.jpg" 
             alt="Hero Background" 
             className="w-full h-full object-cover object-[center_65%]" 
             onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} 
@@ -48,7 +48,7 @@ export default function NousConnaitrePage() {
             {/* Right Image (Desktop only) */}
             <div className="hidden lg:block w-full lg:w-4/12 lg:h-[420px] z-20 relative shrink-0">
               <img
-                src="/img/connaitre-approche-v3.jpg"
+                src="/img/connaitre-intro.jpg"
                 alt="Cabinet"
                 className="w-full h-full object-cover object-center"
               />
@@ -67,18 +67,18 @@ export default function NousConnaitrePage() {
               {/* Mobile Image (Visible only on mobile) */}
               <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
                 <img
-                  src="/img/connaitre-approche-v3.jpg"
+                  src="/img/connaitre-intro.jpg"
                   alt="Cabinet"
                   className="w-full h-full object-cover object-center"
                 />
               </div>
-              <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-8">
-                {t(
-                  "MENUA CONSULTING est un cabinet spécialisé dans l’externalisation opérationnelle des fonctions back et middle office.",
-                  "MENUA CONSULTING is a firm specializing in the operational outsourcing of back and middle office functions."
-                )}
-              </p>
               <div className="space-y-4 text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
+                <p>
+                  {t(
+                    "MENUA CONSULTING est un cabinet spécialisé dans l’externalisation opérationnelle des fonctions back et middle office.",
+                    "MENUA CONSULTING is a firm specializing in the operational outsourcing of back and middle office functions."
+                  )}
+                </p>
                 <p>
                   {t(
                     "Nous accompagnons les entreprises, les cabinets et les organisations qui souhaitent fiabiliser leurs opérations, sécuriser leurs processus et assurer la continuité de leurs activités quotidiennes.",
@@ -122,18 +122,20 @@ export default function NousConnaitrePage() {
               {t("Notre Expertise", "Our Expertise")}
             </h2>
             
-            <p className="text-[#141824] text-[1.2rem] md:text-[1.3rem] font-medium leading-relaxed mb-6">
-              {t(
-                "MENUA CONSULTING accompagne les entreprises, cabinets et organisations dans l’externalisation de leurs fonctions back et middle office en français et en anglais, afin de renforcer la fiabilité de leurs opérations, d’optimiser leurs ressources et de garantir la continuité de leurs activités.",
-                "MENUA CONSULTING supports companies, firms and organizations in the outsourcing of their back and middle office functions in French and English, in order to strengthen the reliability of their operations, optimize their resources and ensure the continuity of their activities."
-              )}
-            </p>
-            <p className="text-[#6e7891] text-[1.05rem] md:text-[1.1rem] font-light leading-relaxed">
-              {t(
-                "Cette approche permet aux équipes internes de se concentrer sur les décisions stratégiques, les validations réglementaires et la relation client, tout en sécurisant le traitement opérationnel des activités back et middle office.",
-                "This approach allows internal teams to focus on strategic decisions, regulatory validations and customer relations, while securing the operational processing of back and middle office activities."
-              )}
-            </p>
+            <div className="space-y-6 text-[#6e7891] text-[1.05rem] md:text-[1.1rem] font-light leading-relaxed">
+              <p>
+                {t(
+                  "MENUA CONSULTING accompagne les entreprises, cabinets et organisations dans l’externalisation de leurs fonctions back et middle office en français et en anglais, afin de renforcer la fiabilité de leurs opérations, d’optimiser leurs ressources et de garantir la continuité de leurs activités.",
+                  "MENUA CONSULTING supports companies, firms and organizations in the outsourcing of their back and middle office functions in French and English, in order to strengthen the reliability of their operations, optimize their resources and ensure the continuity of their activities."
+                )}
+              </p>
+              <p>
+                {t(
+                  "Cette approche permet aux équipes internes de se concentrer sur les décisions stratégiques, les validations réglementaires et la relation client, tout en sécurisant le traitement opérationnel des activités back et middle office.",
+                  "This approach allows internal teams to focus on strategic decisions, regulatory validations and customer relations, while securing the operational processing of back and middle office activities."
+                )}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -151,9 +153,20 @@ export default function NousConnaitrePage() {
               <p className="text-[#141824] font-bold text-[1.1rem] uppercase tracking-wider mb-8">
                 {t("Notre approche repose sur quatre principes :", "Our approach is based on four principles:")}
               </p>
+
+              {/* Mobile Image */}
+              <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
+                <img 
+                  src="/img/connaitre-approche.jpg" 
+                  alt="Notre approche" 
+                  className="w-full h-full object-cover object-center" 
+                  onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} 
+                />
+              </div>
+
               <div className="w-[85%] aspect-[4/5] rounded-sm overflow-hidden shadow-lg hidden lg:block">
                 <img 
-                  src="/img/connaitre_3.jpg" 
+                  src="/img/connaitre-approche.jpg" 
                   alt="Notre approche" 
                   className="w-full h-full object-cover object-left" 
                   onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} 
@@ -227,23 +240,23 @@ export default function NousConnaitrePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {[
               {
-                title: t("1. Découverte", "1. Discovery"),
+                title: t("Découverte", "Discovery"),
                 desc: t("Analyse de votre organisation, de vos processus et de vos contraintes afin de définir précisément le périmètre d’intervention.", "Analysis of your organization, your processes and your constraints in order to precisely define the scope of intervention.")
               },
               {
-                title: t("2. Vérifications préalables", "2. Preliminary checks"),
+                title: t("Vérifications préalables", "Preliminary checks"),
                 desc: t("Vérification de l’identité juridique, de la situation administrative et de la cohérence opérationnelle du client ou partenaire, afin de sécuriser l’entrée en relation.", "Verification of the legal identity, the administrative situation and the operational consistency of the client or partner, in order to secure the onboarding.")
               },
               {
-                title: t("3. Analyse", "3. Analysis"),
+                title: t("Analyse", "Analysis"),
                 desc: t("Construction d’une proposition opérationnelle adaptée à vos besoins, incluant les profils, le mode d’organisation, les délais et les livrables attendus.", "Construction of an operational proposal adapted to your needs, including profiles, organization mode, deadlines and expected deliverables.")
               },
               {
-                title: <>{t("4. Mise en œuvre ", "4. Implementation ")}<span className="font-sans font-medium">&amp;</span>{t(" intégration", " integration")}</>,
+                title: <>{t("Mise en œuvre ", "Implementation ")}<span className="font-sans font-medium">&amp;</span>{t(" intégration", " integration")}</>,
                 desc: t("Déploiement des équipes, intégration aux outils, aux procédures et aux standards de votre organisation.", "Deployment of teams, integration into the tools, procedures and standards of your organization.")
               },
               {
-                title: t("5. Suivi dans la durée", "5. Long-term monitoring"),
+                title: t("Suivi dans la durée", "Long-term monitoring"),
                 desc: t("Pilotage continu de la mission, ajustements réguliers, contrôle qualité et suivi des livrables.", "Continuous steering of the mission, regular adjustments, quality control and monitoring of deliverables.")
               }
             ].map((step, idx) => (
@@ -330,6 +343,11 @@ export default function NousConnaitrePage() {
               {t("Accréditations, certifications et cadre d’intervention", "Accreditations, certifications and intervention framework")}
             </h2>
             
+            {/* Mobile Image */}
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
+              <img src="/img/connaitre-certifications.jpg" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
+            </div>
+            
             <div className="space-y-4 text-[#141824] text-[1.05rem] font-light leading-relaxed">
               <p>
                 {t(
@@ -381,9 +399,9 @@ export default function NousConnaitrePage() {
             </div>
           </div>
           
-          {/* Image (Right) */}
-          <div className="w-full lg:w-5/12 h-[300px] lg:h-[450px] shadow-xl">
-             <img src="/img/connaitre-cert.jpg" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
+          {/* Image (Right Desktop only) */}
+          <div className="hidden lg:block w-full lg:w-5/12 h-[300px] lg:h-[450px] shadow-xl">
+             <img src="/img/connaitre-certifications.jpg" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
           </div>
         </div>
       </section>

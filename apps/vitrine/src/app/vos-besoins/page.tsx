@@ -46,6 +46,14 @@ export default function VosBesoinsPage() {
       {/* ── 3.2 INTRODUCTION ── */}
       <section className="relative w-full bg-white pt-12 md:pt-[11.75rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container relative z-10">
+          {/* BREADCRUMB */}
+          <div className="absolute -top-8 md:-top-[8rem] left-6 md:left-12 lg:left-0 z-50">
+            <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
+              <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
+              <span className="mx-2">/</span>
+              <span>{t("Vos besoins", "Your needs")}</span>
+            </p>
+          </div>
 
           {/* Text block — full width on mobile, leaves room for image on right on desktop */}
           <div className="px-6 py-10 lg:px-16 lg:pt-12 lg:pb-14 lg:pr-[38%] relative z-30 lg:z-10 lg:mt-0">

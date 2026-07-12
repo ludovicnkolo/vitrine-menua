@@ -1,9 +1,36 @@
 const express = require('express');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
+const xss = require('xss');
+const rateLimit = require('express-rate-limit');
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 1 * 1024 * 1024 } // 1MB limit at multer level
+});
+
+// Strict rate limiting specifically for forms (5 per hour)
+const formLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5,
+  message: { success: false, error: 'Trop de soumissions, veuillez réessayer plus tard.' }
+});
+
+router.use(formLimiter);
+
+const sanitizeInput = (data) => {
+  if (typeof data === 'string') return xss(data);
+  if (Array.isArray(data)) return data.map(sanitizeInput);
+  if (typeof data === 'object' && data !== null) {
+    const sanitized = {};
+    for (const key in data) {
+      sanitized[key] = sanitizeInput(data[key]);
+    }
+    return sanitized;
+  }
+  return data;
+};
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
@@ -17,9 +44,10 @@ const transporter = nodemailer.createTransport({
 
 router.post('/contact', upload.single('file'), async (req, res) => {
   try {
+    const sanitizedBody = sanitizeInput(req.body);
     const {
       clientType, company, siret, name, position, email, phone, urgency, description, needs
-    } = req.body;
+    } = sanitizedBody;
 
     const parsedNeeds = Array.isArray(needs) ? needs : (needs ? [needs] : []);
 
@@ -28,8 +56,8 @@ router.post('/contact', upload.single('file'), async (req, res) => {
       if (req.file.mimetype !== 'application/pdf') {
         return res.status(400).json({ success: false, error: "Le fichier doit obligatoirement être au format PDF." });
       }
-      if (req.file.size > 10 * 1024 * 1024) {
-        return res.status(400).json({ success: false, error: "Le fichier PDF dépasse la limite de 10 Mo." });
+      if (req.file.size > 1 * 1024 * 1024) {
+        return res.status(400).json({ success: false, error: "Le fichier PDF dépasse la limite de 1 Mo." });
       }
       attachments.push({
         filename: req.file.originalname,
@@ -94,10 +122,11 @@ ${description}`,
 
 router.post('/join', upload.none(), async (req, res) => {
   try {
+    const sanitizedBody = sanitizeInput(req.body);
     const {
       profileType, company, siret, lastName, firstName, email, phone,
       experience, languages, location, availability, linkedin, message, skills
-    } = req.body;
+    } = sanitizedBody;
 
     const parsedSkills = Array.isArray(skills) ? skills : (skills ? [skills] : []);
 

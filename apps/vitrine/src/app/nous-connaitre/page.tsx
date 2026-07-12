@@ -43,6 +43,14 @@ export default function NousConnaitrePage() {
       {/* ── 2.2 MENUA CONSULTING (Overlapping style, image left) ── */}
       <section id="presentation-du-cabinet" className="relative w-full bg-white pt-12 md:pt-[5.75rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container relative z-10">
+          {/* BREADCRUMB */}
+          <div className="absolute -top-8 md:-top-[4rem] left-0 z-50">
+            <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
+              <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
+              <span className="mx-2">/</span>
+              <span>{t("Nous connaître", "About us")}</span>
+            </p>
+          </div>
           <div className="flex flex-col lg:flex-row-reverse items-center">
             
             {/* Right Image (Desktop only) */}

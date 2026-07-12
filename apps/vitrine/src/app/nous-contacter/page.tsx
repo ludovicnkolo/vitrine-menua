@@ -8,26 +8,28 @@ export default function NousContacter() {
   const { t } = useLanguage();
   const [clientType, setClientType] = useState<"company" | "individual">("company");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error", message: string } | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.type !== "application/pdf") {
-         setSubmitStatus({ type: "error", message: "Seuls les fichiers au format PDF sont acceptés." });
+         setFileError("Seuls les fichiers au format PDF sont acceptés.");
          setSelectedFileName(null);
          e.target.value = "";
-      } else if (file.size > 10 * 1024 * 1024) {
-         setSubmitStatus({ type: "error", message: "Le fichier PDF est trop volumineux (maximum 10 Mo)." });
+      } else if (file.size > 1 * 1024 * 1024) {
+         setFileError("Le fichier PDF est trop volumineux (maximum 1 Mo).");
          setSelectedFileName(null);
          e.target.value = "";
       } else {
          setSelectedFileName(file.name);
-         setSubmitStatus(null);
+         setFileError(null);
       }
     } else {
       setSelectedFileName(null);
+      setFileError(null);
     }
   };
 
@@ -35,6 +37,7 @@ export default function NousContacter() {
     e.preventDefault();
     e.stopPropagation();
     setSelectedFileName(null);
+    setFileError(null);
     const fileInput = document.querySelector('input[name="file"]') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = "";
@@ -53,12 +56,12 @@ export default function NousContacter() {
       const fileField = formData.get("file") as File | null;
       if (fileField && fileField.size > 0) {
         if (fileField.type !== "application/pdf") {
-          setSubmitStatus({ type: "error", message: "Seuls les fichiers au format PDF sont acceptés." });
+          setFileError("Seuls les fichiers au format PDF sont acceptés.");
           setIsSubmitting(false);
           return;
         }
-        if (fileField.size > 10 * 1024 * 1024) { // Limite de 10 Mo
-          setSubmitStatus({ type: "error", message: "Le fichier PDF est trop volumineux (maximum 10 Mo)." });
+        if (fileField.size > 1 * 1024 * 1024) { // Limite de 1 Mo
+          setFileError("Le fichier PDF est trop volumineux (maximum 1 Mo).");
           setIsSubmitting(false);
           return;
         }
@@ -115,8 +118,16 @@ export default function NousContacter() {
 
       {/* ── CONTENT SECTION (Laplace Styling) ── */}
       <section className="relative w-full bg-white pt-12 md:pt-[5.75rem] pb-16 md:pb-24">
-        <div className="laplace-container flex flex-col lg:flex-row gap-12 lg:gap-16">
-
+        <div className="laplace-container">
+          {/* BREADCRUMB */}
+          <div className="absolute -top-8 md:-top-[4rem] left-6 md:left-12 lg:left-0 z-50">
+            <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
+              <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
+              <span className="mx-2">/</span>
+              <span>{t("Nous contacter", "Contact us")}</span>
+            </p>
+          </div>
+          <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
           {/* Left Column (Coordonnées) */}
           <div className="w-full lg:w-[40%] flex flex-col gap-8">
             <div className="bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 shadow-xl">
@@ -296,7 +307,8 @@ export default function NousContacter() {
                      ) : (
                        <div className="flex flex-col items-center">
                          <span className="text-[#141824] font-medium text-[1rem] mb-2">{t("Ou joignez un document (PDF uniquement)", "Or attach a document (PDF only)")}</span>
-                         <span className="text-[#6e7891] text-[0.85rem]">{t("Cliquez ici pour parcourir vos fichiers", "Click here to browse your files")}</span>
+                         <span className="text-[#6e7891] text-[0.85rem] mb-1">{t("Cliquez ici pour parcourir vos fichiers", "Click here to browse your files")}</span>
+                         <span className="text-red-500 text-[0.7rem] italic">{fileError || t("Seuls les fichiers au format PDF sont acceptés.", "Only PDF files are accepted.")}</span>
                        </div>
                      )}
                      <input type="file" name="file" className="hidden" accept=".pdf" onChange={handleFileChange} />
@@ -333,9 +345,9 @@ export default function NousContacter() {
             </form>
           </div>
 
+          </div>
         </div>
       </section>
-
 
 
     </main>

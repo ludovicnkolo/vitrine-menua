@@ -51,8 +51,18 @@ export default function ActualitesPage() {
         </div>
       </section>
 
-      {/* ── SEPARATION BLANC ── */}
-      <div className="w-full h-8 md:h-[5.75rem] bg-white"></div>
+      {/* ── SEPARATION BLANC AVEC BREADCRUMB ── */}
+      <div className="w-full h-8 md:h-[5.75rem] bg-white relative">
+        <div className="laplace-container max-w-6xl mx-auto relative h-full">
+          <div className="absolute top-2 md:top-4 left-6 md:left-12 lg:left-0 z-50">
+            <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
+              <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
+              <span className="mx-2">/</span>
+              <span>{t("Actualités", "News")}</span>
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* ── 6.2 À LA UNE (Dark Section) ── */}
       <section id="articles" className="relative w-full bg-[#141824] pt-12 md:pt-[5.75rem] pb-16 md:pb-24 scroll-mt-20">

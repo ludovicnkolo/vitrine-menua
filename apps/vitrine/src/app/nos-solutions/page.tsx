@@ -46,7 +46,14 @@ export default function NosSolutionsPage() {
       {/* ── 4.2 INTRODUCTION ── */}
       <section className="relative w-full bg-white pt-12 md:pt-[8.75rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container relative z-10">
-
+          {/* BREADCRUMB */}
+          <div className="absolute -top-8 md:-top-[6rem] left-6 md:left-12 lg:left-0 z-50">
+            <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
+              <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
+              <span className="mx-2">/</span>
+              <span>{t("Nos solutions", "Our solutions")}</span>
+            </p>
+          </div>
           <div className="flex flex-col lg:flex-row items-center lg:items-start">
             {/* Left Image (Desktop only) */}
             <div className="hidden lg:block w-full lg:w-4/12 lg:h-[350px] lg:-mt-12 z-20 relative shrink-0">

@@ -25,6 +25,12 @@ router.post('/contact', upload.single('file'), async (req, res) => {
 
     let attachments = [];
     if (req.file) {
+      if (req.file.mimetype !== 'application/pdf') {
+        return res.status(400).json({ success: false, error: "Le fichier doit obligatoirement être au format PDF." });
+      }
+      if (req.file.size > 10 * 1024 * 1024) {
+        return res.status(400).json({ success: false, error: "Le fichier PDF dépasse la limite de 10 Mo." });
+      }
       attachments.push({
         filename: req.file.originalname,
         content: req.file.buffer,

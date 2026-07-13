@@ -16,7 +16,7 @@ export default function Home() {
           <img 
             src="/img/hero-paris.jpg" 
             alt="Paris Aerial" 
-            className="w-full h-full object-cover lg:object-center" 
+            className="w-full h-full object-cover object-[75%_center] md:object-[80%_center] lg:object-center"
             onError={(e) => { e.currentTarget.src = "/img/hero-paris.jpg"; }} 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>

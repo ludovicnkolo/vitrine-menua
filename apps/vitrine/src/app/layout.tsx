@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display, Lobster_Two } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -12,6 +12,14 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
   weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const lobsterTwo = Lobster_Two({
+  subsets: ["latin"],
+  variable: "--font-lobster",
+  weight: ["400", "700"],
   style: ["normal", "italic"],
   display: "swap",
 });
@@ -62,7 +70,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" data-scroll-behavior="smooth">
-      <body className={`${inter.variable} ${playfair.variable} min-h-screen flex flex-col antialiased bg-[#f5f7fa] text-[#141824]`}>
+      <body className={`${inter.variable} ${playfair.variable} ${lobsterTwo.variable} min-h-screen flex flex-col antialiased bg-[#f5f7fa] text-[#141824]`}>
         <LanguageProvider>
           <ScrollObserver />
           <Header />

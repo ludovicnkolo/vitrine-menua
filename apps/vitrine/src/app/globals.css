@@ -64,6 +64,12 @@
     text-decoration: none;
     transition: color 0.3s ease;
   }
+
+  .brand-text {
+    font-family: var(--font-lobster), cursive;
+    color: #0050a4;
+    font-weight: 700;
+  }
 }
 
 @layer components {

@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
+import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight } from "lucide-react";
 
 export default function NosSolutionsPage() {
@@ -87,10 +88,10 @@ export default function NosSolutionsPage() {
                 </div>
                 
                 <p className="text-[1.1rem] font-medium">
-                  {t(
+                  {formatBrand(t(
                     "MENUA CONSULTING conçoit des solutions d’externalisation opérationnelle sur mesure pour accompagner les entreprises, cabinets et organisations dans la gestion de leurs fonctions back et middle office.",
                     "MENUA CONSULTING designs tailor-made operational outsourcing solutions to support companies, firms and organizations in the management of their back and middle office functions."
-                  )}
+                  ))}
                 </p>
                 <p>
                   {t(
@@ -122,10 +123,10 @@ export default function NosSolutionsPage() {
               {t("Urgence", "Urgency")}
             </h3>
             <p className="text-[#e5e9f0] font-light text-[1.1rem] leading-relaxed mb-6">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING peut mobiliser des ressources opérationnelles pour répondre à un besoin immédiat, absorber une surcharge d’activité ou sécuriser la continuité d’un service.",
                 "MENUA CONSULTING can mobilize operational resources to meet an immediate need, absorb an overload of activity or secure the continuity of a service."
-              )}
+              ))}
             </p>
             <p className="text-[#e5e9f0] font-light text-[1.1rem] leading-relaxed mb-12">
               {t(
@@ -176,7 +177,7 @@ export default function NosSolutionsPage() {
               {t("Durée", "Duration")}
             </h2>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
-              {t("MENUA CONSULTING propose des formats d’intervention flexibles, adaptés aussi bien aux missions courtes qu’aux besoins récurrents.", "MENUA CONSULTING offers flexible intervention formats, adapted to short missions as well as recurring needs.")}
+              {formatBrand(t("MENUA CONSULTING propose des formats d’intervention flexibles, adaptés aussi bien aux missions courtes qu’aux besoins récurrents.", "MENUA CONSULTING offers flexible intervention formats, adapted to short missions as well as recurring needs."))}
             </p>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
               {t("La durée de la mission est définie selon le périmètre, les volumes à traiter, les objectifs attendus et les contraintes propres à l’organisation du client.", "The duration of the mission is defined according to the scope, the volumes to be processed, the expected objectives and the constraints specific to the client's organization.")}
@@ -248,10 +249,10 @@ export default function NosSolutionsPage() {
               {t("Volume", "Volume")}
             </h3>
             <p className="text-[#e5e9f0] font-light text-[1.1rem] leading-relaxed mb-6">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING adapte le dimensionnement de ses ressources au volume de dossiers, de flux ou d’opérations à traiter.",
                 "MENUA CONSULTING adapts the sizing of its resources to the volume of files, flows or operations to be processed."
-              )}
+              ))}
             </p>
             <p className="text-[#e5e9f0] font-light text-[1.1rem] leading-relaxed mb-12">
               {t(
@@ -304,10 +305,10 @@ export default function NosSolutionsPage() {
               {t("Mode d’organisation", "Organization mode")}
             </h3>
             <p className="text-[#141824]/80 font-medium text-[1.1rem] leading-relaxed mb-6">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING structure ses interventions selon le format le plus adapté à l’organisation du client : mission dédiée, intervention ponctuelle, traitement de flux ou prise en charge de process définis.",
                 "MENUA CONSULTING structures its interventions according to the format most adapted to the client's organization: dedicated mission, ad hoc intervention, flow processing or management of defined processes."
-              )}
+              ))}
             </p>
             <p className="text-[#141824]/80 font-medium text-[1.1rem] leading-relaxed mb-12">
               {t(
@@ -352,10 +353,10 @@ export default function NosSolutionsPage() {
             <div className="bg-[#141824] p-10 lg:p-12 shadow-xl border-t-4 border-t-[#e8e1d7] flex flex-col justify-center">
               <h3 className="text-white font-bold text-[1.5rem] mb-6">{t("Langues", "Languages")}</h3>
               <p className="text-[#e5e9f0] font-light text-[1.05rem] leading-relaxed">
-                {t(
+                {formatBrand(t(
                   "MENUA CONSULTING peut intervenir en français et en anglais afin de faciliter la gestion des échanges, des reportings, des contrôles documentaires et des opérations dans un contexte national ou international. D’autres langues peuvent être étudiées selon les besoins spécifiques du client, la nature de la mission et les ressources mobilisables.",
                   "MENUA CONSULTING can intervene in French and English in order to facilitate the management of exchanges, reports, documentary controls and operations in a national or international context. Other languages can be studied according to the specific needs of the client, the nature of the mission and the resources that can be mobilized."
-                )}
+                ))}
               </p>
             </div>
 
@@ -363,10 +364,10 @@ export default function NosSolutionsPage() {
             <div className="bg-white p-10 lg:p-12 shadow-xl border border-[#e8e1d7] border-t-4 border-t-[#141824] flex flex-col justify-center">
               <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">{t("Bon à savoir", "Good to know")}</h3>
               <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed">
-                {t(
+                {formatBrand(t(
                   "Chaque solution est construite après analyse du besoin, du volume, des délais, des outils disponibles et du niveau de supervision attendu. MENUA CONSULTING privilégie une approche claire, progressive et contrôlable, afin de garantir une exécution fiable et adaptée aux contraintes réelles de chaque organisation.",
                   "Each solution is built after analysis of the need, volume, deadlines, available tools and expected level of supervision. MENUA CONSULTING favors a clear, progressive and controllable approach, in order to guarantee reliable execution adapted to the real constraints of each organization."
-                )}
+                ))}
               </p>
             </div>
 

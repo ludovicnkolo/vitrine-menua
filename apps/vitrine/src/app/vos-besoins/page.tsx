@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
+import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight, ChevronRight } from "lucide-react";
 
 export default function VosBesoinsPage() {
@@ -76,10 +77,10 @@ export default function VosBesoinsPage() {
             </div>
             
             <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING intervient en appui des équipes financières, comptables, conformité, data, patrimoniales et réglementées sur les fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
                 "MENUA CONSULTING provides support to financial, accounting, compliance, data, wealth and regulated teams on back and middle office functions requiring rigor, continuity and operational reliability."
-              )}
+              ))}
             </p>
             <p className="text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
               {t(
@@ -121,10 +122,10 @@ export default function VosBesoinsPage() {
               {t("Finance", "Finance")} <span className="font-sans font-medium">&amp;</span> {t("Reporting", "Reporting")}
             </h3>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING accompagne les équipes financières dans la production, la structuration et la fiabilisation de reportings destinés au pilotage de l’activité, au suivi de la performance et à l’aide à la décision.",
                 "MENUA CONSULTING supports financial teams in the production, structuring and reliability of reports intended for activity management, performance monitoring and decision-making support."
-              )}
+              ))}
             </p>
             <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-[#6e7891] font-light text-[0.95rem]">
@@ -158,10 +159,10 @@ export default function VosBesoinsPage() {
               <img src="/img/besoins-gestion.jpg" alt="Contrôle de gestion" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
             </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING intervient en appui opérationnel des équipes de contrôle de gestion pour renforcer le suivi budgétaire, l’analyse des écarts et le pilotage de la performance. L’objectif est d’aider les organisations à mieux suivre leurs coûts, leurs marges, leurs objectifs et leurs indicateurs, à partir de données structurées et fiables.",
                 "MENUA CONSULTING provides operational support to management control teams to strengthen budget monitoring, variance analysis and performance management. The objective is to help organizations better monitor their costs, margins, objectives and indicators, based on structured and reliable data."
-              )}
+              ))}
             </p>
             <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-[#6e7891] font-light text-[0.95rem]">
@@ -201,10 +202,10 @@ export default function VosBesoinsPage() {
               {t("Risques", "Risk")} <span className="font-sans font-medium text-[#e8e1d7]">&amp;</span> {t("Conformité", "Compliance")}
             </h3>
             <p className="text-[#e5e9f0] font-light text-[1.1rem] leading-relaxed mb-8">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING apporte un appui opérationnel aux équipes risques et conformité dans le traitement, le contrôle et la fiabilisation des dossiers sensibles, dans le respect des procédures internes et des exigences applicables.",
                 "MENUA CONSULTING provides operational support to risk and compliance teams in the processing, control and reliability of sensitive files, in compliance with internal procedures and applicable requirements."
-              )}
+              ))}
             </p>
             
             {/* Disclaimer block with emphasis */}
@@ -271,10 +272,10 @@ export default function VosBesoinsPage() {
               <img src="/img/besoins-data.jpg" alt="Support comptable & Data" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
             </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING intervient en support opérationnel des équipes comptables, administratives et data dans le traitement, la fiabilisation, le classement et la structuration des informations nécessaires au suivi comptable, administratif et opérationnel.",
                 "MENUA CONSULTING acts as operational support for accounting, administrative and data teams in the processing, reliability, classification and structuring of information necessary for accounting, administrative and operational monitoring."
-              )}
+              ))}
             </p>
             <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-[#6e7891] font-medium text-[0.95rem]">
@@ -311,10 +312,10 @@ export default function VosBesoinsPage() {
               {t("Support aux cabinets de gestion de patrimoine / CGP", "Support to wealth management firms / CGP")}
             </h3>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING accompagne les cabinets de gestion de patrimoine, family offices et structures patrimoniales dans le traitement, la préparation et le suivi administratif des dossiers clients.",
                 "MENUA CONSULTING supports wealth management firms, family offices and wealth structures in the processing, preparation and administrative monitoring of client files."
-              )}
+              ))}
             </p>
             <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-[#6e7891] font-medium text-[0.95rem]">
@@ -356,10 +357,10 @@ export default function VosBesoinsPage() {
               {t("Autres besoins opérationnels", "Other operational needs")}
             </h3>
             <p className="text-[#141824]/80 font-medium text-[1.1rem] leading-relaxed mb-12">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING peut également intervenir sur des besoins opérationnels ponctuels, transverses ou spécifiques ne relevant pas exclusivement d’une fonction financière, comptable, conformité, patrimoniale ou data. Cette flexibilité permet d’accompagner les organisations en période de surcharge, de transition, de réorganisation ou de besoin temporaire de renfort.",
                 "MENUA CONSULTING can also intervene on ad hoc, transversal or specific operational needs not exclusively related to a financial, accounting, compliance, wealth or data function. This flexibility makes it possible to support organizations during periods of overload, transition, reorganization or temporary need for reinforcement."
-              )}
+              ))}
             </p>
           </div>
 

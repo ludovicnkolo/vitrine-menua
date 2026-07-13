@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
+import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight, ChevronRight } from "lucide-react";
 
 export default function NousConnaitrePage() {
@@ -82,10 +83,10 @@ export default function NousConnaitrePage() {
               </div>
               <div className="space-y-4 text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
                 <p>
-                  {t(
+                  {formatBrand(t(
                     "MENUA CONSULTING est un cabinet spécialisé dans l’externalisation opérationnelle des fonctions back et middle office.",
                     "MENUA CONSULTING is a firm specializing in the operational outsourcing of back and middle office functions."
-                  )}
+                  ))}
                 </p>
                 <p>
                   {t(
@@ -100,10 +101,10 @@ export default function NousConnaitrePage() {
                   )}
                 </p>
                 <p>
-                  {t(
+                  {formatBrand(t(
                     "MENUA CONSULTING adopte une posture résolument exécutante. Nos clients définissent leurs besoins, leurs procédures, leurs priorités et leurs circuits de validation. Nous prenons ensuite en charge la réalisation opérationnelle des tâches confiées, dans le respect de leurs instructions, avec rigueur, confidentialité et traçabilité.",
                     "MENUA CONSULTING adopts a resolutely executing posture. Our clients define their needs, their procedures, their priorities and their validation circuits. We then take charge of the operational execution of the assigned tasks, in compliance with their instructions, with rigor, confidentiality and traceability."
-                  )}
+                  ))}
                 </p>
               </div>
               <div className="flex justify-end mt-8">
@@ -132,10 +133,10 @@ export default function NousConnaitrePage() {
             
             <div className="space-y-6 text-[#6e7891] text-[1.05rem] md:text-[1.1rem] font-light leading-relaxed">
               <p>
-                {t(
+                {formatBrand(t(
                   "MENUA CONSULTING accompagne les entreprises, cabinets et organisations dans l’externalisation de leurs fonctions back et middle office en français et en anglais, afin de renforcer la fiabilité de leurs opérations, d’optimiser leurs ressources et de garantir la continuité de leurs activités.",
                   "MENUA CONSULTING supports companies, firms and organizations in the outsourcing of their back and middle office functions in French and English, in order to strengthen the reliability of their operations, optimize their resources and ensure the continuity of their activities."
-                )}
+                ))}
               </p>
               <p>
                 {t(
@@ -314,7 +315,7 @@ export default function NousConnaitrePage() {
                   Rosette Fouelefack
                 </span>
                 <span className="text-[#e8e1d7]/70 text-[0.85rem] mt-2 font-medium text-center">
-                  {t("Présidente de MENUA CONSULTING", "President of MENUA CONSULTING")}
+                  {formatBrand(t("Présidente de MENUA CONSULTING", "President of MENUA CONSULTING"))}
                 </span>
               </div>
 
@@ -324,16 +325,16 @@ export default function NousConnaitrePage() {
                   {t("Rosette Fouelefack dispose d’une expérience en finance, gestion des risques, conformité, appui aux environnements patrimoniaux et opérations back ", "Rosette Fouelefack has experience in finance, risk management, compliance, support for wealth environments and back ")}<span className="font-sans font-medium">&amp;</span>{t(" middle office, acquise auprès d’organisations bancaires, financiers réglementés.", " middle office operations, acquired from banking organizations and regulated financial institutions.")}
                 </p>
                 <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
-                  {t(
+                  {formatBrand(t(
                     "Elle a fondé MENUA CONSULTING avec l’objectif de proposer aux entreprises un appui opérationnel fiable, structuré et flexible, capable de renforcer l’exécution des fonctions back et middle office tout en respectant les procédures internes de chaque client.",
                     "She founded MENUA CONSULTING with the aim of offering companies reliable, structured and flexible operational support, capable of strengthening the execution of back and middle office functions while respecting each client's internal procedures."
-                  )}
+                  ))}
                 </p>
                 <p className="text-[#e8e1d7] font-bold leading-relaxed">
-                  {t(
+                  {formatBrand(t(
                     "MENUA CONSULTING s’appuie sur une organisation agile, composée d’une direction opérationnelle en France et de collaborateurs ou partenaires externalisés mobilisés selon les besoins des clients.",
                     "MENUA CONSULTING relies on an agile organization, composed of an operational management in France and outsourced employees or partners mobilized according to clients' needs."
-                  )}
+                  ))}
                 </p>
               </div>
             </div>
@@ -358,10 +359,10 @@ export default function NousConnaitrePage() {
             
             <div className="space-y-4 text-[#141824] text-[1.05rem] font-light leading-relaxed">
               <p>
-                {t(
+                {formatBrand(t(
                   "MENUA CONSULTING intervient dans des environnements soumis à des exigences élevées en matière de conformité, de qualité et de traçabilité.", 
                   "MENUA CONSULTING operates in environments subject to high requirements in terms of compliance, quality and traceability."
-                )}
+                ))}
               </p>
               <p>
                 {t(
@@ -377,10 +378,10 @@ export default function NousConnaitrePage() {
               </p>
               <div className="bg-white/40 border-l-4 border-[#141824] p-5 my-2 shadow-sm">
                 <p className="font-bold text-[#141824] text-[1rem]">
-                  {t(
+                  {formatBrand(t(
                     "MENUA CONSULTING n’exerce pas d’activité réglementée en son nom propre. Le cabinet intervient en support opérationnel, dans le cadre des procédures, agréments et validations propres à ses clients.", 
                     "MENUA CONSULTING does not carry out regulated activities in its own name. The firm provides operational support, within the framework of its clients' own procedures, approvals and validations."
-                  )}
+                  ))}
                 </p>
               </div>
               <div className="mt-12 pt-4 border-t border-[#141824]/10">

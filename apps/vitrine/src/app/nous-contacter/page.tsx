@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, MapPin, Mail, Phone, Building2 } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
+import { formatBrand } from "@/utils/formatBrand";
 
 export default function NousContacter() {
   const { t } = useLanguage();
@@ -324,10 +325,10 @@ export default function NousContacter() {
                   </span>
                 </label>
                 <p className="text-[0.85rem] text-[#6e7891] font-light mt-4 leading-relaxed">
-                  {t(
+                  {formatBrand(t(
                     "Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin de répondre à votre demande et d'en assurer le suivi. Elles peuvent être conservées jusqu'à 3 ans après le dernier échange. Vous disposez de droits sur vos données personnelles et pouvez les exercer à l'adresse : contact@menuaconsulting.com. Pour en savoir plus, consultez notre",
                     "The information collected via this form is processed by MENUA CONSULTING in order to respond to your request and ensure its follow-up. They can be kept for up to 3 years after the last exchange. You have rights over your personal data and can exercise them at the address: contact@menuaconsulting.com. To learn more, consult our"
-                  )}{" "}<Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("Politique de confidentialité", "Privacy Policy")}</Link>.
+                  ))}{" "}<Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("Politique de confidentialité", "Privacy Policy")}</Link>.
                 </p>
               </div>
 

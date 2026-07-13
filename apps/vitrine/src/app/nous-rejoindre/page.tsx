@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
+import { formatBrand } from "@/utils/formatBrand";
 
 export default function NousRejoindre() {
   const { t } = useLanguage();
@@ -57,10 +58,10 @@ export default function NousRejoindre() {
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
             <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING recrute des profils opérationnels autonomes, rigoureux, fiables et organisés, capables d'intervenir à distance sur des fonctions back et middle office, en France comme à l'international.",
                 "MENUA CONSULTING is recruiting autonomous, rigorous, reliable and organized operational profiles, capable of intervening remotely on back and middle office functions, in France and internationally."
-              )}
+              ))}
             </p>
           </div>
         </div>
@@ -97,10 +98,10 @@ export default function NousRejoindre() {
 
             <div className="bg-[#141824] text-white p-10 shadow-xl border-t-4 border-t-[#e8e1d7]">
               <p className="text-[#e5e9f0] text-[1.05rem] font-light leading-relaxed mb-6">
-                {t(
+                {formatBrand(t(
                   "MENUA CONSULTING recherche des profils opérationnels autonomes, rigoureux, fiables et organisés, capables d'intervenir à distance sur des fonctions back et middle office, principalement dans un cadre international.",
                   "MENUA CONSULTING is looking for autonomous, rigorous, reliable and organized operational profiles, capable of intervening remotely on back and middle office functions, mainly in an international context."
-                )}
+                ))}
               </p>
               <p className="text-[#e5e9f0] text-[1.05rem] font-light leading-relaxed">
                 {t(
@@ -271,10 +272,10 @@ export default function NousRejoindre() {
                   </span>
                 </label>
                 <p className="text-[0.85rem] text-[#6e7891] font-light mt-4 leading-relaxed">
-                  {t(
+                  {formatBrand(t(
                     "Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin d'étudier votre candidature et d'en assurer le suivi. Votre dossier peut être conservé jusqu'à 2 ans après le dernier contact, sauf opposition de votre part. Vous disposez de droits sur vos données personnelles à l'adresse : contact@menuaconsulting.com. Pour en savoir plus, consultez notre",
                     "The information collected via this form is processed by MENUA CONSULTING in order to study your application and ensure its follow-up. Your file may be kept for up to 2 years after the last contact, unless you object. You have rights over your personal data at the address: contact@menuaconsulting.com. To learn more, consult our"
-                  )}{" "}<Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("Politique de confidentialité", "Privacy Policy")}</Link>.
+                  ))}{" "}<Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("Politique de confidentialité", "Privacy Policy")}</Link>.
                 </p>
               </div>
 

@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
+import { formatBrand } from "@/utils/formatBrand";
 
 export default function PolitiqueConfidentialite() {
   const { t } = useLanguage();
@@ -99,10 +100,10 @@ export default function PolitiqueConfidentialite() {
             {t("Politique de confidentialité", "Privacy Policy")}
           </h1>
           <p className="animate-fade-in-up stagger-2 text-[#6e7891] text-[1.1rem] leading-relaxed mb-12">
-            {t(
+            {formatBrand(t(
               "MENUA CONSULTING attache une importance particulière à la protection des données personnelles collectées via son site internet. La présente politique de confidentialité a pour objet d'informer les utilisateurs sur les données collectées, les finalités des traitements, les durées de conservation et les droits dont ils disposent.",
               "MENUA CONSULTING attaches particular importance to the protection of personal data collected via its website. This privacy policy aims to inform users about the data collected, the purposes of processing, retention periods, and the rights they have."
-            )}
+            ))}
           </p>
 
           <div className="animate-fade-in-up stagger-3 space-y-12 text-[#6e7891] text-body leading-relaxed laplace-card p-8 md:p-12">

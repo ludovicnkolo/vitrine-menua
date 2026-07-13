@@ -69,6 +69,8 @@
     font-family: var(--font-lobster), cursive;
     color: #0050a4;
     font-weight: 700;
+    font-size: 1.35em;
+    padding-right: 0.1em;
   }
 }
 

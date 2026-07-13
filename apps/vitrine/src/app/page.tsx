@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, Globe, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
+import { formatBrand } from "@/utils/formatBrand";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -94,10 +95,10 @@ export default function Home() {
                 </div>
 
                 <p>
-                  {t(
+                  {formatBrand(t(
                     "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l’exécution des fonctions back et middle office.",
                     "MENUA CONSULTING supports financial, accounting, wealth, data and regulated teams to secure and strengthen the execution of back and middle office functions."
-                  )}
+                  ))}
                 </p>
               </div>
               <div className="flex justify-end mt-8">
@@ -123,10 +124,10 @@ export default function Home() {
               {t("Pourquoi MENUA CONSULTING ?", "Why MENUA CONSULTING?")}
             </h2>
             <p className="text-[1.1rem] text-[#e5e9f0] font-light leading-relaxed mb-8">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants.",
                 "MENUA CONSULTING supports organizations facing demanding operational execution challenges."
-              )}
+              ))}
             </p>
           </div>
           
@@ -207,10 +208,10 @@ export default function Home() {
                 />
               </div>
               <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-10">
-                {t(
+                {formatBrand(t(
                   "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l'ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
                   "MENUA CONSULTING supports financial, accounting, wealth, IT and regulated teams on all back and middle office functions requiring rigor, continuity and operational reliability."
-                )}
+                ))}
               </p>
 
               {/* 3 need items */}

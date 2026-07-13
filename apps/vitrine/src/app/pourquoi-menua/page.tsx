@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
+import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight } from "lucide-react";
 
 export default function PourquoiMenuaPage() {
@@ -75,16 +76,16 @@ export default function PourquoiMenuaPage() {
             </div>
             
             <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants.",
                 "MENUA CONSULTING supports organizations facing demanding operational execution challenges."
-              )}
+              ))}
             </p>
             <p className="text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
-              {t(
+              {formatBrand(t(
                 "Dans des environnements où les délais, la qualité des données, la conformité documentaire et la continuité de service sont essentiels, MENUA CONSULTING apporte un appui structuré aux équipes internes afin de sécuriser le traitement des fonctions back et middle office.",
                 "In environments where deadlines, data quality, documentary compliance and service continuity are essential, MENUA CONSULTING provides structured support to internal teams to secure the processing of back and middle office functions."
-              )}
+              ))}
             </p>
 
 
@@ -117,10 +118,10 @@ export default function PourquoiMenuaPage() {
               <img src="/img/besoins-finance.jpg" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
             </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
-              {t(
+              {formatBrand(t(
                 "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité, renforcez votre fiabilité et soutenez durablement votre chiffre d’affaires.",
                 "By outsourcing your back and middle office functions with MENUA CONSULTING, you save time, improve your productivity, strengthen your reliability and sustainably support your turnover."
-              )}
+              ))}
             </p>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
               {t(
@@ -214,10 +215,10 @@ export default function PourquoiMenuaPage() {
           <div className="w-full lg:w-7/12 bg-white p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
             <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">{t("Nos engagements", "Our commitments")}</h3>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING s’engage sur l’essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
                 "MENUA CONSULTING commits to the essential: the quality of deliverables, respect for deadlines, traceability of operations and clear communication with your teams."
-              )}
+              ))}
             </p>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
               {t(
@@ -264,10 +265,10 @@ export default function PourquoiMenuaPage() {
               )}
             </p>
             <p className="text-[#141824]/80 font-medium text-[1.1rem] leading-relaxed">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING privilégie une relation professionnelle claire, structurée et transparente, afin de garantir une collaboration efficace et durable avec ses clients.",
                 "MENUA CONSULTING favors a clear, structured and transparent professional relationship, in order to guarantee an effective and lasting collaboration with its clients."
-              )}
+              ))}
             </p>
             
 

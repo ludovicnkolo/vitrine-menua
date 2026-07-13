@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
+import { formatBrand } from "@/utils/formatBrand";
 
 export default function ActualitesPage() {
   const { t } = useLanguage();
@@ -36,10 +37,10 @@ export default function ActualitesPage() {
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
             <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
-              {t(
+              {formatBrand(t(
                 "MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles afin d'éclairer ses clients sur les enjeux qui impactent leurs activités.",
                 "MENUA CONSULTING ensures a regular watch on financial, accounting, wealth, regulatory and operational developments to enlighten its clients on the issues that impact their activities."
-              )}
+              ))}
             </p>
             <div className="animate-fade-in-up stagger-4">
               <Link href="#articles" className="inline-flex items-center gap-3 px-8 py-4 bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
@@ -179,10 +180,10 @@ export default function ActualitesPage() {
                     {t("Nos publications", "Our publications")}
                   </h4>
                   <p className="text-[#6e7891] group-hover:text-white/70 text-[0.95rem] font-light leading-relaxed mb-8 flex-grow transition-colors duration-300">
-                    {t(
+                    {formatBrand(t(
                       "Retrouvez les prises de parole, analyses et contenus publiés par MENUA CONSULTING sur les enjeux opérationnels, réglementaires et sectoriels.",
                       "Find the speeches, analyzes and content published by MENUA CONSULTING on operational, regulatory and sector issues."
-                    )}
+                    ))}
                   </p>
                   <div className="flex justify-end mt-auto">
                     <a href="#" className="text-[#141824] group-hover:text-white text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 transition-colors duration-300">

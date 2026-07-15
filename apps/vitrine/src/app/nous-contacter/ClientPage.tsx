@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, MapPin, Mail, Phone, Building2 } from "lucide-react";
+import { ArrowRight, MapPin, Mail, Phone, Building2, UploadCloud } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 
@@ -103,11 +103,11 @@ export default function NousContacter() {
         </div>
         <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="animate-fade-in-up stagger-1 text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Nous contacter", "Contact us")}
             </h1>
-            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
+            <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "Présentez votre besoin opérationnel, nous vous répondons avec une première analyse et une proposition adaptée.",
                 "Present your operational need, we will answer you with a first analysis and a suitable proposal."
@@ -190,7 +190,7 @@ export default function NousContacter() {
                       onChange={() => setClientType("company")}
                       className="accent-[#141824] w-5 h-5 cursor-pointer"
                     />
-                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Une entreprise (cliente, partenaire ou prestataire)", "A company (client, partner or provider)")}</span>
+                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Une entreprise", "A company")}</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer group">
                     <input 
@@ -201,7 +201,7 @@ export default function NousContacter() {
                       onChange={() => setClientType("individual")}
                       className="accent-[#141824] w-5 h-5 cursor-pointer"
                     />
-                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Une personne physique / particulier", "An individual")}</span>
+                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Un particulier", "An individual")}</span>
                   </label>
                 </div>
               </div>
@@ -216,7 +216,7 @@ export default function NousContacter() {
                       <input type="text" name="company" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                     </div>
                     <div>
-                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("SIRET / Numéro d'identification", "SIRET / ID Number")} <span className="text-red-500">*</span></label>
+                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("SIRET", "SIRET")} <span className="text-red-500">*</span></label>
                       <input type="text" name="siret" placeholder={t("Ex: 123 456 789 00012", "E.g. 123 456 789 00012")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                     </div>
                   </div>
@@ -286,13 +286,13 @@ export default function NousContacter() {
                 </label>
                 <p className="text-[0.95rem] text-[#6e7891] font-light mb-4 leading-relaxed">
                   {t(
-                    "Décrivez votre besoin opérationnel ou joignez une fiche de mission en pdf bien sûr, un cahier des charges ou un document de cadrage afin de faciliter notre première analyse.",
-                    "Describe your operational need or attach a mission sheet in pdf of course, a specification or a scoping document to facilitate our initial analysis."
+                    "Décrivez votre besoin ou joignez un document de cadrage.",
+                    "Describe your need or attach a scoping document."
                   )}
                 </p>
                 <textarea name="description" rows={5} placeholder={t("Saisissez ou collez votre descriptif ici...", "Type or paste your description here...")} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf] mb-4"></textarea>
                 
-                <div className={`w-full border-2 border-dashed ${selectedFileName ? 'border-green-500 bg-green-50/30' : 'border-[#d1d5db] bg-[#f5f7fa]'} p-6 text-center hover:bg-[#e8e1d7]/30 transition-colors cursor-pointer rounded-sm`}>
+                <div className={`w-full border-2 border-dashed ${selectedFileName ? 'border-green-500 bg-green-50/30' : 'border-[#d1d5db] bg-[#f5f7fa]'} py-3 px-4 text-center hover:bg-[#e8e1d7]/30 transition-colors cursor-pointer rounded-sm`}>
                    <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
                      {selectedFileName ? (
                        <div className="flex flex-col items-center">
@@ -307,9 +307,10 @@ export default function NousContacter() {
                        </div>
                      ) : (
                        <div className="flex flex-col items-center">
-                         <span className="text-[#141824] font-medium text-[1rem] mb-2">{t("Ou joignez un document (PDF uniquement)", "Or attach a document (PDF only)")}</span>
-                         <span className="text-[#6e7891] text-[0.85rem] mb-1">{t("Cliquez ici pour parcourir vos fichiers", "Click here to browse your files")}</span>
-                         <span className="text-red-500 text-[0.7rem] italic">{fileError || t("Seuls les fichiers au format PDF sont acceptés.", "Only PDF files are accepted.")}</span>
+                         <UploadCloud className="w-10 h-10 text-[#6e7891] mb-3 opacity-80" />
+                         <span className="text-[#141824] font-medium text-[1rem] mb-2 text-center">{t("Ou joignez un document (PDF uniquement)", "Or attach a document (PDF only)")}</span>
+                         <span className="text-[#6e7891] text-[0.85rem] mb-1 text-center">{t("Cliquez ici pour parcourir vos fichiers", "Click here to browse your files")}</span>
+                         {fileError && <span className="text-red-500 text-[0.7rem] font-bold mt-2">{fileError}</span>}
                        </div>
                      )}
                      <input type="file" name="file" className="hidden" accept=".pdf" onChange={handleFileChange} />
@@ -340,7 +341,7 @@ export default function NousContacter() {
 
               <div className="flex justify-center pt-6">
                 <button type="submit" disabled={isSubmitting} className="inline-flex items-center justify-center bg-[#141824] text-white px-10 py-4 font-bold uppercase tracking-wider text-[0.85rem] hover:bg-[#1f2638] transition-colors duration-300 w-full md:w-auto disabled:opacity-70 disabled:cursor-not-allowed">
-                  {isSubmitting ? t("Envoi en cours...", "Sending...") : t("Envoyer ma demande", "Send my request")}
+                  {isSubmitting ? t("Envoi en cours...", "Sending...") : t("Envoyer", "Send")}
                 </button>
               </div>
             </form>

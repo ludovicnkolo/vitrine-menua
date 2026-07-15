@@ -24,18 +24,18 @@ export default function PourquoiMenuaPage() {
         </div>
         <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="animate-fade-in-up stagger-1 text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Pourquoi MENUA CONSULTING ?", "Why MENUA CONSULTING?")}
             </h1>
-            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
+            <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
               {t(
                 "Un partenaire opérationnel pour renforcer vos équipes, fiabiliser vos traitements et sécuriser la continuité de vos activités.",
                 "An operational partner to strengthen your teams, make your processing reliable and secure the continuity of your activities."
               )}
             </p>
-            <div className="animate-fade-in-up stagger-4 mb-8">
-              <Link href="/nous-contacter" className="inline-flex items-center gap-3 px-8 py-4 bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
+            <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
+              <Link href="/nous-contacter" className="inline-flex items-center gap-3 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
                 {t("Présenter un besoin", "Submit a need")}
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>

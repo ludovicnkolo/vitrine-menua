@@ -91,22 +91,22 @@ export default function PolitiqueConfidentialite() {
     <main className="flex flex-col w-full min-h-screen bg-[#f5f7fa] pt-32 pb-16">
       <section className="relative w-full mb-20">
         <div className="laplace-container max-w-4xl">
-          <p className="animate-fade-in-up stagger-1 text-[#3874ff] text-[0.8rem] font-bold tracking-widest uppercase mb-4">
+          <p className="  text-[#3874ff] text-[0.8rem] font-bold tracking-widest uppercase mb-4">
             <Link href="/" className="hover:text-[#141824] transition-colors">{t("Accueil", "Home")}</Link>
             <span className="mx-2 text-[#a0aabf]">/</span>
             <span>{t("Politique de confidentialité", "Privacy Policy")}</span>
           </p>
-          <h1 className="animate-fade-in-up stagger-1 mb-8 text-[#141824]">
+          <h1 className="  mb-8 text-[#141824]">
             {t("Politique de confidentialité", "Privacy Policy")}
           </h1>
-          <p className="animate-fade-in-up stagger-2 text-[#6e7891] text-[1.1rem] leading-relaxed mb-12">
+          <p className="  text-[#6e7891] text-[1.1rem] leading-relaxed mb-12">
             {formatBrand(t(
               "MENUA CONSULTING attache une importance particulière à la protection des données personnelles collectées via son site internet. La présente politique de confidentialité a pour objet d'informer les utilisateurs sur les données collectées, les finalités des traitements, les durées de conservation et les droits dont ils disposent.",
               "MENUA CONSULTING attaches particular importance to the protection of personal data collected via its website. This privacy policy aims to inform users about the data collected, the purposes of processing, retention periods, and the rights they have."
             ))}
           </p>
 
-          <div className="animate-fade-in-up stagger-3 space-y-12 text-[#6e7891] text-body leading-relaxed laplace-card p-8 md:p-12">
+          <div className="  space-y-12 text-[#6e7891] text-body leading-relaxed laplace-card p-8 md:p-12">
             {sections.map((section, i) => (
               <div key={i}>
                 <h2 className="text-[1.2rem] font-bold text-[#141824] mb-4">{section.title}</h2>

@@ -66,10 +66,10 @@
   }
 
   .brand-text {
-    font-family: var(--font-lobster), cursive;
-    color: #0050a4;
+    font-family: inherit;
+    color: inherit;
     font-weight: 700;
-    font-size: 1.35em;
+    font-size: 1.05em;
     padding-right: 0.1em;
   }
 }

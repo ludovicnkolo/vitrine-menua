@@ -27,7 +27,7 @@ const lobsterTwo = Lobster_Two({
 export const metadata: Metadata = {
   metadataBase: new URL('https://menuaconsulting.com'),
   title: {
-    default: "Menua Consulting | Externalisation Back et Middle Office",
+    default: "Menua Consulting",
     template: "%s | Menua Consulting",
   },
   description:
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Menua Consulting | Externalisation Back et Middle Office",
+    title: "Menua Consulting",
     description:
       "Nous sécurisons l'exécution de vos opérations back et middle office afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
     url: 'https://menuaconsulting.com',

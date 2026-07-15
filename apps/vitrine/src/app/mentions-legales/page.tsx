@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import ClientPage from './ClientPage';
 
 export const metadata: Metadata = {
-  title: "Mentions Légales | Menua Consulting",
+  title: "Mentions Légales",
   description: "Mentions légales du site Menua Consulting.",
 };
 

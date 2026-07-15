@@ -11,16 +11,16 @@ export default function MentionsLegales() {
     <main className="flex flex-col w-full min-h-screen bg-[#f5f7fa] pt-32 pb-16">
       <section className="relative w-full mb-20">
         <div className="laplace-container max-w-4xl">
-          <p className="animate-fade-in-up stagger-1 text-[#3874ff] text-[0.8rem] font-bold tracking-widest uppercase mb-4">
+          <p className="  text-[#3874ff] text-[0.8rem] font-bold tracking-widest uppercase mb-4">
             <Link href="/" className="hover:text-[#141824] transition-colors">{t("Accueil", "Home")}</Link>
             <span className="mx-2 text-[#a0aabf]">/</span>
             <span>{t("Mentions légales", "Legal Notice")}</span>
           </p>
-          <h1 className="animate-fade-in-up stagger-1 mb-12 text-[#141824]">
+          <h1 className="  mb-12 text-[#141824]">
             {t("Mentions légales", "Legal Notice")}
           </h1>
 
-          <div className="animate-fade-in-up stagger-2 space-y-12 text-[#6e7891] text-body leading-relaxed laplace-card p-8 md:p-12">
+          <div className="  space-y-12 text-[#6e7891] text-body leading-relaxed laplace-card p-8 md:p-12">
             <p className="text-[1.1rem]">
               {formatBrand(t(
                 "Le présent site est édité par MENUA CONSULTING, société par actions simplifiée unipersonnelle (SASU), au capital social de 15 000 €, dont le siège social est situé au 92 rue des Pyrénées – 75020 Paris, immatriculée au Registre du commerce et des sociétés de Paris sous le numéro 993 749 779 R.C.S. Paris.",

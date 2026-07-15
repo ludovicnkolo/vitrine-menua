@@ -7,96 +7,170 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+// ─── UTILISATEURS DU SYSTÈME (Admin & Associés) ──────────────────────────────
 model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  password    String
+  name        String
+  role        String   @default("ASSOCIÉ") // ADMINISTRATEUR, ASSOCIÉ
+  profile     String? // Profil de permissions (ex: Juriste, Comptable)
+  permissions String? // Droits JSON (ex: ["MANAGE_CLIENTS", "VIEW_ALL", "EDIT_USERS"])
+  isBlocked   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  assignedTasks    Task[]     @relation("AssignedTasks")
+  createdTasks     Task[]     @relation("CreatedTasks")
+  assignedMessages Message[]  @relation("AssignedMessages")
+  documents        Document[]
+  comments         Comment[]
+  auditLogs        AuditLog[]
+}
+
+// ─── CLIENTS (Personnes externes au CRM) ──────────────────────────────────────
+model Client {
   id        String   @id @default(uuid())
   email     String   @unique
-  password  String
   name      String
-  role      String   @default("COLLABORATOR") // ADMIN, SUPERVISOR, COLLABORATOR, PRESTATAIRE, READ_ONLY
-  isBlocked Boolean  @default(false)
+  company   String?
+  phone     String?
+  status    String   @default("ACTIF") // ACTIF, SUSPENDU
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  assignedTasks Task[]       @relation("AssignedTasks")
-  createdTasks  Task[]       @relation("CreatedTasks")
-  documents     Document[]
-  comments      Comment[]
-  auditLogs     AuditLog[]
+  dossiers Dossier[]
+  messages Message[]
 }
 
-model Dossier {
-  id         String   @id @default(uuid())
-  clientName String
-  contact    String?
-  country    String?
-  needType   String?
-  siret      String?
-  status     String   @default("NEW") // NEW, TO_QUALIFY, TO_ASSIGN, IN_PROGRESS, WAITING_DOCS, IN_REVIEW, CORRECTION_REQUESTED, VALIDATED, SENT, CLOSED
-  priority   String   @default("NORMAL") // URGENT, NORMAL, LOW
+// ─── LA BOÎTE DE RÉCEPTION (Emails récupérés) ─────────────────────────────────
+model Message {
+  id        String  @id @default(uuid())
+  messageId String  @unique // Garantie d'unicité (Message-ID de l'email)
+  subject   String
+  bodyText  String?
+  bodyHtml  String?
+  fromEmail String
+  fromName  String?
+
+  // NOUVEAU, ATTRIBUE, INITIE, CONTROLE, A_CORRIGER, REATTRIBUE, TERMINE, ARCHIVE
+  status String @default("NOUVEAU")
+
+  isAnonyme Boolean @default(true)
+
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  dossierId String?
+  dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: SetNull)
+
+  assignedToId String?
+  assignedTo   User?   @relation("AssignedMessages", fields: [assignedToId], references: [id], onDelete: SetNull)
+
   receivedAt DateTime @default(now())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  auditLogs AuditLog[]
+}
+
+// ─── DOSSIERS (Catégorisation des requêtes clients) ───────────────────────────
+model Dossier {
+  id          String  @id @default(uuid())
+  name        String // Créé et nommé par l'administrateur
+  description String?
+
+  // NOUVEAU, ATTRIBUE, INITIE, CONTROLE, A_CORRIGER, REATTRIBUE, TERMINE, ARCHIVE
+  status   String @default("NOUVEAU")
+  priority String @default("NORMAL")
+
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages  Message[]
   tasks     Task[]
   documents Document[]
   comments  Comment[]
+  auditLogs AuditLog[]
 }
 
+// ─── CHAT INTERNE (Commentaires entre Associés sur un Dossier) ────────────────
+model Comment {
+  id      String  @id @default(uuid())
+  content String
+  isFile  Boolean @default(false)
+  fileUrl String?
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  dossierId String?
+  dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+
+  taskId String?
+  task   Task?   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+// ─── GESTION DES TÂCHES (Optionnel pour le workflow métier) ───────────────────
 model Task {
-  id          String    @id @default(uuid())
-  dossierId   String
-  dossier     Dossier   @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+  id           String  @id @default(uuid())
+  dossierId    String
+  dossier      Dossier @relation(fields: [dossierId], references: [id], onDelete: Cascade)
   assignedToId String?
-  assignedTo  User?     @relation("AssignedTasks", fields: [assignedToId], references: [id])
-  createdById String
-  createdBy   User      @relation("CreatedTasks", fields: [createdById], references: [id])
-  
+  assignedTo   User?   @relation("AssignedTasks", fields: [assignedToId], references: [id])
+  createdById  String
+  createdBy    User    @relation("CreatedTasks", fields: [createdById], references: [id])
+
   description String
   deadline    DateTime?
-  type        String    @default("INTERNAL") // INTERNAL, MISSION
-  status      String    @default("TO_ASSIGN") // TO_ASSIGN, IN_PROGRESS, IN_REVIEW, CORRECTION_REQUESTED, VALIDATED
-  
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  status      String    @default("TO_ASSIGN")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   documents Document[]
   comments  Comment[]
 }
 
+// ─── DOCUMENTS GLOBAUX ────────────────────────────────────────────────────────
 model Document {
-  id           String   @id @default(uuid())
+  id           String @id @default(uuid())
   name         String
   url          String
   uploadedById String
-  uploadedBy   User     @relation(fields: [uploadedById], references: [id])
-  dossierId    String?
-  dossier      Dossier? @relation(fields: [dossierId], references: [id], onDelete: Cascade)
-  taskId       String?
-  task         Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  
-  createdAt    DateTime @default(now())
-}
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
 
-model Comment {
-  id        String   @id @default(uuid())
-  content   String
-  authorId  String
-  author    User     @relation(fields: [authorId], references: [id])
   dossierId String?
   dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: Cascade)
-  taskId    String?
-  task      Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  
+
+  taskId String?
+  task   Task?   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
 }
 
+// ─── AUDIT TRAIL (L'Oeil de l'Admin : qui fait quoi) ──────────────────────────
 model AuditLog {
-  id         String   @id @default(uuid())
-  userId     String?
-  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  action     String   // LOGIN, VIEW_DOSSIER, CHANGE_STATUS, etc.
-  targetId   String?  // ID of the modified entity
-  targetType String?  // User, Dossier, Task, Document
-  details    String?  // JSON stringified details
-  createdAt  DateTime @default(now())
+  id     String  @id @default(uuid())
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  action String // CREATION_DOSSIER, CHANGEMENT_STATUT, TELECHARGEMENT_DOC
+
+  targetId   String?
+  targetType String?
+  details    String?
+
+  dossierId String?
+  dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+
+  messageId String?
+  message   Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 }

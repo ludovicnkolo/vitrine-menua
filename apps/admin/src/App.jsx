@@ -12,7 +12,9 @@ import {
   MoreVertical,
   CheckCircle,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Mail,
+  MessageSquare
 } from 'lucide-react'
 
 // --- MOCK DATA (Données fictives) ---
@@ -47,10 +49,23 @@ const mockTasks = [
   { id: 'TSK-104', dossierId: 'DOS-24-001', name: 'Urgence KYC Profil A', assignedTo: 'Jean Dupont', status: 'IN_PROGRESS', deadline: '2026-07-10', type: 'INTERNAL' },
 ]
 
+const mockInbox = [
+  { id: 'MSG-001', from: 'contact@acme.com', name: 'ACME Corp', subject: 'Nouveau besoin de conseil', date: 'Aujourd\'hui 10:30', status: 'NOUVEAU', isAnonyme: false, client: 'ACME Corp' },
+  { id: 'MSG-002', from: 'unknown@gmail.com', name: 'Paul Inconnu', subject: 'Candidature Spontanée', date: 'Hier 15:45', status: 'ATTRIBUE', isAnonyme: true, assignedTo: 'Alice Martin' },
+  { id: 'MSG-003', from: 'rh@totalenergies.fr', name: 'TotalEnergies RH', subject: 'Modification audit', date: 'Hier 09:12', status: 'INITIE', isAnonyme: false, client: 'TotalEnergies', dossierId: 'DOS-24-005' },
+  { id: 'MSG-004', from: 'contact@acme.com', name: 'ACME Corp', subject: 'Bilan comptable', date: 'Il y a 2 jours', status: 'CONTROLE', isAnonyme: false, client: 'ACME Corp' },
+  { id: 'MSG-005', from: 'legal@acme.com', name: 'ACME Corp', subject: 'Contrat', date: 'Il y a 3 jours', status: 'A_CORRIGER', isAnonyme: false, client: 'ACME Corp' },
+]
+
+const mockClients = [
+  { id: 'CLI-001', name: 'ACME Corp', email: 'contact@acme.com', dossiers: 2 },
+  { id: 'CLI-002', name: 'TotalEnergies', email: 'rh@totalenergies.fr', dossiers: 1 },
+]
+
 // --- HELPERS (Badges) ---
 function getStatusBadge(status) {
   const map = {
-    'NEW': { text: 'Nouveau', class: 'badge-new' },
+    'NOUVEAU': { text: 'Nouveau', class: 'badge-new' },
     'TO_ASSIGN': { text: 'À attribuer', class: 'badge-warning' },
     'IN_PROGRESS': { text: 'En cours', class: 'badge-progress' },
     'WAITING_DOCS': { text: 'Attente Docs', class: 'badge-warning' },
@@ -73,12 +88,24 @@ function getPriorityBadge(priority) {
 function getRoleBadge(role) {
   const map = {
     'ADMIN': { text: 'Administrateur', bg: '#4C1D95', color: '#FFF' },
-    'SUPERVISOR': { text: 'Superviseur', bg: '#2B6CB0', color: '#FFF' },
-    'COLLABORATOR': { text: 'Collaborateur', bg: '#319795', color: '#FFF' },
-    'PRESTATAIRE': { text: 'Prestataire', bg: '#D69E2E', color: '#FFF' },
-    'READ_ONLY': { text: 'Lecture Seule', bg: '#718096', color: '#FFF' }
+    'ASSOCIÉ': { text: 'Associé (Équipe)', bg: '#319795', color: '#FFF' }
   }
-  const s = map[role] || map['READ_ONLY']
+  const s = map[role] || { text: role, bg: '#718096', color: '#FFF' }
+  return <span className="badge" style={{backgroundColor: s.bg, color: s.color}}>{s.text}</span>
+}
+
+function getMessageStatusBadge(status) {
+  const map = {
+    'NOUVEAU': { text: 'Nouveau', bg: '#E53E3E', color: '#FFF' },
+    'ATTRIBUE': { text: 'Attribué', bg: '#DD6B20', color: '#FFF' },
+    'INITIE': { text: 'Initié', bg: '#3182CE', color: '#FFF' },
+    'CONTROLE': { text: 'Contrôlé', bg: '#805AD5', color: '#FFF' },
+    'A_CORRIGER': { text: 'À corriger', bg: '#E53E3E', color: '#FFF' },
+    'REATTRIBUE': { text: 'Réattribué', bg: '#DD6B20', color: '#FFF' },
+    'TERMINE': { text: 'Terminé', bg: '#38A169', color: '#FFF' },
+    'ARCHIVE': { text: 'Archivé', bg: '#718096', color: '#FFF' }
+  }
+  const s = map[status] || { text: status, bg: '#718096', color: '#FFF' }
   return <span className="badge" style={{backgroundColor: s.bg, color: s.color}}>{s.text}</span>
 }
 
@@ -139,6 +166,56 @@ const DashboardPage = () => {
                 <td style={{color: 'var(--text-muted)'}}>{d.date}</td>
                 <td>
                   <button className="btn btn-outline" style={{padding: '0.25rem 0.5rem', fontSize: '0.75rem'}}>Consulter</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+const InboxPage = () => {
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem'}}>
+        <div>
+          <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)'}}>Boîte de Réception Centrale</h1>
+          <p style={{color: 'var(--text-muted)'}}>Emails synchronisés depuis contact@menua.com (Visibilité Admin)</p>
+        </div>
+      </div>
+      <div className="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Expéditeur</th>
+              <th>Sujet</th>
+              <th>Statut CRM</th>
+              <th>Liaison</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {mockInbox.map(m => (
+              <tr key={m.id}>
+                <td>
+                  <strong style={{display: 'block'}}>{m.name}</strong>
+                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.from}</span>
+                </td>
+                <td style={{fontWeight: m.status === 'NOUVEAU' ? 600 : 400}}>{m.subject}</td>
+                <td>{getMessageStatusBadge(m.status)}</td>
+                <td>
+                  {m.isAnonyme ? (
+                    <span style={{color: 'var(--warning)', fontSize: '0.875rem'}}>Anonyme (À qualifier)</span>
+                  ) : (
+                    <span style={{color: 'var(--success)', fontWeight: 500, fontSize: '0.875rem'}}>Client: {m.client}</span>
+                  )}
+                </td>
+                <td style={{color: 'var(--text-muted)'}}>{m.date}</td>
+                <td>
+                  <button className="btn btn-outline" style={{padding: '0.25rem 0.5rem', fontSize: '0.75rem'}}>Traiter</button>
                 </td>
               </tr>
             ))}
@@ -238,47 +315,78 @@ const TasksPage = () => {
 }
 
 const UsersPage = () => {
+  const [tab, setTab] = useState('associes');
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem'}}>
         <div>
-          <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)'}}>Gestion des Utilisateurs</h1>
-          <p style={{color: 'var(--text-muted)'}}>Administrateurs, Superviseurs, Collaborateurs et Prestataires</p>
+          <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)'}}>Annuaire CRM</h1>
+          <p style={{color: 'var(--text-muted)'}}>Gestion des équipes internes et des clients</p>
         </div>
-        <button className="btn btn-primary">Ajouter un acteur</button>
+        <button className="btn btn-primary">{tab === 'associes' ? 'Ajouter un Associé' : 'Ajouter un Client'}</button>
       </div>
+
+      <div style={{display: 'flex', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid #E2E8F0', paddingBottom: '0.5rem'}}>
+        <button onClick={() => setTab('associes')} style={{background: 'none', border: 'none', fontSize: '1rem', fontWeight: tab === 'associes' ? 600 : 400, color: tab === 'associes' ? 'var(--primary)' : 'var(--text-muted)', cursor: 'pointer', borderBottom: tab === 'associes' ? '2px solid var(--primary)' : 'none', paddingBottom: '0.5rem'}}>Équipe (Associés)</button>
+        <button onClick={() => setTab('clients')} style={{background: 'none', border: 'none', fontSize: '1rem', fontWeight: tab === 'clients' ? 600 : 400, color: tab === 'clients' ? 'var(--primary)' : 'var(--text-muted)', cursor: 'pointer', borderBottom: tab === 'clients' ? '2px solid var(--primary)' : 'none', paddingBottom: '0.5rem'}}>Clients</button>
+      </div>
+
       <div className="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Nom / Email</th>
-              <th>Rôle</th>
-              <th>Statut</th>
-              <th>Dernière Connexion</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {mockUsers.map(u => (
-              <tr key={u.id}>
-                <td>
-                  <strong style={{display: 'block'}}>{u.name}</strong>
-                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{u.email}</span>
-                </td>
-                <td>{getRoleBadge(u.role)}</td>
-                <td>
-                  <span style={{color: u.status === 'Actif' ? 'var(--success)' : 'var(--danger)', fontWeight: 500}}>
-                    {u.status}
-                  </span>
-                </td>
-                <td style={{color: 'var(--text-muted)'}}>{u.lastLogin}</td>
-                <td>
-                  <button className="btn btn-outline" style={{padding: '0.25rem 0.5rem', fontSize: '0.75rem'}}>Éditer</button>
-                </td>
+        {tab === 'associes' ? (
+          <table>
+            <thead>
+              <tr>
+                <th>Nom / Email</th>
+                <th>Rôle / Profil</th>
+                <th>Statut</th>
+                <th>Dernière Connexion</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {mockUsers.map(u => (
+                <tr key={u.id}>
+                  <td>
+                    <strong style={{display: 'block'}}>{u.name}</strong>
+                    <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{u.email}</span>
+                  </td>
+                  <td>{getRoleBadge(u.role)}</td>
+                  <td>
+                    <span style={{color: u.status === 'Actif' ? 'var(--success)' : 'var(--danger)', fontWeight: 500}}>
+                      {u.status}
+                    </span>
+                  </td>
+                  <td style={{color: 'var(--text-muted)'}}>{u.lastLogin}</td>
+                  <td>
+                    <button className="btn btn-outline" style={{padding: '0.25rem 0.5rem', fontSize: '0.75rem'}}>Éditer</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Entreprise / Nom</th>
+                <th>Email Contact</th>
+                <th>Dossiers Actifs</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {mockClients.map(c => (
+                <tr key={c.id}>
+                  <td><strong style={{display: 'block'}}>{c.name}</strong></td>
+                  <td><span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{c.email}</span></td>
+                  <td><span className="badge badge-new">{c.dossiers}</span></td>
+                  <td><button className="btn btn-outline" style={{padding: '0.25rem 0.5rem', fontSize: '0.75rem'}}>Voir Profil</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   )
@@ -305,6 +413,10 @@ function App() {
             <Files size={20} />
             Dossiers
           </Link>
+          <Link to="/inbox" className={`nav-item ${location.pathname.includes('/inbox') ? 'active' : ''}`}>
+            <Mail size={20} />
+            Boîte de Réception
+          </Link>
           {/* SÉPARATION DES ACCÈS (Muraille de Chine visuelle) */}
           {['ADMIN', 'SUPERVISOR'].includes(user.role) && (
             <Link to="/tasks" className={`nav-item ${location.pathname.includes('/tasks') ? 'active' : ''}`}>
@@ -315,7 +427,7 @@ function App() {
           {user.role === 'ADMIN' && (
             <Link to="/users" className={`nav-item ${location.pathname.includes('/users') ? 'active' : ''}`}>
               <Users size={20} />
-              Utilisateurs
+              Annuaire CRM
             </Link>
           )}
           {user.role === 'ADMIN' && (
@@ -368,6 +480,7 @@ function App() {
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/dossiers" element={<DossiersPage />} />
+            <Route path="/inbox" element={<InboxPage />} />
             <Route path="/tasks" element={<TasksPage />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/settings" element={

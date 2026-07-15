@@ -25,25 +25,25 @@ export default function Home() {
         
         <div className="laplace-container relative z-10 pt-40 md:pt-48 pb-20 mt-8">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="animate-fade-in-up stagger-1 text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Externalisation opérationnelle des fonctions back ", "Operational outsourcing of back ")}
               <span className="font-sans font-medium">&amp;</span>
               {t(" middle office", " middle office functions")}
             </h1>
-            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
+            <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
               {t(
                 "Nous sécurisons l’exécution de vos opérations back et middle office afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
                 "We secure the execution of your back and middle office operations to allow your teams to focus on strategic decisions."
               )}
             </p>
-            <div className="animate-fade-in-up stagger-4 mb-8">
-              <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-6 py-3 bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.85rem] font-bold hover:bg-white transition-colors group">
+            <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
+              <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.85rem] font-bold hover:bg-white transition-colors group">
                 {t("Présenter un besoin", "Submit a need")}
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
-            <div className="animate-fade-in-up stagger-4 mt-1 flex items-center gap-2 text-white">
+            <div className="  mt-1 flex items-center gap-2 text-white">
               <Globe size={16} />
               <p className="text-[0.9rem] lg:text-[0.95rem] text-white font-light italic tracking-wide">
                 {t(

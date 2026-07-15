@@ -24,15 +24,15 @@ export default function NousConnaitrePage() {
         </div>
         <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="animate-fade-in-up stagger-1 text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Nous connaître", "About us")}
             </h1>
-            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
+            <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
               {t("Un cabinet opérationnel, structuré pour accompagner les entreprises dans l’exécution fiable de leurs fonctions back ", "An operational firm, structured to support companies in the reliable execution of their back ")}<span className="font-sans font-medium">&amp;</span>{t(" middle office.", " middle office.")}
             </p>
-            <div className="animate-fade-in-up stagger-4 mb-8">
-              <Link href="#notre-approche" className="inline-flex items-center gap-3 px-8 py-4 bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
+            <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
+              <Link href="#notre-approche" className="inline-flex items-center gap-3 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
                 {t("Découvrir notre approche", "Discover our approach")}
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -239,7 +239,7 @@ export default function NousConnaitrePage() {
       {/* ── 2.5 NOTRE MÉTHODOLOGIE (Beige Section) ── */}
       <section id="notre-methodologie" className="relative w-full bg-[#e8e1d7] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container">
-          <div className="text-center mb-20 animate-fade-in-up">
+          <div className="text-center mb-20 ">
             <div className="inline-block text-left">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <h2 className="text-[#141824] text-[1.3rem] md:text-[1.5rem] font-bold mb-6 uppercase tracking-wider">{t("Notre méthodologie", "Our methodology")}</h2>

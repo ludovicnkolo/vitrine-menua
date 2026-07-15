@@ -53,11 +53,11 @@ export default function NousRejoindre() {
         </div>
         <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="animate-fade-in-up stagger-1 text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Nous rejoindre", "Join Us")}
             </h1>
-            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 animate-fade-in-up stagger-2"></div>
-            <p className="animate-fade-in-up stagger-3 text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
+            <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {formatBrand(t(
                 "MENUA CONSULTING recrute des profils opérationnels autonomes, rigoureux, fiables et organisés, capables d'intervenir à distance sur des fonctions back et middle office, en France comme à l'international.",
                 "MENUA CONSULTING is recruiting autonomous, rigorous, reliable and organized operational profiles, capable of intervening remotely on back and middle office functions, in France and internationally."
@@ -130,7 +130,7 @@ export default function NousRejoindre() {
                       onChange={() => setProfileType("individual")}
                       className="accent-[#141824] w-5 h-5 cursor-pointer"
                     />
-                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Une personne physique / candidat individuel", "An individual / individual candidate")}</span>
+                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Un particulier", "An individual")}</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer group">
                     <input 
@@ -141,7 +141,7 @@ export default function NousRejoindre() {
                       onChange={() => setProfileType("company")}
                       className="accent-[#141824] w-5 h-5 cursor-pointer"
                     />
-                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Une entreprise prestataire ou partenaire", "A service provider or partner company")}</span>
+                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Une entreprise", "A company")}</span>
                   </label>
                 </div>
               </div>
@@ -156,7 +156,7 @@ export default function NousRejoindre() {
                       <input type="text" name="company" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
                     </div>
                     <div>
-                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("SIRET / Numéro d'identification", "SIRET / ID Number")} <span className="text-red-500">*</span></label>
+                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("SIRET", "SIRET")} <span className="text-red-500">*</span></label>
                       <input type="text" name="siret" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
                     </div>
                   </div>
@@ -252,10 +252,10 @@ export default function NousRejoindre() {
 
               <div className="bg-[#f5f7fa] p-5 border-l-4 border-[#141824]">
                 <p className="text-[0.95rem] text-[#141824] font-medium leading-relaxed">
-                  {t(
-                    "Aucun document n'est exigible pour le moment. Nous vous reviendrons par la suite pour toute modalité ultérieure.",
-                    "No document is required at this time. We will get back to you later for any further arrangements."
-                  )}
+                  {formatBrand(t(
+                    "Aucun document n'est demandé à ce stade. Si votre profil est retenu, MENUA CONSULTING vous contactera pour vous indiquer les pièces complémentaires à transmettre.",
+                    "No document is required at this stage. If your profile is selected, MENUA CONSULTING will contact you to indicate the additional documents to provide."
+                  ))}
                 </p>
               </div>
 
@@ -287,7 +287,7 @@ export default function NousRejoindre() {
 
               <div className="flex justify-center pt-6">
                 <button type="submit" disabled={isSubmitting} className="inline-flex items-center justify-center bg-[#141824] text-white px-10 py-4 font-bold uppercase tracking-wider text-[0.85rem] hover:bg-[#1f2638] transition-colors duration-300 w-full md:w-auto disabled:opacity-70 disabled:cursor-not-allowed">
-                  {isSubmitting ? t("Envoi en cours...", "Sending...") : t("Envoyer ma candidature", "Send my application")}
+                  {isSubmitting ? t("Envoi en cours...", "Sending...") : t("Soumettre", "Submit")}
                 </button>
               </div>
             </form>

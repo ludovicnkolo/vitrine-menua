@@ -10,7 +10,7 @@ export default function ScrollObserver() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
+          entry.target.classList.add("");
           // Stop observing if we only want it to animate once
           observer.unobserve(entry.target);
         }
@@ -22,7 +22,7 @@ export default function ScrollObserver() {
     });
 
     const timer = setTimeout(() => {
-      document.querySelectorAll(".animate-fade-in-up").forEach((el) => {
+      document.querySelectorAll(".").forEach((el) => {
         observer.observe(el);
       });
     }, 150); // slight delay to ensure DOM is fully rendered

@@ -68,7 +68,7 @@ export default function PourquoiMenuaPage() {
             {/* Mobile Image (Visible only on mobile) */}
             <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
               <img
-                src="/img/pourquoi-hero.jpg"
+                src="/img/pourquoi_2.jpg"
                 alt="Pourquoi Menua"
                 className="w-full h-full object-cover object-center"
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
@@ -94,7 +94,7 @@ export default function PourquoiMenuaPage() {
           {/* Image — absolutely overlapping the right side of the white box */}
           <div className="hidden lg:block absolute -top-24 right-0 w-[36%] h-[75%] z-20">
             <img
-              src="/img/pourquoi-hero.jpg"
+              src="/img/pourquoi_2.jpg"
               alt="Pourquoi Menua"
               className="w-full h-full object-cover shadow-xl"
               onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
@@ -108,14 +108,14 @@ export default function PourquoiMenuaPage() {
       <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
-             <img src="/img/besoins-finance.jpg" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
+             <img src="/img/benefices.png" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
           </div>
           <div className="w-full lg:w-7/12 bg-white p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
             <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">{t("Bénéfices", "Benefits")}</h3>
             
             {/* Mobile Image */}
             <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
-              <img src="/img/besoins-finance.jpg" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
+              <img src="/img/benefices.png" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
             </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
               {formatBrand(t(

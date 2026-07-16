@@ -95,7 +95,7 @@ export default function NousContacter() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/img/connaitre-intro.jpg" 
+            src="/img/nous-contacter-hero-new.png" 
             alt="Nous contacter" 
             className="w-full h-full object-cover" 
           />
@@ -212,7 +212,7 @@ export default function NousContacter() {
                 {clientType === "company" && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     <div>
-                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Société", "Company")} <span className="text-red-500">*</span></label>
+                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Raison sociale", "Company")} <span className="text-red-500">*</span></label>
                       <input type="text" name="company" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                     </div>
                     <div>
@@ -234,12 +234,27 @@ export default function NousContacter() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("E-mail professionnel", "Professional email")} <span className="text-red-500">*</span></label>
-                  <input type="email" name="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+              {clientType === "company" && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                  <div>
+                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("E-mail de l'entreprise", "Company email")} <span className="text-red-500">*</span></label>
+                    <input type="email" name="companyEmail" placeholder="contact@entreprise.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                  </div>
+                  <div>
+                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("E-mail professionnel", "Professional email")} <span className="text-red-500">*</span></label>
+                    <input type="email" name="professionalEmail" placeholder="votre.nom@entreprise.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                  </div>
                 </div>
-                <div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {clientType === "individual" && (
+                  <div>
+                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("E-mail personnel", "Personal email")} <span className="text-red-500">*</span></label>
+                    <input type="email" name="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                  </div>
+                )}
+                <div className={clientType === "company" ? "md:col-span-2" : ""}>
                   <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")} <span className="text-red-500">*</span></label>
                   <input type="tel" name="phone" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                 </div>

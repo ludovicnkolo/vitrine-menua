@@ -57,7 +57,7 @@ export default function NousConnaitrePage() {
             {/* Right Image (Desktop only) */}
             <div className="hidden lg:block w-full lg:w-4/12 lg:h-[420px] z-20 relative shrink-0">
               <img
-                src="/img/connaitre-intro.jpg"
+                src="/img/connaitre_2.jpg"
                 alt="Cabinet"
                 className="w-full h-full object-cover object-center"
               />

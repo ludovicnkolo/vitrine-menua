@@ -91,7 +91,7 @@ export default function PolitiqueConfidentialite() {
     <main className="flex flex-col w-full min-h-screen bg-[#f5f7fa] pt-32 pb-16">
       <section className="relative w-full mb-20">
         <div className="laplace-container max-w-4xl">
-          <p className="  text-[#3874ff] text-[0.8rem] font-bold tracking-widest uppercase mb-4">
+          <p className="  text-[#6e7891] text-[0.8rem] font-bold tracking-widest uppercase mb-4">
             <Link href="/" className="hover:text-[#141824] transition-colors">{t("Accueil", "Home")}</Link>
             <span className="mx-2 text-[#a0aabf]">/</span>
             <span>{t("Politique de confidentialité", "Privacy Policy")}</span>

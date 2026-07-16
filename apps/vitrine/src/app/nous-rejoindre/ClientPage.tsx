@@ -44,7 +44,7 @@ export default function NousRejoindre() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/img/besoins-hero.jpg" 
+            src="/img/nous-rejoindre-hero-new.png" 
             alt="Nous rejoindre" 
             className="w-full h-full object-cover" 
             onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 
@@ -152,12 +152,12 @@ export default function NousRejoindre() {
                 {profileType === "company" && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     <div>
-                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Nom de l'entreprise", "Company Name")} <span className="text-red-500">*</span></label>
-                      <input type="text" name="company" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Raison sociale", "Company Name")} <span className="text-red-500">*</span></label>
+                      <input type="text" name="company" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                     </div>
                     <div>
                       <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("SIRET", "SIRET")} <span className="text-red-500">*</span></label>
-                      <input type="text" name="siret" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                      <input type="text" name="siret" placeholder={t("Ex: 123 456 789 00012", "E.g. 123 456 789 00012")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                     </div>
                   </div>
                 )}
@@ -165,22 +165,37 @@ export default function NousRejoindre() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
                     <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Nom", "Last Name")} <span className="text-red-500">*</span></label>
-                    <input type="text" name="lastName" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                    <input type="text" name="lastName" placeholder={t("Votre nom", "Your last name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                   </div>
                   <div>
                     <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Prénom", "First Name")} <span className="text-red-500">*</span></label>
-                    <input type="text" name="firstName" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                    <input type="text" name="firstName" placeholder={t("Votre prénom", "Your first name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-                  <div>
-                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("E-mail", "Email")} <span className="text-red-500">*</span></label>
-                    <input type="email" name="email" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                {profileType === "company" && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                    <div>
+                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("E-mail de l'entreprise", "Company Email")} <span className="text-red-500">*</span></label>
+                      <input type="email" name="companyEmail" placeholder="contact@entreprise.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                    </div>
+                    <div>
+                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("E-mail professionnel", "Professional Email")} <span className="text-red-500">*</span></label>
+                      <input type="email" name="professionalEmail" placeholder="votre.nom@entreprise.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                    </div>
                   </div>
-                  <div>
+                )}
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                  {profileType === "individual" && (
+                    <div>
+                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("E-mail", "Email")} <span className="text-red-500">*</span></label>
+                      <input type="email" name="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                    </div>
+                  )}
+                  <div className={profileType === "company" ? "md:col-span-2" : ""}>
                     <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")} <span className="text-red-500">*</span></label>
-                    <input type="tel" name="phone" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                    <input type="tel" name="phone" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                   </div>
                 </div>
               </div>

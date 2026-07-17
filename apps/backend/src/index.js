@@ -10,6 +10,9 @@ dotenv.config({ path: '../../.env' });
 const app = express();
 const prisma = new PrismaClient();
 
+// Confiance au reverse proxy (Nginx) pour obtenir l'adresse IP réelle de l'utilisateur
+app.set('trust proxy', 1);
+
 // Security Middlewares
 app.use(helmet());
 

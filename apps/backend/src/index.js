@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
-dotenv.config();
+dotenv.config({ path: '../../.env' });
 
 const app = express();
 const prisma = new PrismaClient();

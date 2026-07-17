@@ -7,114 +7,159 @@ import { formatBrand } from "@/utils/formatBrand";
 export default function PolitiqueConfidentialite() {
   const { t } = useLanguage();
 
-  const sections = [
-    {
-      title: t("1. Responsable du traitement", "1. Data Controller"),
-      content: t(
-        "Le responsable du traitement est MENUA CONSULTING, dont le siège social est situé au 92 rue des Pyrénées – 75020 Paris. Pour toute question relative à la protection des données personnelles, vous pouvez écrire à l'adresse suivante : contact@menuaconsulting.com.",
-        "The data controller is MENUA CONSULTING, headquartered at 92 rue des Pyrénées – 75020 Paris. For any questions regarding personal data protection, you can write to: contact@menuaconsulting.com."
-      )
-    },
-    {
-      title: t("2. Données collectées", "2. Data Collected"),
-      content: t(
-        "Les données collectées via le site sont celles que vous communiquez volontairement dans les formulaires de contact et de recrutement. Elles peuvent inclure notamment : nom, société, fonction, adresse email, numéro de téléphone, type de besoin, niveau d'urgence, message, ainsi que les informations contenues dans une candidature et les documents transmis à cette occasion.",
-        "The data collected via the site is what you voluntarily provide in the contact and recruitment forms. It may include: name, company, position, email address, phone number, type of need, urgency level, message, as well as information contained in an application and the documents submitted on that occasion."
-      )
-    },
-    {
-      title: t("3. Finalités des traitements", "3. Purposes of Processing"),
-      content: t(
-        "Ces données sont utilisées pour répondre à vos demandes de contact, analyser votre besoin, traiter les candidatures reçues, organiser le suivi des échanges et, le cas échéant, poursuivre un échange professionnel en lien avec votre demande.",
-        "This data is used to respond to your contact requests, analyze your need, process received applications, organize the follow-up of exchanges, and, if applicable, continue a professional exchange related to your request."
-      )
-    },
-    {
-      title: t("4. Base légale", "4. Legal Basis"),
-      content: t(
-        "Les traitements mis en œuvre reposent sur l'intérêt légitime de MENUA CONSULTING à répondre aux sollicitations reçues et à gérer ses échanges professionnels, ainsi que, lorsque cela est nécessaire, sur votre consentement.",
-        "The processing implemented is based on the legitimate interest of MENUA CONSULTING in responding to received requests and managing its professional exchanges, as well as, when necessary, on your consent."
-      )
-    },
-    {
-      title: t("5. Destinataires des données", "5. Data Recipients"),
-      content: t(
-        "Les données sont destinées exclusivement à MENUA CONSULTING et, lorsque cela est nécessaire, à ses prestataires techniques habilités, notamment pour l'hébergement du site, la gestion technique des formulaires ou l'acheminement sécurisé des messages.",
-        "The data is intended exclusively for MENUA CONSULTING and, when necessary, for its authorized technical service providers, particularly for website hosting, technical form management, or secure message routing."
-      )
-    },
-    {
-      title: t("6. Durée de conservation", "6. Retention Period"),
-      content: t(
-        "Les données issues du formulaire de contact sont conservées pendant la durée nécessaire au traitement de la demande et au suivi des échanges. Le cas échéant, elles peuvent être conservées pendant une durée maximale de 3 ans à compter du dernier échange.\n\nLes données relatives aux candidatures peuvent être conservées pendant la durée du processus de recrutement. Lorsqu'un candidat n'est pas retenu, son dossier peut être conservé jusqu'à 2 ans après le dernier contact, sauf opposition de sa part.\n\nAu-delà, les données sont supprimées ou archivées conformément aux obligations légales applicables.",
-        "Data from the contact form is kept for the time necessary to process the request and follow up on exchanges. If applicable, it may be kept for a maximum of 3 years from the last exchange.\n\nData relating to applications may be kept for the duration of the recruitment process. When a candidate is not selected, their file may be kept for up to 2 years after the last contact, unless they object.\n\nBeyond this, the data is deleted or archived in accordance with applicable legal obligations."
-      )
-    },
-    {
-      title: t("7. Droits des personnes", "7. Individual Rights"),
-      content: t(
-        "Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation du traitement, d'opposition et, lorsque cela est applicable, d'un droit à la portabilité de vos données.\n\nVous pouvez également retirer votre consentement lorsque le traitement repose sur celui-ci.",
-        "In accordance with the GDPR and the French Data Protection Act, you have the right of access, rectification, erasure, restriction of processing, objection, and, where applicable, the right to data portability.\n\nYou may also withdraw your consent when the processing is based on it."
-      )
-    },
-    {
-      title: t("8. Exercice des droits", "8. Exercising Your Rights"),
-      content: t(
-        "Pour exercer vos droits ou poser une question relative à vos données personnelles, vous pouvez contacter MENUA CONSULTING à l'adresse suivante : contact@menuaconsulting.com.\n\nSi vous estimez, après nous avoir contactés, que vos droits ne sont pas respectés, vous pouvez introduire une réclamation auprès de la CNIL.",
-        "To exercise your rights or ask a question about your personal data, you can contact MENUA CONSULTING at: contact@menuaconsulting.com.\n\nIf you believe, after contacting us, that your rights are not being respected, you can file a complaint with the CNIL (French data protection authority)."
-      )
-    },
-    {
-      title: t("9. Sécurité des données", "9. Data Security"),
-      content: t(
-        "MENUA CONSULTING met en œuvre des mesures techniques et organisationnelles appropriées pour protéger les données personnelles contre la perte, l'altération, l'accès non autorisé ou la divulgation non autorisée.",
-        "MENUA CONSULTING implements appropriate technical and organizational measures to protect personal data against loss, alteration, unauthorized access, or unauthorized disclosure."
-      )
-    },
-    {
-      title: t("10. Cookies et traceurs", "10. Cookies and Trackers"),
-      content: t(
-        "Le site peut utiliser des cookies ou traceurs nécessaires à son bon fonctionnement. Lorsque des cookies non strictement nécessaires sont utilisés, notamment à des fins de mesure d'audience ou de statistiques, le consentement de l'utilisateur est recueilli conformément à la réglementation applicable.",
-        "The site may use cookies or trackers necessary for its proper functioning. When non-strictly necessary cookies are used, particularly for audience measurement or statistical purposes, the user's consent is collected in accordance with applicable regulations."
-      )
-    },
-    {
-      title: t("11. Mise à jour", "11. Update"),
-      content: t(
-        "La présente politique de confidentialité peut être modifiée à tout moment afin de tenir compte des évolutions légales, réglementaires ou techniques du site. La version publiée sur le site est celle en vigueur à la date de consultation.",
-        "This privacy policy may be modified at any time to take into account legal, regulatory, or technical changes to the site. The version published on the site is the one in effect at the time of consultation."
-      )
-    },
-  ];
-
   return (
-    <main className="flex flex-col w-full min-h-screen bg-[#f5f7fa] pt-32 pb-16">
+    <main className="flex flex-col w-full min-h-screen bg-white pt-32 pb-16">
       <section className="relative w-full mb-20">
-        <div className="laplace-container max-w-4xl">
+        <div className="laplace-container max-w-5xl">
           <p className="  text-[#6e7891] text-[0.8rem] font-bold tracking-widest uppercase mb-4">
             <Link href="/" className="hover:text-[#141824] transition-colors">{t("Accueil", "Home")}</Link>
             <span className="mx-2 text-[#a0aabf]">/</span>
             <span>{t("Politique de confidentialité", "Privacy Policy")}</span>
           </p>
-          <h1 className="  mb-8 text-[#141824]">
+          
+          <h1 className="text-[1.25rem] md:text-[1.5rem] font-bold uppercase tracking-widest mb-4 text-[#141824]">
             {t("Politique de confidentialité", "Privacy Policy")}
           </h1>
-          <p className="  text-[#6e7891] text-[1.1rem] leading-relaxed mb-12">
-            {formatBrand(t(
-              "MENUA CONSULTING attache une importance particulière à la protection des données personnelles collectées via son site internet. La présente politique de confidentialité a pour objet d'informer les utilisateurs sur les données collectées, les finalités des traitements, les durées de conservation et les droits dont ils disposent.",
-              "MENUA CONSULTING attaches particular importance to the protection of personal data collected via its website. This privacy policy aims to inform users about the data collected, the purposes of processing, retention periods, and the rights they have."
-            ))}
-          </p>
+          <p className="text-[#6e7891] font-medium mb-12">{t("Dernière mise à jour : juin 2026.", "Last update: June 2026.")}</p>
 
-          <div className="  space-y-12 text-[#6e7891] text-body leading-relaxed laplace-card p-8 md:p-12">
-            {sections.map((section, i) => (
-              <div key={i}>
-                <h2 className="text-[1.2rem] font-bold text-[#141824] mb-4">{section.title}</h2>
-                {section.content.split("\n\n").map((para, j) => (
-                  <p key={j} className="mb-3 last:mb-0">{para}</p>
-                ))}
-              </div>
-            ))}
+          <div className="space-y-14 text-[#6e7891] text-[1.05rem] font-light leading-relaxed">
+            
+            {/* INTRODUCTION */}
+            <div>
+              <p className="mb-4">{formatBrand(t(
+                "MENUA CONSULTING s'engage à respecter la confidentialité et à protéger les données personnelles vous concernant, que vous soyez clients, prospects, candidats ou partenaires. Ces données sont collectées et traitées à l'occasion de nos échanges, demandes de contact ou prestations d'externalisation opérationnelle.",
+                "MENUA CONSULTING is committed to respecting confidentiality and protecting your personal data, whether you are clients, prospects, candidates, or partners. This data is collected and processed during our exchanges, contact requests, or operational outsourcing services."
+              ))}</p>
+              <p>{t(
+                "À cet égard, la société respecte les législations européenne et française en matière de protection des données personnelles, principalement le règlement européen UE n°2016/679 dit « RGPD » et la loi n°78-17 dite « Informatique et Libertés ».",
+                "In this regard, the company complies with European and French legislation on personal data protection, mainly the European Regulation EU 2016/679 known as the GDPR and the French Data Protection Act."
+              )}</p>
+            </div>
+
+            {/* RESPONSABLE ET FINALITÉS */}
+            <div>
+              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Responsable de traitement et finalités", "Data Controller and Purposes")}</h2>
+              <p className="mb-4">{formatBrand(t(
+                "MENUA CONSULTING agit en qualité de Responsable de traitement au sens de l'article 4 du RGPD pour les données collectées via son site. Les finalités et bases légales des traitements sont les suivantes :",
+                "MENUA CONSULTING acts as Data Controller within the meaning of Article 4 of the GDPR for data collected via its site. The purposes and legal bases of processing are as follows:"
+              ))}</p>
+              
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li>
+                  <strong className="text-[#141824]">{t("Gestion des demandes de contact et prospection :", "Management of contact requests and prospecting:")}</strong>{" "}
+                  {t("ce traitement est nécessaire aux fins des intérêts légitimes poursuivis par MENUA CONSULTING pour répondre à vos sollicitations (article 6 (f) du RGPD).", "this processing is necessary for the legitimate interests pursued by MENUA CONSULTING to respond to your requests (Article 6 (f) GDPR).")}
+                </li>
+                <li>
+                  <strong className="text-[#141824]">{t("Gestion des candidatures (Nous rejoindre) :", "Management of applications (Join us):")}</strong>{" "}
+                  {t("ce traitement est nécessaire à l'exécution de mesures précontractuelles ou repose sur votre consentement (article 6 (a) et (b) du RGPD).", "this processing is necessary for the performance of pre-contractual measures or is based on your consent (Article 6 (a) and (b) GDPR).")}
+                </li>
+                <li>
+                  <strong className="text-[#141824]">{t("Gestion de la relation contractuelle d'externalisation :", "Management of the outsourcing contractual relationship:")}</strong>{" "}
+                  {t("ce traitement est nécessaire à l'exécution du contrat conclu avec la société (article 6 (b) du RGPD).", "this processing is necessary for the execution of the contract concluded with the company (Article 6 (b) GDPR).")}
+                </li>
+              </ul>
+            </div>
+
+            {/* DONNÉES CONCERNÉES */}
+            <div>
+              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Quelles sont les données concernées ?", "What data is collected?")}</h2>
+              <p>{t(
+                "Les données collectées via le site sont celles que vous communiquez volontairement dans les formulaires de contact et de recrutement. Elles peuvent inclure notamment : vos données d'identification (nom, prénom), vos données professionnelles (société, fonction), vos données de contact (adresse email, numéro de téléphone), ainsi que les détails de votre besoin opérationnel ou les informations contenues dans votre CV et lettre de motivation.",
+                "The data collected via the site is what you voluntarily provide in the contact and recruitment forms. It may include: your identification data (last name, first name), your professional data (company, position), your contact data (email address, phone number), as well as details of your operational need or information contained in your resume and cover letter."
+              )}</p>
+            </div>
+
+            {/* DURÉE DE CONSERVATION */}
+            <div>
+              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Quelle est la durée de conservation ?", "What is the retention period?")}</h2>
+              <p className="mb-4">{formatBrand(t(
+                "MENUA CONSULTING conserve vos données personnelles pour la durée strictement nécessaire à l'accomplissement des finalités pour lesquelles elles sont traitées :",
+                "MENUA CONSULTING keeps your personal data for the time strictly necessary to fulfill the purposes for which it is processed:"
+              ))}</p>
+              <ul className="list-disc pl-6 space-y-3">
+                <li>
+                  <strong className="text-[#141824]">{t("Demandes de contact / Prospects :", "Contact requests / Prospects:")}</strong>{" "}
+                  {t("conservation pendant la durée nécessaire au suivi, et jusqu'à 3 ans à compter du dernier contact émanant de votre part.", "retention for the time necessary for follow-up, and up to 3 years from your last contact.")}
+                </li>
+                <li>
+                  <strong className="text-[#141824]">{t("Candidatures :", "Applications:")}</strong>{" "}
+                  {t("conservation pendant la durée du processus de recrutement. Si votre candidature n'est pas retenue, le dossier peut être conservé jusqu'à 2 ans après le dernier contact, sauf opposition de votre part.", "retention for the duration of the recruitment process. If your application is not selected, the file may be kept up to 2 years after the last contact, unless you object.")}
+                </li>
+                <li>
+                  <strong className="text-[#141824]">{t("Clients :", "Clients:")}</strong>{" "}
+                  {t("conservation le temps de la relation contractuelle, puis archivage pour une durée de 5 ans à compter de la fin de la mission (délai de prescription légale).", "retention for the duration of the contractual relationship, then archived for a period of 5 years from the end of the mission (legal prescription period).")}
+                </li>
+              </ul>
+            </div>
+
+            {/* DESTINATAIRES */}
+            <div>
+              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Qui sont les destinataires de ces données ?", "Who are the recipients of this data?")}</h2>
+              <p className="mb-4">{formatBrand(t(
+                "Les données sont destinées exclusivement aux services internes de MENUA CONSULTING (direction et équipe de gestion).",
+                "The data is intended exclusively for the internal departments of MENUA CONSULTING (management and management team)."
+              ))}</p>
+              <p className="mb-4">{formatBrand(t(
+                "Elles sont également susceptibles d'être transmises à des sous-traitants techniques strictement encadrés (au sens de la réglementation RGPD) pour les besoins exclusifs du fonctionnement du site :",
+                "They may also be transmitted to strictly regulated technical subcontractors (within the meaning of the GDPR regulations) for the exclusive operational needs of the site:"
+              ))}</p>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li>{t("Hébergeurs de serveurs localisés dans l'Union Européenne.", "Server hosting providers located in the European Union.")}</li>
+                <li>{t("Outils techniques d'acheminement sécurisé des formulaires.", "Technical tools for secure form routing.")}</li>
+              </ul>
+              <p>{formatBrand(t(
+                "En aucun cas vos données ne feront l'objet d'une transmission, cession ou revente à des organismes extérieurs à des fins de prospection commerciale.",
+                "Under no circumstances will your data be transmitted, assigned, or resold to external organizations for commercial prospecting purposes."
+              ))}</p>
+            </div>
+
+            {/* VOS DROITS RGPD */}
+            <div>
+              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Vos droits RGPD", "Your GDPR Rights")}</h2>
+              <p className="mb-4">{t(
+                "Conformément à la loi n°78-17 du 6 janvier 1978 et au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement ou de limitation du traitement des données à caractère personnel vous concernant. Vous pouvez vous opposer au traitement de vos données ou, le cas échéant, retirer votre consentement à tout moment.",
+                "In accordance with the French Data Protection Act and the GDPR, you have the right to access, rectify, erase, or limit the processing of personal data concerning you. You can object to the processing of your data or, where applicable, withdraw your consent at any time."
+              )}</p>
+              <p className="mb-4">{formatBrand(t(
+                "Pour exercer ces droits, vous pouvez vous adresser à MENUA CONSULTING par courrier électronique en indiquant vos nom, prénom et objet de la demande, à l'adresse suivante :",
+                "To exercise these rights, you can contact MENUA CONSULTING by email, indicating your name, surname, and the subject of your request, at the following address:"
+              ))}</p>
+              <p className="mb-6">
+                <a href="mailto:contact@menuaconsulting.com" className="text-[#141824] font-medium hover:underline">contact@menuaconsulting.com</a>
+              </p>
+              <p>{formatBrand(t(
+                "Conformément à la loi, si vous estimez après nous avoir contactés que vos droits ne sont pas respectés, vous disposez du droit d'introduire une réclamation auprès de l'autorité de contrôle compétente en France (la CNIL : https://www.cnil.fr/).",
+                "In accordance with the law, if you believe after contacting us that your rights are not respected, you have the right to lodge a complaint with the competent supervisory authority in France (the CNIL: https://www.cnil.fr/)."
+              ))}</p>
+            </div>
+
+            {/* SÉCURITÉ DES DONNÉES */}
+            <div>
+              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Sécurité des données", "Data Security")}</h2>
+              <p>{formatBrand(t(
+                "MENUA CONSULTING s'engage à prendre les mesures techniques et organisationnelles appropriées afin de préserver la sécurité et la confidentialité de vos données personnelles, et d'empêcher qu'elles ne soient déformées, endommagées, ou que des tiers non autorisés y aient accès.",
+                "MENUA CONSULTING is committed to taking appropriate technical and organizational measures to preserve the security and confidentiality of your personal data, and to prevent them from being distorted, damaged, or accessed by unauthorized third parties."
+              ))}</p>
+            </div>
+
+            {/* GESTION DES COOKIES */}
+            <div>
+              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Gestion des cookies", "Cookie Management")}</h2>
+              <p>{formatBrand(t(
+                "Notre site internet peut utiliser des cookies strictement nécessaires à son bon fonctionnement. Lorsque des cookies non indispensables sont utilisés (notamment à des fins de mesure d'audience ou de statistiques d'utilisation), votre consentement libre et éclairé est systématiquement recueilli au préalable, conformément à la réglementation applicable.",
+                "Our website may use cookies strictly necessary for its proper functioning. When non-essential cookies are used (particularly for audience measurement or usage statistics), your free and informed consent is systematically collected beforehand, in accordance with applicable regulations."
+              ))}</p>
+            </div>
+
+            {/* MODIFICATIONS */}
+            <div>
+              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Mise à jour de la politique", "Policy Update")}</h2>
+              <p>{formatBrand(t(
+                "La présente Politique de confidentialité est susceptible d'évoluer dans le temps pour tenir compte des évolutions légales, réglementaires ou techniques. La version publiée sur le site est celle en vigueur à la date de votre consultation.",
+                "This Privacy Policy is likely to evolve over time to take into account legal, regulatory, or technical developments. The version published on the site is the one in effect on the date of your consultation."
+              ))}</p>
+            </div>
+
           </div>
         </div>
       </section>

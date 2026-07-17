@@ -78,6 +78,9 @@ export default function NousContacter() {
       if (res.ok && data.success) {
         setSubmitStatus({ type: "success", message: data.message || "Votre demande a été envoyée avec succès." });
         (e.target as HTMLFormElement).reset();
+        setSelectedFileName(null);
+        setFileError(null);
+        setTimeout(() => setSubmitStatus(null), 3000);
       } else {
         setSubmitStatus({ type: "error", message: data.error || "Une erreur s'est produite." });
       }
@@ -190,7 +193,7 @@ export default function NousContacter() {
                       onChange={() => setClientType("company")}
                       className="accent-[#141824] w-5 h-5 cursor-pointer"
                     />
-                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Une entreprise", "A company")}</span>
+                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Société", "Company")}</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer group">
                     <input 
@@ -201,7 +204,7 @@ export default function NousContacter() {
                       onChange={() => setClientType("individual")}
                       className="accent-[#141824] w-5 h-5 cursor-pointer"
                     />
-                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Un particulier", "An individual")}</span>
+                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Particulier", "Individual")}</span>
                   </label>
                 </div>
               </div>
@@ -212,11 +215,11 @@ export default function NousContacter() {
                 {clientType === "company" && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     <div>
-                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Raison sociale", "Company")} <span className="text-red-500">*</span></label>
+                      <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Raison sociale", "Company")} <span className="text-red-500">*</span></label>
                       <input type="text" name="company" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                     </div>
                     <div>
-                      <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("SIRET", "SIRET")} <span className="text-red-500">*</span></label>
+                      <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("SIRET", "SIRET")} <span className="text-red-500">*</span></label>
                       <input type="text" name="siret" placeholder={t("Ex: 123 456 789 00012", "E.g. 123 456 789 00012")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                     </div>
                   </div>
@@ -224,11 +227,11 @@ export default function NousContacter() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
-                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{clientType === "company" ? t("Nom du contact", "Contact Name") : t("Nom", "Name")} <span className="text-red-500">*</span></label>
+                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{clientType === "company" ? t("Nom du contact", "Contact Name") : t("Nom", "Name")} <span className="text-red-500">*</span></label>
                     <input type="text" name="name" placeholder={t("Votre nom", "Your name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                   </div>
                   <div>
-                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Fonction", "Position")} <span className="text-red-500">*</span></label>
+                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Fonction", "Position")} <span className="text-red-500">*</span></label>
                     <input type="text" name="position" placeholder={t("Votre fonction", "Your position")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                   </div>
                 </div>
@@ -237,11 +240,11 @@ export default function NousContacter() {
               {clientType === "company" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                   <div>
-                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("E-mail de l'entreprise", "Company email")} <span className="text-red-500">*</span></label>
+                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("E-mail de l'entreprise", "Company email")} <span className="text-red-500">*</span></label>
                     <input type="email" name="companyEmail" placeholder="contact@entreprise.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                   </div>
                   <div>
-                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("E-mail professionnel", "Professional email")} <span className="text-red-500">*</span></label>
+                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("E-mail professionnel", "Professional email")} <span className="text-red-500">*</span></label>
                     <input type="email" name="professionalEmail" placeholder="votre.nom@entreprise.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                   </div>
                 </div>
@@ -250,19 +253,19 @@ export default function NousContacter() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {clientType === "individual" && (
                   <div>
-                    <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("E-mail personnel", "Personal email")} <span className="text-red-500">*</span></label>
+                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("E-mail personnel", "Personal email")} <span className="text-red-500">*</span></label>
                     <input type="email" name="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                   </div>
                 )}
                 <div className={clientType === "company" ? "md:col-span-2" : ""}>
-                  <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")} <span className="text-red-500">*</span></label>
+                  <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")} <span className="text-red-500">*</span></label>
                   <input type="tel" name="phone" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 gap-8">
                 <div>
-                  <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">{t("Niveau d'urgence", "Urgency level")} <span className="text-red-500">*</span></label>
+                  <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Niveau d'urgence", "Urgency level")} <span className="text-red-500">*</span></label>
                   <select name="urgency" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
                     <option value="">{t("Sélectionnez l'urgence", "Select urgency")}</option>
                     <option value="Immédiat">{t("Immédiat", "Immediate")}</option>
@@ -274,7 +277,7 @@ export default function NousContacter() {
               </div>
 
               <div>
-                <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-4 block">{t("Type de besoin", "Type of need")} <span className="text-red-500">*</span></label>
+                <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-4 block">{t("Type de besoin", "Type of need")} <span className="text-red-500">*</span></label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6">
                   {[
                     t("Renfort opérationnel", "Operational reinforcement"),
@@ -296,7 +299,7 @@ export default function NousContacter() {
               </div>
 
               <div>
-                <label className="text-[0.85rem] font-bold uppercase tracking-widest text-[#141824] mb-3 block">
+                <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">
                   {t("Décrivez votre besoin", "Describe your need")} <span className="text-red-500">*</span>
                 </label>
                 <p className="text-[0.95rem] text-[#6e7891] font-light mb-4 leading-relaxed">

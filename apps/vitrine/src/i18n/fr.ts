@@ -11,7 +11,7 @@ export default {
   },
   footer: {
     nousTrouver: "Nous trouver",
-    presenterBesoin: "Présenter un besoin",
+    presenterBesoin: "Présenter votre besoin",
     presenterBesoinDesc: "Présentez votre besoin opérationnel, nous vous répondons avec une première analyse et une proposition adaptée.",
     contactBtn: "Nous contacter",
     mentions: "MENTIONS LÉGALES",

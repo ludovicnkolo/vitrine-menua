@@ -109,7 +109,7 @@ export default function NousConnaitrePage() {
               </div>
               <div className="flex justify-end mt-8">
                 <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                  {t("Présenter un besoin", "Submit a need")} 
+                  {t("Présenter votre besoin", "Submit your need")} 
                   <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                   <ArrowRight size={18} className="-ml-2" />
                 </Link>
@@ -278,7 +278,7 @@ export default function NousConnaitrePage() {
           
           <div className="mt-8 text-right">
             <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-              {t("Présenter un besoin", "Submit a need")}
+              {t("Présenter votre besoin", "Submit your need")}
               <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
               <ChevronRight size={18} className="-ml-2" />
             </Link>
@@ -400,7 +400,7 @@ export default function NousConnaitrePage() {
               
               <div className="mt-12 text-right">
                 <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                  {t("Présenter un besoin", "Submit a need")}
+                  {t("Présenter votre besoin", "Submit your need")}
                   <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                   <ChevronRight size={18} className="-ml-2" />
                 </Link>

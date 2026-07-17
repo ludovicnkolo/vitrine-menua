@@ -39,7 +39,7 @@ export default function Home() {
             </p>
             <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
               <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.85rem] font-bold hover:bg-white transition-colors group">
-                {t("Présenter un besoin", "Submit a need")}
+                {t("Présenter votre besoin", "Submit your need")}
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>

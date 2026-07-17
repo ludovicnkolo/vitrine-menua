@@ -228,7 +228,7 @@ export default function PourquoiMenuaPage() {
             </p>
             {/* Mobile Image */}
             <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
-              <img src="/img/connaitre-approche.jpg" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+              <img src="/img/pourquoi_4.jpg" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
             </div>
             
             <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Nos engagements :", "Our commitments:")}</h4>
@@ -248,7 +248,7 @@ export default function PourquoiMenuaPage() {
             </ul>
           </div>
           <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
-             <img src="/img/connaitre-approche.jpg" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+             <img src="/img/pourquoi_4.jpg" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
           </div>
         </div>
       </section>

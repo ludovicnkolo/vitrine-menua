@@ -13,7 +13,7 @@ const upload = multer({
 // Strict rate limiting specifically for forms (5 per hour)
 const formLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 500, // Increased from 5 to 500 to allow debugging
+  max: 2, // Limit changed to 2 requests per hour
   message: { success: false, error: 'Trop de soumissions, veuillez réessayer plus tard.' }
 });
 

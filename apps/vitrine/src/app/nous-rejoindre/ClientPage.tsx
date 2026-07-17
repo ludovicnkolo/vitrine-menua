@@ -17,7 +17,7 @@ export default function NousRejoindre() {
     
     try {
       const formData = new FormData(e.currentTarget);
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiUrl = process.env.NODE_ENV === 'production' ? '' : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000');
       const res = await fetch(`${apiUrl}/api/forms/join`, {
         method: "POST",
         body: formData,

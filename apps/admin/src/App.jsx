@@ -57,10 +57,10 @@ const mockDossiers = [
 ]
 
 const mockTasks = [
-  { id: 'TSK-101', dossierId: 'DOS-24-002', name: 'Analyse des bilans 2025', assignedTo: 'Alice Martin', status: 'IN_PROGRESS', deadline: '2026-07-15', type: 'INTERNAL' },
-  { id: 'TSK-102', dossierId: 'DOS-24-004', name: 'Revue contractuelle', assignedTo: 'Cabinet Légal Pro', status: 'TO_ASSIGN', deadline: '2026-07-12', type: 'MISSION' },
-  { id: 'TSK-103', dossierId: 'DOS-24-006', name: 'Vérification des bénéficiaires', assignedTo: 'Alice Martin', status: 'IN_REVIEW', deadline: '2026-07-11', type: 'INTERNAL' },
-  { id: 'TSK-104', dossierId: 'DOS-24-001', name: 'Urgence KYC Profil A', assignedTo: 'Jean Dupont', status: 'IN_PROGRESS', deadline: '2026-07-10', type: 'INTERNAL' },
+  { id: 'TSK-101', dossierId: 'DOS-24-002', createdBy: 'M. Dubois (Direction)', assignedTo: 'Alice Martin', status: 'IN_PROGRESS', deadline: '2026-07-15', createdAt: '2026-07-14' },
+  { id: 'TSK-102', dossierId: 'DOS-24-004', createdBy: 'S. Connors (Client)', assignedTo: 'Cabinet Légal Pro', status: 'TO_ASSIGN', deadline: '2026-07-12', createdAt: '2026-07-10' },
+  { id: 'TSK-103', dossierId: 'DOS-24-006', createdBy: 'Système (Auto)', assignedTo: 'Alice Martin', status: 'IN_REVIEW', deadline: '2026-07-11', createdAt: '2026-07-09' },
+  { id: 'TSK-104', dossierId: 'DOS-24-001', createdBy: 'L. Picard (Audit)', assignedTo: 'Jean Dupont', status: 'IN_PROGRESS', deadline: '2026-07-10', createdAt: '2026-07-08' },
 ]
 
 const mockInbox = [
@@ -206,6 +206,8 @@ const InboxPage = () => {
   const [processMsg, setProcessMsg] = useState(null);
   const [previewFile, setPreviewFile] = useState(null);
   const [createTaskModal, setCreateTaskModal] = useState(false);
+  const [newTaskFile, setNewTaskFile] = useState(null);
+  const [isNewDossier, setIsNewDossier] = useState(true);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -492,7 +494,7 @@ const InboxPage = () => {
           <div className="card" style={{width: '500px', padding: '2rem'}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600}}>{tab === 'interne' ? 'Répondre au message' : 'Nouvelle Tâche'}</h3>
-              <button onClick={() => setCreateTaskModal(false)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)'}}><X size={20}/></button>
+              <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)'}}><X size={20}/></button>
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -510,6 +512,29 @@ const InboxPage = () => {
                 </select>
               </div>
 
+              {tab !== 'interne' && (
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Dossier associé</label>
+                  <div style={{display: 'flex', gap: '1.5rem', marginBottom: '0.75rem'}}>
+                    <label style={{display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.875rem', cursor: 'pointer'}}>
+                      <input type="radio" name="dossierType" value="new" checked={isNewDossier} onChange={() => setIsNewDossier(true)} />
+                      Nouveau dossier
+                    </label>
+                    <label style={{display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.875rem', cursor: 'pointer'}}>
+                      <input type="radio" name="dossierType" value="existing" checked={!isNewDossier} onChange={() => setIsNewDossier(false)} />
+                      Dossier existant
+                    </label>
+                  </div>
+                  {!isNewDossier && (
+                    <select className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                      <option>DOSS-2026-001 (ACME Corp)</option>
+                      <option>DOSS-2026-002 (Paul Dupont)</option>
+                      <option>DOSS-2026-003 (TechStart)</option>
+                    </select>
+                  )}
+                </div>
+              )}
+
               <div>
                 <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
                 <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
@@ -519,10 +544,21 @@ const InboxPage = () => {
                       <span style={{fontSize: '0.875rem', color: 'var(--text-main)'}}>Inclure le fichier lié ({processMsg.cv || processMsg.attachment})</span>
                     </label>
                   )}
-                  <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'var(--primary)'}}>
+                  <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'var(--primary)', marginBottom: 0}}>
                     <Files size={16} />
-                    <span style={{fontSize: '0.875rem', fontWeight: 500}}>Joindre un autre fichier...</span>
-                  </div>
+                    <span style={{fontSize: '0.875rem', fontWeight: 500}}>
+                      {newTaskFile ? newTaskFile.name : 'Joindre un autre fichier...'}
+                    </span>
+                    <input 
+                      type="file" 
+                      style={{display: 'none'}} 
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                          setNewTaskFile(e.target.files[0]);
+                        }
+                      }} 
+                    />
+                  </label>
                 </div>
               </div>
 
@@ -533,8 +569,8 @@ const InboxPage = () => {
             </div>
 
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem'}}>
-              <button onClick={() => setCreateTaskModal(false)} className="btn btn-outline">Annuler</button>
-              <button onClick={() => { setCreateTaskModal(false); setProcessMsg(null); alert(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Tâche créée et assignée avec succès !'); }} className="btn btn-primary">{tab === 'interne' ? 'Envoyer' : 'Créer la tâche'}</button>
+              <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline">Annuler</button>
+              <button onClick={() => { setCreateTaskModal(false); setProcessMsg(null); setNewTaskFile(null); alert(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Tâche créée et assignée avec succès !'); }} className="btn btn-primary">{tab === 'interne' ? 'Envoyer' : 'Créer la tâche'}</button>
             </div>
           </div>
         </div>
@@ -627,6 +663,46 @@ const DossiersPage = () => {
 }
 
 const TasksPage = () => {
+  const [openMenuId, setOpenMenuId] = useState(null);
+  const [consultTask, setConsultTask] = useState(null);
+  const [taskFile, setTaskFile] = useState(null);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpenMenuId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const toggleMenu = (e, id) => {
+    e.stopPropagation();
+    if (openMenuId === id) setOpenMenuId(null);
+    else setOpenMenuId(id);
+  }
+
+  const renderDropdown = (taskId) => {
+    if (openMenuId !== taskId) return null;
+    return (
+      <div ref={menuRef} style={{
+        position: 'absolute', right: '100%', top: '50%', transform: 'translateY(-50%)', marginRight: '0.5rem',
+        background: '#FFF', border: '1px solid #E2E8F0', borderRadius: '8px',
+        boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, width: '130px',
+        display: 'flex', flexDirection: 'column', padding: '0.25rem 0'
+      }}>
+        <button className="dropdown-item" onClick={() => { setOpenMenuId(null); setConsultTask(mockTasks.find(t => t.id === taskId)); }}>
+          <Eye size={14} /> Consulter
+        </button>
+        <button className="dropdown-item" onClick={() => { setOpenMenuId(null); alert('Supprimer la tâche'); }} style={{color: 'var(--danger)'}}>
+          <Trash size={14} /> Supprimer
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem'}}>
@@ -639,30 +715,141 @@ const TasksPage = () => {
         <table>
           <thead>
             <tr>
-              <th>ID Tâche</th>
-              <th>Dossier Lié</th>
-              <th>Description</th>
-              <th>Assigné à</th>
+              <th>Dossier Associé</th>
+              <th>Émetteur</th>
+              <th>Responsable</th>
+              <th>Création</th>
               <th>Statut</th>
-              <th>Type</th>
               <th>Échéance</th>
+              <th style={{textAlign: 'right'}}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {mockTasks.map(t => (
               <tr key={t.id}>
-                <td style={{fontWeight: 500}}>{t.id}</td>
                 <td style={{color: 'var(--primary)', fontWeight: 500}}>{t.dossierId}</td>
-                <td>{t.name}</td>
+                <td><span style={{fontWeight: 500, color: 'var(--text-main)'}}>{t.createdBy}</span></td>
                 <td>{t.assignedTo}</td>
+                <td><span style={{color: 'var(--text-muted)'}}>{t.createdAt}</span></td>
                 <td>{getStatusBadge(t.status)}</td>
-                <td><span className="badge" style={{background: '#E2E8F0', color: '#4A5568'}}>{t.type}</span></td>
                 <td style={{color: 'var(--danger)', fontWeight: 500}}>{t.deadline}</td>
+                <td style={{textAlign: 'right'}}>
+                  <div style={{position: 'relative', display: 'inline-block'}}>
+                    <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'flex-end'}}>
+                      <button onClick={(e) => toggleMenu(e, t.id)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)'}} title="Options">
+                        <MoreVertical size={18} />
+                      </button>
+                      {renderDropdown(t.id)}
+                    </div>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {consultTask && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 300
+        }}>
+          <div className="card" style={{width: '600px', padding: '2rem', maxHeight: '90vh', overflowY: 'auto'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
+              <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600}}>Consulter la Tâche: {consultTask.id}</h3>
+              <button onClick={() => { setConsultTask(null); setTaskFile(null); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)'}}><X size={20}/></button>
+            </div>
+            
+            <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
+                <input type="text" defaultValue={consultTask.subject} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+              </div>
+
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigné à</label>
+                <input type="text" defaultValue={consultTask.assignedTo} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+              </div>
+
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Dossier associé</label>
+                <div style={{display: 'flex', gap: '1.5rem', marginBottom: '0.75rem'}}>
+                  <label style={{display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.875rem', cursor: 'default'}}>
+                    <input type="radio" checked={false} readOnly />
+                    Nouveau dossier
+                  </label>
+                  <label style={{display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.875rem', cursor: 'default'}}>
+                    <input type="radio" checked={true} readOnly />
+                    Dossier existant
+                  </label>
+                </div>
+                <input type="text" defaultValue={consultTask.dossierId} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+              </div>
+
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
+                <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+                  {consultTask.attachments && consultTask.attachments.length > 0 ? consultTask.attachments.map((att, idx) => (
+                    <label key={idx} style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'default', marginBottom: '0.5rem'}}>
+                      <input type="checkbox" checked={true} readOnly />
+                      <span style={{fontSize: '0.875rem', color: 'var(--text-main)'}}>Inclure le fichier lié ({att})</span>
+                    </label>
+                  )) : (
+                    <span style={{fontSize: '0.875rem', color: 'var(--text-muted)'}}>Aucune pièce jointe lors de la création.</span>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
+                <textarea defaultValue={consultTask.message} readOnly style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'none', fontFamily: 'inherit', background: '#F8FAFC', color: 'var(--text-main)'}}></textarea>
+              </div>
+
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut de la tâche</label>
+                <select className="input-field" defaultValue={consultTask.status} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                  <option value="NEW">Nouveau</option>
+                  <option value="IN_PROGRESS">En cours</option>
+                  <option value="IN_REVIEW">En révision</option>
+                  <option value="VALIDATED">Validé</option>
+                  <option value="TO_ASSIGN">À assigner</option>
+                </select>
+              </div>
+
+              <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
+                <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Envoyer un message à l'émetteur</h4>
+                
+                <div style={{marginBottom: '1rem'}}>
+                  <textarea placeholder="Votre message ou compte-rendu..." style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '100px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+                </div>
+
+                <div>
+                  <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'var(--primary)', marginBottom: 0}}>
+                    <Files size={16} />
+                    <span style={{fontSize: '0.875rem', fontWeight: 500}}>
+                      {taskFile ? taskFile.name : 'Joindre un fichier au message...'}
+                    </span>
+                    <input 
+                      type="file" 
+                      style={{display: 'none'}} 
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                          setTaskFile(e.target.files[0]);
+                        }
+                      }} 
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem'}}>
+              <button onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Annuler</button>
+              <button onClick={() => { setConsultTask(null); setTaskFile(null); alert('Mise à jour et message envoyés avec succès !'); }} className="btn btn-primary">Enregistrer & Envoyer</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

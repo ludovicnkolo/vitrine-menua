@@ -3,8 +3,23 @@ const multer = require('multer');
 const nodemailer = require('nodemailer');
 const xss = require('xss');
 const rateLimit = require('express-rate-limit');
+const dns = require('dns').promises;
 
 const router = express.Router();
+
+const validateEmail = async (email) => {
+  if (!email || typeof email !== 'string') return false;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) return false;
+
+  const domain = email.split('@')[1];
+  try {
+    const records = await dns.resolveMx(domain);
+    return records && records.length > 0;
+  } catch (e) {
+    return false;
+  }
+};
 const upload = multer({ 
   storage: multer.memoryStorage(),
   limits: { fileSize: 1 * 1024 * 1024 } // 1MB limit at multer level
@@ -33,8 +48,8 @@ const sanitizeInput = (data) => {
 };
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.SMTP_PORT || '587'),
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT),
   secure: process.env.SMTP_SECURE === 'true',
   auth: {
     user: process.env.SMTP_USER,
@@ -85,8 +100,21 @@ router.post('/contact', upload.single('file'), async (req, res) => {
   try {
     const sanitizedBody = sanitizeInput(req.body);
     const {
-      clientType, company, siret, name, position, email, phone, urgency, description, needs
+      clientType, company, siret, name, position, email, companyEmail, professionalEmail, phone, urgency, description, needs
     } = sanitizedBody;
+
+    const senderEmail = clientType === 'company' 
+      ? (companyEmail || professionalEmail) 
+      : email;
+
+    if (!senderEmail) {
+      return res.status(400).json({ success: false, error: "Veuillez fournir une adresse email." });
+    }
+
+    const isEmailValid = await validateEmail(senderEmail);
+    if (!isEmailValid) {
+      return res.status(400).json({ success: false, error: "L'adresse email fournie est invalide ou le nom de domaine n'existe pas." });
+    }
 
     const parsedNeeds = Array.isArray(needs) ? needs : (needs ? [needs] : []);
 
@@ -115,7 +143,7 @@ router.post('/contact', upload.single('file'), async (req, res) => {
       ${companyHtml}
       ${buildRow('Nom du contact', name)}
       ${buildRow('Fonction', position)}
-      ${buildRow('Email', email)}
+      ${buildRow('Email', senderEmail)}
       ${buildRow('Téléphone', phone)}
       ${buildRow("Niveau d'urgence", urgency)}
       ${buildRow('Besoins identifiés', needsHtml)}
@@ -123,11 +151,11 @@ router.post('/contact', upload.single('file'), async (req, res) => {
     `;
 
     const mailOptions = {
-      from: process.env.SMTP_FROM || '"Menua Consulting Website" <noreply@menuaconsulting.com>',
-      to: process.env.CONTACT_EMAIL_TO || 'crm-reception@menuaconsulting.com',
-      replyTo: email,
+      from: process.env.SMTP_FROM,
+      to: process.env.CONTACT_EMAIL_TO,
+      replyTo: senderEmail,
       subject: `Nouvelle demande de contact - ${clientType === 'company' ? company : name}`,
-      text: `Nouvelle demande de contact via le site web Menua Consulting:\n\nVous êtes: ${typeText}\n${clientType === 'company' ? `Société: ${company}\nSIRET: ${siret}\n` : ''}Nom: ${name}\nFonction: ${position}\nEmail: ${email}\nTéléphone: ${phone}\nUrgence: ${urgency}\n\nBesoins:\n${parsedNeeds.join(', ')}\n\nDescription:\n${description}`,
+      text: `Nouvelle demande de contact via le site web Menua Consulting:\n\nVous êtes: ${typeText}\n${clientType === 'company' ? `Société: ${company}\nSIRET: ${siret}\n` : ''}Nom: ${name}\nFonction: ${position}\nEmail: ${senderEmail}\nTéléphone: ${phone}\nUrgence: ${urgency}\n\nBesoins:\n${parsedNeeds.join(', ')}\n\nDescription:\n${description}`,
       html: buildEmailTemplate('Nouvelle demande de contact', contentHTML),
       attachments,
     };
@@ -151,6 +179,15 @@ router.post('/join', upload.none(), async (req, res) => {
       profileType, company, siret, lastName, firstName, email, phone,
       experience, languages, location, availability, linkedin, message, skills
     } = sanitizedBody;
+
+    if (!email) {
+      return res.status(400).json({ success: false, error: "Veuillez fournir une adresse email." });
+    }
+
+    const isEmailValid = await validateEmail(email);
+    if (!isEmailValid) {
+      return res.status(400).json({ success: false, error: "L'adresse email fournie est invalide ou le nom de domaine n'existe pas." });
+    }
 
     const parsedSkills = Array.isArray(skills) ? skills : (skills ? [skills] : []);
 
@@ -176,8 +213,8 @@ router.post('/join', upload.none(), async (req, res) => {
     `;
 
     const mailOptions = {
-      from: process.env.SMTP_FROM || '"Menua Consulting Website" <noreply@menuaconsulting.com>',
-      to: process.env.CONTACT_EMAIL_TO || 'crm-reception@menuaconsulting.com',
+      from: process.env.SMTP_FROM,
+      to: process.env.CONTACT_EMAIL_TO,
       replyTo: email,
       subject: `Nouvelle candidature - ${profileType === 'company' ? company : `${firstName} ${lastName}`}`,
       text: `Nouvelle candidature via le site web Menua Consulting:\n\nVous êtes: ${typeText}\n${profileType === 'company' ? `Société: ${company}\nSIRET: ${siret}\n` : ''}Nom: ${lastName}\nPrénom: ${firstName}\nEmail: ${email}\nTéléphone: ${phone}\n\nExpérience: ${experience}\nLangues: ${languages}\nLocalisation: ${location}\nDisponibilité: ${availability}\nLinkedIn: ${linkedin}\n\nCompétences clés:\n${parsedSkills.join(', ')}\n\nMessage:\n${message}`,

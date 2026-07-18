@@ -40,7 +40,6 @@ export const metadata: Metadata = {
     "cabinets financiers France",
   ],
   alternates: {
-    canonical: '/',
     languages: {
       'fr-FR': '/',
       'en-US': '/en',

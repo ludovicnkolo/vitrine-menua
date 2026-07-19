@@ -40,7 +40,9 @@ const LoginPage = ({ onLogin }) => {
     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: 'var(--bg-main)'}}>
       <div className="card" style={{maxWidth: '400px', width: '100%', padding: '2rem'}}>
         <div style={{textAlign: 'center', marginBottom: '2rem'}}>
-          <div style={{width: 48, height: 48, borderRadius: 12, background: 'var(--secondary)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', fontWeight: 'bold', fontSize: '1.5rem', marginBottom: '1rem'}}>M</div>
+          <div style={{ background: 'var(--primary)', padding: '1.5rem', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
+            <img src="/logo.png" alt="Menua Consulting" style={{ height: '70px', objectFit: 'contain' }} />
+          </div>
           <h1 style={{fontSize: '1.5rem', fontWeight: 600}}>MENUA CRM</h1>
           <p style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>Espace d'administration sécurisé</p>
         </div>

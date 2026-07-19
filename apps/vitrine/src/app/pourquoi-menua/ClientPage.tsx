@@ -214,6 +214,10 @@ export default function PourquoiMenuaPage() {
         <div className="laplace-container max-w-6xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
           <div className="w-full lg:w-7/12 bg-white p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
             <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">{t("Nos engagements", "Our commitments")}</h3>
+            {/* Mobile Image */}
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] mb-8 rounded-sm shadow-md overflow-hidden">
+              <img src="/img/pourquoi_4.jpg" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+            </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
               {formatBrand(t(
                 "MENUA CONSULTING s’engage sur l’essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
@@ -226,10 +230,6 @@ export default function PourquoiMenuaPage() {
                 "Our interventions are based on a four-eyes control, structured working methods, training of mobilized resources and compliance with your operational, quality and regulatory requirements."
               )}
             </p>
-            {/* Mobile Image */}
-            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
-              <img src="/img/pourquoi_4.jpg" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
-            </div>
             
             <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Nos engagements :", "Our commitments:")}</h4>
             <ul className="space-y-3 text-[#6e7891] font-light text-[0.95rem]">

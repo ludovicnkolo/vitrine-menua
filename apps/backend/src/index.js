@@ -55,6 +55,18 @@ app.get('/api/health', (req, res) => {
 const formsRouter = require('./routes/forms');
 app.use('/api/forms', formsRouter);
 
+// Auth routes (Login, Setup)
+const authRouter = require('./routes/auth');
+app.use('/api/auth', authRouter);
+
+// Files routes (Secure Buckets)
+const filesRouter = require('./routes/files');
+app.use('/api/files', filesRouter);
+
+// CRM routes (Dossiers, Tasks, Users)
+const crmRouter = require('./routes/crm');
+app.use('/api/crm', crmRouter);
+
 // Get all dossiers
 app.get('/api/dossiers', async (req, res) => {
   try {

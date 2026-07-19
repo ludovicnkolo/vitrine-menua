@@ -2,7 +2,7 @@
   --primary: #1A365D; /* Deep navy */
   --primary-light: #2B6CB0;
   --secondary: #D4AF37; /* Gold/Beige */
-  --bg-color: #F7FAFC;
+  --bg-color: #FFFFFF;
   --surface: #FFFFFF;
   --text-main: #2D3748;
   --text-muted: #718096;
@@ -161,6 +161,7 @@ body {
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
+  position: relative;
 }
 
 /* Table styles */
@@ -228,4 +229,23 @@ tr:hover td {
 
 .dropdown-item.danger {
   color: var(--danger);
+}
+
+/* Modals turned into Pages */
+.page-modal {
+  animation: fadeIn 0.3s ease;
+  background-color: var(--bg);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.page-modal-content {
+  max-width: 900px;
+  margin: 0 auto;
 }

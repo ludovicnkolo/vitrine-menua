@@ -4,9 +4,14 @@ services:
   backend:
     build: ./apps/backend
     container_name: menua_backend
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     volumes:
       - menua_db_data:/app/data
-      - menua_secure_docs:/var/menua/documents
+      - /var/menua/documents:/var/menua/documents
     ports:
       - "4000:4000"
     env_file:
@@ -17,6 +22,11 @@ services:
   vitrine:
     build: ./apps/vitrine
     container_name: menua_vitrine
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     ports:
       - "3000:3000"
     env_file:
@@ -29,6 +39,11 @@ services:
   admin:
     build: ./apps/admin
     container_name: menua_admin
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     ports:
       - "5173:80"  # Map local port 5173 to nginx container port 80
     env_file:
@@ -41,6 +56,11 @@ services:
   menua_nginx:
     image: nginx:alpine
     container_name: menua_nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     restart: always
     ports:
       - "80:80"
@@ -57,7 +77,6 @@ services:
 
 volumes:
   menua_db_data:
-  menua_secure_docs:
 
 networks:
   menua_network:

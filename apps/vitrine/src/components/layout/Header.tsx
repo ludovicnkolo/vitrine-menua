@@ -133,7 +133,7 @@ export default function Header() {
         >
           {/* Clean extracted logo */}
           <img 
-            src="/img/logo-clean-light.png" 
+            src="/img/logo-clean-light.webp" 
             alt="Menua Consulting" 
             className="h-[90px] w-[135px] lg:h-[150px] lg:w-[225px] object-contain" 
             fetchPriority="high"

@@ -15,10 +15,10 @@ export default function Home() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/img/hero-paris.jpg" 
+            src="/img/hero-paris.webp" 
             alt="Paris Aerial" 
             className="w-full h-full object-cover object-[75%_center] md:object-[80%_center] lg:object-center"
-            onError={(e) => { e.currentTarget.src = "/img/hero-paris.jpg"; }} 
+            onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
@@ -63,10 +63,10 @@ export default function Home() {
             {/* Left Image (Desktop only) */}
             <div className="hidden lg:block w-full lg:w-4/12 lg:h-[420px] z-20 relative shrink-0">
               <img 
-                src="/img/accueil-intro.jpg" 
+                src="/img/accueil-intro.webp" 
                 alt="Intro" 
                 className="w-full h-full object-cover" 
-                onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} 
+                onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} 
               />
             </div>
             
@@ -87,10 +87,10 @@ export default function Home() {
                 {/* Mobile Image (Visible only on mobile) */}
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[200px] my-6 z-20 relative shadow-md">
                   <img 
-                    src="/img/accueil-intro.jpg" 
+                    src="/img/accueil-intro.webp" 
                     alt="Intro" 
                     className="w-full h-full object-cover" 
-                    onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} 
+                    onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} 
                   />
                 </div>
 
@@ -181,10 +181,10 @@ export default function Home() {
             {/* Right Image (Desktop only) */}
             <div className="hidden lg:block w-full lg:w-4/12 lg:h-[360px] z-20 relative shrink-0">
               <img
-                src="/img/besoins-meeting.jpg"
+                src="/img/besoins-meeting.webp"
                 alt="Vos besoins"
                 className="w-full h-full object-cover"
-                onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
+                onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
               />
             </div>
 
@@ -201,10 +201,10 @@ export default function Home() {
               {/* Mobile Image (Visible only on mobile) */}
               <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[200px] my-6 z-20 relative shadow-md">
                 <img
-                  src="/img/besoins-meeting.jpg"
+                  src="/img/besoins-meeting.webp"
                   alt="Vos besoins"
                   className="w-full h-full object-cover"
-                  onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
+                  onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                 />
               </div>
               <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-10">
@@ -326,24 +326,24 @@ export default function Home() {
             {[
               {
                 category: t("Finance et Comptabilité", "Finance and Accounting"),
-                img: "/img/accueil-actus.jpg",
-                fallback: "/img/besoins-meeting.jpg",
+                img: "/img/accueil-actus.webp",
+                fallback: "/img/besoins-meeting.webp",
                 title: t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news"),
                 desc: t("Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations.", "Analysis of developments likely to impact your organizations."),
                 href: "/actualites",
               },
               {
                 category: t("Finance", "Finance"),
-                img: "/img/accueil-actus.jpg",
-                fallback: "/img/intro-office.jpg",
+                img: "/img/accueil-actus.webp",
+                fallback: "/img/intro-office.webp",
                 title: t("Nos publications et prises de parole", "Our publications and statements"),
                 desc: t("Retrouvez les analyses et contenus publiés par MENUA CONSULTING sur les enjeux opérationnels et sectoriels.", "Find analyses and content published by MENUA CONSULTING on operational and sector issues."),
                 href: "/actualites",
               },
               {
                 category: t("Réglementation", "Regulation"),
-                img: "/img/accueil-actus.jpg",
-                fallback: "/img/hero-paris.jpg",
+                img: "/img/accueil-actus.webp",
+                fallback: "/img/hero-paris.webp",
                 title: t("Veille réglementaire et conformité", "Regulatory watch and compliance"),
                 desc: t("Restez informés des dernières évolutions réglementaires et adaptez vos processus opérationnels.", "Stay informed of the latest regulatory developments and adapt your operational processes."),
                 href: "/actualites",

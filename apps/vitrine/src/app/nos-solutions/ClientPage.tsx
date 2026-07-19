@@ -15,10 +15,10 @@ export default function NosSolutionsPage() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/img/solutions-hero.jpg" 
+            src="/img/solutions-hero.webp" 
             alt="Nos solutions" 
             className="w-full h-full object-cover object-[center_35%]" 
-            onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} 
+            onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
@@ -59,10 +59,10 @@ export default function NosSolutionsPage() {
             {/* Left Image (Desktop only) */}
             <div className="hidden lg:block w-full lg:w-4/12 lg:h-[350px] lg:-mt-12 z-20 relative shrink-0">
               <img 
-                src="/img/solutions_3.jpg" 
+                src="/img/solutions_3.webp" 
                 alt="Nos solutions" 
                 className="w-full h-full object-cover shadow-xl" 
-                onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} 
+                onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} 
               />
             </div>
             
@@ -80,10 +80,10 @@ export default function NosSolutionsPage() {
                 {/* Mobile Image (Visible only on mobile) */}
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
                   <img
-                    src="/img/solutions-hero.jpg"
+                    src="/img/solutions-hero.webp"
                     alt="Nos solutions"
                     className="w-full h-full object-cover object-center"
-                    onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
+                    onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                   />
                 </div>
                 
@@ -185,14 +185,14 @@ export default function NosSolutionsPage() {
             
             {/* Mobile Image */}
             <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
-              <img src="/img/solutions_2.jpg" alt="Durée" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+              <img src="/img/solutions_2.webp" alt="Durée" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
             </div>
             <div className="w-full aspect-[4/5] rounded-sm overflow-hidden shadow-lg hidden lg:block">
               <img 
-                src="/img/solutions_2.jpg" 
+                src="/img/solutions_2.webp" 
                 alt="Durée" 
                 className="w-full h-full object-cover" 
-                onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} 
+                onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} 
               />
             </div>
           </div>

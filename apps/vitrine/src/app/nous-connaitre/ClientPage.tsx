@@ -15,10 +15,10 @@ export default function NousConnaitrePage() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/img/connaitre-hero.jpg" 
+            src="/img/connaitre-hero.webp" 
             alt="Hero Background" 
             className="w-full h-full object-cover object-[center_65%]" 
-            onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} 
+            onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
@@ -57,7 +57,7 @@ export default function NousConnaitrePage() {
             {/* Right Image (Desktop only) */}
             <div className="hidden lg:block w-full lg:w-4/12 lg:h-[420px] z-20 relative shrink-0">
               <img
-                src="/img/connaitre_2.jpg"
+                src="/img/connaitre_2.webp"
                 alt="Cabinet"
                 className="w-full h-full object-cover object-center"
               />
@@ -76,7 +76,7 @@ export default function NousConnaitrePage() {
               {/* Mobile Image (Visible only on mobile) */}
               <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
                 <img
-                  src="/img/connaitre-intro.jpg"
+                  src="/img/connaitre-intro.webp"
                   alt="Cabinet"
                   className="w-full h-full object-cover object-center"
                 />
@@ -166,19 +166,19 @@ export default function NousConnaitrePage() {
               {/* Mobile Image */}
               <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
                 <img 
-                  src="/img/connaitre-approche.jpg" 
+                  src="/img/connaitre-approche.webp" 
                   alt="Notre approche" 
                   className="w-full h-full object-cover object-center" 
-                  onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} 
+                  onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} 
                 />
               </div>
 
               <div className="w-[85%] aspect-[4/5] rounded-sm overflow-hidden shadow-lg hidden lg:block">
                 <img 
-                  src="/img/connaitre-approche.jpg" 
+                  src="/img/connaitre-approche.webp" 
                   alt="Notre approche" 
                   className="w-full h-full object-cover object-left" 
-                  onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} 
+                  onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} 
                 />
               </div>
             </div>
@@ -305,10 +305,10 @@ export default function NousConnaitrePage() {
               <div className="shrink-0 flex flex-col items-center mx-auto md:mx-0">
                 <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-[3px] border-[#e8e1d7]/40 bg-[#141824] mb-4">
                   <img 
-                    src="/img/rosette.jpg" 
+                    src="/img/rosette.webp" 
                     alt="Rosette Fouelefack" 
                     className="w-full h-full object-cover object-[center_15%]"
-                    onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} 
+                    onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} 
                   />
                 </div>
                 <span className="text-[#e8e1d7] text-[1rem] font-bold uppercase tracking-wider text-center leading-tight">
@@ -354,7 +354,7 @@ export default function NousConnaitrePage() {
             
             {/* Mobile Image */}
             <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
-              <img src="/img/connaitre-certifications.jpg" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
+              <img src="/img/connaitre-certifications.webp" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
             </div>
             
             <div className="space-y-4 text-[#141824] text-[1.05rem] font-light leading-relaxed">
@@ -410,7 +410,7 @@ export default function NousConnaitrePage() {
           
           {/* Image (Right Desktop only) */}
           <div className="hidden lg:block w-full lg:w-5/12 h-[300px] lg:h-[450px] shadow-xl">
-             <img src="/img/connaitre-certifications.jpg" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
+             <img src="/img/connaitre-certifications.webp" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
           </div>
         </div>
       </section>

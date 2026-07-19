@@ -15,10 +15,10 @@ export default function VosBesoinsPage() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/img/besoins-hero.jpg" 
+            src="/img/besoins-hero.webp" 
             alt="Hero Vos Besoins" 
             className="w-full h-full object-cover object-[center_35%]" 
-            onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} 
+            onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
@@ -69,10 +69,10 @@ export default function VosBesoinsPage() {
             {/* Mobile Image (Visible only on mobile) */}
             <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
               <img
-                src="/img/besoins-intro.jpg"
+                src="/img/besoins-intro.webp"
                 alt="Vos besoins"
                 className="w-full h-full object-cover object-center"
-                onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
+                onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
               />
             </div>
             
@@ -101,10 +101,10 @@ export default function VosBesoinsPage() {
           {/* Image — absolutely overlapping the right side of the white box */}
           <div className="hidden lg:block absolute -top-24 right-0 w-[36%] h-[75%] z-20">
             <img
-              src="/img/besoins-intro.jpg"
+              src="/img/besoins-intro.webp"
               alt="Vos besoins"
               className="w-full h-full object-cover shadow-xl"
-              onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }}
+              onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
             />
           </div>
 
@@ -115,7 +115,7 @@ export default function VosBesoinsPage() {
       <section className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
-             <img src="/img/besoins-finance.jpg" alt="Finance & Reporting" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+             <img src="/img/besoins-finance.webp" alt="Finance & Reporting" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
           </div>
           <div className="w-full lg:w-7/12 bg-white p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
             <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">
@@ -156,7 +156,7 @@ export default function VosBesoinsPage() {
             
             {/* Mobile Image */}
             <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
-              <img src="/img/besoins-gestion.jpg" alt="Contrôle de gestion" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
+              <img src="/img/besoins-gestion.webp" alt="Contrôle de gestion" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
             </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
               {formatBrand(t(
@@ -183,7 +183,7 @@ export default function VosBesoinsPage() {
             </ul>
           </div>
           <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
-             <img src="/img/besoins-gestion.jpg" alt="Contrôle de gestion" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.jpg"; }} />
+             <img src="/img/besoins-gestion.webp" alt="Contrôle de gestion" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
           </div>
         </div>
       </section>
@@ -260,7 +260,7 @@ export default function VosBesoinsPage() {
       <section className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[650px] shadow-xl">
-             <img src="/img/besoins-data.jpg" alt="Support comptable & Data" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+             <img src="/img/besoins-data.webp" alt="Support comptable & Data" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
           </div>
           <div className="w-full lg:w-7/12 bg-white p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
             <h3 className="text-[#141824] font-bold text-[1.4rem] mb-6">
@@ -269,7 +269,7 @@ export default function VosBesoinsPage() {
             
             {/* Mobile Image */}
             <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
-              <img src="/img/besoins-data.jpg" alt="Support comptable & Data" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+              <img src="/img/besoins-data.webp" alt="Support comptable & Data" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
             </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
               {formatBrand(t(
@@ -338,7 +338,7 @@ export default function VosBesoinsPage() {
             </ul>
           </div>
           <div className="w-full lg:w-5/12 h-[400px] lg:h-[600px] shadow-xl">
-             <img src="/img/besoins-cgp.jpg" alt="Support aux CGP" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.jpg"; }} />
+             <img src="/img/besoins-cgp.webp" alt="Support aux CGP" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
           </div>
         </div>
       </section>

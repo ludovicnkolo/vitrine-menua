@@ -45,10 +45,10 @@ export default function NousRejoindre() {
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/img/nous-rejoindre-hero-new.png" 
+            src="/img/nous-rejoindre-hero-new.webp" 
             alt="Nous rejoindre" 
             className="w-full h-full object-cover" 
-            onError={(e) => { e.currentTarget.src = "/meeting.jpg"; }} 
+            onError={(e) => { e.currentTarget.src = "/meeting.webp"; }} 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>

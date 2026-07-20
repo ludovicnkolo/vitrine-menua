@@ -80,7 +80,7 @@ export default function NosSolutionsPage() {
                 {/* Mobile Image (Visible only on mobile) */}
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
                   <img
-                    src="/img/solutions-hero.webp"
+                    src="/img/solutions_3.webp"
                     alt="Nos solutions"
                     className="w-full h-full object-cover object-center"
                     onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}

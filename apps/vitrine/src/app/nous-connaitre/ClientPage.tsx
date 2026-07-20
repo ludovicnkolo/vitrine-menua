@@ -76,7 +76,7 @@ export default function NousConnaitrePage() {
               {/* Mobile Image (Visible only on mobile) */}
               <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
                 <img
-                  src="/img/connaitre-intro.webp"
+                  src="/img/connaitre_2.webp"
                   alt="Cabinet"
                   className="w-full h-full object-cover object-center"
                 />

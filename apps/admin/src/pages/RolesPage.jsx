@@ -6,10 +6,9 @@ import {
   Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
 } from 'lucide-react';
 import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
-import { mockDossiers, mockTasks, mockInbox, mockContactInbox, mockRecrutementInbox, mockClients, mockRoles } from '../utils/mockData';
 
 const RolesPage = () => {
-  const [roles, setRoles] = useState(mockRoles);
+  const [roles, setRoles] = useState([]);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [permissionsOpen, setPermissionsOpen] = useState(false);

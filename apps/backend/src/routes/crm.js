@@ -268,15 +268,19 @@ router.delete('/tasks/:id', async (req, res) => {
   }
 });
 
-// --- MESSAGES ---
+// --- MESSAGES (FORMULAIRES) ---
 router.get('/messages', async (req, res) => {
   try {
-    const messages = await prisma.message.findMany({
-      orderBy: { createdAt: 'desc' }
+    const formulaires = await prisma.formulaire.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: {
+        contact: true,
+        recrutement: true
+      }
     });
-    res.json(messages);
+    res.json(formulaires);
   } catch (error) {
-    console.error(error); res.status(500).json({ error: 'Erreur lors de la récupération des messages.' });
+    console.error(error); res.status(500).json({ error: 'Erreur lors de la récupération des formulaires.' });
   }
 });
 

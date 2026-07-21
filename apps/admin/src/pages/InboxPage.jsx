@@ -6,7 +6,6 @@ import {
   Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
 } from 'lucide-react';
 import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
-import { mockDossiers, mockTasks, mockInbox, mockContactInbox, mockRecrutementInbox, mockClients, mockRoles } from '../utils/mockData';
 
 const InboxPage = () => {
   const [tab, setTab] = useState('contact');
@@ -39,8 +38,8 @@ const InboxPage = () => {
     if (!statusMatch) return false;
     if (!searchQuery) return true;
     const term = searchQuery.toLowerCase();
-    const nameMatch = (m.fromName || '').toLowerCase().includes(term);
-    const emailMatch = (m.fromEmail || '').toLowerCase().includes(term);
+    const nameMatch = (m.nomPrenom || '').toLowerCase().includes(term);
+    const emailMatch = (m.email || '').toLowerCase().includes(term);
     return nameMatch || emailMatch;
   };
 
@@ -269,10 +268,10 @@ const InboxPage = () => {
                   </span>
                 </td>
                 <td>
-                  <strong style={{display: 'block', fontSize: '0.875rem'}}>{m.fromName}</strong>
+                  <strong style={{display: 'block', fontSize: '0.875rem'}}>{m.nomPrenom}</strong>
                 </td>
                 <td>
-                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.fromEmail}</span>
+                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.email}</span>
                 </td>
                 <td>
                   <span style={{
@@ -280,10 +279,10 @@ const InboxPage = () => {
                     background: '#E0E7FF',
                     color: '#4F46E5'
                   }}>
-                    Contact
+                    {m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier'}
                   </span>
                 </td>
-                <td><span style={{fontSize: '0.875rem'}}>{m.subject}</span></td>
+                <td><span style={{fontSize: '0.875rem'}}>{m.contact?.typeBesoin || m.objet}</span></td>
                 <td style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{new Date(m.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
@@ -306,18 +305,18 @@ const InboxPage = () => {
                     {m.status}
                   </span>
                 </td>
-                <td><strong style={{display: 'block', fontSize: '0.875rem'}}>{m.fromName}</strong></td>
-                <td><span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.fromEmail}</span></td>
+                <td><strong style={{display: 'block', fontSize: '0.875rem'}}>{m.nomPrenom}</strong></td>
+                <td><span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.email}</span></td>
                 <td>
                   <span style={{
                     padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
                     background: '#FEF3C7',
                     color: '#D97706'
                   }}>
-                    Recrutement
+                    {m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier'}
                   </span>
                 </td>
-                <td><span style={{fontSize: '0.875rem'}}>{m.subject}</span></td>
+                <td><span style={{fontSize: '0.875rem'}}>{m.recrutement?.competenceCle || m.objet}</span></td>
                 <td style={{color: 'var(--text-muted)'}}>{new Date(m.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
@@ -333,13 +332,13 @@ const InboxPage = () => {
             )) : messages.filter(m => m.type === tab.toUpperCase()).filter(filterFn).map(m => (
               <tr key={m.id}>
                 <td>
-                  <strong style={{display: 'block'}}>{m.fromName}</strong>
-                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.fromEmail}</span>
+                  <strong style={{display: 'block'}}>{m.nomPrenom}</strong>
+                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.email}</span>
                 </td>
                 <td>
                   <span style={{color: 'var(--text-main)', fontSize: '0.875rem', fontWeight: 500}}>{m.dossierId || 'Aucun dossier lié'}</span>
                 </td>
-                <td style={{fontWeight: m.status === 'NOUVEAU' ? 600 : 400}}>{m.subject}</td>
+                <td style={{fontWeight: m.status === 'NOUVEAU' ? 600 : 400}}>{m.objet}</td>
                 <td style={{color: 'var(--text-muted)'}}>{new Date(m.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>

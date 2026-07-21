@@ -6,7 +6,6 @@ import {
   Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
 } from 'lucide-react';
 import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
-import { mockDossiers, mockTasks, mockInbox, mockContactInbox, mockRecrutementInbox, mockClients, mockRoles } from '../utils/mockData';
 
 const DossiersPage = () => {
   const [openMenuId, setOpenMenuId] = useState(null);

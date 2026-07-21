@@ -6,7 +6,6 @@ import {
   Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
 } from 'lucide-react';
 import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
-import { mockRoles } from '../utils/mockData';
 
 const UsersPage = () => {
   const [tab, setTab] = useState('interne');
@@ -645,7 +644,7 @@ const UsersPage = () => {
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Permissions (Héritées du rôle)</label>
                 <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', fontSize: '0.875rem', color: 'var(--text-main)'}}>
-                  {mockRoles.find(r => r.name === consultUser.role)?.permissions || 'Aucune permission'}
+                  {[].find(r => r.name === consultUser.role)?.permissions || 'Aucune permission'}
                 </div>
               </div>
 

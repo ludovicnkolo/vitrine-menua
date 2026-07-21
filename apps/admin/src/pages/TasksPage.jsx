@@ -6,7 +6,6 @@ import {
   Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
 } from 'lucide-react';
 import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
-import { mockInbox, mockContactInbox, mockRecrutementInbox, mockClients, mockRoles } from '../utils/mockData';
 
 const TasksPage = () => {
   const [openMenuId, setOpenMenuId] = useState(null);

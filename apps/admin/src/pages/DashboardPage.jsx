@@ -6,7 +6,6 @@ import {
   Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
 } from 'lucide-react';
 import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
-import { mockDossiers, mockTasks, mockInbox, mockContactInbox, mockRecrutementInbox, mockClients, mockRoles } from '../utils/mockData';
 
 const DashboardPage = () => {
   return (
@@ -53,7 +52,7 @@ const DashboardPage = () => {
             </tr>
           </thead>
           <tbody>
-            {mockDossiers.slice(0, 4).map(d => (
+            {[].slice(0, 4).map(d => (
               <tr key={d.id}>
                 <td style={{fontWeight: 500}}>{d.id}</td>
                 <td>{d.client}</td>

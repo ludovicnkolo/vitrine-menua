@@ -43,8 +43,6 @@ const LoginPage = ({ onLogin }) => {
           <div style={{ background: 'var(--primary)', padding: '1.5rem', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
             <img src="/logo.png" alt="Menua Consulting" style={{ height: '70px', objectFit: 'contain' }} />
           </div>
-          <h1 style={{fontSize: '1.5rem', fontWeight: 600}}>MENUA CRM</h1>
-          <p style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>Espace d'administration sécurisé</p>
         </div>
         <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
           {error && <div style={{padding: '0.75rem', background: '#FEE2E2', color: '#B91C1C', borderRadius: '8px', fontSize: '0.875rem'}}>{error}</div>}

@@ -10,6 +10,8 @@ services:
         max-size: "10m"
         max-file: "3"
     volumes:
+      - ./node_modules:/app/node_modules
+      - ./apps/backend/prisma:/app/prisma
       - menua_db_data:/app/data
       - /var/menua/documents:/var/menua/documents
     ports:

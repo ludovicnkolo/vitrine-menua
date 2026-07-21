@@ -27,7 +27,8 @@ const TasksPage = () => {
     try {
       const token = localStorage.getItem('adminToken');
       const headers = { 'Authorization': 'Bearer ' + token };
-      const res = await fetch('http://localhost:4000/api/crm/tasks', { headers });
+      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      const res = await fetch(`${apiUrl}/api/crm/tasks`, { headers });
       const data = await res.json();
       setTasks(Array.isArray(data) ? data : []);
     } catch(e) {}
@@ -291,19 +292,22 @@ const TasksPage = () => {
               let matchSearch = true;
               if (searchQuery) {
                 const lowerQ = searchQuery.toLowerCase();
-                matchSearch = t.dossierId.toLowerCase().includes(lowerQ) ||
-                              t.createdBy.toLowerCase().includes(lowerQ) ||
-                              t.assignedTo.toLowerCase().includes(lowerQ);
+                const dossName = t.dossier?.name || t.dossierId || '';
+                const createdName = t.createdBy?.name || '';
+                const assignedName = t.assignedTo?.name || '';
+                matchSearch = dossName.toLowerCase().includes(lowerQ) ||
+                              createdName.toLowerCase().includes(lowerQ) ||
+                              assignedName.toLowerCase().includes(lowerQ);
               }
               return matchStatus && matchSearch;
             }).map(t => (
               <tr key={t.id}>
-                <td style={{color: 'var(--primary)', fontWeight: 500}}>{t.dossierId}</td>
-                <td><span style={{fontWeight: 500, color: 'var(--text-main)'}}>{t.createdBy}</span></td>
-                <td>{t.assignedTo}</td>
-                <td><span style={{color: 'var(--text-muted)'}}>{t.createdAt}</span></td>
+                <td style={{color: 'var(--primary)', fontWeight: 500}}>{t.dossier?.name || t.dossierId}</td>
+                <td><span style={{fontWeight: 500, color: 'var(--text-main)'}}>{t.createdBy?.name || 'Inconnu'}</span></td>
+                <td>{t.assignedTo?.name || 'Non assigné'}</td>
+                <td><span style={{color: 'var(--text-muted)'}}>{new Date(t.createdAt).toLocaleDateString()}</span></td>
                 <td>{getStatusBadge(t.status)}</td>
-                <td style={{color: 'var(--danger)', fontWeight: 500}}>{t.deadline}</td>
+                <td style={{color: 'var(--danger)', fontWeight: 500}}>{t.deadline ? new Date(t.deadline).toLocaleDateString() : 'Aucune'}</td>
                 <td style={{textAlign: 'right'}}>
                   <div style={{position: 'relative', display: 'inline-block'}}>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'flex-end'}}>

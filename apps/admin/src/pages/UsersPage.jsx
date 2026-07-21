@@ -22,12 +22,33 @@ const UsersPage = () => {
   const menuRef = useRef(null);
   
   // Real API states
+  const [searchTerm, setSearchTerm] = useState('');
   const [users, setUsers] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [newUser, setNewUser] = useState({ name: '', email: '', role: 'ASSOCIÉ', status: 'Actif', profile: '', phone: '' });
   const [newClient, setNewClient] = useState({ name: '', email: '', company: '', phone: '' });
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const uploadFile = async (file) => {
+    if (!file) return null;
+    const formData = new FormData();
+    formData.append('bucket', 'users_id_cards'); // MUST BE BEFORE FILE
+    formData.append('file', file);
+    try {
+      const res = await fetch('http://localhost:4000/api/files/upload', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success) {
+        return `http://localhost:4000/api/files/view/${data.fileData.path}`;
+      }
+    } catch(e) { console.error('Upload error', e); }
+    return null;
+  };
 
   const fetchData = async () => {
     try {
@@ -43,17 +64,17 @@ const UsersPage = () => {
   };
 
   useEffect(() => { fetchData(); }, []);
-
   const handleCreateUser = async (e) => {
     e.preventDefault();
     setLoading(true); setErrorMsg(null);
     try {
+      const uploadedUrl = await uploadFile(selectedFile);
       const res = await fetch('http://localhost:4000/api/crm/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
-        body: JSON.stringify(newUser)
+        body: JSON.stringify({ ...newUser, lastLogin: 'Jamais connecté', idCardUrl: uploadedUrl })
       });
-      if (res.ok) { setShowModal(false); setNewUser({ name: '', email: '', role: 'ASSOCIÉ', status: 'Actif', profile: '', phone: '' }); fetchData(); }
+      if (res.ok) { setShowModal(false); setNewUser({ name: '', email: '', role: 'ASSOCIÉ', status: 'Actif', profile: '', phone: '' }); setSelectedFile(null); fetchData(); }
       else { setErrorMsg('Erreur lors de la création'); }
     } catch(e) { setErrorMsg('Erreur réseau'); }
     setLoading(false);
@@ -63,18 +84,91 @@ const UsersPage = () => {
     e.preventDefault();
     setLoading(true); setErrorMsg(null);
     try {
+      const uploadedUrl = await uploadFile(selectedFile);
       const res = await fetch('http://localhost:4000/api/crm/clients', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
-        body: JSON.stringify({ ...newClient, status: externalType })
+        body: JSON.stringify({ ...newClient, status: newClient.status || 'Actif', idCardUrl: uploadedUrl })
       });
-      if (res.ok) { setShowExternalModal(false); setNewClient({ name: '', email: '', company: '', phone: '' }); fetchData(); }
+      if (res.ok) { setShowExternalModal(false); setNewClient({ name: '', email: '', company: '', phone: '' }); setSelectedFile(null); fetchData(); }
       else { setErrorMsg('Erreur lors de la création'); }
     } catch(e) { setErrorMsg('Erreur réseau'); }
     setLoading(false);
   };
   
-  const isAnyModalOpen = showModal || showExternalModal || editUser || editExternal || consultUser || consultExternal;
+  
+  const handleDeleteUser = async (id) => {
+    if (!window.confirm('Voulez-vous vraiment supprimer ce membre interne ?')) return;
+    try {
+      const res = await fetch(`http://localhost:4000/api/crm/users/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
+      });
+      if (res.ok) fetchData();
+    } catch(e) { console.error(e); }
+    setOpenMenuId(null);
+  };
+
+  const handleDeleteClient = async (id) => {
+    if (!window.confirm('Voulez-vous vraiment supprimer ce membre externe ?')) return;
+    try {
+      const res = await fetch(`http://localhost:4000/api/crm/clients/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
+      });
+      if (res.ok) fetchData();
+    } catch(e) { console.error(e); }
+    setOpenMenuId(null);
+  };
+
+  const handleUpdateUser = async (e) => {
+    e.preventDefault();
+    setLoading(true); setErrorMsg(null);
+    try {
+      const uploadedUrl = await uploadFile(selectedFile);
+      const res = await fetch(`http://localhost:4000/api/crm/users/${editUser.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+        body: JSON.stringify({
+          name: editUser.name,
+          email: editUser.email,
+          role: editUser.role,
+          profile: editUser.profile,
+          status: editUser.isBlocked ? 'Inactif' : 'Actif',
+          ...(uploadedUrl && { idCardUrl: uploadedUrl })
+        })
+      });
+      if (res.ok) { setEditUser(null); setSelectedFile(null); fetchData(); }
+      else { setErrorMsg('Erreur lors de la modification'); }
+    } catch(e) { setErrorMsg('Erreur réseau'); }
+    setLoading(false);
+  };
+
+  const handleUpdateClient = async (e) => {
+    e.preventDefault();
+    setLoading(true); setErrorMsg(null);
+    try {
+      const uploadedUrl = await uploadFile(selectedFile);
+      const res = await fetch(`http://localhost:4000/api/crm/clients/${editExternal.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+        body: JSON.stringify({
+          name: editExternal.name,
+          email: editExternal.email,
+          company: editExternal.company || editExternal.activite,
+          phone: editExternal.phone,
+          status: editExternal.status,
+          ...(uploadedUrl && { idCardUrl: uploadedUrl })
+        })
+      });
+      if (res.ok) { setEditExternal(null); setSelectedFile(null); fetchData(); }
+      else { setErrorMsg('Erreur lors de la modification'); }
+    } catch(e) { setErrorMsg('Erreur réseau'); }
+    setLoading(false);
+  };
+
+  const isAnyModalOpen =
+ showModal || showExternalModal || editUser || editExternal || consultUser || consultExternal;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -119,7 +213,7 @@ const UsersPage = () => {
         }}>
           <Pencil size={14} /> Modifier
         </button>
-        <button className="dropdown-item danger" onClick={() => setOpenMenuId(null)}>
+        <button className="dropdown-item danger" onClick={() => { setOpenMenuId(null); if(userObj){ if(isExternal) handleDeleteClient(userObj.id); else handleDeleteUser(userObj.id); } }}>
           <Trash size={14} /> Supprimer
         </button>
       </div>
@@ -159,7 +253,7 @@ const UsersPage = () => {
                     </div>
                     <div>
                       <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Secteur d'activité</label>
-                      <input type="text" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                      <input type="text" value={newClient.activite || ''} onChange={e=>setNewClient({...newClient, activite: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                     </div>
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
@@ -219,41 +313,42 @@ const UsersPage = () => {
               <button onClick={() => setEditExternal(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             
-            <form onSubmit={handleCreateUser} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+            <form onSubmit={handleUpdateClient} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {errorMsg && <div style={{color: 'red', fontSize: '0.875rem'}}>{errorMsg}</div>}
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom complet</label>
-                  <input type="text" value={newUser.name} onChange={e=>setNewUser({...newUser, name: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <input type="text" value={editExternal.name} onChange={e=>setEditExternal({...editExternal, name: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email</label>
-                  <input type="email" value={newUser.email} onChange={e=>setNewUser({...newUser, email: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <input type="email" value={editExternal.email} onChange={e=>setEditExternal({...editExternal, email: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
               </div>
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Numéro de téléphone</label>
-                  <input type="tel" value={newUser.phone} onChange={e=>setNewUser({...newUser, phone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Secteur d'activité / Entreprise</label>
+                  <input type="text" value={editExternal.company || editExternal.activite || ''} onChange={e=>setEditExternal({...editExternal, company: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Rôle</label>
-                  <select value={newUser.role} onChange={e=>setNewUser({...newUser, role: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
-                    <option value="ADMIN">Administrateur</option>
-                    <option value="SUPERVISOR">Superviseur</option>
-                    <option value="ASSOCIÉ">Associé</option>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Téléphone</label>
+                  <input type="tel" value={editExternal.phone || ''} onChange={e=>setEditExternal({...editExternal, phone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                </div>
+              </div>
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
+                  <select value={editExternal.status} onChange={e=>setEditExternal({...editExternal, status: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+                    <option value="Particulier">Particulier</option>
+                    <option value="Société">Société</option>
                   </select>
                 </div>
               </div>
-              <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Formation / Profil</label>
-                <input type="text" value={newUser.profile} onChange={e=>setNewUser({...newUser, profile: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} placeholder="Ex: Master en Droit des Affaires" />
-              </div>
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
-                <button type="button" onClick={() => setShowModal(false)} className="btn btn-outline">Annuler</button>
-                <button type="submit" disabled={loading} className="btn btn-primary">{loading ? 'Création...' : 'Créer le membre'}</button>
+                <button type="button" onClick={() => setEditExternal(null)} className="btn btn-outline">Annuler</button>
+                <button type="submit" disabled={loading} className="btn btn-primary">{loading ? 'Sauvegarde...' : 'Sauvegarder'}</button>
               </div>
-</form>
+            </form>
           </div>
         </div>
       )}
@@ -363,29 +458,30 @@ const UsersPage = () => {
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Ajouter un Membre Interne</h2>
               <button onClick={() => setShowModal(false)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
-            <form style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+            <form onSubmit={handleCreateUser} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+              {errorMsg && <div style={{color: 'red', fontSize: '0.875rem'}}>{errorMsg}</div>}
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom complet</label>
-                  <input type="text" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <input type="text" value={newUser.name} onChange={e => setNewUser({...newUser, name: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email</label>
-                  <input type="email" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <input type="email" value={newUser.email} onChange={e => setNewUser({...newUser, email: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
               </div>
 
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Numéro de téléphone</label>
-                  <input type="tel" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <input type="tel" value={newUser.phone} onChange={e => setNewUser({...newUser, phone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Rôle</label>
-                  <select style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
-                    <option>Administrateur</option>
-                    <option>Superviseur</option>
-                    <option>Collaborateur</option>
+                  <select value={newUser.role} onChange={e => setNewUser({...newUser, role: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+                    <option value="ADMIN">Administrateur</option>
+                    <option value="SUPERVISOR">Superviseur</option>
+                    <option value="ASSOCIÉ">Associé</option>
                   </select>
                 </div>
               </div>
@@ -404,11 +500,11 @@ const UsersPage = () => {
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Formation</label>
-                  <input type="text" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} placeholder="Ex: Master en Droit des Affaires" />
+                  <input type="text" value={newUser.profile} onChange={e => setNewUser({...newUser, profile: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} placeholder="Ex: Master en Droit des Affaires" />
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
-                  <select style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+                  <select value={newUser.status} onChange={e => setNewUser({...newUser, status: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
                     <option value="Actif">Actif</option>
                     <option value="Inactif">Inactif</option>
                   </select>
@@ -422,12 +518,12 @@ const UsersPage = () => {
 
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Pièce d'identité (Upload)</label>
-                <input type="file" style={{width: '100%', padding: '0.5rem', background: 'var(--bg-color)', borderRadius: '4px', border: '1px dashed var(--text-muted)'}} />
+                <input type="file" onChange={(e) => setSelectedFile(e.target.files[0])} style={{width: '100%', padding: '0.5rem', background: 'var(--bg-color)', borderRadius: '4px', border: '1px dashed var(--text-muted)'}} />
               </div>
 
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
                 <button type="button" onClick={() => setShowModal(false)} className="btn btn-outline">Annuler</button>
-                <button type="submit" className="btn btn-primary" onClick={(e) => { e.preventDefault(); setShowModal(false); }}>Créer le membre</button>
+                <button type="submit" disabled={loading} className="btn btn-primary">{loading ? 'Création...' : 'Créer le membre'}</button>
               </div>
             </form>
           </div>
@@ -442,15 +538,16 @@ const UsersPage = () => {
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Modifier un Membre Interne</h2>
               <button onClick={() => setEditUser(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
-            <form style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+            <form onSubmit={handleUpdateUser} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+              {errorMsg && <div style={{color: 'red', fontSize: '0.875rem'}}>{errorMsg}</div>}
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom complet</label>
-                  <input type="text" defaultValue={editUser.name} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <input type="text" value={editUser.name} onChange={e=>setEditUser({...editUser, name: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email</label>
-                  <input type="email" defaultValue={editUser.email} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <input type="email" value={editUser.email} onChange={e=>setEditUser({...editUser, email: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
               </div>
 
@@ -461,18 +558,11 @@ const UsersPage = () => {
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Rôle</label>
-                  <select defaultValue={editUser.role} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+                  <select value={editUser.role} onChange={e=>setEditUser({...editUser, role: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
                     <option value="ADMIN">Administrateur</option>
                     <option value="SUPERVISOR">Superviseur</option>
-                    <option value="COLLABORATOR">Collaborateur</option>
+                    <option value="ASSOCIÉ">Associé</option>
                   </select>
-                </div>
-              </div>
-
-              <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Permissions actuelles (Héritées du rôle)</label>
-                <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', fontSize: '0.875rem', color: 'var(--text-muted)'}}>
-                  {mockRoles.find(r => r.name === editUser.role)?.permissions || 'Aucune permission'}
                 </div>
               </div>
 
@@ -494,7 +584,7 @@ const UsersPage = () => {
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
-                  <select defaultValue={editUser.status || "Actif"} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+                  <select value={editUser.isBlocked ? 'Inactif' : 'Actif'} onChange={e=>setEditUser({...editUser, isBlocked: e.target.value === 'Inactif'})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
                     <option value="Actif">Actif</option>
                     <option value="Inactif">Inactif</option>
                   </select>
@@ -503,18 +593,18 @@ const UsersPage = () => {
 
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description du profil</label>
-                <textarea rows="3" defaultValue="Consultant Senior spécialisé en audit financier et accompagnement des directions générales." style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+                <textarea rows="3" value={editUser.profile || ''} onChange={e=>setEditUser({...editUser, profile: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
               </div>
 
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Pièce d'identité (Upload nouvelle pièce)</label>
-                <input type="file" style={{width: '100%', padding: '0.5rem', background: 'var(--bg-color)', borderRadius: '4px', border: '1px dashed var(--text-muted)'}} />
+                <input type="file" onChange={(e) => setSelectedFile(e.target.files[0])} style={{width: '100%', padding: '0.5rem', background: 'var(--bg-color)', borderRadius: '4px', border: '1px dashed var(--text-muted)'}} />
                 <div style={{fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem'}}>Fichier actuel : document_identite.pdf</div>
               </div>
 
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
                 <button type="button" onClick={() => setEditUser(null)} className="btn btn-outline">Annuler</button>
-                <button type="submit" className="btn btn-primary" onClick={(e) => { e.preventDefault(); setEditUser(null); }}>Sauvegarder les modifications</button>
+                <button type="submit" disabled={loading} className="btn btn-primary">{loading ? 'Sauvegarde...' : 'Sauvegarder'}</button>
               </div>
             </form>
           </div>
@@ -599,30 +689,29 @@ const UsersPage = () => {
 
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Pièce d'identité</label>
-                <div onClick={() => setViewImage('https://images.unsplash.com/photo-1544813545-4827233fc515?q=80&w=1470&auto=format&fit=crop')} style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'background 0.2s'}}>
-                  <Eye size={16} /> Voir
-                </div>
+                {consultUser.idCardUrl ? (
+                  <div 
+                    onClick={() => {
+                      const token = localStorage.getItem('adminToken');
+                      const viewUrl = consultUser.idCardUrl.includes('?') 
+                        ? `${consultUser.idCardUrl}&token=${token}` 
+                        : `${consultUser.idCardUrl}?token=${token}`;
+                      setViewImage(viewUrl);
+                    }} 
+                    style={{width: '100%', padding: '0.5rem', background: '#EFF6FF', borderRadius: '4px', border: '1px dashed #3B82F6', minHeight: '38px', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 500}}>
+                    <Eye size={16} /> Voir le document
+                  </div>
+                ) : (
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                    Aucun document
+                  </div>
+                )}
               </div>
               
               <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '1rem'}}>
                 <button onClick={() => setConsultUser(null)} className="btn btn-outline">Fermer</button>
               </div>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal Image Viewer */}
-      {viewImage && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200
-        }}>
-          <div style={{position: 'relative', maxWidth: '90vw', maxHeight: '90vh'}}>
-            <button onClick={() => setViewImage(null)} style={{position: 'absolute', top: '-40px', right: '0', background: 'none', border: 'none', color: '#FFF', cursor: 'pointer', zIndex: 210}}>
-              <X size={32} />
-            </button>
-            <img src={viewImage} alt="Pièce d'identité" style={{maxWidth: '100%', maxHeight: '90vh', objectFit: 'contain', borderRadius: '8px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'}} />
           </div>
         </div>
       )}
@@ -708,11 +797,11 @@ const UsersPage = () => {
                   </td>
                   <td>{getRoleBadge(u.role)}</td>
                   <td>
-                    <span style={{color: u.status === 'Actif' ? 'var(--success)' : 'var(--danger)', fontWeight: 500}}>
-                      {u.status}
+                    <span style={{color: !u.isBlocked ? 'var(--success)' : 'var(--danger)', fontWeight: 500}}>
+                      {!u.isBlocked ? 'Actif' : 'Inactif'}
                     </span>
                   </td>
-                  <td style={{color: 'var(--text-muted)'}}>{u.lastLogin}</td>
+                  <td style={{color: 'var(--text-muted)'}}>{u.createdAt ? new Date(u.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'}) : 'Jamais connecté'}</td>
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                       <div style={{position: 'relative'}}>
@@ -758,8 +847,8 @@ const UsersPage = () => {
                       {c.status}
                     </span>
                   </td>
-                  <td><span style={{color: 'var(--text-muted)'}}>{c.activite}</span></td>
-                  <td><span style={{color: 'var(--text-muted)'}}>{c.creationDate}</span></td>
+                  <td><span style={{color: 'var(--text-muted)'}}>{c.company || c.activite || 'N/A'}</span></td>
+                  <td><span style={{color: 'var(--text-muted)'}}>{c.createdAt ? new Date(c.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'}) : 'N/A'}</span></td>
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                       <div style={{position: 'relative'}}>
@@ -777,6 +866,20 @@ const UsersPage = () => {
         )}
       </div>
       </>
+      )}
+
+      {/* Image/PDF Viewer Modal using <object> for better PDF support */}
+      {viewImage && (
+        <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 1100, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <div style={{position: 'relative', width: '90vw', height: '90vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <button onClick={() => setViewImage(null)} style={{position: 'absolute', top: '-40px', right: '0', background: 'none', border: 'none', color: 'white', cursor: 'pointer'}}>
+              <X size={24} />
+            </button>
+            <object data={viewImage} type="application/pdf" style={{width: '100%', height: '100%', border: 'none', backgroundColor: 'white', borderRadius: '8px'}}>
+              <p>Votre navigateur ne supporte pas l'affichage direct de PDF. <a href={viewImage} target="_blank" rel="noreferrer">Télécharger le fichier</a></p>
+            </object>
+          </div>
+        </div>
       )}
     </div>
   )

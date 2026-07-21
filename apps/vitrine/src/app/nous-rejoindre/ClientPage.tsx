@@ -115,13 +115,13 @@ export default function NousRejoindre() {
 
           {/* Right Column (Form) */}
           <div className="w-full lg:w-[60%] bg-[#e8e1d7] border-t-4 border-t-[#141824] p-10 lg:p-16 shadow-xl">
-            <h3 className="text-[1.8rem] font-semibold text-[#141824] mb-10 uppercase tracking-wider">{t("Formulaire de recrutement", "Recruitment Form")}</h3>
+            <h3 className="text-[1.4rem] sm:text-[1.6rem] xl:text-[1.8rem] whitespace-nowrap font-semibold text-[#141824] mb-10 uppercase tracking-wide">{t("Formulaire de collaboration", "Collaboration Form")}</h3>
             
             <form className="space-y-10" onSubmit={handleSubmit}>
 
               <div>
                 <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Vous êtes", "You are")}</p>
-                <div className="flex flex-col sm:flex-row gap-6">
+                <div className="flex flex-col sm:flex-row gap-8 sm:gap-24">
                   <label className="flex items-center gap-3 cursor-pointer group">
                     <input 
                       type="radio" 
@@ -150,20 +150,7 @@ export default function NousRejoindre() {
               <div>
                 <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Informations", "Information")}</p>
                 
-                {profileType === "company" && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <div>
-                      <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Raison sociale", "Company Name")} <span className="text-red-500">*</span></label>
-                      <input type="text" name="company" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                    </div>
-                    <div>
-                      <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("SIRET", "SIRET")} <span className="text-red-500">*</span></label>
-                      <input type="text" name="siret" placeholder={t("Ex: 123 456 789 00012", "E.g. 123 456 789 00012")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                    </div>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                   <div>
                     <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Nom", "Last Name")} <span className="text-red-500">*</span></label>
                     <input type="text" name="lastName" placeholder={t("Votre nom", "Your last name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
@@ -174,31 +161,25 @@ export default function NousRejoindre() {
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                  <div>
+                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("E-mail", "Email")} <span className="text-red-500">*</span></label>
+                    <input type="email" name="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                  </div>
+                  <div>
+                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")}</label>
+                    <input type="tel" name="phone" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
+                  </div>
+                </div>
+
                 {profileType === "company" && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                  <div className="grid grid-cols-1 gap-8 mb-8">
                     <div>
-                      <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("E-mail de l'entreprise", "Company Email")} <span className="text-red-500">*</span></label>
-                      <input type="email" name="companyEmail" placeholder="contact@entreprise.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                    </div>
-                    <div>
-                      <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("E-mail professionnel", "Professional Email")} <span className="text-red-500">*</span></label>
-                      <input type="email" name="professionalEmail" placeholder="votre.nom@entreprise.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                      <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Raison sociale", "Company Name")} <span className="text-red-500">*</span></label>
+                      <input type="text" name="company" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                     </div>
                   </div>
                 )}
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-                  {profileType === "individual" && (
-                    <div>
-                      <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("E-mail", "Email")} <span className="text-red-500">*</span></label>
-                      <input type="email" name="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                    </div>
-                  )}
-                  <div className={profileType === "company" ? "md:col-span-2" : ""}>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")} <span className="text-red-500">*</span></label>
-                    <input type="tel" name="phone" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                  </div>
-                </div>
               </div>
 
 
@@ -217,12 +198,29 @@ export default function NousRejoindre() {
                       t("Risques et Conformité", "Risk and Compliance"),
                       t("Support opérationnel CGP", "Wealth Management Support"),
                       t("Autre", "Other")
-                    ].map((opt, i) => (
-                      <label key={i} className="flex items-start gap-3 text-[1.05rem] text-[#141824] font-light cursor-pointer group">
-                        <input type="checkbox" name="skills" value={opt} className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]" /> 
-                        <span className="group-hover:text-[#6e7891] transition-colors">{opt}</span>
-                      </label>
-                    ))}
+                    ].map((opt, i) => {
+                      const isOther = opt === t("Autre", "Other") || opt === "Autre" || opt === "Other";
+                      return (
+                      <div key={i} className={`flex items-start gap-3 text-[1.05rem] text-[#141824] font-light group ${isOther ? 'flex-col sm:flex-row' : ''}`}>
+                        <label className="flex items-start gap-3 cursor-pointer">
+                          <input 
+                            type="checkbox" 
+                            name="skills" 
+                            value={opt} 
+                            className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]"
+                            onChange={(e) => {
+                              if (isOther && e.target.checked) {
+                                document.getElementById('otherSkillInput')?.focus();
+                              }
+                            }}
+                          /> 
+                          <span className="group-hover:text-[#6e7891] transition-colors whitespace-nowrap">{opt}</span>
+                        </label>
+                        {isOther && (
+                          <input id="otherSkillInput" type="text" name="otherSkill" maxLength={30} placeholder={t("Précisez", "Specify")} className="w-full sm:w-auto flex-grow border-b border-[#d1d5db] bg-transparent px-2 py-0.5 text-[0.95rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
+                        )}
+                      </div>
+                    )})}
                   </div>
                 </div>
 
@@ -231,10 +229,10 @@ export default function NousRejoindre() {
                     <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Années d'expérience", "Years of experience")} <span className="text-red-500">*</span></label>
                     <select name="experience" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
                       <option value="">{t("Sélectionnez", "Select")}</option>
-                      <option>Moins de 2 ans</option>
-                      <option>2 à 5 ans</option>
-                      <option>5 à 10 ans</option>
-                      <option>Plus de 10 ans</option>
+                      <option value="Moins de 2 ans">{t("Moins de 2 ans", "Less than 2 years")}</option>
+                      <option value="2 à 5 ans">{t("2 à 5 ans", "2 to 5 years")}</option>
+                      <option value="5 à 10 ans">{t("5 à 10 ans", "5 to 10 years")}</option>
+                      <option value="Plus de 10 ans">{t("Plus de 10 ans", "More than 10 years")}</option>
                     </select>
                   </div>
                   <div>
@@ -245,8 +243,8 @@ export default function NousRejoindre() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                   <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Pays / Ville", "Country / City")} <span className="text-red-500">*</span></label>
-                    <input type="text" name="location" placeholder={t("Ex: France, Paris", "E.g. France, Paris")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Lieu de résidence", "Place of residence")}</label>
+                    <input type="text" name="location" placeholder={t("Ex: Paris, France", "E.g. Paris, France")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" />
                   </div>
                   <div>
                     <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Disponibilité", "Availability")} <span className="text-red-500">*</span></label>
@@ -266,17 +264,17 @@ export default function NousRejoindre() {
                 </div>
               </div>
 
-              <div className="bg-[#f5f7fa] p-5 border-l-4 border-[#141824]">
-                <p className="text-[0.95rem] text-[#141824] font-medium leading-relaxed">
+              <div className="bg-[#f5f7fa] py-3 px-4 border-l-4 border-[#141824]">
+                <p className="text-[0.85rem] text-[#6e7891] italic leading-relaxed">
                   {formatBrand(t(
-                    "Aucun document n'est demandé à ce stade. Si votre profil est retenu, MENUA CONSULTING vous contactera pour vous indiquer les pièces complémentaires à transmettre.",
+                    "Aucun document n’est demandé à ce stade. Si votre profil est retenu, MENUA CONSULTING vous contactera afin de vous indiquer les éventuelles pièces complémentaires à transmettre.",
                     "No document is required at this stage. If your profile is selected, MENUA CONSULTING will contact you to indicate the additional documents to provide."
                   ))}
                 </p>
               </div>
 
               <div>
-                <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Message", "Message")} <span className="text-red-500">*</span></label>
+                <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Brève description de vos motivations", "Brief description of your motivations")} <span className="text-red-500">*</span></label>
                 <textarea name="message" rows={5} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors" required></textarea>
               </div>
 
@@ -284,13 +282,13 @@ export default function NousRejoindre() {
                 <label className="flex items-start gap-4 text-[1.05rem] text-[#6e7891] cursor-pointer group font-light">
                   <input type="checkbox" className="accent-[#141824] mt-1 shrink-0 w-5 h-5" required />
                   <span>
-                    {t("J'accepte le traitement de mes données.", "I accept the processing of my data.")} <span className="text-red-500">*</span>
+                    {t("J’ai pris connaissance de la", "I have read the")} <Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("politique de confidentialité", "Privacy Policy")}</Link>. <span className="text-red-500">*</span>
                   </span>
                 </label>
                 <p className="text-[0.85rem] text-[#6e7891] font-light mt-4 leading-relaxed">
                   {formatBrand(t(
-                    "Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin d'étudier votre candidature et d'en assurer le suivi. Votre dossier peut être conservé jusqu'à 2 ans après le dernier contact, sauf opposition de votre part. Vous disposez de droits sur vos données personnelles à l'adresse : contact@menuaconsulting.com. Pour en savoir plus, consultez notre",
-                    "The information collected via this form is processed by MENUA CONSULTING in order to study your application and ensure its follow-up. Your file may be kept for up to 2 years after the last contact, unless you object. You have rights over your personal data at the address: contact@menuaconsulting.com. To learn more, consult our"
+                    "Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin de répondre à votre demande et d'en assurer le suivi. Elles peuvent être conservées jusqu'à 3 ans après le dernier échange. Vous disposez de droits sur vos données personnelles et pouvez les exercer à l'adresse : contact@menuaconsulting.com. Pour en savoir plus, consultez notre",
+                    "The information collected via this form is processed by MENUA CONSULTING in order to respond to your request and ensure its follow-up. They can be kept for up to 3 years after the last exchange. You have rights over your personal data and can exercise them at the address: contact@menuaconsulting.com. To learn more, consult our"
                   ))}{" "}<Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("Politique de confidentialité", "Privacy Policy")}</Link>.
                 </p>
               </div>

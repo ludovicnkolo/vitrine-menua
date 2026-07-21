@@ -20,8 +20,8 @@ export default function NousContacter() {
          setFileError("Seuls les fichiers au format PDF sont acceptés.");
          setSelectedFileName(null);
          e.target.value = "";
-      } else if (file.size > 1 * 1024 * 1024) {
-         setFileError("Le fichier PDF est trop volumineux (maximum 1 Mo).");
+      } else if (file.size > 5 * 1024 * 1024) {
+         setFileError("Le fichier PDF est trop volumineux (maximum 5 Mo).");
          setSelectedFileName(null);
          e.target.value = "";
       } else {
@@ -61,8 +61,8 @@ export default function NousContacter() {
           setIsSubmitting(false);
           return;
         }
-        if (fileField.size > 1 * 1024 * 1024) { // Limite de 1 Mo
-          setFileError("Le fichier PDF est trop volumineux (maximum 1 Mo).");
+        if (fileField.size > 5 * 1024 * 1024) { // Limite de 5 Mo
+          setFileError("Le fichier PDF est trop volumineux (maximum 5 Mo).");
           setIsSubmitting(false);
           return;
         }
@@ -183,7 +183,7 @@ export default function NousContacter() {
               
               <div>
                 <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Vous êtes", "You are")}</p>
-                <div className="flex flex-col sm:flex-row gap-6">
+                <div className="flex flex-col sm:flex-row gap-8 sm:gap-24">
                   <label className="flex items-center gap-3 cursor-pointer group">
                     <input 
                       type="radio" 
@@ -212,72 +212,40 @@ export default function NousContacter() {
               <div>
                 <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Vos coordonnées", "Your contact details")}</p>
                 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                  <div>
+                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Nom", "Last Name")} <span className="text-red-500">*</span></label>
+                    <input type="text" name="lastName" placeholder={t("Votre nom", "Your last name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                  </div>
+                  <div>
+                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Prénom", "First Name")} <span className="text-red-500">*</span></label>
+                    <input type="text" name="firstName" placeholder={t("Votre prénom", "Your first name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                  <div>
+                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("E-mail", "Email")} <span className="text-red-500">*</span></label>
+                    <input type="email" name="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                  </div>
+                  <div>
+                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")}</label>
+                    <input type="tel" name="phone" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
+                  </div>
+                </div>
+
                 {clientType === "company" && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                  <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
                     <div>
                       <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Raison sociale", "Company")} <span className="text-red-500">*</span></label>
                       <input type="text" name="company" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                     </div>
-                    <div>
-                      <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("SIRET", "SIRET")} <span className="text-red-500">*</span></label>
-                      <input type="text" name="siret" placeholder={t("Ex: 123 456 789 00012", "E.g. 123 456 789 00012")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                    </div>
                   </div>
                 )}
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{clientType === "company" ? t("Nom du contact", "Contact Name") : t("Nom", "Name")} <span className="text-red-500">*</span></label>
-                    <input type="text" name="name" placeholder={t("Votre nom", "Your name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                  </div>
-                  <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Fonction", "Position")} <span className="text-red-500">*</span></label>
-                    <input type="text" name="position" placeholder={t("Votre fonction", "Your position")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                  </div>
-                </div>
-              </div>
-
-              {clientType === "company" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                  <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("E-mail de l'entreprise", "Company email")} <span className="text-red-500">*</span></label>
-                    <input type="email" name="companyEmail" placeholder="contact@entreprise.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                  </div>
-                  <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("E-mail professionnel", "Professional email")} <span className="text-red-500">*</span></label>
-                    <input type="email" name="professionalEmail" placeholder="votre.nom@entreprise.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                  </div>
-                </div>
-              )}
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {clientType === "individual" && (
-                  <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("E-mail personnel", "Personal email")} <span className="text-red-500">*</span></label>
-                    <input type="email" name="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                  </div>
-                )}
-                <div className={clientType === "company" ? "md:col-span-2" : ""}>
-                  <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")} <span className="text-red-500">*</span></label>
-                  <input type="tel" name="phone" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-8">
-                <div>
-                  <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Niveau d'urgence", "Urgency level")} <span className="text-red-500">*</span></label>
-                  <select name="urgency" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
-                    <option value="">{t("Sélectionnez l'urgence", "Select urgency")}</option>
-                    <option value="Immédiat">{t("Immédiat", "Immediate")}</option>
-                    <option value="Sous quelques jours">{t("Sous quelques jours", "Within a few days")}</option>
-                    <option value="Sous quelques semaines">{t("Sous quelques semaines", "Within a few weeks")}</option>
-                    <option value="À planifier">{t("À planifier", "To be planned")}</option>
-                  </select>
-                </div>
               </div>
 
               <div>
-                <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-4 block">{t("Type de besoin", "Type of need")} <span className="text-red-500">*</span></label>
+                <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-4 block">{t("Type de besoin", "Type of need")}</label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6">
                   {[
                     t("Renfort opérationnel", "Operational reinforcement"),
@@ -304,13 +272,20 @@ export default function NousContacter() {
                 </label>
                 <p className="text-[0.95rem] text-[#6e7891] font-light mb-4 leading-relaxed">
                   {t(
-                    "Décrivez votre besoin ou joignez un document de cadrage.",
-                    "Describe your need or attach a scoping document."
+                    "Décrivez votre besoin en détail.",
+                    "Describe your need in detail."
                   )}
                 </p>
                 <textarea name="description" rows={5} placeholder={t("Saisissez ou collez votre descriptif ici...", "Type or paste your description here...")} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf] mb-4"></textarea>
                 
-                <div className={`w-full border-2 border-dashed ${selectedFileName ? 'border-green-500 bg-green-50/30' : 'border-[#d1d5db] bg-[#f5f7fa]'} py-3 px-4 text-center hover:bg-[#e8e1d7]/30 transition-colors cursor-pointer rounded-sm`}>
+                <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-2 block">
+                  {t("Pièce jointe", "Attachment")}
+                </label>
+                <p className="text-[#141824] font-medium italic text-[0.85rem] mb-4">
+                  {t("Si vous en disposez, vous pouvez joindre une fiche de mission, un cahier des charges ou un document décrivant votre besoin.", "If available, you can attach an assignment brief, specifications, or a document describing your needs.")}
+                </p>
+
+                <div className={`w-full border-2 border-dashed ${selectedFileName ? 'border-green-500 bg-green-50/30' : 'border-[#d1d5db] bg-[#f5f7fa]'} py-2 px-4 text-center hover:bg-[#e8e1d7]/30 transition-colors cursor-pointer rounded-sm`}>
                    <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
                      {selectedFileName ? (
                        <div className="flex flex-col items-center">
@@ -325,13 +300,14 @@ export default function NousContacter() {
                        </div>
                      ) : (
                        <div className="flex flex-col items-center">
-                         <UploadCloud className="w-10 h-10 text-[#6e7891] mb-3 opacity-80" />
-                         <span className="text-[#141824] font-medium text-[1rem] mb-2 text-center">{t("Ou joignez un document (PDF uniquement)", "Or attach a document (PDF only)")}</span>
-                         <span className="text-[#6e7891] text-[0.85rem] mb-1 text-center">{t("Cliquez ici pour parcourir vos fichiers", "Click here to browse your files")}</span>
+                         <UploadCloud className="w-6 h-6 text-[#6e7891] mb-1 opacity-80" />
+                         <span className="text-[#6e7891] text-[0.85rem] text-center">
+                           {t("Déposez votre document ici", "Drop your document here")}
+                         </span>
                          {fileError && <span className="text-red-500 text-[0.7rem] font-bold mt-2">{fileError}</span>}
                        </div>
                      )}
-                     <input type="file" name="file" className="hidden" accept=".pdf" onChange={handleFileChange} />
+                     <input type="file" name="file" className="hidden" accept=".pdf,application/pdf" onChange={handleFileChange} />
                    </label>
                 </div>
               </div>
@@ -340,7 +316,7 @@ export default function NousContacter() {
                 <label className="flex items-start gap-4 text-[1.05rem] text-[#6e7891] cursor-pointer group font-light">
                   <input type="checkbox" className="accent-[#141824] mt-1 shrink-0 w-5 h-5" required />
                   <span>
-                    {t("J'accepte la", "I accept the")} <Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("politique de confidentialité", "Privacy Policy")}</Link> {t("et le traitement de mes données.", "and the processing of my data.")} <span className="text-red-500">*</span>
+                    {t("J’ai pris connaissance de la", "I have read the")} <Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("politique de confidentialité", "Privacy Policy")}</Link>. <span className="text-red-500">*</span>
                   </span>
                 </label>
                 <p className="text-[0.85rem] text-[#6e7891] font-light mt-4 leading-relaxed">

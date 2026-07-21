@@ -90,4 +90,35 @@ router.get('/download/:bucket/:filename', authenticateJWT, (req, res) => {
   });
 });
 
+// Route GET : Consultation inline (Stream) pour affichage dans le navigateur
+router.get('/view/:bucket/:filename', authenticateJWT, (req, res) => {
+  const { bucket, filename } = req.params;
+  
+  if (bucket.includes('..') || filename.includes('..') || bucket.includes('/') || filename.includes('/')) {
+    return res.status(403).json({ success: false, error: 'Accès interdit.' });
+  }
+
+  const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
+  const filePath = path.join(rootPath, bucket, filename);
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ success: false, error: 'Fichier introuvable.' });
+  }
+
+  const options = {
+    headers: {
+      'Content-Security-Policy': "default-src 'self'; base-uri 'self'; font-src 'self' https: data:; form-action 'self'; img-src 'self' data:; object-src 'self'; script-src 'self'; script-src-attr 'none'; style-src 'self' https: 'unsafe-inline'; upgrade-insecure-requests",
+      'X-Download-Options': 'noopen' // We override this to just allow it
+    }
+  };
+
+  res.sendFile(filePath, options, (err) => {
+    if (err && !res.headersSent) {
+      console.error("Erreur lors de l'envoi du fichier:", err);
+      res.status(500).json({ success: false, error: 'Erreur lors de la visualisation.' });
+    }
+  });
+});
+
 module.exports = router;
+

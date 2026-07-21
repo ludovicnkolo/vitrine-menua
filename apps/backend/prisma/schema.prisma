@@ -17,13 +17,15 @@ model User {
   role        String   @default("ASSOCIÉ") // ADMINISTRATEUR, ASSOCIÉ
   profile     String? // Profil de permissions (ex: Juriste, Comptable)
   permissions String? // Droits JSON (ex: ["MANAGE_CLIENTS", "VIEW_ALL", "EDIT_USERS"])
+  idCardUrl   String?
   isBlocked   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   assignedTasks    Task[]     @relation("AssignedTasks")
   createdTasks     Task[]     @relation("CreatedTasks")
-  assignedMessages Message[]  @relation("AssignedMessages")
+  assignedFormulaires Formulaire[]  @relation("AssignedFormulaires")
+  createdDossiers  Dossier[]
   documents        Document[]
   comments         Comment[]
   auditLogs        AuditLog[]
@@ -36,27 +38,32 @@ model Client {
   name      String
   company   String?
   phone     String?
+  idCardUrl String?
   status    String   @default("ACTIF") // ACTIF, SUSPENDU
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   dossiers Dossier[]
-  messages Message[]
+  formulaires Formulaire[]
 }
 
-// ─── LA BOÎTE DE RÉCEPTION (Emails récupérés) ─────────────────────────────────
-model Message {
-  id        String  @id @default(uuid())
-  messageId String  @unique // Garantie d'unicité (Message-ID de l'email)
-  subject   String
-  bodyText  String?
-  bodyHtml  String?
-  fromEmail String
-  fromName  String?
+// ─── FORMULAIRES (Entrées du site web) ─────────────────────────────────
+model Formulaire {
+  id              String  @id @default(uuid())
+  formulaireId    String  @unique // Garantie d'unicité (Message-ID de l'email)
+  type            String  @default("CONTACT") // CONTACT, RECRUTEMENT
+  statusSubmitter String? // SOCIETE, PARTICULIER
+  nomPrenom       String
+  email           String
+  telephone       String?
+  description     String?
+  raisonSocial    String?
+  objet           String?
+
+  bodyHtml        String? // Copie de l'email original envoyé
 
   // NOUVEAU, ATTRIBUE, INITIE, CONTROLE, A_CORRIGER, REATTRIBUE, TERMINE, ARCHIVE
   status String @default("NOUVEAU")
-
   isAnonyme Boolean @default(true)
 
   clientId String?
@@ -66,7 +73,10 @@ model Message {
   dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: SetNull)
 
   assignedToId String?
-  assignedTo   User?   @relation("AssignedMessages", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedTo   User?   @relation("AssignedFormulaires", fields: [assignedToId], references: [id], onDelete: SetNull)
+
+  recrutement FormulaireRecrutement?
+  contact     FormulaireContact?
 
   receivedAt DateTime @default(now())
   createdAt  DateTime @default(now())
@@ -75,8 +85,32 @@ model Message {
   auditLogs AuditLog[]
 }
 
+model FormulaireRecrutement {
+  id              String @id @default(uuid())
+  formulaireId    String @unique
+  formulaire      Formulaire @relation(fields: [formulaireId], references: [id], onDelete: Cascade)
+  
+  competenceCle   String?
+  anneeExperience String?
+  lieuResidence   String?
+  langue          String?
+  lienLinkedin    String?
+}
+
+model FormulaireContact {
+  id              String @id @default(uuid())
+  formulaireId    String @unique
+  formulaire      Formulaire @relation(fields: [formulaireId], references: [id], onDelete: Cascade)
+
+  typeBesoin      String?
+  pieceJointe     String? // URL ou ID du fichier
+}
+
 // ─── DOSSIERS (Catégorisation des requêtes clients) ───────────────────────────
 model Dossier {
+  origin String @default("INTERNE")
+  createdById String?
+  createdBy User? @relation(fields: [createdById], references: [id], onDelete: SetNull)
   id          String  @id @default(uuid())
   name        String // Créé et nommé par l'administrateur
   description String?
@@ -91,7 +125,7 @@ model Dossier {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  messages  Message[]
+  formulaires  Formulaire[]
   tasks     Task[]
   documents Document[]
   comments  Comment[]
@@ -170,8 +204,8 @@ model AuditLog {
   dossierId String?
   dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: Cascade)
 
-  messageId String?
-  message   Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  formulaireId String?
+  formulaire   Formulaire? @relation(fields: [formulaireId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }

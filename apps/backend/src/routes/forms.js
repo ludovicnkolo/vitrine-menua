@@ -4,6 +4,9 @@ const nodemailer = require('nodemailer');
 const xss = require('xss');
 const rateLimit = require('express-rate-limit');
 const dns = require('dns').promises;
+const crypto = require('crypto');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 const router = express.Router();
 
@@ -28,7 +31,7 @@ const upload = multer({
 // Strict rate limiting specifically for forms (5 per hour)
 const formLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 2, // Limit changed to 2 requests per hour
+  max: parseInt(process.env.RATE_LIMIT_FORM_MAX || '2'), // Limit based on env
   message: { success: false, error: 'Trop de soumissions, veuillez réessayer plus tard.' }
 });
 
@@ -51,10 +54,13 @@ const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT),
   secure: process.env.SMTP_SECURE === 'true',
+  requireTLS: true,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+  logger: true,
+  debug: true
 });
 
 // --- EMAIL PREMIUM TEMPLATE UTILS ---
@@ -80,7 +86,7 @@ const buildEmailTemplate = (title, contentHTML) => `
     </tr>
     <tr>
       <td style="padding: 25px 40px; background-color: #141824; border-radius: 0 0 4px 4px; text-align: center;">
-        <p style="color: #e8e1d7; margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;">Cet email a été envoyé depuis le site menuaconsulting.com</p>
+        <p style="color: #e8e1d7; margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;">Cet email a été envoyé depuis le site <span style="text-transform: lowercase;">https://menuaconsulting.com/</span></p>
       </td>
     </tr>
   </table>
@@ -100,12 +106,11 @@ router.post('/contact', upload.single('file'), async (req, res) => {
   try {
     const sanitizedBody = sanitizeInput(req.body);
     const {
-      clientType, company, siret, name, position, email, companyEmail, professionalEmail, phone, urgency, description, needs
+      clientType, company, firstName, lastName, email, phone, description, needs
     } = sanitizedBody;
 
-    const senderEmail = clientType === 'company' 
-      ? (companyEmail || professionalEmail) 
-      : email;
+    const fullName = `${firstName || ''} ${lastName || ''}`.trim();
+    const senderEmail = email;
 
     if (!senderEmail) {
       return res.status(400).json({ success: false, error: "Veuillez fournir une adresse email." });
@@ -123,8 +128,12 @@ router.post('/contact', upload.single('file'), async (req, res) => {
       if (req.file.mimetype !== 'application/pdf') {
         return res.status(400).json({ success: false, error: "Le fichier doit obligatoirement être au format PDF." });
       }
-      if (req.file.size > 1 * 1024 * 1024) {
-        return res.status(400).json({ success: false, error: "Le fichier PDF dépasse la limite de 1 Mo." });
+      const magicBytes = req.file.buffer.toString('hex', 0, 5);
+      if (magicBytes !== '255044462d') { // %PDF-
+        return res.status(400).json({ success: false, error: "Le fichier fourni n'est pas un document PDF valide ou est corrompu." });
+      }
+      if (req.file.size > 5 * 1024 * 1024) {
+        return res.status(400).json({ success: false, error: "Le fichier PDF dépasse la limite de 5 Mo." });
       }
       attachments.push({
         filename: req.file.originalname,
@@ -132,8 +141,8 @@ router.post('/contact', upload.single('file'), async (req, res) => {
       });
     }
 
-    const typeText = clientType === 'company' ? 'Entreprise' : 'Particulier';
-    const companyHtml = clientType === 'company' ? buildRow('Société', company) + buildRow('SIRET', siret) : '';
+    const typeText = clientType === 'company' ? 'Entreprise / Organisation' : 'Particulier';
+    const companyHtml = clientType === 'company' ? buildRow('Société', company) : '';
     const needsHtml = parsedNeeds.length > 0 
       ? `<ul style="margin:0; padding-left: 20px; color: #4a5568; font-size: 15px;">${parsedNeeds.map(n => `<li style="margin-bottom: 5px;">${n}</li>`).join('')}</ul>`
       : 'Aucun besoin spécifique coché';
@@ -141,11 +150,9 @@ router.post('/contact', upload.single('file'), async (req, res) => {
     const contentHTML = `
       ${buildRow('Type de client', typeText)}
       ${companyHtml}
-      ${buildRow('Nom du contact', name)}
-      ${buildRow('Fonction', position)}
+      ${buildRow('Nom complet', fullName)}
       ${buildRow('Email', senderEmail)}
       ${buildRow('Téléphone', phone)}
-      ${buildRow("Niveau d'urgence", urgency)}
       ${buildRow('Besoins identifiés', needsHtml)}
       ${buildRow('Description du besoin', description ? description.replace(/\n/g, '<br/>') : '')}
     `;
@@ -154,16 +161,50 @@ router.post('/contact', upload.single('file'), async (req, res) => {
       from: process.env.SMTP_FROM,
       to: process.env.CONTACT_EMAIL_TO,
       replyTo: senderEmail,
-      subject: `Nouvelle demande de contact - ${clientType === 'company' ? company : name}`,
-      text: `Nouvelle demande de contact via le site web Menua Consulting:\n\nVous êtes: ${typeText}\n${clientType === 'company' ? `Société: ${company}\nSIRET: ${siret}\n` : ''}Nom: ${name}\nFonction: ${position}\nEmail: ${senderEmail}\nTéléphone: ${phone}\nUrgence: ${urgency}\n\nBesoins:\n${parsedNeeds.join(', ')}\n\nDescription:\n${description}`,
-      html: buildEmailTemplate('Nouvelle demande de contact', contentHTML),
+      subject: 'Demande de contact',
+      text: `Nouvelle demande de contact via le site web Menua Consulting:\n\nVous êtes: ${typeText}\n${clientType === 'company' ? `Société: ${company}\n` : ''}Nom: ${fullName}\nEmail: ${senderEmail}\nTéléphone: ${phone}\n\nBesoins:\n${parsedNeeds.join(', ')}\n\nDescription:\n${description}`,
+      html: buildEmailTemplate('Demande de contact', contentHTML),
       attachments,
     };
 
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
       throw new Error("Configuration SMTP manquante dans l'environnement.");
     }
-    await transporter.sendMail(mailOptions);
+    
+    try {
+      await transporter.sendMail(mailOptions);
+    } catch (smtpError) {
+      console.error(`Erreur SMTP détaillée: Code ${smtpError.responseCode || smtpError.code || 'Inconnu'}`, smtpError);
+      throw smtpError;
+    }
+
+    // Enregistrement dans le CRM
+    try {
+      await prisma.formulaire.create({
+        data: {
+          formulaireId: crypto.randomUUID(),
+          type: 'CONTACT',
+          statusSubmitter: clientType === 'company' ? 'SOCIETE' : 'PARTICULIER',
+          nomPrenom: fullName,
+          email: senderEmail,
+          telephone: phone || null,
+          description: description || null,
+          raisonSocial: company || null,
+          objet: 'Demande de contact',
+          bodyHtml: contentHTML,
+          isAnonyme: true,
+          status: 'NOUVEAU',
+          contact: {
+            create: {
+              typeBesoin: parsedNeeds.join(', '),
+              pieceJointe: req.file ? req.file.originalname : null
+            }
+          }
+        }
+      });
+    } catch (dbError) {
+      console.error("Erreur lors de l'enregistrement en DB (Contact):", dbError);
+    }
 
     res.json({ success: true, message: "Message envoyé avec succès." });
   } catch (error) {
@@ -176,8 +217,8 @@ router.post('/join', upload.none(), async (req, res) => {
   try {
     const sanitizedBody = sanitizeInput(req.body);
     const {
-      profileType, company, siret, lastName, firstName, email, phone,
-      experience, languages, location, availability, linkedin, message, skills
+      profileType, company, lastName, firstName, email, phone,
+      experience, languages, location, availability, linkedin, message, skills, otherSkill
     } = sanitizedBody;
 
     if (!email) {
@@ -189,10 +230,11 @@ router.post('/join', upload.none(), async (req, res) => {
       return res.status(400).json({ success: false, error: "L'adresse email fournie est invalide ou le nom de domaine n'existe pas." });
     }
 
-    const parsedSkills = Array.isArray(skills) ? skills : (skills ? [skills] : []);
+    let parsedSkills = Array.isArray(skills) ? skills : (skills ? [skills] : []);
+    parsedSkills = parsedSkills.map(s => s === 'Autre' && otherSkill ? `Autre (${otherSkill})` : s);
 
     const typeText = profileType === 'company' ? 'Entreprise (B2B)' : 'Particulier';
-    const companyHtml = profileType === 'company' ? buildRow('Société', company) + buildRow('SIRET', siret) : '';
+    const companyHtml = profileType === 'company' ? buildRow('Société', company) : '';
     const skillsHtml = parsedSkills.length > 0 
       ? `<ul style="margin:0; padding-left: 20px; color: #4a5568; font-size: 15px;">${parsedSkills.map(s => `<li style="margin-bottom: 5px;">${s}</li>`).join('')}</ul>`
       : 'Aucune compétence spécifique cochée';
@@ -216,15 +258,46 @@ router.post('/join', upload.none(), async (req, res) => {
       from: process.env.SMTP_FROM,
       to: process.env.CONTACT_EMAIL_TO,
       replyTo: email,
-      subject: `Nouvelle candidature - ${profileType === 'company' ? company : `${firstName} ${lastName}`}`,
-      text: `Nouvelle candidature via le site web Menua Consulting:\n\nVous êtes: ${typeText}\n${profileType === 'company' ? `Société: ${company}\nSIRET: ${siret}\n` : ''}Nom: ${lastName}\nPrénom: ${firstName}\nEmail: ${email}\nTéléphone: ${phone}\n\nExpérience: ${experience}\nLangues: ${languages}\nLocalisation: ${location}\nDisponibilité: ${availability}\nLinkedIn: ${linkedin}\n\nCompétences clés:\n${parsedSkills.join(', ')}\n\nMessage:\n${message}`,
-      html: buildEmailTemplate('Nouvelle candidature', contentHTML),
+      subject: 'Demande de collaboration',
+      text: `Nouvelle candidature via le site web Menua Consulting:\n\nVous êtes: ${typeText}\n${profileType === 'company' ? `Société: ${company}\n` : ''}Nom: ${lastName}\nPrénom: ${firstName}\nEmail: ${email}\nTéléphone: ${phone}\n\nExpérience: ${experience}\nLangues: ${languages}\nLocalisation: ${location}\nDisponibilité: ${availability}\nLinkedIn: ${linkedin}\n\nCompétences clés:\n${parsedSkills.join(', ')}\n\nMessage:\n${message}`,
+      html: buildEmailTemplate('Demande de collaboration', contentHTML),
     };
 
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
       throw new Error("Configuration SMTP manquante dans l'environnement.");
     }
     await transporter.sendMail(mailOptions);
+
+    // Enregistrement dans le CRM
+    try {
+      await prisma.formulaire.create({
+        data: {
+          formulaireId: crypto.randomUUID(),
+          type: 'RECRUTEMENT',
+          statusSubmitter: profileType === 'company' ? 'SOCIETE' : 'PARTICULIER',
+          nomPrenom: `${firstName || ''} ${lastName || ''}`.trim(),
+          email: email,
+          telephone: phone || null,
+          description: message || null,
+          raisonSocial: company || null,
+          objet: 'Demande de collaboration',
+          bodyHtml: contentHTML,
+          isAnonyme: true,
+          status: 'NOUVEAU',
+          recrutement: {
+            create: {
+              competenceCle: parsedSkills.join(', '),
+              anneeExperience: experience || null,
+              lieuResidence: location || null,
+              langue: languages || null,
+              lienLinkedin: linkedin || null
+            }
+          }
+        }
+      });
+    } catch (dbError) {
+      console.error("Erreur lors de l'enregistrement en DB (Recrutement):", dbError);
+    }
 
     res.json({ success: true, message: "Candidature envoyée avec succès." });
   } catch (error) {

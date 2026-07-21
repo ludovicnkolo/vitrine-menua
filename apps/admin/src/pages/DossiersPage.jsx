@@ -20,17 +20,18 @@ const DossiersPage = () => {
   const menuRef = useRef(null);
 
   // States for real API data
-  const [dbDossiers, setDbDossiers] = useState(mockDossiers);
-  const [dbTasks, setDbTasks] = useState(mockTasks);
+  const [dbDossiers, setDbDossiers] = useState([]);
+  const [dbTasks, setDbTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
     const token = localStorage.getItem('adminToken');
     const headers = { 'Authorization': `Bearer ${token}` };
+    const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
     Promise.all([
-      fetch('http://localhost:4000/api/crm/dossiers', { headers }).then(res => res.json()).catch(() => []),
-      fetch('http://localhost:4000/api/crm/tasks', { headers }).then(res => res.json()).catch(() => [])
+      fetch(`${apiUrl}/api/crm/dossiers`, { headers }).then(res => res.json()).catch(() => []),
+      fetch(`${apiUrl}/api/crm/tasks`, { headers }).then(res => res.json()).catch(() => [])
     ]).then(([dossiers, tasks]) => {
       if (Array.isArray(dossiers) && dossiers.length > 0) setDbDossiers(dossiers);
       if (Array.isArray(tasks) && tasks.length > 0) setDbTasks(tasks);
@@ -366,24 +367,34 @@ const DossiersPage = () => {
               let matchSearch = true;
               if (searchQuery) {
                 const q = searchQuery.toLowerCase();
+                const creatorName = d.createdBy?.name || '';
                 matchSearch = (d.id || '').toLowerCase().includes(q) || 
                               (d.name || '').toLowerCase().includes(q) || 
-                              (d.createdBy || '').toLowerCase().includes(q);
+                              creatorName.toLowerCase().includes(q);
               }
+              
+              const dOrigin = d.origin || 'INTERNE';
+              const dCreatorName = d.createdBy?.name || 'Inconnu';
+              const dCreatorRole = d.createdBy?.role || '-';
+              
               return matchStatus && matchProfil && matchOrigine && matchSearch;
-            }).map(d => (
+            }).map(d => {
+              const dOrigin = d.origin || 'INTERNE';
+              const dCreatorName = d.createdBy?.name || 'Inconnu';
+              const dCreatorRole = d.createdBy?.role || '-';
+              return (
               <tr key={d.id}>
                 <td style={{fontWeight: 500}}>{d.id}</td>
                 <td><strong style={{display: 'block', color: 'var(--text-main)'}}>{d.name}</strong></td>
-                <td><span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{d.origine}</span></td>
-                <td>{d.createdBy}</td>
+                <td><span style={{color: 'var(--text-muted)', fontSize: '0.875rem', textTransform: 'capitalize'}}>{dOrigin}</span></td>
+                <td>{dCreatorName}</td>
                 <td>{getStatusBadge(d.status)}</td>
                 <td>
-                  <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 500, background: d.profil === 'Entreprise' ? '#EFF6FF' : '#F5F3FF', color: d.profil === 'Entreprise' ? '#2563EB' : '#7C3AED'}}>
-                    {d.profil}
+                  <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 500, background: dCreatorRole === 'ADMIN' ? '#EFF6FF' : '#F5F3FF', color: dCreatorRole === 'ADMIN' ? '#2563EB' : '#7C3AED'}}>
+                    {dCreatorRole}
                   </span>
                 </td>
-                <td style={{color: 'var(--text-muted)'}}>{d.date}</td>
+                <td style={{color: 'var(--text-muted)'}}>{new Date(d.createdAt).toLocaleDateString()}</td>
                 <td style={{textAlign: 'right'}}>
                   <div style={{position: 'relative', display: 'inline-block'}}>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'flex-end'}}>
@@ -395,7 +406,8 @@ const DossiersPage = () => {
                   </div>
                 </td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>

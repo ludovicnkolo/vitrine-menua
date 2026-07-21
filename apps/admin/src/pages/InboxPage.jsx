@@ -15,23 +15,67 @@ const InboxPage = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [processMsg, setProcessMsg] = useState(null);
   const [previewFile, setPreviewFile] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [dossiers, setDossiers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [createTaskModal, setCreateTaskModal] = useState(false);
   const [newTaskFile, setNewTaskFile] = useState(null);
   const [isNewDossier, setIsNewDossier] = useState(true);
+
+  // Form states
+  const [taskSubject, setTaskSubject] = useState('');
+  const [taskAssignedToId, setTaskAssignedToId] = useState('');
+  const [taskNewDossierName, setTaskNewDossierName] = useState('');
+  const [taskDossierId, setTaskDossierId] = useState('');
+  const [taskDescription, setTaskDescription] = useState('');
   const menuRef = useRef(null);
   const isAnyModalOpen = processMsg || createTaskModal;
 
   const filterFn = (m) => {
-    const statusMatch = filterTraite === 'all' ? true : filterTraite === 'traite' ? m.isProcessed === true : m.isProcessed !== true;
+    const isProcessed = m.status === 'TERMINE' || m.status === 'ARCHIVE';
+    const statusMatch = filterTraite === 'all' ? true : filterTraite === 'traite' ? isProcessed === true : isProcessed !== true;
     if (!statusMatch) return false;
     if (!searchQuery) return true;
     const term = searchQuery.toLowerCase();
-    const nameMatch = (m.name || '').toLowerCase().includes(term);
-    const emailMatch = (m.email || m.from || '').toLowerCase().includes(term);
+    const nameMatch = (m.fromName || '').toLowerCase().includes(term);
+    const emailMatch = (m.fromEmail || '').toLowerCase().includes(term);
     return nameMatch || emailMatch;
   };
 
   useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        setLoading(true);
+        const token = localStorage.getItem('adminToken');
+        if (!token) return;
+        const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+        
+        const [resMsgs, resUsers, resDossiers] = await Promise.all([
+          fetch(`${apiUrl}/api/crm/messages`, { headers: { 'Authorization': `Bearer ${token}` } }),
+          fetch(`${apiUrl}/api/crm/users`, { headers: { 'Authorization': `Bearer ${token}` } }),
+          fetch(`${apiUrl}/api/crm/dossiers`, { headers: { 'Authorization': `Bearer ${token}` } })
+        ]);
+
+        if (resMsgs.ok) {
+          setMessages(await resMsgs.json());
+        } else if (resMsgs.status === 401 || resMsgs.status === 403) {
+          alert('Votre session a expiré. Veuillez vous reconnecter.');
+          localStorage.removeItem('adminToken');
+          window.location.href = '/login';
+        }
+        
+        if (resUsers.ok) setUsers(await resUsers.json());
+        if (resDossiers.ok) setDossiers(await resDossiers.json());
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMessages();
+
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setOpenMenuId(null);
@@ -46,6 +90,74 @@ const InboxPage = () => {
     if (openMenuId === id) setOpenMenuId(null);
     else setOpenMenuId(id);
   }
+
+  const handleCreateTask = async () => {
+    try {
+      setIsSubmitting(true);
+      const token = localStorage.getItem('adminToken');
+      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      
+      let finalDossierId = null;
+      if (tab !== 'interne') {
+        if (isNewDossier) {
+          if (!taskNewDossierName.trim()) {
+            alert("Veuillez saisir le nom du nouveau dossier.");
+            setIsSubmitting(false);
+            return;
+          }
+          const dossRes = await fetch(`${apiUrl}/api/crm/dossiers`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ name: taskNewDossierName, description: 'Créé depuis la messagerie', origin: tab.toUpperCase() })
+          });
+          if (!dossRes.ok) {
+            alert("Erreur lors de la création du dossier.");
+            setIsSubmitting(false);
+            return;
+          }
+          const dossData = await dossRes.json();
+          finalDossierId = dossData.id;
+        } else {
+          if (!taskDossierId) {
+            alert("Veuillez sélectionner un dossier existant.");
+            setIsSubmitting(false);
+            return;
+          }
+          finalDossierId = taskDossierId;
+        }
+      }
+
+      if (tab !== 'interne') {
+        const taskRes = await fetch(`${apiUrl}/api/crm/tasks`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({
+            description: `${taskSubject}\n\n${taskDescription}`,
+            assignedToId: taskAssignedToId || null,
+            dossierId: finalDossierId
+          })
+        });
+
+        if (!taskRes.ok) {
+          alert("Erreur lors de la création de la tâche.");
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      alert(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Tâche créée et assignée avec succès !');
+      setCreateTaskModal(false);
+      setProcessMsg(null);
+      setNewTaskFile(null);
+      setTaskSubject('');
+      setTaskDescription('');
+    } catch (error) {
+      console.error(error);
+      alert('Une erreur est survenue.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const renderDropdown = (m) => {
     if (openMenuId !== m.id) return null;
@@ -116,18 +228,20 @@ const InboxPage = () => {
             {tab === 'contact' ? (
               <tr>
                 <th>Statut</th>
-                <th>Nom / Mail</th>
-                <th>Degrés</th>
-                <th>Besoin</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Type</th>
+                <th>Besoins</th>
                 <th>Date</th>
                 <th>Actions</th>
               </tr>
             ) : tab === 'recrutement' ? (
               <tr>
                 <th>Statut</th>
-                <th>Nom / Mail</th>
-                <th>Compétence</th>
-                <th>Langue</th>
+                <th>Nom</th>
+                <th>E-mail</th>
+                <th>Type</th>
+                <th>Compétences</th>
                 <th>Date</th>
                 <th>Actions</th>
               </tr>
@@ -142,31 +256,35 @@ const InboxPage = () => {
             )}
           </thead>
           <tbody>
-            {tab === 'contact' ? mockContactInbox.filter(filterFn).map(m => (
+            {loading ? (
+              <tr><td colSpan="7" style={{textAlign: 'center', padding: '2rem'}}>Chargement des messages...</td></tr>
+            ) : tab === 'contact' ? messages.filter(m => m.type === 'CONTACT').filter(filterFn).map(m => (
               <tr key={m.id}>
                 <td>
                   <span style={{
                     padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                    background: '#F1F5F9', color: '#475569'
+                    background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
                   }}>
-                    {m.type}
+                    {m.status}
                   </span>
                 </td>
                 <td>
-                  <strong style={{display: 'block'}}>{m.name}</strong>
-                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.email}</span>
+                  <strong style={{display: 'block', fontSize: '0.875rem'}}>{m.fromName}</strong>
+                </td>
+                <td>
+                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.fromEmail}</span>
                 </td>
                 <td>
                   <span style={{
                     padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                    background: m.degree === 'Chaud' ? '#FEE2E2' : m.degree === 'Tiède' ? '#FEF3C7' : '#E0E7FF',
-                    color: m.degree === 'Chaud' ? '#DC2626' : m.degree === 'Tiède' ? '#D97706' : '#4F46E5'
+                    background: '#E0E7FF',
+                    color: '#4F46E5'
                   }}>
-                    {m.degree}
+                    Contact
                   </span>
                 </td>
-                <td>{m.need}</td>
-                <td style={{color: 'var(--text-muted)'}}>{m.date}</td>
+                <td><span style={{fontSize: '0.875rem'}}>{m.subject}</span></td>
+                <td style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{new Date(m.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                     <div style={{position: 'relative'}}>
@@ -178,23 +296,29 @@ const InboxPage = () => {
                   </div>
                 </td>
               </tr>
-            )) : tab === 'recrutement' ? mockRecrutementInbox.filter(filterFn).map(m => (
+            )) : tab === 'recrutement' ? messages.filter(m => m.type === 'RECRUTEMENT').filter(filterFn).map(m => (
               <tr key={m.id}>
                 <td>
                   <span style={{
                     padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                    background: '#F1F5F9', color: '#475569'
+                    background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
                   }}>
-                    {m.type}
+                    {m.status}
                   </span>
                 </td>
+                <td><strong style={{display: 'block', fontSize: '0.875rem'}}>{m.fromName}</strong></td>
+                <td><span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.fromEmail}</span></td>
                 <td>
-                  <strong style={{display: 'block'}}>{m.name}</strong>
-                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.email}</span>
+                  <span style={{
+                    padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
+                    background: '#FEF3C7',
+                    color: '#D97706'
+                  }}>
+                    Recrutement
+                  </span>
                 </td>
-                <td>{m.skills}</td>
-                <td>{m.languages}</td>
-                <td style={{color: 'var(--text-muted)'}}>{m.date}</td>
+                <td><span style={{fontSize: '0.875rem'}}>{m.subject}</span></td>
+                <td style={{color: 'var(--text-muted)'}}>{new Date(m.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                     <div style={{position: 'relative'}}>
@@ -206,17 +330,17 @@ const InboxPage = () => {
                   </div>
                 </td>
               </tr>
-            )) : mockInbox.filter(filterFn).map(m => (
+            )) : messages.filter(m => m.type === tab.toUpperCase()).filter(filterFn).map(m => (
               <tr key={m.id}>
                 <td>
-                  <strong style={{display: 'block'}}>{m.name}</strong>
-                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.from}</span>
+                  <strong style={{display: 'block'}}>{m.fromName}</strong>
+                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.fromEmail}</span>
                 </td>
                 <td>
                   <span style={{color: 'var(--text-main)', fontSize: '0.875rem', fontWeight: 500}}>{m.dossierId || 'Aucun dossier lié'}</span>
                 </td>
                 <td style={{fontWeight: m.status === 'NOUVEAU' ? 600 : 400}}>{m.subject}</td>
-                <td style={{color: 'var(--text-muted)'}}>{m.date}</td>
+                <td style={{color: 'var(--text-muted)'}}>{new Date(m.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                     <div style={{position: 'relative'}}>
@@ -236,7 +360,7 @@ const InboxPage = () => {
       )}
 
       {/* Modal Traiter Demande */}
-      {processMsg && (
+      {processMsg && !createTaskModal && (
         <div className="fade-in" style={{padding: "1rem"}}>
           <div className="" style={{width: "100%", padding: "0"}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
@@ -249,39 +373,39 @@ const InboxPage = () => {
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom complet</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.name}</div>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.fromName}</div>
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Email</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.email || processMsg.from}</div>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.fromEmail}</div>
                 </div>
               </div>
               
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Téléphone</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.phone || 'Non renseigné'}</div>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>Non renseigné</div>
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Date de soumission</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.date}</div>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{new Date(processMsg.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
                 </div>
               </div>
 
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Objet</label>
-                <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.subject || (tab === 'contact' ? 'Demande : ' + processMsg.need : tab === 'recrutement' ? 'Candidature spontanée' : 'Aucun objet')}</div>
+                <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.subject || 'Aucun objet'}</div>
               </div>
 
               {tab === 'contact' && (
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Statut</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.type}</div>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.status}</div>
                   </div>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Besoin</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.need}</div>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.subject}</div>
                   </div>
                 </div>
               )}
@@ -290,11 +414,11 @@ const InboxPage = () => {
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Profil LinkedIn</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', color: 'var(--primary)'}}>{processMsg.linkedin || 'Non renseigné'}</div>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', color: 'var(--primary)'}}>{'Non renseigné'}</div>
                   </div>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Compétences</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.skills}</div>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.subject}</div>
                   </div>
                 </div>
               )}
@@ -315,7 +439,7 @@ const InboxPage = () => {
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Message / Lettre de motivation</label>
                 <div style={{width: '100%', padding: '0.75rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '100px', fontSize: '0.875rem', whiteSpace: 'pre-wrap'}}>
-                  {processMsg.message || 'Aucun message.'}
+                  {processMsg.bodyText || processMsg.bodyHtml || 'Aucun message.'}
                 </div>
               </div>
             </div>
@@ -345,15 +469,16 @@ const InboxPage = () => {
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               <div>
                 <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{tab === 'interne' ? 'Objet de la réponse' : 'Objet'}</label>
-                <input type="text" placeholder={tab === 'interne' ? "Sujet..." : "Sujet de la tâche..."} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+                <input type="text" value={taskSubject} onChange={(e) => setTaskSubject(e.target.value)} placeholder={tab === 'interne' ? "Sujet..." : "Sujet de la tâche..."} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
               </div>
 
               <div>
                 <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{tab === 'interne' ? 'Destinataire' : 'Assigner à'}</label>
-                <select className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
-                  <option>Alice Martin (Expert Comptable)</option>
-                  <option>Jean Dupont (Juriste)</option>
-                  <option>Support Menua</option>
+                <select value={taskAssignedToId} onChange={(e) => setTaskAssignedToId(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                  <option value="">Sélectionner un collaborateur...</option>
+                  {users.map(u => (
+                    <option key={u.id} value={u.id}>{u.name} ({u.role})</option>
+                  ))}
                 </select>
               </div>
 
@@ -371,12 +496,13 @@ const InboxPage = () => {
                     </label>
                   </div>
                   {isNewDossier ? (
-                    <input type="text" placeholder="Nom du nouveau dossier..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+                    <input type="text" value={taskNewDossierName} onChange={(e) => setTaskNewDossierName(e.target.value)} placeholder="Nom du nouveau dossier..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
                   ) : (
-                    <select className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
-                      <option>ACME Corp (DOSS-2026-001)</option>
-                      <option>Paul Dupont (DOSS-2026-002)</option>
-                      <option>TechStart (DOSS-2026-003)</option>
+                    <select value={taskDossierId} onChange={(e) => setTaskDossierId(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                      <option value="">Sélectionner un dossier...</option>
+                      {dossiers.map(d => (
+                        <option key={d.id} value={d.id}>{d.name} ({d.client?.name || 'Sans client'})</option>
+                      ))}
                     </select>
                   )}
                 </div>
@@ -411,13 +537,13 @@ const InboxPage = () => {
 
               <div>
                 <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{tab === 'interne' ? 'Message' : 'Message / Consignes'}</label>
-                <textarea placeholder={tab === 'interne' ? "Votre réponse..." : "Détails de la tâche à effectuer..."} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+                <textarea value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)} placeholder={tab === 'interne' ? "Votre réponse..." : "Détails de la tâche à effectuer..."} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
               </div>
             </div>
 
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem'}}>
-              <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline">Annuler</button>
-              <button onClick={() => { setCreateTaskModal(false); setProcessMsg(null); setNewTaskFile(null); alert(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Tâche créée et assignée avec succès !'); }} className="btn btn-primary">{tab === 'interne' ? 'Envoyer' : 'Créer la tâche'}</button>
+              <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline" disabled={isSubmitting}>Annuler</button>
+              <button onClick={handleCreateTask} disabled={isSubmitting} className="btn btn-primary">{isSubmitting ? 'Traitement...' : (tab === 'interne' ? 'Envoyer' : 'Créer la tâche')}</button>
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge }
 import { mockDossiers, mockTasks, mockInbox, mockContactInbox, mockRecrutementInbox, mockClients, mockRoles } from '../utils/mockData';
 
 const RolesPage = () => {
+  const [roles, setRoles] = useState(mockRoles);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [permissionsOpen, setPermissionsOpen] = useState(false);
@@ -17,6 +18,7 @@ const RolesPage = () => {
   const menuRef = useRef(null);
   const dropdownRef = useRef(null);
   const [selectedPermissions, setSelectedPermissions] = useState([]);
+  const [newRole, setNewRole] = useState({ name: '', permissions: '', status: 'Actif', users: 0 });
   const isAnyModalOpen = showRoleModal || editRole || consultRole;
 
   const availablePermissions = [
@@ -36,6 +38,37 @@ const RolesPage = () => {
   };
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const token = localStorage.getItem('adminToken');
+        if (!token) return;
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+        const res = await fetch(`${apiUrl}/api/crm/users`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (res.ok && Array.isArray(data)) {
+          // Count users per role
+          const roleCounts = data.reduce((acc, user) => {
+            if (user.role) {
+              acc[user.role] = (acc[user.role] || 0) + 1;
+            }
+            return acc;
+          }, {});
+
+          // Update roles state
+          setRoles(prevRoles => prevRoles.map(r => ({
+            ...r,
+            users: roleCounts[r.name] || 0
+          })));
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des utilisateurs:", error);
+      }
+    };
+
+    fetchUsers();
+
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setOpenMenuId(null);
@@ -54,6 +87,16 @@ const RolesPage = () => {
     else setOpenMenuId(id);
   }
 
+  const handleDeleteRole = (id) => {
+    if(window.confirm('Voulez-vous vraiment supprimer ce rôle ?')) {
+      setRoles(roles.filter(r => r.id !== id));
+      if (editRole && editRole.id === id) {
+        setEditRole(null);
+      }
+    }
+    setOpenMenuId(null);
+  };
+
   const renderDropdown = (role) => {
     if (openMenuId !== role.id) return null;
     return (
@@ -66,10 +109,10 @@ const RolesPage = () => {
         <button className="dropdown-item" onClick={() => { setConsultRole(role); setOpenMenuId(null); }}>
           <Eye size={14} /> Consulter
         </button>
-        <button className="dropdown-item" onClick={() => { setEditRole(role); setOpenMenuId(null); }}>
+        <button className="dropdown-item" onClick={() => { setEditRole({...role}); setSelectedPermissions(role.permissions.split(', ')); setOpenMenuId(null); }}>
           <Pencil size={14} /> Modifier
         </button>
-        <button className="dropdown-item danger" onClick={() => setOpenMenuId(null)}>
+        <button className="dropdown-item danger" onClick={() => handleDeleteRole(role.id)}>
           <Trash size={14} /> Supprimer
         </button>
       </div>
@@ -100,7 +143,7 @@ const RolesPage = () => {
               </tr>
             </thead>
             <tbody>
-              {mockRoles.map(r => (
+              {roles.map(r => (
                 <tr key={r.id}>
                   <td>
                     <strong style={{display: 'block'}}>{r.name}</strong>
@@ -139,7 +182,7 @@ const RolesPage = () => {
             <form style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Intitulé du rôle</label>
-                <input type="text" placeholder="Ex: GESTIONNAIRE" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                <input type="text" value={newRole.name} onChange={e => setNewRole({...newRole, name: e.target.value})} placeholder="Ex: GESTIONNAIRE" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
               </div>
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Permissions</label>
@@ -175,14 +218,20 @@ const RolesPage = () => {
               </div>
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
-                <select style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+                <select value={newRole.status} onChange={e => setNewRole({...newRole, status: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
                   <option value="Actif">Actif</option>
                   <option value="Inactif">Inactif</option>
                 </select>
               </div>
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
                 <button type="button" onClick={() => setShowRoleModal(false)} className="btn btn-outline">Annuler</button>
-                <button type="submit" className="btn btn-primary" onClick={(e) => { e.preventDefault(); setShowRoleModal(false); }}>Créer le rôle</button>
+                <button type="submit" className="btn btn-primary" onClick={(e) => { 
+                  e.preventDefault(); 
+                  setRoles([...roles, { ...newRole, id: Date.now(), permissions: selectedPermissions.join(', ') }]);
+                  setNewRole({ name: '', permissions: '', status: 'Actif', users: 0 });
+                  setSelectedPermissions([]);
+                  setShowRoleModal(false); 
+                }}>Créer le rôle</button>
               </div>
             </form>
           </div>
@@ -201,7 +250,7 @@ const RolesPage = () => {
             <form style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Intitulé du rôle</label>
-                <input type="text" defaultValue={editRole.name} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                <input type="text" value={editRole.name} onChange={e => setEditRole({...editRole, name: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
               </div>
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Permissions</label>
@@ -237,14 +286,18 @@ const RolesPage = () => {
               </div>
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
-                <select defaultValue={editRole.status} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+                <select value={editRole.status} onChange={e => setEditRole({...editRole, status: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
                   <option value="Actif">Actif</option>
                   <option value="Inactif">Inactif</option>
                 </select>
               </div>
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
                 <button type="button" onClick={() => setEditRole(null)} className="btn btn-outline">Annuler</button>
-                <button type="submit" className="btn btn-primary" onClick={(e) => { e.preventDefault(); setEditRole(null); }}>Sauvegarder</button>
+                <button type="submit" className="btn btn-primary" onClick={(e) => { 
+                  e.preventDefault(); 
+                  setRoles(roles.map(r => r.id === editRole.id ? { ...editRole, permissions: selectedPermissions.join(', ') } : r));
+                  setEditRole(null); 
+                }}>Sauvegarder</button>
               </div>
             </form>
           </div>

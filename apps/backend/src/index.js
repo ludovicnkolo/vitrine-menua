@@ -14,12 +14,17 @@ const prisma = new PrismaClient();
 app.set('trust proxy', 1);
 
 // Security Middlewares
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false, // Disable CSP to allow PDF inline rendering
+  xDownloadOptions: false, // Permet l'affichage inline sur les vieux navigateurs
+  crossOriginResourcePolicy: false, // Permet au frontend de charger la ressource
+  xFrameOptions: false // Autorise l'intégration dans une iframe
+}));
 
 // Rate Limiting (General)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per window
+  max: parseInt(process.env.RATE_LIMIT_GLOBAL_MAX || '100'), // Limit per IP
   standardHeaders: true,
   legacyHeaders: false,
   message: { success: false, error: 'Trop de requêtes, veuillez réessayer plus tard.' }

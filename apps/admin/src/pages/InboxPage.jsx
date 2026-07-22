@@ -246,9 +246,10 @@ const InboxPage = () => {
               </tr>
             ) : (
               <tr>
-                <th>Expéditeur</th>
-                <th>Dossiers</th>
-                <th>Objet</th>
+                <th>Statut</th>
+                <th>Nom</th>
+                <th>E-mail</th>
+                <th>Sujet</th>
                 <th>Date</th>
                 <th>Actions</th>
               </tr>
@@ -332,14 +333,21 @@ const InboxPage = () => {
             )) : messages.filter(m => m.type === tab.toUpperCase()).filter(filterFn).map(m => (
               <tr key={m.id}>
                 <td>
-                  <strong style={{display: 'block'}}>{m.nomPrenom}</strong>
-                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.email}</span>
+                  <span style={{
+                    padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
+                    background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
+                  }}>
+                    {m.status}
+                  </span>
                 </td>
                 <td>
-                  <span style={{color: 'var(--text-main)', fontSize: '0.875rem', fontWeight: 500}}>{m.dossierId || 'Aucun dossier lié'}</span>
+                  <strong style={{display: 'block', fontSize: '0.875rem'}}>{m.nomPrenom}</strong>
                 </td>
-                <td style={{fontWeight: m.status === 'NOUVEAU' ? 600 : 400}}>{m.objet}</td>
-                <td style={{color: 'var(--text-muted)'}}>{new Date(m.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
+                <td>
+                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.email}</span>
+                </td>
+                <td style={{fontWeight: m.status === 'NOUVEAU' ? 600 : 400, fontSize: '0.875rem'}}>{m.objet}</td>
+                <td style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{new Date(m.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                     <div style={{position: 'relative'}}>
@@ -371,30 +379,41 @@ const InboxPage = () => {
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom complet</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.fromName}</div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.nomPrenom || 'Non renseigné'}</div>
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Email</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.fromEmail}</div>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.email || 'Non renseigné'}</div>
                 </div>
               </div>
               
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Téléphone</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>Non renseigné</div>
+              {tab !== 'personnel' && tab !== 'interne' && (
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Téléphone</label>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.telephone || 'Non renseigné'}</div>
+                  </div>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Date de soumission</label>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{new Date(processMsg.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
+                  </div>
                 </div>
-                <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Date de soumission</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{new Date(processMsg.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
-                </div>
-              </div>
+              )}
 
-              <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Objet</label>
-                <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.subject || 'Aucun objet'}</div>
-              </div>
+              {(tab === 'contact' || tab === 'recrutement') && processMsg.statusSubmitter === 'SOCIETE' && (
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom de la société</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.raisonSocial || 'Non renseigné'}</div>
+                </div>
+              )}
+
+              {tab !== 'contact' && tab !== 'recrutement' && (
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Objet</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.objet || 'Aucun objet'}</div>
+                </div>
+              )}
 
               {tab === 'contact' && (
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
@@ -404,20 +423,42 @@ const InboxPage = () => {
                   </div>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Besoin</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.subject}</div>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.contact?.typeBesoin || processMsg.objet || 'Non renseigné'}</div>
                   </div>
                 </div>
               )}
 
               {tab === 'recrutement' && (
-                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                  <div>
-                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Profil LinkedIn</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', color: 'var(--primary)'}}>{'Non renseigné'}</div>
+                <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Compétences clés</label>
+                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.competenceCle || processMsg.objet || 'Non renseigné'}</div>
+                    </div>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Années d'expérience</label>
+                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.anneeExperience || 'Non renseigné'}</div>
+                    </div>
+                  </div>
+                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Langues</label>
+                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.langue || 'Non renseigné'}</div>
+                    </div>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Lieu de résidence</label>
+                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.lieuResidence || 'Non renseigné'}</div>
+                    </div>
                   </div>
                   <div>
-                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Compétences</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.subject}</div>
+                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Profil LinkedIn / Portfolio</label>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>
+                      {processMsg.recrutement?.lienLinkedin ? (
+                        <a href={processMsg.recrutement.lienLinkedin} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>
+                          {processMsg.recrutement.lienLinkedin}
+                        </a>
+                      ) : 'Non renseigné'}
+                    </div>
                   </div>
                 </div>
               )}
@@ -425,10 +466,18 @@ const InboxPage = () => {
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Fichiers joints</label>
                 <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', display: 'flex', gap: '1rem', alignItems: 'center'}}>
-                  {(processMsg.cv || processMsg.attachment) ? (
-                    <a href="#" onClick={(e) => { e.preventDefault(); setPreviewFile(processMsg.cv || processMsg.attachment); }} style={{color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.25rem', textDecoration: 'underline', cursor: 'pointer', fontWeight: 500}}>
-                      <Eye size={14}/> {processMsg.cv || processMsg.attachment}
-                    </a>
+                  {(processMsg.cv || processMsg.attachment || processMsg.contact?.pieceJointe) ? (
+                    <select 
+                      onChange={(e) => { if(e.target.value) setPreviewFile(e.target.value); e.target.selectedIndex = 0; }}
+                      style={{padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', width: '100%', background: '#FFF', cursor: 'pointer'}}
+                    >
+                      <option value="">-- Sélectionner un fichier pour l'ouvrir --</option>
+                      {processMsg.cv && <option value={processMsg.cv}>{processMsg.cv}</option>}
+                      {processMsg.contact?.pieceJointe && <option value={processMsg.contact.pieceJointe}>{processMsg.contact.pieceJointe}</option>}
+                      {processMsg.attachment && String(processMsg.attachment).split(',').map(f => f.trim()).filter(f => f).map(f => (
+                         <option key={f} value={f}>{f}</option>
+                      ))}
+                    </select>
                   ) : (
                     <span style={{color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.25rem'}}>Aucun fichier</span>
                   )}
@@ -436,9 +485,13 @@ const InboxPage = () => {
               </div>
 
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Message / Lettre de motivation</label>
-                <div style={{width: '100%', padding: '0.75rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '100px', fontSize: '0.875rem', whiteSpace: 'pre-wrap'}}>
-                  {processMsg.bodyText || processMsg.bodyHtml || 'Aucun message.'}
+                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>{tab === 'contact' || tab === 'recrutement' ? 'Description / Contenu' : tab === 'personnel' || tab === 'interne' ? 'Contenu du message' : 'Message / Lettre de motivation'}</label>
+                <div style={{width: '100%', padding: '0.75rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '100px', fontSize: '0.875rem', whiteSpace: 'pre-wrap', wordBreak: 'break-word'}}>
+                  {processMsg.description || processMsg.bodyText}
+                  {!processMsg.description && !processMsg.bodyText && processMsg.bodyHtml && (
+                     <div dangerouslySetInnerHTML={{ __html: processMsg.bodyHtml }} />
+                  )}
+                  {!processMsg.description && !processMsg.bodyText && !processMsg.bodyHtml && 'Aucun contenu.'}
                 </div>
               </div>
             </div>

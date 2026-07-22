@@ -130,6 +130,7 @@ model Dossier {
   documents Document[]
   comments  Comment[]
   auditLogs AuditLog[]
+  messagePersonnels MessagePersonnel[]
 }
 
 // ─── CHAT INTERNE (Commentaires entre Associés sur un Dossier) ────────────────
@@ -208,4 +209,22 @@ model AuditLog {
   formulaire   Formulaire? @relation(fields: [formulaireId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
+}
+
+// ─── MESSAGES (Interne & Personnel) ──────────────────────────────────────────
+model MessagePersonnel {
+  id          String   @id @default(uuid())
+  messageId   String   @unique
+  type        String   @default("PERSONNEL") // INTERNE, PERSONNEL
+  status      String   @default("NOUVEAU")
+  nomPrenom   String
+  email       String
+  objet       String?
+  bodyText    String?
+  attachment  String?
+  createdAt   DateTime @default(now())
+  receivedAt  DateTime @default(now())
+
+  dossierId   String?
+  dossier     Dossier? @relation(fields: [dossierId], references: [id], onDelete: SetNull)
 }

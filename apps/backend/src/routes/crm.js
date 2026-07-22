@@ -278,9 +278,14 @@ router.get('/messages', async (req, res) => {
         recrutement: true
       }
     });
-    res.json(formulaires);
+    const messagePersonnels = await prisma.messagePersonnel.findMany({
+      orderBy: { createdAt: 'desc' }
+    });
+    const allMessages = [...formulaires, ...messagePersonnels].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    res.json(allMessages);
   } catch (error) {
-    console.error(error); res.status(500).json({ error: 'Erreur lors de la récupération des formulaires.' });
+    console.error(error); res.status(500).json({ error: 'Erreur lors de la récupération des messages.' });
   }
 });
 

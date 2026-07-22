@@ -7,11 +7,60 @@ const { authenticateJWT } = require('../middlewares/auth');
 
 router.use(authenticateJWT);
 
+// --- ROLES ---
+router.get('/roles', async (req, res) => {
+  try {
+    const roles = await prisma.role.findMany();
+    res.json(roles);
+  } catch (error) {
+    console.error(error); res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/roles', async (req, res) => {
+  try {
+    const { name, permissions, description, status } = req.body;
+    const role = await prisma.role.create({
+      data: { name, permissions, description, status: status || 'Actif' }
+    });
+    res.json(role);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.patch('/roles/:id', async (req, res) => {
+  try {
+    const { name, permissions, description, status } = req.body;
+    const role = await prisma.role.update({
+      where: { id: req.params.id },
+      data: { 
+        ...(name && { name }), 
+        ...(permissions !== undefined && { permissions }), 
+        ...(description !== undefined && { description }), 
+        ...(status && { status }) 
+      }
+    });
+    res.json(role);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.delete('/roles/:id', async (req, res) => {
+  try {
+    await prisma.role.delete({ where: { id: req.params.id } });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // --- UTILISATEURS ---
 router.get('/users', async (req, res) => {
   try {
-    const users = await prisma.user.findMany({
-      select: { id: true, name: true, email: true, role: true, profile: true, idCardUrl: true, isBlocked: true, createdAt: true }
+    const users = await prisma.utilisateur.findMany({
+      select: { id: true, name: true, email: true, roleId: true, role: true, profile: true, idCardUrl: true, isBlocked: true, createdAt: true, telephone: true, lieuResidence: true, experienceCle: true, langues: true }
     });
     res.json(users);
   } catch (error) {
@@ -21,15 +70,19 @@ router.get('/users', async (req, res) => {
 
 router.post('/users', async (req, res) => {
   try {
-    const { name, email, role, phone, country, city, education, status, profile, idCardUrl } = req.body;
+    const { name, email, roleId, phone, country, city, education, status, profile, idCardUrl, telephone, lieuResidence, experienceCle, langues } = req.body;
     const bcrypt = require('bcryptjs');
     const hashedPassword = await bcrypt.hash('Menua@2026', 10); // Mot de passe par défaut
-    const user = await prisma.user.create({
+    const user = await prisma.utilisateur.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        role: role || 'ASSOCIÉ',
+        roleId: roleId || null,
+        telephone: telephone || phone || null,
+        lieuResidence: lieuResidence || null,
+        experienceCle: experienceCle || null,
+        langues: langues || null,
         profile: profile || '',
         idCardUrl: idCardUrl || null,
         isBlocked: status === 'Inactif'
@@ -43,14 +96,18 @@ router.post('/users', async (req, res) => {
 
 router.patch('/users/:id', async (req, res) => {
   try {
-    const { name, email, role, profile, status, idCardUrl } = req.body;
-    const user = await prisma.user.update({
+    const { name, email, roleId, profile, status, idCardUrl, telephone, lieuResidence, experienceCle, langues } = req.body;
+    const user = await prisma.utilisateur.update({
       where: { id: req.params.id },
       data: {
         ...(name && { name }),
         ...(email && { email }),
-        ...(role && { role }),
+        ...(roleId !== undefined && { roleId }),
         ...(profile !== undefined && { profile }),
+        ...(telephone !== undefined && { telephone }),
+        ...(lieuResidence !== undefined && { lieuResidence }),
+        ...(experienceCle !== undefined && { experienceCle }),
+        ...(langues !== undefined && { langues }),
         ...(idCardUrl !== undefined && { idCardUrl }),
         ...(status && { isBlocked: status === 'Inactif' })
       }
@@ -63,7 +120,7 @@ router.patch('/users/:id', async (req, res) => {
 
 router.delete('/users/:id', async (req, res) => {
   try {
-    await prisma.user.delete({ where: { id: req.params.id } });
+    await prisma.utilisateur.delete({ where: { id: req.params.id } });
     res.json({ success: true });
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression.' });
@@ -73,7 +130,7 @@ router.delete('/users/:id', async (req, res) => {
 // --- CLIENTS (Externes) ---
 router.get('/clients', async (req, res) => {
   try {
-    const clients = await prisma.client.findMany();
+    const clients = await prisma.client.findMany({ include: { entreprise: true } });
     res.json(clients);
   } catch (error) {
     console.error(error); console.error(error); res.status(500).json({ error: error.message });
@@ -82,15 +139,27 @@ router.get('/clients', async (req, res) => {
 
 router.post('/clients', async (req, res) => {
   try {
-    const { name, email, company, phone, status, idCardUrl } = req.body;
+    const { name, email, telephone, contactSecondaire, secteurActivite, description, type, siret, raisonSociale, emailEntreprise, telephoneEntreprise } = req.body;
     const client = await prisma.client.create({
       data: {
         name,
         email,
-        company,
-        phone,
-        idCardUrl: idCardUrl || null,
-        status: status || 'ACTIF',
+        telephone: telephone || null,
+        contactSecondaire: contactSecondaire || null,
+        secteurActivite: secteurActivite || null,
+        description: description || null,
+        type: type || 'PARTICULIER',
+        status: 'ACTIF',
+        ...(type === 'Société' && {
+          entreprise: {
+            create: {
+              siret: siret || null,
+              raisonSociale: raisonSociale || null,
+              emailEntreprise: emailEntreprise || null,
+              telephoneEntreprise: telephoneEntreprise || null
+            }
+          }
+        })
       }
     });
     res.status(201).json(client);
@@ -101,16 +170,31 @@ router.post('/clients', async (req, res) => {
 
 router.patch('/clients/:id', async (req, res) => {
   try {
-    const { name, email, company, phone, status, idCardUrl } = req.body;
+    const { name, email, telephone, contactSecondaire, secteurActivite, description, type, siret, raisonSociale, emailEntreprise, telephoneEntreprise, status } = req.body;
+    
+    // Si c'est une société, on met à jour ou crée les données de l'entreprise
+    let entrepriseUpdate = undefined;
+    if (type === 'Société') {
+      entrepriseUpdate = {
+        upsert: {
+          create: { siret, raisonSociale, emailEntreprise, telephoneEntreprise },
+          update: { siret, raisonSociale, emailEntreprise, telephoneEntreprise }
+        }
+      };
+    }
+
     const client = await prisma.client.update({
       where: { id: req.params.id },
       data: {
         ...(name && { name }),
         ...(email && { email }),
-        ...(company !== undefined && { company }),
-        ...(phone !== undefined && { phone }),
-        ...(idCardUrl !== undefined && { idCardUrl }),
-        ...(status && { status })
+        ...(telephone !== undefined && { telephone }),
+        ...(contactSecondaire !== undefined && { contactSecondaire }),
+        ...(secteurActivite !== undefined && { secteurActivite }),
+        ...(description !== undefined && { description }),
+        ...(type !== undefined && { type }),
+        ...(status && { status }),
+        ...(entrepriseUpdate && { entreprise: entrepriseUpdate })
       }
     });
     res.json(client);
@@ -132,7 +216,11 @@ router.delete('/clients/:id', async (req, res) => {
 router.get('/dossiers', async (req, res) => {
   try {
     const dossiers = await prisma.dossier.findMany({
-      include: { tasks: true, client: true, createdBy: true }
+      include: { 
+        missions: true, 
+        client: true, 
+        createdBy: { include: { role: true } }
+      }
     });
     res.json(dossiers);
   } catch (error) {
@@ -147,17 +235,17 @@ router.post('/dossiers', async (req, res) => {
     
     // Handle the bypass login 'MASTER-ADMIN'
     if (creatorId === 'MASTER-ADMIN') {
-      let masterUser = await prisma.user.findFirst({ where: { role: 'ADMIN' } });
-      if (!masterUser) {
-         masterUser = await prisma.user.create({
-            data: { email: 'master@admin.com', password: 'temp', name: 'Master Admin', role: 'ADMIN' }
-         });
-      }
-      creatorId = masterUser.id;
+      let masterUser = await prisma.utilisateur.findUnique({ where: { email: 'contact@menuaconsulting.com' } });
+      if (!masterUser) masterUser = await prisma.utilisateur.findFirst();
+      creatorId = masterUser?.id || creatorId;
     }
+
+    const count = await prisma.dossier.count();
+    const reference = `DOS-${String(count + 1).padStart(2, '0')}`;
 
     const dossier = await prisma.dossier.create({
       data: {
+        reference,
         name,
         description,
         priority: priority || 'NORMAL',
@@ -199,8 +287,12 @@ router.delete('/dossiers/:id', async (req, res) => {
 // --- TÂCHES ---
 router.get('/tasks', async (req, res) => {
   try {
-    const tasks = await prisma.task.findMany({
-      include: { dossier: true, assignedTo: true, createdBy: true }
+    const tasks = await prisma.mission.findMany({
+      include: { 
+        dossier: true, 
+        assignedTo: { include: { role: true } }, 
+        createdBy: { include: { role: true } } 
+      }
     });
     res.json(tasks);
   } catch (error) {
@@ -215,22 +307,17 @@ router.post('/tasks', async (req, res) => {
     
     // Handle the bypass login 'MASTER-ADMIN' which doesn't exist in DB
     if (creatorId === 'MASTER-ADMIN') {
-      let masterUser = await prisma.user.findFirst({ where: { role: 'ADMIN' } });
-      if (!masterUser) {
-         masterUser = await prisma.user.create({
-            data: {
-               email: 'master@admin.com',
-               password: 'temp',
-               name: 'Master Admin',
-               role: 'ADMIN'
-            }
-         });
-      }
-      creatorId = masterUser.id;
+      let masterUser = await prisma.utilisateur.findUnique({ where: { email: 'contact@menuaconsulting.com' } });
+      if (!masterUser) masterUser = await prisma.utilisateur.findFirst();
+      creatorId = masterUser?.id || creatorId;
     }
 
-    const task = await prisma.task.create({
+    const count = await prisma.mission.count();
+    const reference = `MSN-${String(count + 1).padStart(2, '0')}`;
+
+    const task = await prisma.mission.create({
       data: {
+        reference,
         description,
         dossierId,
         assignedToId,
@@ -240,14 +327,14 @@ router.post('/tasks', async (req, res) => {
     });
     res.status(201).json(task);
   } catch (error) {
-    console.error(error); res.status(500).json({ error: 'Erreur lors de la création de la tâche.' });
+    console.error(error); res.status(500).json({ error: error.message || 'Erreur lors de la création de la tâche.' });
   }
 });
 
 router.patch('/tasks/:id', async (req, res) => {
   try {
     const { status, assignedToId } = req.body;
-    const task = await prisma.task.update({
+    const task = await prisma.mission.update({
       where: { id: req.params.id },
       data: { status, assignedToId }
     });
@@ -259,7 +346,7 @@ router.patch('/tasks/:id', async (req, res) => {
 
 router.delete('/tasks/:id', async (req, res) => {
   try {
-    await prisma.task.delete({
+    await prisma.mission.delete({
       where: { id: req.params.id }
     });
     res.json({ success: true, message: 'Tâche supprimée' });

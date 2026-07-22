@@ -8,63 +8,93 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+// ─── ROLES & PERMISSIONS ─────────────────────────────────────────────────────
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique // ex: ADMINISTRATEUR, ASSOCIÉ, JURISTE
+  description String?
+  status      String   @default("Actif")
+  permissions String?  // JSON des droits
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  utilisateurs Utilisateur[]
+}
+
 // ─── UTILISATEURS DU SYSTÈME (Admin & Associés) ──────────────────────────────
-model User {
+model Utilisateur {
   id          String   @id @default(uuid())
   email       String   @unique
   password    String
   name        String
-  role        String   @default("ASSOCIÉ") // ADMINISTRATEUR, ASSOCIÉ
-  profile     String? // Profil de permissions (ex: Juriste, Comptable)
-  permissions String? // Droits JSON (ex: ["MANAGE_CLIENTS", "VIEW_ALL", "EDIT_USERS"])
+  
+  roleId      String?
+  role        Role?    @relation(fields: [roleId], references: [id], onDelete: SetNull)
+  
+  telephone   String?
+  lieuResidence String?
+  experienceCle String?
+  langues     String?
+  profile     String? 
   idCardUrl   String?
   isBlocked   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  assignedTasks    Task[]     @relation("AssignedTasks")
-  createdTasks     Task[]     @relation("CreatedTasks")
+  assignedMissions Mission[]     @relation("AssignedMissions")
+  createdMissions  Mission[]     @relation("CreatedMissions")
   assignedFormulaires Formulaire[]  @relation("AssignedFormulaires")
   createdDossiers  Dossier[]
   documents        Document[]
-  comments         Comment[]
   auditLogs        AuditLog[]
 }
 
 // ─── CLIENTS (Personnes externes au CRM) ──────────────────────────────────────
 model Client {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String
-  company   String?
-  phone     String?
-  idCardUrl String?
-  status    String   @default("ACTIF") // ACTIF, SUSPENDU
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String   @id @default(uuid())
+  type              String   @default("PARTICULIER") // SOCIETE, PARTICULIER
+  email             String   @unique
+  name              String
+  telephone         String?
+  contactSecondaire String?
+  secteurActivite   String?
+  description       String?
+  status            String   @default("ACTIF")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  entreprise ClientEntreprise?
 
   dossiers Dossier[]
   formulaires Formulaire[]
 }
 
+model ClientEntreprise {
+  id                  String @id @default(uuid())
+  clientId            String @unique
+  client              Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  siret               String?
+  raisonSociale       String?
+  emailEntreprise     String?
+  telephoneEntreprise String?
+}
+
 // ─── FORMULAIRES (Entrées du site web) ─────────────────────────────────
 model Formulaire {
   id              String  @id @default(uuid())
-  formulaireId    String  @unique // Garantie d'unicité (Message-ID de l'email)
-  type            String  @default("CONTACT") // CONTACT, RECRUTEMENT
-  statusSubmitter String? // SOCIETE, PARTICULIER
+  formulaireId    String  @unique 
+  type            String  @default("CONTACT") 
+  statusSubmitter String? 
   nomPrenom       String
   email           String
   telephone       String?
   description     String?
   raisonSocial    String?
   objet           String?
-
-  bodyHtml        String? // Copie de l'email original envoyé
-
-  // NOUVEAU, ATTRIBUE, INITIE, CONTROLE, A_CORRIGER, REATTRIBUE, TERMINE, ARCHIVE
-  status String @default("NOUVEAU")
-  isAnonyme Boolean @default(true)
+  bodyHtml        String? 
+  status          String @default("NOUVEAU")
+  isAnonyme       Boolean @default(true)
 
   clientId String?
   client   Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
@@ -73,7 +103,7 @@ model Formulaire {
   dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: SetNull)
 
   assignedToId String?
-  assignedTo   User?   @relation("AssignedFormulaires", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedTo   Utilisateur?   @relation("AssignedFormulaires", fields: [assignedToId], references: [id], onDelete: SetNull)
 
   recrutement FormulaireRecrutement?
   contact     FormulaireContact?
@@ -89,7 +119,6 @@ model FormulaireRecrutement {
   id              String @id @default(uuid())
   formulaireId    String @unique
   formulaire      Formulaire @relation(fields: [formulaireId], references: [id], onDelete: Cascade)
-  
   competenceCle   String?
   anneeExperience String?
   lieuResidence   String?
@@ -101,23 +130,21 @@ model FormulaireContact {
   id              String @id @default(uuid())
   formulaireId    String @unique
   formulaire      Formulaire @relation(fields: [formulaireId], references: [id], onDelete: Cascade)
-
   typeBesoin      String?
-  pieceJointe     String? // URL ou ID du fichier
+  pieceJointe     String? 
 }
 
 // ─── DOSSIERS (Catégorisation des requêtes clients) ───────────────────────────
 model Dossier {
-  origin String @default("INTERNE")
+  origin      String @default("INTERNE")
   createdById String?
-  createdBy User? @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy   Utilisateur? @relation(fields: [createdById], references: [id], onDelete: SetNull)
   id          String  @id @default(uuid())
-  name        String // Créé et nommé par l'administrateur
+  reference   String? @unique
+  name        String 
   description String?
-
-  // NOUVEAU, ATTRIBUE, INITIE, CONTROLE, A_CORRIGER, REATTRIBUE, TERMINE, ARCHIVE
-  status   String @default("NOUVEAU")
-  priority String @default("NORMAL")
+  status      String @default("NOUVEAU")
+  priority    String @default("NORMAL")
 
   clientId String?
   client   Client? @relation(fields: [clientId], references: [id], onDelete: Cascade)
@@ -126,41 +153,24 @@ model Dossier {
   updatedAt DateTime @updatedAt
 
   formulaires  Formulaire[]
-  tasks     Task[]
+  missions  Mission[]
   documents Document[]
-  comments  Comment[]
   auditLogs AuditLog[]
   messagePersonnels MessagePersonnel[]
 }
 
-// ─── CHAT INTERNE (Commentaires entre Associés sur un Dossier) ────────────────
-model Comment {
-  id      String  @id @default(uuid())
-  content String
-  isFile  Boolean @default(false)
-  fileUrl String?
-
-  authorId String
-  author   User   @relation(fields: [authorId], references: [id])
-
-  dossierId String?
-  dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: Cascade)
-
-  taskId String?
-  task   Task?   @relation(fields: [taskId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-}
-
-// ─── GESTION DES TÂCHES (Optionnel pour le workflow métier) ───────────────────
-model Task {
+// ─── MISSIONS (Anciennement Tasks) ────────────────────────────────────────────
+model Mission {
   id           String  @id @default(uuid())
+  reference    String? @unique
   dossierId    String
   dossier      Dossier @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+  
   assignedToId String?
-  assignedTo   User?   @relation("AssignedTasks", fields: [assignedToId], references: [id])
+  assignedTo   Utilisateur?   @relation("AssignedMissions", fields: [assignedToId], references: [id])
+  
   createdById  String
-  createdBy    User    @relation("CreatedTasks", fields: [createdById], references: [id])
+  createdBy    Utilisateur    @relation("CreatedMissions", fields: [createdById], references: [id])
 
   description String
   deadline    DateTime?
@@ -170,7 +180,7 @@ model Task {
   updatedAt DateTime @updatedAt
 
   documents Document[]
-  comments  Comment[]
+  messagePersonnels MessagePersonnel[]
 }
 
 // ─── DOCUMENTS GLOBAUX ────────────────────────────────────────────────────────
@@ -179,25 +189,24 @@ model Document {
   name         String
   url          String
   uploadedById String
-  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+  uploadedBy   Utilisateur   @relation(fields: [uploadedById], references: [id])
 
   dossierId String?
   dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: Cascade)
 
-  taskId String?
-  task   Task?   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  missionId String?
+  mission   Mission?   @relation(fields: [missionId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }
 
-// ─── AUDIT TRAIL (L'Oeil de l'Admin : qui fait quoi) ──────────────────────────
+// ─── AUDIT TRAIL ──────────────────────────────────────────────────────────────
 model AuditLog {
   id     String  @id @default(uuid())
   userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user   Utilisateur?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  action String // CREATION_DOSSIER, CHANGEMENT_STATUT, TELECHARGEMENT_DOC
-
+  action String 
   targetId   String?
   targetType String?
   details    String?
@@ -215,7 +224,7 @@ model AuditLog {
 model MessagePersonnel {
   id          String   @id @default(uuid())
   messageId   String   @unique
-  type        String   @default("PERSONNEL") // INTERNE, PERSONNEL
+  type        String   @default("PERSONNEL") 
   status      String   @default("NOUVEAU")
   nomPrenom   String
   email       String
@@ -227,4 +236,7 @@ model MessagePersonnel {
 
   dossierId   String?
   dossier     Dossier? @relation(fields: [dossierId], references: [id], onDelete: SetNull)
+
+  missionId   String?
+  mission     Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
 }

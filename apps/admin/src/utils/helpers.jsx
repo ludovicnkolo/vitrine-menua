@@ -11,10 +11,12 @@ function getStatusBadge(status) {
     'VALIDATED': { text: 'Validé', class: 'badge-success' },
     'OUVERT': { text: 'Ouvert', class: 'badge-progress' },
     'FERME': { text: 'Fermé', class: 'badge-success' },
-    'ARCHIVE': { text: 'Archivé', class: 'badge-warning' }
+    'ARCHIVE': { text: 'Archivé', class: 'badge-warning' },
+    'Actif': { text: 'Actif', style: { backgroundColor: '#DEF7EC', color: '#03543F' } },
+    'Inactif': { text: 'Inactif', style: { backgroundColor: '#FDE8E8', color: '#9B1C1C' } }
   }
   const s = map[status] || { text: status, class: 'badge-new' }
-  return <span className={`badge ${s.class}`}>{s.text}</span>
+  return <span className={`badge ${s.class || ''}`} style={s.style || {}}>{s.text}</span>
 }
 
 function getPriorityBadge(priority) {
@@ -28,8 +30,11 @@ function getPriorityBadge(priority) {
 
 function getRoleBadge(role) {
   const map = {
-    'ADMIN': { text: 'Administrateur', bg: '#4C1D95', color: '#FFF' },
-    'ASSOCIÉ': { text: 'Associé (Équipe)', bg: '#319795', color: '#FFF' }
+    'Super-administrateur': { text: 'Super-administrateur', bg: '#4C1D95', color: '#FFF' },
+    'Responsable opérationnel': { text: 'Responsable opérationnel', bg: '#DD6B20', color: '#FFF' },
+    'Relecteur': { text: 'Relecteur', bg: '#805AD5', color: '#FFF' },
+    'Collaborateur': { text: 'Collaborateur', bg: '#319795', color: '#FFF' },
+    'Administrateur technique': { text: 'Administrateur technique', bg: '#718096', color: '#FFF' }
   }
   const s = map[role] || { text: role, bg: '#718096', color: '#FFF' }
   return <span className="badge" style={{backgroundColor: s.bg, color: s.color}}>{s.text}</span>

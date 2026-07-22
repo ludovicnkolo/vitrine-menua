@@ -26,9 +26,10 @@ const UsersPage = () => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [newUser, setNewUser] = useState({ name: '', email: '', role: 'ASSOCIÉ', status: 'Actif', profile: '', phone: '' });
-  const [newClient, setNewClient] = useState({ name: '', email: '', company: '', phone: '' });
+  const [newUser, setNewUser] = useState({ name: '', email: '', telephone: '', roleId: '', lieuResidence: '', experienceCle: '', status: 'Actif', langues: '', profile: '' });
+  const [newClient, setNewClient] = useState({ name: '', email: '', telephone: '', contactSecondaire: '', secteurActivite: '', description: '', siret: '', raisonSociale: '', emailEntreprise: '', telephoneEntreprise: '' });
   const [selectedFile, setSelectedFile] = useState(null);
+  const [rolesList, setRolesList] = useState([]);
 
   const uploadFile = async (file) => {
     if (!file) return null;
@@ -53,18 +54,24 @@ const UsersPage = () => {
     try {
       const token = localStorage.getItem('adminToken');
       const headers = { 'Authorization': 'Bearer ' + token };
-      const [rUsers, rClients] = await Promise.all([
+      const [rUsers, rClients, rRoles] = await Promise.all([
         fetch('http://localhost:4000/api/crm/users', { headers }).then(r=>r.json()).catch(()=>[]),
-        fetch('http://localhost:4000/api/crm/clients', { headers }).then(r=>r.json()).catch(()=>[])
+        fetch('http://localhost:4000/api/crm/clients', { headers }).then(r=>r.json()).catch(()=>[]),
+        fetch('http://localhost:4000/api/crm/roles', { headers }).then(r=>r.json()).catch(()=>[])
       ]);
       setUsers(Array.isArray(rUsers) ? rUsers : []);
       setClients(Array.isArray(rClients) ? rClients : []);
+      setRolesList(Array.isArray(rRoles) ? rRoles : []);
     } catch(e) {}
   };
 
   useEffect(() => { fetchData(); }, []);
   const handleCreateUser = async (e) => {
     e.preventDefault();
+    if (!newUser.name || !newUser.email) {
+      setErrorMsg('Veuillez remplir le nom et l\'email au minimum.');
+      return;
+    }
     setLoading(true); setErrorMsg(null);
     try {
       const uploadedUrl = await uploadFile(selectedFile);
@@ -73,7 +80,7 @@ const UsersPage = () => {
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: JSON.stringify({ ...newUser, lastLogin: 'Jamais connecté', idCardUrl: uploadedUrl })
       });
-      if (res.ok) { setShowModal(false); setNewUser({ name: '', email: '', role: 'ASSOCIÉ', status: 'Actif', profile: '', phone: '' }); setSelectedFile(null); fetchData(); }
+      if (res.ok) { setShowModal(false); setNewUser({ name: '', email: '', telephone: '', roleId: '', lieuResidence: '', experienceCle: '', status: 'Actif', langues: '', profile: '' }); setSelectedFile(null); fetchData(); }
       else { setErrorMsg('Erreur lors de la création'); }
     } catch(e) { setErrorMsg('Erreur réseau'); }
     setLoading(false);
@@ -81,15 +88,19 @@ const UsersPage = () => {
 
   const handleCreateClient = async (e) => {
     e.preventDefault();
+    if (!newClient.name || !newClient.email) {
+      setErrorMsg('Veuillez remplir le nom et l\'email au minimum.');
+      return;
+    }
     setLoading(true); setErrorMsg(null);
     try {
       const uploadedUrl = await uploadFile(selectedFile);
       const res = await fetch('http://localhost:4000/api/crm/clients', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
-        body: JSON.stringify({ ...newClient, status: newClient.status || 'Actif', idCardUrl: uploadedUrl })
+        body: JSON.stringify({ ...newClient, type: externalType, status: newClient.status || 'Actif', idCardUrl: uploadedUrl })
       });
-      if (res.ok) { setShowExternalModal(false); setNewClient({ name: '', email: '', company: '', phone: '' }); setSelectedFile(null); fetchData(); }
+      if (res.ok) { setShowExternalModal(false); setNewClient({ name: '', email: '', telephone: '', contactSecondaire: '', secteurActivite: '', description: '', siret: '', raisonSociale: '', emailEntreprise: '', telephoneEntreprise: '' }); setSelectedFile(null); fetchData(); }
       else { setErrorMsg('Erreur lors de la création'); }
     } catch(e) { setErrorMsg('Erreur réseau'); }
     setLoading(false);
@@ -131,9 +142,13 @@ const UsersPage = () => {
         body: JSON.stringify({
           name: editUser.name,
           email: editUser.email,
-          role: editUser.role,
+          roleId: editUser.roleId,
           profile: editUser.profile,
           status: editUser.isBlocked ? 'Inactif' : 'Actif',
+          telephone: editUser.telephone,
+          lieuResidence: editUser.lieuResidence,
+          experienceCle: editUser.experienceCle,
+          langues: editUser.langues,
           ...(uploadedUrl && { idCardUrl: uploadedUrl })
         })
       });
@@ -154,8 +169,15 @@ const UsersPage = () => {
         body: JSON.stringify({
           name: editExternal.name,
           email: editExternal.email,
-          company: editExternal.company || editExternal.activite,
-          phone: editExternal.phone,
+          telephone: editExternal.telephone,
+          contactSecondaire: editExternal.contactSecondaire,
+          secteurActivite: editExternal.secteurActivite,
+          description: editExternal.description,
+          type: editExternal.type,
+          siret: editExternal.siret,
+          raisonSociale: editExternal.raisonSociale,
+          emailEntreprise: editExternal.emailEntreprise,
+          telephoneEntreprise: editExternal.telephoneEntreprise,
           status: editExternal.status,
           ...(uploadedUrl && { idCardUrl: uploadedUrl })
         })
@@ -251,46 +273,82 @@ const UsersPage = () => {
                       <input type="text" value={newClient.name} onChange={e=>setNewClient({...newClient, name: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                     </div>
                     <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Secteur d'activité</label>
-                      <input type="text" value={newClient.activite || ''} onChange={e=>setNewClient({...newClient, activite: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email professionnel</label>
+                      <input type="email" value={newClient.email} onChange={e=>setNewClient({...newClient, email: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                     </div>
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                     <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email professionnel</label>
-                      <input type="email" value={newClient.email} onChange={e=>setNewClient({...newClient, email: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Téléphone</label>
+                      <input type="tel" value={newClient.telephone} onChange={e=>setNewClient({...newClient, telephone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                     </div>
                     <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Téléphone</label>
-                      <input type="tel" value={newClient.phone} onChange={e=>setNewClient({...newClient, phone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Contact secondaire</label>
+                      <input type="text" value={newClient.contactSecondaire} onChange={e=>setNewClient({...newClient, contactSecondaire: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                     </div>
+                  </div>
+                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Secteur d'activité</label>
+                      <input type="text" value={newClient.secteurActivite} onChange={e=>setNewClient({...newClient, secteurActivite: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                    </div>
+                  </div>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description client</label>
+                    <textarea rows="3" value={newClient.description} onChange={e=>setNewClient({...newClient, description: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
                   </div>
                 </>
               ) : (
                 <>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                     <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom de la société</label>
-                      <input type="text" value={newClient.company} onChange={e=>setNewClient({...newClient, company: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom de la société / Raison Sociale</label>
+                      <input type="text" value={newClient.raisonSociale} onChange={e=>setNewClient({...newClient, raisonSociale: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                     </div>
                     <div>
                       <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>SIRET</label>
-                      <input type="text" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                      <input type="text" value={newClient.siret} onChange={e=>setNewClient({...newClient, siret: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                     </div>
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                     <div>
                       <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email de l'entreprise</label>
-                      <input type="email" value={newClient.email} onChange={e=>setNewClient({...newClient, email: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                      <input type="email" value={newClient.emailEntreprise} onChange={e=>setNewClient({...newClient, emailEntreprise: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                     </div>
                     <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Téléphone</label>
-                      <input type="tel" value={newClient.phone} onChange={e=>setNewClient({...newClient, phone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Numéro de l'entreprise</label>
+                      <input type="tel" value={newClient.telephoneEntreprise} onChange={e=>setNewClient({...newClient, telephoneEntreprise: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                    </div>
+                  </div>
+                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom du contact</label>
+                      <input type="text" value={newClient.name} onChange={e=>setNewClient({...newClient, name: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                    </div>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email du contact</label>
+                      <input type="email" value={newClient.email} onChange={e=>setNewClient({...newClient, email: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                    </div>
+                  </div>
+                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Numéro du contact</label>
+                      <input type="tel" value={newClient.telephone} onChange={e=>setNewClient({...newClient, telephone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                    </div>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Contact secondaire</label>
+                      <input type="text" value={newClient.contactSecondaire} onChange={e=>setNewClient({...newClient, contactSecondaire: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                    </div>
+                  </div>
+                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                    <div>
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Secteur d'activité</label>
+                      <input type="text" value={newClient.secteurActivite} onChange={e=>setNewClient({...newClient, secteurActivite: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                     </div>
                   </div>
                   <div>
-                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom du contact</label>
-                    <input type="text" value={newClient.name} onChange={e=>setNewClient({...newClient, name: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description client</label>
+                    <textarea rows="3" value={newClient.description} onChange={e=>setNewClient({...newClient, description: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
                   </div>
                 </>
               )}
@@ -317,27 +375,27 @@ const UsersPage = () => {
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom complet</label>
-                  <input type="text" value={editExternal.name} onChange={e=>setEditExternal({...editExternal, name: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <input type="text" value={editExternal.name} onChange={e=>setEditExternal({...editExternal, name: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email</label>
-                  <input type="email" value={editExternal.email} onChange={e=>setEditExternal({...editExternal, email: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email <span style={{color: 'red'}}>*</span></label>
+                  <input type="email" value={editExternal.email} onChange={e=>setEditExternal({...editExternal, email: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
               </div>
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Secteur d'activité / Entreprise</label>
-                  <input type="text" value={editExternal.company || editExternal.activite || ''} onChange={e=>setEditExternal({...editExternal, company: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Secteur d'activité</label>
+                  <input type="text" value={editExternal.secteurActivite || ''} onChange={e=>setEditExternal({...editExternal, secteurActivite: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Téléphone</label>
-                  <input type="tel" value={editExternal.phone || ''} onChange={e=>setEditExternal({...editExternal, phone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <input type="tel" value={editExternal.telephone || ''} onChange={e=>setEditExternal({...editExternal, telephone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
               </div>
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
-                  <select value={editExternal.status} onChange={e=>setEditExternal({...editExternal, status: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Type de client</label>
+                  <select value={editExternal.type || 'Particulier'} onChange={e=>setEditExternal({...editExternal, type: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
                     <option value="Particulier">Particulier</option>
                     <option value="Société">Société</option>
                   </select>
@@ -362,7 +420,7 @@ const UsersPage = () => {
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-              {consultExternal.status === 'Particulier' ? (
+              {consultExternal.type === 'Particulier' || consultExternal.type === 'PARTICULIER' ? (
                 <>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                     <div>
@@ -371,7 +429,7 @@ const UsersPage = () => {
                     </div>
                     <div>
                       <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Secteur d'activité</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.activite}</div>
+                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.secteurActivite}</div>
                     </div>
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
@@ -380,17 +438,17 @@ const UsersPage = () => {
                       <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.email}</div>
                     </div>
                     <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Email personnel</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.email}</div>
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Contact secondaire</label>
+                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.contactSecondaire}</div>
                     </div>
                   </div>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Numéro de téléphone</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>06 12 34 56 78</div>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.telephone}</div>
                   </div>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Description client</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>Client fidèle depuis 2026.</div>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.description}</div>
                   </div>
                 </>
               ) : (
@@ -398,46 +456,36 @@ const UsersPage = () => {
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                     <div>
                       <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom de la société</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.name}</div>
+                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.entreprise?.raisonSociale || consultExternal.name}</div>
                     </div>
                     <div>
                       <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>SIRET</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>12345678900012</div>
+                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.entreprise?.siret}</div>
                     </div>
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                     <div>
                       <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Email de l'entreprise</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.email}</div>
+                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.entreprise?.emailEntreprise || consultExternal.email}</div>
                     </div>
                     <div>
                       <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Téléphone de l'entreprise</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>01 23 45 67 89</div>
+                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.entreprise?.telephoneEntreprise || consultExternal.telephone}</div>
                     </div>
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                     <div>
                       <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Secteur d'activité</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.activite}</div>
+                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.secteurActivite}</div>
                     </div>
                     <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom de l'employé (contact)</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>Directeur Commercial</div>
-                    </div>
-                  </div>
-                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Email de l'employé</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.email}</div>
-                    </div>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Téléphone de l'employé</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>06 98 76 54 32</div>
+                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Contact secondaire</label>
+                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.contactSecondaire}</div>
                     </div>
                   </div>
                   <div>
-                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Description de l'entreprise</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>Partenaire principal.</div>
+                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Description</label>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.description}</div>
                   </div>
                 </>
               )}
@@ -462,44 +510,43 @@ const UsersPage = () => {
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom complet</label>
-                  <input type="text" value={newUser.name} onChange={e => setNewUser({...newUser, name: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <input type="text" value={newUser.name} onChange={e => setNewUser({...newUser, name: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email</label>
-                  <input type="email" value={newUser.email} onChange={e => setNewUser({...newUser, email: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email <span style={{color: 'red'}}>*</span></label>
+                  <input type="email" value={newUser.email} onChange={e => setNewUser({...newUser, email: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
               </div>
 
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Numéro de téléphone</label>
-                  <input type="tel" value={newUser.phone} onChange={e => setNewUser({...newUser, phone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <input type="tel" value={newUser.telephone} onChange={e => setNewUser({...newUser, telephone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Rôle</label>
-                  <select value={newUser.role} onChange={e => setNewUser({...newUser, role: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
-                    <option value="ADMIN">Administrateur</option>
-                    <option value="SUPERVISOR">Superviseur</option>
-                    <option value="ASSOCIÉ">Associé</option>
+                  <select value={newUser.roleId} onChange={e => setNewUser({...newUser, roleId: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+                    <option value="">Sélectionner un rôle...</option>
+                    {rolesList.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
                   </select>
                 </div>
               </div>
 
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Pays de résidence</label>
-                  <input type="text" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Lieu de résidence</label>
+                  <input type="text" value={newUser.lieuResidence} onChange={e => setNewUser({...newUser, lieuResidence: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Ville</label>
-                  <input type="text" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Expérience clé</label>
+                  <input type="text" value={newUser.experienceCle} onChange={e => setNewUser({...newUser, experienceCle: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
               </div>
 
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Formation</label>
-                  <input type="text" value={newUser.profile} onChange={e => setNewUser({...newUser, profile: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} placeholder="Ex: Master en Droit des Affaires" />
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Langues</label>
+                  <input type="text" value={newUser.langues} onChange={e => setNewUser({...newUser, langues: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} placeholder="Ex: Français, Anglais" />
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
@@ -511,8 +558,8 @@ const UsersPage = () => {
               </div>
 
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description du profil</label>
-                <textarea rows="3" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description profil</label>
+                <textarea rows="3" value={newUser.profile} onChange={e => setNewUser({...newUser, profile: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
               </div>
 
               <div>
@@ -553,33 +600,32 @@ const UsersPage = () => {
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Numéro de téléphone</label>
-                  <input type="tel" defaultValue="+33 6 12 34 56 78" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <input type="tel" value={editUser.telephone || ''} onChange={e=>setEditUser({...editUser, telephone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Rôle</label>
-                  <select value={editUser.role} onChange={e=>setEditUser({...editUser, role: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
-                    <option value="ADMIN">Administrateur</option>
-                    <option value="SUPERVISOR">Superviseur</option>
-                    <option value="ASSOCIÉ">Associé</option>
+                  <select value={editUser.roleId || ''} onChange={e=>setEditUser({...editUser, roleId: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+                    <option value="">Sélectionner un rôle...</option>
+                    {rolesList.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
                   </select>
                 </div>
               </div>
 
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Pays de résidence</label>
-                  <input type="text" defaultValue="France" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Lieu de résidence</label>
+                  <input type="text" value={editUser.lieuResidence || ''} onChange={e=>setEditUser({...editUser, lieuResidence: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Ville</label>
-                  <input type="text" defaultValue="Paris" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Expérience clé</label>
+                  <input type="text" value={editUser.experienceCle || ''} onChange={e=>setEditUser({...editUser, experienceCle: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
               </div>
 
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Formation</label>
-                  <input type="text" defaultValue="Master HEC Paris" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Langues</label>
+                  <input type="text" value={editUser.langues || ''} onChange={e=>setEditUser({...editUser, langues: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
@@ -591,7 +637,7 @@ const UsersPage = () => {
               </div>
 
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description du profil</label>
+                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description profil</label>
                 <textarea rows="3" value={editUser.profile || ''} onChange={e=>setEditUser({...editUser, profile: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
               </div>
 
@@ -637,14 +683,14 @@ const UsersPage = () => {
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Rôle</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultUser.role}</div>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultUser.role?.name || consultUser.role || 'SANS ROLE'}</div>
                 </div>
               </div>
 
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Permissions (Héritées du rôle)</label>
                 <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', fontSize: '0.875rem', color: 'var(--text-main)'}}>
-                  {[].find(r => r.name === consultUser.role)?.permissions || 'Aucune permission'}
+                  {consultUser.role?.permissions || 'Aucune permission'}
                 </div>
               </div>
 
@@ -794,7 +840,7 @@ const UsersPage = () => {
                     <strong style={{display: 'block'}}>{u.name}</strong>
                     <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{u.email}</span>
                   </td>
-                  <td>{getRoleBadge(u.role)}</td>
+                  <td>{getRoleBadge(u.role?.name || 'Non défini')}</td>
                   <td>
                     <span style={{color: !u.isBlocked ? 'var(--success)' : 'var(--danger)', fontWeight: 500}}>
                       {!u.isBlocked ? 'Actif' : 'Inactif'}
@@ -846,7 +892,7 @@ const UsersPage = () => {
                       {c.status}
                     </span>
                   </td>
-                  <td><span style={{color: 'var(--text-muted)'}}>{c.company || c.activite || 'N/A'}</span></td>
+                  <td><span style={{color: 'var(--text-muted)'}}>{c.entreprise?.raisonSociale || c.secteurActivite || 'N/A'}</span></td>
                   <td><span style={{color: 'var(--text-muted)'}}>{c.createdAt ? new Date(c.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'}) : 'N/A'}</span></td>
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>

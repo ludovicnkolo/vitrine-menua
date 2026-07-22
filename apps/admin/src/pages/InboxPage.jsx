@@ -32,6 +32,13 @@ const InboxPage = () => {
   const menuRef = useRef(null);
   const isAnyModalOpen = processMsg || createTaskModal;
 
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+
+  const showToast = (message, type = 'success') => {
+    setToast({ show: true, message, type });
+    setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 3000);
+  };
+
   const filterFn = (m) => {
     const isProcessed = m.status === 'TERMINE' || m.status === 'ARCHIVE';
     const statusMatch = filterTraite === 'all' ? true : filterTraite === 'traite' ? isProcessed === true : isProcessed !== true;
@@ -60,7 +67,7 @@ const InboxPage = () => {
         if (resMsgs.ok) {
           setMessages(await resMsgs.json());
         } else if (resMsgs.status === 401 || resMsgs.status === 403) {
-          alert('Votre session a expiré. Veuillez vous reconnecter.');
+          showToast('Votre session a expiré. Veuillez vous reconnecter.', 'error');
           localStorage.removeItem('adminToken');
           window.location.href = '/login';
         }
@@ -100,7 +107,7 @@ const InboxPage = () => {
       if (tab !== 'interne') {
         if (isNewDossier) {
           if (!taskNewDossierName.trim()) {
-            alert("Veuillez saisir le nom du nouveau dossier.");
+            showToast("Veuillez saisir le nom du nouveau dossier.", "error");
             setIsSubmitting(false);
             return;
           }
@@ -110,7 +117,7 @@ const InboxPage = () => {
             body: JSON.stringify({ name: taskNewDossierName, description: 'Créé depuis la messagerie', origin: tab.toUpperCase() })
           });
           if (!dossRes.ok) {
-            alert("Erreur lors de la création du dossier.");
+            showToast("Erreur lors de la création du dossier.", "error");
             setIsSubmitting(false);
             return;
           }
@@ -118,7 +125,7 @@ const InboxPage = () => {
           finalDossierId = dossData.id;
         } else {
           if (!taskDossierId) {
-            alert("Veuillez sélectionner un dossier existant.");
+            showToast("Veuillez sélectionner un dossier existant.", "error");
             setIsSubmitting(false);
             return;
           }
@@ -138,13 +145,13 @@ const InboxPage = () => {
         });
 
         if (!taskRes.ok) {
-          alert("Erreur lors de la création de la tâche.");
+          showToast("Erreur lors de la création de la tâche.", "error");
           setIsSubmitting(false);
           return;
         }
       }
 
-      alert(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Tâche créée et assignée avec succès !');
+      showToast(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Tâche créée et assignée avec succès !', 'success');
       setCreateTaskModal(false);
       setProcessMsg(null);
       setNewTaskFile(null);
@@ -152,7 +159,7 @@ const InboxPage = () => {
       setTaskDescription('');
     } catch (error) {
       console.error(error);
-      alert('Une erreur est survenue.');
+      showToast('Une erreur est survenue.', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -529,7 +536,7 @@ const InboxPage = () => {
                 <select value={taskAssignedToId} onChange={(e) => setTaskAssignedToId(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
                   <option value="">Sélectionner un collaborateur...</option>
                   {users.map(u => (
-                    <option key={u.id} value={u.id}>{u.name} ({u.role})</option>
+                    <option key={u.id} value={u.id}>{u.name} ({u.role?.name || u.role || 'SANS ROLE'})</option>
                   ))}
                 </select>
               </div>
@@ -636,6 +643,21 @@ const InboxPage = () => {
         </div>
       )}
 
+      {/* Toast Notification */}
+      {toast.show && (
+        <div style={{
+          position: 'fixed', bottom: '20px', right: '20px', 
+          background: toast.type === 'error' ? '#FEE2E2' : '#DCFCE7',
+          color: toast.type === 'error' ? '#991B1B' : '#166534',
+          padding: '1rem 1.5rem', borderRadius: '8px', 
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 9999,
+          display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 500,
+          animation: 'slideIn 0.3s ease-out'
+        }}>
+          {toast.type === 'error' ? <AlertCircle size={20} /> : <CheckCircle size={20} />}
+          {toast.message}
+        </div>
+      )}
     </div>
   )
 }

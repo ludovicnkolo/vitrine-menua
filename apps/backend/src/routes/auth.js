@@ -41,7 +41,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.utilisateur.findUnique({ where: { email }, include: { role: true } });
 
     if (!user) {
       return res.status(401).json({ error: 'Identifiants invalides.' });
@@ -59,7 +59,7 @@ router.post('/login', async (req, res) => {
 
     // Générer le token JWT valide pendant 12 heures
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { id: user.id, email: user.email, role: user.role?.name || 'SANS ROLE' },
       JWT_SECRET,
       { expiresIn: '12h' }
     );
@@ -71,7 +71,7 @@ router.post('/login', async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role,
+        role: user.role?.name || 'SANS ROLE',
         profile: user.profile
       }
     });
@@ -85,18 +85,24 @@ router.post('/login', async (req, res) => {
 // Route utilitaire pour créer le premier admin s'il n'y en a aucun (Très utile pour l'initialisation)
 router.post('/setup', async (req, res) => {
   try {
-    const adminCount = await prisma.user.count({ where: { role: 'ADMIN' } });
+    const adminRole = await prisma.role.findUnique({ where: { name: 'ADMIN' } });
+    if (!adminRole) {
+      await prisma.role.create({ data: { name: 'ADMIN' } });
+    }
+    
+    const adminCount = await prisma.utilisateur.count({ where: { role: { name: 'ADMIN' } } });
     if (adminCount > 0) {
       return res.status(403).json({ error: 'Le système est déjà initialisé.' });
     }
 
     const hashedPassword = await bcrypt.hash('Admin@2026', 10);
-    const user = await prisma.user.create({
+    const roleRecord = await prisma.role.findUnique({ where: { name: 'ADMIN' } });
+    const user = await prisma.utilisateur.create({
       data: {
         email: 'admin@menuaconsulting.com',
         password: hashedPassword,
         name: 'Super Administrateur',
-        role: 'ADMIN'
+        roleId: roleRecord.id
       }
     });
 

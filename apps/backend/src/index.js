@@ -21,6 +21,9 @@ app.use(helmet({
   xFrameOptions: false // Autorise l'intégration dans une iframe
 }));
 
+// CORS doit être défini AVANT le rate limiter pour éviter les erreurs NetworkError bloquantes du navigateur
+app.use(cors());
+
 // Rate Limiting (General)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -30,8 +33,6 @@ const limiter = rateLimit({
   message: { success: false, error: 'Trop de requêtes, veuillez réessayer plus tard.' }
 });
 app.use(limiter);
-
-app.use(cors());
 app.use(express.json({ limit: '10kb' })); // Limit JSON payload size to prevent DoS
 
 // Middlewares
@@ -88,4 +89,13 @@ const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
   console.log(`Backend server running on port ${PORT}`);
+  
+  // Auto-seed default roles and admin on startup
+  try {
+    const { execSync } = require('child_process');
+    console.log('Running seed_admin.js to ensure default roles and admin exist...');
+    execSync('node seed_admin.js', { cwd: __dirname + '/../', stdio: 'inherit' });
+  } catch (err) {
+    console.error('Failed to run seed_admin.js on startup:', err);
+  }
 });

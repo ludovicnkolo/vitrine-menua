@@ -81,7 +81,7 @@ function App() {
                 <Link to="/inbox" className={`nav-item ${location.pathname.includes('/inbox') ? 'active' : ''}`} style={{padding: '0.5rem 1rem', fontSize: '0.9rem', minHeight: 'auto'}}>
                   Messages
                 </Link>
-                {['ADMIN', 'SUPERVISOR'].includes(user.role) && (
+                {['Super-administrateur', 'Responsable opérationnel', 'ADMIN', 'SUPERVISOR'].includes(user.role) && (
                   <Link to="/tasks" className={`nav-item ${location.pathname.includes('/tasks') ? 'active' : ''}`} style={{padding: '0.5rem 1rem', fontSize: '0.9rem', minHeight: 'auto'}}>
                     Missions
                   </Link>
@@ -89,7 +89,7 @@ function App() {
               </div>
             )}
           </div>
-          {user.role === 'ADMIN' && (
+          {['Super-administrateur', 'Administrateur technique', 'ADMIN'].includes(user.role) && (
             <div className="nav-group" style={{display: 'flex', flexDirection: 'column'}}>
               <button 
                 onClick={() => setIsTeamExpanded(!isTeamExpanded)} 
@@ -114,7 +114,7 @@ function App() {
               )}
             </div>
           )}
-          {user.role === 'ADMIN' && (
+          {['Super-administrateur', 'Administrateur technique', 'ADMIN'].includes(user.role) && (
             <Link to="/settings" className={`nav-item ${location.pathname.includes('/settings') ? 'active' : ''}`}>
               <Settings size={20} />
               Configuration

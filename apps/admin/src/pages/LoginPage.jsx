@@ -30,7 +30,8 @@ const LoginPage = ({ onLogin }) => {
         setError(data.error || 'Identifiants invalides');
       }
     } catch (err) {
-      setError('Erreur de connexion au serveur');
+      console.error(err);
+      setError('Erreur réseau ou serveur: ' + err.message);
     }
     setLoading(false);
   };

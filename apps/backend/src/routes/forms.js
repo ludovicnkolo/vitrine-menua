@@ -25,13 +25,13 @@ const validateEmail = async (email) => {
 };
 const upload = multer({ 
   storage: multer.memoryStorage(),
-  limits: { fileSize: 1 * 1024 * 1024 } // 1MB limit at multer level
+  limits: { fileSize: parseInt(process.env.UPLOAD_MAX_FILE_SIZE) }
 });
 
-// Strict rate limiting specifically for forms (5 per hour)
+// Strict rate limiting specifically for forms
 const formLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: parseInt(process.env.RATE_LIMIT_FORM_MAX || '2'), // Limit based on env
+  windowMs: parseInt(process.env.RATE_LIMIT_FORM_WINDOW_MS),
+  max: parseInt(process.env.RATE_LIMIT_FORM_MAX),
   message: { success: false, error: 'Trop de soumissions, veuillez réessayer plus tard.' }
 });
 
@@ -86,7 +86,7 @@ const buildEmailTemplate = (title, contentHTML) => `
     </tr>
     <tr>
       <td style="padding: 25px 40px; background-color: #141824; border-radius: 0 0 4px 4px; text-align: center;">
-        <p style="color: #e8e1d7; margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;">Cet email a été envoyé depuis le site <span style="text-transform: lowercase;">https://menuaconsulting.com/</span></p>
+        <p style="color: #e8e1d7; margin: 0; font-size: 11px; text-transform: none; letter-spacing: 1.5px;">Cet email a été envoyé depuis le site https://menuaconsulting.com/</p>
       </td>
     </tr>
   </table>
@@ -94,10 +94,24 @@ const buildEmailTemplate = (title, contentHTML) => `
 </html>
 `;
 
-const buildRow = (label, value) => `
-  <div style="margin-bottom: 20px;">
-    <strong style="color: #141824; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 8px;">${label}</strong>
-    <div style="color: #4a5568; font-size: 15px; line-height: 1.6; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0;">${value || '<em style="color:#a0aabf;">Non renseigné</em>'}</div>
+const buildInlineRow = (label, value) => `
+  <div style="margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;">
+    <strong style="color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">${label}</strong> : 
+    <span style="margin-left: 4px;">${value || '<em style="color:#a0aabf;">Non renseigné</em>'}</span>
+  </div>
+`;
+
+const buildBlockRow = (label, value) => `
+  <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;">
+    <strong style="color: #141824; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 12px;">${label}</strong>
+    <div style="color: #4a5568; font-size: 14px; line-height: 1.6; background-color: #fcfcfc; padding: 15px; border-radius: 4px;">${value || '<em style="color:#a0aabf;">Non renseigné</em>'}</div>
+  </div>
+`;
+
+const buildListRow = (label, htmlList) => `
+  <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;">
+    <strong style="color: #141824; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;">${label}</strong>
+    ${htmlList}
   </div>
 `;
 // -------------------------------------
@@ -132,8 +146,8 @@ router.post('/contact', upload.single('file'), async (req, res) => {
       if (magicBytes !== '255044462d') { // %PDF-
         return res.status(400).json({ success: false, error: "Le fichier fourni n'est pas un document PDF valide ou est corrompu." });
       }
-      if (req.file.size > 5 * 1024 * 1024) {
-        return res.status(400).json({ success: false, error: "Le fichier PDF dépasse la limite de 5 Mo." });
+      if (req.file.size > parseInt(process.env.UPLOAD_MAX_FILE_SIZE)) {
+        return res.status(400).json({ success: false, error: "Le fichier PDF dépasse la limite de taille autorisée." });
       }
       attachments.push({
         filename: req.file.originalname,
@@ -142,19 +156,21 @@ router.post('/contact', upload.single('file'), async (req, res) => {
     }
 
     const typeText = clientType === 'company' ? 'Entreprise / Organisation' : 'Particulier';
-    const companyHtml = clientType === 'company' ? buildRow('Société', company) : '';
+    const companyHtml = clientType === 'company' ? buildInlineRow('Société', company) : '';
     const needsHtml = parsedNeeds.length > 0 
-      ? `<ul style="margin:0; padding-left: 20px; color: #4a5568; font-size: 15px;">${parsedNeeds.map(n => `<li style="margin-bottom: 5px;">${n}</li>`).join('')}</ul>`
-      : 'Aucun besoin spécifique coché';
+      ? `<ul style="margin:0; padding-left: 20px; color: #4a5568; font-size: 14px;">${parsedNeeds.map(n => `<li style="margin-bottom: 5px;">${n}</li>`).join('')}</ul>`
+      : '<em style="color:#a0aabf; font-size: 14px;">Aucun besoin spécifique coché</em>';
 
     const contentHTML = `
-      ${buildRow('Type de client', typeText)}
-      ${companyHtml}
-      ${buildRow('Nom complet', fullName)}
-      ${buildRow('Email', senderEmail)}
-      ${buildRow('Téléphone', phone)}
-      ${buildRow('Besoins identifiés', needsHtml)}
-      ${buildRow('Description du besoin', description ? description.replace(/\n/g, '<br/>') : '')}
+      <div style="margin-bottom: 20px;">
+        ${buildInlineRow('Type de client', typeText)}
+        ${companyHtml}
+        ${buildInlineRow('Nom complet', fullName)}
+        ${buildInlineRow('Email', senderEmail)}
+        ${buildInlineRow('Téléphone', phone)}
+      </div>
+      ${buildListRow('Besoins identifiés', needsHtml)}
+      ${buildBlockRow('Description du besoin', description ? description.replace(/\n/g, '<br/>') : '')}
     `;
 
     const mailOptions = {
@@ -234,24 +250,26 @@ router.post('/join', upload.none(), async (req, res) => {
     parsedSkills = parsedSkills.map(s => s === 'Autre' && otherSkill ? `Autre (${otherSkill})` : s);
 
     const typeText = profileType === 'company' ? 'Entreprise (B2B)' : 'Particulier';
-    const companyHtml = profileType === 'company' ? buildRow('Société', company) : '';
+    const companyHtml = profileType === 'company' ? buildInlineRow('Société', company) : '';
     const skillsHtml = parsedSkills.length > 0 
-      ? `<ul style="margin:0; padding-left: 20px; color: #4a5568; font-size: 15px;">${parsedSkills.map(s => `<li style="margin-bottom: 5px;">${s}</li>`).join('')}</ul>`
-      : 'Aucune compétence spécifique cochée';
+      ? `<ul style="margin:0; padding-left: 20px; color: #4a5568; font-size: 14px;">${parsedSkills.map(s => `<li style="margin-bottom: 5px;">${s}</li>`).join('')}</ul>`
+      : '<em style="color:#a0aabf; font-size: 14px;">Aucune compétence spécifique cochée</em>';
 
     const contentHTML = `
-      ${buildRow('Type de profil', typeText)}
-      ${companyHtml}
-      ${buildRow('Nom complet', lastName + ' ' + firstName)}
-      ${buildRow('Email', email)}
-      ${buildRow('Téléphone', phone)}
-      ${buildRow('Expérience', experience)}
-      ${buildRow('Langues', languages)}
-      ${buildRow('Localisation', location)}
-      ${buildRow('Disponibilité', availability)}
-      ${buildRow('LinkedIn / Portfolio', linkedin ? `<a href="${linkedin}" style="color: #141824;">${linkedin}</a>` : '')}
-      ${buildRow('Compétences clés', skillsHtml)}
-      ${buildRow('Message / Motivations', message ? message.replace(/\n/g, '<br/>') : '')}
+      <div style="margin-bottom: 20px;">
+        ${buildInlineRow('Type de profil', typeText)}
+        ${companyHtml}
+        ${buildInlineRow('Nom complet', lastName + ' ' + firstName)}
+        ${buildInlineRow('Email', email)}
+        ${buildInlineRow('Téléphone', phone)}
+        ${buildInlineRow('Expérience', experience)}
+        ${buildInlineRow('Langues', languages)}
+        ${buildInlineRow('Localisation', location)}
+        ${buildInlineRow('Disponibilité', availability)}
+        ${buildInlineRow('LinkedIn / Portfolio', linkedin ? `<a href="${linkedin}" style="color: #141824;">${linkedin}</a>` : '')}
+      </div>
+      ${buildListRow('Compétences clés', skillsHtml)}
+      ${buildBlockRow('Message / Motivations', message ? message.replace(/\n/g, '<br/>') : '')}
     `;
 
     const mailOptions = {

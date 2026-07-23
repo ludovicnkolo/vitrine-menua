@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Files, Users, Settings, Inbox, ChevronDown, LogOut } from 'lucide-react';
+import { LayoutDashboard, Files, Users, Settings, Inbox, ChevronDown, LogOut, Shield } from 'lucide-react';
 
 import DashboardPage from './pages/DashboardPage';
 import DossiersPage from './pages/DossiersPage';
@@ -8,7 +8,9 @@ import InboxPage from './pages/InboxPage';
 import TasksPage from './pages/TasksPage';
 import UsersPage from './pages/UsersPage';
 import RolesPage from './pages/RolesPage';
+import AuditPage from './pages/AuditPage';
 import LoginPage from './pages/LoginPage';
+import SetupPasswordPage from './pages/SetupPasswordPage';
 
 const MOCK_USER = {
   id: 'U-001',
@@ -42,6 +44,14 @@ function App() {
     setToken(null);
     setUser(null);
   };
+
+  if (location.pathname === '/setup-password') {
+    return (
+      <Routes>
+        <Route path="/setup-password" element={<SetupPasswordPage />} />
+      </Routes>
+    );
+  }
 
   if (!token || !user) {
     return <LoginPage onLogin={handleLogin} />;
@@ -115,10 +125,16 @@ function App() {
             </div>
           )}
           {['Super-administrateur', 'Administrateur technique', 'ADMIN'].includes(user.role) && (
-            <Link to="/settings" className={`nav-item ${location.pathname.includes('/settings') ? 'active' : ''}`}>
-              <Settings size={20} />
-              Configuration
-            </Link>
+            <div className="nav-group" style={{display: 'flex', flexDirection: 'column'}}>
+              <Link to="/settings" className={`nav-item ${location.pathname.includes('/settings') ? 'active' : ''}`}>
+                <Settings size={20} />
+                Configuration
+              </Link>
+              <Link to="/audit" className={`nav-item ${location.pathname.includes('/audit') ? 'active' : ''}`}>
+                <Shield size={20} />
+                Journal d'Audit
+              </Link>
+            </div>
           )}
         </nav>
         <div style={{padding: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.1)'}}>
@@ -148,6 +164,7 @@ function App() {
             <Route path="/tasks" element={<TasksPage />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/roles" element={<RolesPage />} />
+            <Route path="/audit" element={<AuditPage />} />
             <Route path="/settings" element={
               <div>
                 <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '1.5rem'}}>Configuration</h1>

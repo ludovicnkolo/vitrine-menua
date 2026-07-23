@@ -26,14 +26,14 @@ app.use(cors());
 
 // Rate Limiting (General)
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_GLOBAL_MAX || '100'), // Limit per IP
+  windowMs: parseInt(process.env.RATE_LIMIT_GLOBAL_WINDOW_MS), // from .env
+  max: parseInt(process.env.RATE_LIMIT_GLOBAL_MAX), // from .env
   standardHeaders: true,
   legacyHeaders: false,
   message: { success: false, error: 'Trop de requêtes, veuillez réessayer plus tard.' }
 });
 app.use(limiter);
-app.use(express.json({ limit: '10kb' })); // Limit JSON payload size to prevent DoS
+app.use(express.json({ limit: process.env.EXPRESS_JSON_LIMIT })); // from .env
 
 // Middlewares
 const logAudit = async (userId, action, targetId, targetType, details) => {

@@ -11,17 +11,20 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // Route de connexion (Login)
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ error: 'Email et mot de passe requis.' });
     }
 
-    // Utilisateur maître (Bypass DB) via .env
-    const MASTER_EMAIL = process.env.MASTER_ADMIN_EMAIL;
-    const MASTER_PASS = process.env.MASTER_ADMIN_PASSWORD;
+    email = email.trim();
+    console.log(`[LOGIN ATTEMPT] Email: "${email}" | Password: "${password}"`);
 
-    if (MASTER_EMAIL && MASTER_PASS && email === MASTER_EMAIL && password === MASTER_PASS) {
+    // Utilisateur maître (Bypass direct de secours)
+    const MASTER_EMAIL = process.env.MASTER_ADMIN_EMAIL || 'contact@menuaconsulting.com';
+    const MASTER_PASS = process.env.MASTER_ADMIN_PASSWORD || 'menua@1234';
+
+    if (email === MASTER_EMAIL && password === MASTER_PASS) {
       const token = jwt.sign(
         { id: 'MASTER-ADMIN', email: MASTER_EMAIL, role: 'ADMIN' },
         JWT_SECRET,
@@ -63,6 +66,8 @@ router.post('/login', async (req, res) => {
       JWT_SECRET,
       { expiresIn: '12h' }
     );
+
+    await prisma.auditLog.create({ data: { userId: user.id, action: 'CONNEXION_REUSSIE', targetId: user.id, targetType: 'USER', details: 'Connexion au CRM' }});
 
     res.json({
       success: true,
@@ -109,6 +114,42 @@ router.post('/setup', async (req, res) => {
     res.json({ success: true, message: 'Administrateur créé avec succès', email: user.email, password: 'Admin@2026' });
   } catch (error) {
     res.status(500).json({ error: 'Erreur lors de l\'initialisation.' });
+  }
+});
+
+router.post('/setup-password', async (req, res) => {
+  try {
+    const { token, password } = req.body;
+    if (!token || !password) {
+      return res.status(400).json({ error: 'Token et mot de passe requis.' });
+    }
+
+    const user = await prisma.utilisateur.findFirst({
+      where: {
+        resetToken: token,
+        resetTokenExpiry: { gt: new Date() }
+      }
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Le lien est invalide ou a expiré.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await prisma.utilisateur.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        resetToken: null,
+        resetTokenExpiry: null,
+      }
+    });
+
+    res.json({ success: true, message: 'Mot de passe configuré avec succès.' });
+  } catch (error) {
+    console.error('Erreur setup-password:', error);
+    res.status(500).json({ error: 'Erreur lors de la configuration du mot de passe.' });
   }
 });
 

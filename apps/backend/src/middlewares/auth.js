@@ -12,10 +12,24 @@ const authenticateJWT = (req, res, next) => {
   }
 
   if (token) {
-    jwt.verify(token, JWT_SECRET, (err, user) => {
+    jwt.verify(token, JWT_SECRET, async (err, user) => {
       if (err) {
-        return res.status(403).json({ error: 'Token invalide ou expiré.' });
+        return res.status(401).json({ error: 'Token invalide ou expiré.' });
       }
+      
+      if (user.id !== 'MASTER-ADMIN') {
+        const { PrismaClient } = require('@prisma/client');
+        const prisma = new PrismaClient();
+        try {
+          const dbUser = await prisma.utilisateur.findUnique({ where: { id: user.id } });
+          if (!dbUser) {
+            return res.status(401).json({ error: 'Utilisateur introuvable en base. Veuillez vous reconnecter.' });
+          }
+        } catch (dbError) {
+          return res.status(500).json({ error: 'Erreur de vérification utilisateur' });
+        }
+      }
+
       req.user = user;
       next();
     });

@@ -22,6 +22,7 @@ const InboxPage = () => {
   const [createTaskModal, setCreateTaskModal] = useState(false);
   const [newTaskFile, setNewTaskFile] = useState(null);
   const [isNewDossier, setIsNewDossier] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // Form states
   const [taskSubject, setTaskSubject] = useState('');
@@ -50,36 +51,36 @@ const InboxPage = () => {
     return nameMatch || emailMatch;
   };
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        setLoading(true);
-        const token = localStorage.getItem('adminToken');
-        if (!token) return;
-        const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
-        
-        const [resMsgs, resUsers, resDossiers] = await Promise.all([
-          fetch(`${apiUrl}/api/crm/messages`, { headers: { 'Authorization': `Bearer ${token}` } }),
-          fetch(`${apiUrl}/api/crm/users`, { headers: { 'Authorization': `Bearer ${token}` } }),
-          fetch(`${apiUrl}/api/crm/dossiers`, { headers: { 'Authorization': `Bearer ${token}` } })
-        ]);
+  const fetchMessages = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('adminToken');
+      if (!token) return;
+      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      
+      const [resMsgs, resUsers, resDossiers] = await Promise.all([
+        fetch(`${apiUrl}/api/crm/messages`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${apiUrl}/api/crm/users`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${apiUrl}/api/crm/dossiers`, { headers: { 'Authorization': `Bearer ${token}` } })
+      ]);
 
-        if (resMsgs.ok) {
-          setMessages(await resMsgs.json());
-        } else if (resMsgs.status === 401 || resMsgs.status === 403) {
-          showToast('Votre session a expiré. Veuillez vous reconnecter.', 'error');
-          localStorage.removeItem('adminToken');
-          window.location.href = '/login';
-        }
-        
-        if (resUsers.ok) setUsers(await resUsers.json());
-        if (resDossiers.ok) setDossiers(await resDossiers.json());
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
+      if (resMsgs.ok) setMessages(await resMsgs.json());
+      else if (resMsgs.status === 401 || resMsgs.status === 403) {
+        showToast('Votre session a expiré. Veuillez vous reconnecter.', 'error');
+        localStorage.removeItem('adminToken');
+        window.location.href = '/login';
       }
-    };
+      
+      if (resUsers.ok) setUsers(await resUsers.json());
+      if (resDossiers.ok) setDossiers(await resDossiers.json());
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchMessages();
 
     const handleClickOutside = (event) => {
@@ -165,6 +166,34 @@ const InboxPage = () => {
     }
   };
 
+  const handleSyncEmails = async () => {
+    try {
+      setIsSyncing(true);
+      const token = localStorage.getItem('adminToken');
+      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      
+      const res = await fetch(`${apiUrl}/api/crm/messages/sync-imap`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (!res.ok) throw new Error("Erreur serveur");
+      
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.addedCount > 0 ? `${data.addedCount} nouveaux emails récupérés !` : 'Aucun nouvel email à récupérer.', 'success');
+        fetchMessages();
+      } else {
+        throw new Error(data.error || "Erreur de synchronisation");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Impossible de synchroniser avec le serveur IMAP.", "error");
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   const renderDropdown = (m) => {
     if (openMenuId !== m.id) return null;
     return (
@@ -226,6 +255,17 @@ const InboxPage = () => {
             <option value="non_traite">Non Traités</option>
             <option value="traite">Traités</option>
           </select>
+          {tab === 'personnel' && (
+            <button 
+              onClick={handleSyncEmails} 
+              disabled={isSyncing}
+              className="btn btn-primary" 
+              style={{padding: '0.5rem 1rem', display: 'flex', gap: '0.5rem', alignItems: 'center'}}
+            >
+              <Mail size={16} />
+              {isSyncing ? 'Synchronisation...' : 'Synchroniser Emails'}
+            </button>
+          )}
         </div>
       </div>
       <div className="table-wrapper">

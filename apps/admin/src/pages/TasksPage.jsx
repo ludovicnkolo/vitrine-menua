@@ -19,21 +19,79 @@ const TasksPage = () => {
 
   // Real API states
   const [tasks, setTasks] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+
+  // Form states for creating a task
+  const [newTaskSubject, setNewTaskSubject] = useState('');
+  const [newTaskMessage, setNewTaskMessage] = useState('');
+  const [newTaskAssignedTo, setNewTaskAssignedTo] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchData = async () => {
     try {
       const token = localStorage.getItem('adminToken');
       const headers = { 'Authorization': 'Bearer ' + token };
       const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
-      const res = await fetch(`${apiUrl}/api/crm/tasks`, { headers });
-      const data = await res.json();
-      setTasks(Array.isArray(data) ? data : []);
+      
+      const [resTasks, resUsers] = await Promise.all([
+        fetch(`${apiUrl}/api/crm/tasks`, { headers }),
+        fetch(`${apiUrl}/api/crm/users`, { headers })
+      ]);
+      
+      const dataTasks = await resTasks.json();
+      const dataUsers = await resUsers.json();
+      
+      setTasks(Array.isArray(dataTasks) ? dataTasks : []);
+      setUsers(Array.isArray(dataUsers) ? dataUsers : []);
     } catch(e) {}
   };
 
   useEffect(() => { fetchData(); }, []);
+
+  const handleCreateSubTask = async () => {
+    if (!newTaskMessage || !newTaskAssignedTo) {
+      alert("Veuillez remplir le message et le destinataire.");
+      return;
+    }
+    
+    setIsSubmitting(true);
+    try {
+      const token = localStorage.getItem('adminToken');
+      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      
+      const res = await fetch(`${apiUrl}/api/crm/tasks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          dossierId: consultTask.dossierId,
+          description: `Objet: ${newTaskSubject}\n\nConsignes: ${newTaskMessage}`,
+          assignedToId: newTaskAssignedTo,
+          parentMissionId: consultTask.id
+        })
+      });
+      
+      if (res.ok) {
+        alert('Sous-tâche créée avec succès !');
+        setCreateTaskModal(false);
+        setNewTaskFile(null);
+        setConsultTask(null);
+        setNewTaskSubject('');
+        setNewTaskMessage('');
+        fetchData();
+      } else {
+        alert("Erreur lors de la création de la sous-tâche.");
+      }
+    } catch (e) {
+      alert("Erreur de connexion au serveur.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
 
   useEffect(() => {
@@ -83,15 +141,16 @@ const TasksPage = () => {
           <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
             <div>
               <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet de la tâche</label>
-              <input type="text" placeholder="Sujet de la tâche..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+              <input type="text" value={newTaskSubject} onChange={(e) => setNewTaskSubject(e.target.value)} placeholder="Sujet de la tâche..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
             </div>
 
             <div>
               <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigner à</label>
-              <select className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
-                <option>Alice Martin (Expert Comptable)</option>
-                <option>Jean Dupont (Juriste)</option>
-                <option>Support Menua</option>
+              <select className="input-field" value={newTaskAssignedTo} onChange={(e) => setNewTaskAssignedTo(e.target.value)} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                <option value="">-- Sélectionner un membre --</option>
+                {users.map(u => (
+                  <option key={u.id} value={u.id}>{u.name} ({u.role?.name || 'Sans rôle'})</option>
+                ))}
               </select>
             </div>
 
@@ -115,13 +174,13 @@ const TasksPage = () => {
 
             <div>
               <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
-              <textarea placeholder="Détails de la tâche à effectuer..." style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+              <textarea value={newTaskMessage} onChange={(e) => setNewTaskMessage(e.target.value)} placeholder="Détails de la tâche à effectuer..." style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
             </div>
           </div>
           
           <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
             <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline">Annuler</button>
-            <button onClick={() => { setCreateTaskModal(false); setConsultTask(null); alert('Nouvelle tâche créée avec succès !'); }} className="btn btn-primary">Créer la tâche</button>
+            <button onClick={handleCreateSubTask} disabled={isSubmitting} className="btn btn-primary">{isSubmitting ? 'Création...' : 'Créer la tâche'}</button>
           </div>
         </div>
       </div>
@@ -190,32 +249,25 @@ const TasksPage = () => {
 
           <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
             <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Tâches liées (Sous-tâches)</h4>
-            {consultTask.id === 'TSK-101' ? (
+            {consultTask.subMissions && consultTask.subMissions.length > 0 ? (
               <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem'}}>
-                <div 
-                  onClick={() => setConsultTask({ id: 'TSK-105', dossierId: 'DOS-24-002', createdBy: 'Jean Dupont', assignedTo: 'Jean Dupont', status: 'IN_PROGRESS', subject: 'Demande de documents complémentaires', message: 'Veuillez demander les Kbis manquants au client.', attachments: ['kbis_manquant.pdf'] })}
-                  onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
-                  onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
-                  style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}
-                >
-                  <div>
-                    <strong style={{display: 'block', fontSize: '0.875rem'}}>Demande de documents complémentaires</strong>
-                    <span style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>Créé par: Jean Dupont • Assigné à: Jean Dupont</span>
+                {consultTask.subMissions.map((sub) => (
+                  <div 
+                    key={sub.id}
+                    onClick={() => setConsultTask(tasks.find(t => t.id === sub.id) || sub)}
+                    onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
+                    onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
+                    style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}
+                  >
+                    <div>
+                      <strong style={{display: 'block', fontSize: '0.875rem'}}>{sub.reference || 'Sans réf'}</strong>
+                      <span style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>Créé par: {sub.createdBy?.name || 'Inconnu'} • Assigné à: {sub.assignedTo?.name || 'Non assigné'}</span>
+                    </div>
+                    <span style={{fontSize: '0.75rem', fontWeight: 600, padding: '0.25rem 0.5rem', borderRadius: '4px', height: 'fit-content'}}>
+                      {getStatusBadge(sub.status)}
+                    </span>
                   </div>
-                  <span style={{fontSize: '0.75rem', fontWeight: 600, color: '#D97706', background: '#FEF3C7', padding: '0.25rem 0.5rem', borderRadius: '4px', height: 'fit-content'}}>En cours</span>
-                </div>
-                <div 
-                  onClick={() => setConsultTask({ id: 'TSK-106', dossierId: 'DOS-24-002', createdBy: 'Alice Martin', assignedTo: 'Alice Martin', status: 'VALIDATED', subject: 'Vérification des bilans N-1', message: 'Les bilans N-1 ont été revérifiés et tout est en ordre.', attachments: ['bilan_2025_verifie.pdf', 'rapport_audit.pdf'] })}
-                  onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
-                  onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
-                  style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}
-                >
-                  <div>
-                    <strong style={{display: 'block', fontSize: '0.875rem'}}>Vérification des bilans N-1</strong>
-                    <span style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>Créé par: Alice Martin • Assigné à: Alice Martin</span>
-                  </div>
-                  <span style={{fontSize: '0.75rem', fontWeight: 600, color: '#48BB78', background: '#F0FFF4', padding: '0.25rem 0.5rem', borderRadius: '4px', height: 'fit-content'}}>Terminé</span>
-                </div>
+                ))}
               </div>
             ) : (
                <div style={{padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px dashed var(--border)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem'}}>
@@ -284,6 +336,9 @@ const TasksPage = () => {
           </thead>
           <tbody>
             {tasks.filter(t => {
+              // 1. Les sous-tâches ne s'affichent pas dans l'interface principale
+              if (t.parentMissionId) return false;
+              
               let matchStatus = true;
               if (filterStatus !== 'all') {
                 matchStatus = t.status === filterStatus;

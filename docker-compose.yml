@@ -71,6 +71,7 @@ services:
       - ./docker_nginx/conf.d:/etc/nginx/conf.d
       - /etc/letsencrypt:/etc/nginx/ssl:ro
       - ./docker_nginx/certbot/www:/var/www/certbot
+      - ./docker_nginx/maintenance.html:/usr/share/nginx/html/maintenance.html:ro
     depends_on:
       - vitrine
       - backend

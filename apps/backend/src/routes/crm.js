@@ -1,9 +1,24 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const imaps = require('imap-simple');
+const simpleParser = require('mailparser').simpleParser;
+
 const prisma = new PrismaClient();
 const router = express.Router();
 
 const { authenticateJWT } = require('../middlewares/auth');
+
+const imapConfig = {
+  imap: {
+    user: 'contact@menuaconsulting.com',
+    password: 'Menua2026?consulting',
+    host: 'ssl0.ovh.net',
+    port: 993,
+    tls: true,
+    authTimeout: 3000,
+    tlsOptions: { rejectUnauthorized: false }
+  }
+};
 
 router.use(authenticateJWT);
 
@@ -72,12 +87,23 @@ router.post('/users', async (req, res) => {
   try {
     const { name, email, roleId, phone, country, city, education, status, profile, idCardUrl, telephone, lieuResidence, experienceCle, langues } = req.body;
     const bcrypt = require('bcryptjs');
-    const hashedPassword = await bcrypt.hash('Menua@2026', 10); // Mot de passe par défaut
+    const crypto = require('crypto');
+    const nodemailer = require('nodemailer');
+    
+    // Generate token
+    const token = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
+    
+    // Default fallback password in case they don't use the link
+    const hashedPassword = await bcrypt.hash(crypto.randomBytes(8).toString('hex'), 10); 
+    
     const user = await prisma.utilisateur.create({
       data: {
         name,
         email,
         password: hashedPassword,
+        resetToken: token,
+        resetTokenExpiry,
         roleId: roleId || null,
         telephone: telephone || phone || null,
         lieuResidence: lieuResidence || null,
@@ -88,6 +114,37 @@ router.post('/users', async (req, res) => {
         isBlocked: status === 'Inactif'
       }
     });
+    
+    // Send email
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST || 'ssl0.ovh.net',
+        port: parseInt(process.env.SMTP_PORT || '587'),
+        secure: process.env.SMTP_SECURE === 'true',
+        auth: {
+          user: process.env.SMTP_USER || 'contact@menuaconsulting.com',
+          pass: process.env.SMTP_PASS || 'Menua2026?consulting',
+        },
+      });
+      
+      const setupUrl = `http://localhost:5173/setup-password?token=${token}`; // TODO: use real origin
+      
+      await transporter.sendMail({
+        from: process.env.SMTP_FROM || 'contact@menuaconsulting.com',
+        to: email,
+        subject: 'Création de votre compte Menua Consulting',
+        html: `
+          <h3>Bienvenue ${name},</h3>
+          <p>Un compte collaborateur a été créé pour vous sur l'espace Menua Consulting.</p>
+          <p>Veuillez cliquer sur le lien ci-dessous pour configurer votre mot de passe et activer votre accès :</p>
+          <a href="${setupUrl}" style="display:inline-block;padding:10px 20px;background:#141824;color:#fff;text-decoration:none;border-radius:4px;">Créer mon mot de passe</a>
+          <p>Ce lien est valable 24 heures.</p>
+        `
+      });
+    } catch (emailErr) {
+      console.error("Erreur lors de l'envoi de l'email de configuration:", emailErr);
+    }
+    
     res.json(user);
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la création de l\'utilisateur.' });
@@ -240,8 +297,16 @@ router.post('/dossiers', async (req, res) => {
       creatorId = masterUser?.id || creatorId;
     }
 
-    const count = await prisma.dossier.count();
-    const reference = `DOS-${String(count + 1).padStart(2, '0')}`;
+    const lastDossier = await prisma.dossier.findFirst({
+      orderBy: { createdAt: 'desc' },
+      select: { reference: true }
+    });
+    let nextNum = 1;
+    if (lastDossier && lastDossier.reference) {
+      const match = lastDossier.reference.match(/DOS-(\d+)/);
+      if (match) nextNum = parseInt(match[1], 10) + 1;
+    }
+    const reference = `DOS-${String(nextNum).padStart(2, '0')}`;
 
     const dossier = await prisma.dossier.create({
       data: {
@@ -254,9 +319,38 @@ router.post('/dossiers', async (req, res) => {
         createdById: creatorId
       }
     });
+
+    await prisma.auditLog.create({ data: { userId: creatorId, action: 'CREATION_DOSSIER', targetId: dossier.id, targetType: 'DOSSIER', details: `Dossier créé: ${dossier.name}`, dossierId: dossier.id }});
+
     res.status(201).json(dossier);
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la création du dossier.' });
+  }
+});
+
+router.get('/dashboard-stats', async (req, res) => {
+  try {
+    const dossiersCount = await prisma.dossier.count();
+    const tasksCount = await prisma.mission.count();
+    const clientsCount = await prisma.client.count();
+    const messagesCount = await prisma.messagePersonnel.count();
+    res.json({ dossiers: dossiersCount, tasks: tasksCount, clients: clientsCount, messages: messagesCount });
+  } catch (error) {
+    console.error(error); res.status(500).json({ error: 'Erreur lors de la récupération des statistiques.' });
+  }
+});
+
+// --- AUDIT LOGS ---
+router.get('/audit', async (req, res) => {
+  try {
+    const logs = await prisma.auditLog.findMany({
+      include: { user: { include: { role: true } } },
+      orderBy: { createdAt: 'desc' },
+      take: 200 // limit to last 200 for performance
+    });
+    res.json(logs);
+  } catch (error) {
+    console.error(error); res.status(500).json({ error: 'Erreur lors de la récupération du journal d\'audit.' });
   }
 });
 
@@ -267,6 +361,9 @@ router.patch('/dossiers/:id', async (req, res) => {
       where: { id: req.params.id },
       data: { status, name }
     });
+
+    await prisma.auditLog.create({ data: { userId: req.user.id, action: 'MODIFICATION_DOSSIER', targetId: dossier.id, targetType: 'DOSSIER', details: `Statut modifié: ${status || 'Inchangé'}`, dossierId: dossier.id }});
+
     res.json(dossier);
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la mise à jour du dossier.' });
@@ -291,7 +388,10 @@ router.get('/tasks', async (req, res) => {
       include: { 
         dossier: true, 
         assignedTo: { include: { role: true } }, 
-        createdBy: { include: { role: true } } 
+        createdBy: { include: { role: true } },
+        subMissions: {
+          include: { assignedTo: true, createdBy: true }
+        }
       }
     });
     res.json(tasks);
@@ -302,7 +402,7 @@ router.get('/tasks', async (req, res) => {
 
 router.post('/tasks', async (req, res) => {
   try {
-    const { dossierId, description, assignedToId } = req.body;
+    const { dossierId, description, assignedToId, parentMissionId } = req.body;
     let creatorId = req.user.id;
     
     // Handle the bypass login 'MASTER-ADMIN' which doesn't exist in DB
@@ -312,8 +412,16 @@ router.post('/tasks', async (req, res) => {
       creatorId = masterUser?.id || creatorId;
     }
 
-    const count = await prisma.mission.count();
-    const reference = `MSN-${String(count + 1).padStart(2, '0')}`;
+    const lastMission = await prisma.mission.findFirst({
+      orderBy: { createdAt: 'desc' },
+      select: { reference: true }
+    });
+    let nextNum = 1;
+    if (lastMission && lastMission.reference) {
+      const match = lastMission.reference.match(/MSN-(\d+)/);
+      if (match) nextNum = parseInt(match[1], 10) + 1;
+    }
+    const reference = `MSN-${String(nextNum).padStart(2, '0')}`;
 
     const task = await prisma.mission.create({
       data: {
@@ -322,7 +430,8 @@ router.post('/tasks', async (req, res) => {
         dossierId,
         assignedToId,
         createdById: creatorId,
-        status: 'TO_ASSIGN'
+        status: 'TO_ASSIGN',
+        ...(parentMissionId && { parentMissionId })
       }
     });
     res.status(201).json(task);
@@ -358,21 +467,106 @@ router.delete('/tasks/:id', async (req, res) => {
 // --- MESSAGES (FORMULAIRES) ---
 router.get('/messages', async (req, res) => {
   try {
-    const formulaires = await prisma.formulaire.findMany({
-      orderBy: { createdAt: 'desc' },
-      include: {
-        contact: true,
-        recrutement: true
-      }
-    });
-    const messagePersonnels = await prisma.messagePersonnel.findMany({
+    const fromForms = await prisma.formulaire.findMany({
+      include: { contact: true, recrutement: true },
       orderBy: { createdAt: 'desc' }
     });
-    const allMessages = [...formulaires, ...messagePersonnels].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    
-    res.json(allMessages);
+    const fromEmails = await prisma.messagePersonnel.findMany({
+      orderBy: { createdAt: 'desc' }
+    });
+
+    const combined = [
+      ...fromForms.map(f => ({
+        id: f.id,
+        type: f.type,
+        status: f.status,
+        statusSubmitter: f.statusSubmitter,
+        nomPrenom: f.nomPrenom,
+        email: f.email,
+        objet: f.objet || (f.type === 'CONTACT' ? 'Demande de contact' : 'Candidature'),
+        bodyHtml: f.bodyHtml,
+        createdAt: f.createdAt,
+        contact: f.contact,
+        recrutement: f.recrutement
+      })),
+      ...fromEmails.map(e => ({
+        id: e.id,
+        type: e.type,
+        status: e.status,
+        nomPrenom: e.nomPrenom,
+        email: e.email,
+        objet: e.objet,
+        bodyHtml: e.bodyText || e.bodyHtml,
+        createdAt: e.createdAt
+      }))
+    ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.json(combined);
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la récupération des messages.' });
+  }
+});
+
+// --- SYNC IMAP ---
+router.post('/messages/sync-imap', async (req, res) => {
+  let connection;
+  try {
+    connection = await imaps.connect(imapConfig);
+    await connection.openBox('INBOX');
+    const searchCriteria = ['ALL'];
+    const fetchOptions = { bodies: [''], struct: true };
+    const messages = await connection.search(searchCriteria, fetchOptions);
+    const last10 = messages.slice(-10);
+    
+    let addedCount = 0;
+    
+    for (const item of last10) {
+      const all = item.parts.find(p => p.which === '');
+      const uid = item.attributes.uid;
+      const parsed = await simpleParser(all.body);
+      
+      const messageId = parsed.messageId || `uid-${uid}-${Date.now()}`;
+      const subject = parsed.subject || "Sans objet";
+      let nomPrenom = "Inconnu";
+      let email = "inconnu@inconnu.com";
+      
+      if (parsed.from && parsed.from.value && parsed.from.value.length > 0) {
+        nomPrenom = parsed.from.value[0].name || parsed.from.value[0].address || "Inconnu";
+        email = parsed.from.value[0].address || "inconnu@inconnu.com";
+      }
+      
+      if (parsed.replyTo && parsed.replyTo.value && parsed.replyTo.value.length > 0) {
+        email = parsed.replyTo.value[0].address;
+      }
+      
+      const bodyText = parsed.text || "Aucun contenu";
+      const date = parsed.date || new Date();
+      
+      const existing = await prisma.messagePersonnel.findUnique({ where: { messageId } });
+      if (!existing) {
+        await prisma.messagePersonnel.create({
+          data: {
+            messageId,
+            type: 'PERSONNEL',
+            status: 'NOUVEAU',
+            nomPrenom,
+            email,
+            objet: subject,
+            bodyText,
+            createdAt: date,
+            receivedAt: date
+          }
+        });
+        addedCount++;
+      }
+    }
+    
+    connection.end();
+    res.json({ success: true, addedCount });
+  } catch (error) {
+    console.error("Erreur IMAP Sync:", error);
+    if (connection) connection.end();
+    res.status(500).json({ error: 'Erreur de synchronisation IMAP' });
   }
 });
 

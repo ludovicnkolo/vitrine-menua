@@ -54,7 +54,7 @@ Object.keys(seoData).forEach(route => {
   if (fs.existsSync(pagePath)) {
     const content = fs.readFileSync(pagePath, 'utf8');
 
-    // Only refactor if it has "use client" and hasn't been refactored yet
+    // Only refactor if it has "use  client" and hasn't been refactored yet
     if (content.includes('"use client"') || content.includes("'use client'")) {
       // 1. Rename page.tsx to ClientPage.tsx
       fs.renameSync(pagePath, clientPagePath);

@@ -29,35 +29,17 @@
         .icon-container svg {
             width: 80px;
             height: 80px;
-            stroke: #ffffff;
+            stroke: #b8860b; /* Dark goldenrod */
             stroke-width: 1.5;
             fill: none;
         }
         p { 
             font-size: 1.1rem; 
             color: #ffffff; 
-            max-width: 600px; 
+            max-width: 1200px; 
             line-height: 1.6; 
             margin-bottom: 40px;
-        }
-        .divider {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 40px 0;
-            width: 300px;
-        }
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .divider-dot {
-            width: 6px;
-            height: 6px;
-            background-color: #ffffff;
-            border-radius: 50%;
-            margin: 0 15px;
+            padding: 0 20px;
         }
         .contact-container {
             display: flex;
@@ -93,19 +75,15 @@
         </svg>
     </div>
 
-    <p>Notre site fait actuellement l'objet d'une opération de maintenance<br>pour mieux vous servir. Nous serons de retour dans quelques minutes.</p>
+    <p>Notre site fait l'objet d'une maintenance pour améliorer nos services. L'accès sera rétabli dans quelques minutes.<br>Nous vous remercions de votre compréhension.</p>
     
-    <div class="divider">
-        <div class="divider-dot"></div>
-    </div>
-
     <div class="contact-container">
         <!-- Envelope icon -->
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <rect x="3" y="5" width="18" height="14" rx="2" ry="2"></rect>
             <polyline points="3 7 12 13 21 7"></polyline>
         </svg>
-        <div class="contact-text">Pour toute urgence : contact@menua-consulting.com</div>
+        <div class="contact-text">Pour toute urgence : <span style="color: #8ab4f8;">contact@menua-consulting.com</span></div>
     </div>
 </body>
 </html>

@@ -128,7 +128,9 @@ router.post('/users', async (req, res) => {
         },
       });
       
-      const origin = req.headers.origin || process.env.VITE_API_URL || 'http://localhost:5173';
+      const proto = req.headers['x-forwarded-proto'] || req.protocol;
+      const host = req.headers.host;
+      const origin = host ? `${proto}://${host}` : (process.env.VITE_API_URL || 'http://localhost:5173');
       const setupUrl = `${origin}/setup-password?token=${token}`;
       
       await transporter.sendMail({

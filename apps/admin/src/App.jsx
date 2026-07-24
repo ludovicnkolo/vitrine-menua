@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Files, Users, Settings, Inbox, ChevronDown, LogOut, Shield } from 'lucide-react';
 
@@ -12,6 +12,9 @@ import RolesPage from './pages/RolesPage';
 import AuditPage from './pages/AuditPage';
 import LoginPage from './pages/LoginPage';
 import SetupPasswordPage from './pages/SetupPasswordPage';
+import WorkspacePage from './pages/WorkspacePage';
+import UsersSpacePage from './pages/UsersSpacePage';
+import SystemSpacePage from './pages/SystemSpacePage';
 
 const MOCK_USER = {
   id: 'U-001',
@@ -31,6 +34,12 @@ function App() {
   });
   const [isInboxExpanded, setIsInboxExpanded] = useState(true);
   const [isTeamExpanded, setIsTeamExpanded] = useState(true);
+
+  useEffect(() => {
+    if (localStorage.getItem('adminTheme') === 'dark') {
+      document.body.classList.add('dark');
+    }
+  }, []);
 
   const handleLogin = (newToken, userData) => {
     localStorage.setItem('adminToken', newToken);
@@ -69,78 +78,33 @@ function App() {
         <nav className="sidebar-nav">
           <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
             <LayoutDashboard size={20} />
-            Tableau de bord
+            Espace global
           </Link>
-          <Link to="/dossiers" className={`nav-item ${location.pathname.includes('/dossiers') ? 'active' : ''}`}>
-            <Files size={20} />
-            Dossiers
+          
+          <Link to="/inbox" className={`nav-item ${location.pathname.includes('/inbox') ? 'active' : ''}`}>
+            <Inbox size={20} />
+            Espace message
           </Link>
-          <div className="nav-group" style={{display: 'flex', flexDirection: 'column'}}>
-            <button 
-              onClick={() => setIsInboxExpanded(!isInboxExpanded)} 
-              className={`nav-item ${location.pathname.includes('/inbox') || location.pathname.includes('/tasks') || location.pathname.includes('/taches') ? 'active' : ''}`}
-              style={{justifyContent: 'space-between', width: '100%', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'inherit'}}
-            >
-              <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem'}}>
-                <Inbox size={20} />
-                Boîte de réception
-              </div>
-              <ChevronDown size={16} style={{transform: isInboxExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s'}} />
-            </button>
-            {isInboxExpanded && (
-              <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem', paddingLeft: '1.25rem', marginTop: '0.25rem'}}>
-                <Link to="/inbox" className={`nav-item ${location.pathname.includes('/inbox') ? 'active' : ''}`} style={{padding: '0.5rem 1rem', fontSize: '0.9rem', minHeight: 'auto'}}>
-                  Messages
-                </Link>
-                {['Super-administrateur', 'Responsable opérationnel', 'ADMIN', 'SUPERVISOR'].includes(user.role) && (
-                  <>
-                    <Link to="/tasks" className={`nav-item ${location.pathname.includes('/tasks') ? 'active' : ''}`} style={{padding: '0.5rem 1rem', fontSize: '0.9rem', minHeight: 'auto'}}>
-                      Missions
-                    </Link>
-                    <Link to="/taches" className={`nav-item ${location.pathname.includes('/taches') ? 'active' : ''}`} style={{padding: '0.5rem 1rem', fontSize: '0.9rem', minHeight: 'auto'}}>
-                      Tâches
-                    </Link>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-          {['Super-administrateur', 'Administrateur technique', 'ADMIN'].includes(user.role) && (
-            <div className="nav-group" style={{display: 'flex', flexDirection: 'column'}}>
-              <button 
-                onClick={() => setIsTeamExpanded(!isTeamExpanded)} 
-                className={`nav-item ${location.pathname.includes('/users') || location.pathname.includes('/roles') ? 'active' : ''}`}
-                style={{justifyContent: 'space-between', width: '100%', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'inherit'}}
-              >
-                <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem'}}>
-                  <Users size={20} />
-                  Gestion Équipe
-                </div>
-                <ChevronDown size={16} style={{transform: isTeamExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s'}} />
-              </button>
-              {isTeamExpanded && (
-                <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem', paddingLeft: '1.25rem', marginTop: '0.25rem'}}>
-                  <Link to="/users" className={`nav-item ${location.pathname.includes('/users') ? 'active' : ''}`} style={{padding: '0.5rem 1rem', fontSize: '0.9rem', minHeight: 'auto'}}>
-                    Membres
-                  </Link>
-                  <Link to="/roles" className={`nav-item ${location.pathname.includes('/roles') ? 'active' : ''}`} style={{padding: '0.5rem 1rem', fontSize: '0.9rem', minHeight: 'auto'}}>
-                    Rôles
-                  </Link>
-                </div>
-              )}
-            </div>
+          
+          {['Super-administrateur', 'Responsable opérationnel', 'ADMIN', 'SUPERVISOR'].includes(user.role) && (
+            <Link to="/workspace" className={`nav-item ${location.pathname.includes('/workspace') ? 'active' : ''}`}>
+              <Files size={20} />
+              Espace travail
+            </Link>
           )}
+          
           {['Super-administrateur', 'Administrateur technique', 'ADMIN'].includes(user.role) && (
-            <div className="nav-group" style={{display: 'flex', flexDirection: 'column'}}>
-              <Link to="/settings" className={`nav-item ${location.pathname.includes('/settings') ? 'active' : ''}`}>
-                <Settings size={20} />
-                Configuration
-              </Link>
-              <Link to="/audit" className={`nav-item ${location.pathname.includes('/audit') ? 'active' : ''}`}>
-                <Shield size={20} />
-                Journal d'Audit
-              </Link>
-            </div>
+            <Link to="/users-space" className={`nav-item ${location.pathname.includes('/users-space') ? 'active' : ''}`}>
+              <Users size={20} />
+              Espace utilisateur
+            </Link>
+          )}
+          
+          {['Super-administrateur', 'Administrateur technique', 'ADMIN'].includes(user.role) && (
+            <Link to="/system-space" className={`nav-item ${location.pathname.includes('/system-space') ? 'active' : ''}`}>
+              <Settings size={20} />
+              Espace système
+            </Link>
           )}
         </nav>
         <div style={{padding: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.1)'}}>
@@ -165,8 +129,13 @@ function App() {
         <div className="page-content">
           <Routes>
             <Route path="/" element={<DashboardPage />} />
-            <Route path="/dossiers" element={<DossiersPage />} />
             <Route path="/inbox" element={<InboxPage />} />
+            <Route path="/workspace" element={<WorkspacePage />} />
+            <Route path="/users-space" element={<UsersSpacePage />} />
+            <Route path="/system-space" element={<SystemSpacePage />} />
+            
+            {/* Legacy routes kept for safety in case of internal links */}
+            <Route path="/dossiers" element={<DossiersPage />} />
             <Route path="/taches" element={<TachesPage />} />
             <Route path="/tasks" element={<TasksPage />} />
             <Route path="/users" element={<UsersPage />} />

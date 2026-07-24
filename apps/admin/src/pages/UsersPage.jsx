@@ -7,8 +7,8 @@ import {
 } from 'lucide-react';
 import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
 
-const UsersPage = () => {
-  const [tab, setTab] = useState('interne');
+const UsersPage = ({ forceTab }) => {
+  const [tab, setTab] = useState(forceTab || 'interne');
   const [openMenuId, setOpenMenuId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [consultUser, setConsultUser] = useState(null);
@@ -767,63 +767,82 @@ const UsersPage = () => {
 
       {!isAnyModalOpen && (
       <>
+      {!forceTab && (
         <div style={{marginBottom: '1.5rem'}}>
           <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)'}}>Membres</h1>
           <p style={{color: 'var(--text-muted)'}}>Gestion des équipes internes et des clients</p>
         </div>
+      )}
 
-      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-        <div style={{display: 'flex', gap: '0.5rem'}}>
-        <button 
-          onClick={() => setTab('interne')} 
-          style={{
-            background: tab === 'interne' ? 'var(--primary)' : 'transparent', 
-            color: tab === 'interne' ? '#FFF' : 'var(--text-muted)', 
-            border: tab === 'interne' ? '1px solid var(--primary)' : '1px solid #E2E8F0', 
-            borderRadius: '6px', 
-            padding: '0 0.75rem', 
-            height: '28px',
-            lineHeight: 1,
-            width: 'fit-content',
-            whiteSpace: 'nowrap',
-            fontSize: '0.875rem', 
-            fontWeight: 500, 
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}>
-            Interne
-        </button>
-        <button 
-          onClick={() => setTab('externe')} 
-          style={{
-            background: tab === 'externe' ? 'var(--primary)' : 'transparent', 
-            color: tab === 'externe' ? '#FFF' : 'var(--text-muted)', 
-            border: tab === 'externe' ? '1px solid var(--primary)' : '1px solid #E2E8F0', 
-            borderRadius: '6px', 
-            padding: '0 0.75rem', 
-            height: '28px',
-            lineHeight: 1,
-            width: 'fit-content',
-            whiteSpace: 'nowrap',
-            fontSize: '0.875rem', 
-            fontWeight: 500, 
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}>
-            Externe
-        </button>
+      {!forceTab && (
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
+          <div style={{display: 'flex', gap: '0.5rem'}}>
+            <button 
+              onClick={() => setTab('interne')} 
+              style={{
+                background: tab === 'interne' ? 'var(--primary)' : 'transparent', 
+                color: tab === 'interne' ? '#FFF' : 'var(--text-muted)', 
+                border: tab === 'interne' ? '1px solid var(--primary)' : '1px solid #E2E8F0', 
+                borderRadius: '6px', 
+                padding: '0 0.75rem', 
+                height: '28px',
+                lineHeight: 1,
+                width: 'fit-content',
+                whiteSpace: 'nowrap',
+                fontSize: '0.875rem', 
+                fontWeight: 500, 
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}>
+                Interne
+            </button>
+            <button 
+              onClick={() => setTab('externe')} 
+              style={{
+                background: tab === 'externe' ? 'var(--primary)' : 'transparent', 
+                color: tab === 'externe' ? '#FFF' : 'var(--text-muted)', 
+                border: tab === 'externe' ? '1px solid var(--primary)' : '1px solid #E2E8F0', 
+                borderRadius: '6px', 
+                padding: '0 0.75rem', 
+                height: '28px',
+                lineHeight: 1,
+                width: 'fit-content',
+                whiteSpace: 'nowrap',
+                fontSize: '0.875rem', 
+                fontWeight: 500, 
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}>
+                Externe
+            </button>
+          </div>
+          <button 
+            className="btn btn-primary" 
+            onClick={() => {
+              if (tab === 'interne') setShowModal(true);
+              else setShowExternalModal(true);
+            }}
+            style={{ width: 'fit-content', whiteSpace: 'nowrap', padding: '0 0.75rem', fontSize: '0.875rem', height: '28px', lineHeight: 1 }}
+          >
+            {tab === 'interne' ? 'Ajouter en Interne' : 'Ajouter en Externe'}
+          </button>
         </div>
-        <button 
-          className="btn btn-primary" 
-          onClick={() => {
-            if (tab === 'interne') setShowModal(true);
-            else setShowExternalModal(true);
-          }}
-          style={{ width: 'fit-content', whiteSpace: 'nowrap', padding: '0 0.75rem', fontSize: '0.875rem', height: '28px', lineHeight: 1 }}
-        >
-          {tab === 'interne' ? 'Ajouter en Interne' : 'Ajouter en Externe'}
-        </button>
-      </div>
+      )}
+
+      {forceTab && (
+        <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem'}}>
+          <button 
+            className="btn btn-primary" 
+            onClick={() => {
+              if (tab === 'interne') setShowModal(true);
+              else setShowExternalModal(true);
+            }}
+            style={{ width: 'fit-content', whiteSpace: 'nowrap', padding: '0 0.75rem', fontSize: '0.875rem', height: '28px', lineHeight: 1 }}
+          >
+            {tab === 'interne' ? 'Ajouter un Membre' : 'Ajouter un Client'}
+          </button>
+        </div>
+      )}
 
       <div className="table-wrapper">
         {tab === 'interne' ? (

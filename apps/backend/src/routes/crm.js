@@ -465,7 +465,7 @@ router.get('/tasks', async (req, res) => {
 
 router.post('/tasks', async (req, res) => {
   try {
-    const { dossierId, description, assignedToId, parentMissionId, echeance } = req.body;
+    const { dossierId, description, assignedToId, parentMissionId, echeance, attachment } = req.body;
     let creatorId = req.user.id;
     
     // Handle the bypass login 'MASTER-ADMIN' which doesn't exist in DB
@@ -495,6 +495,7 @@ router.post('/tasks', async (req, res) => {
         createdById: creatorId,
         status: 'TO_ASSIGN',
         echeance: echeance ? new Date(echeance) : null,
+        attachment,
         ...(parentMissionId && { parentMissionId })
       }
     });
@@ -574,7 +575,7 @@ router.get('/taches', async (req, res) => {
 
 router.post('/taches', async (req, res) => {
   try {
-    const { missionId, description, assignedToId, echeance } = req.body;
+    const { missionId, description, assignedToId, echeance, attachment } = req.body;
     let creatorId = req.user.id;
     
     if (creatorId === 'MASTER-ADMIN') {
@@ -602,7 +603,8 @@ router.post('/taches', async (req, res) => {
         assignedToId,
         createdById: creatorId,
         status: 'TO_ASSIGN',
-        echeance: echeance ? new Date(echeance) : null
+        echeance: echeance ? new Date(echeance) : null,
+        attachment
       }
     });
 
@@ -738,14 +740,23 @@ router.post('/messages/sync-imap', async (req, res) => {
   try {
     connection = await imaps.connect(imapConfig);
     await connection.openBox('INBOX');
-    const searchCriteria = ['ALL'];
+    
+    // Trouver la date du dernier message enregistré pour optimiser la recherche
+    const lastMsg = await prisma.messagePersonnel.findFirst({
+      orderBy: { receivedAt: 'desc' }
+    });
+    
+    let searchCriteria = ['ALL'];
+    if (lastMsg && lastMsg.receivedAt) {
+      searchCriteria = [['SINCE', lastMsg.receivedAt]];
+    }
+
     const fetchOptions = { bodies: [''], struct: true };
     const messages = await connection.search(searchCriteria, fetchOptions);
-    const last10 = messages.slice(-10);
     
     let addedCount = 0;
     
-    for (const item of last10) {
+    for (const item of messages) {
       const all = item.parts.find(p => p.which === '');
       const uid = item.attributes.uid;
       const parsed = await simpleParser(all.body);

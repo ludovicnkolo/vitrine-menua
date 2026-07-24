@@ -41,6 +41,7 @@ const InboxPage = () => {
   const [processMsg, setProcessMsg] = useState(null);
   const [previewFile, setPreviewFile] = useState(null);
   const [previewBlobUrl, setPreviewBlobUrl] = useState(null);
+  const [includeAttachedFile, setIncludeAttachedFile] = useState(false);
   const [messages, setMessages] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -168,6 +169,25 @@ const InboxPage = () => {
     else setOpenMenuId(id);
   }
 
+  const uploadFile = async (file) => {
+    if (!file) return null;
+    const formData = new FormData();
+    formData.append('bucket', 'formulaires');
+    formData.append('file', file);
+    try {
+      const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/files/upload', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success) {
+        return data.fileData.filename;
+      }
+    } catch(e) { console.error('Upload error', e); }
+    return null;
+  };
+
   const handleCreateTask = async () => {
     try {
       setIsSubmitting(true);
@@ -211,6 +231,20 @@ const InboxPage = () => {
           return;
         }
 
+        let attachmentsArray = [];
+        if (includeAttachedFile) {
+          if (processMsg?.attachment) attachmentsArray.push(...String(processMsg.attachment).split(',').map(f => f.trim()));
+          if (processMsg?.cv) attachmentsArray.push(processMsg.cv);
+          if (processMsg?.contact?.pieceJointe) attachmentsArray.push(processMsg.contact.pieceJointe);
+        }
+        
+        if (newTaskFile) {
+          const uploadedName = await uploadFile(newTaskFile);
+          if (uploadedName) attachmentsArray.push(uploadedName);
+        }
+        
+        const finalAttachment = attachmentsArray.filter(Boolean).join(',') || null;
+
         const taskRes = await fetch(`${apiUrl}/api/crm/tasks`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -218,7 +252,8 @@ const InboxPage = () => {
             description: `${taskSubject}\n\n${taskDescription}`,
             assignedToId: taskAssignedToId || null,
             dossierId: finalDossierId,
-            echeance: taskEcheance
+            echeance: taskEcheance,
+            attachment: finalAttachment
           })
         });
 
@@ -231,6 +266,7 @@ const InboxPage = () => {
 
       showToast(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Mission créée et assignée avec succès !', 'success');
       setCreateTaskModal(false);
+      setIncludeAttachedFile(false);
       setProcessMsg(null);
       setNewTaskFile(null);
       setTaskSubject('');
@@ -515,7 +551,7 @@ const InboxPage = () => {
         </table>
       </div>
 
-      {totalPages > 1 && (
+      {totalPages >= 1 && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '1rem', alignItems: 'center' }}>
           <button 
             disabled={page === 1} 
@@ -713,7 +749,7 @@ const InboxPage = () => {
           <div className="" style={{width: '100%', padding: '0'}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600}}>{tab === 'interne' ? 'Répondre au message' : 'Nouvelle Mission'}</h3>
-              <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeAttachedFile(false); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -775,10 +811,10 @@ const InboxPage = () => {
               <div>
                 <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
                 <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
-                  {(processMsg?.cv || processMsg?.attachment) && (
-                    <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginBottom: '0.5rem'}}>
-                      <input type="checkbox" defaultChecked />
-                      <span style={{fontSize: '0.875rem', color: 'var(--text-main)'}}>Inclure le fichier lié ({processMsg.cv || processMsg.attachment})</span>
+                  {(processMsg?.cv || processMsg?.attachment || processMsg?.contact?.pieceJointe) && (
+                    <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginBottom: '1rem'}}>
+                      <input type="checkbox" checked={includeAttachedFile} onChange={(e) => setIncludeAttachedFile(e.target.checked)} />
+                      <span style={{fontSize: '0.875rem', color: 'var(--text-main)'}}>Inclure les fichiers liés au message ({[processMsg.cv, processMsg.attachment, processMsg.contact?.pieceJointe].filter(Boolean).join(', ')})</span>
                     </label>
                   )}
                   <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'var(--primary)', marginBottom: 0}}>
@@ -806,7 +842,7 @@ const InboxPage = () => {
             </div>
 
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem'}}>
-              <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline" disabled={isSubmitting}>Annuler</button>
+              <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeAttachedFile(false); }} className="btn btn-outline" disabled={isSubmitting}>Annuler</button>
               <button onClick={handleCreateTask} disabled={isSubmitting} className="btn btn-primary">{isSubmitting ? 'Traitement...' : (tab === 'interne' ? 'Envoyer' : 'Créer la mission')}</button>
             </div>
           </div>
@@ -829,13 +865,21 @@ const InboxPage = () => {
             <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E2E8F0', padding: '2rem'}}>
               <div style={{width: '100%', height: '100%', background: '#FFF', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden'}}>
                 {previewBlobUrl ? (
-                  <object 
-                    data={previewBlobUrl}
-                    type="application/pdf"
-                    style={{width: '100%', height: '100%', border: 'none'}}
-                  >
-                    <p>Votre navigateur ne supporte pas l'affichage direct des PDF. <a href={previewBlobUrl} target="_blank" rel="noopener noreferrer">Téléchargez-le ici</a>.</p>
-                  </object>
+                  previewFile.match(/\.(jpeg|jpg|png|gif|webp)$/i) ? (
+                    <img 
+                      src={previewBlobUrl} 
+                      alt={previewFile}
+                      style={{width: '100%', height: '100%', objectFit: 'contain'}} 
+                    />
+                  ) : (
+                    <object 
+                      data={previewBlobUrl}
+                      type="application/pdf"
+                      style={{width: '100%', height: '100%', border: 'none'}}
+                    >
+                      <p>Impossible d'afficher ce fichier directement. <a href={previewBlobUrl} target="_blank" rel="noopener noreferrer">Téléchargez-le ici</a>.</p>
+                    </object>
+                  )
                 ) : (
                   <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
                     Chargement du document...

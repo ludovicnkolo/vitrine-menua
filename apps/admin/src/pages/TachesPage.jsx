@@ -13,6 +13,8 @@ const TachesPage = () => {
   const [taskFile, setTaskFile] = useState(null);
   const [createTaskModal, setCreateTaskModal] = useState(false);
   const [newTaskFile, setNewTaskFile] = useState(null);
+  const [previewFile, setPreviewFile] = useState(null);
+  const [previewBlobUrl, setPreviewBlobUrl] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const menuRef = useRef(null);
@@ -72,6 +74,48 @@ const TachesPage = () => {
 
   useEffect(() => { fetchData(); }, [page, searchQuery, filterStatus]);
 
+  useEffect(() => {
+    if (!previewFile) {
+      if (previewBlobUrl) URL.revokeObjectURL(previewBlobUrl);
+      setPreviewBlobUrl(null);
+      return;
+    }
+    const fetchPdf = async () => {
+      try {
+        const token = localStorage.getItem('adminToken');
+        const url = `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/files/view/formulaires/${previewFile}?token=${token}`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const blob = await res.blob();
+          const objUrl = URL.createObjectURL(blob);
+          setPreviewBlobUrl(objUrl);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchPdf();
+  }, [previewFile]);
+
+  const uploadFile = async (file) => {
+    if (!file) return null;
+    const formData = new FormData();
+    formData.append('bucket', 'formulaires');
+    formData.append('file', file);
+    try {
+      const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/files/upload', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success) {
+        return data.fileData.filename;
+      }
+    } catch(e) { console.error('Upload error', e); }
+    return null;
+  };
+
   const handleCreateSubTask = async () => {
     if (!newTaskMessage || !newTaskAssignedTo || !newTaskEcheance) {
       alert("Veuillez remplir le message, le destinataire et l'échéance.");
@@ -83,6 +127,14 @@ const TachesPage = () => {
       const token = localStorage.getItem('adminToken');
       const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
       
+      let attachmentName = consultTask.attachment || null;
+      if (newTaskFile) {
+        const uploadedName = await uploadFile(newTaskFile);
+        if (uploadedName) {
+          attachmentName = attachmentName ? `${attachmentName},${uploadedName}` : uploadedName;
+        }
+      }
+
       const res = await fetch(`${apiUrl}/api/crm/taches`, {
         method: 'POST',
         headers: {
@@ -93,7 +145,8 @@ const TachesPage = () => {
           description: `Objet: ${newTaskSubject}\n\nConsignes: ${newTaskMessage}`,
           assignedToId: newTaskAssignedTo,
           missionId: consultTask.id,
-          echeance: newTaskEcheance
+          echeance: newTaskEcheance,
+          attachment: attachmentName
         })
       });
       
@@ -250,12 +303,19 @@ const TachesPage = () => {
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
             <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
-              {consultTask.attachments && consultTask.attachments.length > 0 ? consultTask.attachments.map((att, idx) => (
-                <label key={idx} style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'default', marginBottom: '0.5rem'}}>
-                  <input type="checkbox" checked={true} readOnly />
-                  <span style={{fontSize: '0.875rem', color: 'var(--text-main)'}}>Inclure le fichier lié ({att})</span>
-                </label>
-              )) : (
+              {consultTask.attachment ? (
+                <select className="input-field" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} onChange={(e) => {
+                  if (e.target.value) {
+                    setPreviewFile(e.target.value);
+                    e.target.selectedIndex = 0;
+                  }
+                }}>
+                  <option value="">-- Sélectionner un fichier pour l'ouvrir --</option>
+                  {consultTask.attachment.split(',').map((att, idx) => (
+                    <option key={idx} value={att.trim()}>{att.trim()}</option>
+                  ))}
+                </select>
+              ) : (
                 <span style={{fontSize: '0.875rem', color: 'var(--text-muted)'}}>Aucune pièce jointe lors de la création.</span>
               )}
             </div>
@@ -283,6 +343,48 @@ const TachesPage = () => {
           <button onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Annuler</button>
           <button onClick={() => { setConsultTask(null); setTaskFile(null); alert('Tâche mise à jour avec succès !'); }} className="btn btn-primary">Enregistrer</button>
         </div>
+
+        {previewFile && (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0,0,0,0.8)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 200
+          }}>
+            <div style={{width: '80%', height: '80%', background: '#FFF', borderRadius: '8px', display: 'flex', flexDirection: 'column', overflow: 'hidden'}}>
+              <div style={{padding: '1rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#F8FAFC'}}>
+                <h3 style={{margin: 0, fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                  <Eye size={16} /> Prévisualisation du document : {previewFile}
+                </h3>
+                <button onClick={() => setPreviewFile(null)} className="btn btn-outline" style={{padding: '0.25rem 0.5rem', height: 'auto'}}>Fermer</button>
+              </div>
+              <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E2E8F0', padding: '2rem'}}>
+                <div style={{width: '100%', height: '100%', background: '#FFF', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden'}}>
+                  {previewBlobUrl ? (
+                    previewFile.match(/\.(jpeg|jpg|png|gif|webp)$/i) ? (
+                      <img 
+                        src={previewBlobUrl} 
+                        alt={previewFile}
+                        style={{width: '100%', height: '100%', objectFit: 'contain'}} 
+                      />
+                    ) : (
+                      <object 
+                        data={previewBlobUrl}
+                        type="application/pdf"
+                        style={{width: '100%', height: '100%', border: 'none'}}
+                      >
+                        <p>Impossible d'afficher ce fichier directement. <a href={previewBlobUrl} target="_blank" rel="noopener noreferrer">Téléchargez-le ici</a>.</p>
+                      </object>
+                    )
+                  ) : (
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+                      Chargement du document...
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     );
   }
@@ -386,7 +488,7 @@ const TachesPage = () => {
         </table>
       </div>
 
-      {totalPages > 1 && (
+      {totalPages >= 1 && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '1rem', alignItems: 'center' }}>
           <button 
             disabled={page === 1} 
@@ -403,6 +505,47 @@ const TachesPage = () => {
           >
             Suivant
           </button>
+        </div>
+      )}
+
+      {previewFile && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.8)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 200
+        }}>
+          <div style={{width: '80%', height: '80%', background: '#FFF', borderRadius: '8px', display: 'flex', flexDirection: 'column', overflow: 'hidden'}}>
+            <div style={{padding: '1rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#F8FAFC'}}>
+              <h3 style={{margin: 0, fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                <Eye size={16} /> Prévisualisation du document : {previewFile}
+              </h3>
+              <button onClick={() => setPreviewFile(null)} className="btn btn-outline" style={{padding: '0.25rem 0.5rem', height: 'auto'}}>Fermer</button>
+            </div>
+            <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E2E8F0', padding: '2rem'}}>
+              <div style={{width: '100%', height: '100%', background: '#FFF', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden'}}>
+                {previewBlobUrl ? (
+                  previewFile.match(/\.(jpeg|jpg|png|gif|webp)$/i) ? (
+                    <img 
+                      src={previewBlobUrl} 
+                      alt={previewFile}
+                      style={{width: '100%', height: '100%', objectFit: 'contain'}} 
+                    />
+                  ) : (
+                    <object 
+                      data={previewBlobUrl}
+                      type="application/pdf"
+                      style={{width: '100%', height: '100%', border: 'none'}}
+                    >
+                      <p>Impossible d'afficher ce fichier directement. <a href={previewBlobUrl} target="_blank" rel="noopener noreferrer">Téléchargez-le ici</a>.</p>
+                    </object>
+                  )
+                ) : (
+                  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+                    Chargement du document...
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

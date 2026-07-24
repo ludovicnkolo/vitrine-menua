@@ -924,9 +924,13 @@ const UsersPage = () => {
             <button onClick={() => setViewImage(null)} style={{position: 'absolute', top: '-40px', right: '0', background: 'none', border: 'none', color: 'white', cursor: 'pointer'}}>
               <X size={24} />
             </button>
-            <object data={viewImage} type="application/pdf" style={{width: '100%', height: '100%', border: 'none', backgroundColor: 'white', borderRadius: '8px'}}>
-              <p>Votre navigateur ne supporte pas l'affichage direct de PDF. <a href={viewImage} target="_blank" rel="noreferrer">Télécharger le fichier</a></p>
-            </object>
+            {viewImage.toLowerCase().match(/\.(jpeg|jpg|png|gif|webp)(\?.*)?$/) ? (
+              <img src={viewImage} alt="Document" style={{maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', backgroundColor: 'white', borderRadius: '8px'}} />
+            ) : (
+              <object data={viewImage} type="application/pdf" style={{width: '100%', height: '100%', border: 'none', backgroundColor: 'white', borderRadius: '8px'}}>
+                <p>Impossible d'afficher ce fichier directement. <a href={viewImage} target="_blank" rel="noreferrer">Télécharger le fichier</a></p>
+              </object>
+            )}
           </div>
         </div>
       )}

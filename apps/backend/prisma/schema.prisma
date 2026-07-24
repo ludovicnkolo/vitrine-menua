@@ -179,6 +179,7 @@ model Mission {
   description String
   echeance    DateTime?
   status      String    @default("TO_ASSIGN")
+  attachment  String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -208,6 +209,7 @@ model Tache {
   description String
   echeance    DateTime?
   status      String    @default("TO_ASSIGN")
+  attachment  String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

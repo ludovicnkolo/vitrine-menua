@@ -79,7 +79,8 @@ router.get('/download/:bucket/:filename', authenticateJWT, (req, res) => {
   // Optionnel : Ajouter ici une logique métier pour vérifier si req.user a le droit de lire ce fichier spécifique
   
   // Renvoyer le fichier sous forme de flux (Download)
-  res.download(filePath, filename, (err) => {
+  const absoluteFilePath = path.resolve(filePath);
+  res.download(absoluteFilePath, filename, (err) => {
     if (err) {
       console.error("Erreur lors de l'envoi du fichier:", err);
       // Ne pas renvoyer de réponse si les headers ont déjà été envoyés
@@ -119,7 +120,8 @@ router.get('/view/:bucket/:filename', authenticateJWT, (req, res) => {
     }
   };
 
-  res.sendFile(filePath, options, (err) => {
+  const absoluteFilePath = path.resolve(filePath);
+  res.sendFile(absoluteFilePath, options, (err) => {
     if (err && !res.headersSent) {
       console.error("Erreur lors de l'envoi du fichier:", err);
       res.status(500).json({ success: false, error: 'Erreur lors de la visualisation.' });

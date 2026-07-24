@@ -32,7 +32,7 @@ const DossiersPage = () => {
     const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
     
     Promise.all([
-      fetch(`${apiUrl}/api/crm/dossiers?page=${page}&limit=6&search=${encodeURIComponent(searchQuery)}&status=${filterStatus}&role=${filterRole}&origin=${filterOrigine}`, { headers }).then(res => res.json()).catch(() => ({ data: [], totalPages: 1 })),
+      fetch(`${apiUrl}/api/crm/dossiers?page=${page}&limit=4&search=${encodeURIComponent(searchQuery)}&status=${filterStatus}&role=${filterRole}&origin=${filterOrigine}`, { headers }).then(res => res.json()).catch(() => ({ data: [], totalPages: 1 })),
       fetch(`${apiUrl}/api/crm/tasks?page=1&limit=1000`, { headers }).then(res => res.json()).catch(() => ({ data: [] }))
     ]).then(([dossiersRes, tasksRes]) => {
       if (dossiersRes && dossiersRes.data) {
@@ -418,7 +418,7 @@ const DossiersPage = () => {
         </table>
       </div>
 
-      {totalPages > 1 && (
+      {totalPages >= 1 && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '1rem', alignItems: 'center' }}>
           <button 
             disabled={page === 1} 

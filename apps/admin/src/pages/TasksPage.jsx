@@ -13,6 +13,9 @@ const TasksPage = () => {
   const [taskFile, setTaskFile] = useState(null);
   const [createTaskModal, setCreateTaskModal] = useState(false);
   const [newTaskFile, setNewTaskFile] = useState(null);
+  const [includeParentFile, setIncludeParentFile] = useState(false);
+  const [previewFile, setPreviewFile] = useState(null);
+  const [previewBlobUrl, setPreviewBlobUrl] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const menuRef = useRef(null);
@@ -45,7 +48,7 @@ const TasksPage = () => {
       const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
       
       const [resTasks, resUsers] = await Promise.all([
-        fetch(`${apiUrl}/api/crm/tasks?page=${page}&limit=6&status=${filterStatus}&search=${encodeURIComponent(searchQuery)}`, { headers }),
+        fetch(`${apiUrl}/api/crm/tasks?page=${page}&limit=5&status=${filterStatus}&search=${encodeURIComponent(searchQuery)}`, { headers }),
         fetch(`${apiUrl}/api/crm/users`, { headers })
       ]);
       
@@ -72,6 +75,48 @@ const TasksPage = () => {
 
   useEffect(() => { fetchData(); }, [page, searchQuery, filterStatus]);
 
+  useEffect(() => {
+    if (!previewFile) {
+      if (previewBlobUrl) URL.revokeObjectURL(previewBlobUrl);
+      setPreviewBlobUrl(null);
+      return;
+    }
+    const fetchPdf = async () => {
+      try {
+        const token = localStorage.getItem('adminToken');
+        const url = `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/files/view/formulaires/${previewFile}?token=${token}`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const blob = await res.blob();
+          const objUrl = URL.createObjectURL(blob);
+          setPreviewBlobUrl(objUrl);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchPdf();
+  }, [previewFile]);
+
+  const uploadFile = async (file) => {
+    if (!file) return null;
+    const formData = new FormData();
+    formData.append('bucket', 'formulaires');
+    formData.append('file', file);
+    try {
+      const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/files/upload', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success) {
+        return data.fileData.filename;
+      }
+    } catch(e) { console.error('Upload error', e); }
+    return null;
+  };
+
   const handleCreateSubTask = async () => {
     if (!newTaskMessage || !newTaskAssignedTo || !newTaskEcheance) {
       alert("Veuillez remplir le message, le destinataire et l'échéance.");
@@ -83,6 +128,17 @@ const TasksPage = () => {
       const token = localStorage.getItem('adminToken');
       const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
       
+      let attachmentName = null;
+      if (includeParentFile && consultTask.attachment) {
+        attachmentName = consultTask.attachment;
+      }
+      if (newTaskFile) {
+        const uploadedName = await uploadFile(newTaskFile);
+        if (uploadedName) {
+          attachmentName = attachmentName ? `${attachmentName},${uploadedName}` : uploadedName;
+        }
+      }
+
       const res = await fetch(`${apiUrl}/api/crm/taches`, {
         method: 'POST',
         headers: {
@@ -93,7 +149,8 @@ const TasksPage = () => {
           missionId: consultTask.id,
           description: `Objet: ${newTaskSubject}\n\nConsignes: ${newTaskMessage}`,
           assignedToId: newTaskAssignedTo,
-          echeance: newTaskEcheance
+          echeance: newTaskEcheance,
+          attachment: attachmentName
         })
       });
       
@@ -158,7 +215,7 @@ const TasksPage = () => {
         <div className="" style={{width: '100%', padding: '0'}}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
             <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600}}>Nouvelle Tâche</h3>
-            <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+            <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeParentFile(false); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
           </div>
           
           <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -192,10 +249,16 @@ const TasksPage = () => {
             <div>
               <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
               <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+                {consultTask?.attachment && (
+                  <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginBottom: '1rem'}}>
+                    <input type="checkbox" checked={includeParentFile} onChange={(e) => setIncludeParentFile(e.target.checked)} />
+                    <span style={{fontSize: '0.875rem'}}>Inclure les fichiers de la mission ({consultTask.attachment})</span>
+                  </label>
+                )}
                 <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'var(--primary)', marginBottom: 0}}>
                   <Files size={16} />
                   <span style={{fontSize: '0.875rem', fontWeight: 500}}>
-                    {newTaskFile ? newTaskFile.name : 'Joindre un fichier...'}
+                    {newTaskFile ? newTaskFile.name : 'Joindre un autre fichier...'}
                   </span>
                   <input type="file" style={{display: 'none'}} onChange={(e) => { if (e.target.files && e.target.files.length > 0) setNewTaskFile(e.target.files[0]); }} />
                 </label>
@@ -209,7 +272,7 @@ const TasksPage = () => {
           </div>
           
           <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
-            <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline">Annuler</button>
+            <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeParentFile(false); }} className="btn btn-outline">Annuler</button>
             <button onClick={handleCreateSubTask} disabled={isSubmitting} className="btn btn-primary">{isSubmitting ? 'Création...' : 'Créer la tâche'}</button>
           </div>
         </div>
@@ -250,12 +313,19 @@ const TasksPage = () => {
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
             <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
-              {consultTask.attachments && consultTask.attachments.length > 0 ? consultTask.attachments.map((att, idx) => (
-                <label key={idx} style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'default', marginBottom: '0.5rem'}}>
-                  <input type="checkbox" checked={true} readOnly />
-                  <span style={{fontSize: '0.875rem', color: 'var(--text-main)'}}>Inclure le fichier lié ({att})</span>
-                </label>
-              )) : (
+              {consultTask.attachment ? (
+                <select className="input-field" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} onChange={(e) => {
+                  if (e.target.value) {
+                    setPreviewFile(e.target.value);
+                    e.target.selectedIndex = 0;
+                  }
+                }}>
+                  <option value="">-- Sélectionner un fichier pour l'ouvrir --</option>
+                  {consultTask.attachment.split(',').map((att, idx) => (
+                    <option key={idx} value={att.trim()}>{att.trim()}</option>
+                  ))}
+                </select>
+              ) : (
                 <span style={{fontSize: '0.875rem', color: 'var(--text-muted)'}}>Aucune pièce jointe lors de la création.</span>
               )}
             </div>
@@ -312,6 +382,48 @@ const TasksPage = () => {
           <button onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une tâche</button>
           <button onClick={() => { setConsultTask(null); setTaskFile(null); alert('Tâche mise à jour avec succès !'); }} className="btn btn-primary">Enregistrer</button>
         </div>
+
+        {previewFile && (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0,0,0,0.8)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 200
+          }}>
+            <div style={{width: '80%', height: '80%', background: '#FFF', borderRadius: '8px', display: 'flex', flexDirection: 'column', overflow: 'hidden'}}>
+              <div style={{padding: '1rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#F8FAFC'}}>
+                <h3 style={{margin: 0, fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                  <Eye size={16} /> Prévisualisation du document : {previewFile}
+                </h3>
+                <button onClick={() => setPreviewFile(null)} className="btn btn-outline" style={{padding: '0.25rem 0.5rem', height: 'auto'}}>Fermer</button>
+              </div>
+              <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E2E8F0', padding: '2rem'}}>
+                <div style={{width: '100%', height: '100%', background: '#FFF', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden'}}>
+                  {previewBlobUrl ? (
+                    previewFile.match(/\.(jpeg|jpg|png|gif|webp)$/i) ? (
+                      <img 
+                        src={previewBlobUrl} 
+                        alt={previewFile}
+                        style={{width: '100%', height: '100%', objectFit: 'contain'}} 
+                      />
+                    ) : (
+                      <object 
+                        data={previewBlobUrl}
+                        type="application/pdf"
+                        style={{width: '100%', height: '100%', border: 'none'}}
+                      >
+                        <p>Impossible d'afficher ce fichier directement. <a href={previewBlobUrl} target="_blank" rel="noopener noreferrer">Téléchargez-le ici</a>.</p>
+                      </object>
+                    )
+                  ) : (
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+                      Chargement du document...
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     );
   }
@@ -415,7 +527,7 @@ const TasksPage = () => {
         </table>
       </div>
 
-      {totalPages > 1 && (
+      {totalPages >= 1 && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '1rem', alignItems: 'center' }}>
           <button 
             disabled={page === 1} 
@@ -432,6 +544,47 @@ const TasksPage = () => {
           >
             Suivant
           </button>
+        </div>
+      )}
+
+      {previewFile && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.8)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 200
+        }}>
+          <div style={{width: '80%', height: '80%', background: '#FFF', borderRadius: '8px', display: 'flex', flexDirection: 'column', overflow: 'hidden'}}>
+            <div style={{padding: '1rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#F8FAFC'}}>
+              <h3 style={{margin: 0, fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                <Eye size={16} /> Prévisualisation du document : {previewFile}
+              </h3>
+              <button onClick={() => setPreviewFile(null)} className="btn btn-outline" style={{padding: '0.25rem 0.5rem', height: 'auto'}}>Fermer</button>
+            </div>
+            <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E2E8F0', padding: '2rem'}}>
+              <div style={{width: '100%', height: '100%', background: '#FFF', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden'}}>
+                {previewBlobUrl ? (
+                  previewFile.match(/\.(jpeg|jpg|png|gif|webp)$/i) ? (
+                    <img 
+                      src={previewBlobUrl} 
+                      alt={previewFile}
+                      style={{width: '100%', height: '100%', objectFit: 'contain'}} 
+                    />
+                  ) : (
+                    <object 
+                      data={previewBlobUrl}
+                      type="application/pdf"
+                      style={{width: '100%', height: '100%', border: 'none'}}
+                    >
+                      <p>Impossible d'afficher ce fichier directement. <a href={previewBlobUrl} target="_blank" rel="noopener noreferrer">Téléchargez-le ici</a>.</p>
+                    </object>
+                  )
+                ) : (
+                  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+                    Chargement du document...
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

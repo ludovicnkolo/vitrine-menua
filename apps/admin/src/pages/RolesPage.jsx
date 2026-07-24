@@ -47,7 +47,7 @@ const RolesPage = () => {
     try {
       const token = localStorage.getItem('adminToken');
       if (!token) return;
-      const apiUrl = 'http://localhost:4000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
       
       const [rUsers, rRoles] = await Promise.all([
         fetch(`${apiUrl}/api/crm/users`, { headers: { 'Authorization': `Bearer ${token}` } }).then(r=>r.json()).catch(()=>[]),

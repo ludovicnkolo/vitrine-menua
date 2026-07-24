@@ -51,7 +51,8 @@ function getMessageStatusBadge(status) {
     'TERMINE': { text: 'Terminé', bg: '#38A169', color: '#FFF' },
     'ARCHIVE': { text: 'Archivé', bg: '#718096', color: '#FFF' }
   }
-  const s = map[status] || { text: status, bg: '#718096', color: '#FFF' }
+  const formatUnknown = (st) => st ? st.charAt(0).toUpperCase() + st.slice(1).toLowerCase().replace(/_/g, ' ') : '';
+  const s = map[status] || { text: formatUnknown(status), bg: '#718096', color: '#FFF' }
   return <span className="badge" style={{backgroundColor: s.bg, color: s.color}}>{s.text}</span>
 }
 

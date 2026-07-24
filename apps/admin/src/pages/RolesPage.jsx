@@ -158,7 +158,7 @@ const RolesPage = () => {
               {roles.map(r => (
                 <tr key={r.id}>
                   <td>
-                    <strong style={{display: 'block'}}>{r.name}</strong>
+                    <strong className="truncate-name" style={{}}>{r.name}</strong>
                   </td>
                   <td><span style={{color: 'var(--text-muted)'}}>
                     {(() => {
@@ -170,7 +170,7 @@ const RolesPage = () => {
                       }
                     })()}
                   </span></td>
-                  <td>{getStatusBadge(r.status || 'Actif')}</td>
+                  <td><div className="truncate-text">{getStatusBadge(r.status || 'Actif')}</div></td>
                   <td><span className="badge badge-new" style={{background: '#EFF6FF', color: '#1D4ED8'}}>{r.users} membre{r.users !== 1 ? 's' : ''}</span></td>
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>

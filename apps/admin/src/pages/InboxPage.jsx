@@ -7,6 +7,32 @@ import {
 } from 'lucide-react';
 import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
 
+  const extractFieldFromHtml = (html, fieldName) => {
+    if (!html) return null;
+    // Tente l'ancien format : <strong>Champ</strong> : <span>Valeur</span>
+    let regex = new RegExp(`>\\s*${fieldName}\\s*<\\/strong>\\s*:\\s*<span[^>]*>([\\s\\S]*?)<\\/span>`, 'i');
+    let match = html.match(regex);
+    if (!match) {
+      // Tente le nouveau format : <strong>Champ</strong> <div...>Valeur</div>
+      regex = new RegExp(`>\\s*${fieldName}\\s*<\\/strong>\\s*<div[^>]*>([\\s\\S]*?)<\\/div>`, 'i');
+      match = html.match(regex);
+    }
+    if (match && match[1]) {
+      return match[1].replace(/<[^>]*>?/gm, '').trim();
+    }
+    return null;
+  };
+
+const extractBlockFromHtml = (html, blockName) => {
+  if (!html) return null;
+  const regex = new RegExp(`>\\s*${blockName}\\s*<\\/strong>\\s*<div[^>]*>([\\s\\S]*?)<\\/div>`, 'i');
+  const match = html.match(regex);
+  if (match && match[1]) {
+    return match[1].replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>?/gm, '').trim();
+  }
+  return null;
+};
+
 const InboxPage = () => {
   const [tab, setTab] = useState('contact');
   const [filterTraite, setFilterTraite] = useState('all');
@@ -14,12 +40,16 @@ const InboxPage = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [processMsg, setProcessMsg] = useState(null);
   const [previewFile, setPreviewFile] = useState(null);
+  const [previewBlobUrl, setPreviewBlobUrl] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [users, setUsers] = useState([]);
   const [dossiers, setDossiers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createTaskModal, setCreateTaskModal] = useState(false);
+  const [deleteMsg, setDeleteMsg] = useState(null);
   const [newTaskFile, setNewTaskFile] = useState(null);
   const [isNewDossier, setIsNewDossier] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -30,6 +60,7 @@ const InboxPage = () => {
   const [taskNewDossierName, setTaskNewDossierName] = useState('');
   const [taskDossierId, setTaskDossierId] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
+  const [taskEcheance, setTaskEcheance] = useState('');
   const menuRef = useRef(null);
   const isAnyModalOpen = processMsg || createTaskModal;
 
@@ -59,12 +90,21 @@ const InboxPage = () => {
       const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
       
       const [resMsgs, resUsers, resDossiers] = await Promise.all([
-        fetch(`${apiUrl}/api/crm/messages`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${apiUrl}/api/crm/messages?type=${tab}&page=${page}&limit=6&status=${filterTraite}&search=${encodeURIComponent(searchQuery)}`, { headers: { 'Authorization': `Bearer ${token}` } }),
         fetch(`${apiUrl}/api/crm/users`, { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(`${apiUrl}/api/crm/dossiers`, { headers: { 'Authorization': `Bearer ${token}` } })
+        fetch(`${apiUrl}/api/crm/dossiers?limit=1000`, { headers: { 'Authorization': `Bearer ${token}` } })
       ]);
 
-      if (resMsgs.ok) setMessages(await resMsgs.json());
+      if (resMsgs.ok) {
+        const result = await resMsgs.json();
+        if (result.data) {
+           setMessages(result.data);
+           setTotalPages(result.totalPages || 1);
+        } else {
+           setMessages(result);
+           setTotalPages(1);
+        }
+      }
       else if (resMsgs.status === 401 || resMsgs.status === 403) {
         showToast('Votre session a expiré. Veuillez vous reconnecter.', 'error');
         localStorage.removeItem('adminToken');
@@ -72,13 +112,20 @@ const InboxPage = () => {
       }
       
       if (resUsers.ok) setUsers(await resUsers.json());
-      if (resDossiers.ok) setDossiers(await resDossiers.json());
+      if (resDossiers.ok) {
+        const doss = await resDossiers.json();
+        setDossiers(doss.data || doss);
+      }
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setPage(1);
+  }, [tab, filterTraite, searchQuery]);
 
   useEffect(() => {
     fetchMessages();
@@ -90,7 +137,30 @@ const InboxPage = () => {
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [page, tab, filterTraite, searchQuery]);
+
+  useEffect(() => {
+    if (!previewFile) {
+      if (previewBlobUrl) URL.revokeObjectURL(previewBlobUrl);
+      setPreviewBlobUrl(null);
+      return;
+    }
+    const fetchPdf = async () => {
+      try {
+        const token = localStorage.getItem('adminToken');
+        const url = `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/files/view/formulaires/${previewFile}?token=${token}`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const blob = await res.blob();
+          const objUrl = URL.createObjectURL(blob);
+          setPreviewBlobUrl(objUrl);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchPdf();
+  }, [previewFile]);
 
   const toggleMenu = (e, id) => {
     e.stopPropagation();
@@ -135,29 +205,37 @@ const InboxPage = () => {
       }
 
       if (tab !== 'interne') {
+        if (!taskEcheance) {
+          showToast("Veuillez définir une échéance pour la mission.", "error");
+          setIsSubmitting(false);
+          return;
+        }
+
         const taskRes = await fetch(`${apiUrl}/api/crm/tasks`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({
             description: `${taskSubject}\n\n${taskDescription}`,
             assignedToId: taskAssignedToId || null,
-            dossierId: finalDossierId
+            dossierId: finalDossierId,
+            echeance: taskEcheance
           })
         });
 
         if (!taskRes.ok) {
-          showToast("Erreur lors de la création de la tâche.", "error");
+          showToast("Erreur lors de la création de la mission.", "error");
           setIsSubmitting(false);
           return;
         }
       }
 
-      showToast(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Tâche créée et assignée avec succès !', 'success');
+      showToast(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Mission créée et assignée avec succès !', 'success');
       setCreateTaskModal(false);
       setProcessMsg(null);
       setNewTaskFile(null);
       setTaskSubject('');
       setTaskDescription('');
+      setTaskEcheance('');
     } catch (error) {
       console.error(error);
       showToast('Une erreur est survenue.', 'error');
@@ -194,6 +272,28 @@ const InboxPage = () => {
     }
   };
 
+  const confirmDelete = async () => {
+    if (!deleteMsg) return;
+    try {
+      const token = localStorage.getItem('adminToken');
+      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      
+      const res = await fetch(`${apiUrl}/api/crm/messages/${deleteMsg.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (!res.ok) throw new Error("Erreur lors de la suppression");
+      
+      showToast("Message supprimé avec succès.", "success");
+      setDeleteMsg(null);
+      fetchMessages();
+    } catch (err) {
+      console.error(err);
+      showToast("Impossible de supprimer le message.", "error");
+    }
+  };
+
   const renderDropdown = (m) => {
     if (openMenuId !== m.id) return null;
     return (
@@ -206,7 +306,7 @@ const InboxPage = () => {
         <button className="dropdown-item" onClick={() => { setOpenMenuId(null); setProcessMsg(m); }}>
           <Pencil size={14} /> Traiter
         </button>
-        <button className="dropdown-item danger" onClick={() => setOpenMenuId(null)}>
+        <button className="dropdown-item danger" onClick={() => { setOpenMenuId(null); setDeleteMsg(m); }}>
           <Trash size={14} /> Supprimer
         </button>
       </div>
@@ -273,53 +373,52 @@ const InboxPage = () => {
           <thead>
             {tab === 'contact' ? (
               <tr>
-                <th>Statut</th>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Type</th>
-                <th>Besoins</th>
-                <th>Date</th>
-                <th>Actions</th>
+                <th style={{ width: '10%' }}>Statut</th>
+                <th style={{ width: '20%' }}>Nom</th>
+                <th style={{ width: '20%' }}>Email</th>
+                <th style={{ width: '10%' }}>Type</th>
+                <th style={{ width: '20%' }}>Besoins</th>
+                <th style={{ width: '10%' }}>Date</th>
+                <th style={{ width: '10%' }}>Actions</th>
               </tr>
             ) : tab === 'recrutement' ? (
               <tr>
-                <th>Statut</th>
-                <th>Nom</th>
-                <th>E-mail</th>
-                <th>Type</th>
-                <th>Compétences</th>
-                <th>Date</th>
-                <th>Actions</th>
+                <th style={{ width: '10%' }}>Statut</th>
+                <th style={{ width: '20%' }}>Nom</th>
+                <th style={{ width: '20%' }}>E-mail</th>
+                <th style={{ width: '10%' }}>Type</th>
+                <th style={{ width: '20%' }}>Compétences</th>
+                <th style={{ width: '10%' }}>Date</th>
+                <th style={{ width: '10%' }}>Actions</th>
               </tr>
             ) : (
               <tr>
-                <th>Statut</th>
-                <th>Nom</th>
-                <th>E-mail</th>
-                <th>Sujet</th>
-                <th>Date</th>
-                <th>Actions</th>
+                <th style={{ width: '10%' }}>Statut</th>
+                <th style={{ width: '20%' }}>Nom</th>
+                <th style={{ width: '20%' }}>E-mail</th>
+                <th style={{ width: '10%' }}>Type</th>
+                <th style={{ width: '20%' }}>Sujet</th>
+                <th style={{ width: '10%' }}>Date</th>
+                <th style={{ width: '10%' }}>Actions</th>
               </tr>
             )}
           </thead>
           <tbody>
             {loading ? (
               <tr><td colSpan="7" style={{textAlign: 'center', padding: '2rem'}}>Chargement des messages...</td></tr>
-            ) : tab === 'contact' ? messages.filter(m => m.type === 'CONTACT').filter(filterFn).map(m => (
+            ) : tab === 'contact' ? messages.map(m => (
               <tr key={m.id}>
                 <td>
                   <span style={{
                     padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
                     background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
-                  }}>
-                    {m.status}
-                  </span>
+                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replace(/_/g, " ")}</span>
                 </td>
                 <td>
-                  <strong style={{display: 'block', fontSize: '0.875rem'}}>{m.nomPrenom}</strong>
+                  <strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong>
                 </td>
                 <td>
-                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.email}</span>
+                  <span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span>
                 </td>
                 <td>
                   <span style={{
@@ -330,8 +429,8 @@ const InboxPage = () => {
                     {m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier'}
                   </span>
                 </td>
-                <td><span style={{fontSize: '0.875rem'}}>{m.contact?.typeBesoin || m.objet}</span></td>
-                <td style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{new Date(m.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
+                <td><span className="truncate-text" style={{fontSize: "0.875rem"}}>{m.contact?.typeBesoin || m.objet}</span></td>
+                <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                     <div style={{position: 'relative'}}>
@@ -343,18 +442,16 @@ const InboxPage = () => {
                   </div>
                 </td>
               </tr>
-            )) : tab === 'recrutement' ? messages.filter(m => m.type === 'RECRUTEMENT').filter(filterFn).map(m => (
+            )) : tab === 'recrutement' ? messages.map(m => (
               <tr key={m.id}>
                 <td>
                   <span style={{
                     padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
                     background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
-                  }}>
-                    {m.status}
-                  </span>
+                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replace(/_/g, " ")}</span>
                 </td>
-                <td><strong style={{display: 'block', fontSize: '0.875rem'}}>{m.nomPrenom}</strong></td>
-                <td><span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.email}</span></td>
+                <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong></td>
+                <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span></td>
                 <td>
                   <span style={{
                     padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
@@ -364,8 +461,8 @@ const InboxPage = () => {
                     {m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier'}
                   </span>
                 </td>
-                <td><span style={{fontSize: '0.875rem'}}>{m.recrutement?.competenceCle || m.objet}</span></td>
-                <td style={{color: 'var(--text-muted)'}}>{new Date(m.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
+                <td><span className="truncate-text" style={{fontSize: "0.875rem"}}>{m.recrutement?.competenceCle || m.objet}</span></td>
+                <td style={{color: "var(--text-muted)", whiteSpace: "nowrap", fontSize: "0.875rem"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                     <div style={{position: 'relative'}}>
@@ -377,24 +474,31 @@ const InboxPage = () => {
                   </div>
                 </td>
               </tr>
-            )) : messages.filter(m => m.type === tab.toUpperCase()).filter(filterFn).map(m => (
+            )) : messages.map(m => (
               <tr key={m.id}>
                 <td>
                   <span style={{
                     padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
                     background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
+                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replace(/_/g, " ")}</span>
+                </td>
+                <td>
+                  <strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong>
+                </td>
+                <td>
+                  <span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span>
+                </td>
+                <td>
+                  <span style={{
+                    padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
+                    background: '#F1F5F9',
+                    color: '#64748B'
                   }}>
-                    {m.status}
+                    {m.subType || 'Indéfini'}
                   </span>
                 </td>
-                <td>
-                  <strong style={{display: 'block', fontSize: '0.875rem'}}>{m.nomPrenom}</strong>
-                </td>
-                <td>
-                  <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{m.email}</span>
-                </td>
-                <td style={{fontWeight: m.status === 'NOUVEAU' ? 600 : 400, fontSize: '0.875rem'}}>{m.objet}</td>
-                <td style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{new Date(m.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
+                <td><div className="truncate-text" style={{fontWeight: m.status === "NOUVEAU" ? 600 : 400, fontSize: "0.875rem"}}>{m.objet}</div></td>
+                <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                     <div style={{position: 'relative'}}>
@@ -410,6 +514,26 @@ const InboxPage = () => {
           </tbody>
         </table>
       </div>
+
+      {totalPages > 1 && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '1rem', alignItems: 'center' }}>
+          <button 
+            disabled={page === 1} 
+            onClick={() => setPage(p => Math.max(1, p - 1))} 
+            style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)', background: '#FFF', cursor: page === 1 ? 'not-allowed' : 'pointer' }}
+          >
+            Précédent
+          </button>
+          <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Page {page} sur {totalPages}</span>
+          <button 
+            disabled={page >= totalPages} 
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))} 
+            style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)', background: '#FFF', cursor: page >= totalPages ? 'not-allowed' : 'pointer' }}
+          >
+            Suivant
+          </button>
+        </div>
+      )}
       </>
       )}
 
@@ -423,122 +547,149 @@ const InboxPage = () => {
               </h2>
               <button onClick={() => setProcessMsg(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
-            <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+            
+            {/* Fields for Contact */}
+            {tab === 'contact' && (
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.nomPrenom || 'Non renseigné'}</div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Type de profil</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{extractFieldFromHtml(processMsg.bodyHtml, 'Type de client') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise (B2B)' : 'Particulier')}</div>
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom complet</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'}</div>
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Email</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.email || 'Non renseigné'}</div>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'}</div>
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Téléphone</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'}</div>
+                </div>
+                {processMsg.statusSubmitter === 'SOCIETE' && (
+                  <div>
+                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Société</label>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.raisonSocial || extractFieldFromHtml(processMsg.bodyHtml, 'Société') || 'Non renseigné'}</div>
+                  </div>
+                )}
+                <div style={{gridColumn: processMsg.statusSubmitter === 'SOCIETE' ? 'span 1' : 'span 2'}}>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Besoin</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.contact?.typeBesoin || processMsg.objet || 'Non renseigné'}</div>
                 </div>
               </div>
-              
-              {tab !== 'personnel' && tab !== 'interne' && (
+            )}
+
+            {/* Fields for Recrutement */}
+            {tab === 'recrutement' && (
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem'}}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Type de profil</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{extractFieldFromHtml(processMsg.bodyHtml, 'Type de profil') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise (B2B)' : 'Particulier')}</div>
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom complet</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'}</div>
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Email</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'}</div>
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Téléphone</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'}</div>
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Compétences clés</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}} title={processMsg.recrutement?.competenceCle || processMsg.objet || 'Non renseigné'}>{processMsg.recrutement?.competenceCle || processMsg.objet || 'Non renseigné'}</div>
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Années d'expérience</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.anneeExperience || 'Non renseigné'}</div>
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Langues</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.langue || extractFieldFromHtml(processMsg.bodyHtml, 'Langues') || 'Non renseigné'}</div>
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Lieu de résidence</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.lieuResidence || extractFieldFromHtml(processMsg.bodyHtml, 'Localisation') || 'Non renseigné'}</div>
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Disponibilité</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{extractFieldFromHtml(processMsg.bodyHtml, 'Disponibilité') || 'Non renseigné'}</div>
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Profil LinkedIn</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+                    {processMsg.recrutement?.lienLinkedin ? (
+                      <a href={processMsg.recrutement.lienLinkedin} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>
+                        {processMsg.recrutement.lienLinkedin}
+                      </a>
+                    ) : extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio') ? (
+                      <a href={extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio')} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>
+                        {extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio')}
+                      </a>
+                    ) : 'Non renseigné'}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Fields for Personnel and Interne */}
+            {(tab === 'personnel' || tab === 'interne') && (
+              <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                   <div>
-                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Téléphone</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.telephone || 'Non renseigné'}</div>
+                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom</label>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.nomPrenom || 'Non renseigné'}</div>
                   </div>
                   <div>
-                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Date de soumission</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{new Date(processMsg.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
+                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Email</label>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.email || 'Non renseigné'}</div>
                   </div>
                 </div>
-              )}
-
-              {(tab === 'contact' || tab === 'recrutement') && processMsg.statusSubmitter === 'SOCIETE' && (
-                <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom de la société</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.raisonSocial || 'Non renseigné'}</div>
-                </div>
-              )}
-
-              {tab !== 'contact' && tab !== 'recrutement' && (
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Objet</label>
                   <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.objet || 'Aucun objet'}</div>
                 </div>
-              )}
-
-              {tab === 'contact' && (
-                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                  <div>
-                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Statut</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.status}</div>
-                  </div>
-                  <div>
-                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Besoin</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.contact?.typeBesoin || processMsg.objet || 'Non renseigné'}</div>
-                  </div>
-                </div>
-              )}
-
-              {tab === 'recrutement' && (
-                <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Compétences clés</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.competenceCle || processMsg.objet || 'Non renseigné'}</div>
-                    </div>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Années d'expérience</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.anneeExperience || 'Non renseigné'}</div>
-                    </div>
-                  </div>
-                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Langues</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.langue || 'Non renseigné'}</div>
-                    </div>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Lieu de résidence</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.lieuResidence || 'Non renseigné'}</div>
-                    </div>
-                  </div>
-                  <div>
-                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Profil LinkedIn / Portfolio</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>
-                      {processMsg.recrutement?.lienLinkedin ? (
-                        <a href={processMsg.recrutement.lienLinkedin} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>
-                          {processMsg.recrutement.lienLinkedin}
-                        </a>
-                      ) : 'Non renseigné'}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Fichiers joints</label>
-                <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', display: 'flex', gap: '1rem', alignItems: 'center'}}>
-                  {(processMsg.cv || processMsg.attachment || processMsg.contact?.pieceJointe) ? (
-                    <select 
-                      onChange={(e) => { if(e.target.value) setPreviewFile(e.target.value); e.target.selectedIndex = 0; }}
-                      style={{padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', width: '100%', background: '#FFF', cursor: 'pointer'}}
-                    >
-                      <option value="">-- Sélectionner un fichier pour l'ouvrir --</option>
-                      {processMsg.cv && <option value={processMsg.cv}>{processMsg.cv}</option>}
-                      {processMsg.contact?.pieceJointe && <option value={processMsg.contact.pieceJointe}>{processMsg.contact.pieceJointe}</option>}
-                      {processMsg.attachment && String(processMsg.attachment).split(',').map(f => f.trim()).filter(f => f).map(f => (
-                         <option key={f} value={f}>{f}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    <span style={{color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.25rem'}}>Aucun fichier</span>
-                  )}
-                </div>
               </div>
+            )}
+
+            <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+              {tab !== 'recrutement' && (
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Fichiers joints</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', display: 'flex', gap: '1rem', alignItems: 'center'}}>
+                    {(processMsg.cv || processMsg.attachment || processMsg.contact?.pieceJointe) ? (
+                      <select 
+                        onChange={(e) => { if(e.target.value) setPreviewFile(e.target.value); e.target.selectedIndex = 0; }}
+                        style={{padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', width: '100%', background: '#FFF', cursor: 'pointer'}}
+                      >
+                        <option value="">-- Sélectionner un fichier pour l'ouvrir --</option>
+                        {processMsg.cv && <option value={processMsg.cv}>{processMsg.cv}</option>}
+                        {processMsg.contact?.pieceJointe && <option value={processMsg.contact.pieceJointe}>{processMsg.contact.pieceJointe}</option>}
+                        {processMsg.attachment && String(processMsg.attachment).split(',').map(f => f.trim()).filter(f => f).map(f => (
+                           <option key={f} value={f}>{f}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <span style={{color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.25rem'}}>Aucun fichier</span>
+                    )}
+                  </div>
+                </div>
+              )}
 
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>{tab === 'contact' || tab === 'recrutement' ? 'Description / Contenu' : tab === 'personnel' || tab === 'interne' ? 'Contenu du message' : 'Message / Lettre de motivation'}</label>
                 <div style={{width: '100%', padding: '0.75rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '100px', fontSize: '0.875rem', whiteSpace: 'pre-wrap', wordBreak: 'break-word'}}>
-                  {processMsg.description || processMsg.bodyText}
-                  {!processMsg.description && !processMsg.bodyText && processMsg.bodyHtml && (
+                  {processMsg.description || processMsg.bodyText || (tab === 'recrutement' ? extractBlockFromHtml(processMsg.bodyHtml, 'Message / Motivations') : (tab === 'contact' ? extractBlockFromHtml(processMsg.bodyHtml, 'Description du besoin') : null))}
+                  
+                  {/* Ne rendre le HTML complet que pour les messages personnels ou internes, ou si on a absolument rien pu extraire pour contact/recrutement */}
+                  {!processMsg.description && !processMsg.bodyText && tab !== 'recrutement' && tab !== 'contact' && processMsg.bodyHtml && (
                      <div dangerouslySetInnerHTML={{ __html: processMsg.bodyHtml }} />
                   )}
-                  {!processMsg.description && !processMsg.bodyText && !processMsg.bodyHtml && 'Aucun contenu.'}
+                  {!processMsg.description && !processMsg.bodyText && !extractBlockFromHtml(processMsg.bodyHtml, 'Message / Motivations') && !extractBlockFromHtml(processMsg.bodyHtml, 'Description du besoin') && (!processMsg.bodyHtml || tab === 'contact' || tab === 'recrutement') && 'Aucun contenu.'}
                 </div>
               </div>
             </div>
@@ -548,7 +699,7 @@ const InboxPage = () => {
               {tab === 'interne' ? (
                 <button onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Répondre</button>
               ) : (
-                <button onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une tâche</button>
+                <button onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une mission</button>
               )}
               <button onClick={() => setProcessMsg(null)} className="btn btn-primary">Marquer comme traité</button>
             </div>
@@ -561,24 +712,38 @@ const InboxPage = () => {
         <div className="fade-in" style={{width: '100%', padding: '0'}}>
           <div className="" style={{width: '100%', padding: '0'}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-              <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600}}>{tab === 'interne' ? 'Répondre au message' : 'Nouvelle Tâche'}</h3>
+              <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600}}>{tab === 'interne' ? 'Répondre au message' : 'Nouvelle Mission'}</h3>
               <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               <div>
                 <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{tab === 'interne' ? 'Objet de la réponse' : 'Objet'}</label>
-                <input type="text" value={taskSubject} onChange={(e) => setTaskSubject(e.target.value)} placeholder={tab === 'interne' ? "Sujet..." : "Sujet de la tâche..."} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+                <input type="text" value={taskSubject} onChange={(e) => setTaskSubject(e.target.value)} placeholder={tab === 'interne' ? "Sujet..." : "Sujet de la mission..."} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
               </div>
 
               <div>
                 <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{tab === 'interne' ? 'Destinataire' : 'Assigner à'}</label>
-                <select value={taskAssignedToId} onChange={(e) => setTaskAssignedToId(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
-                  <option value="">Sélectionner un collaborateur...</option>
-                  {users.map(u => (
-                    <option key={u.id} value={u.id}>{u.name} ({u.role?.name || u.role || 'SANS ROLE'})</option>
-                  ))}
-                </select>
+                <div style={{display: 'grid', gridTemplateColumns: tab === 'interne' ? '1fr' : '1fr 1fr', gap: '1rem'}}>
+                  <select value={taskAssignedToId} onChange={(e) => setTaskAssignedToId(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                    <option value="">Sélectionner un collaborateur...</option>
+                    {users.map(u => (
+                      <option key={u.id} value={u.id}>{u.name} ({u.role?.name || u.role || 'SANS ROLE'})</option>
+                    ))}
+                  </select>
+                  {tab !== 'interne' && (
+                    <div>
+                      <input 
+                        type="date" 
+                        value={taskEcheance} 
+                        onChange={(e) => setTaskEcheance(e.target.value)} 
+                        className="input-field" 
+                        style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}} 
+                        title="Échéance de la mission"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
               {tab !== 'interne' && (
@@ -636,13 +801,13 @@ const InboxPage = () => {
 
               <div>
                 <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{tab === 'interne' ? 'Message' : 'Message / Consignes'}</label>
-                <textarea value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)} placeholder={tab === 'interne' ? "Votre réponse..." : "Détails de la tâche à effectuer..."} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+                <textarea value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)} placeholder={tab === 'interne' ? "Votre réponse..." : "Détails de la mission à effectuer..."} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
               </div>
             </div>
 
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem'}}>
               <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline" disabled={isSubmitting}>Annuler</button>
-              <button onClick={handleCreateTask} disabled={isSubmitting} className="btn btn-primary">{isSubmitting ? 'Traitement...' : (tab === 'interne' ? 'Envoyer' : 'Créer la tâche')}</button>
+              <button onClick={handleCreateTask} disabled={isSubmitting} className="btn btn-primary">{isSubmitting ? 'Traitement...' : (tab === 'interne' ? 'Envoyer' : 'Créer la mission')}</button>
             </div>
           </div>
         </div>
@@ -662,22 +827,38 @@ const InboxPage = () => {
               <button onClick={() => setPreviewFile(null)} className="btn btn-outline" style={{padding: '0.25rem 0.5rem', height: 'auto'}}>Fermer</button>
             </div>
             <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E2E8F0', padding: '2rem'}}>
-              {/* Fake Document Content */}
-              <div style={{width: '100%', maxWidth: '800px', height: '100%', background: '#FFF', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', padding: '3rem', overflowY: 'auto'}}>
-                <div style={{width: '30%', height: '20px', background: '#CBD5E1', marginBottom: '2rem', borderRadius: '4px'}}></div>
-                <div style={{width: '100%', height: '12px', background: '#F1F5F9', marginBottom: '0.75rem', borderRadius: '2px'}}></div>
-                <div style={{width: '90%', height: '12px', background: '#F1F5F9', marginBottom: '0.75rem', borderRadius: '2px'}}></div>
-                <div style={{width: '95%', height: '12px', background: '#F1F5F9', marginBottom: '0.75rem', borderRadius: '2px'}}></div>
-                <div style={{width: '85%', height: '12px', background: '#F1F5F9', marginBottom: '2rem', borderRadius: '2px'}}></div>
-                <div style={{width: '40%', height: '16px', background: '#CBD5E1', marginBottom: '1.5rem', borderRadius: '4px'}}></div>
-                <div style={{width: '100%', height: '12px', background: '#F1F5F9', marginBottom: '0.75rem', borderRadius: '2px'}}></div>
-                <div style={{width: '92%', height: '12px', background: '#F1F5F9', marginBottom: '0.75rem', borderRadius: '2px'}}></div>
-                <div style={{display: 'flex', justifyContent: 'center', margin: '3rem 0'}}>
-                  <div style={{padding: '1rem 2rem', border: '2px dashed #CBD5E1', color: '#94A3B8', fontWeight: 500, borderRadius: '8px'}}>
-                    Document scanné / PDF original affiché ici ({previewFile})
+              <div style={{width: '100%', height: '100%', background: '#FFF', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden'}}>
+                {previewBlobUrl ? (
+                  <object 
+                    data={previewBlobUrl}
+                    type="application/pdf"
+                    style={{width: '100%', height: '100%', border: 'none'}}
+                  >
+                    <p>Votre navigateur ne supporte pas l'affichage direct des PDF. <a href={previewBlobUrl} target="_blank" rel="noopener noreferrer">Téléchargez-le ici</a>.</p>
+                  </object>
+                ) : (
+                  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+                    Chargement du document...
                   </div>
-                </div>
+                )}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteMsg && (
+        <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
+          <div style={{background: '#FFF', padding: '2rem', borderRadius: '8px', width: '90%', maxWidth: '400px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
+            <h3 style={{marginTop: 0, marginBottom: '1rem', color: 'var(--text-main)', fontSize: '1.25rem'}}>Confirmer la suppression</h3>
+            <p style={{color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: 1.5}}>
+              Êtes-vous sûr de vouloir supprimer le message de <strong>{deleteMsg.nomPrenom}</strong> ?<br/><br/>
+              Cette action est irréversible.
+            </p>
+            <div style={{display: 'flex', gap: '1rem', justifyContent: 'flex-end'}}>
+              <button className="btn btn-outline" onClick={() => setDeleteMsg(null)}>Annuler</button>
+              <button className="btn btn-primary" style={{backgroundColor: '#DC2626', borderColor: '#DC2626'}} onClick={confirmDelete}>Supprimer</button>
             </div>
           </div>
         </div>

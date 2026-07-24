@@ -6,6 +6,7 @@ import DashboardPage from './pages/DashboardPage';
 import DossiersPage from './pages/DossiersPage';
 import InboxPage from './pages/InboxPage';
 import TasksPage from './pages/TasksPage';
+import TachesPage from './pages/TachesPage';
 import UsersPage from './pages/UsersPage';
 import RolesPage from './pages/RolesPage';
 import AuditPage from './pages/AuditPage';
@@ -77,7 +78,7 @@ function App() {
           <div className="nav-group" style={{display: 'flex', flexDirection: 'column'}}>
             <button 
               onClick={() => setIsInboxExpanded(!isInboxExpanded)} 
-              className={`nav-item ${location.pathname.includes('/inbox') || location.pathname.includes('/tasks') ? 'active' : ''}`}
+              className={`nav-item ${location.pathname.includes('/inbox') || location.pathname.includes('/tasks') || location.pathname.includes('/taches') ? 'active' : ''}`}
               style={{justifyContent: 'space-between', width: '100%', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'inherit'}}
             >
               <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem'}}>
@@ -92,9 +93,14 @@ function App() {
                   Messages
                 </Link>
                 {['Super-administrateur', 'Responsable opérationnel', 'ADMIN', 'SUPERVISOR'].includes(user.role) && (
-                  <Link to="/tasks" className={`nav-item ${location.pathname.includes('/tasks') ? 'active' : ''}`} style={{padding: '0.5rem 1rem', fontSize: '0.9rem', minHeight: 'auto'}}>
-                    Missions
-                  </Link>
+                  <>
+                    <Link to="/tasks" className={`nav-item ${location.pathname.includes('/tasks') ? 'active' : ''}`} style={{padding: '0.5rem 1rem', fontSize: '0.9rem', minHeight: 'auto'}}>
+                      Missions
+                    </Link>
+                    <Link to="/taches" className={`nav-item ${location.pathname.includes('/taches') ? 'active' : ''}`} style={{padding: '0.5rem 1rem', fontSize: '0.9rem', minHeight: 'auto'}}>
+                      Tâches
+                    </Link>
+                  </>
                 )}
               </div>
             )}
@@ -161,6 +167,7 @@ function App() {
             <Route path="/" element={<DashboardPage />} />
             <Route path="/dossiers" element={<DossiersPage />} />
             <Route path="/inbox" element={<InboxPage />} />
+            <Route path="/taches" element={<TachesPage />} />
             <Route path="/tasks" element={<TasksPage />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/roles" element={<RolesPage />} />

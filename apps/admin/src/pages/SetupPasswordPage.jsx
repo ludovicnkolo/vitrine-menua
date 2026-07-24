@@ -16,6 +16,7 @@ const SetupPasswordPage = () => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setError("Les mots de passe ne correspondent pas.");
+      setTimeout(() => setError(null), 3000);
       return;
     }
     
@@ -34,6 +35,7 @@ const SetupPasswordPage = () => {
       
       if (!res.ok) {
         setError(data.error || "Une erreur est survenue.");
+        setTimeout(() => setError(null), 3000);
       } else {
         setSuccess(true);
         setTimeout(() => {
@@ -42,6 +44,7 @@ const SetupPasswordPage = () => {
       }
     } catch (err) {
       setError("Impossible de contacter le serveur.");
+      setTimeout(() => setError(null), 3000);
     } finally {
       setLoading(false);
     }

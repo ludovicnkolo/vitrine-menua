@@ -22,21 +22,43 @@ const DossiersPage = () => {
   const [dbDossiers, setDbDossiers] = useState([]);
   const [dbTasks, setDbTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
+  const fetchDossiers = () => {
     setIsLoading(true);
     const token = localStorage.getItem('adminToken');
     const headers = { 'Authorization': `Bearer ${token}` };
     const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+    
     Promise.all([
-      fetch(`${apiUrl}/api/crm/dossiers`, { headers }).then(res => res.json()).catch(() => []),
-      fetch(`${apiUrl}/api/crm/tasks`, { headers }).then(res => res.json()).catch(() => [])
-    ]).then(([dossiers, tasks]) => {
-      if (Array.isArray(dossiers) && dossiers.length > 0) setDbDossiers(dossiers);
-      if (Array.isArray(tasks) && tasks.length > 0) setDbTasks(tasks);
+      fetch(`${apiUrl}/api/crm/dossiers?page=${page}&limit=6&search=${encodeURIComponent(searchQuery)}&status=${filterStatus}&role=${filterRole}&origin=${filterOrigine}`, { headers }).then(res => res.json()).catch(() => ({ data: [], totalPages: 1 })),
+      fetch(`${apiUrl}/api/crm/tasks?page=1&limit=1000`, { headers }).then(res => res.json()).catch(() => ({ data: [] }))
+    ]).then(([dossiersRes, tasksRes]) => {
+      if (dossiersRes && dossiersRes.data) {
+        setDbDossiers(dossiersRes.data);
+        setTotalPages(dossiersRes.totalPages || 1);
+      } else if (Array.isArray(dossiersRes)) {
+        setDbDossiers(dossiersRes);
+        setTotalPages(1);
+      }
+      
+      if (tasksRes && tasksRes.data) {
+        setDbTasks(tasksRes.data);
+      } else if (Array.isArray(tasksRes)) {
+        setDbTasks(tasksRes);
+      }
       setIsLoading(false);
     });
-  }, []);
+  };
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, filterStatus, filterRole, filterOrigine]);
+
+  useEffect(() => {
+    fetchDossiers();
+  }, [page, filterStatus, filterRole, filterOrigine, searchQuery]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -57,18 +79,19 @@ const DossiersPage = () => {
     if (openMenuId !== id) return null;
     return (
       <div ref={menuRef} style={{
-        position: 'absolute', right: '0', top: '100%', marginTop: '0.5rem',
-        background: '#FFF', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        border: '1px solid var(--border)', minWidth: '160px', zIndex: 10, padding: '0.5rem 0'
+        position: 'absolute', right: '100%', top: '50%', transform: 'translateY(-50%)', marginRight: '0.5rem',
+        background: '#FFF', border: '1px solid #E2E8F0', borderRadius: '8px',
+        boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, width: '150px',
+        display: 'flex', flexDirection: 'column', padding: '0.25rem 0'
       }}>
-        <button className="dropdown-item" onClick={() => { setConsultDossier(dbDossiers.find(d => d.id === id)); setOpenMenuId(null); }} style={{width: '100%', textAlign: 'left', padding: '0.5rem 1rem', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-main)', fontSize: '0.875rem'}}>
-          <Eye size={16} color="var(--primary)" /> Consulter
+        <button className="dropdown-item" onClick={() => { setConsultDossier(dbDossiers.find(d => d.id === id)); setOpenMenuId(null); }}>
+          <Eye size={14} color="var(--primary)" /> Consulter
         </button>
-        <button className="dropdown-item" onClick={() => { setEditDossier(dbDossiers.find(d => d.id === id)); setOpenMenuId(null); }} style={{width: '100%', textAlign: 'left', padding: '0.5rem 1rem', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-main)', fontSize: '0.875rem'}}>
-          <Pencil size={16} color="#D97706" /> Modifier
+        <button className="dropdown-item" onClick={() => { setEditDossier(dbDossiers.find(d => d.id === id)); setOpenMenuId(null); }}>
+          <Pencil size={14} color="#D97706" /> Modifier
         </button>
-        <button className="dropdown-item" onClick={() => setOpenMenuId(null)} style={{width: '100%', textAlign: 'left', padding: '0.5rem 1rem', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--danger)', fontSize: '0.875rem'}}>
-          <Trash size={16} /> Supprimer
+        <button className="dropdown-item danger" onClick={() => setOpenMenuId(null)}>
+          <Trash size={14} /> Supprimer
         </button>
       </div>
     );
@@ -87,23 +110,23 @@ const DossiersPage = () => {
         <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem'}}>
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Nom du dossier</label>
-            <input type="text" defaultValue={consultDossier.name} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+            <input type="text" value={consultDossier.name || ''} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
           </div>
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Origine</label>
-            <input type="text" defaultValue={consultDossier.origine} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+            <input type="text" value={consultDossier.origin || 'INTERNE'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
           </div>
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Créé par</label>
-            <input type="text" defaultValue={consultDossier.createdBy?.name || 'Inconnu'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+            <input type="text" value={consultDossier.createdBy?.name || 'Inconnu'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
           </div>
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Rôle du créateur</label>
-            <input type="text" defaultValue={consultDossier.createdBy?.role?.name || '-'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+            <input type="text" value={consultDossier.createdBy?.role?.name || '-'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
           </div>
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Date de création</label>
-            <input type="text" defaultValue={new Date(consultDossier.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+            <input type="text" value={new Date(consultDossier.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
           </div>
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</label>
@@ -114,14 +137,14 @@ const DossiersPage = () => {
         </div>
 
         <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
-          <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Tâches associées</h4>
+          <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Missions associées</h4>
           {associatedTasks.length > 0 ? (
             <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem'}}>
               {associatedTasks.map(task => (
                 <div key={task.id} onClick={() => setLocalConsultTask(task)} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}>
                   <div>
-                    <strong style={{display: 'block', fontSize: '0.875rem'}}>{task.subject || `Mission ${task.reference || task.id}`}</strong>
-                    <span style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>Assigné à: {task.assignedTo} • Créé le {task.createdAt}</span>
+                    <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{task.subject || `Mission ${task.reference || task.id}`}</strong>
+                    <span style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>Assigné à: {task.assignedTo?.name || 'Non assigné'} • Créé le {task.createdAt}</span>
                   </div>
                   <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(task.status)}</span>
                 </div>
@@ -129,7 +152,7 @@ const DossiersPage = () => {
             </div>
           ) : (
              <div style={{padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px dashed var(--border)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem'}}>
-               Aucune tâche associée pour le moment.
+               Aucune mission associée pour le moment.
              </div>
           )}
         </div>
@@ -138,34 +161,34 @@ const DossiersPage = () => {
           <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <div className="fade-in" style={{background: '#FFF', width: '90%', maxWidth: '800px', borderRadius: '12px', padding: '2rem', maxHeight: '90vh', overflowY: 'auto'}}>
               <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-                <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter la Tâche: {localConsultTask.reference || localConsultTask.id}</h2>
+                <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter la Mission: {localConsultTask.reference || localConsultTask.id}</h2>
                 <button onClick={() => setLocalConsultTask(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem', marginLeft: 'auto'}}>Fermer</button>
               </div>
               
               <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
-                  <input type="text" defaultValue={localConsultTask.subject || `Mission ${localConsultTask.reference || localConsultTask.id}`} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                  <input type="text" value={localConsultTask.subject || `Mission ${localConsultTask.reference || localConsultTask.id}`} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                 </div>
 
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Créé par</label>
-                    <input type="text" defaultValue={localConsultTask.createdBy || 'Système'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                    <input type="text" value={localConsultTask.createdBy || 'Système'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                   </div>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigné à</label>
-                    <input type="text" defaultValue={localConsultTask.assignedTo} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                    <input type="text" value={localConsultTask.assignedTo?.name || 'Non assigné'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                   </div>
                 </div>
 
                 <div>
                   <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
-                  <textarea defaultValue={localConsultTask.message || 'Aucun message.'} readOnly style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'none', fontFamily: 'inherit', background: '#F8FAFC', color: 'var(--text-main)'}}></textarea>
+                  <textarea value={localConsultTask.message || 'Aucun message.'} readOnly style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'none', fontFamily: 'inherit', background: '#F8FAFC', color: 'var(--text-main)'}}></textarea>
                 </div>
 
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut de la tâche</label>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut de la mission</label>
                   <div style={{padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>
                      {getStatusBadge(localConsultTask.status)}
                   </div>
@@ -194,19 +217,19 @@ const DossiersPage = () => {
           </div>
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Origine</label>
-            <input type="text" defaultValue={editDossier.origine} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+            <input type="text" value={editDossier.origin || 'INTERNE'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
           </div>
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Créé par</label>
-            <input type="text" defaultValue={editDossier.createdBy?.name || 'Inconnu'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+            <input type="text" value={editDossier.createdBy?.name || 'Inconnu'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
           </div>
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Rôle du créateur</label>
-            <input type="text" defaultValue={editDossier.createdBy?.role?.name || '-'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+            <input type="text" value={editDossier.createdBy?.role?.name || '-'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
           </div>
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Date de création</label>
-            <input type="text" defaultValue={new Date(editDossier.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+            <input type="text" value={new Date(editDossier.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
           </div>
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</label>
@@ -217,18 +240,18 @@ const DossiersPage = () => {
         </div>
 
         <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
-          <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Gérer les tâches associées</h4>
+          <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Gérer les missions associées</h4>
           {associatedTasks.length > 0 ? (
             <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem'}}>
               {associatedTasks.map(task => (
                 <div key={task.id} onClick={() => setLocalConsultTask(task)} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}>
                   <div>
-                    <strong style={{display: 'block', fontSize: '0.875rem'}}>{task.subject || `Mission ${task.reference || task.id}`}</strong>
-                    <span style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>Assigné à: {task.assignedTo} • Créé le {task.createdAt}</span>
+                    <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{task.subject || `Mission ${task.reference || task.id}`}</strong>
+                    <span style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>Assigné à: {task.assignedTo?.name || 'Non assigné'} • Créé le {task.createdAt}</span>
                   </div>
                   <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
                     {getStatusBadge(task.status)}
-                    <button onClick={(e) => { e.stopPropagation(); alert(`Tâche ${task.id} supprimée avec succès !`); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)'}} title="Supprimer la tâche">
+                    <button onClick={(e) => { e.stopPropagation(); alert(`Mission ${task.id} supprimée avec succès !`); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)'}} title="Supprimer la mission">
                       <Trash size={18} />
                     </button>
                   </div>
@@ -237,7 +260,7 @@ const DossiersPage = () => {
             </div>
           ) : (
              <div style={{padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px dashed var(--border)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem'}}>
-               Aucune tâche associée pour le moment.
+               Aucune mission associée pour le moment.
              </div>
           )}
         </div>
@@ -251,34 +274,34 @@ const DossiersPage = () => {
           <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <div className="fade-in" style={{background: '#FFF', width: '90%', maxWidth: '800px', borderRadius: '12px', padding: '2rem', maxHeight: '90vh', overflowY: 'auto'}}>
               <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-                <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter la Tâche: {localConsultTask.reference || localConsultTask.id}</h2>
+                <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter la Mission: {localConsultTask.reference || localConsultTask.id}</h2>
                 <button onClick={() => setLocalConsultTask(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem', marginLeft: 'auto'}}>Fermer</button>
               </div>
               
               <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
-                  <input type="text" defaultValue={localConsultTask.subject || `Mission ${localConsultTask.reference || localConsultTask.id}`} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                  <input type="text" value={localConsultTask.subject || `Mission ${localConsultTask.reference || localConsultTask.id}`} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                 </div>
 
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Créé par</label>
-                    <input type="text" defaultValue={localConsultTask.createdBy || 'Système'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                    <input type="text" value={localConsultTask.createdBy || 'Système'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                   </div>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigné à</label>
-                    <input type="text" defaultValue={localConsultTask.assignedTo} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                    <input type="text" value={localConsultTask.assignedTo?.name || 'Non assigné'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                   </div>
                 </div>
 
                 <div>
                   <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
-                  <textarea defaultValue={localConsultTask.message || 'Aucun message.'} readOnly style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'none', fontFamily: 'inherit', background: '#F8FAFC', color: 'var(--text-main)'}}></textarea>
+                  <textarea value={localConsultTask.message || 'Aucun message.'} readOnly style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'none', fontFamily: 'inherit', background: '#F8FAFC', color: 'var(--text-main)'}}></textarea>
                 </div>
 
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut de la tâche</label>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut de la mission</label>
                   <div style={{padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>
                      {getStatusBadge(localConsultTask.status)}
                   </div>
@@ -355,48 +378,32 @@ const DossiersPage = () => {
               <th>Statut</th>
               <th>Rôle</th>
               <th>Date de création</th>
-              <th style={{textAlign: 'right'}}>Actions</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {dbDossiers.filter(d => {
-              let matchStatus = filterStatus === 'all' || d.status === filterStatus;
-              let matchRole = filterRole === 'all' || d.createdBy?.role?.name === filterRole;
-              let matchOrigine = filterOrigine === 'all' || d.origine === filterOrigine;
-              let matchSearch = true;
-              if (searchQuery) {
-                const q = searchQuery.toLowerCase();
-                const creatorName = d.createdBy?.name || '';
-                matchSearch = (d.id || '').toLowerCase().includes(q) || 
-                              (d.name || '').toLowerCase().includes(q) || 
-                              creatorName.toLowerCase().includes(q);
-              }
-              
-              const dOrigin = d.origin || 'INTERNE';
-              const dCreatorName = d.createdBy?.name || 'Inconnu';
-              const dCreatorRole = d.createdBy?.role || '-';
-              
-              return matchStatus && matchRole && matchOrigine && matchSearch;
-            }).map(d => {
+            {isLoading ? (
+              <tr><td colSpan="8" style={{textAlign: 'center', padding: '2rem'}}>Chargement des dossiers...</td></tr>
+            ) : dbDossiers.map(d => {
               const dOrigin = d.origin || 'INTERNE';
               const dCreatorName = d.createdBy?.name || 'Inconnu';
               const dCreatorRole = d.createdBy?.role?.name || '-';
               return (
               <tr key={d.id}>
-                <td style={{fontWeight: 500}}>{d.reference || d.id}</td>
-                <td><strong style={{display: 'block', color: 'var(--text-main)'}}>{d.name}</strong></td>
+                <td><div className="truncate-text" style={{fontWeight: 500}}>{d.reference || d.id}</div></td>
+                <td><strong className="truncate-name" style={{color: 'var(--text-main)'}}>{d.name}</strong></td>
                 <td><span style={{color: 'var(--text-muted)', fontSize: '0.875rem', textTransform: 'capitalize'}}>{dOrigin}</span></td>
-                <td>{dCreatorName}</td>
-                <td>{getStatusBadge(d.status)}</td>
+                <td><div className="truncate-text">{dCreatorName}</div></td>
+                <td><div className="truncate-text">{getStatusBadge(d.status)}</div></td>
                 <td>
                   <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 500, background: dCreatorRole === 'ADMIN' ? '#EFF6FF' : '#F5F3FF', color: dCreatorRole === 'ADMIN' ? '#2563EB' : '#7C3AED'}}>
                     {dCreatorRole}
                   </span>
                 </td>
-                <td style={{color: 'var(--text-muted)'}}>{new Date(d.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</td>
-                <td style={{textAlign: 'right'}}>
-                  <div style={{position: 'relative', display: 'inline-block'}}>
-                    <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'flex-end'}}>
+                <td style={{color: 'var(--text-muted)', whiteSpace: "nowrap", fontSize: "0.875rem"}}>{new Date(d.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</td>
+                <td>
+                  <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
+                    <div style={{position: 'relative'}}>
                       <button onClick={(e) => toggleMenu(e, d.id)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)'}} title="Options">
                         <MoreVertical size={18} />
                       </button>
@@ -410,6 +417,26 @@ const DossiersPage = () => {
           </tbody>
         </table>
       </div>
+
+      {totalPages > 1 && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '1rem', alignItems: 'center' }}>
+          <button 
+            disabled={page === 1} 
+            onClick={() => setPage(p => Math.max(1, p - 1))} 
+            style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)', background: '#FFF', cursor: page === 1 ? 'not-allowed' : 'pointer' }}
+          >
+            Précédent
+          </button>
+          <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Page {page} sur {totalPages}</span>
+          <button 
+            disabled={page >= totalPages} 
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))} 
+            style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)', background: '#FFF', cursor: page >= totalPages ? 'not-allowed' : 'pointer' }}
+          >
+            Suivant
+          </button>
+        </div>
+      )}
     </div>
   )
 }

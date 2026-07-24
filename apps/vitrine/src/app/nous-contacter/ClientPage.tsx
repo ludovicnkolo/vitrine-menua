@@ -58,11 +58,13 @@ export default function NousContacter() {
       if (fileField && fileField.size > 0) {
         if (fileField.type !== "application/pdf") {
           setFileError("Seuls les fichiers au format PDF sont acceptés.");
+          setTimeout(() => setFileError(null), 3000);
           setIsSubmitting(false);
           return;
         }
         if (fileField.size > 5 * 1024 * 1024) { // Limite de 5 Mo
           setFileError("Le fichier PDF est trop volumineux (maximum 5 Mo).");
+          setTimeout(() => setFileError(null), 3000);
           setIsSubmitting(false);
           return;
         }
@@ -80,12 +82,14 @@ export default function NousContacter() {
         (e.target as HTMLFormElement).reset();
         setSelectedFileName(null);
         setFileError(null);
-        setTimeout(() => setSubmitStatus(null), 2000);
+        setTimeout(() => setSubmitStatus(null), 3000);
       } else {
         setSubmitStatus({ type: "error", message: data.error || "Une erreur s'est produite." });
+        setTimeout(() => setSubmitStatus(null), 3000);
       }
     } catch (error) {
       setSubmitStatus({ type: "error", message: "Impossible d'envoyer le formulaire." });
+      setTimeout(() => setSubmitStatus(null), 3000);
     } finally {
       setIsSubmitting(false);
     }

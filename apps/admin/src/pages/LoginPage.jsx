@@ -28,10 +28,12 @@ const LoginPage = ({ onLogin }) => {
         onLogin(data.token, data.user);
       } else {
         setError(data.error || 'Identifiants invalides');
+        setTimeout(() => setError(''), 3000);
       }
     } catch (err) {
       console.error(err);
       setError('Erreur réseau ou serveur: ' + err.message);
+      setTimeout(() => setError(''), 3000);
     }
     setLoading(false);
   };

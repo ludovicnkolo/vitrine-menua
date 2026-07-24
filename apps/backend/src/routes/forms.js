@@ -59,8 +59,8 @@ const transporter = nodemailer.createTransport({
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
-  logger: true,
-  debug: true
+  logger: false,
+  debug: false
 });
 
 // --- EMAIL PREMIUM TEMPLATE UTILS ---
@@ -138,6 +138,7 @@ router.post('/contact', upload.single('file'), async (req, res) => {
     const parsedNeeds = Array.isArray(needs) ? needs : (needs ? [needs] : []);
 
     let attachments = [];
+    let savedFilename = null;
     if (req.file) {
       if (req.file.mimetype !== 'application/pdf') {
         return res.status(400).json({ success: false, error: "Le fichier doit obligatoirement être au format PDF." });
@@ -153,6 +154,29 @@ router.post('/contact', upload.single('file'), async (req, res) => {
         filename: req.file.originalname,
         content: req.file.buffer,
       });
+
+      // Sauvegarde physique du fichier pour le CRM
+      try {
+        let destPath;
+        const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
+        try {
+          destPath = require('path').join(rootPath, 'formulaires');
+          require('fs').mkdirSync(destPath, { recursive: true });
+        } catch (dirErr) {
+          // Fallback to local storage if permission denied
+          destPath = require('path').join(__dirname, '../../../storage/formulaires');
+          require('fs').mkdirSync(destPath, { recursive: true });
+        }
+        
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const safeOriginalName = req.file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+        savedFilename = uniqueSuffix + '-' + safeOriginalName;
+        
+        require('fs').writeFileSync(require('path').join(destPath, savedFilename), req.file.buffer);
+      } catch (err) {
+        console.error("Impossible de sauvegarder le fichier :", err);
+        savedFilename = req.file.originalname; // ultimate fallback
+      }
     }
 
     const typeText = clientType === 'company' ? 'Entreprise / Organisation' : 'Particulier';
@@ -188,7 +212,9 @@ router.post('/contact', upload.single('file'), async (req, res) => {
     }
     
     try {
-      await transporter.sendMail(mailOptions);
+      transporter.sendMail(mailOptions).catch(err => {
+        console.error("Erreur lors de l'envoi de l'email en arrière-plan (Contact):", err);
+      });
     } catch (smtpError) {
       console.error(`Erreur SMTP détaillée: Code ${smtpError.responseCode || smtpError.code || 'Inconnu'}`, smtpError);
       throw smtpError;
@@ -213,7 +239,7 @@ router.post('/contact', upload.single('file'), async (req, res) => {
           contact: {
             create: {
               typeBesoin: parsedNeeds.join(', '),
-              pieceJointe: req.file ? req.file.originalname : null
+              pieceJointe: savedFilename
             }
           }
         }
@@ -284,7 +310,9 @@ router.post('/join', upload.none(), async (req, res) => {
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
       throw new Error("Configuration SMTP manquante dans l'environnement.");
     }
-    await transporter.sendMail(mailOptions);
+    transporter.sendMail(mailOptions).catch(err => {
+      console.error("Erreur lors de l'envoi de l'email en arrière-plan (Recrutement):", err);
+    });
 
     // Enregistrement dans le CRM
     try {

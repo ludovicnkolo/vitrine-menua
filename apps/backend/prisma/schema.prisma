@@ -45,6 +45,8 @@ model Utilisateur {
 
   assignedMissions Mission[]     @relation("AssignedMissions")
   createdMissions  Mission[]     @relation("CreatedMissions")
+  assignedTaches   Tache[]       @relation("AssignedTaches")
+  createdTaches    Tache[]       @relation("CreatedTaches")
   assignedFormulaires Formulaire[]  @relation("AssignedFormulaires")
   createdDossiers  Dossier[]
   documents        Document[]
@@ -175,7 +177,7 @@ model Mission {
   createdBy    Utilisateur    @relation("CreatedMissions", fields: [createdById], references: [id])
 
   description String
-  deadline    DateTime?
+  echeance    DateTime?
   status      String    @default("TO_ASSIGN")
 
   createdAt DateTime @default(now())
@@ -187,6 +189,28 @@ model Mission {
 
   documents Document[]
   messagePersonnels MessagePersonnel[]
+  taches    Tache[]
+}
+
+// ─── TACHES (Liées aux Missions) ─────────────────────────────────────────────
+model Tache {
+  id           String  @id @default(uuid())
+  reference    String? @unique
+  missionId    String
+  mission      Mission @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  
+  assignedToId String?
+  assignedTo   Utilisateur?   @relation("AssignedTaches", fields: [assignedToId], references: [id])
+  
+  createdById  String
+  createdBy    Utilisateur    @relation("CreatedTaches", fields: [createdById], references: [id])
+
+  description String
+  echeance    DateTime?
+  status      String    @default("TO_ASSIGN")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // ─── DOCUMENTS GLOBAUX ────────────────────────────────────────────────────────
@@ -231,6 +255,7 @@ model MessagePersonnel {
   id          String   @id @default(uuid())
   messageId   String   @unique
   type        String   @default("PERSONNEL") 
+  subType     String   @default("Indéfini")
   status      String   @default("NOUVEAU")
   nomPrenom   String
   email       String

@@ -54,12 +54,12 @@ const DashboardPage = () => {
           <tbody>
             {[].slice(0, 4).map(d => (
               <tr key={d.id}>
-                <td style={{fontWeight: 500}}>{d.id}</td>
-                <td>{d.client}</td>
-                <td>{d.type}</td>
-                <td>{getStatusBadge(d.status)}</td>
-                <td>{getPriorityBadge(d.priority)}</td>
-                <td style={{color: 'var(--text-muted)'}}>{d.date}</td>
+                <td><div className="truncate-text" style={{fontWeight: 500}}>{d.id}</div></td>
+                <td><div className="truncate-text">{d.client}</div></td>
+                <td><div className="truncate-text">{d.type}</div></td>
+                <td><div className="truncate-text">{getStatusBadge(d.status)}</div></td>
+                <td><div className="truncate-text">{getPriorityBadge(d.priority)}</div></td>
+                <td><div className="truncate-text" style={{color: 'var(--text-muted)'}}>{d.date}</div></td>
                 <td>
                   <button className="btn btn-outline" style={{padding: '0.25rem 0.5rem', fontSize: '0.75rem'}}>Consulter</button>
                 </td>

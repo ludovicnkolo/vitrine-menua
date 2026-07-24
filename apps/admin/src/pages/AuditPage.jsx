@@ -4,7 +4,11 @@ import { Shield, Clock, Search, AlertCircle, FileText, User } from 'lucide-react
 export default function AuditPage() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setRawError] = useState(null);
+  const setError = (msg) => {
+    setRawError(msg);
+    if (msg) setTimeout(() => setRawError(null), 3000);
+  };
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {

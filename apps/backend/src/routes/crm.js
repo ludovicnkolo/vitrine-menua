@@ -2,7 +2,8 @@ const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const imaps = require('imap-simple');
 const simpleParser = require('mailparser').simpleParser;
-
+const fs = require('fs');
+const path = require('path');
 const prisma = new PrismaClient();
 const router = express.Router();
 
@@ -10,12 +11,12 @@ const { authenticateJWT } = require('../middlewares/auth');
 
 const imapConfig = {
   imap: {
-    user: 'contact@menuaconsulting.com',
-    password: 'Menua2026?consulting',
-    host: 'ssl0.ovh.net',
-    port: 993,
+    user: process.env.IMAP_USER || 'contact@menuaconsulting.com',
+    password: process.env.IMAP_PASSWORD || '',
+    host: process.env.IMAP_HOST || 'ssl0.ovh.net',
+    port: process.env.IMAP_PORT ? parseInt(process.env.IMAP_PORT) : 993,
     tls: true,
-    authTimeout: 3000,
+    authTimeout: 10000,
     tlsOptions: { rejectUnauthorized: false }
   }
 };
@@ -272,14 +273,45 @@ router.delete('/clients/:id', async (req, res) => {
 // --- DOSSIERS ---
 router.get('/dossiers', async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const { search, status, role, origin } = req.query;
+
+    const where = {};
+    if (status && status !== 'all') where.status = status;
+    if (origin && origin !== 'all') where.origin = origin;
+    if (role && role !== 'all') {
+      where.createdBy = { role: { name: role } };
+    }
+    
+    if (search) {
+      const s = search.toLowerCase();
+      where.OR = [
+        { id: { contains: s, mode: 'insensitive' } },
+        { reference: { contains: s, mode: 'insensitive' } },
+        { name: { contains: s, mode: 'insensitive' } },
+        { createdBy: { name: { contains: s, mode: 'insensitive' } } }
+      ];
+    }
+    
+    const total = await prisma.dossier.count({ where });
     const dossiers = await prisma.dossier.findMany({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
       include: { 
         missions: true, 
         client: true, 
         createdBy: { include: { role: true } }
       }
     });
-    res.json(dossiers);
+    res.json({
+      data: dossiers,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit) || 1
+    });
   } catch (error) {
     console.error(error); console.error(error); res.status(500).json({ error: error.message });
   }
@@ -384,7 +416,30 @@ router.delete('/dossiers/:id', async (req, res) => {
 // --- TÂCHES ---
 router.get('/tasks', async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const { search, status } = req.query;
+
+    const where = { parentMissionId: null }; // Only parent tasks
+    if (status && status !== 'all') where.status = status;
+    if (search) {
+      const s = search.toLowerCase();
+      where.OR = [
+        { reference: { contains: s, mode: 'insensitive' } },
+        { dossier: { name: { contains: s, mode: 'insensitive' } } },
+        { dossier: { reference: { contains: s, mode: 'insensitive' } } },
+        { dossierId: { contains: s, mode: 'insensitive' } },
+        { createdBy: { name: { contains: s, mode: 'insensitive' } } },
+        { assignedTo: { name: { contains: s, mode: 'insensitive' } } }
+      ];
+    }
+    
+    const total = await prisma.mission.count({ where });
     const tasks = await prisma.mission.findMany({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
       include: { 
         dossier: true, 
         assignedTo: { include: { role: true } }, 
@@ -394,7 +449,12 @@ router.get('/tasks', async (req, res) => {
         }
       }
     });
-    res.json(tasks);
+    res.json({
+      data: tasks,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit) || 1
+    });
   } catch (error) {
     console.error(error); console.error(error); res.status(500).json({ error: error.message });
   }
@@ -402,7 +462,7 @@ router.get('/tasks', async (req, res) => {
 
 router.post('/tasks', async (req, res) => {
   try {
-    const { dossierId, description, assignedToId, parentMissionId } = req.body;
+    const { dossierId, description, assignedToId, parentMissionId, echeance } = req.body;
     let creatorId = req.user.id;
     
     // Handle the bypass login 'MASTER-ADMIN' which doesn't exist in DB
@@ -431,6 +491,7 @@ router.post('/tasks', async (req, res) => {
         assignedToId,
         createdById: creatorId,
         status: 'TO_ASSIGN',
+        echeance: echeance ? new Date(echeance) : null,
         ...(parentMissionId && { parentMissionId })
       }
     });
@@ -464,32 +525,186 @@ router.delete('/tasks/:id', async (req, res) => {
   }
 });
 
+
+// ─── TACHES (Nouvelle table) ──────────────────────────────────────────────────
+router.get('/taches', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const { search, status } = req.query;
+
+    const where = {};
+    if (status && status !== 'all') where.status = status;
+    if (search) {
+      const s = search.toLowerCase();
+      where.OR = [
+        { reference: { contains: s, mode: 'insensitive' } },
+        { mission: { reference: { contains: s, mode: 'insensitive' } } },
+        { missionId: { contains: s, mode: 'insensitive' } },
+        { createdBy: { name: { contains: s, mode: 'insensitive' } } },
+        { assignedTo: { name: { contains: s, mode: 'insensitive' } } }
+      ];
+    }
+
+    const total = await prisma.tache.count({ where });
+    const taches = await prisma.tache.findMany({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        mission: true,
+        assignedTo: { select: { id: true, name: true, role: true } },
+        createdBy: { select: { id: true, name: true } }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json({
+      data: taches,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit) || 1
+    });
+  } catch (error) {
+    console.error(error); res.status(500).json({ error: 'Erreur lors de la récupération des tâches.' });
+  }
+});
+
+router.post('/taches', async (req, res) => {
+  try {
+    const { missionId, description, assignedToId, echeance } = req.body;
+    let creatorId = req.user.id;
+    
+    if (creatorId === 'MASTER-ADMIN') {
+      let masterUser = await prisma.utilisateur.findUnique({ where: { email: 'contact@menuaconsulting.com' } });
+      if (!masterUser) masterUser = await prisma.utilisateur.findFirst();
+      creatorId = masterUser?.id || creatorId;
+    }
+
+    const lastTache = await prisma.tache.findFirst({
+      orderBy: { createdAt: 'desc' },
+      select: { reference: true }
+    });
+    let nextNum = 1;
+    if (lastTache && lastTache.reference) {
+      const match = lastTache.reference.match(/TCH-(\d+)/);
+      if (match) nextNum = parseInt(match[1], 10) + 1;
+    }
+    const reference = `TCH-${String(nextNum).padStart(2, '0')}`;
+
+    const tache = await prisma.tache.create({
+      data: {
+        reference,
+        description,
+        missionId,
+        assignedToId,
+        createdById: creatorId,
+        status: 'TO_ASSIGN',
+        echeance: echeance ? new Date(echeance) : null
+      }
+    });
+
+    res.json(tache);
+  } catch (error) {
+    console.error(error); res.status(500).json({ error: 'Erreur lors de la création de la tâche.' });
+  }
+});
+
+router.patch('/taches/:id', async (req, res) => {
+  try {
+    const tache = await prisma.tache.update({
+      where: { id: req.params.id },
+      data: req.body
+    });
+    res.json(tache);
+  } catch (error) {
+    console.error(error); res.status(500).json({ error: 'Erreur de mise à jour.' });
+  }
+});
+
+router.delete('/taches/:id', async (req, res) => {
+  try {
+    await prisma.tache.delete({
+      where: { id: req.params.id }
+    });
+    res.json({ success: true, message: 'Tâche supprimée' });
+  } catch (error) {
+    console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression.' });
+  }
+});
 // --- MESSAGES (FORMULAIRES) ---
 router.get('/messages', async (req, res) => {
   try {
-    const fromForms = await prisma.formulaire.findMany({
-      include: { contact: true, recrutement: true },
-      orderBy: { createdAt: 'desc' }
-    });
-    const fromEmails = await prisma.messagePersonnel.findMany({
-      orderBy: { createdAt: 'desc' }
-    });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const tabType = (req.query.type || 'CONTACT').toUpperCase(); 
+    const statusFilter = req.query.status || 'all'; 
+    const search = req.query.search || '';
 
-    const combined = [
-      ...fromForms.map(f => ({
+    let messages = [];
+    let total = 0;
+
+    if (tabType === 'CONTACT' || tabType === 'RECRUTEMENT') {
+      let where = { type: tabType };
+      if (statusFilter === 'traite') {
+         where.status = { in: ['TERMINE', 'ARCHIVE'] };
+      } else if (statusFilter === 'nontraite') {
+         where.status = { notIn: ['TERMINE', 'ARCHIVE'] };
+      }
+      if (search) {
+         where.OR = [
+           { nomPrenom: { contains: search } },
+           { email: { contains: search } }
+         ];
+      }
+      
+      total = await prisma.formulaire.count({ where });
+      const records = await prisma.formulaire.findMany({
+         where,
+         orderBy: { createdAt: 'desc' },
+         skip: (page - 1) * limit,
+         take: limit,
+         include: { contact: true, recrutement: true }
+      });
+      
+      messages = records.map(f => ({
         id: f.id,
         type: f.type,
         status: f.status,
         statusSubmitter: f.statusSubmitter,
         nomPrenom: f.nomPrenom,
         email: f.email,
+        telephone: f.telephone,
+        raisonSocial: f.raisonSocial,
+        description: f.description,
         objet: f.objet || (f.type === 'CONTACT' ? 'Demande de contact' : 'Candidature'),
         bodyHtml: f.bodyHtml,
         createdAt: f.createdAt,
         contact: f.contact,
         recrutement: f.recrutement
-      })),
-      ...fromEmails.map(e => ({
+      }));
+    } else {
+      let where = { type: tabType };
+      if (statusFilter === 'traite') {
+         where.status = { in: ['TERMINE', 'ARCHIVE'] };
+      } else if (statusFilter === 'nontraite') {
+         where.status = { notIn: ['TERMINE', 'ARCHIVE'] };
+      }
+      if (search) {
+         where.OR = [
+           { nomPrenom: { contains: search } },
+           { email: { contains: search } }
+         ];
+      }
+
+      total = await prisma.messagePersonnel.count({ where });
+      const records = await prisma.messagePersonnel.findMany({
+         where,
+         orderBy: { createdAt: 'desc' },
+         skip: (page - 1) * limit,
+         take: limit
+      });
+
+      messages = records.map(e => ({
         id: e.id,
         type: e.type,
         status: e.status,
@@ -497,11 +712,18 @@ router.get('/messages', async (req, res) => {
         email: e.email,
         objet: e.objet,
         bodyHtml: e.bodyText || e.bodyHtml,
+        subType: e.subType || 'Indéfini',
+        attachment: e.attachment,
         createdAt: e.createdAt
-      }))
-    ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      }));
+    }
 
-    res.json(combined);
+    res.json({
+      data: messages,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit) || 1
+    });
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la récupération des messages.' });
   }
@@ -544,15 +766,41 @@ router.post('/messages/sync-imap', async (req, res) => {
       
       const existing = await prisma.messagePersonnel.findUnique({ where: { messageId } });
       if (!existing) {
+        let attachmentNames = [];
+        if (parsed.attachments && parsed.attachments.length > 0) {
+          let destPath;
+          const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
+          try {
+            destPath = path.join(rootPath, 'formulaires');
+            fs.mkdirSync(destPath, { recursive: true });
+          } catch (dirErr) {
+            destPath = path.join(__dirname, '../../../storage/formulaires');
+            fs.mkdirSync(destPath, { recursive: true });
+          }
+          for (const att of parsed.attachments) {
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            const safeName = att.filename ? att.filename.replace(/[^a-zA-Z0-9.-]/g, '_') : 'piece_jointe';
+            const savedFilename = uniqueSuffix + '-' + safeName;
+            try {
+              fs.writeFileSync(path.join(destPath, savedFilename), att.content);
+              attachmentNames.push(savedFilename);
+            } catch (fsErr) {
+              console.error("Erreur de sauvegarde de la pièce jointe IMAP:", fsErr);
+            }
+          }
+        }
+
         await prisma.messagePersonnel.create({
           data: {
             messageId,
             type: 'PERSONNEL',
+            subType: 'Indéfini',
             status: 'NOUVEAU',
             nomPrenom,
             email,
             objet: subject,
             bodyText,
+            attachment: attachmentNames.length > 0 ? attachmentNames.join(',') : null,
             createdAt: date,
             receivedAt: date
           }
@@ -567,6 +815,26 @@ router.post('/messages/sync-imap', async (req, res) => {
     console.error("Erreur IMAP Sync:", error);
     if (connection) connection.end();
     res.status(500).json({ error: 'Erreur de synchronisation IMAP' });
+  }
+});
+
+
+router.delete('/messages/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const form = await prisma.formulaire.findUnique({ where: { id } });
+    if (form) {
+      await prisma.formulaire.delete({ where: { id } });
+      return res.json({ success: true, message: 'Message supprimé' });
+    }
+    const msg = await prisma.messagePersonnel.findUnique({ where: { id } });
+    if (msg) {
+      await prisma.messagePersonnel.delete({ where: { id } });
+      return res.json({ success: true, message: 'Message supprimé' });
+    }
+    res.status(404).json({ error: 'Message non trouvé' });
+  } catch (error) {
+    console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression' });
   }
 });
 

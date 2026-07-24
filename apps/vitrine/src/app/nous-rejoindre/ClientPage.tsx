@@ -28,12 +28,14 @@ export default function NousRejoindre() {
       if (res.ok && data.success) {
         setSubmitStatus({ type: "success", message: data.message || "Votre candidature a été envoyée avec succès." });
         (e.target as HTMLFormElement).reset();
-        setTimeout(() => setSubmitStatus(null), 2000);
+        setTimeout(() => setSubmitStatus(null), 3000);
       } else {
         setSubmitStatus({ type: "error", message: data.error || "Une erreur s'est produite." });
+        setTimeout(() => setSubmitStatus(null), 3000);
       }
     } catch (error) {
       setSubmitStatus({ type: "error", message: "Impossible d'envoyer la candidature." });
+      setTimeout(() => setSubmitStatus(null), 3000);
     } finally {
       setIsSubmitting(false);
     }

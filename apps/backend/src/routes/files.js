@@ -99,16 +99,23 @@ router.get('/view/:bucket/:filename', authenticateJWT, (req, res) => {
   }
 
   const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
-  const filePath = path.join(rootPath, bucket, filename);
+  let filePath = path.join(rootPath, bucket, filename);
 
   if (!fs.existsSync(filePath)) {
-    return res.status(404).json({ success: false, error: 'Fichier introuvable.' });
+    // Check fallback local storage
+    const fallbackPath = path.join(__dirname, '../../../storage', bucket, filename);
+    if (fs.existsSync(fallbackPath)) {
+      filePath = fallbackPath;
+    } else {
+      return res.status(404).json({ success: false, error: 'Fichier introuvable.' });
+    }
   }
 
   const options = {
     headers: {
-      'Content-Security-Policy': "default-src 'self'; base-uri 'self'; font-src 'self' https: data:; form-action 'self'; img-src 'self' data:; object-src 'self'; script-src 'self'; script-src-attr 'none'; style-src 'self' https: 'unsafe-inline'; upgrade-insecure-requests",
-      'X-Download-Options': 'noopen' // We override this to just allow it
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'inline',
+      'Content-Security-Policy': "default-src 'self' 'unsafe-inline'; object-src 'self' blob:; frame-src 'self' blob:;"
     }
   };
 

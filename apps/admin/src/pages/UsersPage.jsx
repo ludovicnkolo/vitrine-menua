@@ -25,7 +25,11 @@ const UsersPage = () => {
   const [users, setUsers] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [errorMsg, setRawErrorMsg] = useState(null);
+  const setErrorMsg = (msg) => {
+    setRawErrorMsg(msg);
+    if (msg) setTimeout(() => setRawErrorMsg(null), 3000);
+  };
   const [newUser, setNewUser] = useState({ name: '', email: '', telephone: '', roleId: '', lieuResidence: '', experienceCle: '', status: 'Actif', langues: '', profile: '' });
   const [newClient, setNewClient] = useState({ name: '', email: '', telephone: '', contactSecondaire: '', secteurActivite: '', description: '', siret: '', raisonSociale: '', emailEntreprise: '', telephoneEntreprise: '' });
   const [selectedFile, setSelectedFile] = useState(null);
@@ -837,16 +841,16 @@ const UsersPage = () => {
               {users.map(u => (
                 <tr key={u.id}>
                   <td>
-                    <strong style={{display: 'block'}}>{u.name}</strong>
-                    <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{u.email}</span>
+                    <strong className="truncate-name" style={{}}>{u.name}</strong>
+                    <span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{u.email}</span>
                   </td>
-                  <td>{getRoleBadge(u.role?.name || 'Non défini')}</td>
+                  <td><div className="truncate-text">{getRoleBadge(u.role?.name || 'Non défini')}</div></td>
                   <td>
                     <span style={{color: !u.isBlocked ? 'var(--success)' : 'var(--danger)', fontWeight: 500}}>
                       {!u.isBlocked ? 'Actif' : 'Inactif'}
                     </span>
                   </td>
-                  <td style={{color: 'var(--text-muted)'}}>{u.createdAt ? new Date(u.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'}) : 'Jamais connecté'}</td>
+                  <td style={{color: 'var(--text-muted)', fontSize: '0.875rem', whiteSpace: 'nowrap'}}>{u.createdAt ? new Date(u.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'}) : 'Jamais connecté'}</td>
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                       <div style={{position: 'relative'}}>
@@ -876,8 +880,8 @@ const UsersPage = () => {
               {clients.map(c => (
                 <tr key={c.id}>
                   <td>
-                    <strong style={{display: 'block'}}>{c.name}</strong>
-                    <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>{c.email}</span>
+                    <strong className="truncate-name" style={{}}>{c.name}</strong>
+                    <span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{c.email}</span>
                   </td>
                   <td>
                     <span style={{

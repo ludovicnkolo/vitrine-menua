@@ -1,3 +1,4 @@
+require('dotenv').config();
 const imaps = require('imap-simple');
 const simpleParser = require('mailparser').simpleParser;
 const { PrismaClient } = require('@prisma/client');
@@ -5,10 +6,10 @@ const prisma = new PrismaClient();
 
 const config = {
   imap: {
-    user: 'contact@menuaconsulting.com',
-    password: 'Menua2026?consulting',
-    host: 'ssl0.ovh.net',
-    port: 993,
+    user: process.env.IMAP_USER,
+    password: process.env.IMAP_PASSWORD,
+    host: process.env.IMAP_HOST || 'ssl0.ovh.net',
+    port: process.env.IMAP_PORT ? parseInt(process.env.IMAP_PORT, 10) : 993,
     tls: true,
     authTimeout: 3000,
     tlsOptions: { rejectUnauthorized: false }
@@ -32,10 +33,10 @@ async function main() {
   
   const messages = await connection.search(searchCriteria, fetchOptions);
   
-  const last10 = messages.slice(-10);
-  console.log(`Traitement des ${last10.length} derniers messages...`);
+  const messagesToProcess = messages;
+  console.log(`Traitement de ${messagesToProcess.length} messages...`);
   
-  for (const item of last10) {
+  for (const item of messagesToProcess) {
     const all = item.parts.find(p => p.which === '');
     const uid = item.attributes.uid;
     

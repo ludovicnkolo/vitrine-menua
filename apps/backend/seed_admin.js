@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
@@ -54,16 +55,18 @@ async function main() {
         }
     }
 
-    const hashedPassword = await bcrypt.hash('menua@1234', 10);
+    const adminEmail = process.env.MASTER_ADMIN_EMAIL || 'admin@menua.local';
+    const adminPass = process.env.MASTER_ADMIN_PASSWORD || 'ChangeMe123!';
+    const hashedPassword = await bcrypt.hash(adminPass, 10);
     
-    let u = await prisma.utilisateur.findUnique({ where: { email: 'contact@menuaconsulting.com' } });
+    let u = await prisma.utilisateur.findUnique({ where: { email: adminEmail } });
     if (!u) {
         u = await prisma.utilisateur.create({
             data: { 
-                email: 'contact@menuaconsulting.com', 
+                email: adminEmail, 
                 password: hashedPassword, 
-                name: 'Rosette Fouelefack', 
-                telephone: '+33 6 86 87 79 14',
+                name: process.env.MASTER_ADMIN_NAME || 'Super Administrateur', 
+                telephone: process.env.MASTER_ADMIN_PHONE || '',
                 roleId: adminRole.id 
             }
         });
@@ -72,8 +75,8 @@ async function main() {
         await prisma.utilisateur.update({
             where: { id: u.id },
             data: { 
-                name: 'Rosette Fouelefack', 
-                telephone: '+33 6 86 87 79 14',
+                name: process.env.MASTER_ADMIN_NAME || 'Super Administrateur', 
+                telephone: process.env.MASTER_ADMIN_PHONE || '',
                 roleId: adminRole.id, 
                 password: hashedPassword 
             }

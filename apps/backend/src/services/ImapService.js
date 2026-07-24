@@ -5,10 +5,10 @@ const prisma = new PrismaClient();
 
 const IMAP_CONFIG = {
   imap: {
-    user: process.env.IMAP_USER || 'contact@menua.com', // Le mail public
-    password: process.env.IMAP_PASSWORD || 'password123',
-    host: process.env.IMAP_HOST || 'imap.ovh.net', // OVH par défaut
-    port: process.env.IMAP_PORT ? parseInt(process.env.IMAP_PORT) : 993,
+    user: process.env.IMAP_USER,
+    password: process.env.IMAP_PASSWORD,
+    host: process.env.IMAP_HOST || 'imap.ovh.net',
+    port: process.env.IMAP_PORT ? parseInt(process.env.IMAP_PORT, 10) : 993,
     tls: true,
     authTimeout: 10000,
     tlsOptions: { rejectUnauthorized: false }

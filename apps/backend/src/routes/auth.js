@@ -21,8 +21,8 @@ router.post('/login', async (req, res) => {
     console.log(`[LOGIN ATTEMPT] Email: "${email}" | Password: "${password}"`);
 
     // Utilisateur maître (Bypass direct de secours)
-    const MASTER_EMAIL = process.env.MASTER_ADMIN_EMAIL || 'contact@menuaconsulting.com';
-    const MASTER_PASS = process.env.MASTER_ADMIN_PASSWORD || 'menua@1234';
+    const MASTER_EMAIL = process.env.MASTER_ADMIN_EMAIL;
+    const MASTER_PASS = process.env.MASTER_ADMIN_PASSWORD;
 
     if (email === MASTER_EMAIL && password === MASTER_PASS) {
       const token = jwt.sign(
@@ -100,18 +100,20 @@ router.post('/setup', async (req, res) => {
       return res.status(403).json({ error: 'Le système est déjà initialisé.' });
     }
 
-    const hashedPassword = await bcrypt.hash('Admin@2026', 10);
+    const defaultEmail = process.env.MASTER_ADMIN_EMAIL || 'admin@menua.local';
+    const defaultPass = process.env.MASTER_ADMIN_PASSWORD || 'ChangeMe123!';
+    const hashedPassword = await bcrypt.hash(defaultPass, 10);
     const roleRecord = await prisma.role.findUnique({ where: { name: 'ADMIN' } });
     const user = await prisma.utilisateur.create({
       data: {
-        email: 'admin@menuaconsulting.com',
+        email: defaultEmail,
         password: hashedPassword,
         name: 'Super Administrateur',
         roleId: roleRecord.id
       }
     });
 
-    res.json({ success: true, message: 'Administrateur créé avec succès', email: user.email, password: 'Admin@2026' });
+    res.json({ success: true, message: 'Administrateur créé avec succès', email: user.email, password: defaultPass });
   } catch (error) {
     res.status(500).json({ error: 'Erreur lors de l\'initialisation.' });
   }

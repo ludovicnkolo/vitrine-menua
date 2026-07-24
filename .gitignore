@@ -41,3 +41,9 @@ yarn-error.log*
 next-env.d.ts
 DEPLOIEMENT_VPS.md
 *.md
+
+# Database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3

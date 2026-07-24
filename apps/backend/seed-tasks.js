@@ -3,21 +3,41 @@ const prisma = new PrismaClient();
 
 async function seed() {
   try {
-    const defaultUser = await prisma.user.findFirst();
-    const dossier = await prisma.dossier.create({
-      data: { name: 'Dossier Test UI', description: 'Test', priority: 'HAUTE', status: 'OUVERT' }
-    });
+    const defaultUser = await prisma.utilisateur.findFirst();
     
-    await prisma.task.create({
-      data: {
-        description: 'Test Tâche UI',
-        dossierId: dossier.id,
-        assignedToId: defaultUser ? defaultUser.id : null,
-        createdById: defaultUser ? defaultUser.id : 'temp-id',
-        status: 'NEW'
+    if (!defaultUser) {
+      console.log("Aucun utilisateur trouvé. Exécutez seed_admin.js d'abord.");
+      return;
+    }
+
+    const dossier = await prisma.dossier.create({
+      data: { 
+        name: 'Dossier Test UI', 
+        description: 'Test', 
+        priority: 'HAUTE', 
+        status: 'OUVERT' 
       }
     });
-    console.log("Seeded successfully");
+
+    const mission = await prisma.mission.create({
+      data: {
+        description: 'Mission de Test UI',
+        dossierId: dossier.id,
+        createdById: defaultUser.id,
+        status: 'A_ASSIGNER'
+      }
+    });
+    
+    await prisma.tache.create({
+      data: {
+        description: 'Test Tâche UI',
+        missionId: mission.id,
+        assignedToId: defaultUser.id,
+        createdById: defaultUser.id,
+        status: 'TO_ASSIGN'
+      }
+    });
+    console.log("Seeded tasks successfully");
   } catch (err) {
     console.error("Error:", err);
   } finally {

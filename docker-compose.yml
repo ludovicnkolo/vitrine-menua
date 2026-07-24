@@ -21,7 +21,11 @@ services:
       - menua_network
 
   vitrine:
-    build: ./apps/vitrine
+    build:
+      context: ./apps/vitrine
+      args:
+        - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     container_name: menua_vitrine
     logging:
       driver: "json-file"
@@ -38,7 +42,10 @@ services:
       - menua_network
 
   admin:
-    build: ./apps/admin
+    build:
+      context: ./apps/admin
+      args:
+        - VITE_API_URL=${VITE_API_URL}
     container_name: menua_admin
     logging:
       driver: "json-file"

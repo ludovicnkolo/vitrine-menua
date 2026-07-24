@@ -128,7 +128,8 @@ router.post('/users', async (req, res) => {
         },
       });
       
-      const setupUrl = `http://localhost:5173/setup-password?token=${token}`; // TODO: use real origin
+      const origin = req.headers.origin || process.env.VITE_API_URL || 'http://localhost:5173';
+      const setupUrl = `${origin}/setup-password?token=${token}`;
       
       await transporter.sendMail({
         from: process.env.SMTP_FROM || 'contact@menuaconsulting.com',

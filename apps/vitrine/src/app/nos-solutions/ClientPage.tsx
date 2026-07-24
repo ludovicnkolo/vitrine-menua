@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight } from "lucide-react";

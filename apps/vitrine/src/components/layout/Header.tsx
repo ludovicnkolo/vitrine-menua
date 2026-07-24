@@ -1,7 +1,8 @@
 "use client";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { useState, useEffect } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import { useLanguage } from "@/components/LanguageProvider";
 
 type MenuKey = "nous-connaitre" | "vos-besoins" | "nos-solutions" | "pourquoi-menua" | "actualites";
@@ -12,6 +13,22 @@ export default function Header() {
   const [openMobileSubmenu, setOpenMobileSubmenu] = useState<MenuKey | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const { lang, setLang, t } = useLanguage();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLanguageSwitch = (newLang: "FR" | "EN") => {
+    if (lang === newLang) return;
+    setLang(newLang);
+    const prefix = newLang === "EN" ? "/en" : "/fr";
+    let newPath = pathname;
+    if (newPath.startsWith("/en")) newPath = newPath.replace("/en", "");
+    if (newPath.startsWith("/fr")) newPath = newPath.replace("/fr", "");
+    if (!newPath.startsWith("/")) newPath = "/" + newPath;
+    
+    // Si c'est la racine, on va sur le préfixe, sinon préfixe + chemin
+    const finalPath = newPath === "/" ? prefix : `${prefix}${newPath}`;
+    router.push(finalPath);
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -198,7 +215,7 @@ export default function Header() {
           <div className="flex-1 flex justify-center items-center" onMouseEnter={() => setOpenMenu(null)}>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setLang("FR")}
+                onClick={() => handleLanguageSwitch("FR")}
                 className={`flex items-center gap-1.5 text-[0.75rem] font-bold transition-all tracking-wider ${
                   lang === "FR" ? "text-white opacity-100" : "text-white/50 hover:text-white"
                 }`}
@@ -207,7 +224,7 @@ export default function Header() {
               </button>
               <span className="text-[#D8DCE8] text-xs mx-1">|</span>
               <button
-                onClick={() => setLang("EN")}
+                onClick={() => handleLanguageSwitch("EN")}
                 className={`flex items-center gap-1.5 text-[0.75rem] font-bold transition-all tracking-wider ${
                   lang === "EN" ? "text-white opacity-100" : "text-white/50 hover:text-white"
                 }`}
@@ -307,7 +324,7 @@ export default function Header() {
           <div className="px-6 pb-6 pt-3 border-t border-[#e8e1d7]/50 space-y-3">
             <div className="flex items-center gap-3">
               <button
-                onClick={() => setLang("FR")}
+                onClick={() => handleLanguageSwitch("FR")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
                   lang === "FR" ? "border-[#141824] text-[#141824]" : "border-[#e8e1d7] text-[#6e7891]"
                 }`}
@@ -315,7 +332,7 @@ export default function Header() {
                 <FlagFR /> FR
               </button>
               <button
-                onClick={() => setLang("EN")}
+                onClick={() => handleLanguageSwitch("EN")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
                   lang === "EN" ? "border-[#141824] text-[#141824]" : "border-[#e8e1d7] text-[#6e7891]"
                 }`}

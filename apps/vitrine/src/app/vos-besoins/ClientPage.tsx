@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight, ChevronRight } from "lucide-react";
@@ -211,10 +211,10 @@ export default function VosBesoinsPage() {
             {/* Disclaimer block with emphasis */}
             <div className="p-6 border-l-4 border-[#e8e1d7] bg-white/5 relative">
               <p className="text-[#e8e1d7] font-medium text-[0.95rem] leading-relaxed">
-                {t(
-                  "Et intervient en support des équipes habilitées du client. Les validations réglementaires, arbitrages et décisions finales restent de la responsabilité du client ou de ses professionnels autorisés.",
-                  "And operates in support of the client's authorized teams. Regulatory validations, arbitrations and final decisions remain the responsibility of the client or its authorized professionals."
-                )}
+                {formatBrand(t(
+                  "MENUA CONSULTING intervient en support des équipes habilitées du client. Les validations réglementaires, arbitrages et décisions finales restent de la responsabilité du client ou de ses professionnels autorisés.",
+                  "MENUA CONSULTING intervenes in support of the client's authorized teams. Regulatory validations, arbitrations and final decisions remain the responsibility of the client or its authorized professionals."
+                ))}
               </p>
             </div>
           </div>
@@ -273,8 +273,8 @@ export default function VosBesoinsPage() {
             </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
               {formatBrand(t(
-                "MENUA CONSULTING intervient en support opérationnel des équipes comptables, administratives et data dans le traitement, la fiabilisation, le classement et la structuration des informations nécessaires au suivi comptable, administratif et opérationnel.",
-                "MENUA CONSULTING acts as operational support for accounting, administrative and data teams in the processing, reliability, classification and structuring of information necessary for accounting, administrative and operational monitoring."
+                "MENUA CONSULTING intervient en support opérationnel des équipes comptables, administratives et data dans le traitement, la fiabilisation, le classement et la structuration des informations nécessaires au suivi comptable, administratif et opérationnel. MENUA CONSULTING ne se substitue pas à un expert-comptable lorsque son intervention est requise. Les travaux préparés restent soumis aux contrôles et validations du client ou de son expert-comptable.",
+                "MENUA CONSULTING provides operational support to accounting, administrative and data teams in the processing, reliability, classification and structuring of information necessary for accounting, administrative and operational monitoring. MENUA CONSULTING does not substitute for a chartered accountant when their intervention is required. The prepared work remains subject to the controls and validations of the client or their chartered accountant."
               ))}
             </p>
             <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>
@@ -313,8 +313,8 @@ export default function VosBesoinsPage() {
             </h3>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
               {formatBrand(t(
-                "MENUA CONSULTING accompagne les cabinets de gestion de patrimoine, family offices et structures patrimoniales dans le traitement, la préparation et le suivi administratif des dossiers clients.",
-                "MENUA CONSULTING supports wealth management firms, family offices and wealth structures in the processing, preparation and administrative monitoring of client files."
+                "MENUA CONSULTING accompagne les cabinets de gestion de patrimoine, family offices et structures patrimoniales dans le traitement, la préparation et le suivi administratif des dossiers clients. Les conseils, recommandations, arbitrages et validations demeurent sous la responsabilité des professionnels habilités du client. MENUA CONSULTING intervient uniquement sur la préparation et le suivi opérationnels des dossiers.",
+                "MENUA CONSULTING supports wealth management firms, family offices and wealth structures in the processing, preparation and administrative monitoring of client files. Advice, recommendations, arbitrations and validations remain under the responsibility of the client's authorized professionals. MENUA CONSULTING intervenes solely on the operational preparation and monitoring of files."
               ))}
             </p>
             <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Besoins couverts :", "Needs covered:")}</h4>

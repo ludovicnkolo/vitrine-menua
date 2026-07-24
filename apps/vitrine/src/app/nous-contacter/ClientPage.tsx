@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { ArrowRight, MapPin, Mail, Phone, Building2, UploadCloud, CheckCircle2, AlertCircle } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
@@ -116,8 +116,8 @@ export default function NousContacter() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
             <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
-                "Présentez votre besoin opérationnel, nous vous répondons avec une première analyse et une proposition adaptée.",
-                "Present your operational need, we will answer you with a first analysis and a suitable proposal."
+                "Présentez-nous votre besoin opérationnel. Nous reviendrons vers vous afin de préciser le périmètre, les priorités et le dispositif envisageable.",
+                "Present us with your operational need. We will get back to you to specify the scope, priorities and possible setup."
               )}
             </p>
           </div>
@@ -325,8 +325,8 @@ export default function NousContacter() {
                 </label>
                 <p className="text-[0.85rem] text-[#6e7891] font-light mt-4 leading-relaxed">
                   {formatBrand(t(
-                    "Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin de répondre à votre demande et d'en assurer le suivi. Elles peuvent être conservées jusqu'à 3 ans après le dernier échange. Vous disposez de droits sur vos données personnelles et pouvez les exercer à l'adresse : contact@menuaconsulting.com. Pour en savoir plus, consultez notre",
-                    "The information collected via this form is processed by MENUA CONSULTING in order to respond to your request and ensure its follow-up. They can be kept for up to 3 years after the last exchange. You have rights over your personal data and can exercise them at the address: contact@menuaconsulting.com. To learn more, consult our"
+                    "Les informations recueillies sont traitées par MENUA CONSULTING afin de répondre à votre demande et d’en assurer le suivi. Les champs signalés par un astérisque sont obligatoires. Pour connaître les destinataires, les durées de conservation et exercer vos droits, consultez notre",
+                    "The collected information is processed by MENUA CONSULTING in order to respond to your request and ensure its follow-up. Fields marked with an asterisk are mandatory. To know the recipients, the retention periods and to exercise your rights, consult our"
                   ))}{" "}<Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("Politique de confidentialité", "Privacy Policy")}</Link>.
                 </p>
               </div>

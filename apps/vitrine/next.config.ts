@@ -29,6 +29,22 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
+        source: '/fr',
+        destination: '/',
+      },
+      {
+        source: '/fr/:path*',
+        destination: '/:path*',
+      },
+      {
+        source: '/en',
+        destination: '/',
+      },
+      {
+        source: '/en/:path*',
+        destination: '/:path*',
+      },
+      {
         source: '/api/:path*',
         destination: process.env.NODE_ENV === 'production' ? 'http://backend:4000/api/:path*' : 'http://localhost:4000/api/:path*',
       },

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight, ChevronRight } from "lucide-react";
@@ -29,7 +29,7 @@ export default function NousConnaitrePage() {
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
             <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
-              {t("Un cabinet opérationnel, structuré pour accompagner les entreprises dans l’exécution fiable de leurs fonctions back ", "An operational firm, structured to support companies in the reliable execution of their back ")}<span className="font-sans font-medium">&amp;</span>{t(" middle office.", " middle office.")}
+              {t("Une organisation opérationnelle structurée pour accompagner les entreprises dans l’exécution fiable de leurs fonctions back et middle office.", "An operational organization structured to support companies in the reliable execution of their back and middle office functions.")}
             </p>
             <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
               <Link href="#notre-approche" className="inline-flex items-center gap-3 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
@@ -96,8 +96,8 @@ export default function NousConnaitrePage() {
                 </p>
                 <p>
                   {t(
-                    "Notre intervention s’adresse notamment aux équipes financières, comptables, conformité, data et réglementées, ainsi qu’aux cabinets de gestion de patrimoine à la recherche d’un support opérationnel structuré et fiable.",
-                    "Our intervention is particularly aimed at financial, accounting, compliance, data and regulated teams, as well as wealth management firms looking for structured and reliable operational support."
+                    "Notre intervention s’adresse notamment aux équipes financières, comptables, patrimoniales, IT, data et réglementées, ainsi qu’aux cabinets de gestion de patrimoine à la recherche d’un support opérationnel structuré et fiable.",
+                    "Our intervention is particularly aimed at financial, accounting, wealth, IT, data and regulated teams, as well as wealth management firms looking for structured and reliable operational support."
                   )}
                 </p>
                 <p>
@@ -332,8 +332,8 @@ export default function NousConnaitrePage() {
                 </p>
                 <p className="text-[#e8e1d7] font-bold leading-relaxed">
                   {formatBrand(t(
-                    "MENUA CONSULTING s’appuie sur une organisation agile, composée d’une direction opérationnelle en France et de collaborateurs ou partenaires externalisés mobilisés selon les besoins des clients.",
-                    "MENUA CONSULTING relies on an agile organization, composed of an operational management in France and outsourced employees or partners mobilized according to clients' needs."
+                    "MENUA CONSULTING s’appuie sur une organisation agile, pilotée depuis la France et complétée, selon les besoins des missions, par des collaborateurs ou partenaires sélectionnés et encadrés.",
+                    "MENUA CONSULTING relies on an agile organization, steered from France and complemented, depending on the needs of the missions, by selected and supervised employees or partners."
                   ))}
                 </p>
               </div>

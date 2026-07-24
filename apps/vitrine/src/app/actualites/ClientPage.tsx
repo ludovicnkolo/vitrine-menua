@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
@@ -11,10 +11,12 @@ export default function ActualitesPage() {
 
   const filters = [
     { key: "TOUTES LES ACTUALITÉS", fr: "TOUTES LES ACTUALITÉS", en: "ALL NEWS" },
-    { key: "FINANCIÈRES", fr: "FINANCIÈRES", en: "FINANCIAL" },
-    { key: "COMPTABLES", fr: "COMPTABLES", en: "ACCOUNTING" },
-    { key: "PATRIMONIALES", fr: "PATRIMONIALES", en: "WEALTH" },
-    { key: "RÉGLEMENTAIRES", fr: "RÉGLEMENTAIRES", en: "REGULATORY" }
+    { key: "FINANCE ET COMPTABILITÉ", fr: "FINANCE ET COMPTABILITÉ", en: "FINANCE AND ACCOUNTING" },
+    { key: "BACK ET MIDDLE OFFICE", fr: "BACK ET MIDDLE OFFICE", en: "BACK AND MIDDLE OFFICE" },
+    { key: "DATA ET REPORTING", fr: "DATA ET REPORTING", en: "DATA AND REPORTING" },
+    { key: "RISQUES, CONFORMITÉ ET KYC", fr: "RISQUES, CONFORMITÉ ET KYC", en: "RISK, COMPLIANCE AND KYC" },
+    { key: "GESTION DE PATRIMOINE", fr: "GESTION DE PATRIMOINE", en: "WEALTH MANAGEMENT" },
+    { key: "ORGANISATION ET EXTERNALISATION", fr: "ORGANISATION ET EXTERNALISATION", en: "ORGANIZATION AND OUTSOURCING" }
   ];
 
   return (
@@ -38,8 +40,8 @@ export default function ActualitesPage() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
             <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
               {formatBrand(t(
-                "MENUA CONSULTING assure une veille régulière sur les évolutions financières, comptables, patrimoniales, réglementaires et opérationnelles afin d'éclairer ses clients sur les enjeux qui impactent leurs activités.",
-                "MENUA CONSULTING ensures a regular watch on financial, accounting, wealth, regulatory and operational developments to enlighten its clients on the issues that impact their activities."
+                "Analyses, repères et publications consacrés aux enjeux opérationnels des entreprises, cabinets et organisations.",
+                "Analyses, benchmarks and publications dedicated to the operational challenges of companies, firms and organizations."
               ))}
             </p>
             <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
@@ -74,31 +76,26 @@ export default function ActualitesPage() {
             <h2 className="text-white text-[1.2rem] font-bold uppercase tracking-widest mb-3">
               {t("À la une", "Featured")}
             </h2>
-            <p className="text-[#e5e9f0] text-[1.05rem] font-light max-w-3xl">
-              {t("Sélection d'articles, de contenus et d'analyses mis en avant sur les sujets les plus récents ou les plus structurants pour vos activités.", "Selection of articles, content and analyzes highlighted on the most recent or structuring subjects for your activities.")}
-            </p>
+
           </div>
 
-          {/* Featured Card */}
+          {/* Featured Card (Placeholder) */}
           <div className="bg-white border border-[#e8e1d7] flex flex-col md:flex-row w-full group hover:border-[#141824] transition-all duration-300">
-            <div className="w-full md:w-1/2 h-[250px] md:h-auto overflow-hidden">
-              <img src="/img/accueil-actus.webp" alt="À la une" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            <div className="w-full md:w-1/2 h-[250px] md:h-auto overflow-hidden bg-[#f5f7fa] flex items-center justify-center">
+               <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-xl">MENUA CONSULTING</span>
             </div>
             
             <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white group-hover:bg-[#141824] transition-colors duration-300">
-              <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
-                {t("ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES", "FINANCIAL AND REGULATORY NEWS")} 
-              </p>
-              <h3 className="text-[#141824] group-hover:text-white text-[1.3rem] md:text-[1.5rem] font-bold mb-6 leading-snug uppercase transition-colors duration-300">
-                {t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news")}
-              </h3>
-              <p className="text-[#6e7891] group-hover:text-white/70 text-[1rem] font-light leading-relaxed mb-8 transition-colors duration-300">
-                {t("Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations : finance, comptabilité, gestion de patrimoine, conformité, réglementation et pratiques opérationnelles.", "Analysis and decoding of developments likely to have an impact on your organizations: finance, accounting, wealth management, compliance, regulation and operational practices.")}
+              <p className="text-[#6e7891] group-hover:text-white/70 text-[1.1rem] font-light leading-relaxed mb-8 transition-colors duration-300">
+                {formatBrand(t(
+                  "Cette rubrique accueillera prochainement les analyses et publications de MENUA CONSULTING consacrées aux évolutions opérationnelles, aux méthodes de travail, à la fiabilisation des processus et à la continuité d’activité.",
+                  "This section will soon host MENUA CONSULTING's analyses and publications dedicated to operational developments, working methods, process reliability and business continuity."
+                ))}
               </p>
               
               <div className="flex justify-end mt-auto">
                 <a href="#" className="inline-flex items-center gap-2 text-[#141824] group-hover:text-white font-bold tracking-wider uppercase text-[0.7rem] transition-colors duration-300">
-                  {t("LIRE L'ARTICLE", "READ ARTICLE")} 
+                  {t("DÉCOUVRIR LA RUBRIQUE", "DISCOVER THE SECTION")} 
                   <span className="w-6 h-[1px] bg-[#141824] group-hover:bg-white group-hover:w-10 transition-all duration-300"></span>
                   <ChevronRight size={14} className="-ml-2 group-hover:text-white transition-colors duration-300" />
                 </a>
@@ -115,7 +112,7 @@ export default function ActualitesPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
               <h3 className="text-[#141824] text-[1.4rem] font-semibold uppercase tracking-wider flex items-center gap-4">
                 <span className="w-8 h-[2px] bg-[#141824]"></span>
-                {t("ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES", "FINANCIAL AND REGULATORY NEWS")}
+                {t("RUBRIQUES", "CATEGORIES")}
               </h3>
             </div>
 
@@ -139,91 +136,7 @@ export default function ActualitesPage() {
             {/* Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-              {/* Card 1 */}
-              <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:bg-[#141824] hover:border-[#141824] transition-all duration-300">
-                <div className="w-full h-[220px] overflow-hidden mb-6">
-                  <img src="/img/accueil-actus.webp" alt="Actualités" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                </div>
-                <div className="flex flex-col flex-grow">
-                  <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
-                    {t("FINANCE ET COMPTABILITÉ", "FINANCE AND ACCOUNTING")} 
-                  </p>
-                  <h4 className="text-[#141824] group-hover:text-white text-[1.1rem] font-bold mb-4 leading-snug uppercase transition-colors duration-300">
-                    {t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news")}
-                  </h4>
-                  <p className="text-[#6e7891] group-hover:text-white/70 text-[0.95rem] font-light leading-relaxed mb-8 flex-grow transition-colors duration-300">
-                    {t(
-                      "Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations : finance, comptabilité, gestion de patrimoine, conformité, réglementation et pratiques opérationnelles.",
-                      "Analysis and decoding of developments likely to have an impact on your organizations: finance, accounting, wealth management, compliance, regulation and operational practices."
-                    )}
-                  </p>
-                  <div className="flex justify-end mt-auto">
-                    <a href="#" className="inline-flex items-center gap-2 text-[#141824] group-hover:text-white font-bold tracking-wider uppercase text-[0.7rem] transition-colors duration-300">
-                      {t("LIRE L'ARTICLE", "READ ARTICLE")} 
-                      <span className="w-6 h-[1px] bg-[#141824] group-hover:bg-white group-hover:w-10 transition-all duration-300"></span>
-                      <ChevronRight size={14} className="-ml-2 group-hover:text-white transition-colors duration-300" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 2 */}
-              <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:bg-[#141824] hover:border-[#141824] transition-all duration-300">
-                <div className="w-full h-[220px] overflow-hidden mb-6">
-                  <img src="/img/accueil-actus.webp" alt="Publications" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                </div>
-                <div className="flex flex-col flex-grow">
-                  <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
-                    {t("PUBLICATIONS", "PUBLICATIONS")} 
-                  </p>
-                  <h4 className="text-[#141824] group-hover:text-white text-[1.1rem] font-bold mb-4 leading-snug uppercase transition-colors duration-300">
-                    {t("Nos publications", "Our publications")}
-                  </h4>
-                  <p className="text-[#6e7891] group-hover:text-white/70 text-[0.95rem] font-light leading-relaxed mb-8 flex-grow transition-colors duration-300">
-                    {formatBrand(t(
-                      "Retrouvez les prises de parole, analyses et contenus publiés par MENUA CONSULTING sur les enjeux opérationnels, réglementaires et sectoriels.",
-                      "Find the speeches, analyzes and content published by MENUA CONSULTING on operational, regulatory and sector issues."
-                    ))}
-                  </p>
-                  <div className="flex justify-end mt-auto">
-                    <a href="#" className="text-[#141824] group-hover:text-white text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 transition-colors duration-300">
-                      {t("LIRE L'ARTICLE", "READ ARTICLE")} 
-                      <span className="w-5 h-5 rounded-full border border-[#141824] group-hover:border-white flex items-center justify-center transition-colors duration-300">
-                        <ArrowRight size={10} />
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 3 (Placeholder for grid symmetry) */}
-              <div className="bg-white border border-[#e8e1d7] p-5 flex flex-col group hover:bg-[#141824] hover:border-[#141824] transition-all duration-300">
-                <div className="w-full h-[220px] overflow-hidden mb-6">
-                  <img src="/img/besoins-intro.webp" alt="Veille" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                </div>
-                <div className="flex flex-col flex-grow">
-                  <p className="text-[#141824] group-hover:text-[#e8e1d7] text-[0.65rem] font-bold tracking-widest uppercase mb-4 transition-colors duration-300">
-                    {t("RÉGLEMENTATION", "REGULATION")} 
-                  </p>
-                  <h4 className="text-[#141824] group-hover:text-white text-[1.1rem] font-bold mb-4 leading-snug uppercase transition-colors duration-300">
-                    {t("Veille réglementaire et conformité", "Regulatory watch and compliance")}
-                  </h4>
-                  <p className="text-[#6e7891] group-hover:text-white/70 text-[0.95rem] font-light leading-relaxed mb-8 flex-grow transition-colors duration-300">
-                    {t(
-                      "Restez informés des dernières évolutions réglementaires et adaptez vos processus opérationnels.",
-                      "Stay informed of the latest regulatory developments and adapt your operational processes."
-                    )}
-                  </p>
-                  <div className="flex justify-end mt-auto">
-                    <a href="#" className="text-[#141824] group-hover:text-white text-[0.65rem] font-bold tracking-widest uppercase flex items-center gap-2 transition-colors duration-300">
-                      {t("LIRE L'ARTICLE", "READ ARTICLE")} 
-                      <span className="w-5 h-5 rounded-full border border-[#141824] group-hover:border-white flex items-center justify-center transition-colors duration-300">
-                        <ArrowRight size={10} />
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              </div>
+              {/* Cards will be dynamically injected here via API/admin route */}
 
             </div>
           </div>

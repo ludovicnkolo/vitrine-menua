@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight } from "lucide-react";
@@ -119,14 +119,14 @@ export default function PourquoiMenuaPage() {
             </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
               {formatBrand(t(
-                "En externalisant vos fonctions back et middle office avec MENUA CONSULTING, vous gagnez du temps, améliorez votre productivité, renforcez votre fiabilité et soutenez durablement votre chiffre d’affaires.",
-                "By outsourcing your back and middle office functions with MENUA CONSULTING, you save time, improve your productivity, strengthen your reliability and sustainably support your turnover."
+                "En externalisant certaines fonctions back et middle office avec MENUA CONSULTING, vos équipes peuvent mieux répartir leur charge, renforcer la continuité opérationnelle et structurer le suivi des dossiers.",
+                "By outsourcing certain back and middle office functions with MENUA CONSULTING, your teams can better distribute their workload, strengthen operational continuity and structure the monitoring of files."
               ))}
             </p>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
               {t(
-                "Cette organisation vous permet de réduire vos charges internes, de mieux absorber vos volumes d’activité et de fidéliser durablement votre clientèle.",
-                "This organization allows you to reduce your internal costs, better absorb your business volumes and sustainably build customer loyalty."
+                "Cette organisation contribue à la maîtrise des traitements, à la qualité de service et à la fidélisation des clients.",
+                "This organization contributes to the mastery of processing, service quality and customer loyalty."
               )}
             </p>
             <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Bénéfices clés :", "Key benefits:")}</h4>

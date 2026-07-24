@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { ArrowRight, Globe, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
@@ -33,8 +33,8 @@ export default function Home() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
             <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
               {t(
-                "Nous sécurisons l’exécution de vos opérations back et middle office afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
-                "We secure the execution of your back and middle office operations to allow your teams to focus on strategic decisions."
+                "Nous sécurisons l’exécution de vos opérations afin de permettre à vos équipes de se concentrer sur leurs décisions stratégiques, leurs validations et leur relation client.",
+                "We secure the execution of your operations to allow your teams to focus on their strategic decisions, their validations and their client relationship."
               )}
             </p>
             <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
@@ -96,8 +96,8 @@ export default function Home() {
 
                 <p>
                   {formatBrand(t(
-                    "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, data et réglementées pour sécuriser et renforcer l’exécution des fonctions back et middle office.",
-                    "MENUA CONSULTING supports financial, accounting, wealth, data and regulated teams to secure and strengthen the execution of back and middle office functions."
+                    "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT, data et réglementées pour sécuriser et renforcer l’exécution de leurs fonctions back et middle office. Nous prenons en charge des opérations clairement définies, selon les procédures, les outils, les priorités et les circuits de validation de chaque client.",
+                    "MENUA CONSULTING supports financial, accounting, wealth, IT, data and regulated teams to secure and strengthen the execution of their back and middle office functions. We take charge of clearly defined operations, according to the procedures, tools, priorities and validation circuits of each client."
                   ))}
                 </p>
               </div>
@@ -125,8 +125,8 @@ export default function Home() {
             </h2>
             <p className="text-[1.1rem] text-[#e5e9f0] font-light leading-relaxed mb-8">
               {formatBrand(t(
-                "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants.",
-                "MENUA CONSULTING supports organizations facing demanding operational execution challenges."
+                "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants, avec une approche structurée, traçable et adaptée à leurs contraintes.",
+                "MENUA CONSULTING supports organizations facing demanding operational execution challenges, with a structured, traceable approach adapted to their constraints."
               ))}
             </p>
           </div>
@@ -209,8 +209,8 @@ export default function Home() {
               </div>
               <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-10">
                 {formatBrand(t(
-                  "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT et réglementées sur l'ensemble des fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
-                  "MENUA CONSULTING supports financial, accounting, wealth, IT and regulated teams on all back and middle office functions requiring rigor, continuity and operational reliability."
+                  "Un appui opérationnel adapté aux équipes financières, comptables, patrimoniales, IT, data et réglementées, pour traiter les opérations qui exigent rigueur, continuité et fiabilité.",
+                  "Operational support tailored to financial, accounting, wealth, IT, data and regulated teams, to process operations that require rigor, continuity and reliability."
                 ))}
               </p>
 
@@ -255,8 +255,8 @@ export default function Home() {
             </h2>
             <p className="text-[#141824] text-[1.1rem] font-light leading-relaxed mb-8">
               {t(
-                "Nous concevons des dispositifs d'externalisation sur mesure, adaptés à vos contraintes opérationnelles d'urgence, de durée, de volume et d'organisation.",
-                "We design tailor-made outsourcing systems, adapted to your operational constraints of urgency, duration, volume and organization."
+                "Nous concevons des dispositifs d’externalisation sur mesure, adaptés à vos contraintes d’urgence, de durée, de volume et d’organisation.",
+                "We design tailor-made outsourcing systems, adapted to your constraints of urgency, duration, volume and organization."
               )}
             </p>
           </div>
@@ -312,64 +312,42 @@ export default function Home() {
           
           {/* Header */}
           <div className="text-center mb-14">
-            <div className="inline-block text-left">
+            <div className="inline-block text-left max-w-2xl">
               <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
               <h2 className="text-[1.3rem] md:text-[1.5rem] text-white font-bold mb-4 uppercase tracking-wider">
                 {t("Actualités et Veille", "News and Monitoring")}
               </h2>
+              <p className="text-[1.1rem] text-[#e5e9f0] font-light leading-relaxed">
+                {t(
+                  "Retrouvez nos analyses, publications et contenus consacrés aux enjeux opérationnels, financiers, comptables, patrimoniaux, data et réglementaires.",
+                  "Find our analyses, publications and content dedicated to operational, financial, accounting, wealth, data and regulatory issues."
+                )}
+              </p>
             </div>
 
           </div>
 
-          {/* 3 Article Cards */}
+          {/* 3 Article Cards (Placeholder) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {[
-              {
-                category: t("Finance et Comptabilité", "Finance and Accounting"),
-                img: "/img/accueil-actus.webp",
-                fallback: "/img/besoins-meeting.webp",
-                title: t("Actualités financières, comptables, patrimoniales et réglementaires", "Financial, accounting, wealth and regulatory news"),
-                desc: t("Analyse et décryptage des évolutions susceptibles d'avoir un impact sur vos organisations.", "Analysis of developments likely to impact your organizations."),
-                href: "/actualites",
-              },
-              {
-                category: t("Finance", "Finance"),
-                img: "/img/accueil-actus.webp",
-                fallback: "/img/intro-office.webp",
-                title: t("Nos publications et prises de parole", "Our publications and statements"),
-                desc: t("Retrouvez les analyses et contenus publiés par MENUA CONSULTING sur les enjeux opérationnels et sectoriels.", "Find analyses and content published by MENUA CONSULTING on operational and sector issues."),
-                href: "/actualites",
-              },
-              {
-                category: t("Réglementation", "Regulation"),
-                img: "/img/accueil-actus.webp",
-                fallback: "/img/hero-paris.webp",
-                title: t("Veille réglementaire et conformité", "Regulatory watch and compliance"),
-                desc: t("Restez informés des dernières évolutions réglementaires et adaptez vos processus opérationnels.", "Stay informed of the latest regulatory developments and adapt your operational processes."),
-                href: "/actualites",
-              },
-            ].map((card, i) => (
-              <Link key={i} href={card.href} className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300">
-                {/* Image */}
-                <div className="h-[180px] overflow-hidden">
-                  <img
-                    src={card.img}
-                    alt={card.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => { e.currentTarget.src = card.fallback; }}
-                  />
-                </div>
-                {/* Content */}
-                <div className="flex flex-col flex-grow p-6">
-                  <span className="text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[#e8e1d7] mb-3">{card.category}</span>
-                  <h3 className="text-white font-semibold text-[1rem] leading-snug mb-3 group-hover:text-[#e8e1d7] transition-colors">{card.title}</h3>
-                  <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4">{card.desc}</p>
-                  <span className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
-                    {t("Lire l'article", "Read article")} <ArrowRight size={14} />
-                  </span>
-                </div>
-              </Link>
-            ))}
+            {/* Articles will be dynamically injected here. Displaying a single placeholder for now. */}
+            <Link href="/actualites" className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300 md:col-span-1 md:col-start-2">
+              {/* Image Placeholder */}
+              <div className="h-[180px] overflow-hidden bg-[#1a1f2e] flex items-center justify-center">
+                <span className="text-[#e8e1d7]/20 font-bold tracking-widest uppercase text-lg">MENUA CONSULTING</span>
+              </div>
+              {/* Content */}
+              <div className="flex flex-col flex-grow p-6">
+                <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4">
+                  {formatBrand(t(
+                    "Cette rubrique accueillera prochainement les analyses et publications de MENUA CONSULTING consacrées aux évolutions opérationnelles, aux méthodes de travail, à la fiabilisation des processus et à la continuité d’activité.",
+                    "This section will soon host MENUA CONSULTING's analyses and publications dedicated to operational developments, working methods, process reliability and business continuity."
+                  ))}
+                </p>
+                <span className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
+                  {t("Découvrir la rubrique", "Discover the section")} <ArrowRight size={14} />
+                </span>
+              </div>
+            </Link>
           </div>
 
           {/* CTA */}

@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 

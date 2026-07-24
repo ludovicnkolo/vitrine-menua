@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
@@ -62,10 +62,10 @@ export default function NousRejoindre() {
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
             <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
-              {formatBrand(t(
-                "MENUA CONSULTING recrute des profils opérationnels autonomes, rigoureux, fiables et organisés, capables d'intervenir à distance sur des fonctions back et middle office, en France comme à l'international.",
-                "MENUA CONSULTING is recruiting autonomous, rigorous, reliable and organized operational profiles, capable of intervening remotely on back and middle office functions, in France and internationally."
-              ))}
+              {t(
+                "Rejoignez une organisation exigeante, orientée vers l’exécution, la qualité des livrables et la continuité opérationnelle.",
+                "Join a demanding organization, oriented towards execution, quality of deliverables and operational continuity."
+              )}
             </p>
           </div>
         </div>
@@ -101,24 +101,18 @@ export default function NousRejoindre() {
             </div>
 
             <div className="bg-[#141824] text-white p-10 shadow-xl border-t-4 border-t-[#e8e1d7]">
-              <p className="text-[#e5e9f0] text-[1.05rem] font-light leading-relaxed mb-6">
-                {formatBrand(t(
-                  "MENUA CONSULTING recherche des profils opérationnels autonomes, rigoureux, fiables et organisés, capables d'intervenir à distance sur des fonctions back et middle office, principalement dans un cadre international.",
-                  "MENUA CONSULTING is looking for autonomous, rigorous, reliable and organized operational profiles, capable of intervening remotely on back and middle office functions, mainly in an international context."
-                ))}
-              </p>
               <p className="text-[#e5e9f0] text-[1.05rem] font-light leading-relaxed">
-                {t(
-                  "Les profils recherchés doivent être orientés exécution, à l'aise avec le travail à distance et capables de respecter des procédures, des délais et des standards de qualité élevés.",
-                  "The profiles sought must be execution-oriented, comfortable with remote work and capable of respecting procedures, deadlines and high quality standards."
-                )}
+                {formatBrand(t(
+                  "MENUA CONSULTING recherche des profils autonomes, rigoureux, fiables et organisés, capables d’intervenir à distance sur des fonctions back et middle office, en français ou en anglais, dans le respect de procédures, de délais et de standards de qualité élevés.",
+                  "MENUA CONSULTING is looking for autonomous, rigorous, reliable and organized profiles, capable of intervening remotely on back and middle office functions, in French or in English, in compliance with procedures, deadlines and high quality standards."
+                ))}
               </p>
             </div>
           </div>
 
           {/* Right Column (Form) */}
           <div className="w-full lg:w-[60%] bg-[#e8e1d7] border-t-4 border-t-[#141824] p-10 lg:p-16 shadow-xl">
-            <h3 className="text-[1.4rem] sm:text-[1.6rem] xl:text-[1.8rem] whitespace-nowrap font-semibold text-[#141824] mb-10 uppercase tracking-wide">{t("Formulaire de collaboration", "Collaboration Form")}</h3>
+            <h3 className="text-[1.4rem] sm:text-[1.6rem] xl:text-[1.8rem] whitespace-nowrap font-semibold text-[#141824] mb-10 uppercase tracking-wide">{t("Formulaire de recrutement", "Recruitment Form")}</h3>
             
             <form className="space-y-10" onSubmit={handleSubmit}>
 

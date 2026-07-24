@@ -2,6 +2,8 @@ require('dotenv').config();
 const imaps = require('imap-simple');
 const simpleParser = require('mailparser').simpleParser;
 const { PrismaClient } = require('@prisma/client');
+const fs = require('fs');
+const path = require('path');
 const prisma = new PrismaClient();
 
 const config = {
@@ -60,6 +62,27 @@ async function main() {
     const bodyText = parsed.text || "Aucun contenu";
     const date = parsed.date || new Date();
     
+    // -- EXTRACTION DES PIECES JOINTES --
+    let savedAttachmentName = null;
+    if (parsed.attachments && parsed.attachments.length > 0) {
+      const att = parsed.attachments[0]; // On prend la 1ère pièce jointe
+      const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
+      let destPath = path.join(rootPath, 'formulaires');
+      
+      try {
+        if (!fs.existsSync(destPath)) {
+          fs.mkdirSync(destPath, { recursive: true });
+        }
+        const safeName = (att.filename || 'piece_jointe.pdf').replace(/[^a-zA-Z0-9.-]/g, '_');
+        savedAttachmentName = Date.now() + '-' + Math.round(Math.random() * 1E9) + '-' + safeName;
+        
+        fs.writeFileSync(path.join(destPath, savedAttachmentName), att.content);
+        console.log(`[+] Pièce jointe sauvegardée : ${savedAttachmentName}`);
+      } catch (err) {
+        console.error("[-] Erreur lors de la sauvegarde de la pièce jointe :", err);
+      }
+    }
+
     const existing = await prisma.messagePersonnel.findUnique({
       where: { messageId }
     });
@@ -74,6 +97,7 @@ async function main() {
           email,
           objet: subject,
           bodyText,
+          attachment: savedAttachmentName,
           createdAt: date,
           receivedAt: date
         }

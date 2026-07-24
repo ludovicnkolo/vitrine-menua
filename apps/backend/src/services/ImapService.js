@@ -1,6 +1,8 @@
 const imaps = require('imap-simple');
 const { simpleParser } = require('mailparser');
 const { PrismaClient } = require('@prisma/client');
+const fs = require('fs');
+const path = require('path');
 const prisma = new PrismaClient();
 
 const IMAP_CONFIG = {
@@ -46,6 +48,25 @@ class ImapService {
         const subject = parsedMail.subject || 'Sans objet';
         const bodyText = parsedMail.text || '';
         const bodyHtml = parsedMail.html || '';
+        
+        // -- EXTRACTION DES PIECES JOINTES --
+        let savedAttachmentName = null;
+        if (parsedMail.attachments && parsedMail.attachments.length > 0) {
+          const att = parsedMail.attachments[0];
+          const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
+          let destPath = path.join(rootPath, 'formulaires');
+          try {
+            if (!fs.existsSync(destPath)) {
+              fs.mkdirSync(destPath, { recursive: true });
+            }
+            const safeName = (att.filename || 'piece_jointe.pdf').replace(/[^a-zA-Z0-9.-]/g, '_');
+            savedAttachmentName = Date.now() + '-' + Math.round(Math.random() * 1E9) + '-' + safeName;
+            fs.writeFileSync(path.join(destPath, savedAttachmentName), att.content);
+            console.log(`[+] Pièce jointe extraite : ${savedAttachmentName}`);
+          } catch (err) {
+            console.error("[-] Erreur extraction pièce jointe :", err);
+          }
+        }
 
         // 1. Déduplication : Est-ce qu'on l'a déjà stocké ?
         const existingMessage = await prisma.message.findUnique({
@@ -71,6 +92,7 @@ class ImapService {
             bodyHtml,
             fromEmail,
             fromName,
+            attachment: savedAttachmentName,
             isAnonyme: !existingClient,
             clientId: existingClient ? existingClient.id : null,
             status: 'NOUVEAU', // Statut initial demandé par l'admin

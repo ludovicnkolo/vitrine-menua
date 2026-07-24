@@ -41,14 +41,14 @@ const UsersPage = () => {
     formData.append('bucket', 'users_id_cards'); // MUST BE BEFORE FILE
     formData.append('file', file);
     try {
-      const res = await fetch('http://localhost:4000/api/files/upload', {
+      const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/files/upload', {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: formData
       });
       const data = await res.json();
       if (data.success) {
-        return `http://localhost:4000/api/files/view/${data.fileData.path}`;
+        return `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/files/view/${data.fileData.path}`;
       }
     } catch(e) { console.error('Upload error', e); }
     return null;
@@ -59,9 +59,9 @@ const UsersPage = () => {
       const token = localStorage.getItem('adminToken');
       const headers = { 'Authorization': 'Bearer ' + token };
       const [rUsers, rClients, rRoles] = await Promise.all([
-        fetch('http://localhost:4000/api/crm/users', { headers }).then(r=>r.json()).catch(()=>[]),
-        fetch('http://localhost:4000/api/crm/clients', { headers }).then(r=>r.json()).catch(()=>[]),
-        fetch('http://localhost:4000/api/crm/roles', { headers }).then(r=>r.json()).catch(()=>[])
+        fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/crm/users', { headers }).then(r=>r.json()).catch(()=>[]),
+        fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/crm/clients', { headers }).then(r=>r.json()).catch(()=>[]),
+        fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/crm/roles', { headers }).then(r=>r.json()).catch(()=>[])
       ]);
       setUsers(Array.isArray(rUsers) ? rUsers : []);
       setClients(Array.isArray(rClients) ? rClients : []);
@@ -79,7 +79,7 @@ const UsersPage = () => {
     setLoading(true); setErrorMsg(null);
     try {
       const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch('http://localhost:4000/api/crm/users', {
+      const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/crm/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: JSON.stringify({ ...newUser, lastLogin: 'Jamais connecté', idCardUrl: uploadedUrl })
@@ -99,7 +99,7 @@ const UsersPage = () => {
     setLoading(true); setErrorMsg(null);
     try {
       const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch('http://localhost:4000/api/crm/clients', {
+      const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/crm/clients', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: JSON.stringify({ ...newClient, type: externalType, status: newClient.status || 'Actif', idCardUrl: uploadedUrl })
@@ -114,7 +114,7 @@ const UsersPage = () => {
   const handleDeleteUser = async (id) => {
     if (!window.confirm('Voulez-vous vraiment supprimer ce membre interne ?')) return;
     try {
-      const res = await fetch(`http://localhost:4000/api/crm/users/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/users/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
       });
@@ -126,7 +126,7 @@ const UsersPage = () => {
   const handleDeleteClient = async (id) => {
     if (!window.confirm('Voulez-vous vraiment supprimer ce membre externe ?')) return;
     try {
-      const res = await fetch(`http://localhost:4000/api/crm/clients/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/clients/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
       });
@@ -140,7 +140,7 @@ const UsersPage = () => {
     setLoading(true); setErrorMsg(null);
     try {
       const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch(`http://localhost:4000/api/crm/users/${editUser.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/users/${editUser.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: JSON.stringify({
@@ -167,7 +167,7 @@ const UsersPage = () => {
     setLoading(true); setErrorMsg(null);
     try {
       const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch(`http://localhost:4000/api/crm/clients/${editExternal.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/clients/${editExternal.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: JSON.stringify({

@@ -139,14 +139,13 @@ const DossiersPage = () => {
         <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
           <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Missions associées</h4>
           {associatedTasks.length > 0 ? (
-            <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem'}}>
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem'}}>
               {associatedTasks.map(task => (
                 <div key={task.id} onClick={() => setLocalConsultTask(task)} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}>
-                  <div>
+                  <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
                     <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{task.subject || `Mission ${task.reference || task.id}`}</strong>
-                    <span style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>Assigné à: {task.assignedTo?.name || 'Non assigné'} • Créé le {task.createdAt}</span>
+                    <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(task.status)}</span>
                   </div>
-                  <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(task.status)}</span>
                 </div>
               ))}
             </div>
@@ -168,27 +167,33 @@ const DossiersPage = () => {
               <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
-                  <input type="text" value={localConsultTask.subject || `Mission ${localConsultTask.reference || localConsultTask.id}`} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                  <input type="text" value={localConsultTask.description ? (localConsultTask.description.match(/Objet: (.*)/) ? localConsultTask.description.match(/Objet: (.*)/)[1] : localConsultTask.description.split('\n')[0]) : 'Sans objet'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                 </div>
 
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Créé par</label>
-                    <input type="text" value={localConsultTask.createdBy || 'Système'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                    <input type="text" value={localConsultTask.createdBy?.name || 'Système'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                   </div>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigné à</label>
-                    <input type="text" value={localConsultTask.assignedTo?.name || 'Non assigné'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                    <input type="text" value={localConsultTask.assignedTo?.name || 'Non défini'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                  </div>
+                </div>
+
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Date de création</label>
+                    <input type="text" value={localConsultTask.createdAt ? new Date(localConsultTask.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'}) : 'Inconnue'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                  </div>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance</label>
+                    <input type="text" value={localConsultTask.echeance ? new Date(localConsultTask.echeance).toLocaleDateString('fr-FR') : 'Non définie'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                   </div>
                 </div>
 
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
-                  <textarea value={localConsultTask.message || 'Aucun message.'} readOnly style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'none', fontFamily: 'inherit', background: '#F8FAFC', color: 'var(--text-main)'}}></textarea>
-                </div>
-
-                <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut de la mission</label>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</label>
                   <div style={{padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>
                      {getStatusBadge(localConsultTask.status)}
                   </div>
@@ -242,15 +247,14 @@ const DossiersPage = () => {
         <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
           <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Gérer les missions associées</h4>
           {associatedTasks.length > 0 ? (
-            <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem'}}>
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem'}}>
               {associatedTasks.map(task => (
                 <div key={task.id} onClick={() => setLocalConsultTask(task)} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}>
-                  <div>
+                  <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
                     <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{task.subject || `Mission ${task.reference || task.id}`}</strong>
-                    <span style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>Assigné à: {task.assignedTo?.name || 'Non assigné'} • Créé le {task.createdAt}</span>
+                    <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(task.status)}</span>
                   </div>
                   <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                    {getStatusBadge(task.status)}
                     <button onClick={(e) => { e.stopPropagation(); alert(`Mission ${task.id} supprimée avec succès !`); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)'}} title="Supprimer la mission">
                       <Trash size={18} />
                     </button>
@@ -281,27 +285,33 @@ const DossiersPage = () => {
               <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
-                  <input type="text" value={localConsultTask.subject || `Mission ${localConsultTask.reference || localConsultTask.id}`} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                  <input type="text" value={localConsultTask.description ? (localConsultTask.description.match(/Objet: (.*)/) ? localConsultTask.description.match(/Objet: (.*)/)[1] : localConsultTask.description.split('\n')[0]) : 'Sans objet'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                 </div>
 
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Créé par</label>
-                    <input type="text" value={localConsultTask.createdBy || 'Système'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                    <input type="text" value={localConsultTask.createdBy?.name || 'Système'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                   </div>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigné à</label>
-                    <input type="text" value={localConsultTask.assignedTo?.name || 'Non assigné'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                    <input type="text" value={localConsultTask.assignedTo?.name || 'Non défini'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                  </div>
+                </div>
+
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Date de création</label>
+                    <input type="text" value={localConsultTask.createdAt ? new Date(localConsultTask.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'}) : 'Inconnue'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                  </div>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance</label>
+                    <input type="text" value={localConsultTask.echeance ? new Date(localConsultTask.echeance).toLocaleDateString('fr-FR') : 'Non définie'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                   </div>
                 </div>
 
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
-                  <textarea value={localConsultTask.message || 'Aucun message.'} readOnly style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'none', fontFamily: 'inherit', background: '#F8FAFC', color: 'var(--text-main)'}}></textarea>
-                </div>
-
-                <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut de la mission</label>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</label>
                   <div style={{padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>
                      {getStatusBadge(localConsultTask.status)}
                   </div>

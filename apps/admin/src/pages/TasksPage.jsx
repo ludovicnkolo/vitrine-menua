@@ -10,6 +10,9 @@ import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge }
 const TasksPage = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [consultTask, setConsultTask] = useState(null);
+  const [editTask, setEditTask] = useState(null);
+  const [localConsultSubTask, setLocalConsultSubTask] = useState(null);
+  const [editFormData, setEditFormData] = useState({ subject: '', message: '', status: '', attachment: '' });
   const [taskFile, setTaskFile] = useState(null);
   const [createTaskModal, setCreateTaskModal] = useState(false);
   const [newTaskFile, setNewTaskFile] = useState(null);
@@ -74,6 +77,66 @@ const TasksPage = () => {
   }, [searchQuery, filterStatus]);
 
   useEffect(() => { fetchData(); }, [page, searchQuery, filterStatus]);
+
+  const handleUpdateMission = async () => {
+    if (!editTask) return;
+    try {
+      let finalAttachment = editFormData.attachment;
+      if (taskFile) {
+        const uploadedName = await uploadFile(taskFile);
+        if (uploadedName) {
+          finalAttachment = finalAttachment ? `${finalAttachment},${uploadedName}` : uploadedName;
+        }
+      }
+      
+      const token = localStorage.getItem('adminToken');
+      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      const description = `Objet: ${editFormData.subject}\nConsignes: ${editFormData.message}`;
+      const res = await fetch(`${apiUrl}/api/crm/tasks/${editTask.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          status: editFormData.status,
+          description,
+          attachment: finalAttachment
+        })
+      });
+      if (res.ok) {
+        setEditTask(null);
+        fetchData();
+        alert('Mission mise à jour avec succès !');
+      } else {
+        alert("Erreur lors de la mise à jour.");
+      }
+    } catch (err) {
+      alert("Erreur de connexion.");
+    }
+  };
+
+  const handleDeleteSubMission = async (subId) => {
+    if (!window.confirm("Voulez-vous vraiment supprimer cette tâche liée ?")) return;
+    try {
+      const token = localStorage.getItem('adminToken');
+      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      const res = await fetch(`${apiUrl}/api/crm/tasks/${subId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        if (editTask) {
+          setEditTask({...editTask, subMissions: editTask.subMissions.filter(s => s.id !== subId)});
+        }
+        fetchData();
+      } else {
+        alert("Erreur lors de la suppression.");
+      }
+    } catch (err) {
+      alert("Erreur de connexion.");
+    }
+  };
 
   useEffect(() => {
     if (!previewFile) {
@@ -190,6 +253,35 @@ const TasksPage = () => {
     else setOpenMenuId(id);
   }
 
+  const renderSubTaskModal = () => {
+    if (!localConsultSubTask) return null;
+    return (
+      <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        <div className="fade-in" style={{background: '#FFF', borderRadius: '12px', padding: '2rem', width: '90%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 25px rgba(0,0,0,0.1)'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
+            <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter la Tâche: {localConsultSubTask.reference || localConsultSubTask.id}</h2>
+            <button onClick={() => setLocalConsultSubTask(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem', marginLeft: 'auto'}}>Fermer</button>
+          </div>
+          <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+            <div><label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label><input type="text" value={localConsultSubTask.description ? (localConsultSubTask.description.match(/Objet: (.*)/) ? localConsultSubTask.description.match(/Objet: (.*)/)[1] : localConsultSubTask.description.split('\n')[0]) : 'Sans objet'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} /></div>
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+              <div><label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Créé par</label><input type="text" value={localConsultSubTask.createdBy?.name || 'Inconnu'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} /></div>
+              <div><label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigné à</label><input type="text" value={localConsultSubTask.assignedTo?.name || 'Non assigné'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} /></div>
+            </div>
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+              <div><label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Date de création</label><input type="text" value={new Date(localConsultSubTask.createdAt).toLocaleDateString('fr-FR')} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} /></div>
+              <div><label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance</label><input type="text" value={localConsultSubTask.echeance ? new Date(localConsultSubTask.echeance).toLocaleDateString('fr-FR') : 'Non définie'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} /></div>
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</label>
+              <div style={{padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>{getStatusBadge(localConsultSubTask.status)}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderDropdown = (taskId) => {
     if (openMenuId !== taskId) return null;
     return (
@@ -202,7 +294,27 @@ const TasksPage = () => {
         <button className="dropdown-item" onClick={() => { setOpenMenuId(null); setConsultTask(tasks.find(t => t.id === taskId)); }}>
           <Eye size={14} /> Consulter
         </button>
-        <button className="dropdown-item" onClick={() => { setOpenMenuId(null); alert('Supprimer la tâche'); }} style={{color: 'var(--danger)'}}>
+        <button className="dropdown-item" onClick={() => { 
+          setOpenMenuId(null); 
+          const task = tasks.find(t => t.id === taskId);
+          setEditTask(task);
+          const subj = task.description ? (task.description.match(/Objet: (.*)/) ? task.description.match(/Objet: (.*)/)[1] : task.description.split('\n')[0]) : '';
+          const msg = task.description ? (task.description.match(/Consignes: ([\s\S]*)/) ? task.description.match(/Consignes: ([\s\S]*)/)[1] : task.description) : '';
+          setEditFormData({ subject: subj, message: msg, status: task.status, attachment: task.attachment || '' });
+        }}>
+          <Pencil size={14} color="#D97706" /> Modifier
+        </button>
+        <button className="dropdown-item" onClick={async () => { 
+          setOpenMenuId(null); 
+          if(window.confirm("Supprimer cette mission ?")) {
+             try {
+               const token = localStorage.getItem('adminToken');
+               const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+               const res = await fetch(`${apiUrl}/api/crm/tasks/${taskId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
+               if(res.ok) fetchData();
+             } catch(e) {}
+          }
+        }} style={{color: 'var(--danger)'}}>
           <Trash size={14} /> Supprimer
         </button>
       </div>
@@ -280,11 +392,127 @@ const TasksPage = () => {
     );
   }
 
+  if (editTask) {
+    return (
+      <div className="fade-in" style={{width: "100%", padding: "0"}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
+          <button onClick={() => { setEditTask(null); setTaskFile(null); }} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour</button>
+          <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Modifier mission : {editTask.reference || editTask.id}</h2>
+        </div>
+        
+        <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
+          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Créé par</label>
+              <input type="text" defaultValue={editTask.createdBy?.name || 'Système'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigné à</label>
+              <input type="text" defaultValue={editTask.assignedTo?.name || 'Non assigné'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+            </div>
+          </div>
+
+          <div>
+            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
+            <input type="text" value={editFormData.subject} onChange={(e) => setEditFormData({...editFormData, subject: e.target.value})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', background: '#FFF', color: 'var(--text-main)'}} />
+          </div>
+
+          <div>
+            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Dossier associé</label>
+            <input type="text" defaultValue={editTask.dossier?.reference || editTask.dossier?.name || editTask.dossierId} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+          </div>
+
+          <div>
+            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
+            <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+              {editFormData.attachment && editFormData.attachment.trim() && (
+                <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                  {editFormData.attachment.split(',').map((att, idx) => att.trim() && (
+                    <div key={idx} style={{display: 'flex', alignItems: 'center', gap: '1rem', background: '#FFF', padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)'}}>
+                      <span style={{flex: 1, fontSize: '0.875rem'}} className="truncate-text">{att.trim()}</span>
+                      <button onClick={() => {
+                        const newAtts = editFormData.attachment.split(',').map(a => a.trim()).filter((_, i) => i !== idx).join(',');
+                        setEditFormData({...editFormData, attachment: newAtts});
+                      }} style={{background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '0.25rem'}} title="Supprimer la pièce jointe"><Trash size={16}/></button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                <input type="file" onChange={(e) => setTaskFile(e.target.files[0])} className="input-field" style={{flex: 1, padding: '0.5rem', fontSize: '0.875rem'}} />
+                {taskFile && <span style={{fontSize: '0.875rem', color: 'var(--primary)'}}>Nouveau fichier à ajouter</span>}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
+            <textarea value={editFormData.message} onChange={(e) => setEditFormData({...editFormData, message: e.target.value})} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit', background: '#FFF', color: 'var(--text-main)'}}></textarea>
+          </div>
+
+          <div style={{display: 'flex', alignItems: 'center', gap: '2rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', width: 'fit-content'}}>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+              <span style={{fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-main)'}}>Statut de la mission :</span>
+              {getStatusBadge(editTask.status)}
+            </div>
+            <select className="input-field" value={editFormData.status} onChange={(e) => setEditFormData({...editFormData, status: e.target.value})} style={{width: '150px', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', fontSize: '0.875rem'}}>
+              <option value="REDEFINIR">Redéfinir...</option>
+              <option value="NOUVEAU">Nouveau</option>
+              <option value="IN_PROGRESS">En cours</option>
+              <option value="WAITING_DOCS">Attente Docs</option>
+              <option value="IN_REVIEW">En révision</option>
+              <option value="VALIDATED">Validé</option>
+              <option value="TO_ASSIGN">À attribuer</option>
+            </select>
+          </div>
+
+          <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
+            <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Gérer les tâches liées</h4>
+            {editTask.taches && editTask.taches.length > 0 ? (
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem'}}>
+                {editTask.taches.map((sub) => (
+                  <div 
+                    key={sub.id}
+                    onClick={() => setLocalConsultSubTask(sub)}
+                    onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
+                    onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
+                    style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}
+                  >
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
+                      <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{sub.reference || 'Sans réf'}</strong>
+                      <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(sub.status)}</span>
+                    </div>
+                    <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                      <button onClick={(e) => { e.stopPropagation(); alert(`Tâche ${sub.id} supprimée avec succès !`); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)'}} title="Supprimer la tâche liée">
+                        <Trash size={18} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+               <div style={{padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px dashed var(--border)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem'}}>
+                 Aucune tâche liée pour le moment.
+               </div>
+            )}
+          </div>
+
+        </div>
+
+        <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem'}}>
+          <button onClick={() => { setEditTask(null); setTaskFile(null); }} className="btn btn-outline">Annuler</button>
+          <button onClick={handleUpdateMission} className="btn btn-primary">Enregistrer</button>
+        </div>
+        {renderSubTaskModal()}
+      </div>
+    );
+  }
+
   if (consultTask) {
     return (
       <div className="fade-in" style={{width: "100%", padding: "0"}}>
         <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-          <button onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour aux tâches</button>
+          <button onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour</button>
           <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consultation mission : {consultTask.reference || consultTask.id}</h2>
         </div>
         
@@ -336,36 +564,38 @@ const TasksPage = () => {
             <textarea defaultValue={consultTask.description ? (consultTask.description.match(/Consignes: ([\s\S]*)/) ? consultTask.description.match(/Consignes: ([\s\S]*)/)[1] : consultTask.description) : 'Aucun message'} readOnly style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'none', fontFamily: 'inherit', background: '#F8FAFC', color: 'var(--text-main)'}}></textarea>
           </div>
 
-          <div>
-            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut de la tâche</label>
-            <select className="input-field" defaultValue={consultTask.status} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
-              <option value="NEW">Nouveau</option>
+          <div style={{display: 'flex', alignItems: 'center', gap: '2rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', width: 'fit-content'}}>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+              <span style={{fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-main)'}}>Statut de la mission :</span>
+              {getStatusBadge(consultTask.status)}
+            </div>
+            <select className="input-field" defaultValue="REDEFINIR" style={{width: '150px', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', fontSize: '0.875rem'}}>
+              <option value="REDEFINIR">Redéfinir...</option>
+              <option value="NOUVEAU">Nouveau</option>
               <option value="IN_PROGRESS">En cours</option>
+              <option value="WAITING_DOCS">Attente Docs</option>
               <option value="IN_REVIEW">En révision</option>
               <option value="VALIDATED">Validé</option>
-              <option value="TO_ASSIGN">À assigner</option>
+              <option value="TO_ASSIGN">À attribuer</option>
             </select>
           </div>
 
           <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
             <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Tâches liées</h4>
-            {consultTask.subMissions && consultTask.subMissions.length > 0 ? (
-              <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem'}}>
-                {consultTask.subMissions.map((sub) => (
+            {consultTask.taches && consultTask.taches.length > 0 ? (
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem'}}>
+                {consultTask.taches.map((sub) => (
                   <div 
                     key={sub.id}
-                    onClick={() => setConsultTask(tasks.find(t => t.id === sub.id) || sub)}
+                    onClick={() => setLocalConsultSubTask(sub)}
                     onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
                     onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
                     style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}
                   >
-                    <div>
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
                       <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{sub.reference || 'Sans réf'}</strong>
-                      <span style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>Créé par: {sub.createdBy?.name || 'Inconnu'} • Assigné à: {sub.assignedTo?.name || 'Non assigné'}</span>
+                      <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(sub.status)}</span>
                     </div>
-                    <span style={{fontSize: '0.75rem', fontWeight: 600, padding: '0.25rem 0.5rem', borderRadius: '4px', height: 'fit-content'}}>
-                      {getStatusBadge(sub.status)}
-                    </span>
                   </div>
                 ))}
               </div>
@@ -380,8 +610,10 @@ const TasksPage = () => {
         <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem'}}>
           <button onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Annuler</button>
           <button onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une tâche</button>
-          <button onClick={() => { setConsultTask(null); setTaskFile(null); alert('Tâche mise à jour avec succès !'); }} className="btn btn-primary">Enregistrer</button>
+          <button onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-primary">Enregistrer</button>
         </div>
+        
+        {renderSubTaskModal()}
 
         {previewFile && (
           <div style={{

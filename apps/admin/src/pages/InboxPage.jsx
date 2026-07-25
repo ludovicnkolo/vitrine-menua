@@ -47,6 +47,7 @@ const InboxPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [users, setUsers] = useState([]);
   const [dossiers, setDossiers] = useState([]);
+  const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createTaskModal, setCreateTaskModal] = useState(false);
@@ -90,10 +91,11 @@ const InboxPage = () => {
       if (!token) return;
       const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
       
-      const [resMsgs, resUsers, resDossiers] = await Promise.all([
+      const [resMsgs, resUsers, resDossiers, resClients] = await Promise.all([
         fetch(`${apiUrl}/api/crm/messages?type=${tab}&page=${page}&limit=6&status=${filterTraite}&search=${encodeURIComponent(searchQuery)}`, { headers: { 'Authorization': `Bearer ${token}` } }),
         fetch(`${apiUrl}/api/crm/users`, { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(`${apiUrl}/api/crm/dossiers?limit=1000`, { headers: { 'Authorization': `Bearer ${token}` } })
+        fetch(`${apiUrl}/api/crm/dossiers?limit=1000`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${apiUrl}/api/crm/clients?limit=1000`, { headers: { 'Authorization': `Bearer ${token}` } })
       ]);
 
       if (resMsgs.ok) {
@@ -116,6 +118,10 @@ const InboxPage = () => {
       if (resDossiers.ok) {
         const doss = await resDossiers.json();
         setDossiers(doss.data || doss);
+      }
+      if (resClients.ok) {
+        const cl = await resClients.json();
+        setClients(cl.data || cl);
       }
     } catch (err) {
       console.error(err);
@@ -202,10 +208,27 @@ const InboxPage = () => {
             setIsSubmitting(false);
             return;
           }
+          if (!taskDossierSection || !taskDossierCible) {
+            showToast("Veuillez sélectionner la section et la cible pour le nouveau dossier.", "error");
+            setIsSubmitting(false);
+            return;
+          }
+          
+          const newDossierPayload = { 
+            name: taskNewDossierName, 
+            description: 'Créé depuis la messagerie', 
+            origin: tab.toUpperCase() 
+          };
+          if (taskDossierSection === 'client') {
+            newDossierPayload.clientId = taskDossierCible;
+          } else if (taskDossierSection === 'equipe') {
+            newDossierPayload.targetUserId = taskDossierCible;
+          }
+          
           const dossRes = await fetch(`${apiUrl}/api/crm/dossiers`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify({ name: taskNewDossierName, description: 'Créé depuis la messagerie', origin: tab.toUpperCase() })
+            body: JSON.stringify(newDossierPayload)
           });
           if (!dossRes.ok) {
             showToast("Erreur lors de la création du dossier.", "error");
@@ -266,6 +289,9 @@ const InboxPage = () => {
 
       showToast(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Mission créée et assignée avec succès !', 'success');
       setCreateTaskModal(false);
+      setTaskNewDossierName('');
+      setTaskDossierSection('');
+      setTaskDossierCible('');
       setIncludeAttachedFile(false);
       setProcessMsg(null);
       setNewTaskFile(null);
@@ -796,7 +822,25 @@ const InboxPage = () => {
                     </label>
                   </div>
                   {isNewDossier ? (
-                    <input type="text" value={taskNewDossierName} onChange={(e) => setTaskNewDossierName(e.target.value)} placeholder="Nom du nouveau dossier..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+                    <div style={{display: 'grid', gridTemplateColumns: '1fr 1.5fr 2fr', gap: '1rem', alignItems: 'start'}}>
+                      <select value={taskDossierSection} onChange={(e) => { setTaskDossierSection(e.target.value); setTaskDossierCible(''); }} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                        <option value="">-- Section --</option>
+                        <option value="equipe">Équipe</option>
+                        <option value="client">Client</option>
+                      </select>
+                      
+                      <select value={taskDossierCible} onChange={(e) => setTaskDossierCible(e.target.value)} disabled={!taskDossierSection} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', opacity: !taskDossierSection ? 0.5 : 1}}>
+                        <option value="">-- Sélectionner --</option>
+                        {taskDossierSection === 'equipe' && users.map(u => (
+                          <option key={u.id} value={u.id}>{u.name} ({u.role?.name || 'Sans rôle'})</option>
+                        ))}
+                        {taskDossierSection === 'client' && clients.map(c => (
+                          <option key={c.id} value={c.id}>{c.name || `${c.firstName} ${c.lastName}` || c.email}</option>
+                        ))}
+                      </select>
+                      
+                      <input type="text" value={taskNewDossierName} onChange={(e) => setTaskNewDossierName(e.target.value)} placeholder="Nom du nouveau dossier..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+                    </div>
                   ) : (
                     <select value={taskDossierId} onChange={(e) => setTaskDossierId(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
                       <option value="">Sélectionner un dossier...</option>

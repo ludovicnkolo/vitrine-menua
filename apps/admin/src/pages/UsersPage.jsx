@@ -683,7 +683,7 @@ const UsersPage = ({ forceTab }) => {
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Numéro de téléphone</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>Non renseigné</div>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultUser.telephone || 'Non renseigné'}</div>
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Rôle</label>
@@ -698,21 +698,17 @@ const UsersPage = ({ forceTab }) => {
                 </div>
               </div>
 
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+              <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '1rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Pays de résidence</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>Non renseigné</div>
-                </div>
-                <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Ville</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>Non renseigné</div>
+                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Lieu de résidence</label>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultUser.lieuResidence || 'Non renseigné'}</div>
                 </div>
               </div>
 
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Formation</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>Non renseigné</div>
+                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultUser.experienceCle || 'Non renseigné'}</div>
                 </div>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Statut</label>
@@ -733,7 +729,7 @@ const UsersPage = ({ forceTab }) => {
 
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Description du profil</label>
-                <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '76px'}}>Non renseigné</div>
+                <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '76px'}}>{consultUser.profile || 'Non renseigné'}</div>
               </div>
 
               <div>
@@ -849,7 +845,8 @@ const UsersPage = ({ forceTab }) => {
           <table>
             <thead>
               <tr>
-                <th>Nom / Email</th>
+                <th>Nom</th>
+                <th>Email</th>
                 <th>Rôle</th>
                 <th>Statut</th>
                 <th>Dernière Connexion</th>
@@ -859,10 +856,8 @@ const UsersPage = ({ forceTab }) => {
             <tbody>
               {users.map(u => (
                 <tr key={u.id}>
-                  <td>
-                    <strong className="truncate-name" style={{}}>{u.name}</strong>
-                    <span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{u.email}</span>
-                  </td>
+                  <td><strong className="truncate-name" style={{}}>{u.name}</strong></td>
+                  <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{u.email}</span></td>
                   <td><div className="truncate-text">{getRoleBadge(u.role?.name || 'Non défini')}</div></td>
                   <td>
                     <span style={{color: !u.isBlocked ? 'var(--success)' : 'var(--danger)', fontWeight: 500}}>
@@ -888,7 +883,8 @@ const UsersPage = ({ forceTab }) => {
           <table>
             <thead>
               <tr>
-                <th>Nom / Mail</th>
+                <th>Nom</th>
+                <th>Email</th>
                 <th>Statut</th>
                 <th>Activité</th>
                 <th>Date de création</th>
@@ -898,10 +894,8 @@ const UsersPage = ({ forceTab }) => {
             <tbody>
               {clients.map(c => (
                 <tr key={c.id}>
-                  <td>
-                    <strong className="truncate-name" style={{}}>{c.name}</strong>
-                    <span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{c.email}</span>
-                  </td>
+                  <td><strong className="truncate-name" style={{}}>{c.name}</strong></td>
+                  <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{c.email}</span></td>
                   <td>
                     <span style={{
                       display: 'inline-block',

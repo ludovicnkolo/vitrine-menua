@@ -10,6 +10,8 @@ import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge }
 const TachesPage = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [consultTask, setConsultTask] = useState(null);
+  const [editTask, setEditTask] = useState(null);
+  const [editFormData, setEditFormData] = useState({ subject: '', message: '', status: '', attachment: '', assignedToId: '' });
   const [taskFile, setTaskFile] = useState(null);
   const [createTaskModal, setCreateTaskModal] = useState(false);
   const [newTaskFile, setNewTaskFile] = useState(null);
@@ -169,6 +171,46 @@ const TachesPage = () => {
     }
   };
 
+  const handleUpdateTask = async () => {
+    if (!editTask) return;
+    try {
+      let finalAttachment = editFormData.attachment;
+      if (taskFile) {
+        const uploadedName = await uploadFile(taskFile);
+        if (uploadedName) {
+          finalAttachment = finalAttachment ? `${finalAttachment},${uploadedName}` : uploadedName;
+        }
+      }
+      
+      const token = localStorage.getItem('adminToken');
+      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      const description = `Objet: ${editFormData.subject}\nConsignes: ${editFormData.message}`;
+      const res = await fetch(`${apiUrl}/api/crm/taches/${editTask.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          status: editFormData.status,
+          description,
+          assignedToId: editFormData.assignedToId,
+          attachment: finalAttachment
+        })
+      });
+      if (res.ok) {
+        setEditTask(null);
+        setTaskFile(null);
+        fetchData();
+        alert('Tâche mise à jour avec succès !');
+      } else {
+        alert("Erreur lors de la mise à jour.");
+      }
+    } catch (err) {
+      alert("Erreur de connexion.");
+    }
+  };
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -198,7 +240,27 @@ const TachesPage = () => {
         <button className="dropdown-item" onClick={() => { setOpenMenuId(null); setConsultTask(tasks.find(t => t.id === taskId)); }}>
           <Eye size={14} /> Consulter
         </button>
-        <button className="dropdown-item" onClick={() => { setOpenMenuId(null); alert('Supprimer la tâche'); }} style={{color: 'var(--danger)'}}>
+        <button className="dropdown-item" onClick={() => { 
+          setOpenMenuId(null); 
+          const task = tasks.find(t => t.id === taskId);
+          setEditTask(task);
+          const subj = task.description ? (task.description.match(/Objet: (.*)/) ? task.description.match(/Objet: (.*)/)[1] : task.description.split('\n')[0]) : '';
+          const msg = task.description ? (task.description.match(/Consignes: ([\s\S]*)/) ? task.description.match(/Consignes: ([\s\S]*)/)[1] : task.description) : '';
+          setEditFormData({ subject: subj, message: msg, status: task.status, attachment: task.attachment || '', assignedToId: task.assignedToId || '' });
+        }}>
+          <Pencil size={14} color="#D97706" /> Modifier
+        </button>
+        <button className="dropdown-item" onClick={async () => { 
+          setOpenMenuId(null); 
+          if(window.confirm("Supprimer cette tâche ?")) {
+             try {
+               const token = localStorage.getItem('adminToken');
+               const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+               const res = await fetch(`${apiUrl}/api/crm/taches/${taskId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
+               if(res.ok) fetchData();
+             } catch(e) {}
+          }
+        }} style={{color: 'var(--danger)'}}>
           <Trash size={14} /> Supprimer
         </button>
       </div>
@@ -265,6 +327,94 @@ const TachesPage = () => {
             <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline">Annuler</button>
             <button onClick={handleCreateSubTask} disabled={isSubmitting} className="btn btn-primary">{isSubmitting ? 'Création...' : 'Créer la tâche'}</button>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (editTask) {
+    return (
+      <div className="fade-in" style={{width: "100%", padding: "0"}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
+          <button onClick={() => { setEditTask(null); setTaskFile(null); }} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour</button>
+          <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Modifier tâche : {editTask.reference || editTask.id}</h2>
+        </div>
+        
+        <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
+          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Créé par</label>
+              <input type="text" defaultValue={editTask.createdBy?.name || 'Système'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigné à</label>
+              <select className="input-field" value={editFormData.assignedToId} onChange={(e) => setEditFormData({...editFormData, assignedToId: e.target.value})} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                <option value="">-- Non assigné --</option>
+                {users.map(u => (
+                  <option key={u.id} value={u.id}>{u.name} ({u.role?.name || 'Sans rôle'})</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
+            <input type="text" value={editFormData.subject} onChange={(e) => setEditFormData({...editFormData, subject: e.target.value})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', background: '#FFF', color: 'var(--text-main)'}} />
+          </div>
+
+          <div>
+            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Mission Liée</label>
+            <input type="text" defaultValue={editTask.mission?.reference || editTask.missionId} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+          </div>
+
+          <div>
+            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
+            <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+              {editFormData.attachment && editFormData.attachment.trim() && (
+                <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                  {editFormData.attachment.split(',').map((att, idx) => att.trim() && (
+                    <div key={idx} style={{display: 'flex', alignItems: 'center', gap: '1rem', background: '#FFF', padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)'}}>
+                      <span style={{flex: 1, fontSize: '0.875rem'}} className="truncate-text">{att.trim()}</span>
+                      <button onClick={() => {
+                        const newAtts = editFormData.attachment.split(',').map(a => a.trim()).filter((_, i) => i !== idx).join(',');
+                        setEditFormData({...editFormData, attachment: newAtts});
+                      }} style={{background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '0.25rem'}} title="Supprimer la pièce jointe"><Trash size={16}/></button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                <input type="file" onChange={(e) => setTaskFile(e.target.files[0])} className="input-field" style={{flex: 1, padding: '0.5rem', fontSize: '0.875rem'}} />
+                {taskFile && <span style={{fontSize: '0.875rem', color: 'var(--primary)'}}>Nouveau fichier à ajouter</span>}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
+            <textarea value={editFormData.message} onChange={(e) => setEditFormData({...editFormData, message: e.target.value})} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit', background: '#FFF', color: 'var(--text-main)'}}></textarea>
+          </div>
+
+          <div style={{display: 'flex', alignItems: 'center', gap: '2rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', width: 'fit-content'}}>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+              <span style={{fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-main)'}}>Statut de la tâche :</span>
+              {getStatusBadge(editTask.status)}
+            </div>
+            <select className="input-field" value={editFormData.status} onChange={(e) => setEditFormData({...editFormData, status: e.target.value})} style={{width: '150px', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', fontSize: '0.875rem'}}>
+              <option value="REDEFINIR">Redéfinir...</option>
+              <option value="NEW">Nouveau</option>
+              <option value="IN_PROGRESS">En cours</option>
+              <option value="IN_REVIEW">En révision</option>
+              <option value="VALIDATED">Validé</option>
+              <option value="TO_ASSIGN">À assigner</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem'}}>
+          <button onClick={() => { setEditTask(null); setTaskFile(null); }} className="btn btn-outline">Annuler</button>
+          <button onClick={handleUpdateTask} className="btn btn-primary">Enregistrer</button>
         </div>
       </div>
     );

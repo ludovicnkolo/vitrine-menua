@@ -5,7 +5,6 @@ const nodemailer = require('nodemailer');
 const xss = require('xss');
 const rateLimit = require('express-rate-limit');
 const dns = require('dns').promises;
-const crypto = require('crypto');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 

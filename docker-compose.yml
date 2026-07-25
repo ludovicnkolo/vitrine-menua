@@ -53,7 +53,7 @@ services:
         max-size: "10m"
         max-file: "3"
     ports:
-      - "5173:80"  # Map local port 5173 to nginx container port 80
+      - "5173:8080"  # nginx-unprivileged écoute sur 8080 (non-root)
     env_file:
       - .env
     depends_on:

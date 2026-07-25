@@ -1,8 +1,8 @@
 const express = require('express');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-const crypto = require('crypto');
+const path = require('node:path');
+const fs = require('node:fs');
+const crypto = require('node:crypto');
 const { authenticateJWT } = require('../middlewares/auth');
 
 const router = express.Router();
@@ -13,15 +13,22 @@ const storage = multer.diskStorage({
     // Le bucket est envoyé par le frontend (ex: 'vitrine/formulaires_contact', 'admin/rapports')
     let bucket = req.body.bucket || 'temp';
     
-    // Validation basique pour éviter le path traversal
-    if (bucket.includes('..') || bucket.startsWith('/')) {
+    // Validation stricte anti-path traversal (SonarQube Blocker fix)
+    // 1. Bloquer les segments dangereux évidents
+    if (bucket.includes('..') || bucket.startsWith('/') || bucket.startsWith('\\')) {
       bucket = 'temp';
     }
 
     // Le dossier racine (le faux disque de 20Go monté)
     const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
-    const destPath = path.join(rootPath, bucket);
-    
+    const resolvedRoot = path.resolve(rootPath);
+    const destPath = path.resolve(rootPath, bucket);
+
+    // 2. Vérification que le chemin résolu est bien un enfant du rootPath (protection absolue)
+    if (!destPath.startsWith(resolvedRoot + path.sep) && destPath !== resolvedRoot) {
+      return cb(new Error(`Accès refusé : chemin de bucket invalide '${bucket}'`));
+    }
+
     // Création automatique du sous-dossier (bucket) s'il n'existe pas
     fs.mkdirSync(destPath, { recursive: true });
     cb(null, destPath);

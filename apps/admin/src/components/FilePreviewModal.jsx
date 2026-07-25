@@ -13,7 +13,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
     const fetchPdf = async () => {
       try {
         const token = localStorage.getItem('adminToken');
-        const url = `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/files/view/formulaires/${previewFile}?token=${token}`;
+        const url = `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/files/view/formulaires/${encodeURIComponent(previewFile)}?token=${encodeURIComponent(token)}`;
         const res = await fetch(url);
         if (res.ok) {
           const blob = await res.blob();
@@ -43,7 +43,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
           <h3 style={{margin: 0, fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
             <Eye size={16} /> Prévisualisation du document : {previewFile}
           </h3>
-          <button onClick={onClose} className="btn btn-outline" style={{padding: '0.25rem 0.5rem', height: 'auto'}}>Fermer</button>
+          <button type="button" onClick={onClose} className="btn btn-outline" style={{padding: '0.25rem 0.5rem', height: 'auto'}}>Fermer</button>
         </div>
         <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E2E8F0', padding: '2rem'}}>
           <div style={{width: '100%', height: '100%', background: '#FFF', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden'}}>

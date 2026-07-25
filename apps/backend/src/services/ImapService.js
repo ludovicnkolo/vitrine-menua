@@ -1,9 +1,9 @@
 const imaps = require('imap-simple');
 const { simpleParser } = require('mailparser');
 const { PrismaClient } = require('@prisma/client');
-const fs = require('fs');
-const path = require('path');
-const crypto = require('crypto');
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
 const prisma = new PrismaClient();
 
 const IMAP_CONFIG = {

@@ -186,6 +186,7 @@ const TachesPage = () => {
         alert("Erreur lors de la mise à jour.");
       }
     } catch (err) {
+      console.error("Erreur mise à jour tâche:", err);
       alert("Erreur de connexion.");
     }
   };
@@ -237,7 +238,7 @@ const TachesPage = () => {
                const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
                const res = await fetch(`${apiUrl}/api/crm/taches/${taskId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
                if(res.ok) fetchData();
-             } catch(e) {}
+             } catch(e) { console.error("Erreur suppression tâche:", e); }
           }
         }} style={{color: 'var(--danger)'}}>
           <Trash size={14} /> Supprimer
@@ -352,9 +353,9 @@ const TachesPage = () => {
               {editFormData.attachment && editFormData.attachment.trim() && (
                 <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
                   {editFormData.attachment.split(',').map((att, idx) => att.trim() && (
-                    <div key={idx} style={{display: 'flex', alignItems: 'center', gap: '1rem', background: '#FFF', padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)'}}>
+                    <div key={`att-${idx}-${att.trim()}`} style={{display: 'flex', alignItems: 'center', gap: '1rem', background: '#FFF', padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)'}}>
                       <span style={{flex: 1, fontSize: '0.875rem'}} className="truncate-text">{att.trim()}</span>
-                      <button onClick={() => {
+                      <button type="button" onClick={() => {
                         const newAtts = editFormData.attachment.split(',').map(a => a.trim()).filter((_, i) => i !== idx).join(',');
                         setEditFormData({...editFormData, attachment: newAtts});
                       }} style={{background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '0.25rem'}} title="Supprimer la pièce jointe"><Trash size={16}/></button>

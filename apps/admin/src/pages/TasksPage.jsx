@@ -112,28 +112,7 @@ const TasksPage = () => {
         alert("Erreur lors de la mise à jour.");
       }
     } catch (err) {
-      alert("Erreur de connexion.");
-    }
-  };
-
-  const handleDeleteSubMission = async (subId) => {
-    if (!window.confirm("Voulez-vous vraiment supprimer cette tâche liée ?")) return;
-    try {
-      const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
-      const res = await fetch(`${apiUrl}/api/crm/tasks/${subId}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (res.ok) {
-        if (editTask) {
-          setEditTask({...editTask, subMissions: editTask.subMissions.filter(s => s.id !== subId)});
-        }
-        fetchData();
-      } else {
-        alert("Erreur lors de la suppression.");
-      }
-    } catch (err) {
+      console.error("Erreur mise à jour mission:", err);
       alert("Erreur de connexion.");
     }
   };
@@ -291,7 +270,7 @@ const TasksPage = () => {
                const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
                const res = await fetch(`${apiUrl}/api/crm/tasks/${taskId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
                if(res.ok) fetchData();
-             } catch(e) {}
+             } catch(e) { console.error("Erreur suppression mission:", e); }
           }
         }} style={{color: 'var(--danger)'}}>
           <Trash size={14} /> Supprimer
@@ -566,9 +545,14 @@ const TasksPage = () => {
                 {consultTask.taches.map((sub) => (
                   <div 
                     key={sub.id}
+                    role="button"
+                    tabIndex={0}
                     onClick={() => setLocalConsultSubTask(sub)}
+                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setLocalConsultSubTask(sub)}
                     onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
+                    onFocus={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
                     onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
+                    onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
                     style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}
                   >
                     <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>

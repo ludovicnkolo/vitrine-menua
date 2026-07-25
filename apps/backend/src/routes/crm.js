@@ -1,6 +1,6 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-const crypto = require('crypto');
+const crypto = require('node:crypto');
 const imaps = require('imap-simple');
 const simpleParser = require('mailparser').simpleParser;
 const fs = require('fs');

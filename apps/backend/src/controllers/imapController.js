@@ -1,9 +1,9 @@
 const { PrismaClient } = require('@prisma/client');
-const crypto = require('crypto');
+const crypto = require('node:crypto');
 const imaps = require('imap-simple');
 const simpleParser = require('mailparser').simpleParser;
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 const prisma = new PrismaClient();
 
 const imapConfig = {
@@ -11,7 +11,7 @@ const imapConfig = {
     user: process.env.IMAP_USER || 'menua@vitrine-menua.fr',
     password: process.env.IMAP_PASSWORD || 'MotDePasseSécurisé',
     host: process.env.IMAP_HOST || 'mail.vitrine-menua.fr',
-    port: parseInt(process.env.IMAP_PORT || '993', 10),
+    port: Number.parseInt(process.env.IMAP_PORT || '993', 10),
     tls: process.env.IMAP_TLS === 'true' || true,
     authTimeout: 10000,
     tlsOptions: { rejectUnauthorized: false }
@@ -23,12 +23,12 @@ const extractEmailData = (parsed) => {
   let nomPrenom = "Inconnu";
   let email = "inconnu@inconnu.com";
   
-  if (parsed.from && parsed.from.value && parsed.from.value.length > 0) {
+  if (parsed.from?.value?.length > 0) {
     nomPrenom = parsed.from.value[0].name || parsed.from.value[0].address || "Inconnu";
     email = parsed.from.value[0].address || "inconnu@inconnu.com";
   }
   
-  if (parsed.replyTo && parsed.replyTo.value && parsed.replyTo.value.length > 0) {
+  if (parsed.replyTo?.value?.length > 0) {
     email = parsed.replyTo.value[0].address;
   }
   

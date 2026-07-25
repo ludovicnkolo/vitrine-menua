@@ -26,9 +26,21 @@ const DossiersPage = () => {
     const headers = { 'Authorization': `Bearer ${token}` };
     const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
     
+    const urlDossiers = new URL('/api/crm/dossiers', apiUrl);
+    urlDossiers.searchParams.set('page', page);
+    urlDossiers.searchParams.set('limit', 4);
+    if (searchQuery) urlDossiers.searchParams.set('search', searchQuery);
+    if (filterStatus) urlDossiers.searchParams.set('status', filterStatus);
+    if (filterRole) urlDossiers.searchParams.set('role', filterRole);
+    if (filterOrigine) urlDossiers.searchParams.set('origin', filterOrigine);
+
+    const urlTasks = new URL('/api/crm/tasks', apiUrl);
+    urlTasks.searchParams.set('page', 1);
+    urlTasks.searchParams.set('limit', 1000);
+
     Promise.all([
-      fetch(`${apiUrl}/api/crm/dossiers?page=${page}&limit=4&search=${encodeURIComponent(searchQuery)}&status=${filterStatus}&role=${filterRole}&origin=${filterOrigine}`, { headers }).then(res => res.json()).catch(() => ({ data: [], totalPages: 1 })),
-      fetch(`${apiUrl}/api/crm/tasks?page=1&limit=1000`, { headers }).then(res => res.json()).catch(() => ({ data: [] }))
+      fetch(urlDossiers.toString(), { headers }).then(res => res.json()).catch(() => ({ data: [], totalPages: 1 })),
+      fetch(urlTasks.toString(), { headers }).then(res => res.json()).catch(() => ({ data: [] }))
     ]).then(([dossiersRes, tasksRes]) => {
       if (dossiersRes?.data) {
         setDbDossiers(dossiersRes.data);

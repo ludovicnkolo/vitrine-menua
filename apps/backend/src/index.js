@@ -116,7 +116,7 @@ app.listen(PORT, () => {
   try {
     const { execFileSync } = require('node:child_process');
     console.log('Running seed_admin.js to ensure default roles and admin exist...');
-    execFileSync('node', ['seed_admin.js'], { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
+    execFileSync(process.execPath, ['seed_admin.js'], { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
   } catch (err) {
     console.error('Failed to run seed_admin.js on startup:', err);
   }

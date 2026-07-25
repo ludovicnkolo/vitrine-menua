@@ -6,7 +6,7 @@ RUN npm install --ignore-scripts
 # Copy the rest of the code
 COPY . .
 # We don't need a build step for vanilla Express, but we might need Prisma generation
-RUN npx prisma generate || true
+RUN ./node_modules/.bin/prisma generate || true
 
 EXPOSE 4000
 USER node

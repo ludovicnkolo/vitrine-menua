@@ -45,7 +45,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024, files: 1 } // Limite à 10 Mo et 1 fichier par requête
+  limits: { 
+    fileSize: 10 * 1024 * 1024, 
+    files: 1,
+    fields: 10,
+    fieldSize: 1024 * 1024 
+  } // Limite stricte pour éviter les DoS
 });
 
 // Route POST : Upload sécurisé d'un fichier dans un bucket
@@ -80,10 +85,7 @@ router.get('/download/:bucket/:filename', authenticateJWT, (req, res) => {
   const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
   const filePath = path.join(rootPath, bucket, filename);
 
-  // Vérifier si le fichier existe
-  if (!fs.existsSync(filePath)) {
-    return res.status(404).json({ success: false, error: 'Fichier introuvable.' });
-  }
+  // Suppression de fs.existsSync pour éviter la faille TOCTOU (Time-of-Check to Time-of-Use)
 
   // Optionnel : Ajouter ici une logique métier pour vérifier si req.user a le droit de lire ce fichier spécifique
   

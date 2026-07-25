@@ -25,6 +25,7 @@ const SystemSpacePage = () => {
   };
 
   const handleLangChange = (newLang) => {
+    if (newLang !== 'fr' && newLang !== 'en') return;
     setLang(newLang);
     localStorage.setItem('adminLang', newLang);
     // Reload to apply

@@ -13,8 +13,10 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
     const fetchPdf = async () => {
       try {
         const token = localStorage.getItem('adminToken');
-        const url = `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/files/view/formulaires/${encodeURIComponent(previewFile)}?token=${encodeURIComponent(token)}`;
-        const res = await fetch(url);
+        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+        const urlObj = new URL(`/api/files/view/formulaires/${encodeURIComponent(previewFile)}`, baseUrl);
+        if (token) urlObj.searchParams.set('token', token);
+        const res = await fetch(urlObj.toString());
         if (res.ok) {
           const blob = await res.blob();
           const objUrl = URL.createObjectURL(blob);

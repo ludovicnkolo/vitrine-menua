@@ -220,7 +220,7 @@ const UsersPage = ({ forceTab }) => {
         boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, width: '150px',
         display: 'flex', flexDirection: 'column', padding: '0.25rem 0'
       }}>
-        <button className="dropdown-item" onClick={() => { 
+        <button type="button" className="dropdown-item" onClick={() => { 
           setOpenMenuId(null); 
           if (userObj) {
             if (isExternal) setConsultExternal(userObj);
@@ -229,7 +229,7 @@ const UsersPage = ({ forceTab }) => {
         }}>
           <Eye size={14} /> Consulter
         </button>
-        <button className="dropdown-item" onClick={() => { 
+        <button type="button" className="dropdown-item" onClick={() => { 
           setOpenMenuId(null); 
           if (userObj) {
             if (isExternal) setEditExternal(userObj);
@@ -238,7 +238,7 @@ const UsersPage = ({ forceTab }) => {
         }}>
           <Pencil size={14} /> Modifier
         </button>
-        <button className="dropdown-item danger" onClick={() => { setOpenMenuId(null); if(userObj){ if(isExternal) handleDeleteClient(userObj.id); else handleDeleteUser(userObj.id); } }}>
+        <button type="button" className="dropdown-item danger" onClick={() => { setOpenMenuId(null); if(userObj){ if(isExternal) handleDeleteClient(userObj.id); else handleDeleteUser(userObj.id); } }}>
           <Trash size={14} /> Supprimer
         </button>
       </div>
@@ -253,7 +253,7 @@ const UsersPage = ({ forceTab }) => {
           <div className="" style={{width: "100%", padding: "0"}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Ajouter un Membre Externe</h2>
-              <button onClick={() => setShowExternalModal(false)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <button type="button" onClick={() => setShowExternalModal(false)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             
             <div style={{display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', padding: '0.5rem', background: '#F8FAFC', borderRadius: '8px', width: 'fit-content'}}>
@@ -371,7 +371,7 @@ const UsersPage = ({ forceTab }) => {
           <div className="" style={{width: "100%", padding: "0"}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Modifier un Membre Externe</h2>
-              <button onClick={() => setEditExternal(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <button type="button" onClick={() => setEditExternal(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             
             <form onSubmit={handleUpdateClient} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -420,7 +420,7 @@ const UsersPage = ({ forceTab }) => {
           <div className="" style={{width: "100%", padding: "0"}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Consulter un Membre Externe</h2>
-              <button onClick={() => setConsultExternal(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <button type="button" onClick={() => setConsultExternal(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -494,7 +494,7 @@ const UsersPage = ({ forceTab }) => {
                 </>
               )}
               <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '1rem'}}>
-                <button onClick={() => setConsultExternal(null)} className="btn btn-outline">Fermer</button>
+                <button type="button" onClick={() => setConsultExternal(null)} className="btn btn-outline">Fermer</button>
               </div>
             </div>
           </div>
@@ -507,7 +507,7 @@ const UsersPage = ({ forceTab }) => {
           <div className="" style={{width: "100%", padding: "0"}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Ajouter un Membre Interne</h2>
-              <button onClick={() => setShowModal(false)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <button type="button" onClick={() => setShowModal(false)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             <form onSubmit={handleCreateUser} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {errorMsg && <div style={{color: 'red', fontSize: '0.875rem'}}>{errorMsg}</div>}
@@ -586,7 +586,7 @@ const UsersPage = ({ forceTab }) => {
           <div className="" style={{width: "100%", padding: "0"}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Modifier un Membre Interne</h2>
-              <button onClick={() => setEditUser(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <button type="button" onClick={() => setEditUser(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             <form onSubmit={handleUpdateUser} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {errorMsg && <div style={{color: 'red', fontSize: '0.875rem'}}>{errorMsg}</div>}
@@ -666,7 +666,7 @@ const UsersPage = ({ forceTab }) => {
           <div className="" style={{width: "100%", padding: "0"}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Consulter : {consultUser.name}</h2>
-              <button onClick={() => setConsultUser(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <button type="button" onClick={() => setConsultUser(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
@@ -754,7 +754,7 @@ const UsersPage = ({ forceTab }) => {
               </div>
               
               <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '1rem'}}>
-                <button onClick={() => setConsultUser(null)} className="btn btn-outline">Fermer</button>
+                <button type="button" onClick={() => setConsultUser(null)} className="btn btn-outline">Fermer</button>
               </div>
             </div>
           </div>
@@ -773,7 +773,7 @@ const UsersPage = ({ forceTab }) => {
       {!forceTab && (
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
           <div style={{display: 'flex', gap: '0.5rem'}}>
-            <button 
+            <button type="button" 
               onClick={() => setTab('interne')} 
               style={{
                 background: tab === 'interne' ? 'var(--primary)' : 'transparent', 
@@ -792,7 +792,7 @@ const UsersPage = ({ forceTab }) => {
               }}>
                 Interne
             </button>
-            <button 
+            <button type="button" 
               onClick={() => setTab('externe')} 
               style={{
                 background: tab === 'externe' ? 'var(--primary)' : 'transparent', 
@@ -812,7 +812,7 @@ const UsersPage = ({ forceTab }) => {
                 Externe
             </button>
           </div>
-          <button 
+          <button type="button" 
             className="btn btn-primary" 
             onClick={() => {
               if (tab === 'interne') setShowModal(true);
@@ -827,7 +827,7 @@ const UsersPage = ({ forceTab }) => {
 
       {forceTab && (
         <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem'}}>
-          <button 
+          <button type="button" 
             className="btn btn-primary" 
             onClick={() => {
               if (tab === 'interne') setShowModal(true);
@@ -868,7 +868,7 @@ const UsersPage = ({ forceTab }) => {
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                       <div style={{position: 'relative'}}>
-                        <button onClick={(e) => toggleMenu(e, u.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
+                        <button type="button" onClick={(e) => toggleMenu(e, u.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
                           <MoreVertical size={16} />
                         </button>
                         {renderDropdown(u.id, u)}
@@ -914,7 +914,7 @@ const UsersPage = ({ forceTab }) => {
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                       <div style={{position: 'relative'}}>
-                        <button onClick={(e) => toggleMenu(e, c.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
+                        <button type="button" onClick={(e) => toggleMenu(e, c.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
                           <MoreVertical size={16} />
                         </button>
                         {renderDropdown(c.id, c, true)}
@@ -934,7 +934,7 @@ const UsersPage = ({ forceTab }) => {
       {viewImage && (
         <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 1100, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
           <div style={{position: 'relative', width: '90vw', height: '90vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <button onClick={() => setViewImage(null)} style={{position: 'absolute', top: '-40px', right: '0', background: 'none', border: 'none', color: 'white', cursor: 'pointer'}}>
+            <button type="button" onClick={() => setViewImage(null)} style={{position: 'absolute', top: '-40px', right: '0', background: 'none', border: 'none', color: 'white', cursor: 'pointer'}}>
               <X size={24} />
             </button>
             {viewImage.toLowerCase().match(/\.(jpeg|jpg|png|gif|webp)(\?.*)?$/) ? (

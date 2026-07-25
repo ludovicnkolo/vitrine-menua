@@ -73,7 +73,7 @@ export default function AuditPage() {
               style={{width: '100%', padding: '0.75rem 1rem 0.75rem 2.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC'}}
             />
           </div>
-          <button onClick={fetchLogs} className="btn btn-primary" style={{padding: '0.75rem 1.5rem'}}>
+          <button type="button" onClick={fetchLogs} className="btn btn-primary" style={{padding: '0.75rem 1.5rem'}}>
             Rafraîchir
           </button>
         </div>
@@ -109,7 +109,7 @@ export default function AuditPage() {
                   filteredLogs.map(log => {
                     const colors = getActionColor(log.action);
                     return (
-                      <tr key={log.id} style={{borderBottom: '1px solid var(--border)', transition: 'background 0.2s'}} onMouseOver={(e) => e.currentTarget.style.background = '#F8FAFC'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
+                      <tr key={log.id} style={{borderBottom: '1px solid var(--border)', transition: 'background 0.2s'}} onMouseOver={(e) => e.currentTarget.style.background = '#F8FAFC'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onFocus={(e) => e.currentTarget.style.background = '#F8FAFC'} onBlur={(e) => e.currentTarget.style.background = 'transparent'} tabIndex={0}>
                         <td style={{padding: '1rem 1.5rem'}}>
                           <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.875rem'}}>
                             <Clock size={14} />

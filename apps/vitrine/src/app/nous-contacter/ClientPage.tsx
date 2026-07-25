@@ -295,7 +295,7 @@ export default function NousContacter() {
                        <div className="flex flex-col items-center">
                          <span className="text-green-700 font-bold text-[1rem] mb-2">{selectedFileName}</span>
                          <span className="text-[#6e7891] text-[0.85rem]">{t("Cliquez ici pour remplacer le document", "Click here to replace the document")}</span>
-                         <button 
+                         <button type="button" 
                            onClick={handleRemoveFile}
                            className="mt-4 px-4 py-1.5 text-[0.75rem] font-bold uppercase tracking-wider text-red-600 bg-red-50 hover:bg-red-100 rounded-full transition-colors border border-red-200"
                          >

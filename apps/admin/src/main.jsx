@@ -31,6 +31,7 @@ class ErrorBoundary extends React.Component {
             {this.state.errorInfo && this.state.errorInfo.componentStack}
           </pre>
           <button 
+            type="button"
             onClick={() => { localStorage.clear(); window.location.href = '/'; }}
             style={{ marginTop: '1rem', padding: '0.5rem 1rem', background: '#B91C1C', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
           >

@@ -214,7 +214,7 @@ export default function Header() {
           {/* SPACER with LANG SWITCHER CENTERED inside it */}
           <div className="flex-1 flex justify-center items-center" onMouseEnter={() => setOpenMenu(null)}>
             <div className="flex items-center gap-2">
-              <button
+              <button type="button"
                 onClick={() => handleLanguageSwitch("FR")}
                 className={`flex items-center gap-1.5 text-[0.75rem] font-bold transition-all tracking-wider ${
                   lang === "FR" ? "text-white opacity-100" : "text-white/50 hover:text-white"
@@ -223,7 +223,7 @@ export default function Header() {
                 <FlagFR /> FR
               </button>
               <span className="text-[#D8DCE8] text-xs mx-1">|</span>
-              <button
+              <button type="button"
                 onClick={() => handleLanguageSwitch("EN")}
                 className={`flex items-center gap-1.5 text-[0.75rem] font-bold transition-all tracking-wider ${
                   lang === "EN" ? "text-white opacity-100" : "text-white/50 hover:text-white"
@@ -277,7 +277,7 @@ export default function Header() {
 
             {(Object.keys(menus) as MenuKey[]).map((key) => (
               <div key={key} className="flex flex-col border-b border-[#e8e1d7]/50">
-                <button
+                <button type="button"
                   onClick={() => setOpenMobileSubmenu(openMobileSubmenu === key ? null : key)}
                   className="flex items-center justify-between py-3 text-[1.2rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors text-left"
                 >
@@ -324,7 +324,7 @@ export default function Header() {
           {/* Bottom: Lang */}
           <div className="px-6 pb-6 pt-3 border-t border-[#e8e1d7]/50 space-y-3">
             <div className="flex items-center gap-3">
-              <button
+              <button type="button"
                 onClick={() => handleLanguageSwitch("FR")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
                   lang === "FR" ? "border-[#141824] text-[#141824]" : "border-[#e8e1d7] text-[#6e7891]"
@@ -332,7 +332,7 @@ export default function Header() {
               >
                 <FlagFR /> FR
               </button>
-              <button
+              <button type="button"
                 onClick={() => handleLanguageSwitch("EN")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
                   lang === "EN" ? "border-[#141824] text-[#141824]" : "border-[#e8e1d7] text-[#6e7891]"

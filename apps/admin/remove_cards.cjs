@@ -12,13 +12,13 @@ let content = fs.readFileSync(file, 'utf8');
 // <div className="fade-in card" style={{padding: '2rem', maxWidth: '800px', margin: '0 auto'}}>
 
 // Let's remove the card class and max-width from all form wrappers.
-content = content.replace(/className="card" style={{maxWidth: "800px", margin: "0 auto", padding: "2rem"}}/g, 
+content = content.replaceAll('className="card" style={{maxWidth: "800px", margin: "0 auto", padding: "2rem"}}', 
   'className="" style={{width: "100%", padding: "0"}}');
 
-content = content.replace(/className="fade-in card" style={{padding: '2rem', maxWidth: '800px', margin: '0 auto'}}/g,
+content = content.replaceAll('className="fade-in card" style={{padding: \'2rem\', maxWidth: \'800px\', margin: \'0 auto\'}}',
   'className="fade-in" style={{width: "100%", padding: "0"}}');
 
-content = content.replace(/className="card" style={{width: '500px', position: 'relative'}}/g,
+content = content.replaceAll('className="card" style={{width: \'500px\', position: \'relative\'}}',
   'className="" style={{width: "100%", position: "relative"}}');
 
 

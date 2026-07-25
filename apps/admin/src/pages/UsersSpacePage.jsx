@@ -21,7 +21,7 @@ const UsersSpacePage = () => {
           { id: 'client', label: 'Client' },
           { id: 'role', label: 'Rôle' }
         ].map(t => (
-          <button 
+          <button type="button" 
             key={t.id}
             onClick={() => setTab(t.id)} 
             style={{

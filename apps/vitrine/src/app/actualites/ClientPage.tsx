@@ -119,7 +119,7 @@ export default function ActualitesPage() {
             {/* Filters */}
             <div className="flex flex-wrap gap-2 md:gap-4 mb-12">
               {filters.map((filter) => (
-                <button 
+                <button type="button" 
                   key={filter.key}
                   onClick={() => setActiveFilter(filter.key)}
                   className={`px-4 py-2 text-[0.7rem] font-bold tracking-widest uppercase transition-colors border ${

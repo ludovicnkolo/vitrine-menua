@@ -22,7 +22,7 @@ const WorkspacePage = () => {
           { id: 'missions', label: 'Missions' },
           { id: 'taches', label: 'Tâches' }
         ].map(t => (
-          <button 
+          <button type="button" 
             key={t.id}
             onClick={() => setTab(t.id)} 
             style={{

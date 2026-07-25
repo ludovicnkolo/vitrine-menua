@@ -15,7 +15,7 @@ const DashboardPage = () => {
           <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)'}}>Tableau de bord</h1>
           <p style={{color: 'var(--text-muted)'}}>Vue d'ensemble de vos dossiers et tâches</p>
         </div>
-        <button className="btn btn-primary">Nouveau Dossier</button>
+        <button type="button" className="btn btn-primary">Nouveau Dossier</button>
       </div>
 
       <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2rem'}}>
@@ -61,7 +61,7 @@ const DashboardPage = () => {
                 <td><div className="truncate-text">{getPriorityBadge(d.priority)}</div></td>
                 <td><div className="truncate-text" style={{color: 'var(--text-muted)'}}>{d.date}</div></td>
                 <td>
-                  <button className="btn btn-outline" style={{padding: '0.25rem 0.5rem', fontSize: '0.75rem'}}>Consulter</button>
+                  <button type="button" className="btn btn-outline" style={{padding: '0.25rem 0.5rem', fontSize: '0.75rem'}}>Consulter</button>
                 </td>
               </tr>
             ))}

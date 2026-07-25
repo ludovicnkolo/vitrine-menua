@@ -114,17 +114,17 @@ const RolesPage = () => {
         boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, width: '150px',
         display: 'flex', flexDirection: 'column', padding: '0.25rem 0'
       }}>
-        <button className="dropdown-item" onClick={() => { setConsultRole(role); setOpenMenuId(null); }}>
+        <button type="button" className="dropdown-item" onClick={() => { setConsultRole(role); setOpenMenuId(null); }}>
           <Eye size={14} /> Consulter
         </button>
-        <button className="dropdown-item" onClick={() => { 
+        <button type="button" className="dropdown-item" onClick={() => { 
           setEditRole({...role}); 
           try { setSelectedPermissions(JSON.parse(role.permissions || '[]')); } catch(e) { setSelectedPermissions([]); }
           setOpenMenuId(null); 
         }}>
           <Pencil size={14} /> Modifier
         </button>
-        <button className="dropdown-item danger" onClick={() => { setDeleteRole(role); setOpenMenuId(null); }}>
+        <button type="button" className="dropdown-item danger" onClick={() => { setDeleteRole(role); setOpenMenuId(null); }}>
           <Trash size={14} /> Supprimer
         </button>
       </div>
@@ -137,7 +137,7 @@ const RolesPage = () => {
       <>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
         <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)'}}>Rôles</h1>
-        <button onClick={() => setShowRoleModal(true)} className="btn btn-primary" style={{display: 'flex', gap: '0.5rem', alignItems: 'center', height: '28px', padding: '0 0.75rem', fontSize: '0.875rem'}}>
+        <button type="button" onClick={() => setShowRoleModal(true)} className="btn btn-primary" style={{display: 'flex', gap: '0.5rem', alignItems: 'center', height: '28px', padding: '0 0.75rem', fontSize: '0.875rem'}}>
           Créer un rôle
         </button>
       </div>
@@ -175,7 +175,7 @@ const RolesPage = () => {
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                       <div style={{position: 'relative'}}>
-                        <button onClick={(e) => toggleMenu(e, r.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
+                        <button type="button" onClick={(e) => toggleMenu(e, r.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
                           <MoreVertical size={16} />
                         </button>
                         {renderDropdown(r)}
@@ -197,7 +197,7 @@ const RolesPage = () => {
           <div className="" style={{width: "100%", position: "relative"}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Créer un Rôle</h2>
-              <button onClick={() => setShowRoleModal(false)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <button type="button" onClick={() => setShowRoleModal(false)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             
             <form style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -272,7 +272,7 @@ const RolesPage = () => {
           <div className="" style={{width: "100%", position: "relative"}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Modifier le Rôle</h2>
-              <button onClick={() => setEditRole(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <button type="button" onClick={() => setEditRole(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             
             <form style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -345,7 +345,7 @@ const RolesPage = () => {
           <div className="" style={{width: "100%", position: "relative"}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Consulter le Rôle</h2>
-              <button onClick={() => setConsultRole(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <button type="button" onClick={() => setConsultRole(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -390,8 +390,8 @@ const RolesPage = () => {
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Supprimer le rôle</h2>
               <p style={{color: 'var(--text-muted)'}}>Êtes-vous sûr de vouloir supprimer le rôle <strong>{deleteRole.name}</strong> ? Cette action est irréversible et pourrait affecter les utilisateurs associés.</p>
               <div style={{display: 'flex', gap: '1rem', width: '100%', marginTop: '1rem'}}>
-                <button className="btn btn-outline" style={{flex: 1}} onClick={() => setDeleteRole(null)}>Annuler</button>
-                <button className="btn btn-primary" style={{flex: 1, backgroundColor: '#DC2626', borderColor: '#DC2626'}} onClick={handleDeleteRole}>Supprimer</button>
+                <button type="button" className="btn btn-outline" style={{flex: 1}} onClick={() => setDeleteRole(null)}>Annuler</button>
+                <button type="button" className="btn btn-primary" style={{flex: 1, backgroundColor: '#DC2626', borderColor: '#DC2626'}} onClick={handleDeleteRole}>Supprimer</button>
               </div>
             </div>
           </div>

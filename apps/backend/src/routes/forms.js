@@ -125,14 +125,15 @@ router.post('/contact', upload.single('file'), async (req, res) => {
 
     const fullName = `${firstName || ''} ${lastName || ''}`.trim();
     const senderEmail = email;
+    const lang = req.query.lang || req.body.lang || 'fr';
 
     if (!senderEmail) {
-      return res.status(400).json({ success: false, error: "Veuillez fournir une adresse email." });
+      return sendResponse(res, 400, 'ERROR_EMAIL_REQUIRED', lang);
     }
 
     const isEmailValid = await validateEmail(senderEmail);
     if (!isEmailValid) {
-      return res.status(400).json({ success: false, error: "L'adresse email fournie est invalide ou le nom de domaine n'existe pas." });
+      return sendResponse(res, 400, 'ERROR_EMAIL_INVALID', lang);
     }
 
     const parsedNeeds = Array.isArray(needs) ? needs : (needs ? [needs] : []);
@@ -141,14 +142,14 @@ router.post('/contact', upload.single('file'), async (req, res) => {
     let savedFilename = null;
     if (req.file) {
       if (req.file.mimetype !== 'application/pdf') {
-        return res.status(400).json({ success: false, error: "Le fichier doit obligatoirement être au format PDF." });
+        return sendResponse(res, 400, 'ERROR_FILE_PDF_ONLY', lang);
       }
       const magicBytes = req.file.buffer.toString('hex', 0, 5);
       if (magicBytes !== '255044462d') { // %PDF-
-        return res.status(400).json({ success: false, error: "Le fichier fourni n'est pas un document PDF valide ou est corrompu." });
+        return sendResponse(res, 400, 'ERROR_FILE_CORRUPTED', lang);
       }
       if (req.file.size > parseInt(process.env.UPLOAD_MAX_FILE_SIZE)) {
-        return res.status(400).json({ success: false, error: "Le fichier PDF dépasse la limite de taille autorisée." });
+        return sendResponse(res, 400, 'ERROR_FILE_TOO_LARGE', lang);
       }
       attachments.push({
         filename: req.file.originalname,
@@ -249,10 +250,11 @@ router.post('/contact', upload.single('file'), async (req, res) => {
       console.error("Erreur lors de l'enregistrement en DB (Contact):", dbError);
     }
 
-    res.json({ success: true, message: "Message envoyé avec succès." });
+    return sendResponse(res, 200, 'SUCCESS_CONTACT', lang);
   } catch (error) {
+    const lang = req.query.lang || req.body.lang || 'fr';
     console.error("Erreur lors de l'envoi de l'email de contact:", error);
-    res.status(500).json({ success: false, error: "Une erreur est survenue lors de l'envoi de votre message." });
+    return sendResponse(res, 500, 'ERROR_SENDING_EMAIL', lang);
   }
 });
 
@@ -263,14 +265,15 @@ router.post('/join', upload.none(), async (req, res) => {
       profileType, company, lastName, firstName, email, phone,
       experience, languages, location, availability, linkedin, message, skills, otherSkill
     } = sanitizedBody;
+    const lang = req.query.lang || req.body.lang || 'fr';
 
     if (!email) {
-      return res.status(400).json({ success: false, error: "Veuillez fournir une adresse email." });
+      return sendResponse(res, 400, 'ERROR_EMAIL_REQUIRED', lang);
     }
 
     const isEmailValid = await validateEmail(email);
     if (!isEmailValid) {
-      return res.status(400).json({ success: false, error: "L'adresse email fournie est invalide ou le nom de domaine n'existe pas." });
+      return sendResponse(res, 400, 'ERROR_EMAIL_INVALID', lang);
     }
 
     let parsedSkills = Array.isArray(skills) ? skills : (skills ? [skills] : []);
@@ -346,10 +349,11 @@ router.post('/join', upload.none(), async (req, res) => {
       console.error("Erreur lors de l'enregistrement en DB (Recrutement):", dbError);
     }
 
-    res.json({ success: true, message: "Candidature envoyée avec succès." });
+    return sendResponse(res, 200, 'SUCCESS_JOIN', lang);
   } catch (error) {
+    const lang = req.query.lang || req.body.lang || 'fr';
     console.error("Erreur lors de l'envoi de la candidature:", error);
-    res.status(500).json({ success: false, error: "Une erreur est survenue lors de l'envoi de votre candidature." });
+    return sendResponse(res, 500, 'ERROR_SENDING_EMAIL', lang);
   }
 });
 

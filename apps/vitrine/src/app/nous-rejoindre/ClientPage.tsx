@@ -6,7 +6,7 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 
 export default function NousRejoindre() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [profileType, setProfileType] = useState<"individual" | "company">("individual");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error", message: string } | null>(null);
@@ -19,7 +19,7 @@ export default function NousRejoindre() {
     try {
       const formData = new FormData(e.currentTarget);
       const apiUrl = process.env.NODE_ENV === 'production' ? '' : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000');
-      const res = await fetch(`${apiUrl}/api/forms/join`, {
+      const res = await fetch(`${apiUrl}/api/forms/join?lang=${lang.toLowerCase()}`, {
         method: "POST",
         body: formData,
       });

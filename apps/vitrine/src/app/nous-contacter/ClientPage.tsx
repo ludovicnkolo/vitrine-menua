@@ -6,7 +6,7 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 
 export default function NousContacter() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [clientType, setClientType] = useState<"company" | "individual">("company");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
@@ -71,7 +71,7 @@ export default function NousContacter() {
       }
 
       const apiUrl = process.env.NODE_ENV === 'production' ? '' : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000');
-      const res = await fetch(`${apiUrl}/api/forms/contact`, {
+      const res = await fetch(`${apiUrl}/api/forms/contact?lang=${lang.toLowerCase()}`, {
         method: "POST",
         body: formData,
       });

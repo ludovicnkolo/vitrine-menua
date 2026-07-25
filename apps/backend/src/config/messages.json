@@ -1,0 +1,50 @@
+{
+  "SUCCESS_CONTACT": {
+    "fr": "Votre demande de contact a été envoyée avec succès.",
+    "en": "Your contact request has been sent successfully."
+  },
+  "SUCCESS_JOIN": {
+    "fr": "Votre candidature a été envoyée avec succès.",
+    "en": "Your application has been sent successfully."
+  },
+  "ERROR_EMAIL_REQUIRED": {
+    "fr": "Veuillez fournir une adresse email.",
+    "en": "Please provide an email address."
+  },
+  "ERROR_EMAIL_INVALID": {
+    "fr": "L'adresse email fournie est invalide ou le nom de domaine n'existe pas.",
+    "en": "The email address provided is invalid or the domain name does not exist."
+  },
+  "ERROR_FILE_PDF_ONLY": {
+    "fr": "Le fichier doit obligatoirement être au format PDF.",
+    "en": "The file must be in PDF format."
+  },
+  "ERROR_FILE_CORRUPTED": {
+    "fr": "Le fichier fourni n'est pas un document PDF valide ou est corrompu.",
+    "en": "The file provided is not a valid PDF document or is corrupted."
+  },
+  "ERROR_FILE_TOO_LARGE": {
+    "fr": "Le fichier PDF dépasse la limite de taille autorisée.",
+    "en": "The PDF file exceeds the maximum allowed size."
+  },
+  "ERROR_INTERNAL_SERVER": {
+    "fr": "Une erreur interne du serveur s'est produite.",
+    "en": "An internal server error occurred."
+  },
+  "ERROR_SMTP_MISSING": {
+    "fr": "Configuration SMTP manquante dans l'environnement.",
+    "en": "Missing SMTP configuration in the environment."
+  },
+  "ERROR_SENDING_EMAIL": {
+    "fr": "Une erreur est survenue lors de l'envoi de votre message.",
+    "en": "An error occurred while sending your message."
+  },
+  "ERROR_UNAUTHORIZED": {
+    "fr": "Accès non autorisé.",
+    "en": "Unauthorized access."
+  },
+  "ERROR_NOT_FOUND": {
+    "fr": "La ressource demandée n'a pas été trouvée.",
+    "en": "The requested resource was not found."
+  }
+}

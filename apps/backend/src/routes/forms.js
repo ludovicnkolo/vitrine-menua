@@ -136,7 +136,12 @@ router.post('/contact', upload.single('file'), async (req, res) => {
       return sendResponse(res, 400, 'ERROR_EMAIL_INVALID', lang);
     }
 
-    const parsedNeeds = Array.isArray(needs) ? needs : (needs ? [needs] : []);
+    let parsedNeeds = [];
+    if (Array.isArray(needs)) {
+      parsedNeeds = needs;
+    } else if (needs) {
+      parsedNeeds = [needs];
+    }
 
     let attachments = [];
     let savedFilename = null;
@@ -196,7 +201,7 @@ router.post('/contact', upload.single('file'), async (req, res) => {
         ${buildInlineRow('Téléphone', phone)}
       </div>
       ${buildListRow('Besoins identifiés', needsHtml)}
-      ${buildBlockRow('Description du besoin', description ? description.replace(/\n/g, '<br/>') : '')}
+      ${buildBlockRow('Description du besoin', description ? description.replaceAll('\n', '<br/>') : '')}
     `;
 
     const mailOptions = {
@@ -276,7 +281,12 @@ router.post('/join', upload.none(), async (req, res) => {
       return sendResponse(res, 400, 'ERROR_EMAIL_INVALID', lang);
     }
 
-    let parsedSkills = Array.isArray(skills) ? skills : (skills ? [skills] : []);
+    let parsedSkills = [];
+    if (Array.isArray(skills)) {
+      parsedSkills = skills;
+    } else if (skills) {
+      parsedSkills = [skills];
+    }
     parsedSkills = parsedSkills.map(s => s === 'Autre' && otherSkill ? `Autre (${otherSkill})` : s);
 
     const typeText = profileType === 'company' ? 'Entreprise (B2B)' : 'Particulier';
@@ -299,7 +309,7 @@ router.post('/join', upload.none(), async (req, res) => {
         ${buildInlineRow('LinkedIn / Portfolio', linkedin ? `<a href="${linkedin}" style="color: #141824;">${linkedin}</a>` : '')}
       </div>
       ${buildListRow('Compétences clés', skillsHtml)}
-      ${buildBlockRow('Message / Motivations', message ? message.replace(/\n/g, '<br/>') : '')}
+      ${buildBlockRow('Message / Motivations', message ? message.replaceAll('\n', '<br/>') : '')}
     `;
 
     const mailOptions = {

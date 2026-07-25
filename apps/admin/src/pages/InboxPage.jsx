@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   MoreVertical, CheckCircle, AlertCircle, Mail, Pencil, Eye, Trash, Files
 } from 'lucide-react';
+import TabsNavigation from '../components/TabsNavigation';
+import ActionDropdown from '../components/ActionDropdown';
 
   const extractFieldFromHtml = (html, fieldName) => {
     if (!html) return null;
@@ -375,21 +377,15 @@ const InboxPage = () => {
   };
 
   const renderDropdown = (m) => {
-    if (openMenuId !== m.id) return null;
     return (
-      <div ref={menuRef} style={{
-        position: 'absolute', right: '100%', top: '50%', transform: 'translateY(-50%)', marginRight: '0.5rem',
-        background: '#FFF', border: '1px solid #E2E8F0', borderRadius: '8px',
-        boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, width: '150px',
-        display: 'flex', flexDirection: 'column', padding: '0.25rem 0'
-      }}>
+      <ActionDropdown isOpen={openMenuId === m.id} menuRef={menuRef} width="150px">
         <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setProcessMsg(m); }}>
           <Pencil size={14} /> Traiter
         </button>
         <button type="button" className="dropdown-item danger" onClick={() => { setOpenMenuId(null); setDeleteMsg(m); }}>
           <Trash size={14} /> Supprimer
         </button>
-      </div>
+      </ActionDropdown>
     );
   }
 
@@ -398,24 +394,16 @@ const InboxPage = () => {
       {!isAnyModalOpen && (
       <>
       <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
-        <div style={{display: 'flex', gap: '0.5rem', width: '100%'}}>
-          {['contact', 'recrutement', 'interne', 'personnel'].map(t => (
-            <button type="button"
-              key={t}
-              onClick={() => setTab(t)} 
-              style={{
-                flex: 1,
-                background: tab === t ? 'var(--primary)' : 'transparent', 
-                color: tab === t ? '#FFF' : 'var(--text-muted)', 
-                border: tab === t ? '1px solid var(--primary)' : '1px solid #E2E8F0', 
-                padding: '0 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', height: '44px', fontSize: '1.05rem', textTransform: 'capitalize'
-              }}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
+        <TabsNavigation 
+          tabs={[
+            { id: 'contact', label: 'Contact' },
+            { id: 'recrutement', label: 'Recrutement' },
+            { id: 'interne', label: 'Interne' },
+            { id: 'personnel', label: 'Personnel' }
+          ]} 
+          activeTab={tab} 
+          onTabChange={setTab} 
+        />
         <div style={{display: 'flex', gap: '1rem', width: '100%', alignItems: 'center'}}>
           <div style={{flex: 1, position: 'relative'}}>
             <input 

@@ -5,6 +5,7 @@ import {
   MoreVertical, CheckCircle, Clock, AlertCircle, Mail, MessageSquare,
   Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
 } from 'lucide-react';
+import ActionDropdown from '../components/ActionDropdown';
 import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
 
 const UsersPage = ({ forceTab }) => {
@@ -212,14 +213,8 @@ const UsersPage = ({ forceTab }) => {
   }
 
   const renderDropdown = (id, userObj = null, isExternal = false) => {
-    if (openMenuId !== id) return null;
     return (
-      <div ref={menuRef} style={{
-        position: 'absolute', right: '100%', top: '50%', transform: 'translateY(-50%)', marginRight: '0.5rem',
-        background: '#FFF', border: '1px solid #E2E8F0', borderRadius: '8px',
-        boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, width: '150px',
-        display: 'flex', flexDirection: 'column', padding: '0.25rem 0'
-      }}>
+      <ActionDropdown isOpen={openMenuId === id} menuRef={menuRef} width="150px">
         <button type="button" className="dropdown-item" onClick={() => { 
           setOpenMenuId(null); 
           if (userObj) {
@@ -241,7 +236,7 @@ const UsersPage = ({ forceTab }) => {
         <button type="button" className="dropdown-item danger" onClick={() => { setOpenMenuId(null); if(userObj){ if(isExternal) handleDeleteClient(userObj.id); else handleDeleteUser(userObj.id); } }}>
           <Trash size={14} /> Supprimer
         </button>
-      </div>
+      </ActionDropdown>
     );
   }
 

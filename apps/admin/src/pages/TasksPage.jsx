@@ -5,6 +5,7 @@ import {
   MoreVertical, CheckCircle, Clock, AlertCircle, Mail, MessageSquare,
   Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
 } from 'lucide-react';
+import ActionDropdown from '../components/ActionDropdown';
 import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
 import FilePreviewModal from '../components/FilePreviewModal';
 import SmsModal from '../components/SmsModal';
@@ -255,14 +256,8 @@ const TasksPage = () => {
   };
 
   const renderDropdown = (taskId) => {
-    if (openMenuId !== taskId) return null;
     return (
-      <div ref={menuRef} style={{
-        position: 'absolute', right: '100%', top: '50%', transform: 'translateY(-50%)', marginRight: '0.5rem',
-        background: '#FFF', border: '1px solid #E2E8F0', borderRadius: '8px',
-        boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, width: '130px',
-        display: 'flex', flexDirection: 'column', padding: '0.25rem 0'
-      }}>
+      <ActionDropdown isOpen={openMenuId === taskId} menuRef={menuRef} width="130px">
         <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setConsultTask(tasks.find(t => t.id === taskId)); }}>
           <Eye size={14} /> Consulter
         </button>
@@ -283,13 +278,13 @@ const TasksPage = () => {
                const token = localStorage.getItem('adminToken');
                const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
                const res = await fetch(`${apiUrl}/api/crm/tasks/${taskId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
-               if(res.ok) fetchData();
-             } catch(e) { console.error("Erreur suppression mission:", e); }
+               if (res.ok) fetchData();
+             } catch(e) { console.error("Erreur suppr mission:", e); }
           }
         }} style={{color: 'var(--danger)'}}>
           <Trash size={14} /> Supprimer
         </button>
-      </div>
+      </ActionDropdown>
     );
   }
 

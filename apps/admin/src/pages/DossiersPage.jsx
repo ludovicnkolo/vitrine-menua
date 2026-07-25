@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, MoreVertical, Pencil, Eye, Trash, MessageSquare } from 'lucide-react';
+import ActionDropdown from '../components/ActionDropdown';
 import { getStatusBadge } from '../utils/helpers';
 import SmsModal from '../components/SmsModal';
 
@@ -85,14 +86,8 @@ const DossiersPage = () => {
   };
 
   const renderDropdown = (id) => {
-    if (openMenuId !== id) return null;
     return (
-      <div ref={menuRef} style={{
-        position: 'absolute', right: '100%', top: '50%', transform: 'translateY(-50%)', marginRight: '0.5rem',
-        background: '#FFF', border: '1px solid #E2E8F0', borderRadius: '8px',
-        boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, width: '150px',
-        display: 'flex', flexDirection: 'column', padding: '0.25rem 0'
-      }}>
+      <ActionDropdown isOpen={openMenuId === id} menuRef={menuRef} width="150px">
         <button type="button" className="dropdown-item" onClick={() => { setConsultDossier(dbDossiers.find(d => d.id === id)); setOpenMenuId(null); }}>
           <Eye size={14} color="var(--primary)" /> Consulter
         </button>
@@ -102,7 +97,7 @@ const DossiersPage = () => {
         <button type="button" className="dropdown-item danger" onClick={() => setOpenMenuId(null)}>
           <Trash size={14} /> Supprimer
         </button>
-      </div>
+      </ActionDropdown>
     );
   };
 

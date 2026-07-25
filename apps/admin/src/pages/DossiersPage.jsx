@@ -45,19 +45,9 @@ const DossiersPage = () => {
       fetch(urlDossiers.toString(), { headers }).then(res => res.json()).catch(() => ({ data: [], totalPages: 1 })),
       fetch(urlTasks.toString(), { headers }).then(res => res.json()).catch(() => ({ data: [] }))
     ]).then(([dossiersRes, tasksRes]) => {
-      if (dossiersRes?.data) {
-        setDbDossiers(dossiersRes.data);
-        setTotalPages(dossiersRes.totalPages || 1);
-      } else if (Array.isArray(dossiersRes)) {
-        setDbDossiers(dossiersRes);
-        setTotalPages(1);
-      }
-      
-      if (tasksRes?.data) {
-        setDbTasks(tasksRes.data);
-      } else if (Array.isArray(tasksRes)) {
-        setDbTasks(tasksRes);
-      }
+      setDbDossiers(dossiersRes?.data || (Array.isArray(dossiersRes) ? dossiersRes : []));
+      setTotalPages(dossiersRes?.totalPages || 1);
+      setDbTasks(tasksRes?.data || (Array.isArray(tasksRes) ? tasksRes : []));
       setIsLoading(false);
     });
   };
@@ -133,7 +123,7 @@ const DossiersPage = () => {
             <input id="auto-field-1785016991499-5" type="text" value={new Date(consultDossier.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
           </div>
           <div>
-            <label htmlFor="auto-field-1785016991499-6" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</label>
+            <span style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</span>
             <div style={{padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>
                {getStatusBadge(consultDossier.status)}
             </div>
@@ -145,12 +135,12 @@ const DossiersPage = () => {
           {associatedTasks.length > 0 ? (
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem'}}>
               {associatedTasks.map(task => (
-                <div key={task.id} role="button" tabIndex={0} onClick={() => setLocalConsultTask(task)} onKeyDown={(e) => { if (e.key === 'Enter') setLocalConsultTask(task); }} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} onFocus={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}>
+                <button type="button" key={task.id} onClick={() => setLocalConsultTask(task)} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} onFocus={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s', width: '100%', textAlign: 'left', fontFamily: 'inherit'}}>
                   <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
                     <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{task.subject || `Mission ${task.reference || task.id}`}</strong>
                     <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(task.status)}</span>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           ) : (
@@ -215,7 +205,7 @@ const DossiersPage = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="auto-field-1785016991499-11" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</label>
+                  <span style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</span>
                   <div style={{padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>
                      {getStatusBadge(localConsultTask.status)}
                   </div>
@@ -259,7 +249,7 @@ const DossiersPage = () => {
             <input id="auto-field-1785016991499-15" type="text" value={new Date(editDossier.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
           </div>
           <div>
-            <label htmlFor="auto-field-1785016991499-16" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</label>
+            <span style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</span>
             <div style={{padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>
                {getStatusBadge(editDossier.status)}
             </div>
@@ -271,7 +261,7 @@ const DossiersPage = () => {
           {associatedTasks.length > 0 ? (
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem'}}>
               {associatedTasks.map(task => (
-                <div key={task.id} role="button" tabIndex={0} onClick={() => setLocalConsultTask(task)} onKeyDown={(e) => { if (e.key === 'Enter') setLocalConsultTask(task); }} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} onFocus={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}>
+                <button type="button" key={task.id} onClick={() => setLocalConsultTask(task)} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} onFocus={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s', width: '100%', textAlign: 'left', fontFamily: 'inherit'}}>
                   <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
                     <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{task.subject || `Mission ${task.reference || task.id}`}</strong>
                     <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(task.status)}</span>
@@ -281,7 +271,7 @@ const DossiersPage = () => {
                       <Trash size={18} />
                     </button>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           ) : (
@@ -338,7 +328,7 @@ const DossiersPage = () => {
                 </div>
 
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</label>
+                  <span style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</span>
                   <div style={{padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>
                      {getStatusBadge(localConsultTask.status)}
                   </div>

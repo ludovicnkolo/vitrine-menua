@@ -49,14 +49,24 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
         </div>
         <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E2E8F0', padding: '2rem'}}>
           <div style={{width: '100%', height: '100%', background: '#FFF', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden'}}>
-            {previewBlobUrl ? (
-              previewFile?.match(/\.(jpeg|jpg|png|gif|webp)$/i) ? (
-                <img 
-                  src={previewBlobUrl} 
-                  alt={previewFile}
-                  style={{width: '100%', height: '100%', objectFit: 'contain'}} 
-                />
-              ) : (
+            {(() => {
+              if (!previewBlobUrl) {
+                return (
+                  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+                    Chargement du document...
+                  </div>
+                );
+              }
+              if (previewFile?.match(/\.(jpeg|jpg|png|gif|webp)$/i)) {
+                return (
+                  <img 
+                    src={previewBlobUrl} 
+                    alt={previewFile}
+                    style={{width: '100%', height: '100%', objectFit: 'contain'}} 
+                  />
+                );
+              }
+              return (
                 <object 
                   data={previewBlobUrl}
                   type="application/pdf"
@@ -65,12 +75,8 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
                 >
                   <p>Impossible d'afficher ce fichier directement. <a href={previewBlobUrl} target="_blank" rel="noopener noreferrer">Téléchargez-le ici</a>.</p>
                 </object>
-              )
-            ) : (
-              <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
-                Chargement du document...
-              </div>
-            )}
+              );
+            })()}
           </div>
         </div>
       </div>

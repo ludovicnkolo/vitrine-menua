@@ -387,15 +387,15 @@ const TasksPage = () => {
           </div>
 
           <div>
-            <label htmlFor="auto-field-1785016991510-15" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
+            <label htmlFor="task-attachment" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
             <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {editFormData.attachment && editFormData.attachment.trim() && (
                 <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.75rem'}}>
-                  {editFormData.attachment.split(',').map((att, idx) => att.trim() && (
-                    <div key={idx} style={{display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#FFF', padding: '0.35rem 0.75rem', borderRadius: '4px', border: '1px solid var(--border)', maxWidth: '300px'}}>
+                  {editFormData.attachment.split(',').map((att) => att.trim() && (
+                    <div key={att.trim()} style={{display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#FFF', padding: '0.35rem 0.75rem', borderRadius: '4px', border: '1px solid var(--border)', maxWidth: '300px'}}>
                       <span style={{fontSize: '0.875rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>{att.trim()}</span>
                       <button type="button" onClick={() => {
-                        const newAtts = editFormData.attachment.split(',').map(a => a.trim()).filter((_, i) => i !== idx).join(',');
+                        const newAtts = editFormData.attachment.split(',').map(a => a.trim()).filter(a => a !== att.trim()).join(',');
                         setEditFormData({...editFormData, attachment: newAtts});
                       }} style={{background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '0.25rem', display: 'flex'}} title="Supprimer la pièce jointe"><Trash size={16}/></button>
                     </div>
@@ -403,23 +403,23 @@ const TasksPage = () => {
                 </div>
               )}
               <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                <input type="file" onChange={(e) => setTaskFile(e.target.files[0])} className="input-field" style={{flex: 1, padding: '0.5rem', fontSize: '0.875rem'}} />
+                <input id="task-attachment" type="file" onChange={(e) => setTaskFile(e.target.files?.[0])} className="input-field" style={{flex: 1, padding: '0.5rem', fontSize: '0.875rem'}} />
                 {taskFile && <span style={{fontSize: '0.875rem', color: 'var(--primary)'}}>Nouveau fichier à ajouter</span>}
               </div>
             </div>
           </div>
 
           <div>
-            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
-            <textarea id="auto-field-1785016991510-15" value={editFormData.message} onChange={(e) => setEditFormData({...editFormData, message: e.target.value})} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit', background: '#FFF', color: 'var(--text-main)'}}></textarea>
+            <label htmlFor="task-message" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
+            <textarea id="task-message" value={editFormData.message} onChange={(e) => setEditFormData({...editFormData, message: e.target.value})} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit', background: '#FFF', color: 'var(--text-main)'}}></textarea>
           </div>
 
           <div style={{display: 'flex', alignItems: 'center', gap: '2rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', width: 'fit-content'}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-              <span style={{fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-main)'}}>Statut de la mission :</span>
+              <label htmlFor="task-status" style={{fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-main)'}}>Statut de la mission :</label>
               {getStatusBadge(editTask.status)}
             </div>
-            <select className="input-field" value={editFormData.status} onChange={(e) => setEditFormData({...editFormData, status: e.target.value})} style={{width: '150px', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', fontSize: '0.875rem'}}>
+            <select id="task-status" className="input-field" value={editFormData.status} onChange={(e) => setEditFormData({...editFormData, status: e.target.value})} style={{width: '150px', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', fontSize: '0.875rem'}}>
               <option value="REDEFINIR">Redéfinir...</option>
               <option value="NOUVEAU">Nouveau</option>
               <option value="IN_PROGRESS">En cours</option>
@@ -551,23 +551,21 @@ const TasksPage = () => {
             {consultTask.taches && consultTask.taches.length > 0 ? (
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem'}}>
                 {consultTask.taches.map((sub) => (
-                  <div 
+                  <button 
+                    type="button"
                     key={sub.id}
-                    role="button"
-                    tabIndex={0}
                     onClick={() => setLocalConsultSubTask(sub)}
-                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setLocalConsultSubTask(sub)}
                     onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
                     onFocus={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
                     onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
                     onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
-                    style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}
+                    style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s', width: '100%', textAlign: 'left', fontFamily: 'inherit'}}
                   >
                     <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
                       <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{sub.reference || 'Sans réf'}</strong>
                       <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(sub.status)}</span>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             ) : (

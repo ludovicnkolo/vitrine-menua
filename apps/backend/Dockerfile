@@ -9,12 +9,9 @@ COPY prisma/ ./prisma/
 COPY seed_imap.js ./
 # Transformation du schéma SQLite vers PostgreSQL pour la production Docker
 RUN sed -i 's/provider = "sqlite"/provider = "postgresql"/' prisma/schema.prisma && \
-    sed -i 's/url      = "file:.\/dev.db"/url      = env("DATABASE_URL")/' prisma/schema.prisma
-
-RUN ./node_modules/.bin/prisma generate || true
-
-# Prepare data directory for SQLite with correct permissions (and allow prisma client regeneration)
-RUN mkdir -p /app/data && chown -R node:node /app
+    sed -i 's/url      = "file:.\/dev.db"/url      = env("DATABASE_URL")/' prisma/schema.prisma && \
+    ./node_modules/.bin/prisma generate || true && \
+    mkdir -p /app/data && chown -R node:node /app
 
 EXPOSE 4000
 USER node

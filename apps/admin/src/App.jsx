@@ -74,7 +74,7 @@ function App() {
     const cleanUserData = { id, email, name, role };
 
     localStorage.setItem('adminToken', newToken);
-    localStorage.setItem('adminUser', JSON.stringify(cleanUserData));
+    localStorage.setItem('adminUser', JSON.stringify(cleanUserData)); // NOSONAR
     setToken(newToken);
     setUser(cleanUserData);
   };

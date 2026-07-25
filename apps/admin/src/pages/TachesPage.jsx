@@ -348,7 +348,7 @@ const TachesPage = () => {
           </div>
 
           <div>
-            <label htmlFor="auto-field-1785016991510-10" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
+            <label htmlFor="task-attachment" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
             <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {editFormData.attachment && editFormData.attachment.trim() && (
                 <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.75rem'}}>
@@ -364,23 +364,23 @@ const TachesPage = () => {
                 </div>
               )}
               <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                <input type="file" onChange={(e) => setTaskFile(e.target.files[0])} className="input-field" style={{flex: 1, padding: '0.5rem', fontSize: '0.875rem'}} />
+                <input id="task-attachment" type="file" onChange={(e) => setTaskFile(e.target.files?.[0])} className="input-field" style={{flex: 1, padding: '0.5rem', fontSize: '0.875rem'}} />
                 {taskFile && <span style={{fontSize: '0.875rem', color: 'var(--primary)'}}>Nouveau fichier à ajouter</span>}
               </div>
             </div>
           </div>
 
           <div>
-            <label htmlFor="auto-field-1785016991510-10" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
-            <textarea id="auto-field-1785016991510-10" value={editFormData.message} onChange={(e) => setEditFormData({...editFormData, message: e.target.value})} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit', background: '#FFF', color: 'var(--text-main)'}}></textarea>
+            <label htmlFor="task-message" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
+            <textarea id="task-message" value={editFormData.message} onChange={(e) => setEditFormData({...editFormData, message: e.target.value})} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit', background: '#FFF', color: 'var(--text-main)'}}></textarea>
           </div>
 
           <div style={{display: 'flex', alignItems: 'center', gap: '2rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', width: 'fit-content'}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-              <span style={{fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-main)'}}>Statut de la tâche :</span>
+              <label htmlFor="task-status" style={{fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-main)'}}>Statut de la tâche :</label>
               {getStatusBadge(editTask.status)}
             </div>
-            <select className="input-field" value={editFormData.status} onChange={(e) => setEditFormData({...editFormData, status: e.target.value})} style={{width: '150px', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', fontSize: '0.875rem'}}>
+            <select id="task-status" className="input-field" value={editFormData.status} onChange={(e) => setEditFormData({...editFormData, status: e.target.value})} style={{width: '150px', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', fontSize: '0.875rem'}}>
               <option value="REDEFINIR">Redéfinir...</option>
               <option value="NEW">Nouveau</option>
               <option value="IN_PROGRESS">En cours</option>

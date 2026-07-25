@@ -463,153 +463,138 @@ const InboxPage = () => {
             )}
           </thead>
           <tbody>
-            {loading ? (
-              <tr><td colSpan="7" style={{textAlign: 'center', padding: '2rem'}}>Chargement des messages...</td></tr>
-            ) : tab === 'contact' ? messages.map(m => (
-              <tr key={m.id}>
-                <td>
-                  <span style={{
-                    padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                    background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
-                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
-                </td>
-                <td>
-                  <strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong>
-                </td>
-                <td>
-                  <span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span>
-                </td>
-                <td>
-                  <span style={{
-                    padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                    background: '#E0E7FF',
-                    color: '#4F46E5'
-                  }}>
-                    {m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier'}
-                  </span>
-                </td>
-                <td><span className="truncate-text" style={{fontSize: "0.875rem"}}>{m.contact?.typeBesoin || m.objet}</span></td>
-                <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
-                <td>
-                  <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
-                    <div style={{position: 'relative'}}>
-                      <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
-                        <MoreVertical size={16} />
-                      </button>
-                      {renderDropdown(m)}
+            {(() => {
+              if (loading) {
+                return <tr><td colSpan="7" style={{textAlign: 'center', padding: '2rem'}}>Chargement des messages...</td></tr>;
+              }
+              
+              if (tab === 'contact') {
+                return messages.map(m => (
+                  <tr key={m.id}>
+                    <td>
+                      <span style={{
+                        padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
+                        background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
+                      }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
+                    </td>
+                    <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong></td>
+                    <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span></td>
+                    <td>
+                      <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: '#E0E7FF', color: '#4F46E5'}}>
+                        {m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier'}
+                      </span>
+                    </td>
+                    <td><span className="truncate-text" style={{fontSize: "0.875rem"}}>{m.contact?.typeBesoin || m.objet}</span></td>
+                    <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
+                    <td>
+                      <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
+                        <div style={{position: 'relative'}}>
+                          <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
+                            <MoreVertical size={16} />
+                          </button>
+                          {renderDropdown(m)}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ));
+              }
+
+              if (tab === 'recrutement') {
+                return messages.map(m => (
+                  <tr key={m.id}>
+                    <td>
+                      <span style={{
+                        padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
+                        background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
+                      }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
+                    </td>
+                    <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong></td>
+                    <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span></td>
+                    <td>
+                      <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: '#FEF3C7', color: '#D97706'}}>
+                        {m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier'}
+                      </span>
+                    </td>
+                    <td><span className="truncate-text" style={{fontSize: "0.875rem"}}>{m.recrutement?.competenceCle || m.objet}</span></td>
+                    <td style={{color: "var(--text-muted)", whiteSpace: "nowrap", fontSize: "0.875rem"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
+                    <td>
+                      <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
+                        <div style={{position: 'relative'}}>
+                          <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
+                            <MoreVertical size={16} />
+                          </button>
+                          {renderDropdown(m)}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ));
+              }
+
+              if (tab === 'interne') {
+                return messages.map(m => (
+                  <tr key={m.id}>
+                    <td>
+                      <span style={{
+                        padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
+                        background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
+                      }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
+                    </td>
+                    <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom || 'Système'}</strong></td>
+                    <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email || '-'}</span></td>
+                    <td>
+                      <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: '#F1F5F9', color: '#64748B'}}>
+                        {m.subType || 'Interne'}
+                      </span>
+                    </td>
+                    <td><span style={{color: "var(--text-muted)", fontSize: "0.75rem", fontFamily: "monospace"}} title={m.formulaireId || m.id}>{m.formulaireId ? m.formulaireId.split('-')[0] : m.id}</span></td>
+                    <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
+                    <td>
+                      <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
+                        <div style={{position: 'relative'}}>
+                          <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
+                            <MoreVertical size={16} />
+                          </button>
+                          {renderDropdown(m)}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ));
+              }
+
+              // Fallback
+              return messages.map(m => (
+                <tr key={m.id}>
+                  <td>
+                    <span style={{
+                      padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
+                      background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
+                    }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
+                  </td>
+                  <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong></td>
+                  <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span></td>
+                  <td>
+                    <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: '#F1F5F9', color: '#64748B'}}>
+                      {m.subType || 'Indéfini'}
+                    </span>
+                  </td>
+                  <td><div className="truncate-text" style={{fontWeight: m.status === "NOUVEAU" ? 600 : 400, fontSize: "0.875rem"}}>{m.objet}</div></td>
+                  <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
+                  <td>
+                    <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
+                      <div style={{position: 'relative'}}>
+                        <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
+                          <MoreVertical size={16} />
+                        </button>
+                        {renderDropdown(m)}
+                      </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            )) : tab === 'recrutement' ? messages.map(m => (
-              <tr key={m.id}>
-                <td>
-                  <span style={{
-                    padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                    background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
-                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
-                </td>
-                <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong></td>
-                <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span></td>
-                <td>
-                  <span style={{
-                    padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                    background: '#FEF3C7',
-                    color: '#D97706'
-                  }}>
-                    {m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier'}
-                  </span>
-                </td>
-                <td><span className="truncate-text" style={{fontSize: "0.875rem"}}>{m.recrutement?.competenceCle || m.objet}</span></td>
-                <td style={{color: "var(--text-muted)", whiteSpace: "nowrap", fontSize: "0.875rem"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
-                <td>
-                  <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
-                    <div style={{position: 'relative'}}>
-                      <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
-                        <MoreVertical size={16} />
-                      </button>
-                      {renderDropdown(m)}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            )) : tab === 'interne' ? messages.map(m => (
-              <tr key={m.id}>
-                <td>
-                  <span style={{
-                    padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                    background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
-                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
-                </td>
-                <td>
-                  <strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom || 'Système'}</strong>
-                </td>
-                <td>
-                  <span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email || '-'}</span>
-                </td>
-                <td>
-                  <span style={{
-                    padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                    background: '#F1F5F9',
-                    color: '#64748B'
-                  }}>
-                    {m.subType || 'Interne'}
-                  </span>
-                </td>
-                <td>
-                  <span style={{color: "var(--text-muted)", fontSize: "0.75rem", fontFamily: "monospace"}} title={m.formulaireId || m.id}>
-                    {m.formulaireId ? m.formulaireId.split('-')[0] : m.id}
-                  </span>
-                </td>
-                <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
-                <td>
-                  <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
-                    <div style={{position: 'relative'}}>
-                      <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
-                        <MoreVertical size={16} />
-                      </button>
-                      {renderDropdown(m)}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            )) : messages.map(m => (
-              <tr key={m.id}>
-                <td>
-                  <span style={{
-                    padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                    background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
-                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
-                </td>
-                <td>
-                  <strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong>
-                </td>
-                <td>
-                  <span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span>
-                </td>
-                <td>
-                  <span style={{
-                    padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                    background: '#F1F5F9',
-                    color: '#64748B'
-                  }}>
-                    {m.subType || 'Indéfini'}
-                  </span>
-                </td>
-                <td><div className="truncate-text" style={{fontWeight: m.status === "NOUVEAU" ? 600 : 400, fontSize: "0.875rem"}}>{m.objet}</div></td>
-                <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
-                <td>
-                  <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
-                    <div style={{position: 'relative'}}>
-                      <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
-                        <MoreVertical size={16} />
-                      </button>
-                      {renderDropdown(m)}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              ));
+            })()}
           </tbody>
         </table>
       </div>
@@ -909,7 +894,7 @@ const InboxPage = () => {
                   {(processMsg?.cv || processMsg?.attachment || processMsg?.contact?.pieceJointe) && (
                     <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginBottom: '1rem'}}>
                       <input type="checkbox" checked={includeAttachedFile} onChange={(e) => setIncludeAttachedFile(e.target.checked)} />
-                      <span style={{fontSize: '0.875rem', color: 'var(--text-main)'}}>Inclure les fichiers liés au message ({[processMsg.cv, processMsg.attachment, processMsg.contact?.pieceJointe].filter(Boolean).join(', ')})</span>
+                      <span style={{fontSize: '0.875rem', color: 'var(--text-main)'}}>{`Inclure les fichiers liés au message (${[processMsg.cv, processMsg.attachment, processMsg.contact?.pieceJointe].filter(Boolean).join(', ')})`}</span>
                     </label>
                   )}
                   <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'var(--primary)', marginBottom: 0}}>

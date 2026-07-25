@@ -111,8 +111,8 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
 
         <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
           <div>
-            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Destinataire (Collaborateur)</label>
-            <select value={targetUserId} onChange={(e) => setTargetUserId(e.target.value)} required className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+            <label htmlFor="smsDestinataire" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Destinataire (Collaborateur)</label>
+            <select id="smsDestinataire" value={targetUserId} onChange={(e) => setTargetUserId(e.target.value)} required className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
               <option value="">-- Sélectionner un collaborateur --</option>
               {users.map(u => (
                 <option key={u.id} value={u.id}>{u.name} ({u.role?.name || 'Sans rôle'})</option>
@@ -121,18 +121,18 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
           </div>
 
           <div>
-            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
-            <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} required placeholder="Sujet du SMS" className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}} />
+            <label htmlFor="smsSubject" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
+            <input id="smsSubject" type="text" value={subject} onChange={(e) => setSubject(e.target.value)} required placeholder="Sujet du SMS" className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}} />
           </div>
 
           <div>
-            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Contenu du message</label>
-            <textarea value={content} onChange={(e) => setContent(e.target.value)} required placeholder="Tapez votre message ici..." className="input-field" rows={5} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', resize: 'vertical'}} />
+            <label htmlFor="smsContent" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Contenu du message</label>
+            <textarea id="smsContent" value={content} onChange={(e) => setContent(e.target.value)} required placeholder="Tapez votre message ici..." className="input-field" rows={5} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', resize: 'vertical'}} />
           </div>
 
           <div>
-            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Fichier joint (Optionnel)</label>
-            <input type="file" onChange={(e) => setFile(e.target.files[0])} className="input-field" style={{width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}} />
+            <label htmlFor="smsFile" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Fichier joint (Optionnel)</label>
+            <input id="smsFile" type="file" onChange={(e) => setFile(e.target.files[0])} className="input-field" style={{width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}} />
           </div>
 
           <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem'}}>

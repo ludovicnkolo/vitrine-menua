@@ -202,11 +202,11 @@ const RolesPage = () => {
             
             <form style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Intitulé du rôle</label>
-                <input type="text" value={newRole.name} onChange={e => setNewRole({...newRole, name: e.target.value})} placeholder="Ex: GESTIONNAIRE" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                <label htmlFor="auto-field-1785016991508-1" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Intitulé du rôle</label>
+                <input id="auto-field-1785016991508-1" type="text" value={newRole.name} onChange={e => setNewRole({...newRole, name: e.target.value})} placeholder="Ex: GESTIONNAIRE" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
               </div>
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Permissions</label>
+                <label htmlFor="auto-field-1785016991508-2" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Permissions</label>
                 <div style={{position: 'relative'}} ref={dropdownRef}>
                   <div 
                     onClick={() => setPermissionsOpen(!permissionsOpen)}
@@ -235,11 +235,11 @@ const RolesPage = () => {
               </div>
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description du rôle</label>
-                <textarea rows="3" value={newRole.description} onChange={e=>setNewRole({...newRole, description: e.target.value})} placeholder="Description des responsabilités..." style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+                <textarea id="auto-field-1785016991508-2" rows="3" value={newRole.description} onChange={e=>setNewRole({...newRole, description: e.target.value})} placeholder="Description des responsabilités..." style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
               </div>
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
-                <select value={newRole.status} onChange={e => setNewRole({...newRole, status: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+                <label htmlFor="auto-field-1785016991508-3" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
+                <select id="auto-field-1785016991508-3" value={newRole.status} onChange={e => setNewRole({...newRole, status: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
                   <option value="Actif">Actif</option>
                   <option value="Inactif">Inactif</option>
                 </select>
@@ -277,11 +277,11 @@ const RolesPage = () => {
             
             <form style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Intitulé du rôle</label>
-                <input type="text" value={editRole.name} onChange={e => setEditRole({...editRole, name: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+                <label htmlFor="auto-field-1785016991508-4" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Intitulé du rôle</label>
+                <input id="auto-field-1785016991508-4" type="text" value={editRole.name} onChange={e => setEditRole({...editRole, name: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
               </div>
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Permissions</label>
+                <label htmlFor="auto-field-1785016991508-5" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Permissions</label>
                 <div style={{position: 'relative'}} ref={dropdownRef}>
                   <div 
                     onClick={() => setPermissionsOpen(!permissionsOpen)}
@@ -310,11 +310,11 @@ const RolesPage = () => {
               </div>
               <div>
                 <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description du rôle</label>
-                <textarea rows="3" value={editRole.description || ''} onChange={e=>setEditRole({...editRole, description: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+                <textarea id="auto-field-1785016991508-5" rows="3" value={editRole.description || ''} onChange={e=>setEditRole({...editRole, description: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
               </div>
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
-                <select value={editRole.status} onChange={e => setEditRole({...editRole, status: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+                <label htmlFor="auto-field-1785016991508-6" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
+                <select id="auto-field-1785016991508-6" value={editRole.status} onChange={e => setEditRole({...editRole, status: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
                   <option value="Actif">Actif</option>
                   <option value="Inactif">Inactif</option>
                 </select>

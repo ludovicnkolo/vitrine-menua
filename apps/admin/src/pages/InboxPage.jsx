@@ -686,7 +686,7 @@ const InboxPage = () => {
             {tab === 'contact' && (
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Type de profil</label>
+                  <label htmlFor="auto-field-1785016991506-1" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Type de profil</label>
                   <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{extractFieldFromHtml(processMsg.bodyHtml, 'Type de client') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise (B2B)' : 'Particulier')}</div>
                 </div>
                 <div>
@@ -863,13 +863,13 @@ const InboxPage = () => {
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               <div>
                 <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{tab === 'interne' ? 'Objet de la réponse' : 'Objet'}</label>
-                <input type="text" value={taskSubject} onChange={(e) => setTaskSubject(e.target.value)} placeholder={tab === 'interne' ? "Sujet..." : "Sujet de la mission..."} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+                <input id="auto-field-1785016991506-1" type="text" value={taskSubject} onChange={(e) => setTaskSubject(e.target.value)} placeholder={tab === 'interne' ? "Sujet..." : "Sujet de la mission..."} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
               </div>
 
               <div>
-                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{tab === 'interne' ? 'Destinataire' : 'Assigner à'}</label>
+                <label htmlFor="auto-field-1785016991506-2" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{tab === 'interne' ? 'Destinataire' : 'Assigner à'}</label>
                 <div style={{display: 'grid', gridTemplateColumns: tab === 'interne' ? '1fr' : '1fr 1fr', gap: '1rem'}}>
-                  <select value={taskAssignedToId} onChange={(e) => setTaskAssignedToId(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                  <select id="auto-field-1785016991506-2" value={taskAssignedToId} onChange={(e) => setTaskAssignedToId(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
                     <option value="">Sélectionner un collaborateur...</option>
                     {users.map(u => (
                       <option key={u.id} value={u.id}>{u.name} ({u.role?.name || u.role || 'SANS ROLE'})</option>
@@ -892,7 +892,7 @@ const InboxPage = () => {
 
               {tab !== 'interne' && (
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Dossier associé</label>
+                  <label htmlFor="auto-field-1785016991506-3" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Dossier associé</label>
                   <div style={{display: 'flex', gap: '1.5rem', marginBottom: '0.75rem'}}>
                     <label htmlFor="dossierTypeNew" style={{display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.875rem', cursor: 'pointer'}}>
                       <input type="radio" id="dossierTypeNew" name="dossierType" value="new" checked={isNewDossier} onChange={() => setIsNewDossier(true)} />
@@ -963,7 +963,7 @@ const InboxPage = () => {
 
               <div>
                 <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{tab === 'interne' ? 'Message' : 'Message / Consignes'}</label>
-                <textarea value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)} placeholder={tab === 'interne' ? "Votre réponse..." : "Détails de la mission à effectuer..."} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+                <textarea id="auto-field-1785016991506-3" value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)} placeholder={tab === 'interne' ? "Votre réponse..." : "Détails de la mission à effectuer..."} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
               </div>
             </div>
 

@@ -109,7 +109,7 @@ export default function AuditPage() {
                   filteredLogs.map(log => {
                     const colors = getActionColor(log.action);
                     return (
-                      <tr key={log.id} style={{borderBottom: '1px solid var(--border)', transition: 'background 0.2s'}} onMouseOver={(e) => e.currentTarget.style.background = '#F8FAFC'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onFocus={(e) => e.currentTarget.style.background = '#F8FAFC'} onBlur={(e) => e.currentTarget.style.background = 'transparent'} tabIndex={0}>
+                      <tr key={log.id} style={{borderBottom: '1px solid var(--border)', transition: 'background 0.2s'}}>
                         <td style={{padding: '1rem 1.5rem'}}>
                           <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.875rem'}}>
                             <Clock size={14} />

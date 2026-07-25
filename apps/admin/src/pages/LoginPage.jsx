@@ -49,12 +49,12 @@ const LoginPage = ({ onLogin }) => {
         <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
           {error && <div style={{padding: '0.75rem', background: '#FEE2E2', color: '#B91C1C', borderRadius: '8px', fontSize: '0.875rem'}}>{error}</div>}
           <div>
-            <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+            <label htmlFor="auto-field-1785016991507-1" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email</label>
+            <input id="auto-field-1785016991507-1" type="email" value={email} onChange={e => setEmail(e.target.value)} required style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
           </div>
           <div>
-            <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Mot de passe</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} required style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+            <label htmlFor="auto-field-1785016991507-2" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Mot de passe</label>
+            <input id="auto-field-1785016991507-2" type="password" value={password} onChange={e => setPassword(e.target.value)} required style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
           </div>
           <button type="submit" disabled={loading} className="btn btn-primary" style={{marginTop: '0.5rem', justifyContent: 'center', width: '100%'}}>
             {loading ? 'Connexion...' : 'Se connecter'}

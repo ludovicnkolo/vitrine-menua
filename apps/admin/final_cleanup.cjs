@@ -17,7 +17,7 @@ content = content.replace(regex, '<div className="fade-in" style={{padding: "1re
 
 // Also remove `className="card page-modal-content" style={{maxWidth: "800px", margin: "0 auto", padding: "2rem"}}`
 // since `page-modal-content` is not needed anymore if it's naturally flowed, but keeping `card` and `maxWidth` is good.
-content = content.replace(/className="card page-modal-content" style={{maxWidth: "800px", margin: "0 auto", padding: "2rem"}}/g,
+content = content.replaceAll('className="card page-modal-content" style={{maxWidth: "800px", margin: "0 auto", padding: "2rem"}}',
   'className="card" style={{maxWidth: "800px", margin: "0 auto", padding: "2rem"}}');
 
 // And remove the `X` buttons with `Retour` since we did that but some missed? Let's just fix the `X` to `Retour` everywhere inside a header.

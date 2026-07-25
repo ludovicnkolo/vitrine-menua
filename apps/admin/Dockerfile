@@ -1,8 +1,10 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --ignore-scripts --legacy-peer-deps --fetch-timeout=600000 --fetch-retry-maxtimeout=120000 --fetch-retries=5
-COPY . .
+RUN npm ci --ignore-scripts --legacy-peer-deps --fetch-timeout=600000 --fetch-retry-maxtimeout=120000 --fetch-retries=5
+COPY src/ ./src/
+COPY public/ ./public/
+COPY index.html vite.config.js nginx.conf ./
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build

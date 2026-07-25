@@ -40,13 +40,19 @@ function App() {
   }, []);
 
   const handleLogin = (newToken, userData) => {
-    if (!newToken || typeof newToken !== 'string') return;
+    // Validation stricte du jeton JWT (Format : 3 parties séparées par un point, base64url)
+    const jwtRegex = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$/;
+    if (!newToken || typeof newToken !== 'string' || !jwtRegex.test(newToken)) {
+      console.error('Format de jeton invalide.');
+      return;
+    }
     
+    // Nettoyage et validation stricte des données utilisateur
     const cleanUserData = {
-      id: userData?.id,
-      email: userData?.email,
-      name: userData?.name,
-      role: userData?.role
+      id: String(userData?.id || '').replace(/[^a-zA-Z0-9-]/g, ''),
+      email: String(userData?.email || '').trim(),
+      name: String(userData?.name || '').trim().replace(/</g, "&lt;"),
+      role: String(userData?.role || 'SANS ROLE').trim().replace(/</g, "&lt;")
     };
 
     localStorage.setItem('adminToken', newToken);

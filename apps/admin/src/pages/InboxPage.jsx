@@ -160,6 +160,19 @@ const InboxPage = () => {
         const token = localStorage.getItem('adminToken');
         const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
         const urlObj = new URL(`/api/files/view/formulaires/${encodeURIComponent(previewFile)}`, baseUrl);
+        
+        // Validation stricte de l'hôte API (Prévention SSRF)
+        const ALLOWED_API_HOSTS = [
+          'http://localhost:4000', 
+          'https://menuaconsulting.com', 
+          'https://api.menuaconsulting.com',
+          'http://backend:4000',
+          'https://backend:4000'
+        ];
+        if (!ALLOWED_API_HOSTS.includes(urlObj.origin)) {
+           throw new Error('Hôte API invalide ou non autorisé.');
+        }
+
         if (token) urlObj.searchParams.set('token', token);
         const res = await fetch(urlObj.toString());
         if (res.ok) {
@@ -458,6 +471,16 @@ const InboxPage = () => {
                 <th style={{ width: '10%' }}>Date</th>
                 <th style={{ width: '10%' }}>Actions</th>
               </tr>
+            ) : tab === 'interne' ? (
+              <tr>
+                <th style={{ width: '10%' }}>Statut</th>
+                <th style={{ width: '15%' }}>Emetteur</th>
+                <th style={{ width: '20%' }}>Email</th>
+                <th style={{ width: '10%' }}>Source</th>
+                <th style={{ width: '15%' }}>ID</th>
+                <th style={{ width: '15%' }}>Date</th>
+                <th style={{ width: '15%' }}>Actions</th>
+              </tr>
             ) : (
               <tr>
                 <th style={{ width: '10%' }}>Statut</th>
@@ -530,6 +553,46 @@ const InboxPage = () => {
                 </td>
                 <td><span className="truncate-text" style={{fontSize: "0.875rem"}}>{m.recrutement?.competenceCle || m.objet}</span></td>
                 <td style={{color: "var(--text-muted)", whiteSpace: "nowrap", fontSize: "0.875rem"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
+                <td>
+                  <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
+                    <div style={{position: 'relative'}}>
+                      <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
+                        <MoreVertical size={16} />
+                      </button>
+                      {renderDropdown(m)}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            )) : tab === 'interne' ? messages.map(m => (
+              <tr key={m.id}>
+                <td>
+                  <span style={{
+                    padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
+                    background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
+                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
+                </td>
+                <td>
+                  <strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom || 'Système'}</strong>
+                </td>
+                <td>
+                  <span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email || '-'}</span>
+                </td>
+                <td>
+                  <span style={{
+                    padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
+                    background: '#F1F5F9',
+                    color: '#64748B'
+                  }}>
+                    {m.subType || 'Interne'}
+                  </span>
+                </td>
+                <td>
+                  <span style={{color: "var(--text-muted)", fontSize: "0.75rem", fontFamily: "monospace"}} title={m.formulaireId || m.id}>
+                    {m.formulaireId ? m.formulaireId.split('-')[0] : m.id}
+                  </span>
+                </td>
+                <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                     <div style={{position: 'relative'}}>

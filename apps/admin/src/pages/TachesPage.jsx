@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
 import FilePreviewModal from '../components/FilePreviewModal';
+import SmsModal from '../components/SmsModal';
 
 const getSubjectFromTask = (desc) => {
   if (!desc) return 'Sans objet';
@@ -31,6 +32,7 @@ const TachesPage = () => {
   const [previewFile, setPreviewFile] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [showSmsModal, setShowSmsModal] = useState(false);
   const menuRef = useRef(null);
 
   // Real API states
@@ -480,6 +482,19 @@ const TachesPage = () => {
           </div>
 
         </div>
+
+        <div style={{marginTop: '1.5rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'center'}}>
+          <button type="button" onClick={() => setShowSmsModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)', display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.75rem 1.5rem'}}>
+            <MessageSquare size={16} />
+            SMS Collaborateur
+          </button>
+        </div>
+
+        <SmsModal 
+          isOpen={showSmsModal} 
+          onClose={() => setShowSmsModal(false)} 
+          contextData={{ missionId: consultTask.missionId }} 
+        />
 
         <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem'}}>
           <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Annuler</button>

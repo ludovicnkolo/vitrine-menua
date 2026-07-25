@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, MoreVertical, Pencil, Eye, Trash } from 'lucide-react';
+import { Search, MoreVertical, Pencil, Eye, Trash, MessageSquare } from 'lucide-react';
 import { getStatusBadge } from '../utils/helpers';
+import SmsModal from '../components/SmsModal';
 
 const DossiersPage = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -11,6 +12,7 @@ const DossiersPage = () => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterRole, setFilterRole] = useState('all');
   const [filterOrigine, setFilterOrigine] = useState('all');
+  const [showSmsModal, setShowSmsModal] = useState(false);
   const menuRef = useRef(null);
 
   // States for real API data
@@ -162,6 +164,19 @@ const DossiersPage = () => {
              </div>
           )}
         </div>
+
+        <div style={{marginTop: '1.5rem', display: 'flex', justifyContent: 'center'}}>
+          <button type="button" onClick={() => setShowSmsModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)', display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.75rem 1.5rem'}}>
+            <MessageSquare size={16} />
+            SMS Collaborateur
+          </button>
+        </div>
+
+        <SmsModal 
+          isOpen={showSmsModal} 
+          onClose={() => setShowSmsModal(false)} 
+          contextData={{ dossierId: consultDossier.id }} 
+        />
 
         {localConsultTask && (
           <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>

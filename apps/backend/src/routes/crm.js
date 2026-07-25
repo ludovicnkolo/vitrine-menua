@@ -647,6 +647,49 @@ router.delete('/taches/:id', async (req, res) => {
   }
 });
 // --- MESSAGES (FORMULAIRES) ---
+router.post('/messages/interne', async (req, res) => {
+  try {
+    const { subType, objet, bodyText, attachment, dossierId, missionId } = req.body;
+    
+    // Récupérer les infos complètes de l'expéditeur
+    let senderName = 'Administrateur';
+    let senderEmail = req.user?.email || 'admin@menua';
+    let senderRole = req.user?.role || 'Admin';
+
+    if (req.user?.id && req.user.id !== 'MASTER-ADMIN') {
+      const dbUser = await prisma.utilisateur.findUnique({
+        where: { id: req.user.id },
+        include: { role: true }
+      });
+      if (dbUser) {
+        senderName = dbUser.name;
+        senderEmail = dbUser.email;
+        senderRole = dbUser.role?.name || 'Sans rôle';
+      }
+    }
+
+    const message = await prisma.messagePersonnel.create({
+      data: {
+        messageId: crypto.randomUUID(),
+        type: 'INTERNE',
+        subType: subType || 'SMS Collaborateur',
+        nomPrenom: `${senderName} (${senderRole})`,
+        email: senderEmail,
+        objet: objet,
+        bodyText: bodyText,
+        attachment: attachment,
+        status: 'NOUVEAU',
+        dossierId: dossierId || null,
+        missionId: missionId || null,
+      }
+    });
+    res.json({ success: true, data: message });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la création du message interne.' });
+  }
+});
+
 router.get('/messages', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;

@@ -1,5 +1,6 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const crypto = require('crypto');
 const imaps = require('imap-simple');
 const simpleParser = require('mailparser').simpleParser;
 const fs = require('fs');
@@ -801,7 +802,8 @@ router.post('/messages/sync-imap', async (req, res) => {
             fs.mkdirSync(destPath, { recursive: true });
           }
           for (const att of parsed.attachments) {
-            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            const randomHex = crypto.randomBytes(8).toString('hex');
+            const uniqueSuffix = Date.now() + '-' + randomHex;
             const safeName = att.filename ? att.filename.replace(/[^a-zA-Z0-9.-]/g, '_') : 'piece_jointe';
             const savedFilename = uniqueSuffix + '-' + safeName;
             try {

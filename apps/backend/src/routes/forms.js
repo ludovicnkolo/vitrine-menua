@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const xss = require('xss');
 const rateLimit = require('express-rate-limit');
@@ -168,7 +169,8 @@ router.post('/contact', upload.single('file'), async (req, res) => {
           require('fs').mkdirSync(destPath, { recursive: true });
         }
         
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const randomHex = crypto.randomBytes(8).toString('hex');
+        const uniqueSuffix = Date.now() + '-' + randomHex;
         const safeOriginalName = req.file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
         savedFilename = uniqueSuffix + '-' + safeOriginalName;
         

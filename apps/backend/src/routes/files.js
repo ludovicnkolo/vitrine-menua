@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const { authenticateJWT } = require('../middlewares/auth');
 
 const router = express.Router();
@@ -27,7 +28,8 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     // Générer un nom de fichier 100% unique (Timestamp + Nombre aléatoire + Nom d'origine nettoyé)
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const randomHex = crypto.randomBytes(8).toString('hex');
+    const uniqueSuffix = Date.now() + '-' + randomHex;
     // On nettoie le nom original pour éviter les caractères bizarres
     const safeOriginalName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
     cb(null, uniqueSuffix + '-' + safeOriginalName);

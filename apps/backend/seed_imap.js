@@ -2,8 +2,8 @@ require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env'
 const imaps = require('imap-simple');
 const simpleParser = require('mailparser').simpleParser;
 const { PrismaClient } = require('@prisma/client');
-const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const prisma = new PrismaClient();
 
 const config = {
@@ -74,7 +74,8 @@ async function main() {
           fs.mkdirSync(destPath, { recursive: true });
         }
         const safeName = (att.filename || 'piece_jointe.pdf').replace(/[^a-zA-Z0-9.-]/g, '_');
-        savedAttachmentName = Date.now() + '-' + Math.round(Math.random() * 1E9) + '-' + safeName;
+        const randomHex = crypto.randomBytes(8).toString('hex');
+        savedAttachmentName = Date.now() + '-' + randomHex + '-' + safeName;
         
         fs.writeFileSync(path.join(destPath, savedAttachmentName), att.content);
         console.log(`[+] Pièce jointe sauvegardée : ${savedAttachmentName}`);

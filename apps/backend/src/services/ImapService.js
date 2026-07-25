@@ -3,6 +3,7 @@ const { simpleParser } = require('mailparser');
 const { PrismaClient } = require('@prisma/client');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const prisma = new PrismaClient();
 
 const IMAP_CONFIG = {
@@ -42,7 +43,8 @@ class ImapService {
         // Parse du contenu du mail
         const parsedMail = await simpleParser(allInfo.body);
         
-        const messageId = parsedMail.messageId || `msg_${Date.now()}_${Math.random()}`;
+        const randomMsgHex = crypto.randomBytes(4).toString('hex');
+        const messageId = parsedMail.messageId || `msg_${Date.now()}_${randomMsgHex}`;
         const fromEmail = parsedMail.from?.value[0]?.address || 'inconnu@domaine.com';
         const fromName = parsedMail.from?.value[0]?.name || fromEmail;
         const subject = parsedMail.subject || 'Sans objet';
@@ -60,7 +62,8 @@ class ImapService {
               fs.mkdirSync(destPath, { recursive: true });
             }
             const safeName = (att.filename || 'piece_jointe.pdf').replace(/[^a-zA-Z0-9.-]/g, '_');
-            savedAttachmentName = Date.now() + '-' + Math.round(Math.random() * 1E9) + '-' + safeName;
+            const randomAttHex = crypto.randomBytes(8).toString('hex');
+            savedAttachmentName = Date.now() + '-' + randomAttHex + '-' + safeName;
             fs.writeFileSync(path.join(destPath, savedAttachmentName), att.content);
             console.log(`[+] Pièce jointe extraite : ${savedAttachmentName}`);
           } catch (err) {

@@ -8,7 +8,7 @@ async function test() {
   const res = await fetch('http://localhost:4000/api/files/upload', {
     method: 'POST',
     headers: {
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ik1BU1RFUi1BRE1JTiIsImVtYWlsIjoibWVudWFjb25zdWx0aW5nQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4NDU1NTk3MSwiZXhwIjoxNzg0NTk5MTcxfQ.GUXIMU_mi30qNXdcJQxra7nOnR-quAZoGW_WbtjrA4A'
+      'Authorization': `Bearer ${process.env.TEST_ADMIN_TOKEN}`
     },
     body: formData
   });

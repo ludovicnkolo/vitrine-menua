@@ -15,14 +15,31 @@ app.set('trust proxy', 1);
 
 // Security Middlewares
 app.use(helmet({
-  contentSecurityPolicy: false, // Disable CSP to allow PDF inline rendering
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "blob:"],
+      frameSrc: ["'self'"], // Permettre l'iframe pour les PDF depuis la même origine
+    },
+  },
   xDownloadOptions: false, // Permet l'affichage inline sur les vieux navigateurs
-  crossOriginResourcePolicy: false, // Permet au frontend de charger la ressource
-  xFrameOptions: false // Autorise l'intégration dans une iframe
+  crossOriginResourcePolicy: { policy: "cross-origin" }, // Permet au frontend de charger la ressource (PDF/Images)
+  xFrameOptions: { action: "sameorigin" } // Autorise l'intégration dans une iframe depuis la même origine
 }));
 
-// CORS doit être défini AVANT le rate limiter pour éviter les erreurs NetworkError bloquantes du navigateur
-app.use(cors());
+// CORS
+app.use(cors({
+  origin: [
+    'http://localhost:5173', 
+    'http://localhost:5174', 
+    'https://vitrine-menua.fr', 
+    'https://admin.vitrine-menua.fr'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
+}));
 
 // Rate Limiting (General)
 const limiter = rateLimit({

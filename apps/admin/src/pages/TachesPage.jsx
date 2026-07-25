@@ -217,10 +217,10 @@ const TachesPage = () => {
         boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, width: '130px',
         display: 'flex', flexDirection: 'column', padding: '0.25rem 0'
       }}>
-        <button className="dropdown-item" onClick={() => { setOpenMenuId(null); setConsultTask(tasks.find(t => t.id === taskId)); }}>
+        <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setConsultTask(tasks.find(t => t.id === taskId)); }}>
           <Eye size={14} /> Consulter
         </button>
-        <button className="dropdown-item" onClick={() => { 
+        <button type="button" className="dropdown-item" onClick={() => { 
           setOpenMenuId(null); 
           const task = tasks.find(t => t.id === taskId);
           setEditTask(task);
@@ -230,7 +230,7 @@ const TachesPage = () => {
         }}>
           <Pencil size={14} color="#D97706" /> Modifier
         </button>
-        <button className="dropdown-item" onClick={async () => { 
+        <button type="button" className="dropdown-item" onClick={async () => { 
           setOpenMenuId(null); 
           if(window.confirm("Supprimer cette tâche ?")) {
              try {
@@ -253,7 +253,7 @@ const TachesPage = () => {
         <div className="" style={{width: '100%', padding: '0'}}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
             <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600}}>Nouvelle Tâche (Liée à {consultTask?.dossierId})</h3>
-            <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+            <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
           </div>
           
           <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -304,8 +304,8 @@ const TachesPage = () => {
           </div>
           
           <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
-            <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline">Annuler</button>
-            <button onClick={handleCreateSubTask} disabled={isSubmitting} className="btn btn-primary">{isSubmitting ? 'Création...' : 'Créer la tâche'}</button>
+            <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline">Annuler</button>
+            <button type="button" onClick={handleCreateSubTask} disabled={isSubmitting} className="btn btn-primary">{isSubmitting ? 'Création...' : 'Créer la tâche'}</button>
           </div>
         </div>
       </div>
@@ -316,7 +316,7 @@ const TachesPage = () => {
     return (
       <div className="fade-in" style={{width: "100%", padding: "0"}}>
         <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-          <button onClick={() => { setEditTask(null); setTaskFile(null); }} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour</button>
+          <button type="button" onClick={() => { setEditTask(null); setTaskFile(null); }} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour</button>
           <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Modifier tâche : {editTask.reference || editTask.id}</h2>
         </div>
         
@@ -351,14 +351,14 @@ const TachesPage = () => {
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
             <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {editFormData.attachment && editFormData.attachment.trim() && (
-                <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.75rem'}}>
                   {editFormData.attachment.split(',').map((att, idx) => att.trim() && (
-                    <div key={`att-${idx}-${att.trim()}`} style={{display: 'flex', alignItems: 'center', gap: '1rem', background: '#FFF', padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)'}}>
-                      <span style={{flex: 1, fontSize: '0.875rem'}} className="truncate-text">{att.trim()}</span>
+                    <div key={`att-${idx}-${att.trim()}`} style={{display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#FFF', padding: '0.35rem 0.75rem', borderRadius: '4px', border: '1px solid var(--border)', maxWidth: '300px'}}>
+                      <span style={{fontSize: '0.875rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>{att.trim()}</span>
                       <button type="button" onClick={() => {
                         const newAtts = editFormData.attachment.split(',').map(a => a.trim()).filter((_, i) => i !== idx).join(',');
                         setEditFormData({...editFormData, attachment: newAtts});
-                      }} style={{background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '0.25rem'}} title="Supprimer la pièce jointe"><Trash size={16}/></button>
+                      }} style={{background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '0.25rem', display: 'flex'}} title="Supprimer la pièce jointe"><Trash size={16}/></button>
                     </div>
                   ))}
                 </div>
@@ -393,8 +393,8 @@ const TachesPage = () => {
         </div>
 
         <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem'}}>
-          <button onClick={() => { setEditTask(null); setTaskFile(null); }} className="btn btn-outline">Annuler</button>
-          <button onClick={handleUpdateTask} className="btn btn-primary">Enregistrer</button>
+          <button type="button" onClick={() => { setEditTask(null); setTaskFile(null); }} className="btn btn-outline">Annuler</button>
+          <button type="button" onClick={handleUpdateTask} className="btn btn-primary">Enregistrer</button>
         </div>
       </div>
     );
@@ -404,7 +404,7 @@ const TachesPage = () => {
     return (
       <div className="fade-in" style={{width: "100%", padding: "0"}}>
         <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-          <button onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour aux tâches</button>
+          <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour aux tâches</button>
           <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consultation tâche : {consultTask.reference || consultTask.id}</h2>
         </div>
         
@@ -470,8 +470,8 @@ const TachesPage = () => {
         </div>
 
         <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem'}}>
-          <button onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Annuler</button>
-          <button onClick={() => { setConsultTask(null); setTaskFile(null); alert('Tâche mise à jour avec succès !'); }} className="btn btn-primary">Enregistrer</button>
+          <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Annuler</button>
+          <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); alert('Tâche mise à jour avec succès !'); }} className="btn btn-primary">Enregistrer</button>
         </div>
 
         <FilePreviewModal previewFile={previewFile} onClose={() => setPreviewFile(null)} />
@@ -566,7 +566,7 @@ const TachesPage = () => {
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                     <div style={{position: 'relative'}}>
-                      <button onClick={(e) => toggleMenu(e, t.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
+                      <button type="button" onClick={(e) => toggleMenu(e, t.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
                         <MoreVertical size={16} />
                       </button>
                       {renderDropdown(t.id)}
@@ -581,7 +581,7 @@ const TachesPage = () => {
 
       {totalPages >= 1 && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '1rem', alignItems: 'center' }}>
-          <button 
+          <button type="button" 
             disabled={page === 1} 
             onClick={() => setPage(p => Math.max(1, p - 1))} 
             style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)', background: '#FFF', cursor: page === 1 ? 'not-allowed' : 'pointer' }}
@@ -589,7 +589,7 @@ const TachesPage = () => {
             Précédent
           </button>
           <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Page {page} sur {totalPages}</span>
-          <button 
+          <button type="button" 
             disabled={page >= totalPages} 
             onClick={() => setPage(p => Math.min(totalPages, p + 1))} 
             style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)', background: '#FFF', cursor: page >= totalPages ? 'not-allowed' : 'pointer' }}

@@ -472,7 +472,7 @@ const InboxPage = () => {
                   <span style={{
                     padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
                     background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
-                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replace(/_/g, " ")}</span>
+                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
                 </td>
                 <td>
                   <strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong>
@@ -508,7 +508,7 @@ const InboxPage = () => {
                   <span style={{
                     padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
                     background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
-                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replace(/_/g, " ")}</span>
+                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
                 </td>
                 <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong></td>
                 <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span></td>
@@ -540,7 +540,7 @@ const InboxPage = () => {
                   <span style={{
                     padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
                     background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
-                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replace(/_/g, " ")}</span>
+                  }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
                 </td>
                 <td>
                   <strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong>

@@ -15,6 +15,7 @@ const SystemSpacePage = () => {
   }, [location]);
 
   const handleThemeChange = (newTheme) => {
+    if (newTheme !== 'light' && newTheme !== 'dark') return;
     setTheme(newTheme);
     localStorage.setItem('adminTheme', newTheme);
     if (newTheme === 'dark') {

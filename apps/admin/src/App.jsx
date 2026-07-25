@@ -46,14 +46,32 @@ function App() {
       console.error('Format de jeton invalide.');
       return;
     }
+
+    // Validation stricte par liste blanche et regex pour contrer l'empoisonnement du stockage (S8475)
+    const ALLOWED_ROLES = ['Super-administrateur', 'Responsable opérationnel', 'Relecteur', 'Collaborateur', 'Administrateur technique', 'ADMIN', 'SUPERVISOR', 'USER', 'SANS ROLE'];
     
-    // Nettoyage et validation stricte des données utilisateur
-    const cleanUserData = {
-      id: String(userData?.id || '').replace(/[^a-zA-Z0-9-]/g, ''),
-      email: String(userData?.email || '').trim(),
-      name: String(userData?.name || '').trim().replace(/</g, "&lt;"),
-      role: String(userData?.role || 'SANS ROLE').trim().replace(/</g, "&lt;")
-    };
+    const role = String(userData?.role || 'SANS ROLE').trim();
+    if (!ALLOWED_ROLES.includes(role)) {
+      console.error('Rôle utilisateur non autorisé.');
+      return;
+    }
+
+    const email = String(userData?.email || '').trim();
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      console.error('Email invalide.');
+      return;
+    }
+
+    const id = String(userData?.id || '').replace(/[^a-zA-Z0-9-]/g, '');
+    if (!id || id.length > 50) {
+      console.error('ID invalide.');
+      return;
+    }
+
+    const name = String(userData?.name || '').trim().replace(/[<>]/g, "");
+
+    const cleanUserData = { id, email, name, role };
 
     localStorage.setItem('adminToken', newToken);
     localStorage.setItem('adminUser', JSON.stringify(cleanUserData));

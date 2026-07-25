@@ -60,6 +60,8 @@ const InboxPage = () => {
   const [taskSubject, setTaskSubject] = useState('');
   const [taskAssignedToId, setTaskAssignedToId] = useState('');
   const [taskNewDossierName, setTaskNewDossierName] = useState('');
+  const [taskDossierSection, setTaskDossierSection] = useState('');
+  const [taskDossierCible, setTaskDossierCible] = useState('');
   const [taskDossierId, setTaskDossierId] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [taskEcheance, setTaskEcheance] = useState('');

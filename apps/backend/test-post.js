@@ -1,4 +1,4 @@
-const http = require('http');
+const http = require('node:http');
 const jwt = require('jsonwebtoken');
 
 const token = jwt.sign({ id: 'MASTER-ADMIN', email: 'master@admin.com', role: 'ADMIN' }, process.env.JWT_SECRET || 'CHANGE_MOI_EN_PRODUCTION_openssl_rand_base64_64');

@@ -3,8 +3,8 @@ const { PrismaClient } = require('@prisma/client');
 const crypto = require('node:crypto');
 const imaps = require('imap-simple');
 const simpleParser = require('mailparser').simpleParser;
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 const prisma = new PrismaClient();
 const router = express.Router();
 
@@ -89,7 +89,7 @@ router.post('/users', async (req, res) => {
   try {
     const { name, email, roleId, phone, country, city, education, status, profile, idCardUrl, telephone, lieuResidence, experienceCle, langues } = req.body;
     const bcrypt = require('bcryptjs');
-    const crypto = require('crypto');
+    const crypto = require('node:crypto');
     const nodemailer = require('nodemailer');
     
     // Generate token

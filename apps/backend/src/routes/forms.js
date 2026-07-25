@@ -161,12 +161,12 @@ router.post('/contact', upload.single('file'), async (req, res) => {
         let destPath;
         const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
         try {
-          destPath = require('path').join(rootPath, 'formulaires');
-          require('fs').mkdirSync(destPath, { recursive: true });
+          destPath = require('node:path').join(rootPath, 'formulaires');
+          require('node:fs').mkdirSync(destPath, { recursive: true });
         } catch (dirErr) {
           // Fallback to local storage if permission denied
-          destPath = require('path').join(__dirname, '../../../storage/formulaires');
-          require('fs').mkdirSync(destPath, { recursive: true });
+          destPath = require('node:path').join(__dirname, '../../../storage/formulaires');
+          require('node:fs').mkdirSync(destPath, { recursive: true });
         }
         
         const randomHex = crypto.randomBytes(8).toString('hex');
@@ -174,7 +174,7 @@ router.post('/contact', upload.single('file'), async (req, res) => {
         const safeOriginalName = req.file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
         savedFilename = uniqueSuffix + '-' + safeOriginalName;
         
-        require('fs').writeFileSync(require('path').join(destPath, savedFilename), req.file.buffer);
+        require('node:fs').writeFileSync(require('node:path').join(destPath, savedFilename), req.file.buffer);
       } catch (err) {
         console.error("Impossible de sauvegarder le fichier :", err);
         savedFilename = req.file.originalname; // ultimate fallback

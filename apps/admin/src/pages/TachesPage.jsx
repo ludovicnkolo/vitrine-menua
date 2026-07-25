@@ -8,6 +8,18 @@ import {
 import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
 import FilePreviewModal from '../components/FilePreviewModal';
 
+const getSubjectFromTask = (desc) => {
+  if (!desc) return 'Sans objet';
+  const match = desc.match(/Objet: (.*)/);
+  return match ? match[1] : desc.split('\n')[0];
+};
+
+const getMessageFromTask = (desc) => {
+  if (!desc) return 'Aucun message';
+  const match = desc.match(/Consignes: ([\s\S]*)/);
+  return match ? match[1] : desc;
+};
+
 const TachesPage = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [consultTask, setConsultTask] = useState(null);
@@ -224,8 +236,8 @@ const TachesPage = () => {
           setOpenMenuId(null); 
           const task = tasks.find(t => t.id === taskId);
           setEditTask(task);
-          const subj = task.description ? (task.description.match(/Objet: (.*)/) ? task.description.match(/Objet: (.*)/)[1] : task.description.split('\n')[0]) : '';
-          const msg = task.description ? (task.description.match(/Consignes: ([\s\S]*)/) ? task.description.match(/Consignes: ([\s\S]*)/)[1] : task.description) : '';
+          const subj = getSubjectFromTask(task.description);
+          const msg = getMessageFromTask(task.description);
           setEditFormData({ subject: subj, message: msg, status: task.status, attachment: task.attachment || '', assignedToId: task.assignedToId || '' });
         }}>
           <Pencil size={14} color="#D97706" /> Modifier
@@ -422,7 +434,7 @@ const TachesPage = () => {
 
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
-            <input type="text" defaultValue={consultTask.description ? (consultTask.description.match(/Objet: (.*)/) ? consultTask.description.match(/Objet: (.*)/)[1] : consultTask.description.split('\n')[0]) : 'Sans objet'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+            <input type="text" defaultValue={getSubjectFromTask(consultTask.description)} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
           </div>
 
           <div>
@@ -453,7 +465,7 @@ const TachesPage = () => {
 
           <div>
             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
-            <textarea defaultValue={consultTask.description ? (consultTask.description.match(/Consignes: ([\s\S]*)/) ? consultTask.description.match(/Consignes: ([\s\S]*)/)[1] : consultTask.description) : 'Aucun message'} readOnly style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'none', fontFamily: 'inherit', background: '#F8FAFC', color: 'var(--text-main)'}}></textarea>
+            <textarea defaultValue={getMessageFromTask(consultTask.description)} readOnly style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'none', fontFamily: 'inherit', background: '#F8FAFC', color: 'var(--text-main)'}}></textarea>
           </div>
 
           <div>

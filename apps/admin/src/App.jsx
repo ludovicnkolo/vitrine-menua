@@ -32,7 +32,6 @@ function App() {
     const saved = localStorage.getItem('adminUser');
     return saved ? JSON.parse(saved) : null;
   });
-  const [isTeamExpanded, setIsTeamExpanded] = useState(true);
 
   useEffect(() => {
     if (localStorage.getItem('adminTheme') === 'dark') {
@@ -41,10 +40,19 @@ function App() {
   }, []);
 
   const handleLogin = (newToken, userData) => {
+    if (!newToken || typeof newToken !== 'string') return;
+    
+    const cleanUserData = {
+      id: userData?.id,
+      email: userData?.email,
+      name: userData?.name,
+      role: userData?.role
+    };
+
     localStorage.setItem('adminToken', newToken);
-    localStorage.setItem('adminUser', JSON.stringify(userData));
+    localStorage.setItem('adminUser', JSON.stringify(cleanUserData));
     setToken(newToken);
-    setUser(userData);
+    setUser(cleanUserData);
   };
 
   const handleLogout = () => {

@@ -73,7 +73,12 @@ const InboxPage = () => {
 
   const filterFn = (m) => {
     const isProcessed = m.status === 'TERMINE' || m.status === 'ARCHIVE';
-    const statusMatch = filterTraite === 'all' ? true : (filterTraite === 'traite' ? isProcessed : !isProcessed);
+    let statusMatch = true;
+    if (filterTraite === 'traite') {
+      statusMatch = isProcessed;
+    } else if (filterTraite === 'non_traite') {
+      statusMatch = !isProcessed;
+    }
     if (!statusMatch) return false;
     if (!searchQuery) return true;
     const term = searchQuery.toLowerCase();
@@ -605,7 +610,11 @@ const InboxPage = () => {
           <div className="" style={{width: "100%", padding: "0"}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>
-                {tab === 'contact' ? 'Détails du Contact' : tab === 'recrutement' ? 'Détails de la Candidature' : 'Détails du Message'}
+                {(() => {
+                  if (tab === 'contact') return 'Détails du Contact';
+                  if (tab === 'recrutement') return 'Détails de la Candidature';
+                  return 'Détails du Message';
+                })()}
               </h2>
               <button type="button" onClick={() => setProcessMsg(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
@@ -742,10 +751,20 @@ const InboxPage = () => {
                 </div>
               )}
 
-              <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>{tab === 'contact' || tab === 'recrutement' ? 'Description / Contenu' : tab === 'personnel' || tab === 'interne' ? 'Contenu du message' : 'Message / Lettre de motivation'}</label>
-                <div style={{width: '100%', padding: '0.75rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '100px', fontSize: '0.875rem', whiteSpace: 'pre-wrap', wordBreak: 'break-word'}}>
-                  {processMsg.description || processMsg.bodyText || (tab === 'recrutement' ? extractBlockFromHtml(processMsg.bodyHtml, 'Message / Motivations') : (tab === 'contact' ? extractBlockFromHtml(processMsg.bodyHtml, 'Description du besoin') : null))}
+              <div className="card" style={{padding: '1.25rem', height: '100%'}}>
+                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>
+                  {(() => {
+                    if (tab === 'contact' || tab === 'recrutement') return 'Description / Contenu';
+                    if (tab === 'personnel' || tab === 'interne') return 'Contenu du message';
+                    return 'Message / Lettre de motivation';
+                  })()}
+                </label>
+                <div style={{background: 'var(--bg-light)', padding: '1rem', borderRadius: '8px', minHeight: '120px', whiteSpace: 'pre-wrap', color: 'var(--text-main)', border: '1px solid var(--border)', fontSize: '0.9rem', lineHeight: '1.5'}}>
+                  {processMsg.description || processMsg.bodyText || (() => {
+                    if (tab === 'recrutement') return extractBlockFromHtml(processMsg.bodyHtml, 'Message / Motivations');
+                    if (tab === 'contact') return extractBlockFromHtml(processMsg.bodyHtml, 'Description du besoin');
+                    return null;
+                  })()}
                   
                   {/* Ne rendre le HTML complet que pour les messages personnels ou internes, ou si on a absolument rien pu extraire pour contact/recrutement */}
                   {!processMsg.description && !processMsg.bodyText && tab !== 'recrutement' && tab !== 'contact' && processMsg.bodyHtml && (
@@ -887,7 +906,13 @@ const InboxPage = () => {
 
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem'}}>
               <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeAttachedFile(false); }} className="btn btn-outline" disabled={isSubmitting}>Annuler</button>
-              <button type="button" onClick={handleCreateTask} disabled={isSubmitting} className="btn btn-primary">{isSubmitting ? 'Traitement...' : (tab === 'interne' ? 'Envoyer' : 'Créer la mission')}</button>
+              <button type="button" onClick={handleCreateTask} disabled={isSubmitting} className="btn btn-primary">
+                {(() => {
+                  if (isSubmitting) return 'Traitement...';
+                  if (tab === 'interne') return 'Envoyer';
+                  return 'Créer la mission';
+                })()}
+              </button>
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 const imapConfig = {
   imap: {
     user: process.env.IMAP_USER || 'menua@vitrine-menua.fr',
-    password: process.env.IMAP_PASSWORD || 'MotDePasseSécurisé',
+    password: process.env.IMAP_PASSWORD || '', // Ne jamais mettre de mot de passe en dur dans le code (CWE-259)
     host: process.env.IMAP_HOST || 'mail.vitrine-menua.fr',
     port: Number.parseInt(process.env.IMAP_PORT || '993', 10),
     tls: process.env.IMAP_TLS === 'true' || true,
@@ -51,6 +51,7 @@ const saveAttachments = (attachments) => {
     destPath = path.join(rootPath, 'formulaires');
     fs.mkdirSync(destPath, { recursive: true });
   } catch (dirErr) {
+    console.warn("Dossier principal inaccessible, utilisation du fallback local:", dirErr.message);
     destPath = path.join(__dirname, '../../../../storage/formulaires');
     fs.mkdirSync(destPath, { recursive: true });
   }
@@ -80,7 +81,7 @@ const syncMessages = async (req, res) => {
     });
     
     let searchCriteria = ['ALL'];
-    if (lastMsg && lastMsg.receivedAt) {
+    if (lastMsg?.receivedAt) {
       searchCriteria = [['SINCE', lastMsg.receivedAt]];
     }
 

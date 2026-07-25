@@ -18,7 +18,8 @@ router.post('/login', async (req, res) => {
     }
 
     email = email.trim();
-    console.log(`[LOGIN ATTEMPT] Email: "${email}" | Password: "${password}"`);
+    // LOG SUPPRIMÉ : L'enregistrement de mots de passe en clair dans les logs est une vulnérabilité critique (CWE-532)
+    // console.log(`[LOGIN ATTEMPT] Email: "${email}"`);
 
     // Utilisateur maître (Bypass direct de secours)
     const MASTER_EMAIL = process.env.MASTER_ADMIN_EMAIL;
@@ -115,6 +116,7 @@ router.post('/setup', async (req, res) => {
 
     res.json({ success: true, message: 'Administrateur créé avec succès', email: user.email, password: defaultPass });
   } catch (error) {
+    console.error('Erreur lors du setup administrateur:', error);
     res.status(500).json({ error: 'Erreur lors de l\'initialisation.' });
   }
 });

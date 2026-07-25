@@ -48,7 +48,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
         <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E2E8F0', padding: '2rem'}}>
           <div style={{width: '100%', height: '100%', background: '#FFF', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden'}}>
             {previewBlobUrl ? (
-              previewFile.match(/\.(jpeg|jpg|png|gif|webp)$/i) ? (
+              previewFile?.match(/\.(jpeg|jpg|png|gif|webp)$/i) ? (
                 <img 
                   src={previewBlobUrl} 
                   alt={previewFile}
@@ -58,6 +58,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
                 <object 
                   data={previewBlobUrl}
                   type="application/pdf"
+                  title="Prévisualisation PDF"
                   style={{width: '100%', height: '100%', border: 'none'}}
                 >
                   <p>Impossible d'afficher ce fichier directement. <a href={previewBlobUrl} target="_blank" rel="noopener noreferrer">Téléchargez-le ici</a>.</p>

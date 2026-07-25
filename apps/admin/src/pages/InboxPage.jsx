@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, Files, Users, Settings, Bell, Search, LogOut, Briefcase,
-  MoreVertical, CheckCircle, Clock, AlertCircle, Mail, MessageSquare,
-  Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
+  MoreVertical, CheckCircle, AlertCircle, Mail, Pencil, Eye, Trash, Files
 } from 'lucide-react';
-import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
 
   const extractFieldFromHtml = (html, fieldName) => {
     if (!html) return null;
@@ -17,7 +13,7 @@ import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge }
       regex = new RegExp(`>\\s*${fieldName}\\s*<\\/strong>\\s*<div[^>]*>([\\s\\S]*?)<\\/div>`, 'i');
       match = html.match(regex);
     }
-    if (match && match[1]) {
+    if (match?.[1]) {
       return match[1].replace(/<[^>]*>?/gm, '').trim();
     }
     return null;
@@ -27,7 +23,7 @@ const extractBlockFromHtml = (html, blockName) => {
   if (!html) return null;
   const regex = new RegExp(`>\\s*${blockName}\\s*<\\/strong>\\s*<div[^>]*>([\\s\\S]*?)<\\/div>`, 'i');
   const match = html.match(regex);
-  if (match && match[1]) {
+  if (match?.[1]) {
     return match[1].replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>?/gm, '').trim();
   }
   return null;
@@ -77,7 +73,7 @@ const InboxPage = () => {
 
   const filterFn = (m) => {
     const isProcessed = m.status === 'TERMINE' || m.status === 'ARCHIVE';
-    const statusMatch = filterTraite === 'all' ? true : filterTraite === 'traite' ? isProcessed === true : isProcessed !== true;
+    const statusMatch = filterTraite === 'all' ? true : (filterTraite === 'traite' ? isProcessed : !isProcessed);
     if (!statusMatch) return false;
     if (!searchQuery) return true;
     const term = searchQuery.toLowerCase();
@@ -367,10 +363,10 @@ const InboxPage = () => {
         boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, width: '150px',
         display: 'flex', flexDirection: 'column', padding: '0.25rem 0'
       }}>
-        <button className="dropdown-item" onClick={() => { setOpenMenuId(null); setProcessMsg(m); }}>
+        <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setProcessMsg(m); }}>
           <Pencil size={14} /> Traiter
         </button>
-        <button className="dropdown-item danger" onClick={() => { setOpenMenuId(null); setDeleteMsg(m); }}>
+        <button type="button" className="dropdown-item danger" onClick={() => { setOpenMenuId(null); setDeleteMsg(m); }}>
           <Trash size={14} /> Supprimer
         </button>
       </div>
@@ -384,7 +380,7 @@ const InboxPage = () => {
       <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
         <div style={{display: 'flex', gap: '0.5rem', width: '100%'}}>
           {['contact', 'recrutement', 'interne', 'personnel'].map(t => (
-            <button 
+            <button type="button"
               key={t}
               onClick={() => setTab(t)} 
               style={{
@@ -420,7 +416,7 @@ const InboxPage = () => {
             <option value="traite">Traités</option>
           </select>
           {tab === 'personnel' && (
-            <button 
+            <button type="button"
               onClick={handleSyncEmails} 
               disabled={isSyncing}
               className="btn btn-primary" 
@@ -498,7 +494,7 @@ const InboxPage = () => {
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                     <div style={{position: 'relative'}}>
-                      <button onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
+                      <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
                         <MoreVertical size={16} />
                       </button>
                       {renderDropdown(m)}
@@ -530,7 +526,7 @@ const InboxPage = () => {
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                     <div style={{position: 'relative'}}>
-                      <button onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
+                      <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
                         <MoreVertical size={16} />
                       </button>
                       {renderDropdown(m)}
@@ -566,7 +562,7 @@ const InboxPage = () => {
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                     <div style={{position: 'relative'}}>
-                      <button onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
+                      <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
                         <MoreVertical size={16} />
                       </button>
                       {renderDropdown(m)}
@@ -581,7 +577,7 @@ const InboxPage = () => {
 
       {totalPages >= 1 && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '1rem', alignItems: 'center' }}>
-          <button 
+          <button type="button"
             disabled={page === 1} 
             onClick={() => setPage(p => Math.max(1, p - 1))} 
             style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)', background: '#FFF', cursor: page === 1 ? 'not-allowed' : 'pointer' }}
@@ -589,7 +585,7 @@ const InboxPage = () => {
             Précédent
           </button>
           <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Page {page} sur {totalPages}</span>
-          <button 
+          <button type="button"
             disabled={page >= totalPages} 
             onClick={() => setPage(p => Math.min(totalPages, p + 1))} 
             style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)', background: '#FFF', cursor: page >= totalPages ? 'not-allowed' : 'pointer' }}
@@ -609,7 +605,7 @@ const InboxPage = () => {
               <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>
                 {tab === 'contact' ? 'Détails du Contact' : tab === 'recrutement' ? 'Détails de la Candidature' : 'Détails du Message'}
               </h2>
-              <button onClick={() => setProcessMsg(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <button type="button" onClick={() => setProcessMsg(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             
             {/* Fields for Contact */}
@@ -759,13 +755,13 @@ const InboxPage = () => {
             </div>
             
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
-              <button onClick={() => setProcessMsg(null)} className="btn btn-outline">Fermer</button>
+              <button type="button" onClick={() => setProcessMsg(null)} className="btn btn-outline">Fermer</button>
               {tab === 'interne' ? (
-                <button onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Répondre</button>
+                <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Répondre</button>
               ) : (
-                <button onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une mission</button>
+                <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une mission</button>
               )}
-              <button onClick={() => setProcessMsg(null)} className="btn btn-primary">Marquer comme traité</button>
+              <button type="button" onClick={() => setProcessMsg(null)} className="btn btn-primary">Marquer comme traité</button>
             </div>
           </div>
         </div>
@@ -777,7 +773,7 @@ const InboxPage = () => {
           <div className="" style={{width: '100%', padding: '0'}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600}}>{tab === 'interne' ? 'Répondre au message' : 'Nouvelle Mission'}</h3>
-              <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeAttachedFile(false); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeAttachedFile(false); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -814,12 +810,12 @@ const InboxPage = () => {
                 <div>
                   <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Dossier associé</label>
                   <div style={{display: 'flex', gap: '1.5rem', marginBottom: '0.75rem'}}>
-                    <label style={{display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.875rem', cursor: 'pointer'}}>
-                      <input type="radio" name="dossierType" value="new" checked={isNewDossier} onChange={() => setIsNewDossier(true)} />
+                    <label htmlFor="dossierTypeNew" style={{display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.875rem', cursor: 'pointer'}}>
+                      <input type="radio" id="dossierTypeNew" name="dossierType" value="new" checked={isNewDossier} onChange={() => setIsNewDossier(true)} />
                       Nouveau dossier
                     </label>
-                    <label style={{display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.875rem', cursor: 'pointer'}}>
-                      <input type="radio" name="dossierType" value="existing" checked={!isNewDossier} onChange={() => setIsNewDossier(false)} />
+                    <label htmlFor="dossierTypeExisting" style={{display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.875rem', cursor: 'pointer'}}>
+                      <input type="radio" id="dossierTypeExisting" name="dossierType" value="existing" checked={!isNewDossier} onChange={() => setIsNewDossier(false)} />
                       Dossier existant
                     </label>
                   </div>
@@ -888,8 +884,8 @@ const InboxPage = () => {
             </div>
 
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem'}}>
-              <button onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeAttachedFile(false); }} className="btn btn-outline" disabled={isSubmitting}>Annuler</button>
-              <button onClick={handleCreateTask} disabled={isSubmitting} className="btn btn-primary">{isSubmitting ? 'Traitement...' : (tab === 'interne' ? 'Envoyer' : 'Créer la mission')}</button>
+              <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeAttachedFile(false); }} className="btn btn-outline" disabled={isSubmitting}>Annuler</button>
+              <button type="button" onClick={handleCreateTask} disabled={isSubmitting} className="btn btn-primary">{isSubmitting ? 'Traitement...' : (tab === 'interne' ? 'Envoyer' : 'Créer la mission')}</button>
             </div>
           </div>
         </div>
@@ -906,12 +902,12 @@ const InboxPage = () => {
               <h3 style={{margin: 0, fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
                 <Eye size={16} /> Prévisualisation du document : {previewFile}
               </h3>
-              <button onClick={() => setPreviewFile(null)} className="btn btn-outline" style={{padding: '0.25rem 0.5rem', height: 'auto'}}>Fermer</button>
+              <button type="button" onClick={() => setPreviewFile(null)} className="btn btn-outline" style={{padding: '0.25rem 0.5rem', height: 'auto'}}>Fermer</button>
             </div>
             <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E2E8F0', padding: '2rem'}}>
               <div style={{width: '100%', height: '100%', background: '#FFF', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden'}}>
                 {previewBlobUrl ? (
-                  previewFile.match(/\.(jpeg|jpg|png|gif|webp)$/i) ? (
+                  previewFile?.match(/\.(jpeg|jpg|png|gif|webp)$/i) ? (
                     <img 
                       src={previewBlobUrl} 
                       alt={previewFile}
@@ -921,6 +917,7 @@ const InboxPage = () => {
                     <object 
                       data={previewBlobUrl}
                       type="application/pdf"
+                      title="Prévisualisation PDF"
                       style={{width: '100%', height: '100%', border: 'none'}}
                     >
                       <p>Impossible d'afficher ce fichier directement. <a href={previewBlobUrl} target="_blank" rel="noopener noreferrer">Téléchargez-le ici</a>.</p>
@@ -947,8 +944,8 @@ const InboxPage = () => {
               Cette action est irréversible.
             </p>
             <div style={{display: 'flex', gap: '1rem', justifyContent: 'flex-end'}}>
-              <button className="btn btn-outline" onClick={() => setDeleteMsg(null)}>Annuler</button>
-              <button className="btn btn-primary" style={{backgroundColor: '#DC2626', borderColor: '#DC2626'}} onClick={confirmDelete}>Supprimer</button>
+              <button type="button" className="btn btn-outline" onClick={() => setDeleteMsg(null)}>Annuler</button>
+              <button type="button" className="btn btn-primary" style={{backgroundColor: '#DC2626', borderColor: '#DC2626'}} onClick={confirmDelete}>Supprimer</button>
             </div>
           </div>
         </div>

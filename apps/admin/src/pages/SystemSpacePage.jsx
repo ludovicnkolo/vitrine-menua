@@ -9,7 +9,7 @@ const SystemSpacePage = () => {
   const [lang, setLang] = useState(localStorage.getItem('adminLang') || 'fr');
 
   useEffect(() => {
-    if (location.state && location.state.tab) {
+    if (location.state?.tab) {
       setTab(location.state.tab);
     }
   }, [location]);
@@ -38,7 +38,7 @@ const SystemSpacePage = () => {
           { id: 'audit', label: 'Audit' },
           { id: 'configuration', label: 'Configuration' }
         ].map(t => (
-          <button 
+          <button type="button"
             key={t.id}
             onClick={() => setTab(t.id)} 
             style={{
@@ -64,14 +64,14 @@ const SystemSpacePage = () => {
             <div className="card" style={{maxWidth: '600px', marginBottom: '2rem'}}>
               <h3 style={{marginBottom: '1rem', fontWeight: 600, color: 'var(--text-main)'}}>Apparence</h3>
               <div style={{display: 'flex', gap: '1rem'}}>
-                <button 
+                <button type="button"
                   onClick={() => handleThemeChange('light')}
                   style={{flex: 1, padding: '1rem', border: theme === 'light' ? '2px solid var(--primary)' : '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface)', color: 'var(--text-main)', cursor: 'pointer', textAlign: 'center'}}
                 >
                   <div style={{fontSize: '1.5rem', marginBottom: '0.5rem'}}>☀️</div>
                   Mode Clair
                 </button>
-                <button 
+                <button type="button"
                   onClick={() => handleThemeChange('dark')}
                   style={{flex: 1, padding: '1rem', border: theme === 'dark' ? '2px solid var(--primary)' : '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface)', color: 'var(--text-main)', cursor: 'pointer', textAlign: 'center'}}
                 >

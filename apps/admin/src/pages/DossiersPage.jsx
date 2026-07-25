@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, Files, Users, Settings, Bell, Search, LogOut, Briefcase,
-  MoreVertical, CheckCircle, Clock, AlertCircle, Mail, MessageSquare,
-  Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
-} from 'lucide-react';
-import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
+import { Search, MoreVertical, Pencil, Eye, Trash } from 'lucide-react';
+import { getStatusBadge } from '../utils/helpers';
 
 const DossiersPage = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -35,7 +30,7 @@ const DossiersPage = () => {
       fetch(`${apiUrl}/api/crm/dossiers?page=${page}&limit=4&search=${encodeURIComponent(searchQuery)}&status=${filterStatus}&role=${filterRole}&origin=${filterOrigine}`, { headers }).then(res => res.json()).catch(() => ({ data: [], totalPages: 1 })),
       fetch(`${apiUrl}/api/crm/tasks?page=1&limit=1000`, { headers }).then(res => res.json()).catch(() => ({ data: [] }))
     ]).then(([dossiersRes, tasksRes]) => {
-      if (dossiersRes && dossiersRes.data) {
+      if (dossiersRes?.data) {
         setDbDossiers(dossiersRes.data);
         setTotalPages(dossiersRes.totalPages || 1);
       } else if (Array.isArray(dossiersRes)) {
@@ -43,7 +38,7 @@ const DossiersPage = () => {
         setTotalPages(1);
       }
       
-      if (tasksRes && tasksRes.data) {
+      if (tasksRes?.data) {
         setDbTasks(tasksRes.data);
       } else if (Array.isArray(tasksRes)) {
         setDbTasks(tasksRes);
@@ -84,13 +79,13 @@ const DossiersPage = () => {
         boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, width: '150px',
         display: 'flex', flexDirection: 'column', padding: '0.25rem 0'
       }}>
-        <button className="dropdown-item" onClick={() => { setConsultDossier(dbDossiers.find(d => d.id === id)); setOpenMenuId(null); }}>
+        <button type="button" className="dropdown-item" onClick={() => { setConsultDossier(dbDossiers.find(d => d.id === id)); setOpenMenuId(null); }}>
           <Eye size={14} color="var(--primary)" /> Consulter
         </button>
-        <button className="dropdown-item" onClick={() => { setEditDossier(dbDossiers.find(d => d.id === id)); setOpenMenuId(null); }}>
+        <button type="button" className="dropdown-item" onClick={() => { setEditDossier(dbDossiers.find(d => d.id === id)); setOpenMenuId(null); }}>
           <Pencil size={14} color="#D97706" /> Modifier
         </button>
-        <button className="dropdown-item danger" onClick={() => setOpenMenuId(null)}>
+        <button type="button" className="dropdown-item danger" onClick={() => setOpenMenuId(null)}>
           <Trash size={14} /> Supprimer
         </button>
       </div>
@@ -103,7 +98,7 @@ const DossiersPage = () => {
     return (
       <div className="fade-in" style={{width: "100%", padding: "0"}}>
         <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-          <button onClick={() => setConsultDossier(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour aux dossiers</button>
+          <button type="button" onClick={() => setConsultDossier(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour aux dossiers</button>
           <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter le Dossier: {consultDossier.reference || consultDossier.id}</h2>
         </div>
 
@@ -141,7 +136,7 @@ const DossiersPage = () => {
           {associatedTasks.length > 0 ? (
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem'}}>
               {associatedTasks.map(task => (
-                <div key={task.id} onClick={() => setLocalConsultTask(task)} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}>
+                <div key={task.id} role="button" tabIndex={0} onClick={() => setLocalConsultTask(task)} onKeyDown={(e) => { if (e.key === 'Enter') setLocalConsultTask(task); }} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}>
                   <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
                     <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{task.subject || `Mission ${task.reference || task.id}`}</strong>
                     <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(task.status)}</span>
@@ -161,13 +156,18 @@ const DossiersPage = () => {
             <div className="fade-in" style={{background: '#FFF', width: '90%', maxWidth: '800px', borderRadius: '12px', padding: '2rem', maxHeight: '90vh', overflowY: 'auto'}}>
               <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
                 <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter la Mission: {localConsultTask.reference || localConsultTask.id}</h2>
-                <button onClick={() => setLocalConsultTask(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem', marginLeft: 'auto'}}>Fermer</button>
+                <button type="button" onClick={() => setLocalConsultTask(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem', marginLeft: 'auto'}}>Fermer</button>
               </div>
               
               <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
-                  <input type="text" value={localConsultTask.description ? (localConsultTask.description.match(/Objet: (.*)/) ? localConsultTask.description.match(/Objet: (.*)/)[1] : localConsultTask.description.split('\n')[0]) : 'Sans objet'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                  <input type="text" value={(() => {
+                    if (!localConsultTask.description) return 'Sans objet';
+                    const match = localConsultTask.description.match(/Objet: (.*)/);
+                    if (match) return match[1];
+                    return localConsultTask.description.split('\n')[0] || 'Sans objet';
+                  })()} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                 </div>
 
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
@@ -211,7 +211,7 @@ const DossiersPage = () => {
     return (
       <div className="fade-in" style={{width: "100%", padding: "0"}}>
         <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-          <button onClick={() => setEditDossier(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour aux dossiers</button>
+          <button type="button" onClick={() => setEditDossier(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour aux dossiers</button>
           <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Modifier le Dossier: {editDossier.reference || editDossier.id}</h2>
         </div>
 
@@ -249,13 +249,13 @@ const DossiersPage = () => {
           {associatedTasks.length > 0 ? (
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem'}}>
               {associatedTasks.map(task => (
-                <div key={task.id} onClick={() => setLocalConsultTask(task)} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}>
+                <div key={task.id} role="button" tabIndex={0} onClick={() => setLocalConsultTask(task)} onKeyDown={(e) => { if (e.key === 'Enter') setLocalConsultTask(task); }} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}>
                   <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
                     <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{task.subject || `Mission ${task.reference || task.id}`}</strong>
                     <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(task.status)}</span>
                   </div>
                   <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                    <button onClick={(e) => { e.stopPropagation(); alert(`Mission ${task.id} supprimée avec succès !`); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)'}} title="Supprimer la mission">
+                    <button type="button" onClick={(e) => { e.stopPropagation(); alert(`Mission ${task.id} supprimée avec succès !`); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)'}} title="Supprimer la mission">
                       <Trash size={18} />
                     </button>
                   </div>
@@ -270,8 +270,8 @@ const DossiersPage = () => {
         </div>
 
         <div style={{marginTop: '2rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'flex-end', gap: '1rem'}}>
-          <button onClick={() => setEditDossier(null)} className="btn btn-outline">Annuler</button>
-          <button onClick={() => { setEditDossier(null); alert('Dossier modifié avec succès !'); }} className="btn btn-primary">Enregistrer</button>
+          <button type="button" onClick={() => setEditDossier(null)} className="btn btn-outline">Annuler</button>
+          <button type="button" onClick={() => { setEditDossier(null); alert('Dossier modifié avec succès !'); }} className="btn btn-primary">Enregistrer</button>
         </div>
 
         {localConsultTask && (
@@ -279,13 +279,18 @@ const DossiersPage = () => {
             <div className="fade-in" style={{background: '#FFF', width: '90%', maxWidth: '800px', borderRadius: '12px', padding: '2rem', maxHeight: '90vh', overflowY: 'auto'}}>
               <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
                 <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter la Mission: {localConsultTask.reference || localConsultTask.id}</h2>
-                <button onClick={() => setLocalConsultTask(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem', marginLeft: 'auto'}}>Fermer</button>
+                <button type="button" onClick={() => setLocalConsultTask(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem', marginLeft: 'auto'}}>Fermer</button>
               </div>
               
               <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
                 <div>
                   <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
-                  <input type="text" value={localConsultTask.description ? (localConsultTask.description.match(/Objet: (.*)/) ? localConsultTask.description.match(/Objet: (.*)/)[1] : localConsultTask.description.split('\n')[0]) : 'Sans objet'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+                  <input type="text" value={(() => {
+                    if (!localConsultTask.description) return 'Sans objet';
+                    const match = localConsultTask.description.match(/Objet: (.*)/);
+                    if (match) return match[1];
+                    return localConsultTask.description.split('\n')[0] || 'Sans objet';
+                  })()} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
                 </div>
 
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
@@ -414,7 +419,7 @@ const DossiersPage = () => {
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                     <div style={{position: 'relative'}}>
-                      <button onClick={(e) => toggleMenu(e, d.id)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)'}} title="Options">
+                      <button type="button" onClick={(e) => toggleMenu(e, d.id)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)'}} title="Options">
                         <MoreVertical size={18} />
                       </button>
                       {renderDropdown(d.id)}
@@ -430,7 +435,7 @@ const DossiersPage = () => {
 
       {totalPages >= 1 && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '1rem', alignItems: 'center' }}>
-          <button 
+          <button type="button"
             disabled={page === 1} 
             onClick={() => setPage(p => Math.max(1, p - 1))} 
             style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)', background: '#FFF', cursor: page === 1 ? 'not-allowed' : 'pointer' }}
@@ -438,7 +443,7 @@ const DossiersPage = () => {
             Précédent
           </button>
           <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Page {page} sur {totalPages}</span>
-          <button 
+          <button type="button"
             disabled={page >= totalPages} 
             onClick={() => setPage(p => Math.min(totalPages, p + 1))} 
             style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)', background: '#FFF', cursor: page >= totalPages ? 'not-allowed' : 'pointer' }}

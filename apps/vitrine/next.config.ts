@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
-import os from "os";
-import path from "path";
+import os from "node:os";
+import path from "node:path";
 import { loadEnvConfig } from "@next/env";
 
 // Charger le fichier .env universel depuis la racine (site_web)
@@ -46,7 +46,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/api/:path*',
-        destination: process.env.NODE_ENV === 'production' ? 'http://backend:4000/api/:path*' : 'http://localhost:4000/api/:path*',
+        destination: process.env.NODE_ENV === 'production' ? (process.env.BACKEND_URL || 'http://backend:4000') + '/api/:path*' : 'http://localhost:4000/api/:path*',
       },
     ];
   },

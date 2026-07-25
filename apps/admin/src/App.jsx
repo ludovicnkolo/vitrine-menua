@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Files, Users, Settings, Inbox, ChevronDown, LogOut, Shield } from 'lucide-react';
+import { LayoutDashboard, Files, Users, Settings, Inbox, LogOut } from 'lucide-react';
 
 import DashboardPage from './pages/DashboardPage';
 import DossiersPage from './pages/DossiersPage';
@@ -32,7 +32,6 @@ function App() {
     const saved = localStorage.getItem('adminUser');
     return saved ? JSON.parse(saved) : null;
   });
-  const [isInboxExpanded, setIsInboxExpanded] = useState(true);
   const [isTeamExpanded, setIsTeamExpanded] = useState(true);
 
   useEffect(() => {
@@ -117,7 +116,7 @@ function App() {
               <div style={{fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)'}}>{user.role}</div>
             </div>
           </div>
-          <button onClick={handleLogout} className="btn btn-outline" style={{width: '100%', borderColor: 'rgba(255,255,255,0.2)', color: 'white', display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center'}}>
+          <button type="button" onClick={handleLogout} className="btn btn-outline" style={{width: '100%', borderColor: 'rgba(255,255,255,0.2)', color: 'white', display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center'}}>
             <LogOut size={16} /> Déconnexion
           </button>
         </div>

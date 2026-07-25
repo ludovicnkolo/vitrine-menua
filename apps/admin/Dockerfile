@@ -1,7 +1,7 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --ignore-scripts
+RUN npm install --ignore-scripts --fetch-timeout=600000 --fetch-retry-maxtimeout=120000 --fetch-retries=5
 COPY . .
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL

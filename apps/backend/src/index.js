@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('node:path');
 const { PrismaClient } = require('@prisma/client');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
@@ -43,8 +44,8 @@ app.use(cors({
 
 // Rate Limiting (General)
 const limiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_GLOBAL_WINDOW_MS), // from .env
-  max: parseInt(process.env.RATE_LIMIT_GLOBAL_MAX), // from .env
+  windowMs: Number.parseInt(process.env.RATE_LIMIT_GLOBAL_WINDOW_MS, 10), // from .env
+  max: Number.parseInt(process.env.RATE_LIMIT_GLOBAL_MAX, 10), // from .env
   standardHeaders: true,
   legacyHeaders: false,
   message: { success: false, error: 'Trop de requêtes, veuillez réessayer plus tard.' }
@@ -98,6 +99,7 @@ app.get('/api/dossiers', async (req, res) => {
     });
     res.json(dossiers);
   } catch (error) {
+    console.error('Erreur récupération dossiers:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -109,9 +111,9 @@ app.listen(PORT, () => {
   
   // Auto-seed default roles and admin on startup
   try {
-    const { execSync } = require('child_process');
+    const { execFileSync } = require('node:child_process');
     console.log('Running seed_admin.js to ensure default roles and admin exist...');
-    execSync('node seed_admin.js', { cwd: __dirname + '/../', stdio: 'inherit' });
+    execFileSync('node', ['seed_admin.js'], { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
   } catch (err) {
     console.error('Failed to run seed_admin.js on startup:', err);
   }

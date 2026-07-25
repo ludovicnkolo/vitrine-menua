@@ -1,5 +1,5 @@
 FROM node:22-bookworm-slim
-RUN apt-get update -y && apt-get install -y openssl
+RUN apt-get update -y && apt-get install -y --no-install-recommends openssl && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --ignore-scripts

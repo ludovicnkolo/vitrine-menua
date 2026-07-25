@@ -45,7 +45,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 } // Limite à 10 Mo pour les pièces jointes internes
+  limits: { fileSize: 10 * 1024 * 1024, files: 1 } // Limite à 10 Mo et 1 fichier par requête
 });
 
 // Route POST : Upload sécurisé d'un fichier dans un bucket
@@ -109,17 +109,8 @@ router.get('/view/:bucket/:filename', authenticateJWT, (req, res) => {
   }
 
   const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
-  let filePath = path.join(rootPath, bucket, filename);
-
-  if (!fs.existsSync(filePath)) {
-    // Check fallback local storage
-    const fallbackPath = path.join(__dirname, '../../../storage', bucket, filename);
-    if (fs.existsSync(fallbackPath)) {
-      filePath = fallbackPath;
-    } else {
-      return res.status(404).json({ success: false, error: 'Fichier introuvable.' });
-    }
-  }
+  const filePath = path.resolve(rootPath, bucket, filename);
+  const fallbackPath = path.resolve(__dirname, '../../../storage', bucket, filename);
 
   const options = {
     headers: {
@@ -129,11 +120,16 @@ router.get('/view/:bucket/:filename', authenticateJWT, (req, res) => {
     }
   };
 
-  const absoluteFilePath = path.resolve(filePath);
-  res.sendFile(absoluteFilePath, options, (err) => {
-    if (err && !res.headersSent) {
-      console.error("Erreur lors de l'envoi du fichier:", err);
-      res.status(500).json({ success: false, error: 'Erreur lors de la visualisation.' });
+  // Lecture directe du fichier (évite la faille TOCTOU de fs.existsSync)
+  res.sendFile(filePath, options, (err) => {
+    if (err) {
+      // Si introuvable, on tente le fallback local
+      res.sendFile(fallbackPath, options, (errFallback) => {
+        if (errFallback && !res.headersSent) {
+          console.error("Fichier introuvable:", errFallback.message);
+          res.status(404).json({ success: false, error: 'Fichier introuvable.' });
+        }
+      });
     }
   });
 });

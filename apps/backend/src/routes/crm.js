@@ -351,7 +351,9 @@ router.post('/dossiers', async (req, res) => {
         priority: priority || 'NORMAL',
         status: 'OUVERT', // mapped from NOUVEAU
         origin: origin || 'INTERNE',
-        createdById: creatorId
+        createdById: creatorId,
+        clientId: req.body.clientId || null,
+        targetUserId: req.body.targetUserId || null
       }
     });
 
@@ -449,6 +451,9 @@ router.get('/tasks', async (req, res) => {
         createdBy: { include: { role: true } },
         subMissions: {
           include: { assignedTo: true, createdBy: true }
+        },
+        taches: {
+          include: { assignedTo: true, createdBy: true }
         }
       }
     });
@@ -507,10 +512,14 @@ router.post('/tasks', async (req, res) => {
 
 router.patch('/tasks/:id', async (req, res) => {
   try {
-    const { status, assignedToId } = req.body;
+    const { status, assignedToId, description, attachment } = req.body;
+    const dataToUpdate = { status, assignedToId };
+    if (description !== undefined) dataToUpdate.description = description;
+    if (attachment !== undefined) dataToUpdate.attachment = attachment;
+    
     const task = await prisma.mission.update({
       where: { id: req.params.id },
-      data: { status, assignedToId }
+      data: dataToUpdate
     });
     res.json(task);
   } catch (error) {

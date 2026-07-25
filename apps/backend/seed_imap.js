@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 const imaps = require('imap-simple');
 const simpleParser = require('mailparser').simpleParser;
 const { PrismaClient } = require('@prisma/client');

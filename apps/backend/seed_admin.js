@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
@@ -67,6 +67,9 @@ async function main() {
                 password: hashedPassword, 
                 name: process.env.MASTER_ADMIN_NAME || 'Super Administrateur', 
                 telephone: process.env.MASTER_ADMIN_PHONE || '',
+                lieuResidence: process.env.MASTER_ADMIN_RESIDENCE || '',
+                experienceCle: process.env.MASTER_ADMIN_EXPERIENCE || '',
+                profile: process.env.MASTER_ADMIN_PROFILE || '',
                 roleId: adminRole.id 
             }
         });
@@ -77,6 +80,9 @@ async function main() {
             data: { 
                 name: process.env.MASTER_ADMIN_NAME || 'Super Administrateur', 
                 telephone: process.env.MASTER_ADMIN_PHONE || '',
+                lieuResidence: process.env.MASTER_ADMIN_RESIDENCE || '',
+                experienceCle: process.env.MASTER_ADMIN_EXPERIENCE || '',
+                profile: process.env.MASTER_ADMIN_PROFILE || '',
                 roleId: adminRole.id, 
                 password: hashedPassword 
             }

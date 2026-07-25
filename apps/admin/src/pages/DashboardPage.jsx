@@ -1,11 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, Files, Users, Settings, Bell, Search, LogOut, Briefcase,
-  MoreVertical, CheckCircle, Clock, AlertCircle, Mail, MessageSquare,
-  Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
-} from 'lucide-react';
-import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
+import React from 'react';
+import { getStatusBadge, getPriorityBadge } from '../utils/helpers';
 
 const DashboardPage = () => {
   return (

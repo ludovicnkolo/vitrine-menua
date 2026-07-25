@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, Files, Users, Settings, Bell, Search, LogOut, Briefcase,
-  MoreVertical, CheckCircle, Clock, AlertCircle, Mail, MessageSquare,
-  Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
+  MoreVertical, Pencil, Eye, Trash
 } from 'lucide-react';
 import ActionDropdown from '../components/ActionDropdown';
-import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
+import { getStatusBadge, getPriorityBadge } from '../utils/helpers';
 import FilePreviewModal from '../components/FilePreviewModal';
 import SmsModal from '../components/SmsModal';
 
@@ -39,12 +36,6 @@ const TachesPage = () => {
   // Real API states
   const [tasks, setTasks] = useState([]);
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setRawErrorMsg] = useState(null);
-  const setErrorMsg = (msg) => {
-    setRawErrorMsg(msg);
-    if (msg) setTimeout(() => setRawErrorMsg(null), 3000);
-  };
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -58,7 +49,6 @@ const TachesPage = () => {
 
   const fetchData = async () => {
     try {
-      setLoading(true);
       const token = localStorage.getItem('adminToken');
       const headers = { 'Authorization': 'Bearer ' + token };
       const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
@@ -71,7 +61,7 @@ const TachesPage = () => {
       const dataTasks = await resTasks.json();
       const dataUsers = await resUsers.json();
       
-      if (dataTasks && dataTasks.data) {
+      if (dataTasks?.data) {
         setTasks(dataTasks.data);
         setTotalPages(dataTasks.totalPages || 1);
       } else {
@@ -80,8 +70,8 @@ const TachesPage = () => {
       }
 
       setUsers(Array.isArray(dataUsers) ? dataUsers : []);
-    } catch(e) {} finally {
-      setLoading(false);
+    } catch(e) {
+      console.error("Erreur fetchData:", e);
     }
   };
 
@@ -159,6 +149,7 @@ const TachesPage = () => {
         alert("Erreur lors de la création de la tâche.");
       }
     } catch (e) {
+      console.error("Erreur de connexion au serveur:", e);
       alert("Erreur de connexion au serveur.");
     } finally {
       setIsSubmitting(false);
@@ -361,11 +352,11 @@ const TachesPage = () => {
             <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {editFormData.attachment && editFormData.attachment.trim() && (
                 <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.75rem'}}>
-                  {editFormData.attachment.split(',').map((att, idx) => att.trim() && (
-                    <div key={`att-${idx}-${att.trim()}`} style={{display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#FFF', padding: '0.35rem 0.75rem', borderRadius: '4px', border: '1px solid var(--border)', maxWidth: '300px'}}>
+                  {editFormData.attachment.split(',').map((att) => att.trim() && (
+                    <div key={att.trim()} style={{display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#FFF', padding: '0.35rem 0.75rem', borderRadius: '4px', border: '1px solid var(--border)', maxWidth: '300px'}}>
                       <span style={{fontSize: '0.875rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>{att.trim()}</span>
                       <button type="button" onClick={() => {
-                        const newAtts = editFormData.attachment.split(',').map(a => a.trim()).filter((_, i) => i !== idx).join(',');
+                        const newAtts = editFormData.attachment.split(',').map(a => a.trim()).filter(a => a !== att.trim()).join(',');
                         setEditFormData({...editFormData, attachment: newAtts});
                       }} style={{background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '0.25rem', display: 'flex'}} title="Supprimer la pièce jointe"><Trash size={16}/></button>
                     </div>
@@ -380,7 +371,7 @@ const TachesPage = () => {
           </div>
 
           <div>
-            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
+            <label htmlFor="auto-field-1785016991510-10" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
             <textarea id="auto-field-1785016991510-10" value={editFormData.message} onChange={(e) => setEditFormData({...editFormData, message: e.target.value})} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit', background: '#FFF', color: 'var(--text-main)'}}></textarea>
           </div>
 
@@ -450,8 +441,8 @@ const TachesPage = () => {
                   }
                 }}>
                   <option value="">-- Sélectionner un fichier pour l'ouvrir --</option>
-                  {consultTask.attachment.split(',').map((att, idx) => (
-                    <option key={idx} value={att.trim()}>{att.trim()}</option>
+                  {consultTask.attachment.split(',').map((att) => (
+                    <option key={att.trim()} value={att.trim()}>{att.trim()}</option>
                   ))}
                 </select>
               ) : (
@@ -461,8 +452,8 @@ const TachesPage = () => {
           </div>
 
           <div>
-            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
-            <textarea id="auto-field-1785016991510-15" defaultValue={getMessageFromTask(consultTask.description)} readOnly style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'none', fontFamily: 'inherit', background: '#F8FAFC', color: 'var(--text-main)'}}></textarea>
+            <label htmlFor="auto-field-1785016991510-15-msg" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
+            <textarea id="auto-field-1785016991510-15-msg" defaultValue={getMessageFromTask(consultTask.description)} readOnly style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'none', fontFamily: 'inherit', background: '#F8FAFC', color: 'var(--text-main)'}}></textarea>
           </div>
 
           <div>

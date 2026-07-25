@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, Files, Users, Settings, Bell, Search, LogOut, Briefcase,
-  MoreVertical, CheckCircle, Clock, AlertCircle, Mail, MessageSquare,
-  Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
+  MoreVertical, Pencil, Eye, Trash, Mail, MessageSquare
 } from 'lucide-react';
 import ActionDropdown from '../components/ActionDropdown';
-import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
+import { getStatusBadge, getPriorityBadge } from '../utils/helpers';
 import FilePreviewModal from '../components/FilePreviewModal';
 import SmsModal from '../components/SmsModal';
 

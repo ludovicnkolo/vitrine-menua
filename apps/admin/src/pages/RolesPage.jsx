@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, Files, Users, Settings, Bell, Search, LogOut, Briefcase,
-  MoreVertical, CheckCircle, Clock, AlertCircle, Mail, MessageSquare,
-  Pencil, Eye, Trash, X, Shield, Inbox, ChevronDown
+  MoreVertical, Pencil, Eye, Trash
 } from 'lucide-react';
 import ActionDropdown from '../components/ActionDropdown';
-import { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge } from '../utils/helpers';
+import { getStatusBadge } from '../utils/helpers';
 
 const RolesPage = () => {
   const [roles, setRoles] = useState([]);
@@ -102,7 +99,9 @@ const RolesPage = () => {
       });
       fetchData();
       if (editRole && editRole.id === deleteRole.id) setEditRole(null);
-    } catch(e) {}
+    } catch(e) {
+      console.error("Erreur lors de la suppression:", e);
+    }
     setDeleteRole(null);
   };
 
@@ -204,7 +203,10 @@ const RolesPage = () => {
                 <label htmlFor="auto-field-1785016991508-2" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Permissions</label>
                 <div style={{position: 'relative'}} ref={dropdownRef}>
                   <div 
+                    role="button"
+                    tabIndex={0}
                     onClick={() => setPermissionsOpen(!permissionsOpen)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setPermissionsOpen(!permissionsOpen); }}
                     style={{width: '100%', padding: '0.5rem', minHeight: '38px', borderRadius: '4px', border: '1px solid var(--border)', background: 'white', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}
                   >
                     <span style={{color: selectedPermissions.length > 0 ? 'var(--text-main)' : 'var(--text-muted)'}}>
@@ -229,7 +231,7 @@ const RolesPage = () => {
                 </div>
               </div>
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description du rôle</label>
+                <label htmlFor="auto-field-1785016991508-2" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description du rôle</label>
                 <textarea id="auto-field-1785016991508-2" rows="3" value={newRole.description} onChange={e=>setNewRole({...newRole, description: e.target.value})} placeholder="Description des responsabilités..." style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
               </div>
               <div>
@@ -253,7 +255,9 @@ const RolesPage = () => {
                     setSelectedPermissions([]);
                     setShowRoleModal(false); 
                     fetchData();
-                  } catch(e) {}
+                  } catch(e) {
+                    console.error("Erreur lors de la création:", e);
+                  }
                 }}>Créer le rôle</button>
               </div>
             </form>
@@ -279,7 +283,10 @@ const RolesPage = () => {
                 <label htmlFor="auto-field-1785016991508-5" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Permissions</label>
                 <div style={{position: 'relative'}} ref={dropdownRef}>
                   <div 
+                    role="button"
+                    tabIndex={0}
                     onClick={() => setPermissionsOpen(!permissionsOpen)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setPermissionsOpen(!permissionsOpen); }}
                     style={{width: '100%', padding: '0.5rem', minHeight: '38px', borderRadius: '4px', border: '1px solid var(--border)', background: 'white', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}
                   >
                     <span style={{color: selectedPermissions.length > 0 ? 'var(--text-main)' : 'var(--text-muted)'}}>
@@ -304,7 +311,7 @@ const RolesPage = () => {
                 </div>
               </div>
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description du rôle</label>
+                <label htmlFor="auto-field-1785016991508-5" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description du rôle</label>
                 <textarea id="auto-field-1785016991508-5" rows="3" value={editRole.description || ''} onChange={e=>setEditRole({...editRole, description: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
               </div>
               <div>
@@ -326,7 +333,9 @@ const RolesPage = () => {
                     });
                     setEditRole(null); 
                     fetchData();
-                  } catch(e) {}
+                  } catch(e) {
+                    console.error("Erreur lors de la mise à jour:", e);
+                  }
                 }}>Sauvegarder</button>
               </div>
             </form>
@@ -345,11 +354,11 @@ const RolesPage = () => {
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Intitulé du rôle</label>
+                <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Intitulé du rôle</span>
                 <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultRole.name}</div>
               </div>
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Permissions</label>
+                <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Permissions</span>
                 <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '80px'}}>
                   {(() => {
                     try {
@@ -359,11 +368,11 @@ const RolesPage = () => {
                 </div>
               </div>
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Description</label>
+                <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Description</span>
                 <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultRole.description}</div>
               </div>
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Statut</label>
+                <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Statut</span>
                 <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultRole.status || 'Actif'}</div>
               </div>
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>

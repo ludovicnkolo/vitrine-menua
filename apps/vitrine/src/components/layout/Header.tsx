@@ -262,6 +262,7 @@ export default function Header() {
             className="lg:hidden fixed inset-0 bg-black/40 z-[9990] backdrop-blur-sm"
             onClick={() => setIsMobileMenuOpen(false)}
             style={{ touchAction: 'manipulation' }}
+            aria-hidden="true"
           />
           {/* Menu Box */}
           <div className="lg:hidden fixed left-1/2 -translate-x-1/2 top-[85px] w-[92%] max-w-[400px] max-h-[calc(100vh-110px)] bg-white z-[9995] border border-[#e8e1d7] rounded-xl shadow-2xl flex flex-col overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>

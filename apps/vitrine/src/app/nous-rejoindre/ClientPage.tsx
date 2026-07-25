@@ -149,31 +149,31 @@ export default function NousRejoindre() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                   <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Nom", "Last Name")} <span className="text-red-500">*</span></label>
-                    <input type="text" name="lastName" placeholder={t("Votre nom", "Your last name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                    <label htmlFor="lastName" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Nom", "Last Name")} <span className="text-red-500">*</span></label>
+                    <input id="lastName" type="text" name="lastName" placeholder={t("Votre nom", "Your last name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                   </div>
                   <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Prénom", "First Name")} <span className="text-red-500">*</span></label>
-                    <input type="text" name="firstName" placeholder={t("Votre prénom", "Your first name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                    <label htmlFor="firstName" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Prénom", "First Name")} <span className="text-red-500">*</span></label>
+                    <input id="firstName" type="text" name="firstName" placeholder={t("Votre prénom", "Your first name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                   <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("E-mail", "Email")} <span className="text-red-500">*</span></label>
-                    <input type="email" name="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                    <label htmlFor="email" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("E-mail", "Email")} <span className="text-red-500">*</span></label>
+                    <input id="email" type="email" name="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                   </div>
                   <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")}</label>
-                    <input type="tel" name="phone" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
+                    <label htmlFor="phone" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Téléphone", "Phone")}</label>
+                    <input id="phone" type="tel" name="phone" placeholder="+33 6 12 34 56 78" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
                   </div>
                 </div>
 
                 {profileType === "company" && (
                   <div className="grid grid-cols-1 gap-8 mb-8">
                     <div>
-                      <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Raison sociale", "Company Name")} <span className="text-red-500">*</span></label>
-                      <input type="text" name="company" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+                      <label htmlFor="company" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Raison sociale", "Company Name")} <span className="text-red-500">*</span></label>
+                      <input id="company" type="text" name="company" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
                     </div>
                   </div>
                 )}
@@ -223,8 +223,8 @@ export default function NousRejoindre() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                   <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Années d'expérience", "Years of experience")} <span className="text-red-500">*</span></label>
-                    <select name="experience" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
+                    <label htmlFor="experience" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Années d'expérience", "Years of experience")} <span className="text-red-500">*</span></label>
+                    <select id="experience" name="experience" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
                       <option value="">{t("Sélectionnez", "Select")}</option>
                       <option value="Moins de 2 ans">{t("Moins de 2 ans", "Less than 2 years")}</option>
                       <option value="2 à 5 ans">{t("2 à 5 ans", "2 to 5 years")}</option>
@@ -233,19 +233,19 @@ export default function NousRejoindre() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Langues parlées", "Languages spoken")} <span className="text-red-500">*</span></label>
-                    <input type="text" name="languages" placeholder={t("Ex: Français, Anglais...", "E.g. French, English...")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+                    <label htmlFor="languages" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Langues parlées", "Languages spoken")} <span className="text-red-500">*</span></label>
+                    <input id="languages" type="text" name="languages" placeholder={t("Ex: Français, Anglais...", "E.g. French, English...")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                   <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Lieu de résidence", "Place of residence")}</label>
-                    <input type="text" name="location" placeholder={t("Ex: Paris, France", "E.g. Paris, France")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" />
+                    <label htmlFor="location" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Lieu de résidence", "Place of residence")}</label>
+                    <input id="location" type="text" name="location" placeholder={t("Ex: Paris, France", "E.g. Paris, France")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" />
                   </div>
                   <div>
-                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Disponibilité", "Availability")} <span className="text-red-500">*</span></label>
-                    <select name="availability" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
+                    <label htmlFor="availability" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Disponibilité", "Availability")} <span className="text-red-500">*</span></label>
+                    <select id="availability" name="availability" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors appearance-none" required>
                       <option value="">{t("Sélectionnez votre disponibilité", "Select your availability")}</option>
                       <option>{t("Immédiate", "Immediate")}</option>
                       <option>{t("Sous 15 jours", "Within 15 days")}</option>
@@ -256,8 +256,8 @@ export default function NousRejoindre() {
                 </div>
 
                 <div className="mt-8">
-                  <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Lien LinkedIn ou Portfolio", "LinkedIn Link or Portfolio")}</label>
-                  <input type="url" name="linkedin" placeholder="https://" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" />
+                  <label htmlFor="linkedin" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Lien LinkedIn ou Portfolio", "LinkedIn Link or Portfolio")}</label>
+                  <input id="linkedin" type="url" name="linkedin" placeholder="https://" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" />
                 </div>
               </div>
 
@@ -271,8 +271,8 @@ export default function NousRejoindre() {
               </div>
 
               <div>
-                <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Brève description de vos motivations", "Brief description of your motivations")} <span className="text-red-500">*</span></label>
-                <textarea name="message" rows={5} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors" required></textarea>
+                <label htmlFor="message" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Brève description de vos motivations", "Brief description of your motivations")} <span className="text-red-500">*</span></label>
+                <textarea id="message" name="message" rows={5} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors" required></textarea>
               </div>
 
               <div>

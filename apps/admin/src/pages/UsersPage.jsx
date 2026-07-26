@@ -1,9 +1,10 @@
 import { getSafeApiUrl } from '../utils/helpers';
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  MoreVertical, Search, Mail, MessageSquare, Pencil, Eye, Trash, Shield
+  MoreVertical, Search, Mail, MessageSquare, Pencil, Eye, Trash, Shield, Download, File, Loader
 } from 'lucide-react';
 import ActionDropdown from '../components/ActionDropdown';
+import UserFormFields from '../components/UserFormFields';
 import { getStatusBadge, getRoleBadge } from '../utils/helpers';
 
 const UsersPage = ({ forceTab }) => {
@@ -428,65 +429,13 @@ const UsersPage = ({ forceTab }) => {
             </div>
             <form onSubmit={handleCreateUser} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {errorMsg && <div style={{color: 'red', fontSize: '0.875rem'}}>{errorMsg}</div>}
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom complet</label>
-                  <input id="auto-field-1785016991511-22" type="text" value={newUser.name} onChange={e => setNewUser({...newUser, name: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-23" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email <span style={{color: 'red'}}>*</span></label>
-                  <input id="auto-field-1785016991511-23" type="email" value={newUser.email} onChange={e => setNewUser({...newUser, email: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
-              </div>
-
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-24" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Numéro de téléphone</label>
-                  <input id="auto-field-1785016991511-24" type="tel" value={newUser.telephone} onChange={e => setNewUser({...newUser, telephone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-25" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Rôle</label>
-                  <select id="auto-field-1785016991511-25" value={newUser.roleId} onChange={e => setNewUser({...newUser, roleId: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
-                    <option value="">Sélectionner un rôle...</option>
-                    {rolesList.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
-                  </select>
-                </div>
-              </div>
-
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-26" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Lieu de résidence</label>
-                  <input id="auto-field-1785016991511-26" type="text" value={newUser.lieuResidence} onChange={e => setNewUser({...newUser, lieuResidence: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-27" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Expérience clé</label>
-                  <input id="auto-field-1785016991511-27" type="text" value={newUser.experienceCle} onChange={e => setNewUser({...newUser, experienceCle: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
-              </div>
-
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-28" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Langues</label>
-                  <input id="auto-field-1785016991511-28" type="text" value={newUser.langues} onChange={e => setNewUser({...newUser, langues: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} placeholder="Ex: Français, Anglais" />
-                </div>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-29" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
-                  <select id="auto-field-1785016991511-29" value={newUser.status} onChange={e => setNewUser({...newUser, status: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
-                    <option value="Actif">Actif</option>
-                    <option value="Inactif">Inactif</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="auto-field-1785016991511-30" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description profil</label>
-                <textarea id="auto-field-1785016991511-30" rows="3" value={newUser.profile} onChange={e => setNewUser({...newUser, profile: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
-              </div>
-
-              <div>
-                <label htmlFor="auto-field-1785016991511-31" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Pièce d'identité (Upload)</label>
-                <input id="auto-field-1785016991511-31" type="file" onChange={(e) => setSelectedFile(e.target.files[0])} style={{width: '100%', padding: '0.5rem', background: 'var(--bg-color)', borderRadius: '4px', border: '1px dashed var(--text-muted)'}} />
-              </div>
+              <UserFormFields
+                user={newUser}
+                setUser={setNewUser}
+                rolesList={rolesList}
+                isEdit={false}
+                setSelectedFile={setSelectedFile}
+              />
 
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
                 <button type="button" onClick={() => setShowModal(false)} className="btn btn-outline">Annuler</button>
@@ -507,66 +456,13 @@ const UsersPage = ({ forceTab }) => {
             </div>
             <form onSubmit={handleUpdateUser} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {errorMsg && <div style={{color: 'red', fontSize: '0.875rem'}}>{errorMsg}</div>}
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-32" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom complet</label>
-                  <input id="auto-field-1785016991511-32" type="text" value={editUser.name} onChange={e=>setEditUser({...editUser, name: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-33" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email</label>
-                  <input id="auto-field-1785016991511-33" type="email" value={editUser.email} onChange={e=>setEditUser({...editUser, email: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
-              </div>
-
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-34" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Numéro de téléphone</label>
-                  <input id="auto-field-1785016991511-34" type="tel" value={editUser.telephone || ''} onChange={e=>setEditUser({...editUser, telephone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-35" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Rôle</label>
-                  <select id="auto-field-1785016991511-35" value={editUser.roleId || ''} onChange={e=>setEditUser({...editUser, roleId: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
-                    <option value="">Sélectionner un rôle...</option>
-                    {rolesList.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
-                  </select>
-                </div>
-              </div>
-
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-36" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Lieu de résidence</label>
-                  <input id="auto-field-1785016991511-36" type="text" value={editUser.lieuResidence || ''} onChange={e=>setEditUser({...editUser, lieuResidence: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-37" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Expérience clé</label>
-                  <input id="auto-field-1785016991511-37" type="text" value={editUser.experienceCle || ''} onChange={e=>setEditUser({...editUser, experienceCle: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
-              </div>
-
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-38" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Langues</label>
-                  <input id="auto-field-1785016991511-38" type="text" value={editUser.langues || ''} onChange={e=>setEditUser({...editUser, langues: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-39" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
-                  <select id="auto-field-1785016991511-39" value={editUser.isBlocked ? 'Inactif' : 'Actif'} onChange={e=>setEditUser({...editUser, isBlocked: e.target.value === 'Inactif'})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
-                    <option value="Actif">Actif</option>
-                    <option value="Inactif">Inactif</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="auto-field-1785016991511-40" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description profil</label>
-                <textarea id="auto-field-1785016991511-40" rows="3" value={editUser.profile || ''} onChange={e=>setEditUser({...editUser, profile: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
-              </div>
-
-              <div>
-                <label htmlFor="auto-field-1785016991511-41" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Pièce d'identité (Upload nouvelle pièce)</label>
-                <input id="auto-field-1785016991511-41" type="file" onChange={(e) => setSelectedFile(e.target.files[0])} style={{width: '100%', padding: '0.5rem', background: 'var(--bg-color)', borderRadius: '4px', border: '1px dashed var(--text-muted)'}} />
-                <div style={{fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem'}}>Fichier actuel : document_identite.pdf</div>
-              </div>
+              <UserFormFields
+                user={editUser}
+                setUser={setEditUser}
+                rolesList={rolesList}
+                isEdit={true}
+                setSelectedFile={setSelectedFile}
+              />
 
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
                 <button type="button" onClick={() => setEditUser(null)} className="btn btn-outline">Annuler</button>

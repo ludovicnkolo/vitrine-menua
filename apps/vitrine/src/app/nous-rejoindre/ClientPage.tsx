@@ -6,6 +6,8 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 import SubmitStatusModal from "@/components/SubmitStatusModal";
 import ContactInfoFields from "@/components/ContactInfoFields";
+import FormPrivacyAndSubmit from "@/components/FormPrivacyAndSubmit";
+import { handleFormSubmit } from "@/utils/formSubmitHandler";
 
 export default function NousRejoindre() {
   const { t, lang } = useLanguage();
@@ -14,33 +16,15 @@ export default function NousRejoindre() {
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error", message: string } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus(null);
-    
-    try {
-      const formData = new FormData(e.currentTarget);
-      const apiUrl = process.env.NODE_ENV === 'production' ? '' : process.env.NEXT_PUBLIC_API_URL;
-      const res = await fetch(`${apiUrl}/api/forms/join?lang=${encodeURIComponent(lang.toLowerCase())}`, {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      
-      if (res.ok && data.success) {
-        setSubmitStatus({ type: "success", message: data.message || "Votre candidature a été envoyée avec succès." });
-        (e.target as HTMLFormElement).reset();
-        setTimeout(() => setSubmitStatus(null), 3000);
-      } else {
-        setSubmitStatus({ type: "error", message: data.error || "Une erreur s'est produite." });
-        setTimeout(() => setSubmitStatus(null), 3000);
-      }
-    } catch (error) {
-      setSubmitStatus({ type: "error", message: "Impossible d'envoyer la candidature." });
-      setTimeout(() => setSubmitStatus(null), 3000);
-    } finally {
-      setIsSubmitting(false);
-    }
+    await handleFormSubmit({
+      e,
+      endpoint: "/api/forms/join",
+      lang,
+      setSubmitStatus,
+      setIsSubmitting,
+      successMessage: "Votre candidature a été envoyée avec succès.",
+      errorMessage: "Impossible d'envoyer la candidature."
+    });
   };
 
   return (
@@ -260,28 +244,13 @@ export default function NousRejoindre() {
                 <textarea id="message" name="message" rows={5} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors" required></textarea>
               </div>
 
-              <div>
-                <label htmlFor="privacyPolicyJoin" className="flex items-start gap-4 text-[1.05rem] text-[#6e7891] cursor-pointer group font-light">
-                  <input type="checkbox" id="privacyPolicyJoin" className="accent-[#141824] mt-1 shrink-0 w-5 h-5" required />
-                  <span>
-                    {t("J’ai pris connaissance de la", "I have read the")} <Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("politique de confidentialité", "Privacy Policy")}</Link>. <span className="text-red-500">*</span>
-                  </span>
-                </label>
-                <p className="text-[0.85rem] text-[#6e7891] font-light mt-4 leading-relaxed">
-                  {formatBrand(t(
-                    "Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin de répondre à votre demande et d'en assurer le suivi. Elles peuvent être conservées jusqu'à 3 ans après le dernier échange. Vous disposez de droits sur vos données personnelles et pouvez les exercer à l'adresse : contact@menuaconsulting.com. Pour en savoir plus, consultez notre",
-                    "The information collected via this form is processed by MENUA CONSULTING in order to respond to your request and ensure its follow-up. They can be kept for up to 3 years after the last exchange. You have rights over your personal data and can exercise them at the address: contact@menuaconsulting.com. To learn more, consult our"
-                  ))}{" "}<Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("Politique de confidentialité", "Privacy Policy")}</Link>.
-                </p>
-              </div>
-
-
-
-              <div className="flex justify-center pt-6">
-                <button type="submit" disabled={isSubmitting} className="inline-flex items-center justify-center bg-[#141824] text-white px-10 py-4 font-bold uppercase tracking-wider text-[0.85rem] hover:bg-[#1f2638] transition-colors duration-300 w-full md:w-auto disabled:opacity-70 disabled:cursor-not-allowed">
-                  {isSubmitting ? t("Envoi en cours...", "Sending...") : t("Soumettre", "Submit")}
-                </button>
-              </div>
+              <FormPrivacyAndSubmit 
+                id="privacyPolicyJoin"
+                isSubmitting={isSubmitting}
+                submitText={t("Soumettre", "Submit")}
+                submittingText={t("Envoi en cours...", "Sending...")}
+                type="join"
+              />
             </form>
           </div>
         </div>

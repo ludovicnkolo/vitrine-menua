@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit');
 const dns = require('dns').promises;
 const { PrismaClient } = require('@prisma/client');
 const { sendResponse } = require('../utils/responses');
+const { transporter } = require('../utils/mailer');
 const prisma = new PrismaClient();
 
 const router = express.Router();
@@ -50,19 +51,6 @@ const sanitizeInput = (data) => {
   }
   return data;
 };
-
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number.parseInt(process.env.SMTP_PORT),
-  secure: process.env.SMTP_SECURE === 'true',
-  requireTLS: true,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-  logger: false,
-  debug: false
-});
 
 // --- EMAIL PREMIUM TEMPLATE UTILS ---
 const buildEmailTemplate = (title, contentHTML) => `

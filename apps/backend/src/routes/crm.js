@@ -9,6 +9,7 @@ const prisma = new PrismaClient();
 const router = express.Router();
 
 const { authenticateJWT } = require('../middlewares/auth');
+const { transporter } = require('../utils/mailer');
 
 const imapConfig = {
   imap: {
@@ -20,6 +21,22 @@ const imapConfig = {
     authTimeout: 10000,
     tlsOptions: { rejectUnauthorized: false }
   }
+};
+
+const getPaginationParams = (query, defaultLimit = 6) => {
+  const page = Number.parseInt(query.page) || 1;
+  const limit = Number.parseInt(query.limit) || defaultLimit;
+  const skip = (page - 1) * limit;
+  return { page, limit, skip };
+};
+
+const sendPaginatedResponse = (res, data, total, page, limit) => {
+  res.json({
+    data,
+    total,
+    page,
+    totalPages: Math.ceil(total / limit) || 1
+  });
 };
 
 router.use(authenticateJWT);
@@ -119,16 +136,6 @@ router.post('/users', async (req, res) => {
     
     // Send email
     try {
-      const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST || 'ssl0.ovh.net',
-        port: Number.parseInt(process.env.SMTP_PORT || '587'),
-        secure: process.env.SMTP_SECURE === 'true',
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      });
-      
       const proto = req.headers['x-forwarded-proto'] || req.protocol;
       const host = req.headers.host;
       const origin = host ? `${proto}://${host}` : (process.env.VITE_API_URL || 'http://localhost:5173');
@@ -277,8 +284,7 @@ router.delete('/clients/:id', async (req, res) => {
 // --- DOSSIERS ---
 router.get('/dossiers', async (req, res) => {
   try {
-    const page = Number.parseInt(req.query.page) || 1;
-    const limit = Number.parseInt(req.query.limit) || 6;
+    const { page, limit, skip } = getPaginationParams(req.query);
     const { search, status, role, origin } = req.query;
 
     const where = {};
@@ -301,7 +307,7 @@ router.get('/dossiers', async (req, res) => {
     const total = await prisma.dossier.count({ where });
     const dossiers = await prisma.dossier.findMany({
       where,
-      skip: (page - 1) * limit,
+      skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
       include: { 
@@ -310,12 +316,7 @@ router.get('/dossiers', async (req, res) => {
         createdBy: { include: { role: true } }
       }
     });
-    res.json({
-      data: dossiers,
-      total,
-      page,
-      totalPages: Math.ceil(total / limit) || 1
-    });
+    sendPaginatedResponse(res, dossiers, total, page, limit);
   } catch (error) {
     console.error(error); console.error(error); res.status(500).json({ error: error.message });
   }
@@ -422,8 +423,7 @@ router.delete('/dossiers/:id', async (req, res) => {
 // --- TÂCHES ---
 router.get('/tasks', async (req, res) => {
   try {
-    const page = Number.parseInt(req.query.page) || 1;
-    const limit = Number.parseInt(req.query.limit) || 6;
+    const { page, limit, skip } = getPaginationParams(req.query);
     const { search, status } = req.query;
 
     const where = { parentMissionId: null }; // Only parent tasks
@@ -443,7 +443,7 @@ router.get('/tasks', async (req, res) => {
     const total = await prisma.mission.count({ where });
     const tasks = await prisma.mission.findMany({
       where,
-      skip: (page - 1) * limit,
+      skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
       include: { 
@@ -458,12 +458,7 @@ router.get('/tasks', async (req, res) => {
         }
       }
     });
-    res.json({
-      data: tasks,
-      total,
-      page,
-      totalPages: Math.ceil(total / limit) || 1
-    });
+    sendPaginatedResponse(res, tasks, total, page, limit);
   } catch (error) {
     console.error(error); console.error(error); res.status(500).json({ error: error.message });
   }
@@ -556,8 +551,7 @@ router.delete('/tasks/:id', async (req, res) => {
 // ─── TACHES (Nouvelle table) ──────────────────────────────────────────────────
 router.get('/taches', async (req, res) => {
   try {
-    const page = Number.parseInt(req.query.page) || 1;
-    const limit = Number.parseInt(req.query.limit) || 6;
+    const { page, limit, skip } = getPaginationParams(req.query);
     const { search, status } = req.query;
 
     const where = {};
@@ -576,7 +570,7 @@ router.get('/taches', async (req, res) => {
     const total = await prisma.tache.count({ where });
     const taches = await prisma.tache.findMany({
       where,
-      skip: (page - 1) * limit,
+      skip,
       take: limit,
       include: {
         mission: true,
@@ -585,12 +579,7 @@ router.get('/taches', async (req, res) => {
       },
       orderBy: { createdAt: 'desc' }
     });
-    res.json({
-      data: taches,
-      total,
-      page,
-      totalPages: Math.ceil(total / limit) || 1
-    });
+    sendPaginatedResponse(res, taches, total, page, limit);
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la récupération des tâches.' });
   }
@@ -705,8 +694,7 @@ router.post('/messages/interne', async (req, res) => {
 
 router.get('/messages', async (req, res) => {
   try {
-    const page = Number.parseInt(req.query.page) || 1;
-    const limit = Number.parseInt(req.query.limit) || 6;
+    const { page, limit, skip } = getPaginationParams(req.query);
     const tabType = (req.query.type || 'CONTACT').toUpperCase(); 
     const statusFilter = req.query.status || 'all'; 
     const search = req.query.search || '';
@@ -732,7 +720,7 @@ router.get('/messages', async (req, res) => {
       const records = await prisma.formulaire.findMany({
          where,
          orderBy: { createdAt: 'desc' },
-         skip: (page - 1) * limit,
+         skip,
          take: limit,
          include: { contact: true, recrutement: true }
       });
@@ -771,7 +759,7 @@ router.get('/messages', async (req, res) => {
       const records = await prisma.messagePersonnel.findMany({
          where,
          orderBy: { createdAt: 'desc' },
-         skip: (page - 1) * limit,
+         skip,
          take: limit,
          include: { dossier: true, mission: true }
       });
@@ -792,12 +780,7 @@ router.get('/messages', async (req, res) => {
       }));
     }
 
-    res.json({
-      data: messages,
-      total,
-      page,
-      totalPages: Math.ceil(total / limit) || 1
-    });
+    sendPaginatedResponse(res, messages, total, page, limit);
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la récupération des messages.' });
   }

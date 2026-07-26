@@ -18,6 +18,29 @@ const UsersPage = ({ forceTab }) => {
   const [consultExternal, setConsultExternal] = useState(null);
   const [editExternal, setEditExternal] = useState(null);
   const menuRef = useRef(null);
+
+  const renderReadOnlyField = (label, value) => (
+    <div>
+      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>{label}</label>
+      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{value || ''}</div>
+    </div>
+  );
+
+  const renderInputField = (label, field, obj, setObj, type = "text", required = false, isTextarea = false) => {
+    const id = `field-${field.replace(/\s+/g, '-')}`;
+    return (
+      <div>
+        <label htmlFor={id} style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>
+          {label}
+        </label>
+        {isTextarea ? (
+          <textarea id={id} rows="3" value={obj[field] || ''} onChange={e => setObj({...obj, [field]: e.target.value})} required={required} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+        ) : (
+          <input id={id} type={type} value={obj[field] || ''} onChange={e => setObj({...obj, [field]: e.target.value})} required={required} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+        )}
+      </div>
+    );
+  };
   
   // Real API states
   const [searchTerm, setSearchTerm] = useState('');
@@ -265,88 +288,40 @@ const UsersPage = ({ forceTab }) => {
               {externalType === 'Particulier' ? (
                 <>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom complet</label>
-                      <input id="auto-field-1785016991511-1" type="text" value={newClient.name} onChange={e=>setNewClient({...newClient, name: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-2" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email professionnel</label>
-                      <input id="auto-field-1785016991511-2" type="email" value={newClient.email} onChange={e=>setNewClient({...newClient, email: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
+                    {renderInputField("Nom complet", "name", newClient, setNewClient, "text", true)}
+                    {renderInputField("Email professionnel", "email", newClient, setNewClient, "email", true)}
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-3" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Téléphone</label>
-                      <input id="auto-field-1785016991511-3" type="tel" value={newClient.telephone} onChange={e=>setNewClient({...newClient, telephone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-4" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Contact secondaire</label>
-                      <input id="auto-field-1785016991511-4" type="text" value={newClient.contactSecondaire} onChange={e=>setNewClient({...newClient, contactSecondaire: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
+                    {renderInputField("Téléphone", "telephone", newClient, setNewClient, "tel")}
+                    {renderInputField("Contact secondaire", "contactSecondaire", newClient, setNewClient)}
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-5" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Secteur d'activité</label>
-                      <input id="auto-field-1785016991511-5" type="text" value={newClient.secteurActivite} onChange={e=>setNewClient({...newClient, secteurActivite: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
+                    {renderInputField("Secteur d'activité", "secteurActivite", newClient, setNewClient)}
                   </div>
-                  <div>
-                    <label htmlFor="auto-field-1785016991511-6" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description client</label>
-                    <textarea id="auto-field-1785016991511-6" rows="3" value={newClient.description} onChange={e=>setNewClient({...newClient, description: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
-                  </div>
+                  {renderInputField("Description client", "description", newClient, setNewClient, "text", false, true)}
                 </>
               ) : (
                 <>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-7" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom de la société / Raison Sociale</label>
-                      <input id="auto-field-1785016991511-7" type="text" value={newClient.raisonSociale} onChange={e=>setNewClient({...newClient, raisonSociale: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-8" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>SIRET</label>
-                      <input id="auto-field-1785016991511-8" type="text" value={newClient.siret} onChange={e=>setNewClient({...newClient, siret: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
+                    {renderInputField("Nom de la société / Raison Sociale", "raisonSociale", newClient, setNewClient, "text", true)}
+                    {renderInputField("SIRET", "siret", newClient, setNewClient)}
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-9" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email de l'entreprise</label>
-                      <input id="auto-field-1785016991511-9" type="email" value={newClient.emailEntreprise} onChange={e=>setNewClient({...newClient, emailEntreprise: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-10" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Numéro de l'entreprise</label>
-                      <input id="auto-field-1785016991511-10" type="tel" value={newClient.telephoneEntreprise} onChange={e=>setNewClient({...newClient, telephoneEntreprise: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
+                    {renderInputField("Email de l'entreprise", "emailEntreprise", newClient, setNewClient, "email")}
+                    {renderInputField("Numéro de l'entreprise", "telephoneEntreprise", newClient, setNewClient, "tel")}
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-11" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom du contact</label>
-                      <input id="auto-field-1785016991511-11" type="text" value={newClient.name} onChange={e=>setNewClient({...newClient, name: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-12" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email du contact</label>
-                      <input id="auto-field-1785016991511-12" type="email" value={newClient.email} onChange={e=>setNewClient({...newClient, email: e.target.value})} required style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
+                    {renderInputField("Nom du contact", "name", newClient, setNewClient, "text", true)}
+                    {renderInputField("Email du contact", "email", newClient, setNewClient, "email", true)}
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-13" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Numéro du contact</label>
-                      <input id="auto-field-1785016991511-13" type="tel" value={newClient.telephone} onChange={e=>setNewClient({...newClient, telephone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-14" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Contact secondaire</label>
-                      <input id="auto-field-1785016991511-14" type="text" value={newClient.contactSecondaire} onChange={e=>setNewClient({...newClient, contactSecondaire: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
+                    {renderInputField("Numéro du contact", "telephone", newClient, setNewClient, "tel")}
+                    {renderInputField("Contact secondaire", "contactSecondaire", newClient, setNewClient)}
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-15" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Secteur d'activité</label>
-                      <input id="auto-field-1785016991511-15" type="text" value={newClient.secteurActivite} onChange={e=>setNewClient({...newClient, secteurActivite: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                    </div>
+                    {renderInputField("Secteur d'activité", "secteurActivite", newClient, setNewClient)}
                   </div>
-                  <div>
-                    <label htmlFor="auto-field-1785016991511-16" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description client</label>
-                    <textarea id="auto-field-1785016991511-16" rows="3" value={newClient.description} onChange={e=>setNewClient({...newClient, description: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
-                  </div>
+                  {renderInputField("Description client", "description", newClient, setNewClient, "text", false, true)}
                 </>
               )}
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
@@ -370,24 +345,12 @@ const UsersPage = ({ forceTab }) => {
             <form onSubmit={handleUpdateClient} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {errorMsg && <div style={{color: 'red', fontSize: '0.875rem'}}>{errorMsg}</div>}
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-17" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Nom complet</label>
-                  <input id="auto-field-1785016991511-17" type="text" value={editExternal.name} onChange={e=>setEditExternal({...editExternal, name: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-18" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Email <span style={{color: 'red'}}>*</span></label>
-                  <input id="auto-field-1785016991511-18" type="email" value={editExternal.email} onChange={e=>setEditExternal({...editExternal, email: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
+                {renderInputField("Nom complet", "name", editExternal, setEditExternal, "text", true)}
+                {renderInputField("Email", "email", editExternal, setEditExternal, "email", true)}
               </div>
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-19" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Secteur d'activité</label>
-                  <input id="auto-field-1785016991511-19" type="text" value={editExternal.secteurActivite || ''} onChange={e=>setEditExternal({...editExternal, secteurActivite: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-20" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Téléphone</label>
-                  <input id="auto-field-1785016991511-20" type="tel" value={editExternal.telephone || ''} onChange={e=>setEditExternal({...editExternal, telephone: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-                </div>
+                {renderInputField("Secteur d'activité", "secteurActivite", editExternal, setEditExternal)}
+                {renderInputField("Téléphone", "telephone", editExternal, setEditExternal, "tel")}
               </div>
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                 <div>
@@ -420,70 +383,31 @@ const UsersPage = ({ forceTab }) => {
               {consultExternal.type === 'Particulier' || consultExternal.type === 'PARTICULIER' ? (
                 <>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label htmlFor="auto-field-1785016991511-22" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom complet</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.name}</div>
-                    </div>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Secteur d'activité</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.secteurActivite}</div>
-                    </div>
+                    {renderReadOnlyField("Nom complet", consultExternal.name)}
+                    {renderReadOnlyField("Secteur d'activité", consultExternal.secteurActivite)}
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Email professionnel</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.email}</div>
-                    </div>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Contact secondaire</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.contactSecondaire}</div>
-                    </div>
+                    {renderReadOnlyField("Email professionnel", consultExternal.email)}
+                    {renderReadOnlyField("Contact secondaire", consultExternal.contactSecondaire)}
                   </div>
-                  <div>
-                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Numéro de téléphone</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.telephone}</div>
-                  </div>
-                  <div>
-                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Description client</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.description}</div>
-                  </div>
+                  {renderReadOnlyField("Numéro de téléphone", consultExternal.telephone)}
+                  {renderReadOnlyField("Description client", consultExternal.description)}
                 </>
               ) : (
                 <>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom de la société</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.entreprise?.raisonSociale || consultExternal.name}</div>
-                    </div>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>SIRET</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.entreprise?.siret}</div>
-                    </div>
+                    {renderReadOnlyField("Nom de la société", consultExternal.entreprise?.raisonSociale || consultExternal.name)}
+                    {renderReadOnlyField("SIRET", consultExternal.entreprise?.siret)}
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Email de l'entreprise</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.entreprise?.emailEntreprise || consultExternal.email}</div>
-                    </div>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Téléphone de l'entreprise</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.entreprise?.telephoneEntreprise || consultExternal.telephone}</div>
-                    </div>
+                    {renderReadOnlyField("Email de l'entreprise", consultExternal.entreprise?.emailEntreprise || consultExternal.email)}
+                    {renderReadOnlyField("Téléphone de l'entreprise", consultExternal.entreprise?.telephoneEntreprise || consultExternal.telephone)}
                   </div>
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Secteur d'activité</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.secteurActivite}</div>
-                    </div>
-                    <div>
-                      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Contact secondaire</label>
-                      <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.contactSecondaire}</div>
-                    </div>
+                    {renderReadOnlyField("Secteur d'activité", consultExternal.secteurActivite)}
+                    {renderReadOnlyField("Contact secondaire", consultExternal.contactSecondaire)}
                   </div>
-                  <div>
-                    <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Description</label>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{consultExternal.description}</div>
-                  </div>
+                  {renderReadOnlyField("Description", consultExternal.description)}
                 </>
               )}
               <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '1rem'}}>

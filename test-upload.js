@@ -22,6 +22,11 @@ async function test() {
     },
     body: formData
   });
-  console.log(await res.json());
+  const data = await res.json();
+  if (data && data.url) {
+    console.log("Upload réussi. Fichier stocké.");
+  } else {
+    console.log("Erreur lors de l'upload.");
+  }
 }
 test();

@@ -150,19 +150,7 @@ const InboxPage = () => {
     const fetchPdf = async () => {
       try {
         const token = localStorage.getItem('adminToken');
-        const baseUrl = import.meta.env.VITE_API_URL ;
-        const urlObj = new URL(`/api/files/view/formulaires/${encodeURIComponent(previewFile)}`, baseUrl);
-        
-        // Validation stricte de l'hôte API (Prévention SSRF)
-        const ALLOWED_API_HOSTS = [
-          'https://localhost:4000', 
-          'https://menuaconsulting.com', 
-          'https://api.menuaconsulting.com',
-          'https://backend:4000'
-        ];
-        if (!ALLOWED_API_HOSTS.includes(urlObj.origin)) {
-           throw new Error('Hôte API invalide ou non autorisé.');
-        }
+        const urlObj = new URL(getSafeApiUrl(`/api/files/view/formulaires/${encodeURIComponent(previewFile)}`));
 
         if (token) urlObj.searchParams.set('token', token);
         const res = await fetch(urlObj.toString());

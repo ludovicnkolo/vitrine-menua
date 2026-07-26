@@ -227,6 +227,34 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     else setOpenMenuId(id);
   }
 
+  const renderTaskField = (label, value, readOnly = true, onChange = null, isTextarea = false) => {
+    const id = `field-${label.replace(/\s+/g, '-')}`;
+    return (
+      <div>
+        <label htmlFor={id} style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{label}</label>
+        {isTextarea ? (
+          <textarea 
+            id={id}
+            value={value || ''} 
+            onChange={onChange} 
+            readOnly={readOnly}
+            style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: readOnly ? '1px solid var(--border)' : '1px solid var(--primary)', minHeight: '120px', resize: readOnly ? 'none' : 'vertical', fontFamily: 'inherit', background: readOnly ? '#F8FAFC' : '#FFF', color: 'var(--text-main)'}}
+          />
+        ) : (
+          <input 
+            id={id}
+            type="text" 
+            value={value || ''} 
+            onChange={onChange} 
+            readOnly={readOnly}
+            className="input-field" 
+            style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: readOnly ? '1px solid var(--border)' : '1px solid var(--primary)', background: readOnly ? '#F8FAFC' : '#FFF', color: 'var(--text-main)'}}
+          />
+        )}
+      </div>
+    );
+  };
+
   const renderSubTaskModal = () => {
     if (!localConsultSubTask) return null;
     return (
@@ -237,17 +265,17 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             <button type="button" onClick={() => setLocalConsultSubTask(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem', marginLeft: 'auto'}}>Fermer</button>
           </div>
           <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-            <div><label htmlFor="auto-field-1785016991510-1" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label><input id="auto-field-1785016991510-1" type="text" value={getSubjectFromTask(localConsultSubTask.description)} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} /></div>
+            {renderTaskField("Objet", getSubjectFromTask(localConsultSubTask.description))}
             <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-              <div><label htmlFor="auto-field-1785016991510-2" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Créé par</label><input id="auto-field-1785016991510-2" type="text" value={localConsultSubTask.createdBy?.name || 'Inconnu'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} /></div>
-              <div><label htmlFor="auto-field-1785016991510-3" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigné à</label><input id="auto-field-1785016991510-3" type="text" value={localConsultSubTask.assignedTo?.name || 'Non assigné'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} /></div>
+              {renderTaskField("Créé par", localConsultSubTask.createdBy?.name || 'Inconnu')}
+              {renderTaskField("Assigné à", localConsultSubTask.assignedTo?.name || 'Non assigné')}
             </div>
             <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-              <div><label htmlFor="auto-field-1785016991510-4" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Date de création</label><input id="auto-field-1785016991510-4" type="text" value={new Date(localConsultSubTask.createdAt).toLocaleDateString('fr-FR')} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} /></div>
-              <div><label htmlFor="auto-field-1785016991510-5" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance</label><input id="auto-field-1785016991510-5" type="text" value={localConsultSubTask.echeance ? new Date(localConsultSubTask.echeance).toLocaleDateString('fr-FR') : 'Non définie'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} /></div>
+              {renderTaskField("Date de création", new Date(localConsultSubTask.createdAt).toLocaleDateString('fr-FR'))}
+              {renderTaskField("Échéance", localConsultSubTask.echeance ? new Date(localConsultSubTask.echeance).toLocaleDateString('fr-FR') : 'Non définie')}
             </div>
             <div>
-              <label htmlFor="auto-field-1785016991510-6" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</label>
+              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</label>
               <div style={{padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>{getStatusBadge(localConsultSubTask.status)}</div>
             </div>
           </div>
@@ -369,25 +397,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         
         <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            <div>
-              <label htmlFor="auto-field-1785016991510-11" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Créé par</label>
-              <input id="auto-field-1785016991510-11" type="text" defaultValue={editTask.createdBy?.name || 'Système'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
-            </div>
-            <div>
-              <label htmlFor="auto-field-1785016991510-12" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigné à</label>
-              <input id="auto-field-1785016991510-12" type="text" defaultValue={editTask.assignedTo?.name || 'Non assigné'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
-            </div>
+            {renderTaskField("Créé par", editTask.createdBy?.name || 'Système')}
+            {renderTaskField("Assigné à", editTask.assignedTo?.name || 'Non assigné')}
           </div>
 
-          <div>
-            <label htmlFor="auto-field-1785016991510-13" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
-            <input id="auto-field-1785016991510-13" type="text" value={editFormData.subject} onChange={(e) => setEditFormData({...editFormData, subject: e.target.value})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', background: '#FFF', color: 'var(--text-main)'}} />
-          </div>
-
-          <div>
-            <label htmlFor="auto-field-1785016991510-14" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{mode === 'MISSION' ? 'Dossier associé' : 'Mission Liée'}</label>
-            <input id="auto-field-1785016991510-14" type="text" defaultValue={mode === 'MISSION' ? (editTask.dossier?.reference || editTask.dossier?.name || editTask.dossierId) : (editTask.mission?.reference || editTask.missionId)} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
-          </div>
+          {renderTaskField("Objet", editFormData.subject, false, (e) => setEditFormData({...editFormData, subject: e.target.value}))}
+          
+          {renderTaskField(mode === 'MISSION' ? 'Dossier associé' : 'Mission Liée', mode === 'MISSION' ? (editTask.dossier?.reference || editTask.dossier?.name || editTask.dossierId) : (editTask.mission?.reference || editTask.missionId))}
 
           <div>
             <label htmlFor="task-attachment" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
@@ -412,10 +428,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             </div>
           </div>
 
-          <div>
-            <label htmlFor="task-message" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
-            <textarea id="task-message" value={editFormData.message} onChange={(e) => setEditFormData({...editFormData, message: e.target.value})} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit', background: '#FFF', color: 'var(--text-main)'}}></textarea>
-          </div>
+          {renderTaskField("Message / Consignes", editFormData.message, false, (e) => setEditFormData({...editFormData, message: e.target.value}), true)}
 
           <div style={{display: 'flex', alignItems: 'center', gap: '2rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', width: 'fit-content'}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
@@ -488,25 +501,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         
         <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            <div>
-              <label htmlFor="auto-field-1785016991510-16" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Créé par</label>
-              <input id="auto-field-1785016991510-16" type="text" defaultValue={consultTask.createdBy?.name || 'Système'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
-            </div>
-            <div>
-              <label htmlFor="auto-field-1785016991510-17" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigné à</label>
-              <input id="auto-field-1785016991510-17" type="text" defaultValue={consultTask.assignedTo?.name || 'Non assigné'} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
-            </div>
+            {renderTaskField("Créé par", consultTask.createdBy?.name || 'Système')}
+            {renderTaskField("Assigné à", consultTask.assignedTo?.name || 'Non assigné')}
           </div>
 
-          <div>
-            <label htmlFor="auto-field-1785016991510-18" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
-            <input id="auto-field-1785016991510-18" type="text" defaultValue={getSubjectFromTask(consultTask.description)} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
-          </div>
-
-          <div>
-            <label htmlFor="auto-field-1785016991510-19" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{mode === 'MISSION' ? 'Dossier associé' : 'Mission Liée'}</label>
-            <input id="auto-field-1785016991510-19" type="text" defaultValue={mode === 'MISSION' ? (consultTask.dossier?.reference || consultTask.dossier?.name || consultTask.dossierId) : (consultTask.mission?.reference || consultTask.missionId)} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
-          </div>
+          {renderTaskField("Objet", getSubjectFromTask(consultTask.description))}
+          
+          {renderTaskField(mode === 'MISSION' ? 'Dossier associé' : 'Mission Liée', mode === 'MISSION' ? (consultTask.dossier?.reference || consultTask.dossier?.name || consultTask.dossierId) : (consultTask.mission?.reference || consultTask.missionId))}
 
           <div>
             <label htmlFor="auto-field-1785016991510-20" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
@@ -529,10 +530,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             </div>
           </div>
 
-          <div>
-            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
-            <textarea id="auto-field-1785016991510-20" defaultValue={getMessageFromTask(consultTask.description)} readOnly style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'none', fontFamily: 'inherit', background: '#F8FAFC', color: 'var(--text-main)'}}></textarea>
-          </div>
+          {renderTaskField("Message / Consignes", getMessageFromTask(consultTask.description), true, null, true)}
 
           <div style={{display: 'flex', alignItems: 'center', gap: '2rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', width: 'fit-content'}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>

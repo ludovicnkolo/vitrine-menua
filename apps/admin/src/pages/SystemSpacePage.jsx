@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AuditPage from './AuditPage';
-import TabsNavigation from '../components/TabsNavigation';
+import SpacePageLayout from '../components/SpacePageLayout';
 
 const SystemSpacePage = () => {
-  const [tab, setTab] = useState('audit');
-  const location = useLocation();
   const [theme, setTheme] = useState(localStorage.getItem('adminTheme') || 'light');
   const [lang, setLang] = useState(localStorage.getItem('adminLang') || 'fr');
-
-  useEffect(() => {
-    if (location.state?.tab) {
-      setTab(location.state.tab);
-    }
-  }, [location]);
 
   const handleThemeChange = (newTheme) => {
     if (newTheme !== 'light' && newTheme !== 'dark') return;
@@ -35,58 +27,57 @@ const SystemSpacePage = () => {
   };
 
   return (
-    <div style={{padding: '0 1rem'}}>
-      <TabsNavigation 
-        tabs={[
-          { id: 'audit', label: 'Audit' },
-          { id: 'configuration', label: 'Configuration' }
-        ]} 
-        activeTab={tab} 
-        onTabChange={setTab} 
-      />
+    <SpacePageLayout
+      initialTab="audit"
+      tabs={[
+        { id: 'audit', label: 'Audit' },
+        { id: 'configuration', label: 'Configuration' }
+      ]}
+    >
+      {(tab) => (
+        <>
+          {tab === 'audit' && <AuditPage />}
+          {tab === 'configuration' && (
+            <div>
+              <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '1.5rem'}}>Configuration</h1>
+              
+              <div className="card" style={{maxWidth: '600px', marginBottom: '2rem'}}>
+                <h3 style={{marginBottom: '1rem', fontWeight: 600, color: 'var(--text-main)'}}>Apparence</h3>
+                <div style={{display: 'flex', gap: '1rem'}}>
+                  <button type="button"
+                    onClick={() => handleThemeChange('light')}
+                    style={{flex: 1, padding: '1rem', border: theme === 'light' ? '2px solid var(--primary)' : '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface)', color: 'var(--text-main)', cursor: 'pointer', textAlign: 'center'}}
+                  >
+                    <div style={{fontSize: '1.5rem', marginBottom: '0.5rem'}}>☀️</div>
+                    Mode Clair
+                  </button>
+                  <button type="button"
+                    onClick={() => handleThemeChange('dark')}
+                    style={{flex: 1, padding: '1rem', border: theme === 'dark' ? '2px solid var(--primary)' : '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface)', color: 'var(--text-main)', cursor: 'pointer', textAlign: 'center'}}
+                  >
+                    <div style={{fontSize: '1.5rem', marginBottom: '0.5rem'}}>🌙</div>
+                    Mode Sombre
+                  </button>
+                </div>
+              </div>
 
-      <div>
-        {tab === 'audit' && <AuditPage />}
-        {tab === 'configuration' && (
-          <div>
-            <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '1.5rem'}}>Configuration</h1>
-            
-            <div className="card" style={{maxWidth: '600px', marginBottom: '2rem'}}>
-              <h3 style={{marginBottom: '1rem', fontWeight: 600, color: 'var(--text-main)'}}>Apparence</h3>
-              <div style={{display: 'flex', gap: '1rem'}}>
-                <button type="button"
-                  onClick={() => handleThemeChange('light')}
-                  style={{flex: 1, padding: '1rem', border: theme === 'light' ? '2px solid var(--primary)' : '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface)', color: 'var(--text-main)', cursor: 'pointer', textAlign: 'center'}}
+              <div className="card" style={{maxWidth: '600px'}}>
+                <h3 style={{marginBottom: '1rem', fontWeight: 600, color: 'var(--text-main)'}}>Langue / Language</h3>
+                <p style={{color: 'var(--text-muted)', marginBottom: '1rem'}}>Sélectionnez la langue de l'interface d'administration. (La traduction intégrale est en cours d'intégration)</p>
+                <select 
+                  value={lang} 
+                  onChange={(e) => handleLangChange(e.target.value)}
+                  style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-main)', fontSize: '1rem'}}
                 >
-                  <div style={{fontSize: '1.5rem', marginBottom: '0.5rem'}}>☀️</div>
-                  Mode Clair
-                </button>
-                <button type="button"
-                  onClick={() => handleThemeChange('dark')}
-                  style={{flex: 1, padding: '1rem', border: theme === 'dark' ? '2px solid var(--primary)' : '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface)', color: 'var(--text-main)', cursor: 'pointer', textAlign: 'center'}}
-                >
-                  <div style={{fontSize: '1.5rem', marginBottom: '0.5rem'}}>🌙</div>
-                  Mode Sombre
-                </button>
+                  <option value="fr">🇫🇷 Français</option>
+                  <option value="en">🇬🇧 English</option>
+                </select>
               </div>
             </div>
-
-            <div className="card" style={{maxWidth: '600px'}}>
-              <h3 style={{marginBottom: '1rem', fontWeight: 600, color: 'var(--text-main)'}}>Langue / Language</h3>
-              <p style={{color: 'var(--text-muted)', marginBottom: '1rem'}}>Sélectionnez la langue de l'interface d'administration. (La traduction intégrale est en cours d'intégration)</p>
-              <select 
-                value={lang} 
-                onChange={(e) => handleLangChange(e.target.value)}
-                style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-main)', fontSize: '1rem'}}
-              >
-                <option value="fr">🇫🇷 Français</option>
-                <option value="en">🇬🇧 English</option>
-              </select>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+          )}
+        </>
+      )}
+    </SpacePageLayout>
   );
 };
 

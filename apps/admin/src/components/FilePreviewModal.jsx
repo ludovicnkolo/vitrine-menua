@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Eye } from 'lucide-react';
+import { getSafeApiUrl } from '../utils/helpers';
 
 const FilePreviewModal = ({ previewFile, onClose }) => {
   const [previewBlobUrl, setPreviewBlobUrl] = useState(null);
@@ -13,8 +14,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
     const fetchPdf = async () => {
       try {
         const token = localStorage.getItem('adminToken');
-        const baseUrl = import.meta.env.VITE_API_URL ;
-        const urlObj = new URL(`/api/files/view/formulaires/${encodeURIComponent(previewFile)}`, baseUrl);
+        const urlObj = new URL(getSafeApiUrl(`/api/files/view/formulaires/${encodeURIComponent(previewFile)}`));
         if (token) urlObj.searchParams.set('token', token);
         const res = await fetch(urlObj.toString());
         if (res.ok) {

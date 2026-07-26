@@ -71,7 +71,7 @@ export default function NousContacter() {
       }
 
       const apiUrl = process.env.NODE_ENV === 'production' ? '' : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000');
-      const res = await fetch(`${apiUrl}/api/forms/contact?lang=${lang.toLowerCase()}`, {
+      const res = await fetch(`${apiUrl}/api/forms/contact?lang=${encodeURIComponent(lang.toLowerCase())}`, {
         method: "POST",
         body: formData,
       });
@@ -188,9 +188,10 @@ export default function NousContacter() {
               <div>
                 <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Vous êtes", "You are")}</p>
                 <div className="flex flex-col sm:flex-row gap-8 sm:gap-24">
-                  <label className="flex items-center gap-3 cursor-pointer group">
+                  <label htmlFor="clientTypeCompany" className="flex items-center gap-3 cursor-pointer group">
                     <input 
                       type="radio" 
+                      id="clientTypeCompany"
                       name="clientType" 
                       value="company" 
                       checked={clientType === "company"} 
@@ -199,9 +200,10 @@ export default function NousContacter() {
                     />
                     <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Société", "Company")}</span>
                   </label>
-                  <label className="flex items-center gap-3 cursor-pointer group">
+                  <label htmlFor="clientTypeIndividual" className="flex items-center gap-3 cursor-pointer group">
                     <input 
                       type="radio" 
+                      id="clientTypeIndividual"
                       name="clientType" 
                       value="individual" 
                       checked={clientType === "individual"} 
@@ -262,8 +264,8 @@ export default function NousContacter() {
                     t("Support opérationnel CGP / gestion de patrimoine", "Wealth Management Support"),
                     t("Autre besoin opérationnel", "Other operational need"),
                   ].map((opt, i) => (
-                    <label key={i} className="flex items-start gap-3 text-[1.05rem] text-[#141824] font-light cursor-pointer group">
-                      <input type="checkbox" name="needs" value={opt} className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]" /> 
+                    <label key={i} htmlFor={`need_${i}`} className="flex items-start gap-3 text-[1.05rem] text-[#141824] font-light cursor-pointer group">
+                      <input type="checkbox" id={`need_${i}`} name="needs" value={opt} className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]" /> 
                       <span className="group-hover:text-[#6e7891] transition-colors">{opt}</span>
                     </label>
                   ))}
@@ -290,7 +292,7 @@ export default function NousContacter() {
                 </p>
 
                 <div className={`w-full border-2 border-dashed ${selectedFileName ? 'border-green-500 bg-green-50/30' : 'border-[#d1d5db] bg-[#f5f7fa]'} py-2 px-4 text-center hover:bg-[#e8e1d7]/30 transition-colors cursor-pointer rounded-sm`}>
-                   <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
+                   <label htmlFor="fileUploadContact" className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
                      {selectedFileName ? (
                        <div className="flex flex-col items-center">
                          <span className="text-green-700 font-bold text-[1rem] mb-2">{selectedFileName}</span>
@@ -311,14 +313,14 @@ export default function NousContacter() {
                          {fileError && <span className="text-red-500 text-[0.7rem] font-bold mt-2">{fileError}</span>}
                        </div>
                      )}
-                     <input type="file" name="file" className="hidden" accept=".pdf,application/pdf" onChange={handleFileChange} />
+                     <input type="file" id="fileUploadContact" name="file" className="hidden" accept=".pdf,application/pdf" onChange={handleFileChange} />
                    </label>
                 </div>
               </div>
 
               <div>
-                <label className="flex items-start gap-4 text-[1.05rem] text-[#6e7891] cursor-pointer group font-light">
-                  <input type="checkbox" className="accent-[#141824] mt-1 shrink-0 w-5 h-5" required />
+                <label htmlFor="privacyPolicyContact" className="flex items-start gap-4 text-[1.05rem] text-[#6e7891] cursor-pointer group font-light">
+                  <input type="checkbox" id="privacyPolicyContact" className="accent-[#141824] mt-1 shrink-0 w-5 h-5" required />
                   <span>
                     {t("J’ai pris connaissance de la", "I have read the")} <Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("politique de confidentialité", "Privacy Policy")}</Link>. <span className="text-red-500">*</span>
                   </span>

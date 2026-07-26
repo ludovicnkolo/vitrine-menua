@@ -19,7 +19,7 @@ export default function NousRejoindre() {
     try {
       const formData = new FormData(e.currentTarget);
       const apiUrl = process.env.NODE_ENV === 'production' ? '' : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000');
-      const res = await fetch(`${apiUrl}/api/forms/join?lang=${lang.toLowerCase()}`, {
+      const res = await fetch(`${apiUrl}/api/forms/join?lang=${encodeURIComponent(lang.toLowerCase())}`, {
         method: "POST",
         body: formData,
       });
@@ -119,9 +119,10 @@ export default function NousRejoindre() {
               <div>
                 <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Vous êtes", "You are")}</p>
                 <div className="flex flex-col sm:flex-row gap-8 sm:gap-24">
-                  <label className="flex items-center gap-3 cursor-pointer group">
+                  <label htmlFor="profileTypeIndividual" className="flex items-center gap-3 cursor-pointer group">
                     <input 
                       type="radio" 
+                      id="profileTypeIndividual"
                       name="profileType" 
                       value="individual" 
                       checked={profileType === "individual"} 
@@ -130,9 +131,10 @@ export default function NousRejoindre() {
                     />
                     <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Particulier", "Individual")}</span>
                   </label>
-                  <label className="flex items-center gap-3 cursor-pointer group">
+                  <label htmlFor="profileTypeCompany" className="flex items-center gap-3 cursor-pointer group">
                     <input 
                       type="radio" 
+                      id="profileTypeCompany"
                       name="profileType" 
                       value="company" 
                       checked={profileType === "company"} 
@@ -199,9 +201,10 @@ export default function NousRejoindre() {
                       const isOther = opt === t("Autre", "Other") || opt === "Autre" || opt === "Other";
                       return (
                       <div key={i} className={`flex items-start gap-3 text-[1.05rem] text-[#141824] font-light group ${isOther ? 'flex-col sm:flex-row' : ''}`}>
-                        <label className="flex items-start gap-3 cursor-pointer">
+                        <label htmlFor={`skill_${i}`} className="flex items-start gap-3 cursor-pointer">
                           <input 
                             type="checkbox" 
+                            id={`skill_${i}`}
                             name="skills" 
                             value={opt} 
                             className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]"
@@ -276,8 +279,8 @@ export default function NousRejoindre() {
               </div>
 
               <div>
-                <label className="flex items-start gap-4 text-[1.05rem] text-[#6e7891] cursor-pointer group font-light">
-                  <input type="checkbox" className="accent-[#141824] mt-1 shrink-0 w-5 h-5" required />
+                <label htmlFor="privacyPolicyJoin" className="flex items-start gap-4 text-[1.05rem] text-[#6e7891] cursor-pointer group font-light">
+                  <input type="checkbox" id="privacyPolicyJoin" className="accent-[#141824] mt-1 shrink-0 w-5 h-5" required />
                   <span>
                     {t("J’ai pris connaissance de la", "I have read the")} <Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("politique de confidentialité", "Privacy Policy")}</Link>. <span className="text-red-500">*</span>
                   </span>

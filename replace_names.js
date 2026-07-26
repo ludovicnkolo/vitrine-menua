@@ -11,20 +11,20 @@ files.forEach(file => {
 
   // Replace className="truncate-text" with className="truncate-name" ONLY for name columns
   // In InboxPage (m.nomPrenom)
-  content = content.replaceAll(/<strong className="truncate-text"(.*?)>(\{m\.nomPrenom\})<\/strong>/g, '<strong className="truncate-name"$1>$2</strong>');
+  content = content.replace(/<strong className="truncate-text"(.*?)>(\{m\.nomPrenom\})<\/strong>/g, '<strong className="truncate-name"$1>$2</strong>');
   
   // In UsersPage (u.name, c.name)
-  content = content.replaceAll(/<strong className="truncate-text"(.*?)>(\{u\.name\})<\/strong>/g, '<strong className="truncate-name"$1>$2</strong>');
-  content = content.replaceAll(/<strong className="truncate-text"(.*?)>(\{c\.name\})<\/strong>/g, '<strong className="truncate-name"$1>$2</strong>');
+  content = content.replace(/<strong className="truncate-text"(.*?)>(\{u\.name\})<\/strong>/g, '<strong className="truncate-name"$1>$2</strong>');
+  content = content.replace(/<strong className="truncate-text"(.*?)>(\{c\.name\})<\/strong>/g, '<strong className="truncate-name"$1>$2</strong>');
   
   // In DossiersPage (d.name)
-  content = content.replaceAll(/<strong className="truncate-text"(.*?)>(\{d\.name\})<\/strong>/g, '<strong className="truncate-name"$1>$2</strong>');
+  content = content.replace(/<strong className="truncate-text"(.*?)>(\{d\.name\})<\/strong>/g, '<strong className="truncate-name"$1>$2</strong>');
 
   // In RolesPage (r.name)
-  content = content.replaceAll(/<strong className="truncate-text"(.*?)>(\{r\.name\})<\/strong>/g, '<strong className="truncate-name"$1>$2</strong>');
+  content = content.replace(/<strong className="truncate-text"(.*?)>(\{r\.name\})<\/strong>/g, '<strong className="truncate-name"$1>$2</strong>');
 
   // In TasksPage (t.assignedTo?.name)
-  content = content.replaceAll(/<div className="truncate-text"(.*?)>(\{t\.assignedTo\?\.name \|\| 'Non assigné'\})<\/div>/g, '<div className="truncate-name"$1>$2</div>');
+  content = content.replace(/<div className="truncate-text"(.*?)>(\{t\.assignedTo\?\.name \|\| 'Non assigné'\})<\/div>/g, '<div className="truncate-name"$1>$2</div>');
 
   if (content !== original) {
     fs.writeFileSync(filePath, content);

@@ -53,9 +53,15 @@ const TachesPage = () => {
       const headers = { 'Authorization': 'Bearer ' + token };
       const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       
+      const urlTaches = new URL(`${apiUrl}/api/crm/taches`);
+      urlTaches.searchParams.append('page', page);
+      urlTaches.searchParams.append('limit', '6');
+      urlTaches.searchParams.append('status', filterStatus);
+      urlTaches.searchParams.append('search', searchQuery);
+
       const [resTasks, resUsers] = await Promise.all([
-        fetch(`${apiUrl}/api/crm/taches?page=${page}&limit=6&status=${filterStatus}&search=${encodeURIComponent(searchQuery)}`, { headers }),
-        fetch(`${apiUrl}/api/crm/users`, { headers })
+        fetch(urlTaches.toString(), { headers }),
+        fetch(new URL(`${apiUrl}/api/crm/users`).toString(), { headers })
       ]);
       
       const dataTasks = await resTasks.json();
@@ -89,7 +95,7 @@ const TachesPage = () => {
     formData.append('bucket', 'formulaires');
     formData.append('file', file);
     try {
-      const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/files/upload', {
+      const res = await fetch(new URL('/api/files/upload', import.meta.env.VITE_API_URL || 'http://localhost:4000').toString(), {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: formData
@@ -121,7 +127,7 @@ const TachesPage = () => {
         }
       }
 
-      const res = await fetch(`${apiUrl}/api/crm/taches`, {
+      const res = await fetch(new URL(`${apiUrl}/api/crm/taches`).toString(), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -170,7 +176,7 @@ const TachesPage = () => {
       const token = localStorage.getItem('adminToken');
       const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       const description = `Objet: ${editFormData.subject}\nConsignes: ${editFormData.message}`;
-      const res = await fetch(`${apiUrl}/api/crm/taches/${encodeURIComponent(editTask.id)}`, {
+      const res = await fetch(new URL(`${apiUrl}/api/crm/taches/${encodeURIComponent(editTask.id)}`).toString(), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -236,7 +242,7 @@ const TachesPage = () => {
              try {
                const token = localStorage.getItem('adminToken');
                const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
-               const res = await fetch(`${apiUrl}/api/crm/taches/${encodeURIComponent(taskId)}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
+               const res = await fetch(new URL(`${apiUrl}/api/crm/taches/${encodeURIComponent(taskId)}`).toString(), { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
                if(res.ok) fetchData();
              } catch(e) { console.error("Erreur suppression tâche:", e); }
           }

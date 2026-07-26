@@ -39,7 +39,7 @@ const UsersPage = ({ forceTab }) => {
     formData.append('bucket', 'users_id_cards'); // MUST BE BEFORE FILE
     formData.append('file', file);
     try {
-      const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/files/upload', {
+      const res = await fetch(new URL('/api/files/upload', import.meta.env.VITE_API_URL || 'http://localhost:4000').toString(), {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: formData
@@ -57,9 +57,9 @@ const UsersPage = ({ forceTab }) => {
       const token = localStorage.getItem('adminToken');
       const headers = { 'Authorization': 'Bearer ' + token };
       const [rUsers, rClients, rRoles] = await Promise.all([
-        fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/crm/users', { headers }).then(r=>r.json()).catch(()=>[]),
-        fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/crm/clients', { headers }).then(r=>r.json()).catch(()=>[]),
-        fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/crm/roles', { headers }).then(r=>r.json()).catch(()=>[])
+        fetch(new URL('/api/crm/users', import.meta.env.VITE_API_URL || 'http://localhost:4000').toString(), { headers }).then(r=>r.json()).catch(()=>[]),
+        fetch(new URL('/api/crm/clients', import.meta.env.VITE_API_URL || 'http://localhost:4000').toString(), { headers }).then(r=>r.json()).catch(()=>[]),
+        fetch(new URL('/api/crm/roles', import.meta.env.VITE_API_URL || 'http://localhost:4000').toString(), { headers }).then(r=>r.json()).catch(()=>[])
       ]);
       setUsers(Array.isArray(rUsers) ? rUsers : []);
       setClients(Array.isArray(rClients) ? rClients : []);
@@ -77,7 +77,7 @@ const UsersPage = ({ forceTab }) => {
     setLoading(true); setErrorMsg(null);
     try {
       const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/crm/users', {
+      const res = await fetch(new URL('/api/crm/users', import.meta.env.VITE_API_URL || 'http://localhost:4000').toString(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: JSON.stringify({ ...newUser, lastLogin: 'Jamais connecté', idCardUrl: uploadedUrl })
@@ -97,7 +97,7 @@ const UsersPage = ({ forceTab }) => {
     setLoading(true); setErrorMsg(null);
     try {
       const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:4000') + '/api/crm/clients', {
+      const res = await fetch(new URL('/api/crm/clients', import.meta.env.VITE_API_URL || 'http://localhost:4000').toString(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: JSON.stringify({ ...newClient, type: externalType, status: newClient.status || 'Actif', idCardUrl: uploadedUrl })
@@ -112,7 +112,7 @@ const UsersPage = ({ forceTab }) => {
   const handleDeleteUser = async (id) => {
     if (!window.confirm('Voulez-vous vraiment supprimer ce membre interne ?')) return;
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/users/${encodeURIComponent(id)}`, {
+      const res = await fetch(new URL(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/users/${encodeURIComponent(id)}`).toString(), {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
       });
@@ -124,7 +124,7 @@ const UsersPage = ({ forceTab }) => {
   const handleDeleteClient = async (id) => {
     if (!window.confirm('Voulez-vous vraiment supprimer ce membre externe ?')) return;
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/clients/${encodeURIComponent(id)}`, {
+      const res = await fetch(new URL(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/clients/${encodeURIComponent(id)}`).toString(), {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
       });
@@ -138,7 +138,7 @@ const UsersPage = ({ forceTab }) => {
     setLoading(true); setErrorMsg(null);
     try {
       const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/users/${encodeURIComponent(editUser.id)}`, {
+      const res = await fetch(new URL(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/users/${encodeURIComponent(editUser.id)}`).toString(), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: JSON.stringify({
@@ -165,7 +165,7 @@ const UsersPage = ({ forceTab }) => {
     setLoading(true); setErrorMsg(null);
     try {
       const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/clients/${encodeURIComponent(editExternal.id)}`, {
+      const res = await fetch(new URL(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/clients/${encodeURIComponent(editExternal.id)}`).toString(), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: JSON.stringify({

@@ -76,7 +76,7 @@ const InboxPage = () => {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
       if (!token) return;
-      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+      const apiUrl = import.meta.env.VITE_API_URL ;
       
       const urlMessages = new URL(`${apiUrl}/api/crm/messages`);
       urlMessages.searchParams.append('type', tab);
@@ -149,7 +149,7 @@ const InboxPage = () => {
     const fetchPdf = async () => {
       try {
         const token = localStorage.getItem('adminToken');
-        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+        const baseUrl = import.meta.env.VITE_API_URL ;
         const urlObj = new URL(`/api/files/view/formulaires/${encodeURIComponent(previewFile)}`, baseUrl);
         
         // Validation stricte de l'hôte API (Prévention SSRF)
@@ -189,7 +189,7 @@ const InboxPage = () => {
     formData.append('bucket', 'formulaires');
     formData.append('file', file);
     try {
-      const res = await fetch(new URL('/api/files/upload', import.meta.env.VITE_API_URL || 'http://localhost:4000').toString(), {
+      const res = await fetch(new URL('/api/files/upload', import.meta.env.VITE_API_URL ).toString(), {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: formData
@@ -206,7 +206,7 @@ const InboxPage = () => {
     try {
       setIsSubmitting(true);
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+      const apiUrl = import.meta.env.VITE_API_URL ;
       
       let finalDossierId = null;
       if (tab !== 'interne') {
@@ -354,7 +354,7 @@ const InboxPage = () => {
     if (!processMsg) return;
     try {
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+      const apiUrl = import.meta.env.VITE_API_URL ;
       const res = await fetch(new URL(`${apiUrl}/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`).toString(), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -377,7 +377,7 @@ const InboxPage = () => {
     try {
       setIsSyncing(true);
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+      const apiUrl = import.meta.env.VITE_API_URL ;
       
       const res = await fetch(new URL(`${apiUrl}/api/crm/messages/sync-imap`).toString(), {
         method: 'POST',
@@ -405,7 +405,7 @@ const InboxPage = () => {
     if (!deleteMsg) return;
     try {
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+      const apiUrl = import.meta.env.VITE_API_URL ;
       
       const res = await fetch(new URL(`${apiUrl}/api/crm/messages/${encodeURIComponent(deleteMsg.id)}`).toString(), {
         method: 'DELETE',

@@ -51,7 +51,7 @@ const TachesPage = () => {
     try {
       const token = localStorage.getItem('adminToken');
       const headers = { 'Authorization': 'Bearer ' + token };
-      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+      const apiUrl = import.meta.env.VITE_API_URL ;
       
       const urlTaches = new URL(`${apiUrl}/api/crm/taches`);
       urlTaches.searchParams.append('page', page);
@@ -95,7 +95,7 @@ const TachesPage = () => {
     formData.append('bucket', 'formulaires');
     formData.append('file', file);
     try {
-      const res = await fetch(new URL('/api/files/upload', import.meta.env.VITE_API_URL || 'http://localhost:4000').toString(), {
+      const res = await fetch(new URL('/api/files/upload', import.meta.env.VITE_API_URL ).toString(), {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: formData
@@ -117,7 +117,7 @@ const TachesPage = () => {
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+      const apiUrl = import.meta.env.VITE_API_URL ;
       
       let attachmentName = consultTask.attachment || null;
       if (newTaskFile) {
@@ -174,7 +174,7 @@ const TachesPage = () => {
       }
       
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+      const apiUrl = import.meta.env.VITE_API_URL ;
       const description = `Objet: ${editFormData.subject}\nConsignes: ${editFormData.message}`;
       const res = await fetch(new URL(`${apiUrl}/api/crm/taches/${encodeURIComponent(editTask.id)}`).toString(), {
         method: 'PATCH',
@@ -241,7 +241,7 @@ const TachesPage = () => {
           if(window.confirm("Supprimer cette tâche ?")) {
              try {
                const token = localStorage.getItem('adminToken');
-               const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+               const apiUrl = import.meta.env.VITE_API_URL ;
                const res = await fetch(new URL(`${apiUrl}/api/crm/taches/${encodeURIComponent(taskId)}`).toString(), { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
                if(res.ok) fetchData();
              } catch(e) { console.error("Erreur suppression tâche:", e); }

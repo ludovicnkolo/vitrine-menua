@@ -19,7 +19,7 @@ export default function AuditPage() {
     try {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/audit`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL }/api/crm/audit`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!res.ok) throw new Error("Erreur de récupération de l'audit");

@@ -26,9 +26,9 @@ class ErrorBoundary extends React.Component {
           <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Erreur critique de l'application</h1>
           <p style={{ marginBottom: '1rem' }}>Une erreur s'est produite lors du rendu de la page :</p>
           <pre style={{ background: '#fff', padding: '1rem', borderRadius: '8px', overflowX: 'auto', border: '1px solid #F87171' }}>
-            {this.state.error && this.state.error.toString()}
+            {this.state.error?.toString()}
             <br />
-            {this.state.errorInfo && this.state.errorInfo.componentStack}
+            {this.state.errorInfo?.componentStack}
           </pre>
           <button 
             type="button"

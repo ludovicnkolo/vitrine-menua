@@ -60,7 +60,7 @@ const TasksPage = () => {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
       const headers = { 'Authorization': 'Bearer ' + token };
-      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+      const apiUrl = import.meta.env.VITE_API_URL ;
       
       const urlTasks = new URL(`${apiUrl}/api/crm/tasks`);
       urlTasks.searchParams.append('page', page);
@@ -108,7 +108,7 @@ const TasksPage = () => {
       }
       
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+      const apiUrl = import.meta.env.VITE_API_URL ;
       const description = `Objet: ${editFormData.subject}\nConsignes: ${editFormData.message}`;
       const res = await fetch(new URL(`${apiUrl}/api/crm/tasks/${encodeURIComponent(editTask.id)}`).toString(), {
         method: 'PATCH',
@@ -143,7 +143,7 @@ const TasksPage = () => {
     formData.append('bucket', 'formulaires');
     formData.append('file', file);
     try {
-      const res = await fetch(new URL('/api/files/upload', import.meta.env.VITE_API_URL || 'http://localhost:4000').toString(), {
+      const res = await fetch(new URL('/api/files/upload', import.meta.env.VITE_API_URL ).toString(), {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: formData
@@ -165,7 +165,7 @@ const TasksPage = () => {
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+      const apiUrl = import.meta.env.VITE_API_URL ;
       
       let attachmentName = null;
       if (includeParentFile && consultTask.attachment) {
@@ -279,7 +279,7 @@ const TasksPage = () => {
           if(window.confirm("Supprimer cette mission ?")) {
              try {
                const token = localStorage.getItem('adminToken');
-               const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+               const apiUrl = import.meta.env.VITE_API_URL ;
                const res = await fetch(new URL(`${apiUrl}/api/crm/tasks/${encodeURIComponent(taskId)}`).toString(), { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
                if (res.ok) fetchData();
              } catch(e) { console.error("Erreur suppr mission:", e); }
@@ -441,17 +441,15 @@ const TasksPage = () => {
             {editTask.taches && editTask.taches.length > 0 ? (
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem'}}>
                 {editTask.taches.map((sub) => (
-                  <div 
+                  <button 
+                    type="button"
                     key={sub.id}
-                    role="button"
-                    tabIndex={0}
                     onClick={() => setLocalConsultSubTask(sub)}
-                    onKeyDown={(e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLocalConsultSubTask(sub); } }}
                     onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
                     onFocus={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
                     onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
                     onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
-                    style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s'}}
+                    style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s', width: '100%', textAlign: 'left', fontFamily: 'inherit', fontSize: 'inherit'}}
                   >
                     <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
                       <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{sub.reference || 'Sans réf'}</strong>
@@ -462,7 +460,7 @@ const TasksPage = () => {
                         <Trash size={18} />
                       </button>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             ) : (

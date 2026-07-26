@@ -45,7 +45,7 @@ const RolesPage = () => {
     try {
       const token = localStorage.getItem('adminToken');
       if (!token) return;
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+      const apiUrl = import.meta.env.VITE_API_URL ;
       
       const [rUsers, rRoles] = await Promise.all([
         fetch(new URL(`${apiUrl}/api/crm/users`).toString(), { headers: { 'Authorization': `Bearer ${token}` } }).then(r=>r.json()).catch(()=>[]),
@@ -93,7 +93,7 @@ const RolesPage = () => {
   const handleDeleteRole = async () => {
     if(!deleteRole) return;
     try {
-      await fetch(new URL(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/roles/${encodeURIComponent(deleteRole.id)}`).toString(), {
+      await fetch(new URL(`${import.meta.env.VITE_API_URL }/api/crm/roles/${encodeURIComponent(deleteRole.id)}`).toString(), {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
       });
@@ -202,18 +202,16 @@ const RolesPage = () => {
               <div>
                 <label htmlFor="auto-field-1785016991508-2" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Permissions</label>
                 <div style={{position: 'relative'}} ref={dropdownRef}>
-                  <div 
-                    role="button"
-                    tabIndex={0}
+                  <button 
+                    type="button"
                     onClick={() => setPermissionsOpen(!permissionsOpen)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setPermissionsOpen(!permissionsOpen); }}
-                    style={{width: '100%', padding: '0.5rem', minHeight: '38px', borderRadius: '4px', border: '1px solid var(--border)', background: 'white', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}
+                    style={{width: '100%', padding: '0.5rem', minHeight: '38px', borderRadius: '4px', border: '1px solid var(--border)', background: 'white', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'inherit', fontSize: 'inherit'}}
                   >
                     <span style={{color: selectedPermissions.length > 0 ? 'var(--text-main)' : 'var(--text-muted)'}}>
                       {selectedPermissions.length > 0 ? selectedPermissions.map(getPermLabel).join(', ') : 'Sélectionner des permissions...'}
                     </span>
                     <span style={{fontSize: '0.75rem', color: 'var(--text-muted)', flexShrink: 0, marginLeft: '0.5rem'}}>▼</span>
-                  </div>
+                  </button>
                   {permissionsOpen && (
                     <div style={{
                       position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '4px',
@@ -246,7 +244,7 @@ const RolesPage = () => {
                 <button type="submit" className="btn btn-primary" onClick={async (e) => { 
                   e.preventDefault(); 
                   try {
-                    await fetch(new URL('/api/crm/roles', import.meta.env.VITE_API_URL || 'http://localhost:4000').toString(), {
+                    await fetch(new URL('/api/crm/roles', import.meta.env.VITE_API_URL ).toString(), {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
                       body: JSON.stringify({ name: newRole.name, description: newRole.description, status: newRole.status, permissions: JSON.stringify(selectedPermissions) })
@@ -282,18 +280,16 @@ const RolesPage = () => {
               <div>
                 <label htmlFor="auto-field-1785016991508-5" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Permissions</label>
                 <div style={{position: 'relative'}} ref={dropdownRef}>
-                  <div 
-                    role="button"
-                    tabIndex={0}
+                  <button 
+                    type="button"
                     onClick={() => setPermissionsOpen(!permissionsOpen)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setPermissionsOpen(!permissionsOpen); }}
-                    style={{width: '100%', padding: '0.5rem', minHeight: '38px', borderRadius: '4px', border: '1px solid var(--border)', background: 'white', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}
+                    style={{width: '100%', padding: '0.5rem', minHeight: '38px', borderRadius: '4px', border: '1px solid var(--border)', background: 'white', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'inherit', fontSize: 'inherit'}}
                   >
                     <span style={{color: selectedPermissions.length > 0 ? 'var(--text-main)' : 'var(--text-muted)'}}>
                       {selectedPermissions.length > 0 ? selectedPermissions.map(getPermLabel).join(', ') : 'Sélectionner des permissions...'}
                     </span>
                     <span style={{fontSize: '0.75rem', color: 'var(--text-muted)', flexShrink: 0, marginLeft: '0.5rem'}}>▼</span>
-                  </div>
+                  </button>
                   {permissionsOpen && (
                     <div style={{
                       position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '4px',
@@ -326,7 +322,7 @@ const RolesPage = () => {
                 <button type="submit" className="btn btn-primary" onClick={async (e) => { 
                   e.preventDefault(); 
                   try {
-                    await fetch(new URL(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/roles/${encodeURIComponent(editRole.id)}`).toString(), {
+                    await fetch(new URL(`${import.meta.env.VITE_API_URL }/api/crm/roles/${encodeURIComponent(editRole.id)}`).toString(), {
                       method: 'PATCH',
                       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
                       body: JSON.stringify({ name: editRole.name, description: editRole.description, status: editRole.status, permissions: JSON.stringify(selectedPermissions) })

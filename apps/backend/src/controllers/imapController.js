@@ -107,7 +107,7 @@ const syncMessages = async (req, res) => {
             messageId,
             type: 'PERSONNEL',
             subType: 'Indéfini',
-            status: 'NOUVEAU',
+            status: 'EN_ATTENTE',
             nomPrenom,
             email,
             objet: subject,

@@ -76,7 +76,7 @@ const InboxPage = () => {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
       if (!token) return;
-      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       
       const [resMsgs, resUsers, resDossiers, resClients] = await Promise.all([
         fetch(`${apiUrl}/api/crm/messages?type=${tab}&page=${page}&limit=6&status=${filterTraite}&search=${encodeURIComponent(searchQuery)}`, { headers: { 'Authorization': `Bearer ${token}` } }),
@@ -199,7 +199,7 @@ const InboxPage = () => {
     try {
       setIsSubmitting(true);
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       
       let finalDossierId = null;
       if (tab !== 'interne') {
@@ -277,7 +277,8 @@ const InboxPage = () => {
             assignedToId: taskAssignedToId || null,
             dossierId: finalDossierId,
             echeance: taskEcheance,
-            attachment: finalAttachment
+            attachment: finalAttachment,
+            messageId: processMsg.id
           })
         });
 
@@ -286,8 +287,43 @@ const InboxPage = () => {
           setIsSubmitting(false);
           return;
         }
+      } else {
+        // Interne reply
+        let attachmentsArray = [];
+        if (newTaskFile) {
+          const uploadedName = await uploadFile(newTaskFile);
+          if (uploadedName) attachmentsArray.push(uploadedName);
+        }
+        const finalAttachment = attachmentsArray.filter(Boolean).join(',') || null;
+
+        const replyRes = await fetch(`${apiUrl}/api/crm/messages/interne`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({
+            subType: `Réponse à ${processMsg.nomPrenom}`,
+            objet: taskSubject,
+            bodyText: taskDescription,
+            attachment: finalAttachment,
+            dossierId: processMsg.dossierId || null,
+            missionId: processMsg.missionId || null
+          })
+        });
+
+        if (!replyRes.ok) {
+          showToast("Erreur lors de l'envoi de la réponse.", "error");
+          setIsSubmitting(false);
+          return;
+        }
+
+        // Mark the original message as TRAITE
+        await fetch(`${apiUrl}/api/crm/messages/${processMsg.id}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ status: 'TRAITE' })
+        });
       }
 
+      fetchMessages();
       showToast(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Mission créée et assignée avec succès !', 'success');
       setCreateTaskModal(false);
       setTaskNewDossierName('');
@@ -307,11 +343,34 @@ const InboxPage = () => {
     }
   };
 
+  const handleMarkAsProcessed = async () => {
+    if (!processMsg) return;
+    try {
+      const token = localStorage.getItem('adminToken');
+      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
+      const res = await fetch(`${apiUrl}/api/crm/messages/${processMsg.id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ status: 'TRAITE' })
+      });
+      if (res.ok) {
+        showToast("Message marqué comme traité !", "success");
+        setProcessMsg(null);
+        fetchMessages();
+      } else {
+        showToast("Erreur lors de la mise à jour.", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Erreur réseau.", "error");
+    }
+  };
+
   const handleSyncEmails = async () => {
     try {
       setIsSyncing(true);
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       
       const res = await fetch(`${apiUrl}/api/crm/messages/sync-imap`, {
         method: 'POST',
@@ -339,7 +398,7 @@ const InboxPage = () => {
     if (!deleteMsg) return;
     try {
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       
       const res = await fetch(`${apiUrl}/api/crm/messages/${deleteMsg.id}`, {
         method: 'DELETE',
@@ -799,7 +858,7 @@ const InboxPage = () => {
               ) : (
                 <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une mission</button>
               )}
-              <button type="button" onClick={() => setProcessMsg(null)} className="btn btn-primary">Marquer comme traité</button>
+              <button type="button" onClick={handleMarkAsProcessed} className="btn btn-primary">Marquer comme traité</button>
             </div>
           </div>
         </div>

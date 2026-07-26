@@ -243,7 +243,7 @@ router.post('/contact', upload.single('file'), async (req, res) => {
           objet: 'Demande de contact',
           bodyHtml: contentHTML,
           isAnonyme: true,
-          status: 'NOUVEAU',
+          status: 'EN_ATTENTE',
           contact: {
             create: {
               typeBesoin: parsedNeeds.join(', '),
@@ -344,7 +344,7 @@ router.post('/join', upload.none(), async (req, res) => {
           objet: 'Demande de collaboration',
           bodyHtml: contentHTML,
           isAnonyme: true,
-          status: 'NOUVEAU',
+          status: 'EN_ATTENTE',
           recrutement: {
             create: {
               competenceCle: parsedSkills.join(', '),

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  MoreVertical, Pencil, Eye, Trash
+  MoreVertical, Pencil, Eye, Trash, Search, Files, MessageSquare, Mail
 } from 'lucide-react';
 import ActionDropdown from '../components/ActionDropdown';
 import { getStatusBadge, getPriorityBadge } from '../utils/helpers';
@@ -51,7 +51,7 @@ const TachesPage = () => {
     try {
       const token = localStorage.getItem('adminToken');
       const headers = { 'Authorization': 'Bearer ' + token };
-      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       
       const [resTasks, resUsers] = await Promise.all([
         fetch(`${apiUrl}/api/crm/taches?page=${page}&limit=6&status=${filterStatus}&search=${encodeURIComponent(searchQuery)}`, { headers }),
@@ -111,7 +111,7 @@ const TachesPage = () => {
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       
       let attachmentName = consultTask.attachment || null;
       if (newTaskFile) {
@@ -168,7 +168,7 @@ const TachesPage = () => {
       }
       
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       const description = `Objet: ${editFormData.subject}\nConsignes: ${editFormData.message}`;
       const res = await fetch(`${apiUrl}/api/crm/taches/${editTask.id}`, {
         method: 'PATCH',
@@ -235,7 +235,7 @@ const TachesPage = () => {
           if(window.confirm("Supprimer cette tâche ?")) {
              try {
                const token = localStorage.getItem('adminToken');
-               const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+               const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
                const res = await fetch(`${apiUrl}/api/crm/taches/${taskId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
                if(res.ok) fetchData();
              } catch(e) { console.error("Erreur suppression tâche:", e); }

@@ -14,7 +14,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
       const fetchUsers = async () => {
         try {
           const token = localStorage.getItem('adminToken');
-          const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+          const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
           const res = await fetch(`${apiUrl}/api/crm/users`, {
             headers: { 'Authorization': `Bearer ${token}` }
           });
@@ -39,7 +39,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
     try {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       
       let attachmentStr = null;
       if (file) {

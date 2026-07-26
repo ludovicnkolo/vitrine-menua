@@ -24,7 +24,7 @@ const SetupPasswordPage = () => {
     setError(null);
     
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:4000`;
+      const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       const res = await fetch(`${apiUrl}/api/auth/setup-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

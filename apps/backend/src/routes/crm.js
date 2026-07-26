@@ -471,7 +471,7 @@ router.get('/tasks', async (req, res) => {
 
 router.post('/tasks', async (req, res) => {
   try {
-    const { dossierId, description, assignedToId, parentMissionId, echeance, attachment } = req.body;
+    const { dossierId, description, assignedToId, parentMissionId, echeance, attachment, messageId } = req.body;
     let creatorId = req.user.id;
     
     // Handle the bypass login 'MASTER-ADMIN' which doesn't exist in DB
@@ -505,6 +505,19 @@ router.post('/tasks', async (req, res) => {
         ...(parentMissionId && { parentMissionId })
       }
     });
+
+    if (messageId) {
+      const form = await prisma.formulaire.findUnique({ where: { id: messageId } });
+      if (form) {
+        await prisma.formulaire.update({ where: { id: messageId }, data: { status: 'TRAITE' } });
+      } else {
+        const msg = await prisma.messagePersonnel.findUnique({ where: { id: messageId } });
+        if (msg) {
+          await prisma.messagePersonnel.update({ where: { id: messageId }, data: { status: 'TRAITE', missionId: task.id } });
+        }
+      }
+    }
+
     res.status(201).json(task);
   } catch (error) {
     console.error(error); res.status(500).json({ error: error.message || 'Erreur lors de la création de la tâche.' });
@@ -678,7 +691,7 @@ router.post('/messages/interne', async (req, res) => {
         objet: objet,
         bodyText: bodyText,
         attachment: attachment,
-        status: 'NOUVEAU',
+        status: 'EN_ATTENTE',
         dossierId: dossierId || null,
         missionId: missionId || null,
       }
@@ -811,6 +824,26 @@ router.delete('/messages/:id', async (req, res) => {
     res.status(404).json({ error: 'Message non trouvé' });
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression' });
+  }
+});
+
+router.patch('/messages/:id/status', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const form = await prisma.formulaire.findUnique({ where: { id } });
+    if (form) {
+      await prisma.formulaire.update({ where: { id }, data: { status } });
+      return res.json({ success: true, message: 'Statut mis à jour' });
+    }
+    const msg = await prisma.messagePersonnel.findUnique({ where: { id } });
+    if (msg) {
+      await prisma.messagePersonnel.update({ where: { id }, data: { status } });
+      return res.json({ success: true, message: 'Statut mis à jour' });
+    }
+    res.status(404).json({ error: 'Message non trouvé' });
+  } catch (error) {
+    console.error(error); res.status(500).json({ error: 'Erreur lors de la mise à jour' });
   }
 });
 

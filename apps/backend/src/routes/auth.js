@@ -37,10 +37,10 @@ router.post('/login', async (req, res) => {
         token,
         user: {
           id: 'MASTER-ADMIN',
-          name: 'Fondateur',
+          name: process.env.MASTER_ADMIN_NAME || 'Super Administrateur',
           email: MASTER_EMAIL,
           role: 'ADMIN',
-          profile: 'Master'
+          profile: process.env.MASTER_ADMIN_PROFILE || 'Master'
         }
       });
     }

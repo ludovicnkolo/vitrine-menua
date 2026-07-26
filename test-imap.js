@@ -6,7 +6,7 @@ const config = {
         user: process.env.IMAP_USER,
         password: process.env.IMAP_PASSWORD,
         host: process.env.IMAP_HOST,
-        port: parseInt(process.env.IMAP_PORT || '993'),
+        port: Number.parseInt(process.env.IMAP_PORT || '993', 10),
         tls: true,
         authTimeout: 15000,
         tlsOptions: { rejectUnauthorized: false }

@@ -545,10 +545,10 @@ const InboxPage = () => {
                     <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email || '-'}</span></td>
                     <td>
                       <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: '#F1F5F9', color: '#64748B'}}>
-                        {m.subType || 'Interne'}
+                        {m.sourceType || m.subType || 'Interne'}
                       </span>
                     </td>
-                    <td><span style={{color: "var(--text-muted)", fontSize: "0.75rem", fontFamily: "monospace"}} title={m.formulaireId || m.id}>{m.formulaireId ? m.formulaireId.split('-')[0] : m.id}</span></td>
+                    <td><span style={{color: "var(--text-muted)", fontSize: "0.75rem", fontFamily: "monospace"}} title={m.sourceRef || m.formulaireId || m.id}>{m.sourceRef || (m.formulaireId ? m.formulaireId.split('-')[0] : m.id)}</span></td>
                     <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
                     <td>
                       <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
@@ -576,9 +576,9 @@ const InboxPage = () => {
                   <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong></td>
                   <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span></td>
                   <td>
-                    <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: '#F1F5F9', color: '#64748B'}}>
-                      {m.subType || 'Indéfini'}
-                    </span>
+                      <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: '#F1F5F9', color: '#64748B'}}>
+                        {m.sourceType || m.subType || 'Indéfini'}
+                      </span>
                   </td>
                   <td><div className="truncate-text" style={{fontWeight: m.status === "NOUVEAU" ? 600 : 400, fontSize: "0.875rem"}}>{m.objet}</div></td>
                   <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
@@ -868,7 +868,7 @@ const InboxPage = () => {
                       <select value={taskDossierCible} onChange={(e) => setTaskDossierCible(e.target.value)} disabled={!taskDossierSection} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', opacity: !taskDossierSection ? 0.5 : 1}}>
                         <option value="">-- Sélectionner --</option>
                         {taskDossierSection === 'equipe' && users.map(u => (
-                          <option key={u.id} value={u.id}>{u.name} ({u.role?.name || 'Sans rôle'})</option>
+                          <option key={u.id} value={u.id}>{`${u.name} (${u.role?.name || 'Sans rôle'})`}</option>
                         ))}
                         {taskDossierSection === 'client' && clients.map(c => (
                           <option key={c.id} value={c.id}>{c.name || `${c.firstName} ${c.lastName}` || c.email}</option>

@@ -94,7 +94,7 @@ export default function ActualitesPage() {
               </p>
               
               <div className="flex justify-end mt-auto">
-                <a href="#" className="inline-flex items-center gap-2 text-[#141824] group-hover:text-white font-bold tracking-wider uppercase text-[0.7rem] transition-colors duration-300">
+                <a href="#articles" className="inline-flex items-center gap-2 text-[#141824] group-hover:text-white font-bold tracking-wider uppercase text-[0.7rem] transition-colors duration-300">
                   {t("DÉCOUVRIR LA RUBRIQUE", "DISCOVER THE SECTION")} 
                   <span className="w-6 h-[1px] bg-[#141824] group-hover:bg-white group-hover:w-10 transition-all duration-300"></span>
                   <ChevronRight size={14} className="-ml-2 group-hover:text-white transition-colors duration-300" />
@@ -165,7 +165,7 @@ export default function ActualitesPage() {
           </div>
           <div className="shrink-0 text-center md:text-right mt-4 md:mt-0">
 
-            <a href="#" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[0.85rem] font-bold justify-end hover:text-[#e8e1d7] transition-colors group">
+            <a href="https://www.linkedin.com/company/menua-consulting/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[0.85rem] font-bold justify-end hover:text-[#e8e1d7] transition-colors group">
               {t("RETROUVEZ-NOUS SUR LINKEDIN", "FIND US ON LINKEDIN")} 
               <span className="w-8 h-[1px] bg-white group-hover:w-12 transition-all duration-300"></span>
               <ChevronRight size={18} className="-ml-2" />

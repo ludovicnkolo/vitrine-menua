@@ -3,7 +3,7 @@ import {
   MoreVertical, Search, Mail, MessageSquare, Pencil, Eye, Trash, Shield
 } from 'lucide-react';
 import ActionDropdown from '../components/ActionDropdown';
-import { getStatusBadge } from '../utils/helpers';
+import { getStatusBadge, getRoleBadge } from '../utils/helpers';
 
 const UsersPage = ({ forceTab }) => {
   const [tab, setTab] = useState(forceTab || 'interne');
@@ -720,14 +720,15 @@ const UsersPage = ({ forceTab }) => {
               </div>
 
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Description du profil</label>
+                <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Description du profil</span>
                 <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '76px'}}>{consultUser.profile || 'Non renseigné'}</div>
               </div>
 
               <div>
-                <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Pièce d'identité</label>
+                <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Pièce d'identité</span>
                 {consultUser.idCardUrl ? (
-                  <div 
+                  <button 
+                    type="button"
                     onClick={() => {
                       const token = localStorage.getItem('adminToken');
                       const viewUrl = consultUser.idCardUrl.includes('?') 
@@ -737,7 +738,7 @@ const UsersPage = ({ forceTab }) => {
                     }} 
                     style={{width: '100%', padding: '0.5rem', background: '#EFF6FF', borderRadius: '4px', border: '1px dashed #3B82F6', minHeight: '38px', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 500}}>
                     <Eye size={16} /> Voir le document
-                  </div>
+                  </button>
                 ) : (
                   <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                     Aucun document

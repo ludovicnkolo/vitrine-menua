@@ -13,7 +13,7 @@ echo "Début de la compression des images dans $IMG_DIR..."
 
 for img in "$IMG_DIR"/*.{jpg,jpeg,png}; do
     # Vérifier si le fichier existe (au cas où il n'y a pas d'image de ce type)
-    if [ -f "$img" ]; then
+    if [[ -f "$img" ]]; then
         # Extraire le nom de fichier sans l'extension
         filename="${img%.*}"
         

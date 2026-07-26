@@ -652,7 +652,7 @@ router.post('/messages/interne', async (req, res) => {
     const { subType, objet, bodyText, attachment, dossierId, missionId } = req.body;
     
     // Récupérer les infos complètes de l'expéditeur
-    let senderName = 'Administrateur';
+    let senderName = req.user?.id === 'MASTER-ADMIN' ? (process.env.MASTER_ADMIN_NAME || 'Super Administrateur') : 'Administrateur';
     let senderEmail = req.user?.email || 'admin@menua';
     let senderRole = req.user?.role || 'Admin';
 
@@ -673,7 +673,7 @@ router.post('/messages/interne', async (req, res) => {
         messageId: crypto.randomUUID(),
         type: 'INTERNE',
         subType: subType || 'SMS Collaborateur',
-        nomPrenom: `${senderName} (${senderRole})`,
+        nomPrenom: senderName,
         email: senderEmail,
         objet: objet,
         bodyText: bodyText,
@@ -759,7 +759,8 @@ router.get('/messages', async (req, res) => {
          where,
          orderBy: { createdAt: 'desc' },
          skip: (page - 1) * limit,
-         take: limit
+         take: limit,
+         include: { dossier: true, mission: true }
       });
 
       messages = records.map(e => ({
@@ -772,7 +773,9 @@ router.get('/messages', async (req, res) => {
         bodyHtml: e.bodyText || e.bodyHtml,
         subType: e.subType || 'Indéfini',
         attachment: e.attachment,
-        createdAt: e.createdAt
+        createdAt: e.createdAt,
+        sourceType: e.mission ? 'Mission' : (e.dossier ? 'Dossier' : null),
+        sourceRef: e.mission?.reference || e.dossier?.reference || e.id
       }));
     }
 

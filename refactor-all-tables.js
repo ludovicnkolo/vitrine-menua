@@ -18,12 +18,12 @@ files.forEach(file => {
   
   // For standard td with text (like Date or basic strings)
   // This regex looks for <td>{...}</td> or <td>...</td> where ... doesn't contain tags
-  content = content.replace(/<td>\s*([^<]+)\s*<\/td>/g, '<td><div className="truncate-text">$1</div></td>');
-  content = content.replace(/<td>\s*(\{.*?})\s*<\/td>/g, '<td><div className="truncate-text">$1</div></td>');
+  content = content.replace(/<td>\s*([^<]*[^<\s])\s*<\/td>/g, '<td><div className="truncate-text">$1</div></td>');
+  content = content.replace(/<td>\s*(\{[^}]*\})\s*<\/td>/g, '<td><div className="truncate-text">$1</div></td>');
   
   // Specific pattern for <td style="...">...</td>
-  content = content.replace(/<td\s+style=\{\{([^}]+)\}\}>\s*([^<]+)\s*<\/td>/g, '<td><div className="truncate-text" style={{$1}}>$2</div></td>');
-  content = content.replace(/<td\s+style=\{\{([^}]+)\}\}>\s*(\{.*?\})\s*<\/td>/g, '<td><div className="truncate-text" style={{$1}}>$2</div></td>');
+  content = content.replace(/<td\s+style=\{\{([^}]+)\}\}>\s*([^<]*[^<\s])\s*<\/td>/g, '<td><div className="truncate-text" style={{$1}}>$2</div></td>');
+  content = content.replace(/<td\s+style=\{\{([^}]+)\}\}>\s*(\{[^}]*\})\s*<\/td>/g, '<td><div className="truncate-text" style={{$1}}>$2</div></td>');
 
   fs.writeFileSync(filePath, content);
 });

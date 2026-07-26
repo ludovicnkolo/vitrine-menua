@@ -15,7 +15,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
         try {
           const token = localStorage.getItem('adminToken');
           const apiUrl = import.meta.env.VITE_API_URL ;
-          const res = await fetch(`${apiUrl}/api/crm/users`, {
+          const res = await fetch(getSafeApiUrl(`/api/crm/users`), {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           if (res.ok) {
@@ -46,7 +46,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
         const formData = new FormData();
         formData.append('bucket', 'formulaires');
         formData.append('file', file);
-        const uploadRes = await fetch(`${apiUrl}/api/files/upload`, {
+        const uploadRes = await fetch(getSafeApiUrl(`/api/files/upload`), {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` },
           body: formData
@@ -72,7 +72,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
         missionId: contextData?.missionId || null,
       };
 
-      const res = await fetch(`${apiUrl}/api/crm/messages/interne`, {
+      const res = await fetch(getSafeApiUrl(`/api/crm/messages/interne`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

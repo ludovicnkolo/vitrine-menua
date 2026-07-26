@@ -48,8 +48,8 @@ const RolesPage = () => {
       const apiUrl = import.meta.env.VITE_API_URL ;
       
       const [rUsers, rRoles] = await Promise.all([
-        fetch(new URL(`${apiUrl}/api/crm/users`).toString(), { headers: { 'Authorization': `Bearer ${token}` } }).then(r=>r.json()).catch(()=>[]),
-        fetch(new URL(`${apiUrl}/api/crm/roles`).toString(), { headers: { 'Authorization': `Bearer ${token}` } }).then(r=>r.json()).catch(()=>[])
+        fetch(new URL(getSafeApiUrl(`/api/crm/users`)).toString(), { headers: { 'Authorization': `Bearer ${token}` } }).then(r=>r.json()).catch(()=>[]),
+        fetch(new URL(getSafeApiUrl(`/api/crm/roles`)).toString(), { headers: { 'Authorization': `Bearer ${token}` } }).then(r=>r.json()).catch(()=>[])
       ]);
 
       const validRoles = Array.isArray(rRoles) ? rRoles : [];
@@ -93,7 +93,7 @@ const RolesPage = () => {
   const handleDeleteRole = async () => {
     if(!deleteRole) return;
     try {
-      await fetch(new URL(`${import.meta.env.VITE_API_URL }/api/crm/roles/${encodeURIComponent(deleteRole.id)}`).toString(), {
+      await fetch(getSafeApiUrl(`/api/crm/roles/${encodeURIComponent(deleteRole.id)}`), {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
       });
@@ -244,7 +244,7 @@ const RolesPage = () => {
                 <button type="submit" className="btn btn-primary" onClick={async (e) => { 
                   e.preventDefault(); 
                   try {
-                    await fetch(new URL('/api/crm/roles', import.meta.env.VITE_API_URL ).toString(), {
+                    await fetch(getSafeApiUrl('/api/crm/roles'), {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
                       body: JSON.stringify({ name: newRole.name, description: newRole.description, status: newRole.status, permissions: JSON.stringify(selectedPermissions) })
@@ -322,7 +322,7 @@ const RolesPage = () => {
                 <button type="submit" className="btn btn-primary" onClick={async (e) => { 
                   e.preventDefault(); 
                   try {
-                    await fetch(new URL(`${import.meta.env.VITE_API_URL }/api/crm/roles/${encodeURIComponent(editRole.id)}`).toString(), {
+                    await fetch(getSafeApiUrl(`/api/crm/roles/${encodeURIComponent(editRole.id)}`), {
                       method: 'PATCH',
                       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
                       body: JSON.stringify({ name: editRole.name, description: editRole.description, status: editRole.status, permissions: JSON.stringify(selectedPermissions) })

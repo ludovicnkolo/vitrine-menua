@@ -78,7 +78,7 @@ const InboxPage = () => {
       if (!token) return;
       const apiUrl = import.meta.env.VITE_API_URL ;
       
-      const urlMessages = new URL(`${apiUrl}/api/crm/messages`);
+      const urlMessages = new URL(getSafeApiUrl(`/api/crm/messages`));
       urlMessages.searchParams.append('type', tab);
       urlMessages.searchParams.append('page', page);
       urlMessages.searchParams.append('limit', '6');
@@ -87,9 +87,9 @@ const InboxPage = () => {
 
       const [resMsgs, resUsers, resDossiers, resClients] = await Promise.all([
         fetch(urlMessages.toString(), { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(new URL(`${apiUrl}/api/crm/users`).toString(), { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(new URL(`${apiUrl}/api/crm/dossiers?limit=1000`).toString(), { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(new URL(`${apiUrl}/api/crm/clients?limit=1000`).toString(), { headers: { 'Authorization': `Bearer ${token}` } })
+        fetch(new URL(getSafeApiUrl(`/api/crm/users`)).toString(), { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(new URL(getSafeApiUrl(`/api/crm/dossiers?limit=1000`)).toString(), { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(new URL(getSafeApiUrl(`/api/crm/clients?limit=1000`)).toString(), { headers: { 'Authorization': `Bearer ${token}` } })
       ]);
 
       if (resMsgs.ok) {
@@ -189,7 +189,7 @@ const InboxPage = () => {
     formData.append('bucket', 'formulaires');
     formData.append('file', file);
     try {
-      const res = await fetch(new URL('/api/files/upload', import.meta.env.VITE_API_URL ).toString(), {
+      const res = await fetch(getSafeApiUrl('/api/files/upload'), {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: formData
@@ -233,7 +233,7 @@ const InboxPage = () => {
             newDossierPayload.targetUserId = taskDossierCible;
           }
           
-          const dossRes = await fetch(new URL(`${apiUrl}/api/crm/dossiers`).toString(), {
+          const dossRes = await fetch(new URL(getSafeApiUrl(`/api/crm/dossiers`)).toString(), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify(newDossierPayload)
@@ -276,7 +276,7 @@ const InboxPage = () => {
         
         const finalAttachment = attachmentsArray.filter(Boolean).join(',') || null;
 
-        const taskRes = await fetch(new URL(`${apiUrl}/api/crm/tasks`).toString(), {
+        const taskRes = await fetch(new URL(getSafeApiUrl(`/api/crm/tasks`)).toString(), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({
@@ -303,7 +303,7 @@ const InboxPage = () => {
         }
         const finalAttachment = attachmentsArray.filter(Boolean).join(',') || null;
 
-        const replyRes = await fetch(new URL(`${apiUrl}/api/crm/messages/interne`).toString(), {
+        const replyRes = await fetch(new URL(getSafeApiUrl(`/api/crm/messages/interne`)).toString(), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({
@@ -323,7 +323,7 @@ const InboxPage = () => {
         }
 
         // Mark the original message as TRAITE
-        await fetch(new URL(`${apiUrl}/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`).toString(), {
+        await fetch(new URL(getSafeApiUrl(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`)).toString(), {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({ status: 'TRAITE' })
@@ -355,7 +355,7 @@ const InboxPage = () => {
     try {
       const token = localStorage.getItem('adminToken');
       const apiUrl = import.meta.env.VITE_API_URL ;
-      const res = await fetch(new URL(`${apiUrl}/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`).toString(), {
+      const res = await fetch(new URL(getSafeApiUrl(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`)).toString(), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status: 'TRAITE' })
@@ -379,7 +379,7 @@ const InboxPage = () => {
       const token = localStorage.getItem('adminToken');
       const apiUrl = import.meta.env.VITE_API_URL ;
       
-      const res = await fetch(new URL(`${apiUrl}/api/crm/messages/sync-imap`).toString(), {
+      const res = await fetch(new URL(getSafeApiUrl(`/api/crm/messages/sync-imap`)).toString(), {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -407,7 +407,7 @@ const InboxPage = () => {
       const token = localStorage.getItem('adminToken');
       const apiUrl = import.meta.env.VITE_API_URL ;
       
-      const res = await fetch(new URL(`${apiUrl}/api/crm/messages/${encodeURIComponent(deleteMsg.id)}`).toString(), {
+      const res = await fetch(new URL(getSafeApiUrl(`/api/crm/messages/${encodeURIComponent(deleteMsg.id)}`)).toString(), {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

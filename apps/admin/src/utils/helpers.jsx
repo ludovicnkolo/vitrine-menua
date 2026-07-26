@@ -57,3 +57,20 @@ function getMessageStatusBadge(status) {
 }
 
 export { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge };
+
+function getSafeApiUrl(path) {
+  const base = import.meta.env.VITE_API_URL || '';
+  if (!base) return path;
+  
+  // Basic validation to prevent arbitrary URL injection
+  try {
+    const url = new URL(path, base);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+      return path; // Fallback or reject
+    }
+    return url.toString();
+  } catch(e) {
+    return path;
+  }
+}
+export { getSafeApiUrl };

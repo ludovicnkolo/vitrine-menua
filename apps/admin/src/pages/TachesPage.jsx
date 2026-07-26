@@ -53,7 +53,7 @@ const TachesPage = () => {
       const headers = { 'Authorization': 'Bearer ' + token };
       const apiUrl = import.meta.env.VITE_API_URL ;
       
-      const urlTaches = new URL(`${apiUrl}/api/crm/taches`);
+      const urlTaches = new URL(getSafeApiUrl(`/api/crm/taches`));
       urlTaches.searchParams.append('page', page);
       urlTaches.searchParams.append('limit', '6');
       urlTaches.searchParams.append('status', filterStatus);
@@ -61,7 +61,7 @@ const TachesPage = () => {
 
       const [resTasks, resUsers] = await Promise.all([
         fetch(urlTaches.toString(), { headers }),
-        fetch(new URL(`${apiUrl}/api/crm/users`).toString(), { headers })
+        fetch(new URL(getSafeApiUrl(`/api/crm/users`)).toString(), { headers })
       ]);
       
       const dataTasks = await resTasks.json();
@@ -95,7 +95,7 @@ const TachesPage = () => {
     formData.append('bucket', 'formulaires');
     formData.append('file', file);
     try {
-      const res = await fetch(new URL('/api/files/upload', import.meta.env.VITE_API_URL ).toString(), {
+      const res = await fetch(getSafeApiUrl('/api/files/upload'), {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: formData
@@ -127,7 +127,7 @@ const TachesPage = () => {
         }
       }
 
-      const res = await fetch(new URL(`${apiUrl}/api/crm/taches`).toString(), {
+      const res = await fetch(new URL(getSafeApiUrl(`/api/crm/taches`)).toString(), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ const TachesPage = () => {
       const token = localStorage.getItem('adminToken');
       const apiUrl = import.meta.env.VITE_API_URL ;
       const description = `Objet: ${editFormData.subject}\nConsignes: ${editFormData.message}`;
-      const res = await fetch(new URL(`${apiUrl}/api/crm/taches/${encodeURIComponent(editTask.id)}`).toString(), {
+      const res = await fetch(new URL(getSafeApiUrl(`/api/crm/taches/${encodeURIComponent(editTask.id)}`)).toString(), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -242,7 +242,7 @@ const TachesPage = () => {
              try {
                const token = localStorage.getItem('adminToken');
                const apiUrl = import.meta.env.VITE_API_URL ;
-               const res = await fetch(new URL(`${apiUrl}/api/crm/taches/${encodeURIComponent(taskId)}`).toString(), { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
+               const res = await fetch(new URL(getSafeApiUrl(`/api/crm/taches/${encodeURIComponent(taskId)}`)).toString(), { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
                if(res.ok) fetchData();
              } catch(e) { console.error("Erreur suppression tâche:", e); }
           }

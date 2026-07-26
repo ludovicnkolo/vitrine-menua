@@ -25,7 +25,7 @@ const SetupPasswordPage = () => {
     
     try {
       const apiUrl = import.meta.env.VITE_API_URL ;
-      const res = await fetch(`${apiUrl}/api/auth/setup-password`, {
+      const res = await fetch(getSafeApiUrl(`/api/auth/setup-password`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, password })

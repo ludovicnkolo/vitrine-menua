@@ -60,7 +60,6 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
       const headers = { 'Authorization': 'Bearer ' + token };
-      const apiUrl = import.meta.env.VITE_API_URL ;
       
       const urlTasks = new URL(getSafeApiUrl(mode === "MISSION" ? `/api/crm/tasks` : `/api/crm/taches`));
       urlTasks.searchParams.append('page', page);
@@ -108,7 +107,6 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       }
       
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL ;
       const description = `Objet: ${editFormData.subject}\nConsignes: ${editFormData.message}`;
       const res = await fetch(new URL(getSafeApiUrl(mode === "MISSION" ? `/api/crm/tasks/${encodeURIComponent(editTask.id)}` : `/api/crm/taches/${encodeURIComponent(editTask.id)}`)).toString(), {
         method: 'PATCH',
@@ -165,7 +163,6 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL ;
       
       let attachmentName = null;
       if (includeParentFile && consultTask.attachment) {
@@ -279,7 +276,6 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           if(window.confirm("Supprimer cette mission ?")) {
              try {
                const token = localStorage.getItem('adminToken');
-               const apiUrl = import.meta.env.VITE_API_URL ;
                const res = await fetch(new URL(getSafeApiUrl(`/api/crm/tasks/${encodeURIComponent(taskId)}`)).toString(), { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
                if (res.ok) fetchData();
              } catch(e) { console.error("Erreur suppr mission:", e); }

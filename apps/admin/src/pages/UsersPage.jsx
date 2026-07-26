@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import ActionDropdown from '../components/ActionDropdown';
 import UserFormFields from '../components/UserFormFields';
+import ClientFormFields from '../components/ClientFormFields';
 import { getStatusBadge, getRoleBadge } from '../utils/helpers';
 
 const UsersPage = ({ forceTab }) => {
@@ -25,18 +26,6 @@ const UsersPage = ({ forceTab }) => {
       <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>{label}</label>
       <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{value || ''}</div>
     </div>
-  );
-
-  const renderInputField = (label, field, obj, setObj, type = "text", required = false, isTextarea = false) => {
-    const id = `field-${field.replace(/\s+/g, '-')}`;
-    return (
-      <div>
-        <label htmlFor={id} style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>
-          {label}
-        </label>
-        {isTextarea ? (
-          <textarea id={id} rows="3" value={obj[field] || ''} onChange={e => setObj({...obj, [field]: e.target.value})} required={required} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
-        ) : (
           <input id={id} type={type} value={obj[field] || ''} onChange={e => setObj({...obj, [field]: e.target.value})} required={required} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
         )}
       </div>
@@ -286,45 +275,7 @@ const UsersPage = ({ forceTab }) => {
 
             <form onSubmit={handleCreateClient} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {errorMsg && <div style={{color: 'red', fontSize: '0.875rem'}}>{errorMsg}</div>}
-              {externalType === 'Particulier' ? (
-                <>
-                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    {renderInputField("Nom complet", "name", newClient, setNewClient, "text", true)}
-                    {renderInputField("Email professionnel", "email", newClient, setNewClient, "email", true)}
-                  </div>
-                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    {renderInputField("Téléphone", "telephone", newClient, setNewClient, "tel")}
-                    {renderInputField("Contact secondaire", "contactSecondaire", newClient, setNewClient)}
-                  </div>
-                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    {renderInputField("Secteur d'activité", "secteurActivite", newClient, setNewClient)}
-                  </div>
-                  {renderInputField("Description client", "description", newClient, setNewClient, "text", false, true)}
-                </>
-              ) : (
-                <>
-                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    {renderInputField("Nom de la société / Raison Sociale", "raisonSociale", newClient, setNewClient, "text", true)}
-                    {renderInputField("SIRET", "siret", newClient, setNewClient)}
-                  </div>
-                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    {renderInputField("Email de l'entreprise", "emailEntreprise", newClient, setNewClient, "email")}
-                    {renderInputField("Numéro de l'entreprise", "telephoneEntreprise", newClient, setNewClient, "tel")}
-                  </div>
-                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    {renderInputField("Nom du contact", "name", newClient, setNewClient, "text", true)}
-                    {renderInputField("Email du contact", "email", newClient, setNewClient, "email", true)}
-                  </div>
-                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    {renderInputField("Numéro du contact", "telephone", newClient, setNewClient, "tel")}
-                    {renderInputField("Contact secondaire", "contactSecondaire", newClient, setNewClient)}
-                  </div>
-                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                    {renderInputField("Secteur d'activité", "secteurActivite", newClient, setNewClient)}
-                  </div>
-                  {renderInputField("Description client", "description", newClient, setNewClient, "text", false, true)}
-                </>
-              )}
+              <ClientFormFields client={newClient} setClient={setNewClient} type={externalType} isEdit={false} />
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
                 <button type="button" onClick={() => setShowExternalModal(false)} className="btn btn-outline">Annuler</button>
                 <button type="submit" disabled={loading} className="btn btn-primary">{loading ? 'Création...' : 'Créer le membre'}</button>
@@ -345,23 +296,7 @@ const UsersPage = ({ forceTab }) => {
             
             <form onSubmit={handleUpdateClient} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {errorMsg && <div style={{color: 'red', fontSize: '0.875rem'}}>{errorMsg}</div>}
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                {renderInputField("Nom complet", "name", editExternal, setEditExternal, "text", true)}
-                {renderInputField("Email", "email", editExternal, setEditExternal, "email", true)}
-              </div>
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                {renderInputField("Secteur d'activité", "secteurActivite", editExternal, setEditExternal)}
-                {renderInputField("Téléphone", "telephone", editExternal, setEditExternal, "tel")}
-              </div>
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                <div>
-                  <label htmlFor="auto-field-1785016991511-21" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Type de client</label>
-                  <select id="auto-field-1785016991511-21" value={editExternal.type || 'Particulier'} onChange={e=>setEditExternal({...editExternal, type: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
-                    <option value="Particulier">Particulier</option>
-                    <option value="Société">Société</option>
-                  </select>
-                </div>
-              </div>
+              <ClientFormFields client={editExternal} setClient={setEditExternal} type={editExternal.type} isEdit={true} />
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
                 <button type="button" onClick={() => setEditExternal(null)} className="btn btn-outline">Annuler</button>
                 <button type="submit" disabled={loading} className="btn btn-primary">{loading ? 'Sauvegarde...' : 'Sauvegarder'}</button>

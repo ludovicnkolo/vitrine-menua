@@ -316,7 +316,7 @@ const InboxPage = () => {
         }
 
         // Mark the original message as TRAITE
-        await fetch(`${apiUrl}/api/crm/messages/${processMsg.id}/status`, {
+        await fetch(`${apiUrl}/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({ status: 'TRAITE' })
@@ -348,7 +348,7 @@ const InboxPage = () => {
     try {
       const token = localStorage.getItem('adminToken');
       const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
-      const res = await fetch(`${apiUrl}/api/crm/messages/${processMsg.id}/status`, {
+      const res = await fetch(`${apiUrl}/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status: 'TRAITE' })
@@ -400,7 +400,7 @@ const InboxPage = () => {
       const token = localStorage.getItem('adminToken');
       const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       
-      const res = await fetch(`${apiUrl}/api/crm/messages/${deleteMsg.id}`, {
+      const res = await fetch(`${apiUrl}/api/crm/messages/${encodeURIComponent(deleteMsg.id)}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -909,11 +909,11 @@ const InboxPage = () => {
                   <div style={{display: 'flex', gap: '1.5rem', marginBottom: '0.75rem'}}>
                     <label htmlFor="dossierTypeNew" style={{display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.875rem', cursor: 'pointer'}}>
                       <input type="radio" id="dossierTypeNew" name="dossierType" value="new" checked={isNewDossier} onChange={() => setIsNewDossier(true)} />
-                      Nouveau dossier
+                      {' '}Nouveau dossier
                     </label>
                     <label htmlFor="dossierTypeExisting" style={{display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.875rem', cursor: 'pointer'}}>
                       <input type="radio" id="dossierTypeExisting" name="dossierType" value="existing" checked={!isNewDossier} onChange={() => setIsNewDossier(false)} />
-                      Dossier existant
+                      {' '}Dossier existant
                     </label>
                   </div>
                   {isNewDossier ? (

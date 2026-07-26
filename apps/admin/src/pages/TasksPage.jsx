@@ -104,7 +104,7 @@ const TasksPage = () => {
       const token = localStorage.getItem('adminToken');
       const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       const description = `Objet: ${editFormData.subject}\nConsignes: ${editFormData.message}`;
-      const res = await fetch(`${apiUrl}/api/crm/tasks/${editTask.id}`, {
+      const res = await fetch(`${apiUrl}/api/crm/tasks/${encodeURIComponent(editTask.id)}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -274,7 +274,7 @@ const TasksPage = () => {
              try {
                const token = localStorage.getItem('adminToken');
                const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
-               const res = await fetch(`${apiUrl}/api/crm/tasks/${taskId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
+               const res = await fetch(`${apiUrl}/api/crm/tasks/${encodeURIComponent(taskId)}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
                if (res.ok) fetchData();
              } catch(e) { console.error("Erreur suppr mission:", e); }
           }
@@ -437,7 +437,10 @@ const TasksPage = () => {
                 {editTask.taches.map((sub) => (
                   <div 
                     key={sub.id}
+                    role="button"
+                    tabIndex={0}
                     onClick={() => setLocalConsultSubTask(sub)}
+                    onKeyDown={(e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLocalConsultSubTask(sub); } }}
                     onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
                     onFocus={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
                     onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'}

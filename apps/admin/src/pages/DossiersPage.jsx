@@ -173,7 +173,7 @@ const DossiersPage = () => {
               
               <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
+                  <label htmlFor="auto-field-1785016991499-6" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
                   <input id="auto-field-1785016991499-6" type="text" value={(() => {
                     if (!localConsultTask.description) return 'Sans objet';
                     const match = localConsultTask.description.match(/Objet: (.*)/);
@@ -229,7 +229,7 @@ const DossiersPage = () => {
 
         <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem'}}>
           <div>
-            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Nom du dossier</label>
+            <label htmlFor="auto-field-1785016991499-11" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Nom du dossier</label>
             <input id="auto-field-1785016991499-11" type="text" defaultValue={editDossier.name} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', background: '#FFF', color: 'var(--text-main)'}} />
           </div>
           <div>
@@ -296,7 +296,7 @@ const DossiersPage = () => {
               
               <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
+                  <label htmlFor="auto-field-1785016991499-16" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
                   <input id="auto-field-1785016991499-16" type="text" value={(() => {
                     if (!localConsultTask.description) return 'Sans objet';
                     const match = localConsultTask.description.match(/Objet: (.*)/);

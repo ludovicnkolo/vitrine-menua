@@ -112,7 +112,7 @@ const UsersPage = ({ forceTab }) => {
   const handleDeleteUser = async (id) => {
     if (!window.confirm('Voulez-vous vraiment supprimer ce membre interne ?')) return;
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/users/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/users/${encodeURIComponent(id)}`, {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
       });
@@ -124,7 +124,7 @@ const UsersPage = ({ forceTab }) => {
   const handleDeleteClient = async (id) => {
     if (!window.confirm('Voulez-vous vraiment supprimer ce membre externe ?')) return;
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/clients/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/clients/${encodeURIComponent(id)}`, {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
       });
@@ -138,7 +138,7 @@ const UsersPage = ({ forceTab }) => {
     setLoading(true); setErrorMsg(null);
     try {
       const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/users/${editUser.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/users/${encodeURIComponent(editUser.id)}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: JSON.stringify({
@@ -165,7 +165,7 @@ const UsersPage = ({ forceTab }) => {
     setLoading(true); setErrorMsg(null);
     try {
       const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/clients/${editExternal.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/crm/clients/${encodeURIComponent(editExternal.id)}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
         body: JSON.stringify({

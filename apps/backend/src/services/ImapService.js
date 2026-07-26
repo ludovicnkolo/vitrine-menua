@@ -11,7 +11,7 @@ const IMAP_CONFIG = {
     user: process.env.IMAP_USER,
     password: process.env.IMAP_PASSWORD,
     host: process.env.IMAP_HOST || 'imap.ovh.net',
-    port: process.env.IMAP_PORT ? parseInt(process.env.IMAP_PORT, 10) : 993,
+    port: process.env.IMAP_PORT ? Number.parseInt(process.env.IMAP_PORT, 10) : 993,
     tls: true,
     authTimeout: 10000,
     tlsOptions: { rejectUnauthorized: false }

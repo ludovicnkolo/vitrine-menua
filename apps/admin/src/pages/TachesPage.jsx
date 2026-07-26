@@ -170,7 +170,7 @@ const TachesPage = () => {
       const token = localStorage.getItem('adminToken');
       const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
       const description = `Objet: ${editFormData.subject}\nConsignes: ${editFormData.message}`;
-      const res = await fetch(`${apiUrl}/api/crm/taches/${editTask.id}`, {
+      const res = await fetch(`${apiUrl}/api/crm/taches/${encodeURIComponent(editTask.id)}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -236,7 +236,7 @@ const TachesPage = () => {
              try {
                const token = localStorage.getItem('adminToken');
                const apiUrl = import.meta.env.VITE_API_URL || ('http://localhost:4000');
-               const res = await fetch(`${apiUrl}/api/crm/taches/${taskId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
+               const res = await fetch(`${apiUrl}/api/crm/taches/${encodeURIComponent(taskId)}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
                if(res.ok) fetchData();
              } catch(e) { console.error("Erreur suppression tâche:", e); }
           }

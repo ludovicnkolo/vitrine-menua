@@ -15,7 +15,7 @@ const imapConfig = {
     user: process.env.IMAP_USER || 'contact@menuaconsulting.com',
     password: process.env.IMAP_PASSWORD || '',
     host: process.env.IMAP_HOST || 'ssl0.ovh.net',
-    port: process.env.IMAP_PORT ? parseInt(process.env.IMAP_PORT) : 993,
+    port: process.env.IMAP_PORT ? Number.parseInt(process.env.IMAP_PORT) : 993,
     tls: true,
     authTimeout: 10000,
     tlsOptions: { rejectUnauthorized: false }
@@ -121,7 +121,7 @@ router.post('/users', async (req, res) => {
     try {
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST || 'ssl0.ovh.net',
-        port: parseInt(process.env.SMTP_PORT || '587'),
+        port: Number.parseInt(process.env.SMTP_PORT || '587'),
         secure: process.env.SMTP_SECURE === 'true',
         auth: {
           user: process.env.SMTP_USER,
@@ -277,8 +277,8 @@ router.delete('/clients/:id', async (req, res) => {
 // --- DOSSIERS ---
 router.get('/dossiers', async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 6;
+    const page = Number.parseInt(req.query.page) || 1;
+    const limit = Number.parseInt(req.query.limit) || 6;
     const { search, status, role, origin } = req.query;
 
     const where = {};
@@ -340,7 +340,7 @@ router.post('/dossiers', async (req, res) => {
     let nextNum = 1;
     if (lastDossier && lastDossier.reference) {
       const match = lastDossier.reference.match(/DOS-(\d+)/);
-      if (match) nextNum = parseInt(match[1], 10) + 1;
+      if (match) nextNum = Number.parseInt(match[1], 10) + 1;
     }
     const reference = `DOS-${String(nextNum).padStart(2, '0')}`;
 
@@ -422,8 +422,8 @@ router.delete('/dossiers/:id', async (req, res) => {
 // --- TÂCHES ---
 router.get('/tasks', async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 6;
+    const page = Number.parseInt(req.query.page) || 1;
+    const limit = Number.parseInt(req.query.limit) || 6;
     const { search, status } = req.query;
 
     const where = { parentMissionId: null }; // Only parent tasks
@@ -488,7 +488,7 @@ router.post('/tasks', async (req, res) => {
     let nextNum = 1;
     if (lastMission && lastMission.reference) {
       const match = lastMission.reference.match(/MSN-(\d+)/);
-      if (match) nextNum = parseInt(match[1], 10) + 1;
+      if (match) nextNum = Number.parseInt(match[1], 10) + 1;
     }
     const reference = `MSN-${String(nextNum).padStart(2, '0')}`;
 
@@ -556,8 +556,8 @@ router.delete('/tasks/:id', async (req, res) => {
 // ─── TACHES (Nouvelle table) ──────────────────────────────────────────────────
 router.get('/taches', async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 6;
+    const page = Number.parseInt(req.query.page) || 1;
+    const limit = Number.parseInt(req.query.limit) || 6;
     const { search, status } = req.query;
 
     const where = {};
@@ -614,7 +614,7 @@ router.post('/taches', async (req, res) => {
     let nextNum = 1;
     if (lastTache && lastTache.reference) {
       const match = lastTache.reference.match(/TCH-(\d+)/);
-      if (match) nextNum = parseInt(match[1], 10) + 1;
+      if (match) nextNum = Number.parseInt(match[1], 10) + 1;
     }
     const reference = `TCH-${String(nextNum).padStart(2, '0')}`;
 
@@ -705,8 +705,8 @@ router.post('/messages/interne', async (req, res) => {
 
 router.get('/messages', async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 6;
+    const page = Number.parseInt(req.query.page) || 1;
+    const limit = Number.parseInt(req.query.limit) || 6;
     const tabType = (req.query.type || 'CONTACT').toUpperCase(); 
     const statusFilter = req.query.status || 'all'; 
     const search = req.query.search || '';

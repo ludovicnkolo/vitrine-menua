@@ -26,13 +26,13 @@ const validateEmail = async (email) => {
 };
 const upload = multer({ 
   storage: multer.memoryStorage(),
-  limits: { fileSize: parseInt(process.env.UPLOAD_MAX_FILE_SIZE) }
+  limits: { fileSize: Number.parseInt(process.env.UPLOAD_MAX_FILE_SIZE) }
 });
 
 // Strict rate limiting specifically for forms
 const formLimiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_FORM_WINDOW_MS),
-  max: parseInt(process.env.RATE_LIMIT_FORM_MAX),
+  windowMs: Number.parseInt(process.env.RATE_LIMIT_FORM_WINDOW_MS),
+  max: Number.parseInt(process.env.RATE_LIMIT_FORM_MAX),
   message: { success: false, error: 'Trop de soumissions, veuillez réessayer plus tard.' }
 });
 
@@ -53,7 +53,7 @@ const sanitizeInput = (data) => {
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT),
+  port: Number.parseInt(process.env.SMTP_PORT),
   secure: process.env.SMTP_SECURE === 'true',
   requireTLS: true,
   auth: {
@@ -154,7 +154,7 @@ router.post('/contact', upload.single('file'), async (req, res) => {
       if (magicBytes !== '255044462d') { // %PDF-
         return sendResponse(res, 400, 'ERROR_FILE_CORRUPTED', lang);
       }
-      if (req.file.size > parseInt(process.env.UPLOAD_MAX_FILE_SIZE)) {
+      if (req.file.size > Number.parseInt(process.env.UPLOAD_MAX_FILE_SIZE)) {
         return sendResponse(res, 400, 'ERROR_FILE_TOO_LARGE', lang);
       }
       attachments.push({

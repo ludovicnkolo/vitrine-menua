@@ -1,3 +1,4 @@
+import { getSafeApiUrl } from '../utils/helpers';
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   MoreVertical, Search, Mail, MessageSquare, Pencil, Eye, Trash, Shield

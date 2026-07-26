@@ -1,3 +1,4 @@
+import { getSafeApiUrl } from '../utils/helpers';
 import React, { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 
@@ -24,7 +25,7 @@ const SetupPasswordPage = () => {
     setError(null);
     
     try {
-      const apiUrl = import.meta.env.VITE_API_URL ;
+      
       const res = await fetch(getSafeApiUrl(`/api/auth/setup-password`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

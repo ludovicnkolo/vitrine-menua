@@ -1,3 +1,4 @@
+import { getSafeApiUrl } from '../utils/helpers';
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   MoreVertical, Pencil, Eye, Trash
@@ -45,7 +46,7 @@ const RolesPage = () => {
     try {
       const token = localStorage.getItem('adminToken');
       if (!token) return;
-      const apiUrl = import.meta.env.VITE_API_URL ;
+      
       
       const [rUsers, rRoles] = await Promise.all([
         fetch(new URL(getSafeApiUrl(`/api/crm/users`)).toString(), { headers: { 'Authorization': `Bearer ${token}` } }).then(r=>r.json()).catch(()=>[]),

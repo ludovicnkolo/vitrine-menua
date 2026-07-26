@@ -1,3 +1,4 @@
+import { getSafeApiUrl } from '../utils/helpers';
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   MoreVertical, CheckCircle, AlertCircle, Mail, Pencil, Eye, Trash, Files
@@ -76,7 +77,7 @@ const InboxPage = () => {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
       if (!token) return;
-      const apiUrl = import.meta.env.VITE_API_URL ;
+      
       
       const urlMessages = new URL(getSafeApiUrl(`/api/crm/messages`));
       urlMessages.searchParams.append('type', tab);
@@ -206,7 +207,7 @@ const InboxPage = () => {
     try {
       setIsSubmitting(true);
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL ;
+      
       
       let finalDossierId = null;
       if (tab !== 'interne') {
@@ -354,7 +355,7 @@ const InboxPage = () => {
     if (!processMsg) return;
     try {
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL ;
+      
       const res = await fetch(new URL(getSafeApiUrl(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`)).toString(), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -377,7 +378,7 @@ const InboxPage = () => {
     try {
       setIsSyncing(true);
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL ;
+      
       
       const res = await fetch(new URL(getSafeApiUrl(`/api/crm/messages/sync-imap`)).toString(), {
         method: 'POST',
@@ -405,7 +406,7 @@ const InboxPage = () => {
     if (!deleteMsg) return;
     try {
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL ;
+      
       
       const res = await fetch(new URL(getSafeApiUrl(`/api/crm/messages/${encodeURIComponent(deleteMsg.id)}`)).toString(), {
         method: 'DELETE',

@@ -1,3 +1,4 @@
+import { getSafeApiUrl } from '../utils/helpers';
 import React, { useState } from 'react';
 
 const LoginPage = ({ onLogin }) => {

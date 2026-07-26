@@ -1,3 +1,4 @@
+import { getSafeApiUrl } from '../utils/helpers';
 import React, { useState, useEffect } from 'react';
 import { Shield, Clock, Search, AlertCircle, FileText, User } from 'lucide-react';
 

@@ -1,3 +1,4 @@
+import { getSafeApiUrl } from '../utils/helpers';
 import React, { useState, useEffect } from 'react';
 import { X, Send } from 'lucide-react';
 
@@ -14,7 +15,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
       const fetchUsers = async () => {
         try {
           const token = localStorage.getItem('adminToken');
-          const apiUrl = import.meta.env.VITE_API_URL ;
+          
           const res = await fetch(getSafeApiUrl(`/api/crm/users`), {
             headers: { 'Authorization': `Bearer ${token}` }
           });
@@ -39,7 +40,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
     try {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
-      const apiUrl = import.meta.env.VITE_API_URL ;
+      
       
       let attachmentStr = null;
       if (file) {

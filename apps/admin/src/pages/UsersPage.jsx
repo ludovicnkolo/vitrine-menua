@@ -26,11 +26,7 @@ const UsersPage = ({ forceTab }) => {
       <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>{label}</label>
       <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{value || ''}</div>
     </div>
-          <input id={id} type={type} value={obj[field] || ''} onChange={e => setObj({...obj, [field]: e.target.value})} required={required} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-        )}
-      </div>
-    );
-  };
+  );
   
   // Real API states
   const [searchTerm, setSearchTerm] = useState('');
@@ -82,46 +78,36 @@ const UsersPage = ({ forceTab }) => {
   };
 
   useEffect(() => { fetchData(); }, []);
-  const handleCreateUser = async (e) => {
-    e.preventDefault();
-    if (!newUser.name || !newUser.email) {
-      setErrorMsg('Veuillez remplir le nom et l\'email au minimum.');
-      return;
-    }
+  const submitApiRequest = async (url, method, payload, onSuccess, errorText) => {
     setLoading(true); setErrorMsg(null);
     try {
       const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch(getSafeApiUrl('/api/crm/users'), {
-        method: 'POST',
+      const res = await fetch(getSafeApiUrl(url), {
+        method,
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
-        body: JSON.stringify({ ...newUser, lastLogin: 'Jamais connecté', idCardUrl: uploadedUrl })
+        body: JSON.stringify(uploadedUrl ? { ...payload, idCardUrl: uploadedUrl } : payload)
       });
-      if (res.ok) { setShowModal(false); setNewUser({ name: '', email: '', telephone: '', roleId: '', lieuResidence: '', experienceCle: '', status: 'Actif', langues: '', profile: '' }); setSelectedFile(null); fetchData(); }
-      else { setErrorMsg('Erreur lors de la création'); }
+      if (res.ok) { onSuccess(); setSelectedFile(null); fetchData(); }
+      else { setErrorMsg(errorText); }
     } catch(e) { setErrorMsg('Erreur réseau'); }
     setLoading(false);
   };
 
+  const handleCreateUser = async (e) => {
+    e.preventDefault();
+    if (!newUser.name || !newUser.email) return setErrorMsg('Veuillez remplir le nom et l\'email au minimum.');
+    await submitApiRequest('/api/crm/users', 'POST', { ...newUser, lastLogin: 'Jamais connecté' }, () => {
+      setShowModal(false); setNewUser({ name: '', email: '', telephone: '', roleId: '', lieuResidence: '', experienceCle: '', status: 'Actif', langues: '', profile: '' });
+    }, 'Erreur lors de la création');
+  };
+
   const handleCreateClient = async (e) => {
     e.preventDefault();
-    if (!newClient.name || !newClient.email) {
-      setErrorMsg('Veuillez remplir le nom et l\'email au minimum.');
-      return;
-    }
-    setLoading(true); setErrorMsg(null);
-    try {
-      const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch(getSafeApiUrl('/api/crm/clients'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
-        body: JSON.stringify({ ...newClient, type: externalType, status: newClient.status || 'Actif', idCardUrl: uploadedUrl })
-      });
-      if (res.ok) { setShowExternalModal(false); setNewClient({ name: '', email: '', telephone: '', contactSecondaire: '', secteurActivite: '', description: '', siret: '', raisonSociale: '', emailEntreprise: '', telephoneEntreprise: '' }); setSelectedFile(null); fetchData(); }
-      else { setErrorMsg('Erreur lors de la création'); }
-    } catch(e) { setErrorMsg('Erreur réseau'); }
-    setLoading(false);
+    if (!newClient.name || !newClient.email) return setErrorMsg('Veuillez remplir le nom et l\'email au minimum.');
+    await submitApiRequest('/api/crm/clients', 'POST', { ...newClient, type: externalType, status: newClient.status || 'Actif' }, () => {
+      setShowExternalModal(false); setNewClient({ name: '', email: '', telephone: '', contactSecondaire: '', secteurActivite: '', description: '', siret: '', raisonSociale: '', emailEntreprise: '', telephoneEntreprise: '' });
+    }, 'Erreur lors de la création');
   };
-  
   
   const handleDeleteUser = async (id) => {
     if (!window.confirm('Voulez-vous vraiment supprimer ce membre interne ?')) return;
@@ -149,59 +135,21 @@ const UsersPage = ({ forceTab }) => {
 
   const handleUpdateUser = async (e) => {
     e.preventDefault();
-    setLoading(true); setErrorMsg(null);
-    try {
-      const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch(getSafeApiUrl(`/api/crm/users/${encodeURIComponent(editUser.id)}`), {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
-        body: JSON.stringify({
-          name: editUser.name,
-          email: editUser.email,
-          roleId: editUser.roleId,
-          profile: editUser.profile,
-          status: editUser.isBlocked ? 'Inactif' : 'Actif',
-          telephone: editUser.telephone,
-          lieuResidence: editUser.lieuResidence,
-          experienceCle: editUser.experienceCle,
-          langues: editUser.langues,
-          ...(uploadedUrl && { idCardUrl: uploadedUrl })
-        })
-      });
-      if (res.ok) { setEditUser(null); setSelectedFile(null); fetchData(); }
-      else { setErrorMsg('Erreur lors de la modification'); }
-    } catch(e) { setErrorMsg('Erreur réseau'); }
-    setLoading(false);
+    await submitApiRequest(`/api/crm/users/${encodeURIComponent(editUser.id)}`, 'PATCH', {
+      name: editUser.name, email: editUser.email, roleId: editUser.roleId, profile: editUser.profile,
+      status: editUser.isBlocked ? 'Inactif' : 'Actif', telephone: editUser.telephone, lieuResidence: editUser.lieuResidence,
+      experienceCle: editUser.experienceCle, langues: editUser.langues
+    }, () => setEditUser(null), 'Erreur lors de la modification');
   };
 
   const handleUpdateClient = async (e) => {
     e.preventDefault();
-    setLoading(true); setErrorMsg(null);
-    try {
-      const uploadedUrl = await uploadFile(selectedFile);
-      const res = await fetch(getSafeApiUrl(`/api/crm/clients/${encodeURIComponent(editExternal.id)}`), {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
-        body: JSON.stringify({
-          name: editExternal.name,
-          email: editExternal.email,
-          telephone: editExternal.telephone,
-          contactSecondaire: editExternal.contactSecondaire,
-          secteurActivite: editExternal.secteurActivite,
-          description: editExternal.description,
-          type: editExternal.type,
-          siret: editExternal.siret,
-          raisonSociale: editExternal.raisonSociale,
-          emailEntreprise: editExternal.emailEntreprise,
-          telephoneEntreprise: editExternal.telephoneEntreprise,
-          status: editExternal.status,
-          ...(uploadedUrl && { idCardUrl: uploadedUrl })
-        })
-      });
-      if (res.ok) { setEditExternal(null); setSelectedFile(null); fetchData(); }
-      else { setErrorMsg('Erreur lors de la modification'); }
-    } catch(e) { setErrorMsg('Erreur réseau'); }
-    setLoading(false);
+    await submitApiRequest(`/api/crm/clients/${encodeURIComponent(editExternal.id)}`, 'PATCH', {
+      name: editExternal.name, email: editExternal.email, telephone: editExternal.telephone, contactSecondaire: editExternal.contactSecondaire,
+      secteurActivite: editExternal.secteurActivite, description: editExternal.description, type: editExternal.type, siret: editExternal.siret,
+      raisonSociale: editExternal.raisonSociale, emailEntreprise: editExternal.emailEntreprise, telephoneEntreprise: editExternal.telephoneEntreprise,
+      status: editExternal.status
+    }, () => setEditExternal(null), 'Erreur lors de la modification');
   };
 
   const isAnyModalOpen =

@@ -5,30 +5,26 @@ import {
 } from 'lucide-react';
 import TabsNavigation from '../components/TabsNavigation';
 import ActionDropdown from '../components/ActionDropdown';
+import PaginationControls from '../components/PaginationControls';
 
-  const extractFieldFromHtml = (html, fieldName) => {
+  const extractContentFromHtml = (html, label, isBlock = false) => {
     if (!html) return null;
-    let regex = new RegExp(String.raw`>\s*${fieldName}\s*<\/strong>\s*:\s*<span[^>]*>([\s\S]*?)<\/span>`, 'i');
+    let regex = new RegExp(String.raw`>\s*${label}\s*<\/strong>\s*<div[^>]*>([\s\S]*?)<\/div>`, 'i');
     let match = html.match(regex);
-    if (!match) {
-      regex = new RegExp(String.raw`>\s*${fieldName}\s*<\/strong>\s*<div[^>]*>([\s\S]*?)<\/div>`, 'i');
+    if (!match && !isBlock) {
+      regex = new RegExp(String.raw`>\s*${label}\s*<\/strong>\s*:\s*<span[^>]*>([\s\S]*?)<\/span>`, 'i');
       match = html.match(regex);
     }
     if (match?.[1]) {
-      return match[1].replace(/<[^>]*>?/gm, '').trim();
+      let content = match[1];
+      if (isBlock) content = content.replace(/<br\s*\/?>/gi, '\n');
+      return content.replace(/<[^>]*>?/gm, '').trim();
     }
     return null;
   };
 
-const extractBlockFromHtml = (html, blockName) => {
-  if (!html) return null;
-  const regex = new RegExp(String.raw`>\s*${blockName}\s*<\/strong>\s*<div[^>]*>([\s\S]*?)<\/div>`, 'i');
-  const match = html.match(regex);
-  if (match?.[1]) {
-    return match[1].replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>?/gm, '').trim();
-  }
-  return null;
-};
+  const extractFieldFromHtml = (html, fieldName) => extractContentFromHtml(html, fieldName, false);
+  const extractBlockFromHtml = (html, blockName) => extractContentFromHtml(html, blockName, true);
 
 const InboxPage = () => {
   const [tab, setTab] = useState('contact');
@@ -172,6 +168,19 @@ const InboxPage = () => {
     else setOpenMenuId(id);
   }
 
+  const apiFetch = async (endpoint, method = 'GET', body = null) => {
+    const token = localStorage.getItem('adminToken');
+    const options = {
+      method,
+      headers: { 'Authorization': `Bearer ${token}` }
+    };
+    if (body) {
+      options.headers['Content-Type'] = 'application/json';
+      options.body = JSON.stringify(body);
+    }
+    return fetch(new URL(getSafeApiUrl(endpoint)).toString(), options);
+  };
+
   const uploadFile = async (file) => {
     if (!file) return null;
     const formData = new FormData();
@@ -222,11 +231,7 @@ const InboxPage = () => {
             newDossierPayload.targetUserId = taskDossierCible;
           }
           
-          const dossRes = await fetch(new URL(getSafeApiUrl(`/api/crm/dossiers`)).toString(), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify(newDossierPayload)
-          });
+          const dossRes = await apiFetch(`/api/crm/dossiers`, 'POST', newDossierPayload);
           if (!dossRes.ok) {
             showToast("Erreur lors de la création du dossier.", "error");
             setIsSubmitting(false);
@@ -265,17 +270,13 @@ const InboxPage = () => {
         
         const finalAttachment = attachmentsArray.filter(Boolean).join(',') || null;
 
-        const taskRes = await fetch(new URL(getSafeApiUrl(`/api/crm/tasks`)).toString(), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-          body: JSON.stringify({
+        const taskRes = await apiFetch(`/api/crm/tasks`, 'POST', {
             description: `${taskSubject}\n\n${taskDescription}`,
             assignedToId: taskAssignedToId || null,
             dossierId: finalDossierId,
             echeance: taskEcheance,
             attachment: finalAttachment,
             messageId: processMsg.id
-          })
         });
 
         if (!taskRes.ok) {
@@ -292,17 +293,13 @@ const InboxPage = () => {
         }
         const finalAttachment = attachmentsArray.filter(Boolean).join(',') || null;
 
-        const replyRes = await fetch(new URL(getSafeApiUrl(`/api/crm/messages/interne`)).toString(), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-          body: JSON.stringify({
+        const replyRes = await apiFetch(`/api/crm/messages/interne`, 'POST', {
             subType: `Réponse à ${processMsg.nomPrenom}`,
             objet: taskSubject,
             bodyText: taskDescription,
             attachment: finalAttachment,
             dossierId: processMsg.dossierId || null,
             missionId: processMsg.missionId || null
-          })
         });
 
         if (!replyRes.ok) {
@@ -312,11 +309,7 @@ const InboxPage = () => {
         }
 
         // Mark the original message as TRAITE
-        await fetch(new URL(getSafeApiUrl(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`)).toString(), {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-          body: JSON.stringify({ status: 'TRAITE' })
-        });
+        await apiFetch(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`, 'PATCH', { status: 'TRAITE' });
       }
 
       fetchMessages();
@@ -342,13 +335,7 @@ const InboxPage = () => {
   const handleMarkAsProcessed = async () => {
     if (!processMsg) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      
-      const res = await fetch(new URL(getSafeApiUrl(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`)).toString(), {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ status: 'TRAITE' })
-      });
+      const res = await apiFetch(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`, 'PATCH', { status: 'TRAITE' });
       if (res.ok) {
         showToast("Message marqué comme traité !", "success");
         setProcessMsg(null);
@@ -365,13 +352,7 @@ const InboxPage = () => {
   const handleSyncEmails = async () => {
     try {
       setIsSyncing(true);
-      const token = localStorage.getItem('adminToken');
-      
-      
-      const res = await fetch(new URL(getSafeApiUrl(`/api/crm/messages/sync-imap`)).toString(), {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const res = await apiFetch(`/api/crm/messages/sync-imap`, 'POST');
       
       if (!res.ok) throw new Error("Erreur serveur");
       
@@ -393,13 +374,7 @@ const InboxPage = () => {
   const confirmDelete = async () => {
     if (!deleteMsg) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      
-      
-      const res = await fetch(new URL(getSafeApiUrl(`/api/crm/messages/${encodeURIComponent(deleteMsg.id)}`)).toString(), {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const res = await apiFetch(`/api/crm/messages/${encodeURIComponent(deleteMsg.id)}`, 'DELETE');
       
       if (!res.ok) throw new Error("Erreur lors de la suppression");
       
@@ -475,152 +450,25 @@ const InboxPage = () => {
       <div className="table-wrapper">
         <table>
           <thead>
-            {tab === 'contact' ? (
-              <tr>
-                <th style={{ width: '10%' }}>Statut</th>
-                <th style={{ width: '20%' }}>Nom</th>
-                <th style={{ width: '20%' }}>Email</th>
-                <th style={{ width: '10%' }}>Type</th>
-                <th style={{ width: '20%' }}>Besoins</th>
-                <th style={{ width: '10%' }}>Date</th>
-                <th style={{ width: '10%' }}>Actions</th>
-              </tr>
-            ) : tab === 'recrutement' ? (
-              <tr>
-                <th style={{ width: '10%' }}>Statut</th>
-                <th style={{ width: '20%' }}>Nom</th>
-                <th style={{ width: '20%' }}>E-mail</th>
-                <th style={{ width: '10%' }}>Type</th>
-                <th style={{ width: '20%' }}>Compétences</th>
-                <th style={{ width: '10%' }}>Date</th>
-                <th style={{ width: '10%' }}>Actions</th>
-              </tr>
-            ) : tab === 'interne' ? (
-              <tr>
-                <th style={{ width: '10%' }}>Statut</th>
-                <th style={{ width: '15%' }}>Emetteur</th>
-                <th style={{ width: '20%' }}>Email</th>
-                <th style={{ width: '10%' }}>Source</th>
-                <th style={{ width: '15%' }}>ID</th>
-                <th style={{ width: '15%' }}>Date</th>
-                <th style={{ width: '15%' }}>Actions</th>
-              </tr>
-            ) : (
-              <tr>
-                <th style={{ width: '10%' }}>Statut</th>
-                <th style={{ width: '20%' }}>Nom</th>
-                <th style={{ width: '20%' }}>E-mail</th>
-                <th style={{ width: '10%' }}>Type</th>
-                <th style={{ width: '20%' }}>Sujet</th>
-                <th style={{ width: '10%' }}>Date</th>
-                <th style={{ width: '10%' }}>Actions</th>
-              </tr>
-            )}
+            <tr>
+              <th style={{ width: '10%' }}>Statut</th>
+              <th style={{ width: tab === 'interne' ? '15%' : '20%' }}>{tab === 'interne' ? 'Emetteur' : 'Nom'}</th>
+              <th style={{ width: '20%' }}>{tab === 'recrutement' ? 'E-mail' : 'Email'}</th>
+              <th style={{ width: '10%' }}>{tab === 'interne' ? 'Source' : 'Type'}</th>
+              <th style={{ width: tab === 'interne' ? '15%' : '20%' }}>
+                {tab === 'contact' ? 'Besoins' : tab === 'recrutement' ? 'Compétences' : tab === 'interne' ? 'ID' : 'Sujet'}
+              </th>
+              <th style={{ width: tab === 'interne' ? '15%' : '10%' }}>Date</th>
+              <th style={{ width: tab === 'interne' ? '15%' : '10%' }}>Actions</th>
+            </tr>
           </thead>
           <tbody>
             {(() => {
               if (loading) {
                 return <tr><td colSpan="7" style={{textAlign: 'center', padding: '2rem'}}>Chargement des messages...</td></tr>;
               }
-              
-              if (tab === 'contact') {
-                return messages.map(m => (
-                  <tr key={m.id}>
-                    <td>
-                      <span style={{
-                        padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                        background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
-                      }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
-                    </td>
-                    <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong></td>
-                    <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span></td>
-                    <td>
-                      <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: '#E0E7FF', color: '#4F46E5'}}>
-                        {m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier'}
-                      </span>
-                    </td>
-                    <td><span className="truncate-text" style={{fontSize: "0.875rem"}}>{m.contact?.typeBesoin || m.objet}</span></td>
-                    <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
-                    <td>
-                      <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
-                        <div style={{position: 'relative'}}>
-                          <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
-                            <MoreVertical size={16} />
-                          </button>
-                          {renderDropdown(m)}
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                ));
-              }
 
-              if (tab === 'recrutement') {
-                return messages.map(m => (
-                  <tr key={m.id}>
-                    <td>
-                      <span style={{
-                        padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                        background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
-                      }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
-                    </td>
-                    <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong></td>
-                    <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span></td>
-                    <td>
-                      <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: '#FEF3C7', color: '#D97706'}}>
-                        {m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier'}
-                      </span>
-                    </td>
-                    <td><span className="truncate-text" style={{fontSize: "0.875rem"}}>{m.recrutement?.competenceCle || m.objet}</span></td>
-                    <td style={{color: "var(--text-muted)", whiteSpace: "nowrap", fontSize: "0.875rem"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
-                    <td>
-                      <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
-                        <div style={{position: 'relative'}}>
-                          <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
-                            <MoreVertical size={16} />
-                          </button>
-                          {renderDropdown(m)}
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                ));
-              }
-
-              if (tab === 'interne') {
-                return messages.map(m => (
-                  <tr key={m.id}>
-                    <td>
-                      <span style={{
-                        padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                        background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
-                      }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
-                    </td>
-                    <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom || 'Système'}</strong></td>
-                    <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email || '-'}</span></td>
-                    <td>
-                      <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: '#F1F5F9', color: '#64748B'}}>
-                        {m.sourceType || m.subType || 'Interne'}
-                      </span>
-                    </td>
-                    <td><span style={{color: "var(--text-muted)", fontSize: "0.75rem", fontFamily: "monospace"}} title={m.sourceRef || m.formulaireId || m.id}>{m.sourceRef || (m.formulaireId ? m.formulaireId.split('-')[0] : m.id)}</span></td>
-                    <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
-                    <td>
-                      <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
-                        <div style={{position: 'relative'}}>
-                          <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
-                            <MoreVertical size={16} />
-                          </button>
-                          {renderDropdown(m)}
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                ));
-              }
-
-              // Fallback
-              return messages.map(m => (
+              const renderMessageRow = (m, col2, col3, typeBadgeText, typeBadgeBg, typeBadgeColor, col5, col5Style) => (
                 <tr key={m.id}>
                   <td>
                     <span style={{
@@ -628,14 +476,14 @@ const InboxPage = () => {
                       background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
                     }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
                   </td>
-                  <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{m.nomPrenom}</strong></td>
-                  <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{m.email}</span></td>
+                  <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{col2}</strong></td>
+                  <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{col3}</span></td>
                   <td>
-                      <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: '#F1F5F9', color: '#64748B'}}>
-                        {m.sourceType || m.subType || 'Indéfini'}
-                      </span>
+                    <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: typeBadgeBg, color: typeBadgeColor}}>
+                      {typeBadgeText}
+                    </span>
                   </td>
-                  <td><div className="truncate-text" style={{fontWeight: m.status === "NOUVEAU" ? 600 : 400, fontSize: "0.875rem"}}>{m.objet}</div></td>
+                  <td><div className="truncate-text" style={col5Style || {fontSize: "0.875rem"}}>{col5}</div></td>
                   <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
@@ -648,31 +496,46 @@ const InboxPage = () => {
                     </div>
                   </td>
                 </tr>
+              );
+              
+              if (tab === 'contact') {
+                return messages.map(m => renderMessageRow(
+                  m, m.nomPrenom, m.email,
+                  m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier', '#E0E7FF', '#4F46E5',
+                  m.contact?.typeBesoin || m.objet
+                ));
+              }
+
+              if (tab === 'recrutement') {
+                return messages.map(m => renderMessageRow(
+                  m, m.nomPrenom, m.email,
+                  m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier', '#FEF3C7', '#D97706',
+                  m.recrutement?.competenceCle || m.objet
+                ));
+              }
+
+              if (tab === 'interne') {
+                return messages.map(m => renderMessageRow(
+                  m, m.nomPrenom || 'Système', m.email || '-',
+                  m.sourceType || m.subType || 'Interne', '#F1F5F9', '#64748B',
+                  <span title={m.sourceRef || m.formulaireId || m.id}>{m.sourceRef || (m.formulaireId ? m.formulaireId.split('-')[0] : m.id)}</span>,
+                  {color: "var(--text-muted)", fontSize: "0.75rem", fontFamily: "monospace"}
+                ));
+              }
+
+              // Fallback
+              return messages.map(m => renderMessageRow(
+                m, m.nomPrenom, m.email,
+                m.sourceType || m.subType || 'Indéfini', '#F1F5F9', '#64748B',
+                m.objet,
+                {fontWeight: m.status === "NOUVEAU" ? 600 : 400, fontSize: "0.875rem"}
               ));
             })()}
           </tbody>
         </table>
       </div>
 
-      {totalPages >= 1 && (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '1rem', alignItems: 'center' }}>
-          <button type="button"
-            disabled={page === 1} 
-            onClick={() => setPage(p => Math.max(1, p - 1))} 
-            style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)', background: '#FFF', cursor: page === 1 ? 'not-allowed' : 'pointer' }}
-          >
-            Précédent
-          </button>
-          <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Page {page} sur {totalPages}</span>
-          <button type="button"
-            disabled={page >= totalPages} 
-            onClick={() => setPage(p => Math.min(totalPages, p + 1))} 
-            style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--border)', background: '#FFF', cursor: page >= totalPages ? 'not-allowed' : 'pointer' }}
-          >
-            Suivant
-          </button>
-        </div>
-      )}
+      <PaginationControls page={page} totalPages={totalPages} setPage={setPage} />
       </>
       )}
 

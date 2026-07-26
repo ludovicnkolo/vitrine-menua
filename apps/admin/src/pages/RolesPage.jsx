@@ -126,6 +126,68 @@ const RolesPage = () => {
     );
   }
 
+  const renderRoleForm = (title, roleData, setRoleData, onSubmit, onCancel) => (
+    <div className="fade-in" style={{padding: "1rem"}}>
+      <div className="" style={{width: "100%", position: "relative"}}>
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
+          <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>{title}</h2>
+          <button type="button" onClick={onCancel} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+        </div>
+        
+        <form style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+          <div>
+            <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Intitulé du rôle</label>
+            <input type="text" value={roleData.name || ''} onChange={e => setRoleData({...roleData, name: e.target.value})} placeholder="Ex: GESTIONNAIRE" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
+          </div>
+          <div>
+            <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Permissions</label>
+            <div style={{position: 'relative'}} ref={dropdownRef}>
+              <button 
+                type="button"
+                onClick={() => setPermissionsOpen(!permissionsOpen)}
+                style={{width: '100%', padding: '0.5rem', minHeight: '38px', borderRadius: '4px', border: '1px solid var(--border)', background: 'white', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'inherit', fontSize: 'inherit'}}
+              >
+                <span style={{color: selectedPermissions.length > 0 ? 'var(--text-main)' : 'var(--text-muted)'}}>
+                  {selectedPermissions.length > 0 ? selectedPermissions.map(getPermLabel).join(', ') : 'Sélectionner des permissions...'}
+                </span>
+                <span style={{fontSize: '0.75rem', color: 'var(--text-muted)', flexShrink: 0, marginLeft: '0.5rem'}}>▼</span>
+              </button>
+              {permissionsOpen && (
+                <div style={{
+                  position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '4px',
+                  background: 'white', border: '1px solid var(--border)', borderRadius: '4px',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, maxHeight: '200px', overflowY: 'auto',
+                  padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem'
+                }}>
+                  {availablePermissions.map(p => (
+                    <label key={p.value} style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.875rem'}}>
+                      <input type="checkbox" checked={selectedPermissions.includes(p.value)} onChange={() => togglePerm(p.value)} /> {p.label}
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          <div>
+            <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description du rôle</label>
+            <textarea rows="3" value={roleData.description || ''} onChange={e=>setRoleData({...roleData, description: e.target.value})} placeholder="Description des responsabilités..." style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+          </div>
+          <div>
+            <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
+            <select value={roleData.status || 'Actif'} onChange={e => setRoleData({...roleData, status: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+              <option value="Actif">Actif</option>
+              <option value="Inactif">Inactif</option>
+            </select>
+          </div>
+          <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
+            <button type="button" onClick={onCancel} className="btn btn-outline">Annuler</button>
+            <button type="submit" className="btn btn-primary" onClick={onSubmit}>{title.includes('Créer') ? 'Créer le rôle' : 'Sauvegarder'}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+
   return (
     <div style={{padding: '0 1rem'}}>
       {!isTableViewHidden && (
@@ -187,157 +249,49 @@ const RolesPage = () => {
       )}
 
       {/* Modal Créer un Rôle */}
-      {showRoleModal && (
-        <div className="fade-in" style={{padding: "1rem"}}>
-          <div className="" style={{width: "100%", position: "relative"}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-              <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Créer un Rôle</h2>
-              <button type="button" onClick={() => setShowRoleModal(false)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
-            </div>
-            
-            <form style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-              <div>
-                <label htmlFor="auto-field-1785016991508-1" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Intitulé du rôle</label>
-                <input id="auto-field-1785016991508-1" type="text" value={newRole.name} onChange={e => setNewRole({...newRole, name: e.target.value})} placeholder="Ex: GESTIONNAIRE" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-              </div>
-              <div>
-                <label htmlFor="auto-field-1785016991508-2" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Permissions</label>
-                <div style={{position: 'relative'}} ref={dropdownRef}>
-                  <button 
-                    type="button"
-                    onClick={() => setPermissionsOpen(!permissionsOpen)}
-                    style={{width: '100%', padding: '0.5rem', minHeight: '38px', borderRadius: '4px', border: '1px solid var(--border)', background: 'white', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'inherit', fontSize: 'inherit'}}
-                  >
-                    <span style={{color: selectedPermissions.length > 0 ? 'var(--text-main)' : 'var(--text-muted)'}}>
-                      {selectedPermissions.length > 0 ? selectedPermissions.map(getPermLabel).join(', ') : 'Sélectionner des permissions...'}
-                    </span>
-                    <span style={{fontSize: '0.75rem', color: 'var(--text-muted)', flexShrink: 0, marginLeft: '0.5rem'}}>▼</span>
-                  </button>
-                  {permissionsOpen && (
-                    <div style={{
-                      position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '4px',
-                      background: 'white', border: '1px solid var(--border)', borderRadius: '4px',
-                      boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, maxHeight: '200px', overflowY: 'auto',
-                      padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem'
-                    }}>
-                      {availablePermissions.map(p => (
-                        <label key={p.value} style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.875rem'}}>
-                          <input type="checkbox" checked={selectedPermissions.includes(p.value)} onChange={() => togglePerm(p.value)} /> {p.label}
-                        </label>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div>
-                <label htmlFor="auto-field-1785016991508-2" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description du rôle</label>
-                <textarea id="auto-field-1785016991508-2" rows="3" value={newRole.description} onChange={e=>setNewRole({...newRole, description: e.target.value})} placeholder="Description des responsabilités..." style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
-              </div>
-              <div>
-                <label htmlFor="auto-field-1785016991508-3" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
-                <select id="auto-field-1785016991508-3" value={newRole.status} onChange={e => setNewRole({...newRole, status: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
-                  <option value="Actif">Actif</option>
-                  <option value="Inactif">Inactif</option>
-                </select>
-              </div>
-              <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
-                <button type="button" onClick={() => setShowRoleModal(false)} className="btn btn-outline">Annuler</button>
-                <button type="submit" className="btn btn-primary" onClick={async (e) => { 
-                  e.preventDefault(); 
-                  try {
-                    await fetch(getSafeApiUrl('/api/crm/roles'), {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
-                      body: JSON.stringify({ name: newRole.name, description: newRole.description, status: newRole.status, permissions: JSON.stringify(selectedPermissions) })
-                    });
-                    setNewRole({ name: '', description: '', status: 'Actif' });
-                    setSelectedPermissions([]);
-                    setShowRoleModal(false); 
-                    fetchData();
-                  } catch(e) {
-                    console.error("Erreur lors de la création:", e);
-                  }
-                }}>Créer le rôle</button>
-              </div>
-            </form>
-          </div>
-        </div>
+      {showRoleModal && renderRoleForm(
+        "Créer un Rôle",
+        newRole,
+        setNewRole,
+        async (e) => { 
+          e.preventDefault(); 
+          try {
+            await fetch(getSafeApiUrl('/api/crm/roles'), {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+              body: JSON.stringify({ name: newRole.name, description: newRole.description, status: newRole.status, permissions: JSON.stringify(selectedPermissions) })
+            });
+            setNewRole({ name: '', description: '', status: 'Actif' });
+            setSelectedPermissions([]);
+            setShowRoleModal(false); 
+            fetchData();
+          } catch(err) {
+            console.error("Erreur lors de la création:", err);
+          }
+        },
+        () => setShowRoleModal(false)
       )}
 
       {/* Modal Modifier un Rôle */}
-      {editRole && (
-        <div className="fade-in" style={{padding: "1rem"}}>
-          <div className="" style={{width: "100%", position: "relative"}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-              <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Modifier le Rôle</h2>
-              <button type="button" onClick={() => setEditRole(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
-            </div>
-            
-            <form style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-              <div>
-                <label htmlFor="auto-field-1785016991508-4" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Intitulé du rôle</label>
-                <input id="auto-field-1785016991508-4" type="text" value={editRole.name} onChange={e => setEditRole({...editRole, name: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-              </div>
-              <div>
-                <label htmlFor="auto-field-1785016991508-5" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Permissions</label>
-                <div style={{position: 'relative'}} ref={dropdownRef}>
-                  <button 
-                    type="button"
-                    onClick={() => setPermissionsOpen(!permissionsOpen)}
-                    style={{width: '100%', padding: '0.5rem', minHeight: '38px', borderRadius: '4px', border: '1px solid var(--border)', background: 'white', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'inherit', fontSize: 'inherit'}}
-                  >
-                    <span style={{color: selectedPermissions.length > 0 ? 'var(--text-main)' : 'var(--text-muted)'}}>
-                      {selectedPermissions.length > 0 ? selectedPermissions.map(getPermLabel).join(', ') : 'Sélectionner des permissions...'}
-                    </span>
-                    <span style={{fontSize: '0.75rem', color: 'var(--text-muted)', flexShrink: 0, marginLeft: '0.5rem'}}>▼</span>
-                  </button>
-                  {permissionsOpen && (
-                    <div style={{
-                      position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '4px',
-                      background: 'white', border: '1px solid var(--border)', borderRadius: '4px',
-                      boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, maxHeight: '200px', overflowY: 'auto',
-                      padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem'
-                    }}>
-                      {availablePermissions.map(p => (
-                        <label key={p.value} style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.875rem'}}>
-                          <input type="checkbox" checked={selectedPermissions.includes(p.value)} onChange={() => togglePerm(p.value)} /> {p.label}
-                        </label>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div>
-                <label htmlFor="auto-field-1785016991508-5" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Description du rôle</label>
-                <textarea id="auto-field-1785016991508-5" rows="3" value={editRole.description || ''} onChange={e=>setEditRole({...editRole, description: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
-              </div>
-              <div>
-                <label htmlFor="auto-field-1785016991508-6" style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Statut</label>
-                <select id="auto-field-1785016991508-6" value={editRole.status} onChange={e => setEditRole({...editRole, status: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
-                  <option value="Actif">Actif</option>
-                  <option value="Inactif">Inactif</option>
-                </select>
-              </div>
-              <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
-                <button type="button" onClick={() => setEditRole(null)} className="btn btn-outline">Annuler</button>
-                <button type="submit" className="btn btn-primary" onClick={async (e) => { 
-                  e.preventDefault(); 
-                  try {
-                    await fetch(getSafeApiUrl(`/api/crm/roles/${encodeURIComponent(editRole.id)}`), {
-                      method: 'PATCH',
-                      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
-                      body: JSON.stringify({ name: editRole.name, description: editRole.description, status: editRole.status, permissions: JSON.stringify(selectedPermissions) })
-                    });
-                    setEditRole(null); 
-                    fetchData();
-                  } catch(e) {
-                    console.error("Erreur lors de la mise à jour:", e);
-                  }
-                }}>Sauvegarder</button>
-              </div>
-            </form>
-          </div>
-        </div>
+      {editRole && renderRoleForm(
+        "Modifier le Rôle",
+        editRole,
+        setEditRole,
+        async (e) => { 
+          e.preventDefault(); 
+          try {
+            await fetch(getSafeApiUrl(`/api/crm/roles/${encodeURIComponent(editRole.id)}`), {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+              body: JSON.stringify({ name: editRole.name, description: editRole.description, status: editRole.status, permissions: JSON.stringify(selectedPermissions) })
+            });
+            setEditRole(null); 
+            fetchData();
+          } catch(err) {
+            console.error("Erreur lors de la mise à jour:", err);
+          }
+        },
+        () => setEditRole(null)
       )}
 
       {/* Modal Consulter un Rôle */}

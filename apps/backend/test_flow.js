@@ -37,11 +37,17 @@ async function runTest() {
       body: JSON.stringify({ dossierId: dossier.id, description: 'Mission de Test', status: 'NEW' })
     });
     const mission = await resMission.json();
-    console.log(`✅ Mission created:`, { id: mission.id, reference: mission.reference, status: mission.status });
+    const missionIdStr = String(mission.id);
+    if (!/^[0-9a-fA-F-]+$/.test(missionIdStr)) {
+      throw new Error("ID de mission invalide");
+    }
+    const safeMissionId = missionIdStr;
+    console.log(`✅ Mission created:`, { id: safeMissionId, reference: mission.reference, status: mission.status });
 
     // 4. Update Status to EN_COURS
     console.log("4. Updating status to EN_COURS...");
-    const resUpdate1 = await fetch(`http://localhost:4000/api/crm/tasks/${encodeURIComponent(mission.id)}`, {
+    const taskUrl1 = new URL(`http://localhost:4000/api/crm/tasks/${encodeURIComponent(safeMissionId)}`);
+    const resUpdate1 = await fetch(taskUrl1.toString(), {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ status: 'EN_COURS' })
@@ -51,7 +57,8 @@ async function runTest() {
 
     // 5. Update Status to EN_FINALISATION
     console.log("5. Updating status to EN_FINALISATION...");
-    const resUpdate2 = await fetch(`http://localhost:4000/api/crm/tasks/${encodeURIComponent(mission.id)}`, {
+    const taskUrl2 = new URL(`http://localhost:4000/api/crm/tasks/${encodeURIComponent(safeMissionId)}`);
+    const resUpdate2 = await fetch(taskUrl2.toString(), {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ status: 'EN_FINALISATION' })
@@ -61,7 +68,8 @@ async function runTest() {
     
     // 6. Update Status to TERMINEE
     console.log("6. Updating status to TERMINEE...");
-    const resUpdate3 = await fetch(`http://localhost:4000/api/crm/tasks/${encodeURIComponent(mission.id)}`, {
+    const taskUrl3 = new URL(`http://localhost:4000/api/crm/tasks/${encodeURIComponent(safeMissionId)}`);
+    const resUpdate3 = await fetch(taskUrl3.toString(), {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ status: 'TERMINEE' })
@@ -72,7 +80,7 @@ async function runTest() {
     console.log("\n🎉 All tests passed successfully!");
     
     // Cleanup
-    await prisma.mission.delete({ where: { id: mission.id }});
+    await prisma.mission.delete({ where: { id: safeMissionId }});
     await prisma.dossier.delete({ where: { id: dossier.id }});
     console.log("🧹 Cleanup done.");
 

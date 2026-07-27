@@ -335,9 +335,12 @@ router.get('/dossiers', async (req, res) => {
       take: limit,
       orderBy: { createdAt: 'desc' },
       include: { 
-        missions: true, 
+        missions: {
+          include: { assignedTo: { include: { role: true } } }
+        }, 
         client: true, 
-        createdBy: { include: { role: true } }
+        createdBy: { include: { role: true } },
+        documents: { include: { uploadedBy: true }, orderBy: { createdAt: 'desc' } }
       }
     });
     sendPaginatedResponse(res, dossiers, total, page, limit);
@@ -457,6 +460,7 @@ router.get('/tasks', async (req, res) => {
         dossier: true, 
         assignedTo: { include: { role: true } }, 
         createdBy: { include: { role: true } },
+        documents: { include: { uploadedBy: true }, orderBy: { createdAt: 'desc' } },
         subMissions: {
           include: { assignedTo: true, createdBy: true }
         },
@@ -638,6 +642,60 @@ router.delete('/taches/:id', async (req, res) => {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression.' });
   }
 });
+
+// --- DOCUMENTS ---
+// Attacher un fichier (déjà uploadé via /api/files/upload) à un dossier ou une mission
+router.post('/documents', async (req, res) => {
+  try {
+    const { name, filename, bucket, dossierId, missionId } = req.body;
+    const creatorId = await resolveCreatorId(req);
+    if (!filename || (!dossierId && !missionId)) {
+      return res.status(400).json({ error: 'filename et dossierId ou missionId sont requis.' });
+    }
+    const document = await prisma.document.create({
+      data: {
+        name: name || filename,
+        url: `${bucket || 'formulaires'}/${filename}`,
+        uploadedById: creatorId,
+        ...(dossierId && { dossierId }),
+        ...(missionId && { missionId })
+      },
+      include: { uploadedBy: true }
+    });
+    res.status(201).json(document);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de l\'enregistrement du document: ' + error.message });
+  }
+});
+
+// Lister les documents d'une entité
+router.get('/documents/:type/:id', async (req, res) => {
+  try {
+    const { type, id } = req.params;
+    const where = type === 'dossier' ? { dossierId: id } : { missionId: id };
+    const docs = await prisma.document.findMany({
+      where,
+      include: { uploadedBy: true },
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json(docs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des documents.' });
+  }
+});
+
+router.delete('/documents/:id', async (req, res) => {
+  try {
+    await prisma.document.delete({ where: { id: req.params.id } });
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la suppression du document.' });
+  }
+});
+
 // --- MESSAGES (FORMULAIRES) ---
 router.post('/messages/interne', async (req, res) => {
   try {

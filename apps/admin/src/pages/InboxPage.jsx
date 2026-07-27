@@ -1,7 +1,7 @@
 import { getSafeApiUrl, apiFetch, uploadFile, formatDate, extractFieldFromHtml, extractBlockFromHtml } from '../utils/helpers';
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  MoreVertical, CheckCircle, AlertCircle, Mail, Pencil, Eye, Trash, Files
+  MoreVertical, CheckCircle, AlertCircle, Mail, Pencil, Eye, Trash, Files, Paperclip, FileText
 } from 'lucide-react';
 import TabsNavigation from '../components/TabsNavigation';
 import ActionDropdown from '../components/ActionDropdown';
@@ -37,6 +37,7 @@ const InboxPage = () => {
   const [deleteMsg, setDeleteMsg] = useState(null);
   const [newTaskFile, setNewTaskFile] = useState(null);
   const [isNewDossier, setIsNewDossier] = useState(true);
+  const [dossierFile, setDossierFile] = useState(null);
   const [isSyncing, setIsSyncing] = useState(false);
 
   // Form states
@@ -161,19 +162,36 @@ const InboxPage = () => {
             origin: tab.toUpperCase() 
           };
           if (taskDossierSection === 'client') {
-            newDossierPayload.clientId = taskDossierCible;
+            newDossierPayload.clientId = taskDossierCible || null;
           } else if (taskDossierSection === 'equipe') {
-            newDossierPayload.targetUserId = taskDossierCible;
+            newDossierPayload.targetUserId = taskDossierCible || null;
           }
           
+          // Upload dossier file if any
+          let dossierFilename = null;
+          if (dossierFile) {
+            dossierFilename = await uploadFile(dossierFile, 'dossiers');
+          }
+
           const dossRes = await apiFetch(`/api/crm/dossiers`, 'POST', newDossierPayload);
           if (!dossRes.ok) {
-            showToast("Erreur lors de la création du dossier.", "error");
+            const errData = await dossRes.json().catch(() => ({}));
+            showToast(`Erreur lors de la création du dossier: ${errData.error || ''}`, "error");
             setIsSubmitting(false);
             return;
           }
           const dossData = await dossRes.json();
           finalDossierId = dossData.id;
+
+          // Register uploaded file as Document linked to the dossier
+          if (dossierFilename) {
+            await apiFetch('/api/crm/documents', 'POST', {
+              name: dossierFile.name,
+              filename: dossierFilename,
+              bucket: 'dossiers',
+              dossierId: finalDossierId
+            });
+          }
         } else {
           if (!taskDossierId) {
             showToast("Veuillez sélectionner un dossier existant.", "error");
@@ -223,6 +241,7 @@ const InboxPage = () => {
       setIncludeAttachedFile(false);
       setProcessMsg(null);
       setNewTaskFile(null);
+      setDossierFile(null);
       setTaskSubject('');
       setTaskDescription('');
       setTaskEcheance('');
@@ -579,7 +598,7 @@ const InboxPage = () => {
           <div className="" style={{width: '100%', padding: '0'}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
               <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeAttachedFile(false); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
-              <h3 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>{tab === 'interne' ? 'Répondre au message' : 'Nouvelle Mission'}</h3>
+              <h3 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>{tab === 'interne' ? 'Répondre au message' : 'Nouveau Dossier'}</h3>
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -618,6 +637,20 @@ const InboxPage = () => {
                     
                     <input type="text" value={taskNewDossierName} onChange={(e) => setTaskNewDossierName(e.target.value)} placeholder="Nom du nouveau dossier..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
                   </div>
+
+                  {/* File upload for dossier */}
+                  <div style={{marginTop: '0.75rem'}}>
+                    <label style={{display: 'block', marginBottom: '0.35rem', fontWeight: 500, fontSize: '0.875rem'}}>
+                      <Paperclip size={13} style={{marginRight: '4px', verticalAlign: 'middle'}} />Pièce jointe (optionnel)
+                    </label>
+                    <input
+                      type="file"
+                      accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
+                      onChange={(e) => setDossierFile(e.target.files?.[0] || null)}
+                      style={{width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', fontSize: '0.875rem'}}
+                    />
+                    {dossierFile && <p style={{fontSize: '0.8rem', color: 'var(--primary)', marginTop: '0.25rem', margin: '0.25rem 0 0'}}>&#10004; {dossierFile.name}</p>}
+                  </div>
                 </div>
               )}
 
@@ -646,7 +679,7 @@ const InboxPage = () => {
             </div>
 
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem'}}>
-              <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeAttachedFile(false); }} className="btn btn-outline" disabled={isSubmitting}>Annuler</button>
+              <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setDossierFile(null); setIncludeAttachedFile(false); }} className="btn btn-outline" disabled={isSubmitting}>Annuler</button>
               <button type="button" onClick={handleCreateTask} disabled={isSubmitting} className="btn btn-primary">
                 {(() => {
                   if (isSubmitting) return 'Traitement...';

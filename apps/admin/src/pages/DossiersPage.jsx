@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, MoreVertical, Pencil, Eye, Trash, MessageSquare } from 'lucide-react';
-import { getSafeApiUrl } from '../utils/helpers';
+import { Search, MoreVertical, Pencil, Eye, Trash, MessageSquare, Paperclip, FileText, Download } from 'lucide-react';
+import { getSafeApiUrl, uploadFile, formatDate } from '../utils/helpers';
 import ActionDropdown from '../components/ActionDropdown';
 import { getStatusBadge } from '../utils/helpers';
 import SmsModal from '../components/SmsModal';
@@ -26,6 +26,7 @@ const DossiersPage = () => {
   const [missionAssignedTo, setMissionAssignedTo] = useState('');
   const [missionEcheance, setMissionEcheance] = useState('');
   const [missionDescription, setMissionDescription] = useState('');
+  const [missionFile, setMissionFile] = useState(null);
   const [isSubmittingMission, setIsSubmittingMission] = useState(false);
   
   const menuRef = useRef(null);
@@ -87,6 +88,12 @@ const DossiersPage = () => {
     const token = localStorage.getItem('adminToken');
     
     try {
+      // 1. Upload file if any
+      let attachmentFilename = null;
+      if (missionFile) {
+        attachmentFilename = await uploadFile(missionFile, 'missions');
+      }
+
       const res = await fetch(getSafeApiUrl('/api/crm/tasks'), {
         method: 'POST',
         headers: {
@@ -98,16 +105,32 @@ const DossiersPage = () => {
           assignedToId: missionAssignedTo,
           dossierId: consultDossier.id,
           echeance: missionEcheance,
+          attachment: attachmentFilename
         })
       });
       
       if (res.ok) {
+        const missionData = await res.json();
+        // 2. If file was uploaded, register it as a Document linked to this mission
+        if (attachmentFilename) {
+          await fetch(getSafeApiUrl('/api/crm/documents'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({
+              name: missionFile.name,
+              filename: attachmentFilename,
+              bucket: 'missions',
+              missionId: missionData.id
+            })
+          });
+        }
         alert("Mission créée avec succès !");
         setCreateMissionModal(false);
         setMissionSubject('');
         setMissionDescription('');
         setMissionAssignedTo('');
         setMissionEcheance('');
+        setMissionFile(null);
         fetchDossiers();
       } else {
         alert("Erreur lors de la création de la mission.");
@@ -207,6 +230,36 @@ const DossiersPage = () => {
     </div>
   );
 
+  const renderDocuments = (documents, label = 'Documents attachés') => (
+    <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
+      <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+        <Paperclip size={16} /> {label}
+      </h4>
+      {(documents && documents.length > 0) ? (
+        <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+          {documents.map(doc => {
+            const [bucket, ...rest] = (doc.url || '').split('/');
+            const filename = rest.join('/');
+            const viewUrl = getSafeApiUrl(`/api/files/view/${encodeURIComponent(bucket)}/${encodeURIComponent(filename)}`);
+            const downloadUrl = getSafeApiUrl(`/api/files/download/${encodeURIComponent(bucket)}/${encodeURIComponent(filename)}`);
+            return (
+              <div key={doc.id} style={{display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)'}}>
+                <FileText size={16} style={{color: 'var(--primary)', flexShrink: 0}} />
+                <span style={{flex: 1, fontSize: '0.875rem', fontWeight: 500, wordBreak: 'break-all'}}>{doc.name}</span>
+                <span style={{fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap'}}>{formatDate(doc.createdAt)}</span>
+                <a href={viewUrl} target="_blank" rel="noopener noreferrer" title="Visualiser" style={{color: 'var(--primary)', lineHeight: 0}}><Eye size={16} /></a>
+                <a href={downloadUrl} title="Télécharger" style={{color: 'var(--text-muted)', lineHeight: 0}}><Download size={16} /></a>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div style={{padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px dashed var(--border)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem'}}>
+          Aucun document attaché.
+        </div>
+      )}
+    </div>
+  );
 
 
   if (consultDossier) {
@@ -221,6 +274,7 @@ const DossiersPage = () => {
 
         {renderDossierFields(consultDossier, false)}
         {renderAssociatedTasks(associatedTasks, false)}
+        {renderDocuments(consultDossier.documents || [], 'Documents du dossier')}
 
         <div style={{marginTop: '2rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <div style={{display: 'flex', gap: '1rem'}}>
@@ -305,6 +359,19 @@ const DossiersPage = () => {
                 <div>
                   <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
                   <textarea value={missionDescription} onChange={(e) => setMissionDescription(e.target.value)} placeholder="Détails de la mission..." style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+                </div>
+
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>
+                    <Paperclip size={14} style={{marginRight: '4px', verticalAlign: 'middle'}} />Pièce jointe (optionnel)
+                  </label>
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
+                    onChange={(e) => setMissionFile(e.target.files?.[0] || null)}
+                    style={{width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', fontSize: '0.875rem'}}
+                  />
+                  {missionFile && <p style={{fontSize: '0.8rem', color: 'var(--primary)', marginTop: '0.25rem'}}>✔ {missionFile.name}</p>}
                 </div>
               </div>
               

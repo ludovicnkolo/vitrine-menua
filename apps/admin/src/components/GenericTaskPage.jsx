@@ -4,6 +4,7 @@ import { MoreVertical, Pencil, Eye, Trash, Mail, MessageSquare, Search, Files } 
 import ActionDropdown from '../components/ActionDropdown';
 import FilePreviewModal from '../components/FilePreviewModal';
 import SmsModal from '../components/SmsModal';
+import TaskConsultModal from '../components/TaskConsultModal';
 
 const getSubjectFromTask = (desc) => {
   if (!desc) return 'Sans objet';
@@ -46,34 +47,6 @@ const TaskField = ({ label, value, readOnly = true, onChange = null, isTextarea 
   );
 };
 
-const SubTaskModal = ({ localConsultSubTask, setLocalConsultSubTask }) => {
-  if (!localConsultSubTask) return null;
-  return (
-    <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-      <div className="fade-in" style={{background: '#FFF', borderRadius: '12px', padding: '2rem', width: '90%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 25px rgba(0,0,0,0.1)'}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-          <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter la Tâche: {localConsultSubTask.reference || localConsultSubTask.id}</h2>
-          <button type="button" onClick={() => setLocalConsultSubTask(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem', marginLeft: 'auto'}}>Fermer</button>
-        </div>
-        <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-          <TaskField label="Objet" value={getSubjectFromTask(localConsultSubTask.description)} />
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            <TaskField label="Créé par" value={localConsultSubTask.createdBy?.name || 'Inconnu'} />
-            <TaskField label="Assigné à" value={localConsultSubTask.assignedTo?.name || 'Non assigné'} />
-          </div>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            <TaskField label="Date de création" value={new Date(localConsultSubTask.createdAt).toLocaleDateString('fr-FR')} />
-            <TaskField label="Échéance" value={localConsultSubTask.echeance ? new Date(localConsultSubTask.echeance).toLocaleDateString('fr-FR') : 'Non définie'} />
-          </div>
-          <div>
-            <span style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</span>
-            <div style={{padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>{getStatusBadge(localConsultSubTask.status)}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const TaskDropdown = ({ taskId, openMenuId, setOpenMenuId, menuRef, tasks, setConsultTask, setEditTask, setEditFormData, fetchData }) => {
   return (
@@ -465,7 +438,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           <button type="button" onClick={() => { setEditTask(null); setTaskFile(null); }} className="btn btn-outline">Annuler</button>
           <button type="button" onClick={handleUpdateMission} className="btn btn-primary">Enregistrer</button>
         </div>
-        <SubTaskModal localConsultSubTask={localConsultSubTask} setLocalConsultSubTask={setLocalConsultSubTask} />
+        <TaskConsultModal task={localConsultSubTask} onClose={() => setLocalConsultSubTask(null)} />
       </div>
     );
   }
@@ -576,7 +549,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-primary">Enregistrer</button>
         </div>
         
-        <SubTaskModal localConsultSubTask={localConsultSubTask} setLocalConsultSubTask={setLocalConsultSubTask} />
+        <TaskConsultModal task={localConsultSubTask} onClose={() => setLocalConsultSubTask(null)} />
 
         <FilePreviewModal previewFile={previewFile} onClose={() => setPreviewFile(null)} />
 

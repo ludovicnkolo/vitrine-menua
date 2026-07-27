@@ -27,7 +27,7 @@ async function runTest() {
       body: JSON.stringify({ name: 'Dossier de Test API', description: 'Test', origin: 'MESSAGERIE' })
     });
     const dossier = await resDossier.json();
-    console.log(`✅ Dossier created: ${dossier.id} - ${dossier.reference}`);
+    console.log(`✅ Dossier created:`, { id: dossier.id, reference: dossier.reference });
 
     // 3. Create a Mission
     console.log("3. Creating a Mission...");
@@ -37,37 +37,37 @@ async function runTest() {
       body: JSON.stringify({ dossierId: dossier.id, description: 'Mission de Test', status: 'NEW' })
     });
     const mission = await resMission.json();
-    console.log(`✅ Mission created: ${mission.id} - ${mission.reference} - Status: ${mission.status}`);
+    console.log(`✅ Mission created:`, { id: mission.id, reference: mission.reference, status: mission.status });
 
     // 4. Update Status to EN_COURS
     console.log("4. Updating status to EN_COURS...");
-    const resUpdate1 = await fetch(`http://localhost:4000/api/crm/tasks/${mission.id}`, {
+    const resUpdate1 = await fetch(`http://localhost:4000/api/crm/tasks/${encodeURIComponent(mission.id)}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ status: 'EN_COURS' })
     });
     const missionUpdate1 = await resUpdate1.json();
-    console.log(`✅ Status updated to: ${missionUpdate1.status}, Previous: ${missionUpdate1.previousStatus}`);
+    console.log(`✅ Status updated to:`, { status: missionUpdate1.status, previous: missionUpdate1.previousStatus });
 
     // 5. Update Status to EN_FINALISATION
     console.log("5. Updating status to EN_FINALISATION...");
-    const resUpdate2 = await fetch(`http://localhost:4000/api/crm/tasks/${mission.id}`, {
+    const resUpdate2 = await fetch(`http://localhost:4000/api/crm/tasks/${encodeURIComponent(mission.id)}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ status: 'EN_FINALISATION' })
     });
     const missionUpdate2 = await resUpdate2.json();
-    console.log(`✅ Status updated to: ${missionUpdate2.status}, Previous: ${missionUpdate2.previousStatus}`);
+    console.log(`✅ Status updated to:`, { status: missionUpdate2.status, previous: missionUpdate2.previousStatus });
     
     // 6. Update Status to TERMINEE
     console.log("6. Updating status to TERMINEE...");
-    const resUpdate3 = await fetch(`http://localhost:4000/api/crm/tasks/${mission.id}`, {
+    const resUpdate3 = await fetch(`http://localhost:4000/api/crm/tasks/${encodeURIComponent(mission.id)}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ status: 'TERMINEE' })
     });
     const missionUpdate3 = await resUpdate3.json();
-    console.log(`✅ Status updated to: ${missionUpdate3.status}, Previous: ${missionUpdate3.previousStatus}`);
+    console.log(`✅ Status updated to:`, { status: missionUpdate3.status, previous: missionUpdate3.previousStatus });
 
     console.log("\n🎉 All tests passed successfully!");
     

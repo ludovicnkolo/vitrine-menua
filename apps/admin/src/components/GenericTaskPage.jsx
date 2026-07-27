@@ -323,9 +323,9 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     return (
       <div className="fade-in" style={{width: '100%', padding: '0'}}>
         <div className="" style={{width: '100%', padding: '0'}}>
-          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-            <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600}}>Nouvelle Tâche</h3>
+          <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
             <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeParentFile(false); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+            <h3 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Nouvelle Tâche</h3>
           </div>
           
           <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -640,7 +640,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           <thead>
             <tr>
               <th style={{ width: '10%', textAlign: 'left' }}>ID</th>
-              <th style={{ width: '15%', textAlign: 'left' }}>Nom dossier</th>
+              <th style={{ width: '15%', textAlign: 'left' }}>{mode === 'MISSION' ? 'Nom dossier' : 'ID Mission'}</th>
               <th style={{ width: '15%', textAlign: 'left' }}>Objet</th>
               <th style={{ width: '15%', textAlign: 'left' }}>Récepteur</th>
               <th style={{ width: '10%', textAlign: 'right', paddingRight: '0.5rem' }}>Échéance</th>
@@ -659,7 +659,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 </td>
                 <td style={{ textAlign: 'left' }}>
                   <span className="truncate-text" style={{color: 'var(--primary)', fontWeight: 500, fontSize: "0.875rem", margin: 0}}>
-                    {t.dossier?.name || t.dossierId}
+                    {mode === 'MISSION' ? (t.dossier?.name || t.dossierId) : (t.mission?.reference || t.missionId)}
                   </span>
                 </td>
                 <td style={{ textAlign: 'left' }}>

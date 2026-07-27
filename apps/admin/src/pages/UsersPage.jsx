@@ -187,9 +187,9 @@ const UsersPage = ({ forceTab }) => {
       {showExternalModal && tab === 'externe' && (
         <div className="fade-in" style={{padding: "1rem"}}>
           <div className="" style={{width: "100%", padding: "0"}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-              <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Ajouter un Membre Externe</h2>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
               <button type="button" onClick={() => setShowExternalModal(false)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Ajouter un Membre Externe</h2>
             </div>
             
             <div style={{display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', padding: '0.5rem', background: '#F8FAFC', borderRadius: '8px', width: 'fit-content'}}>
@@ -219,9 +219,9 @@ const UsersPage = ({ forceTab }) => {
       {editExternal && (
         <div className="fade-in" style={{padding: "1rem"}}>
           <div className="" style={{width: "100%", padding: "0"}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-              <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Modifier un Membre Externe</h2>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
               <button type="button" onClick={() => setEditExternal(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Modifier un Membre Externe</h2>
             </div>
             
             <form onSubmit={handleUpdateClient} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -240,9 +240,9 @@ const UsersPage = ({ forceTab }) => {
       {consultExternal && (
         <div className="fade-in" style={{padding: "1rem"}}>
           <div className="" style={{width: "100%", padding: "0"}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-              <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Consulter un Membre Externe</h2>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
               <button type="button" onClick={() => setConsultExternal(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter un Membre Externe</h2>
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -288,9 +288,9 @@ const UsersPage = ({ forceTab }) => {
       {showModal && tab === 'interne' && (
         <div className="fade-in" style={{padding: "1rem"}}>
           <div className="" style={{width: "100%", padding: "0"}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-              <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Ajouter un Membre Interne</h2>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
               <button type="button" onClick={() => setShowModal(false)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Ajouter un Membre Interne</h2>
             </div>
             <form onSubmit={handleCreateUser} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {errorMsg && <div style={{color: 'red', fontSize: '0.875rem'}}>{errorMsg}</div>}
@@ -315,9 +315,9 @@ const UsersPage = ({ forceTab }) => {
       {editUser && (
         <div className="fade-in" style={{padding: "1rem"}}>
           <div className="" style={{width: "100%", padding: "0"}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-              <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Modifier un Membre Interne</h2>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
               <button type="button" onClick={() => setEditUser(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Modifier un Membre Interne</h2>
             </div>
             <form onSubmit={handleUpdateUser} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               {errorMsg && <div style={{color: 'red', fontSize: '0.875rem'}}>{errorMsg}</div>}
@@ -342,9 +342,9 @@ const UsersPage = ({ forceTab }) => {
       {consultUser && (
         <div className="fade-in" style={{padding: "1rem"}}>
           <div className="" style={{width: "100%", padding: "0"}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-              <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Consulter : {consultUser.name}</h2>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
               <button type="button" onClick={() => setConsultUser(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter : {consultUser.name}</h2>
             </div>
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>

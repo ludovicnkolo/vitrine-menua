@@ -129,9 +129,9 @@ const RolesPage = () => {
   const renderRoleForm = (title, roleData, setRoleData, onSubmit, onCancel) => (
     <div className="fade-in" style={{padding: "1rem"}}>
       <div className="" style={{width: "100%", position: "relative"}}>
-        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-          <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>{title}</h2>
+        <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
           <button type="button" onClick={onCancel} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+          <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>{title}</h2>
         </div>
         
         <form style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -298,9 +298,9 @@ const RolesPage = () => {
       {consultRole && (
         <div className="fade-in" style={{padding: "1rem"}}>
           <div className="" style={{width: "100%", position: "relative"}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-              <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>Consulter le Rôle</h2>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
               <button type="button" onClick={() => setConsultRole(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter le Rôle</h2>
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>

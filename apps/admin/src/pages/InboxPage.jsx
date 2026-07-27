@@ -12,7 +12,7 @@ import AttachmentSelect from '../components/AttachmentSelect';
 const DetailField = ({ label, value, children }) => (
   <div>
     <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>{label}</span>
-    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', whiteSpace: 'normal', overflowWrap: 'break-word', wordBreak: 'break-word'}}>
       {children || value}
     </div>
   </div>
@@ -445,15 +445,15 @@ const InboxPage = () => {
       {processMsg && !createTaskModal && (
         <div className="fade-in" style={{padding: "1rem"}}>
           <div className="" style={{width: "100%", padding: "0"}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-              <h2 style={{fontSize: '1.25rem', fontWeight: 600}}>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
+              <button type="button" onClick={() => setProcessMsg(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>
                 {(() => {
                   if (tab === 'contact') return 'Détails du Contact';
                   if (tab === 'recrutement') return 'Détails de la Candidature';
                   return 'Détails du Message';
                 })()}
               </h2>
-              <button type="button" onClick={() => setProcessMsg(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             </div>
             
             {/* Fields for Contact */}
@@ -575,9 +575,9 @@ const InboxPage = () => {
       {createTaskModal && (
         <div className="fade-in" style={{width: '100%', padding: '0'}}>
           <div className="" style={{width: '100%', padding: '0'}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-              <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600}}>{tab === 'interne' ? 'Répondre au message' : 'Nouvelle Mission'}</h3>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
               <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeAttachedFile(false); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <h3 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>{tab === 'interne' ? 'Répondre au message' : 'Nouvelle Mission'}</h3>
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>

@@ -42,7 +42,7 @@ app.use(cors({
     'https://menuaconsulting.com/',
     'https://crm-admin.menuaconsulting.com'
   ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
 

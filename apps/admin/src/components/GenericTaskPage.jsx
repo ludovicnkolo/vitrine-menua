@@ -627,11 +627,12 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           style={{padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', minWidth: '200px'}}
         >
           <option value="all">Tous les statuts</option>
-          <option value="NEW">Nouveau</option>
-          <option value="IN_PROGRESS">En cours</option>
-          <option value="IN_REVIEW">En contrôle</option>
-          <option value="VALIDATED">Validé</option>
           <option value="TO_ASSIGN">À attribuer</option>
+          <option value="EN_ATTENTE">En attente</option>
+          <option value="EN_COURS">En cours</option>
+          <option value="EN_FINALISATION">En finalisation</option>
+          <option value="EN_CONTROLE">En contrôle</option>
+          <option value="TERMINEE">Terminée</option>
         </select>
       </div>
       <div className="table-wrapper">

@@ -4,8 +4,6 @@ import Link from "@/components/Link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight } from "lucide-react";
-
-import { ChevronRight } from "lucide-react";
 import BulletList from "@/components/BulletList";
 
 const SolutionSection = ({ id, title, intro, desc, isReversed, listTitle, listItems, bgClass, topDecoClass, titleDecoClass, borderClass, zIndexClass = "z-10" }: any) => {

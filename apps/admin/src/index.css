@@ -276,16 +276,16 @@ tr:hover td {
   white-space: normal;
   overflow-wrap: break-word;
   word-break: normal;
-  max-width: 200px;
+  max-width: 100%;
   text-align: left;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .truncate-name {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 180px;
+  max-width: 100%;
   display: inline-block;
   vertical-align: bottom;
 }

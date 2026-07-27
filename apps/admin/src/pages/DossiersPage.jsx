@@ -215,22 +215,64 @@ const DossiersPage = () => {
     return (
       <div className="fade-in" style={{width: "100%", padding: "0"}}>
         <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-          <button type="button" onClick={() => setConsultDossier(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour aux dossiers</button>
           <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter le Dossier: {consultDossier.reference || consultDossier.id}</h2>
         </div>
 
         {renderDossierFields(consultDossier, false)}
         {renderAssociatedTasks(associatedTasks, false)}
 
-        <div style={{marginTop: '1.5rem', display: 'flex', justifyContent: 'center', gap: '1rem'}}>
-          <button type="button" onClick={() => setCreateMissionModal(true)} className="btn btn-primary" style={{display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.75rem 1.5rem'}}>
-            Créer une mission
-          </button>
-          <button type="button" onClick={() => setShowSmsModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)', display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.75rem 1.5rem'}}>
-            <MessageSquare size={16} />
-            SMS Collaborateur
-          </button>
+        <div style={{marginTop: '2rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          <div style={{display: 'flex', gap: '1rem'}}>
+            <button type="button" onClick={() => setCreateMissionModal(true)} className="btn btn-primary" style={{display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
+              Créer une mission
+            </button>
+            <button type="button" onClick={() => setShowSmsModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)', display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
+              <MessageSquare size={16} /> Envoyer SMS
+            </button>
+          </div>
+          <button type="button" onClick={() => setConsultDossier(null)} className="btn btn-outline">Fermer</button>
         </div>
+
+        {/* Modal SMS */}
+        {showSmsModal && (
+          <div className="fade-in" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
+            <div className="card" style={{width: '90%', maxWidth: '500px', padding: '2rem'}}>
+              <h3 style={{marginTop: 0, marginBottom: '1.5rem', fontSize: '1.25rem'}}>Envoyer un SMS (Dossier: {consultDossier.reference || consultDossier.id})</h3>
+              
+              <div style={{marginBottom: '1.5rem'}}>
+                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Numéro de téléphone</label>
+                <input 
+                  type="text" 
+                  value={smsPhone} 
+                  onChange={(e) => setSmsPhone(e.target.value)} 
+                  placeholder="+33600000000"
+                  className="input-field" 
+                  style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} 
+                />
+              </div>
+
+              <div style={{marginBottom: '1.5rem'}}>
+                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message</label>
+                <textarea 
+                  value={smsMessage} 
+                  onChange={(e) => setSmsMessage(e.target.value)} 
+                  placeholder="Votre message SMS..."
+                  className="input-field" 
+                  style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '100px', resize: 'vertical', fontFamily: 'inherit'}}
+                />
+                <div style={{textAlign: 'right', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem'}}>
+                  {smsMessage.length} / 160 caractères
+                </div>
+              </div>
+
+              <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
+                <button type="button" onClick={() => { setShowSmsModal(false); setSmsPhone(''); setSmsMessage(''); }} className="btn btn-outline" disabled={isSubmittingSms}>Annuler</button>
+                <button type="button" onClick={handleSendSms} disabled={isSubmittingSms} className="btn btn-primary">{isSubmittingSms ? 'Envoi...' : 'Envoyer SMS'}</button>
+              </div>
+            </div>
+          </div>
+        )}
+
 
         {createMissionModal && (
           <div className="fade-in" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>

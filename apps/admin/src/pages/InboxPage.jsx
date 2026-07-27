@@ -518,7 +518,7 @@ const InboxPage = () => {
               <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
                 <div className="card" style={{padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem'}}>
                   <span style={{display: 'block', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Date de réception</span>
-                  <div style={{fontWeight: 600, fontSize: '1.1rem'}}>{formatDate(processMsg.date)} à {formatTime(processMsg.date)}</div>
+                  <div style={{fontWeight: 600, fontSize: '1.1rem'}}>{formatDate(processMsg.createdAt || processMsg.date)} à {new Date(processMsg.createdAt || processMsg.date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}</div>
                 </div>
                 
                 {tab !== 'recrutement' && (
@@ -542,7 +542,7 @@ const InboxPage = () => {
                     return 'Message / Lettre de motivation';
                   })()}
                 </span>
-                <div style={{background: 'var(--bg-light)', padding: '1rem', borderRadius: '8px', minHeight: '120px', whiteSpace: 'pre-wrap', color: 'var(--text-main)', border: '1px solid var(--border)', fontSize: '0.9rem', lineHeight: '1.5'}}>
+                <div style={{background: 'var(--bg-light)', padding: '1rem', borderRadius: '8px', minHeight: '120px', maxHeight: '500px', overflowY: 'auto', overflowX: 'hidden', whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'var(--text-main)', border: '1px solid var(--border)', fontSize: '0.9rem', lineHeight: '1.5'}}>
                   {processMsg.description || processMsg.bodyText || (() => {
                     if (tab === 'recrutement') return extractBlockFromHtml(processMsg.bodyHtml, 'Message / Motivations');
                     if (tab === 'contact') return extractBlockFromHtml(processMsg.bodyHtml, 'Description du besoin');

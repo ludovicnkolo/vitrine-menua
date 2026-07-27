@@ -38,7 +38,7 @@ const UsersPage = ({ forceTab }) => {
     setRawErrorMsg(msg);
     if (msg) setTimeout(() => setRawErrorMsg(null), 3000);
   };
-  const [newUser, setNewUser] = useState({ name: '', email: '', telephone: '', roleId: '', lieuResidence: '', experienceCle: '', status: 'Actif', langues: '', profile: '' });
+  const [newUser, setNewUser] = useState({ name: '', email: '', telephone: '', roleId: '', lieuResidence: '', experienceCle: '', status: 'Inactif', langues: '', profile: '' });
   const [newClient, setNewClient] = useState({ name: '', email: '', telephone: '', contactSecondaire: '', secteurActivite: '', description: '', siret: '', raisonSociale: '', emailEntreprise: '', telephoneEntreprise: '' });
   const [selectedFile, setSelectedFile] = useState(null);
   const [rolesList, setRolesList] = useState([]);
@@ -46,7 +46,7 @@ const UsersPage = ({ forceTab }) => {
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
+      const token = sessionStorage.getItem('adminToken');
       const headers = { 'Authorization': 'Bearer ' + token };
       const [rUsers, rClients, rRoles] = await Promise.all([
         fetch(getSafeApiUrl('/api/crm/users'), { headers }).then(r=>r.json()).catch(()=>[]),
@@ -66,11 +66,19 @@ const UsersPage = ({ forceTab }) => {
       const uploadedUrl = await uploadFile(selectedFile, 'users_id_cards');
       const res = await fetch(getSafeApiUrl(url), {
         method,
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') },
         body: JSON.stringify(uploadedUrl ? { ...payload, idCardUrl: uploadedUrl } : payload)
       });
       if (res.ok) { onSuccess(); setSelectedFile(null); fetchData(); }
-      else { setErrorMsg(errorText); }
+      else {
+        // Read the actual API error message
+        try {
+          const errData = await res.json();
+          setErrorMsg(errData.error || errorText);
+        } catch(e) {
+          setErrorMsg(errorText);
+        }
+      }
     } catch(e) { setErrorMsg('Erreur réseau'); }
     setLoading(false);
   };
@@ -79,7 +87,7 @@ const UsersPage = ({ forceTab }) => {
     e.preventDefault();
     if (!newUser.name || !newUser.email) return setErrorMsg('Veuillez remplir le nom et l\'email au minimum.');
     await submitApiRequest('/api/crm/users', 'POST', { ...newUser, lastLogin: 'Jamais connecté' }, () => {
-      setShowModal(false); setNewUser({ name: '', email: '', telephone: '', roleId: '', lieuResidence: '', experienceCle: '', status: 'Actif', langues: '', profile: '' });
+      setShowModal(false); setNewUser({ name: '', email: '', telephone: '', roleId: '', lieuResidence: '', experienceCle: '', status: 'Inactif', langues: '', profile: '' });
     }, 'Erreur lors de la création');
   };
 
@@ -96,7 +104,7 @@ const UsersPage = ({ forceTab }) => {
     try {
       const res = await fetch(getSafeApiUrl(`/api/crm/users/${encodeURIComponent(id)}`), {
         method: 'DELETE',
-        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
+        headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') }
       });
       if (res.ok) fetchData();
     } catch(e) { console.error(e); }
@@ -108,7 +116,7 @@ const UsersPage = ({ forceTab }) => {
     try {
       const res = await fetch(getSafeApiUrl(`/api/crm/clients/${encodeURIComponent(id)}`), {
         method: 'DELETE',
-        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
+        headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') }
       });
       if (res.ok) fetchData();
     } catch(e) { console.error(e); }
@@ -416,7 +424,7 @@ const UsersPage = ({ forceTab }) => {
                   <button 
                     type="button"
                     onClick={() => {
-                      const token = localStorage.getItem('adminToken');
+                      const token = sessionStorage.getItem('adminToken');
                       const viewUrl = consultUser.idCardUrl.includes('?') 
                         ? `${consultUser.idCardUrl}&token=${token}` 
                         : `${consultUser.idCardUrl}?token=${token}`;
@@ -564,7 +572,8 @@ const UsersPage = ({ forceTab }) => {
               <tr>
                 <th>Nom</th>
                 <th>Email</th>
-                <th>Statut</th>
+                <th>Type</th>
+                <th>État</th>
                 <th>Activité</th>
                 <th>Date de création</th>
                 <th>Actions</th>
@@ -573,7 +582,7 @@ const UsersPage = ({ forceTab }) => {
             <tbody>
               {clients.map(c => (
                 <tr key={c.id}>
-                  <td><strong className="truncate-name" style={{}}>{c.name}</strong></td>
+                  <td><strong className="truncate-name">{c.name}</strong></td>
                   <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{c.email}</span></td>
                   <td>
                     <span style={{
@@ -582,10 +591,23 @@ const UsersPage = ({ forceTab }) => {
                       borderRadius: '9999px',
                       fontSize: '0.75rem',
                       fontWeight: 600,
-                      backgroundColor: c.status === 'Société' ? '#EFF6FF' : '#F3E8FF',
-                      color: c.status === 'Société' ? '#1D4ED8' : '#7E22CE'
+                      backgroundColor: (c.type === 'Société' || c.type === 'SOCIETE') ? '#EFF6FF' : (c.type === 'Anonyme' || c.type === 'ANONYME') ? '#F1F5F9' : '#F3E8FF',
+                      color: (c.type === 'Société' || c.type === 'SOCIETE') ? '#1D4ED8' : (c.type === 'Anonyme' || c.type === 'ANONYME') ? '#64748B' : '#7E22CE'
                     }}>
-                      {c.status}
+                      {c.type === 'SOCIETE' ? 'Entreprise' : c.type === 'PARTICULIER' ? 'Particulier' : c.type === 'ANONYME' ? 'Anonyme' : (c.type || 'Particulier')}
+                    </span>
+                  </td>
+                  <td>
+                    <span style={{
+                      display: 'inline-block',
+                      padding: '0.2rem 0.6rem',
+                      borderRadius: '9999px',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      backgroundColor: !c.isBlocked ? '#DCFCE7' : '#FEE2E2',
+                      color: !c.isBlocked ? '#166534' : '#B91C1C'
+                    }}>
+                      {!c.isBlocked ? 'Actif' : 'Inactif'}
                     </span>
                   </td>
                   <td><span style={{color: 'var(--text-muted)'}}>{c.entreprise?.raisonSociale || c.secteurActivite || 'N/A'}</span></td>

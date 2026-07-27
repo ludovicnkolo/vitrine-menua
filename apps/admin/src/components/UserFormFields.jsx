@@ -54,14 +54,18 @@ const UserFormFields = ({ user, setUser, rolesList, isEdit, setSelectedFile }) =
         <FormField label="Langues" value={user.langues} onChange={handleChange('langues')}
           inputProps={{ placeholder: 'Ex: Français, Anglais' }} />
         <div>
-          <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>Statut</label>
+          <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>
+            Statut
+            {!isEdit && <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginLeft: '0.5rem' }}>(Inactif par défaut)</span>}
+          </label>
           <select
-            value={user.isBlocked ? 'Inactif' : (user.status || 'Actif')}
-            onChange={isEdit ? handleChange('isBlocked') : handleChange('status')}
+            value={user.isBlocked ? 'Inactif' : (user.status || (isEdit ? 'Actif' : 'Inactif'))}
+            onChange={handleChange(isEdit ? 'isBlocked' : 'status')}
             style={selectStyle}
           >
+            {!isEdit && <option value="Inactif">Inactif</option>}
             <option value="Actif">Actif</option>
-            <option value="Inactif">Inactif</option>
+            {isEdit && <option value="Inactif">Inactif</option>}
           </select>
         </div>
       </div>

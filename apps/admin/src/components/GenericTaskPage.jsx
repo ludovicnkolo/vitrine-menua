@@ -1,12 +1,14 @@
 import { getSafeApiUrl, uploadFile, formatDate, getStatusBadge, getPriorityBadge } from '../utils/helpers';
 import React, { useState, useEffect, useRef } from 'react';
-import { MoreVertical, Pencil, Eye, Trash, Mail, MessageSquare, Search, Files } from 'lucide-react';
+import { MoreVertical, Pencil, Eye, Trash, Mail, MessageSquare, Search, Files, FileText } from 'lucide-react';
 import ActionDropdown from '../components/ActionDropdown';
 import FilePreviewModal from '../components/FilePreviewModal';
 import SmsModal from '../components/SmsModal';
 import TaskConsultModal from '../components/TaskConsultModal';
 import AttachmentChips from '../components/AttachmentChips';
 import AttachmentSelect from '../components/AttachmentSelect';
+import FeedbackModal from '../components/FeedbackModal';
+import FeedbackThread from '../components/FeedbackThread';
 
 const getSubjectFromTask = (desc) => {
   if (!desc) return 'Sans objet';
@@ -79,7 +81,7 @@ const TaskDropdown = ({ taskId, openMenuId, setOpenMenuId, menuRef, tasks, setCo
         setOpenMenuId(null); 
         if(window.confirm("Supprimer cette mission ?")) {
            try {
-             const token = localStorage.getItem('adminToken');
+             const token = sessionStorage.getItem('adminToken');
              const res = await fetch(new URL(getSafeApiUrl(`/api/crm/tasks/${encodeURIComponent(taskId)}`)).toString(), { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
              if (res.ok) fetchData();
            } catch(e) { console.error("Erreur suppr mission:", e); }
@@ -99,7 +101,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const [taskFile, setTaskFile] = useState(null);
   const [createTaskModal, setCreateTaskModal] = useState(false);
   const [newTaskFile, setNewTaskFile] = useState(null);
-  const [includeParentFile, setIncludeParentFile] = useState(false);
+  const [selectedParentDocs, setSelectedParentDocs] = useState([]);
+  const [selectedMissionDocs, setSelectedMissionDocs] = useState([]);
   const [previewFile, setPreviewFile] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -107,9 +110,14 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const menuRef = useRef(null);
 
+  // Feedback workflow modals
+  const [showAdminFeedbackModal, setShowAdminFeedbackModal] = useState(false);
+  const [showManagerFeedbackModal, setShowManagerFeedbackModal] = useState(false);
+  const [isFeedbackSubmitting, setIsFeedbackSubmitting] = useState(false);
+
   useEffect(() => {
     try {
-      const userStr = localStorage.getItem('adminUser');
+      const userStr = sessionStorage.getItem('adminUser');
       if (userStr) setCurrentUser(JSON.parse(userStr));
     } catch(e) { console.error(e); }
   }, []);
@@ -137,7 +145,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
+      const token = sessionStorage.getItem('adminToken');
       const headers = { 'Authorization': 'Bearer ' + token };
       
       const urlTasks = new URL(getSafeApiUrl(mode === "MISSION" ? `/api/crm/tasks` : `/api/crm/taches`));
@@ -187,7 +195,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         }
       }
       
-      const token = localStorage.getItem('adminToken');
+      const token = sessionStorage.getItem('adminToken');
       const description = `Objet: ${editFormData.subject}\nConsignes: ${editFormData.message}`;
       const res = await fetch(new URL(getSafeApiUrl(mode === "MISSION" ? `/api/crm/tasks/${encodeURIComponent(editTask.id)}` : `/api/crm/taches/${encodeURIComponent(editTask.id)}`)).toString(), {
         method: 'PATCH',
@@ -216,7 +224,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
   const handleWorkflowAction = async (taskId, newStatus) => {
     try {
-      const token = localStorage.getItem('adminToken');
+      const token = sessionStorage.getItem('adminToken');
       const res = await fetch(new URL(getSafeApiUrl(mode === "MISSION" ? `/api/crm/tasks/${encodeURIComponent(taskId)}` : `/api/crm/taches/${encodeURIComponent(taskId)}`)).toString(), {
         method: 'PATCH',
         headers: {
@@ -243,8 +251,49 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     }
   };
 
+  /**
+   * handleFeedbackSubmit
+   * mode: 'admin' → status = A_AMELIORER, sends adminFeedback
+   * mode: 'manager' → status = EN_REVISION, sends managerFeedback
+   */
+  const handleFeedbackSubmit = async (feedbackText, feedbackMode) => {
+    if (!consultTask) return;
+    setIsFeedbackSubmitting(true);
+    try {
+      const token = sessionStorage.getItem('adminToken');
+      const url = mode === 'MISSION'
+        ? getSafeApiUrl(`/api/crm/tasks/${encodeURIComponent(consultTask.id)}`)
+        : getSafeApiUrl(`/api/crm/taches/${encodeURIComponent(consultTask.id)}`);
 
+      const newStatus = feedbackMode === 'admin' ? 'A_AMELIORER' : 'EN_REVISION';
+      const body = feedbackMode === 'admin'
+        ? { status: newStatus, adminFeedback: feedbackText }
+        : { status: newStatus, managerFeedback: feedbackText };
 
+      const res = await fetch(new URL(url).toString(), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(body)
+      });
+
+      if (res.ok) {
+        const updated = await res.json();
+        setConsultTask(prev => ({ ...prev, ...updated }));
+        fetchData();
+        setErrorMsg(feedbackMode === 'admin' ? 'Instructions envoyées. Tâche marquée "À améliorer".' : 'Corrections soumises. Tâche passée en révision.');
+        if (feedbackMode === 'admin') setShowAdminFeedbackModal(false);
+        else setShowManagerFeedbackModal(false);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        setErrorMsg(err.error || 'Erreur lors de la soumission.');
+      }
+    } catch (e) {
+      console.error(e);
+      setErrorMsg('Erreur de connexion.');
+    } finally {
+      setIsFeedbackSubmitting(false);
+    }
+  };
 
   const handleCreateSubTask = async () => {
     if (!newTaskMessage || !newTaskAssignedTo || !newTaskEcheance) {
@@ -254,11 +303,17 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     
     setIsSubmitting(true);
     try {
-      const token = localStorage.getItem('adminToken');
+      const token = sessionStorage.getItem('adminToken');
       
       let attachmentName = null;
-      if (includeParentFile && consultTask.attachment) {
-        attachmentName = consultTask.attachment;
+      if (selectedMissionDocs.length > 0 && consultTask.documents) {
+        attachmentName = consultTask.documents
+          .filter(d => selectedMissionDocs.includes(d.id))
+          .map(d => d.url)
+          .join(',');
+      }
+      if (selectedParentDocs.length > 0) {
+        attachmentName = attachmentName ? `${attachmentName},${selectedParentDocs.join(',')}` : selectedParentDocs.join(',');
       }
       if (newTaskFile) {
         const uploadedName = await uploadFile(newTaskFile);
@@ -286,6 +341,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         setErrorMsg('Tâche créée avec succès !');
         setCreateTaskModal(false);
         setNewTaskFile(null);
+        setSelectedMissionDocs([]);
         setConsultTask(null);
         setNewTaskSubject('');
         setNewTaskMessage('');
@@ -324,7 +380,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       <div className="fade-in" style={{width: '100%', padding: '0'}}>
         <div className="" style={{width: '100%', padding: '0'}}>
           <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-            <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeParentFile(false); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+            <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setSelectedParentDocs([]); setSelectedMissionDocs([]); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
             <h3 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Nouvelle Tâche</h3>
           </div>
           
@@ -360,10 +416,61 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               <label htmlFor="new-task-attachment" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
               <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
                 {consultTask?.attachment && (
-                  <label htmlFor="include-parent-file" style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginBottom: '1rem'}}>
-                    <input id="include-parent-file" type="checkbox" checked={includeParentFile} onChange={(e) => setIncludeParentFile(e.target.checked)} />
-                    <span style={{fontSize: '0.875rem'}}>Inclure les fichiers de la mission ({consultTask.attachment})</span>
-                  </label>
+                  <div style={{marginBottom: '1rem'}}>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
+                      Inclure la pièce jointe (héritée) :
+                    </label>
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '0.5rem', background: '#FFF', borderRadius: '4px', border: '1px solid var(--border)'}}>
+                      {consultTask.attachment.split(',').map(att => {
+                        const fileName = att.split('/').pop();
+                        return (
+                          <div key={att} style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                            <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', margin: 0, fontWeight: 500, color: 'var(--text-main)'}}>
+                              <input 
+                                type="checkbox" 
+                                checked={selectedParentDocs.includes(att)} 
+                                onChange={(e) => {
+                                  if (e.target.checked) setSelectedParentDocs([...selectedParentDocs, att]);
+                                  else setSelectedParentDocs(selectedParentDocs.filter(a => a !== att));
+                                }} 
+                              />
+                              <Files size={14} style={{color: 'var(--text-muted)'}}/> {fileName}
+                            </label>
+                            <button type="button" onClick={(e) => { e.preventDefault(); setPreviewFile(att); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', display: 'flex', alignItems: 'center'}} title="Prévisualiser">
+                              <Eye size={16} />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+                {consultTask?.documents?.length > 0 && (
+                  <div style={{marginBottom: '1rem'}}>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
+                      Inclure des documents de la mission :
+                    </label>
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '0.5rem', background: '#FFF', borderRadius: '4px', border: '1px solid var(--border)'}}>
+                      {consultTask.documents.map(doc => (
+                        <div key={doc.id} style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                          <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', margin: 0}}>
+                            <input 
+                              type="checkbox" 
+                              checked={selectedMissionDocs.includes(doc.id)} 
+                              onChange={(e) => {
+                                if (e.target.checked) setSelectedMissionDocs([...selectedMissionDocs, doc.id]);
+                                else setSelectedMissionDocs(selectedMissionDocs.filter(id => id !== doc.id));
+                              }} 
+                            />
+                            <FileText size={14} style={{color: 'var(--primary)'}}/> {doc.name}
+                          </label>
+                          <button type="button" onClick={(e) => { e.preventDefault(); setPreviewFile(doc.url); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', display: 'flex', alignItems: 'center'}} title="Prévisualiser">
+                            <Eye size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
                 <label htmlFor="new-task-attachment" style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'var(--primary)', marginBottom: 0}}>
                   <Files size={16} />
@@ -382,7 +489,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           </div>
           
           <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
-            <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeParentFile(false); }} className="btn btn-outline">Annuler</button>
+            <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setSelectedParentDocs([]); setSelectedMissionDocs([]); }} className="btn btn-outline">Annuler</button>
             <button type="button" onClick={handleCreateSubTask} disabled={isSubmitting} className="btn btn-primary">{isSubmitting ? 'Création...' : 'Créer la tâche'}</button>
           </div>
         </div>
@@ -404,7 +511,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             <TaskField label={"Assigné à"} value={editTask.assignedTo?.name || 'Non assigné'} />
           </div>
 
-          {renderTaskField("Objet", editFormData.subject, false, (e) => setEditFormData({...editFormData, subject: e.target.value}))}
+          <TaskField label="Objet" value={editFormData.subject} readOnly={false} onChange={(e) => setEditFormData({...editFormData, subject: e.target.value})} />
           
           <TaskField label={mode === 'MISSION' ? 'Dossier associé' : 'Mission Liée'} value={mode === 'MISSION' ? (editTask.dossier?.reference || editTask.dossier?.name || editTask.dossierId) : (editTask.mission?.reference || editTask.missionId)} />
 
@@ -425,7 +532,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             </div>
           </div>
 
-          {renderTaskField("Message / Consignes", editFormData.message, false, (e) => setEditFormData({...editFormData, message: e.target.value}), true)}
+          <TaskField label="Message / Consignes" value={editFormData.message} readOnly={false} onChange={(e) => setEditFormData({...editFormData, message: e.target.value})} isTextarea={true} />
 
           <div style={{display: 'flex', alignItems: 'center', gap: '2rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', width: 'fit-content'}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
@@ -515,26 +622,36 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             
             {(() => {
               const role = currentUser?.role?.name || currentUser?.role || '';
-              const isSuperAdmin = role === 'Super-administrateur' || role === 'Administrateur';
+              const isSuperAdmin = role === 'Super-administrateur' || role === 'Administrateur' || currentUser?.id === 'MASTER-ADMIN';
               const isResp = role === 'Responsable opérationnel' || isSuperAdmin;
               const isController = role === 'Relecteur' || isResp;
               const status = consultTask.status;
 
               return (
-                <div style={{display: 'flex', gap: '0.5rem'}}>
+                <div style={{display: 'flex', gap: '0.5rem', flexWrap: 'wrap'}}>
                   {(status === 'EN_ATTENTE' || status === 'NOUVEAU' || status === 'TO_ASSIGN') && (
                     <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-primary" style={{padding: '0.5rem 1rem'}}>Débuter</button>
                   )}
-                  {(status === 'EN_COURS' || status === 'IN_PROGRESS') && (
+                  {(status === 'EN_COURS' || status === 'IN_PROGRESS' || status === 'EN_REVISION') && (
                     <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_FINALISATION')} className="btn btn-outline" style={{borderColor: 'var(--warning)', color: 'var(--warning)', padding: '0.5rem 1rem'}}>Finaliser</button>
                   )}
-                  {(status === 'EN_FINALISATION') && isController && (
+                  {status === 'EN_FINALISATION' && isController && (
                     <>
                       <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_CONTROLE')} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)', padding: '0.5rem 1rem'}}>Contrôler</button>
-                      <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-outline" style={{borderColor: 'var(--danger)', color: 'var(--danger)', padding: '0.5rem 1rem'}}>Rejeter / Réattribuer</button>
+                      <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-outline" style={{borderColor: 'var(--danger)', color: 'var(--danger)', padding: '0.5rem 1rem'}}>Rejeter</button>
                     </>
                   )}
-                  {(status === 'EN_CONTROLE' || status === 'EN_FINALISATION') && isResp && (
+                  {status === 'EN_CONTROLE' && isSuperAdmin && (
+                    <button type="button" onClick={() => setShowAdminFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#B91C1C', color: '#B91C1C', padding: '0.5rem 1rem'}}>
+                      ✦ À améliorer
+                    </button>
+                  )}
+                  {status === 'A_AMELIORER' && isController && (
+                    <button type="button" onClick={() => setShowManagerFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#6D28D9', color: '#6D28D9', padding: '0.5rem 1rem'}}>
+                      ✎ Corriger
+                    </button>
+                  )}
+                  {(status === 'EN_CONTROLE' || status === 'A_AMELIORER') && isResp && (
                     <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'TERMINEE')} className="btn btn-primary" style={{backgroundColor: 'var(--success)', borderColor: 'var(--success)', padding: '0.5rem 1rem'}}>Terminer</button>
                   )}
                 </div>
@@ -570,6 +687,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                </div>
             )}
           </div>
+
+          {/* Fil de corrections — visible selon le rôle et le statut */}
+          <FeedbackThread
+            adminFeedback={consultTask.adminFeedback}
+            managerFeedback={consultTask.managerFeedback}
+            currentStatus={consultTask.status}
+          />
         </div>
 
         <div style={{marginTop: '1.5rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'center'}}>
@@ -586,14 +710,33 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         />
 
         <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem'}}>
-          <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Annuler</button>
-          <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une tâche</button>
-          <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-primary">Enregistrer</button>
+          <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Retour</button>
+          {mode === 'MISSION' && (
+            <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une tâche</button>
+          )}
         </div>
         
         <TaskConsultModal task={localConsultSubTask} onClose={() => setLocalConsultSubTask(null)} />
-
         <FilePreviewModal previewFile={previewFile} onClose={() => setPreviewFile(null)} />
+
+        {/* Admin Feedback Modal — Super Admin → À améliorer */}
+        <FeedbackModal
+          isOpen={showAdminFeedbackModal}
+          mode="admin"
+          onClose={() => setShowAdminFeedbackModal(false)}
+          onSubmit={(text) => handleFeedbackSubmit(text, 'admin')}
+          isSubmitting={isFeedbackSubmitting}
+        />
+
+        {/* Manager Feedback Modal — Contrôleur → En révision */}
+        <FeedbackModal
+          isOpen={showManagerFeedbackModal}
+          mode="manager"
+          referenceFeedback={consultTask.adminFeedback || null}
+          onClose={() => setShowManagerFeedbackModal(false)}
+          onSubmit={(text) => handleFeedbackSubmit(text, 'manager')}
+          isSubmitting={isFeedbackSubmitting}
+        />
 
       </div>
     );
@@ -632,6 +775,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           <option value="EN_COURS">En cours</option>
           <option value="EN_FINALISATION">En finalisation</option>
           <option value="EN_CONTROLE">En contrôle</option>
+          <option value="A_AMELIORER">À améliorer</option>
+          <option value="EN_REVISION">En révision</option>
           <option value="TERMINEE">Terminée</option>
         </select>
       </div>

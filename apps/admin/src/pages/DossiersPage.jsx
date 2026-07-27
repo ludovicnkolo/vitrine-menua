@@ -7,6 +7,7 @@ import SmsModal from '../components/SmsModal';
 import PaginationControls from '../components/PaginationControls';
 import ReadOnlyField from '../components/ReadOnlyField';
 import TaskConsultModal from '../components/TaskConsultModal';
+import FilePreviewModal from '../components/FilePreviewModal';
 
 
 const DossiersPage = () => {
@@ -14,6 +15,7 @@ const DossiersPage = () => {
   const [consultDossier, setConsultDossier] = useState(null);
   const [editDossier, setEditDossier] = useState(null);
   const [localConsultTask, setLocalConsultTask] = useState(null);
+  const [previewFile, setPreviewFile] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterRole, setFilterRole] = useState('all');
@@ -27,6 +29,7 @@ const DossiersPage = () => {
   const [missionEcheance, setMissionEcheance] = useState('');
   const [missionDescription, setMissionDescription] = useState('');
   const [missionFile, setMissionFile] = useState(null);
+  const [selectedDossierDocs, setSelectedDossierDocs] = useState([]);
   const [isSubmittingMission, setIsSubmittingMission] = useState(false);
   
   const menuRef = useRef(null);
@@ -41,7 +44,7 @@ const DossiersPage = () => {
 
   const fetchDossiers = () => {
     setIsLoading(true);
-    const token = localStorage.getItem('adminToken');
+    const token = sessionStorage.getItem('adminToken');
     const headers = { 'Authorization': `Bearer ${token}` };
     
     const urlDossiers = new URL(getSafeApiUrl('/api/crm/dossiers'));
@@ -85,7 +88,7 @@ const DossiersPage = () => {
     }
     
     setIsSubmittingMission(true);
-    const token = localStorage.getItem('adminToken');
+    const token = sessionStorage.getItem('adminToken');
     
     try {
       // 1. Upload file if any
@@ -124,6 +127,31 @@ const DossiersPage = () => {
             })
           });
         }
+
+        // 3. Link selected dossier documents
+        if (selectedDossierDocs.length > 0 && consultDossier.documents) {
+          for (const docId of selectedDossierDocs) {
+            const d = consultDossier.documents.find(x => x.id === docId);
+            if (d && d.url) {
+              const parts = d.url.split('/');
+              if (parts.length >= 2) {
+                const b = parts.shift();
+                const fn = parts.join('/');
+                await fetch(getSafeApiUrl('/api/crm/documents'), {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                  body: JSON.stringify({
+                    name: d.name,
+                    filename: fn,
+                    bucket: b,
+                    missionId: missionData.id
+                  })
+                });
+              }
+            }
+          }
+        }
+
         alert("Mission créée avec succès !");
         setCreateMissionModal(false);
         setMissionSubject('');
@@ -131,6 +159,7 @@ const DossiersPage = () => {
         setMissionAssignedTo('');
         setMissionEcheance('');
         setMissionFile(null);
+        setSelectedDossierDocs([]);
         fetchDossiers();
       } else {
         alert("Erreur lors de la création de la mission.");
@@ -236,23 +265,21 @@ const DossiersPage = () => {
         <Paperclip size={16} /> {label}
       </h4>
       {(documents && documents.length > 0) ? (
-        <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
-          {documents.map(doc => {
-            const [bucket, ...rest] = (doc.url || '').split('/');
-            const filename = rest.join('/');
-            const viewUrl = getSafeApiUrl(`/api/files/view/${encodeURIComponent(bucket)}/${encodeURIComponent(filename)}`);
-            const downloadUrl = getSafeApiUrl(`/api/files/download/${encodeURIComponent(bucket)}/${encodeURIComponent(filename)}`);
-            return (
-              <div key={doc.id} style={{display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)'}}>
-                <FileText size={16} style={{color: 'var(--primary)', flexShrink: 0}} />
-                <span style={{flex: 1, fontSize: '0.875rem', fontWeight: 500, wordBreak: 'break-all'}}>{doc.name}</span>
-                <span style={{fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap'}}>{formatDate(doc.createdAt)}</span>
-                <a href={viewUrl} target="_blank" rel="noopener noreferrer" title="Visualiser" style={{color: 'var(--primary)', lineHeight: 0}}><Eye size={16} /></a>
-                <a href={downloadUrl} title="Télécharger" style={{color: 'var(--text-muted)', lineHeight: 0}}><Download size={16} /></a>
-              </div>
-            );
-          })}
-        </div>
+        <select 
+          onChange={(e) => {
+            if(e.target.value) {
+              setPreviewFile(e.target.value);
+              e.target.selectedIndex = 0;
+            }
+          }}
+          className="input-field"
+          style={{padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', width: '100%', background: '#FFF', cursor: 'pointer', fontFamily: 'inherit'}}
+        >
+          <option value="">-- Sélectionner un document pour le consulter --</option>
+          {documents.map(doc => (
+            <option key={doc.id} value={doc.url}>{doc.name}</option>
+          ))}
+        </select>
       ) : (
         <div style={{padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px dashed var(--border)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem'}}>
           Aucun document attaché.
@@ -373,10 +400,38 @@ const DossiersPage = () => {
                   />
                   {missionFile && <p style={{fontSize: '0.8rem', color: 'var(--primary)', marginTop: '0.25rem'}}>✔ {missionFile.name}</p>}
                 </div>
+
+                {consultDossier?.documents?.length > 0 && (
+                  <div style={{marginTop: '0.5rem', padding: '0.75rem', background: '#F0F9FF', borderRadius: '8px', border: '1px solid #BAE6FD'}}>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
+                      Inclure des documents du dossier (optionnel) :
+                    </label>
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                      {consultDossier.documents.map(doc => (
+                        <div key={doc.id} style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                          <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', margin: 0}}>
+                            <input 
+                              type="checkbox" 
+                              checked={selectedDossierDocs.includes(doc.id)} 
+                              onChange={(e) => {
+                                if (e.target.checked) setSelectedDossierDocs([...selectedDossierDocs, doc.id]);
+                                else setSelectedDossierDocs(selectedDossierDocs.filter(id => id !== doc.id));
+                              }} 
+                            />
+                            <FileText size={14} style={{color: 'var(--primary)'}}/> {doc.name}
+                          </label>
+                          <button type="button" onClick={(e) => { e.preventDefault(); setPreviewFile(doc.url); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', display: 'flex', alignItems: 'center'}} title="Prévisualiser">
+                            <Eye size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
               
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
-                <button type="button" onClick={() => setCreateMissionModal(false)} className="btn btn-outline" disabled={isSubmittingMission}>Annuler</button>
+                <button type="button" onClick={() => { setCreateMissionModal(false); setSelectedDossierDocs([]); }} className="btn btn-outline" disabled={isSubmittingMission}>Annuler</button>
                 <button type="button" onClick={handleCreateMission} disabled={isSubmittingMission} className="btn btn-primary">{isSubmittingMission ? 'Création...' : 'Créer la mission'}</button>
               </div>
             </div>
@@ -521,6 +576,7 @@ const DossiersPage = () => {
       </div>
 
       <PaginationControls page={page} totalPages={totalPages} setPage={setPage} />
+      <FilePreviewModal previewFile={previewFile} onClose={() => setPreviewFile(null)} />
     </div>
   )
 }

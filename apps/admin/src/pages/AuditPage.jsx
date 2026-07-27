@@ -19,7 +19,7 @@ export default function AuditPage() {
   const fetchLogs = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
+      const token = sessionStorage.getItem('adminToken');
       const res = await fetch(getSafeApiUrl(`/api/crm/audit`), {
         headers: { 'Authorization': `Bearer ${token}` }
       });

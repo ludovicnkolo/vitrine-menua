@@ -14,7 +14,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
     if (isOpen) {
       const fetchUsers = async () => {
         try {
-          const token = localStorage.getItem('adminToken');
+          const token = sessionStorage.getItem('adminToken');
           
           const res = await fetch(getSafeApiUrl(`/api/crm/users`), {
             headers: { 'Authorization': `Bearer ${token}` }
@@ -39,7 +39,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
 
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
+      const token = sessionStorage.getItem('adminToken');
       
       
       let attachmentStr = null;

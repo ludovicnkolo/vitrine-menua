@@ -18,8 +18,8 @@ const DetailField = ({ label, value, children }) => (
   </div>
 );
 
-const InboxPage = () => {
-  const [tab, setTab] = useState('contact');
+const InboxPage = ({ userRole }) => {
+  const [tab, setTab] = useState((userRole === 'Collaborateur' || userRole === 'Relecteur') ? 'interne' : 'contact');
   const [filterTraite, setFilterTraite] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -38,7 +38,10 @@ const InboxPage = () => {
   const [newTaskFile, setNewTaskFile] = useState(null);
   const [isNewDossier, setIsNewDossier] = useState(true);
   const [dossierFile, setDossierFile] = useState(null);
+  const [selectedMsgDocs, setSelectedMsgDocs] = useState([]);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [assignMsg, setAssignMsg] = useState(null);
+  const [selectedAssignee, setSelectedAssignee] = useState('');
 
   // Form states
   const [taskSubject, setTaskSubject] = useState('');
@@ -62,7 +65,7 @@ const InboxPage = () => {
   const fetchMessages = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
+      const token = sessionStorage.getItem('adminToken');
       if (!token) return;
       
       
@@ -92,7 +95,7 @@ const InboxPage = () => {
       }
       else if (resMsgs.status === 401 || resMsgs.status === 403) {
         showToast('Votre session a expiré. Veuillez vous reconnecter.', 'error');
-        localStorage.removeItem('adminToken');
+        sessionStorage.removeItem('adminToken');
         window.location.href = '/login';
       }
       
@@ -139,7 +142,7 @@ const InboxPage = () => {
   const handleCreateTask = async () => {
     try {
       setIsSubmitting(true);
-      const token = localStorage.getItem('adminToken');
+      const token = sessionStorage.getItem('adminToken');
       
       
       let finalDossierId = null;
@@ -192,6 +195,23 @@ const InboxPage = () => {
               dossierId: finalDossierId
             });
           }
+
+          // Link message attachment if requested
+          if (selectedMsgDocs.length > 0 && processMsg?.attachment) {
+            for (const att of selectedMsgDocs) {
+              const parts = att.split('/');
+              if (parts.length >= 2) {
+                const b = parts.shift();
+                const fn = parts.join('/');
+                await apiFetch('/api/crm/documents', 'POST', {
+                  name: fn.split('/').pop() || fn,
+                  filename: fn,
+                  bucket: b,
+                  dossierId: finalDossierId
+                });
+              }
+            }
+          }
         } else {
           if (!taskDossierId) {
             showToast("Veuillez sélectionner un dossier existant.", "error");
@@ -202,7 +222,13 @@ const InboxPage = () => {
         }
 
         // Lier le message au dossier et marquer comme traité
-        await apiFetch(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`, 'PATCH', { dossierId: finalDossierId, status: 'TRAITE' });
+        const statusRes = await apiFetch(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`, 'PATCH', { dossierId: finalDossierId, status: 'TRAITE' });
+        if (!statusRes.ok) {
+          showToast("Erreur lors de la mise à jour du statut du message.", "error");
+          setIsSubmitting(false);
+          return;
+        }
+
 
       } else {
         // Interne reply
@@ -229,7 +255,12 @@ const InboxPage = () => {
         }
 
         // Mark the original message as TRAITE
-        await apiFetch(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`, 'PATCH', { status: 'TRAITE' });
+        const statusRes = await apiFetch(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`, 'PATCH', { status: 'TRAITE' });
+        if (!statusRes.ok) {
+          showToast("Erreur lors de la mise à jour du statut du message.", "error");
+          setIsSubmitting(false);
+          return;
+        }
       }
 
       fetchMessages();
@@ -242,12 +273,44 @@ const InboxPage = () => {
       setProcessMsg(null);
       setNewTaskFile(null);
       setDossierFile(null);
+      setSelectedMsgDocs([]);
       setTaskSubject('');
       setTaskDescription('');
       setTaskEcheance('');
     } catch (error) {
       console.error(error);
       showToast('Une erreur est survenue.', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleAssignSubmit = async () => {
+    if (!selectedAssignee) {
+      alert("Veuillez sélectionner un collaborateur.");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(getSafeApiUrl(`/api/crm/messages/${assignMsg.id}/assign`), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionStorage.getItem('adminToken')}`
+        },
+        body: JSON.stringify({ assignedToId: selectedAssignee })
+      });
+      if (res.ok) {
+        showToast("Message assigné avec succès");
+        setAssignMsg(null);
+        setSelectedAssignee('');
+        fetchMessages();
+      } else {
+        alert("Erreur lors de l'assignation");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Erreur réseau");
     } finally {
       setIsSubmitting(false);
     }
@@ -314,6 +377,11 @@ const InboxPage = () => {
         <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setProcessMsg(m); }}>
           <Pencil size={14} /> Traiter
         </button>
+        {(userRole === 'Administrateur' || userRole === 'Super administrateur') && (
+          <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setAssignMsg(m); }}>
+            <Files size={14} /> Assigner à...
+          </button>
+        )}
         <button type="button" className="dropdown-item danger" onClick={() => { setOpenMenuId(null); setDeleteMsg(m); }}>
           <Trash size={14} /> Supprimer
         </button>
@@ -327,12 +395,16 @@ const InboxPage = () => {
       <>
       <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
         <TabsNavigation 
-          tabs={[
-            { id: 'contact', label: 'Contact' },
-            { id: 'recrutement', label: 'Recrutement' },
-            { id: 'interne', label: 'Interne' },
-            { id: 'personnel', label: 'Personnel' }
-          ]} 
+          tabs={
+            (userRole === 'Collaborateur' || userRole === 'Relecteur')
+            ? [{ id: 'interne', label: 'Interne' }]
+            : [
+                { id: 'contact', label: 'Contact' },
+                { id: 'recrutement', label: 'Recrutement' },
+                { id: 'interne', label: 'Interne' },
+                { id: 'personnel', label: 'Personnel' }
+              ]
+          } 
           activeTab={tab} 
           onTabChange={setTab} 
         />
@@ -651,6 +723,38 @@ const InboxPage = () => {
                     />
                     {dossierFile && <p style={{fontSize: '0.8rem', color: 'var(--primary)', marginTop: '0.25rem', margin: '0.25rem 0 0'}}>&#10004; {dossierFile.name}</p>}
                   </div>
+
+                  {processMsg?.attachment && (
+                    <div style={{marginTop: '1rem', padding: '0.75rem', background: '#F0F9FF', borderRadius: '8px', border: '1px solid #BAE6FD'}}>
+                      <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
+                        Inclure les pièces jointes du message :
+                      </label>
+                      <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                        {processMsg.attachment.split(',').map(att => {
+                          const fileName = att.split('/').pop();
+                          return (
+                            <div key={att} style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                              <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', margin: 0, fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-main)'}}>
+                                <input 
+                                  type="checkbox" 
+                                  checked={selectedMsgDocs.includes(att)} 
+                                  onChange={(e) => {
+                                    if (e.target.checked) setSelectedMsgDocs([...selectedMsgDocs, att]);
+                                    else setSelectedMsgDocs(selectedMsgDocs.filter(a => a !== att));
+                                  }} 
+                                  style={{cursor: 'pointer'}} 
+                                />
+                                <Paperclip size={14} style={{color: 'var(--primary)'}} /> {fileName}
+                              </label>
+                              <button type="button" onClick={(e) => { e.preventDefault(); setPreviewFile(att); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', display: 'flex', alignItems: 'center'}} title="Prévisualiser">
+                                <Eye size={16} />
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -679,7 +783,7 @@ const InboxPage = () => {
             </div>
 
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem'}}>
-              <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setDossierFile(null); setIncludeAttachedFile(false); }} className="btn btn-outline" disabled={isSubmitting}>Annuler</button>
+              <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setDossierFile(null); setSelectedMsgDocs([]); setIncludeAttachedFile(false); }} className="btn btn-outline" disabled={isSubmitting}>Annuler</button>
               <button type="button" onClick={handleCreateTask} disabled={isSubmitting} className="btn btn-primary">
                 {(() => {
                   if (isSubmitting) return 'Traitement...';
@@ -706,6 +810,34 @@ const InboxPage = () => {
             <div style={{display: 'flex', gap: '1rem', justifyContent: 'flex-end'}}>
               <button type="button" className="btn btn-outline" onClick={() => setDeleteMsg(null)}>Annuler</button>
               <button type="button" className="btn btn-primary" style={{backgroundColor: '#DC2626', borderColor: '#DC2626'}} onClick={confirmDelete}>Supprimer</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Assign Confirmation Modal */}
+      {assignMsg && (
+        <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
+          <div style={{background: '#FFF', padding: '2rem', borderRadius: '8px', width: '90%', maxWidth: '400px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
+            <h3 style={{marginTop: 0, marginBottom: '1rem', color: 'var(--text-main)', fontSize: '1.25rem'}}>Assigner le message</h3>
+            <div style={{marginBottom: '1.5rem'}}>
+              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500}}>Sélectionner le destinataire :</label>
+              <select 
+                value={selectedAssignee} 
+                onChange={(e) => setSelectedAssignee(e.target.value)}
+                style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}
+              >
+                <option value="">-- Choisir un utilisateur --</option>
+                {users.map(u => (
+                  <option key={u.id} value={u.id}>{u.name} ({u.role?.name || 'Sans rôle'})</option>
+                ))}
+              </select>
+            </div>
+            <div style={{display: 'flex', gap: '1rem', justifyContent: 'flex-end'}}>
+              <button type="button" className="btn btn-outline" onClick={() => { setAssignMsg(null); setSelectedAssignee(''); }}>Annuler</button>
+              <button type="button" className="btn btn-primary" disabled={isSubmitting} onClick={handleAssignSubmit}>
+                {isSubmitting ? 'En cours...' : 'Assigner'}
+              </button>
             </div>
           </div>
         </div>

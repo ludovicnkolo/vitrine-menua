@@ -52,6 +52,7 @@ model Utilisateur {
   targetDossiers   Dossier[]     @relation("DossierTarget")
   documents        Document[]
   auditLogs        AuditLog[]
+  assignedMessagePersonnels MessagePersonnel[] @relation("AssignedMessagePersonnels")
 }
 
 // ─── CLIENTS (Personnes externes au CRM) ──────────────────────────────────────
@@ -217,6 +218,8 @@ model Tache {
   status      String    @default("TO_ASSIGN")
   previousStatus String?
   attachment  String?
+  adminFeedback String?
+  managerFeedback String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -279,4 +282,7 @@ model MessagePersonnel {
 
   missionId   String?
   mission     Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+
+  assignedToId String?
+  assignedTo   Utilisateur? @relation("AssignedMessagePersonnels", fields: [assignedToId], references: [id], onDelete: SetNull)
 }

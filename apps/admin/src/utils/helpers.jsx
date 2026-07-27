@@ -7,6 +7,8 @@ function getStatusBadge(status) {
     'EN_COURS': { text: 'En cours', class: 'badge-progress' },
     'EN_FINALISATION': { text: 'En finalisation', class: 'badge-warning' },
     'EN_CONTROLE': { text: 'En contrôle', class: 'badge-warning' },
+    'A_AMELIORER': { text: 'À améliorer', style: { backgroundColor: '#FEE2E2', color: '#B91C1C', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
+    'EN_REVISION': { text: 'En révision', style: { backgroundColor: '#EDE9FE', color: '#6D28D9', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
     'TERMINEE': { text: 'Terminée', class: 'badge-success' },
     'NOUVEAU': { text: 'Nouveau', class: 'badge-new' },
     'TO_ASSIGN': { text: 'À attribuer', class: 'badge-warning' },
@@ -82,7 +84,7 @@ function getSafeApiUrl(path) {
  * @param {object|null} body - Corps JSON optionnel
  */
 async function apiFetch(endpoint, method = 'GET', body = null) {
-  const token = localStorage.getItem('adminToken');
+  const token = sessionStorage.getItem('adminToken');
   const options = {
     method,
     headers: { 'Authorization': `Bearer ${token}` }
@@ -108,7 +110,7 @@ async function uploadFile(file, bucket = 'formulaires') {
   try {
     const res = await fetch(getSafeApiUrl('/api/files/upload'), {
       method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+      headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') },
       body: formData
     });
     const data = await res.json();

@@ -13,8 +13,15 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
     }
     const fetchPdf = async () => {
       try {
-        const token = localStorage.getItem('adminToken');
-        const urlObj = new URL(getSafeApiUrl(`/api/files/view/formulaires/${encodeURIComponent(previewFile)}`));
+        const token = sessionStorage.getItem('adminToken');
+        const parts = previewFile.split('/');
+        let bucket = 'formulaires';
+        let filename = previewFile;
+        if (parts.length > 1) {
+          bucket = parts.shift();
+          filename = parts.join('/');
+        }
+        const urlObj = new URL(getSafeApiUrl(`/api/files/view/${encodeURIComponent(bucket)}/${encodeURIComponent(filename)}`));
         if (token) urlObj.searchParams.set('token', token);
         const res = await fetch(urlObj.toString());
         if (res.ok) {

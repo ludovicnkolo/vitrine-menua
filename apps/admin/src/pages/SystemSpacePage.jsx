@@ -1,11 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
 import AuditPage from './AuditPage';
 import SpacePageLayout from '../components/SpacePageLayout';
 
-const SystemSpacePage = () => {
+const SystemSpacePage = ({ userRole }) => {
   const [theme, setTheme] = useState(localStorage.getItem('adminTheme') || 'light');
   const [lang, setLang] = useState(localStorage.getItem('adminLang') || 'fr');
+
+  // Super-administrateur ET Administrateur technique voient l'onglet Audit
+  // Collaborateur, Relecteur, Responsable opérationnel ne voient que Configuration
+  const canSeeAudit = userRole === 'Super-administrateur' || userRole === 'ADMIN' || userRole === 'Administrateur technique';
+
+  const tabs = [
+    ...(canSeeAudit ? [{ id: 'audit', label: 'Audit' }] : []),
+    { id: 'configuration', label: 'Configuration' }
+  ];
 
   const handleThemeChange = (newTheme) => {
     if (newTheme !== 'light' && newTheme !== 'dark') return;
@@ -22,21 +30,17 @@ const SystemSpacePage = () => {
     if (newLang !== 'fr' && newLang !== 'en') return;
     setLang(newLang);
     localStorage.setItem('adminLang', newLang);
-    // Reload to apply
     window.location.reload();
   };
 
   return (
     <SpacePageLayout
-      initialTab="audit"
-      tabs={[
-        { id: 'audit', label: 'Audit' },
-        { id: 'configuration', label: 'Configuration' }
-      ]}
+      initialTab={canSeeAudit ? 'audit' : 'configuration'}
+      tabs={tabs}
     >
       {(tab) => (
         <>
-          {tab === 'audit' && <AuditPage />}
+          {tab === 'audit' && canSeeAudit && <AuditPage />}
           {tab === 'configuration' && (
             <div>
               <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '1.5rem'}}>Configuration</h1>
@@ -63,7 +67,7 @@ const SystemSpacePage = () => {
 
               <div className="card" style={{maxWidth: '600px'}}>
                 <h3 style={{marginBottom: '1rem', fontWeight: 600, color: 'var(--text-main)'}}>Langue / Language</h3>
-                <p style={{color: 'var(--text-muted)', marginBottom: '1rem'}}>Sélectionnez la langue de l'interface d'administration. (La traduction intégrale est en cours d'intégration)</p>
+                <p style={{color: 'var(--text-muted)', marginBottom: '1rem'}}>Sélectionnez la langue de l'interface d'administration.</p>
                 <select 
                   value={lang} 
                   onChange={(e) => handleLangChange(e.target.value)}
@@ -82,3 +86,4 @@ const SystemSpacePage = () => {
 };
 
 export default SystemSpacePage;
+

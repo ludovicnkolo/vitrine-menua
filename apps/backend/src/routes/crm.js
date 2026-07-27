@@ -131,15 +131,36 @@ router.post('/users', async (req, res) => {
     const { name, email, roleId, phone, country, city, education, status, profile, idCardUrl, telephone, lieuResidence, experienceCle, langues } = req.body;
     const bcrypt = require('bcryptjs');
     const crypto = require('node:crypto');
-    const nodemailer = require('nodemailer');
-    
-    // Generate token
+
+    if (!name || !email) {
+      return res.status(400).json({ error: 'Le nom et l\'email sont obligatoires.' });
+    }
+
+    // --- Validation unicité email et téléphone ---
+    const existingEmail = await prisma.utilisateur.findUnique({ where: { email } });
+    if (existingEmail) {
+      return res.status(409).json({ error: `Un collaborateur avec l'email "${email}" existe déjà.` });
+    }
+
+    const tel = telephone || phone || null;
+    if (tel) {
+      const normalizedTel = tel.replace(/\s/g, '');
+      const existingTel = await prisma.utilisateur.findFirst({ where: { telephone: { equals: normalizedTel } } });
+      if (existingTel) {
+        return res.status(409).json({ error: `Un collaborateur avec le numéro "${tel}" existe déjà.` });
+      }
+    }
+
+    // Generate token for password setup
     const token = crypto.randomBytes(32).toString('hex');
     const resetTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
     
     // Default fallback password in case they don't use the link
     const hashedPassword = await bcrypt.hash(crypto.randomBytes(8).toString('hex'), 10); 
     
+    // Statut par défaut : Inactif (isBlocked=true) sauf si l'admin choisit explicitement Actif au moment de la création
+    const isBlockedDefault = status === 'Actif' ? false : true;
+
     const user = await prisma.utilisateur.create({
       data: {
         name,
@@ -148,22 +169,20 @@ router.post('/users', async (req, res) => {
         resetToken: token,
         resetTokenExpiry,
         roleId: roleId || null,
-        telephone: telephone || phone || null,
+        telephone: tel,
         lieuResidence: lieuResidence || null,
         experienceCle: experienceCle || null,
         langues: langues || null,
         profile: profile || '',
         idCardUrl: idCardUrl || null,
-        isBlocked: status === 'Inactif'
+        isBlocked: isBlockedDefault
       }
     });
     
-    // Send email
+    // Send email — Use ADMIN_FRONTEND_URL env var (the CRM admin frontend, NOT the backend)
     try {
-      const proto = req.headers['x-forwarded-proto'] || req.protocol;
-      const host = req.headers.host;
-      const origin = host ? `${proto}://${host}` : (process.env.VITE_API_URL || 'http://localhost:5173');
-      const setupUrl = `${origin}/setup-password?token=${token}`;
+      const adminFrontend = process.env.ADMIN_FRONTEND_URL || 'http://localhost:5173';
+      const setupUrl = `${adminFrontend}/setup-password?token=${token}`;
       
       await transporter.sendMail({
         from: process.env.SMTP_FROM || 'contact@menuaconsulting.com',
@@ -172,9 +191,10 @@ router.post('/users', async (req, res) => {
         html: `
           <h3>Bienvenue ${name},</h3>
           <p>Un compte collaborateur a été créé pour vous sur l'espace Menua Consulting.</p>
-          <p>Veuillez cliquer sur le lien ci-dessous pour configurer votre mot de passe et activer votre accès :</p>
+          <p>Veuillez cliquer sur le lien ci-dessous pour configurer votre mot de passe :</p>
           <a href="${setupUrl}" style="display:inline-block;padding:10px 20px;background:#141824;color:#fff;text-decoration:none;border-radius:4px;">Créer mon mot de passe</a>
           <p>Ce lien est valable 24 heures.</p>
+          <p style="color:#666;font-size:0.85em;">Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur : ${setupUrl}</p>
         `
       });
     } catch (emailErr) {
@@ -186,6 +206,7 @@ router.post('/users', async (req, res) => {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la création de l\'utilisateur.' });
   }
 });
+
 
 router.patch('/users/:id', async (req, res) => {
   try {
@@ -311,7 +332,28 @@ router.get('/dossiers', async (req, res) => {
     const { page, limit, skip } = getPaginationParams(req.query);
     const { search, status, role, origin } = req.query;
 
+    if (req.user.role === 'Collaborateur') {
+      return res.status(403).json({ error: 'Accès interdit aux dossiers pour les collaborateurs.' });
+    }
+
     const where = {};
+
+    if (req.user.role === 'Responsable opérationnel') {
+      where.OR = [
+        { origin: { not: 'INTERNE' } },
+        { targetUserId: req.user.id },
+        { createdById: req.user.id },
+        { missions: { some: { assignedToId: req.user.id } } }
+      ];
+    } else if (req.user.role === 'Relecteur') {
+      where.OR = [
+        { targetUserId: req.user.id },
+        { createdById: req.user.id },
+        { missions: { some: { assignedToId: req.user.id } } },
+        { missions: { some: { taches: { some: { assignedToId: req.user.id } } } } }
+      ];
+    }
+
     if (status && status !== 'all') where.status = status;
     if (origin && origin !== 'all') where.origin = origin;
     if (role && role !== 'all') {
@@ -436,7 +478,27 @@ router.get('/tasks', async (req, res) => {
     const { page, limit, skip } = getPaginationParams(req.query);
     const { search, status } = req.query;
 
+    if (req.user.role === 'Collaborateur') {
+      return res.status(403).json({ error: 'Accès interdit aux missions pour les collaborateurs.' });
+    }
+
     const where = { parentMissionId: null }; // Only parent tasks
+
+    if (req.user.role === 'Responsable opérationnel') {
+      where.OR = [
+        { dossier: { origin: { not: 'INTERNE' } } },
+        { assignedToId: req.user.id },
+        { createdById: req.user.id },
+        { taches: { some: { assignedToId: req.user.id } } }
+      ];
+    } else if (req.user.role === 'Relecteur') {
+      where.OR = [
+        { assignedToId: req.user.id },
+        { createdById: req.user.id },
+        { taches: { some: { assignedToId: req.user.id } } }
+      ];
+    }
+
     if (status && status !== 'all') where.status = status;
     if (search) {
       const s = search.toLowerCase();
@@ -557,6 +619,23 @@ router.get('/taches', async (req, res) => {
     const { search, status } = req.query;
 
     const where = {};
+    if (req.user.role === 'Collaborateur') {
+      where.assignedToId = req.user.id;
+    } else if (req.user.role === 'Responsable opérationnel') {
+      where.OR = [
+        { mission: { dossier: { origin: { not: 'INTERNE' } } } },
+        { assignedToId: req.user.id },
+        { createdById: req.user.id },
+        { mission: { assignedToId: req.user.id } }
+      ];
+    } else if (req.user.role === 'Relecteur') {
+      where.OR = [
+        { assignedToId: req.user.id },
+        { createdById: req.user.id },
+        { mission: { assignedToId: req.user.id } }
+      ];
+    }
+
     if (status && status !== 'all') where.status = status;
     if (search) {
       const s = search.toLowerCase();
@@ -614,23 +693,62 @@ router.post('/taches', async (req, res) => {
 
 router.patch('/taches/:id', async (req, res) => {
   try {
-    const dataToUpdate = { ...req.body };
-    if (dataToUpdate.status !== undefined) {
-      const currentTache = await prisma.tache.findUnique({ where: { id: req.params.id } });
-      if (currentTache && currentTache.status !== dataToUpdate.status) {
-        dataToUpdate.previousStatus = currentTache.status;
+    const { id } = req.params;
+    const { status, adminFeedback, managerFeedback, ...rest } = req.body;
+
+    const currentTache = await prisma.tache.findUnique({ where: { id } });
+    if (!currentTache) return res.status(404).json({ error: 'Tâche introuvable.' });
+
+    const userRole = req.user?.role || '';
+    const isSuperAdmin = userRole === 'Super-administrateur' || req.user?.id === 'MASTER-ADMIN';
+    const isController = userRole === 'Relecteur' || userRole === 'Responsable opérationnel' || isSuperAdmin;
+
+    // Build the data payload
+    const dataToUpdate = { ...rest };
+
+    // --- Validate status transitions ---
+    if (status !== undefined && status !== currentTache.status) {
+      // A_AMELIORER can only be set by Super-Admin, requires adminFeedback
+      if (status === 'A_AMELIORER') {
+        if (!isSuperAdmin) {
+          return res.status(403).json({ error: 'Seul le Super-Administrateur peut passer une tâche en "À améliorer".' });
+        }
+        if (!adminFeedback || !adminFeedback.trim()) {
+          return res.status(400).json({ error: 'Veuillez saisir les instructions d\'amélioration.' });
+        }
+        dataToUpdate.adminFeedback = adminFeedback.trim();
       }
+
+      // EN_REVISION can only be set by Controller/Manager, requires managerFeedback
+      if (status === 'EN_REVISION') {
+        if (!isController) {
+          return res.status(403).json({ error: 'Seul un Contrôleur ou Responsable peut passer une tâche en "En révision".' });
+        }
+        if (!managerFeedback || !managerFeedback.trim()) {
+          return res.status(400).json({ error: 'Veuillez saisir vos corrections avant de soumettre.' });
+        }
+        dataToUpdate.managerFeedback = managerFeedback.trim();
+      }
+
+      dataToUpdate.previousStatus = currentTache.status;
+      dataToUpdate.status = status;
+    } else if (status !== undefined) {
+      // status unchanged, just allow field updates
+      if (adminFeedback !== undefined && isSuperAdmin) dataToUpdate.adminFeedback = adminFeedback;
+      if (managerFeedback !== undefined && isController) dataToUpdate.managerFeedback = managerFeedback;
     }
 
     const tache = await prisma.tache.update({
-      where: { id: req.params.id },
+      where: { id },
       data: dataToUpdate
     });
     res.json(tache);
   } catch (error) {
-    console.error(error); res.status(500).json({ error: 'Erreur de mise à jour.' });
+    console.error(error);
+    res.status(500).json({ error: 'Erreur de mise à jour.' });
   }
 });
+
 
 router.delete('/taches/:id', async (req, res) => {
   try {
@@ -751,7 +869,14 @@ router.get('/messages', async (req, res) => {
     let total = 0;
 
     if (tabType === 'CONTACT' || tabType === 'RECRUTEMENT') {
+      if (req.user.role === 'Collaborateur' || req.user.role === 'Relecteur') {
+        return res.status(403).json({ error: 'Accès interdit aux formulaires externes.' });
+      }
+
       let where = { type: tabType };
+      if (req.user.role === 'Responsable opérationnel') {
+        where.assignedToId = req.user.id;
+      }
       if (statusFilter === 'traite') {
          where.status = { in: ['TERMINE', 'ARCHIVE'] };
       } else if (statusFilter === 'nontraite') {
@@ -791,16 +916,35 @@ router.get('/messages', async (req, res) => {
       }));
     } else {
       let where = { type: tabType };
+      
+      if (req.user.role === 'Collaborateur' || req.user.role === 'Relecteur') {
+        where.OR = [
+          { subType: { contains: req.user.name, mode: 'insensitive' } },
+          { email: req.user.email }
+        ];
+      } else if (req.user.role === 'Responsable opérationnel') {
+        where.assignedToId = req.user.id;
+      }
+
       if (statusFilter === 'traite') {
          where.status = { in: ['TERMINE', 'ARCHIVE'] };
       } else if (statusFilter === 'nontraite') {
          where.status = { notIn: ['TERMINE', 'ARCHIVE'] };
       }
+      
       if (search) {
-         where.OR = [
-           { nomPrenom: { contains: search } },
-           { email: { contains: search } }
-         ];
+         const searchFilter = {
+           OR: [
+             { nomPrenom: { contains: search } },
+             { email: { contains: search } }
+           ]
+         };
+         if (where.OR) {
+           where.AND = [ { OR: where.OR }, searchFilter ];
+           delete where.OR;
+         } else {
+           where.OR = searchFilter.OR;
+         }
       }
 
       total = await prisma.messagePersonnel.count({ where });
@@ -838,6 +982,32 @@ router.get('/messages', async (req, res) => {
 const { syncMessages } = require('../controllers/imapController');
 router.post('/messages/sync-imap', syncMessages);
 
+
+router.post('/messages/:id/assign', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { assignedToId } = req.body;
+    
+    // Check if it's a Formulaire
+    let form = await prisma.formulaire.findUnique({ where: { id } });
+    if (form) {
+      await prisma.formulaire.update({ where: { id }, data: { assignedToId: assignedToId || null } });
+      return res.json({ success: true, message: 'Formulaire assigné' });
+    }
+    
+    // Otherwise check MessagePersonnel
+    let msg = await prisma.messagePersonnel.findUnique({ where: { id } });
+    if (msg) {
+      await prisma.messagePersonnel.update({ where: { id }, data: { assignedToId: assignedToId || null } });
+      return res.json({ success: true, message: 'Message assigné' });
+    }
+    
+    res.status(404).json({ error: 'Message non trouvé' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de l\'assignation' });
+  }
+});
 
 router.delete('/messages/:id', async (req, res) => {
   try {

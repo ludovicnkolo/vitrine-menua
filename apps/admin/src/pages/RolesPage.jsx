@@ -44,7 +44,7 @@ const RolesPage = () => {
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
+      const token = sessionStorage.getItem('adminToken');
       if (!token) return;
       
       
@@ -96,7 +96,7 @@ const RolesPage = () => {
     try {
       await fetch(getSafeApiUrl(`/api/crm/roles/${encodeURIComponent(deleteRole.id)}`), {
         method: 'DELETE',
-        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
+        headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') }
       });
       fetchData();
       if (editRole && editRole.id === deleteRole.id) setEditRole(null);
@@ -258,7 +258,7 @@ const RolesPage = () => {
           try {
             await fetch(getSafeApiUrl('/api/crm/roles'), {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') },
               body: JSON.stringify({ name: newRole.name, description: newRole.description, status: newRole.status, permissions: JSON.stringify(selectedPermissions) })
             });
             setNewRole({ name: '', description: '', status: 'Actif' });
@@ -282,7 +282,7 @@ const RolesPage = () => {
           try {
             await fetch(getSafeApiUrl(`/api/crm/roles/${encodeURIComponent(editRole.id)}`), {
               method: 'PATCH',
-              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') },
               body: JSON.stringify({ name: editRole.name, description: editRole.description, status: editRole.status, permissions: JSON.stringify(selectedPermissions) })
             });
             setEditRole(null); 

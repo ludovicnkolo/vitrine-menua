@@ -8,6 +8,8 @@ const router = express.Router();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+const { authenticateJWT } = require('../middlewares/auth');
+
 // Route de connexion (Login)
 router.post('/login', async (req, res) => {
   try {
@@ -87,6 +89,43 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Erreur serveur.' });
   }
 });
+
+// Route de vérification de session (Ping sécurité — retourne le rôle réel depuis la BD)
+router.get('/verify', authenticateJWT, async (req, res) => {
+  try {
+    // Master-Admin n'est pas en BD
+    if (req.user.id === 'MASTER-ADMIN') {
+      return res.json({ success: true, user: req.user, roleChanged: false });
+    }
+
+    const dbUser = await prisma.utilisateur.findUnique({
+      where: { id: req.user.id },
+      include: { role: true }
+    });
+
+    if (!dbUser) {
+      return res.status(401).json({ error: 'Utilisateur introuvable.', action: 'FORCE_LOGOUT' });
+    }
+    if (dbUser.isBlocked) {
+      return res.status(401).json({ error: 'Compte désactivé.', action: 'FORCE_LOGOUT' });
+    }
+
+    const currentRole = dbUser.role?.name || 'SANS ROLE';
+    const tokenRole   = req.user.role;
+    const roleChanged = currentRole !== tokenRole;
+
+    res.json({
+      success: true,
+      user: req.user,
+      currentRole,
+      roleChanged
+    });
+  } catch (e) {
+    console.error('/verify error:', e);
+    res.status(500).json({ error: 'Erreur vérification.' });
+  }
+});
+
 
 // Route utilitaire pour créer le premier admin s'il n'y en a aucun (Très utile pour l'initialisation)
 router.post('/setup', async (req, res) => {

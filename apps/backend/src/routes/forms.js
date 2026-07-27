@@ -180,9 +180,14 @@ const sendAutoReply = async (email, lang) => {
   };
 
   try {
-    transporter.sendMail(mailOptions).catch(err => {
-      console.error("Erreur lors de l'envoi de l'accusé de réception (background):", err);
-    });
+    console.log(`Tentative d'envoi de l'accusé de réception à: ${email} (Langue: ${lang})`);
+    transporter.sendMail(mailOptions)
+      .then(info => {
+        console.log(`Accusé de réception envoyé avec succès à ${email}. Message ID: ${info.messageId}`);
+      })
+      .catch(err => {
+        console.error(`Erreur SMTP lors de l'envoi de l'accusé de réception (background) à ${email}:`, err);
+      });
   } catch (error) {
     console.error("Erreur immédiate lors de l'envoi de l'accusé de réception à", email, ":", error);
   }

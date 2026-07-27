@@ -23,7 +23,7 @@ export const handleFormSubmit = async ({
   
   try {
     const formData = new FormData(e.currentTarget);
-    const apiUrl = process.env.NODE_ENV === 'production' ? '' : process.env.NEXT_PUBLIC_API_URL;
+    const apiUrl = ''; // Rely on Next.js rewrites
     const res = await fetch(`${apiUrl}${endpoint}?lang=${encodeURIComponent(lang.toLowerCase())}`, {
       method: "POST",
       body: formData,

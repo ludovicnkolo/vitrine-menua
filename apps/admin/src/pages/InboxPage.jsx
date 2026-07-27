@@ -563,9 +563,11 @@ const InboxPage = () => {
               {tab === 'interne' ? (
                 <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Répondre</button>
               ) : (
-                <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer un Dossier</button>
+                processMsg.status !== 'TRAITE' && <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer un Dossier</button>
               )}
-              <button type="button" onClick={handleMarkAsProcessed} className="btn btn-primary">Marquer comme traité</button>
+              {processMsg.status !== 'TRAITE' && (
+                <button type="button" onClick={handleMarkAsProcessed} className="btn btn-primary">Marquer comme traité</button>
+              )}
             </div>
           </div>
         </div>
@@ -597,44 +599,25 @@ const InboxPage = () => {
               {tab !== 'interne' && (
                 <div>
                   <label htmlFor="task-dossier" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Dossier associé</label>
-                  <div style={{display: 'flex', gap: '1.5rem', marginBottom: '0.75rem'}}>
-                    <label htmlFor="dossierTypeNew" style={{display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.875rem', cursor: 'pointer'}}>
-                      <input type="radio" id="dossierTypeNew" name="dossierType" value="new" checked={isNewDossier} onChange={() => setIsNewDossier(true)} />
-                      {' '}Nouveau dossier
-                    </label>
-                    <label htmlFor="dossierTypeExisting" style={{display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.875rem', cursor: 'pointer'}}>
-                      <input type="radio" id="dossierTypeExisting" name="dossierType" value="existing" checked={!isNewDossier} onChange={() => setIsNewDossier(false)} />
-                      {' '}Dossier existant
-                    </label>
-                  </div>
-                  {isNewDossier ? (
-                    <div style={{display: 'grid', gridTemplateColumns: '1fr 1.5fr 2fr', gap: '1rem', alignItems: 'start'}}>
-                      <select value={taskDossierSection} onChange={(e) => { setTaskDossierSection(e.target.value); setTaskDossierCible(''); }} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
-                        <option value="">-- Section --</option>
-                        <option value="equipe">Équipe</option>
-                        <option value="client">Client</option>
-                      </select>
-                      
-                      <select value={taskDossierCible} onChange={(e) => setTaskDossierCible(e.target.value)} disabled={!taskDossierSection} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', opacity: !taskDossierSection ? 0.5 : 1}}>
-                        <option value="">-- Sélectionner --</option>
-                        {taskDossierSection === 'equipe' && users.map(u => (
-                          <option key={u.id} value={u.id}>{`${u.name} (${u.role?.name || 'Sans rôle'})`}</option>
-                        ))}
-                        {taskDossierSection === 'client' && clients.map(c => (
-                          <option key={c.id} value={c.id}>{c.name || `${c.firstName} ${c.lastName}` || c.email}</option>
-                        ))}
-                      </select>
-                      
-                      <input type="text" value={taskNewDossierName} onChange={(e) => setTaskNewDossierName(e.target.value)} placeholder="Nom du nouveau dossier..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
-                    </div>
-                  ) : (
-                    <select value={taskDossierId} onChange={(e) => setTaskDossierId(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
-                      <option value="">Sélectionner un dossier...</option>
-                      {dossiers.map(d => (
-                        <option key={d.id} value={d.id}>{d.name} ({d.client?.name || 'Sans client'})</option>
+                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1.5fr 2fr', gap: '1rem', alignItems: 'start'}}>
+                    <select value={taskDossierSection} onChange={(e) => { setTaskDossierSection(e.target.value); setTaskDossierCible(''); }} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                      <option value="">-- Section --</option>
+                      <option value="equipe">Équipe</option>
+                      <option value="client">Client</option>
+                    </select>
+                    
+                    <select value={taskDossierCible} onChange={(e) => setTaskDossierCible(e.target.value)} disabled={!taskDossierSection} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', opacity: !taskDossierSection ? 0.5 : 1}}>
+                      <option value="">-- Sélectionner --</option>
+                      {taskDossierSection === 'equipe' && users.map(u => (
+                        <option key={u.id} value={u.id}>{`${u.name} (${u.role?.name || 'Sans rôle'})`}</option>
+                      ))}
+                      {taskDossierSection === 'client' && clients.map(c => (
+                        <option key={c.id} value={c.id}>{c.name || `${c.firstName} ${c.lastName}` || c.email}</option>
                       ))}
                     </select>
-                  )}
+                    
+                    <input type="text" value={taskNewDossierName} onChange={(e) => setTaskNewDossierName(e.target.value)} placeholder="Nom du nouveau dossier..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+                  </div>
                 </div>
               )}
 

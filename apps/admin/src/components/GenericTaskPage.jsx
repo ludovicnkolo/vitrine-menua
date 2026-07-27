@@ -1,10 +1,7 @@
-import { getSafeApiUrl } from '../utils/helpers';
+import { getSafeApiUrl, uploadFile, formatDate, getStatusBadge, getPriorityBadge } from '../utils/helpers';
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  MoreVertical, Pencil, Eye, Trash, Mail, MessageSquare, Search, Files
-} from 'lucide-react';
+import { MoreVertical, Pencil, Eye, Trash, Mail, MessageSquare, Search, Files } from 'lucide-react';
 import ActionDropdown from '../components/ActionDropdown';
-import { getStatusBadge, getPriorityBadge } from '../utils/helpers';
 import FilePreviewModal from '../components/FilePreviewModal';
 import SmsModal from '../components/SmsModal';
 
@@ -136,24 +133,6 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
 
 
-  const uploadFile = async (file) => {
-    if (!file) return null;
-    const formData = new FormData();
-    formData.append('bucket', 'formulaires');
-    formData.append('file', file);
-    try {
-      const res = await fetch(getSafeApiUrl('/api/files/upload'), {
-        method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
-        body: formData
-      });
-      const data = await res.json();
-      if (data.success) {
-        return data.fileData.filename;
-      }
-    } catch(e) { console.error('Upload error', e); }
-    return null;
-  };
 
   const handleCreateSubTask = async () => {
     if (!newTaskMessage || !newTaskAssignedTo || !newTaskEcheance) {
@@ -686,7 +665,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   {getStatusBadge(t.status)}
                 </td>
                 <td style={{ textAlign: 'left', color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap" }}>
-                  {new Date(t.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}
+                  {formatDate(t.createdAt)}
                 </td>
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>

@@ -1,4 +1,4 @@
-import { getSafeApiUrl } from '../utils/helpers';
+import { getSafeApiUrl, apiFetch, uploadFile, formatDate, extractFieldFromHtml, extractBlockFromHtml } from '../utils/helpers';
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   MoreVertical, CheckCircle, AlertCircle, Mail, Pencil, Eye, Trash, Files
@@ -6,25 +6,6 @@ import {
 import TabsNavigation from '../components/TabsNavigation';
 import ActionDropdown from '../components/ActionDropdown';
 import PaginationControls from '../components/PaginationControls';
-
-  const extractContentFromHtml = (html, label, isBlock = false) => {
-    if (!html) return null;
-    let regex = new RegExp(String.raw`>\s*${label}\s*<\/strong>\s*<div[^>]*>([\s\S]*?)<\/div>`, 'i');
-    let match = html.match(regex);
-    if (!match && !isBlock) {
-      regex = new RegExp(String.raw`>\s*${label}\s*<\/strong>\s*:\s*<span[^>]*>([\s\S]*?)<\/span>`, 'i');
-      match = html.match(regex);
-    }
-    if (match?.[1]) {
-      let content = match[1];
-      if (isBlock) content = content.replace(/<br\s*\/?>/gi, '\n');
-      return content.replace(/<[^>]*>?/gm, '').trim();
-    }
-    return null;
-  };
-
-  const extractFieldFromHtml = (html, fieldName) => extractContentFromHtml(html, fieldName, false);
-  const extractBlockFromHtml = (html, blockName) => extractContentFromHtml(html, blockName, true);
 
 const InboxPage = () => {
   const [tab, setTab] = useState('contact');
@@ -168,37 +149,6 @@ const InboxPage = () => {
     else setOpenMenuId(id);
   }
 
-  const apiFetch = async (endpoint, method = 'GET', body = null) => {
-    const token = localStorage.getItem('adminToken');
-    const options = {
-      method,
-      headers: { 'Authorization': `Bearer ${token}` }
-    };
-    if (body) {
-      options.headers['Content-Type'] = 'application/json';
-      options.body = JSON.stringify(body);
-    }
-    return fetch(new URL(getSafeApiUrl(endpoint)).toString(), options);
-  };
-
-  const uploadFile = async (file) => {
-    if (!file) return null;
-    const formData = new FormData();
-    formData.append('bucket', 'formulaires');
-    formData.append('file', file);
-    try {
-      const res = await fetch(getSafeApiUrl('/api/files/upload'), {
-        method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
-        body: formData
-      });
-      const data = await res.json();
-      if (data.success) {
-        return data.fileData.filename;
-      }
-    } catch(e) { console.error('Upload error', e); }
-    return null;
-  };
 
   const handleCreateTask = async () => {
     try {
@@ -484,7 +434,7 @@ const InboxPage = () => {
                     </span>
                   </td>
                   <td><div className="truncate-text" style={col5Style || {fontSize: "0.875rem"}}>{col5}</div></td>
-                  <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{new Date(m.createdAt).toLocaleString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
+                  <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{formatDate(m.createdAt)}</td>
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                       <div style={{position: 'relative'}}>

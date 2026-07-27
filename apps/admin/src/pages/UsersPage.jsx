@@ -1,4 +1,4 @@
-import { getSafeApiUrl } from '../utils/helpers';
+import { getSafeApiUrl, uploadFile, formatDate } from '../utils/helpers';
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   MoreVertical, Search, Mail, MessageSquare, Pencil, Eye, Trash, Shield, Download, File, Loader
@@ -43,24 +43,6 @@ const UsersPage = ({ forceTab }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [rolesList, setRolesList] = useState([]);
 
-  const uploadFile = async (file) => {
-    if (!file) return null;
-    const formData = new FormData();
-    formData.append('bucket', 'users_id_cards'); // MUST BE BEFORE FILE
-    formData.append('file', file);
-    try {
-      const res = await fetch(getSafeApiUrl('/api/files/upload'), {
-        method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
-        body: formData
-      });
-      const data = await res.json();
-      if (data.success) {
-        return getSafeApiUrl(`/api/files/view/${data.fileData.path}`);
-      }
-    } catch(e) { console.error('Upload error', e); }
-    return null;
-  };
 
   const fetchData = async () => {
     try {
@@ -81,7 +63,7 @@ const UsersPage = ({ forceTab }) => {
   const submitApiRequest = async (url, method, payload, onSuccess, errorText) => {
     setLoading(true); setErrorMsg(null);
     try {
-      const uploadedUrl = await uploadFile(selectedFile);
+      const uploadedUrl = await uploadFile(selectedFile, 'users_id_cards');
       const res = await fetch(getSafeApiUrl(url), {
         method,
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
@@ -561,7 +543,7 @@ const UsersPage = ({ forceTab }) => {
                       {!u.isBlocked ? 'Actif' : 'Inactif'}
                     </span>
                   </td>
-                  <td style={{color: 'var(--text-muted)', fontSize: '0.875rem', whiteSpace: 'nowrap'}}>{u.createdAt ? new Date(u.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'}) : 'Jamais connecté'}</td>
+                  <td style={{color: 'var(--text-muted)', fontSize: '0.875rem', whiteSpace: 'nowrap'}}>{u.createdAt ? formatDate(u.createdAt) : 'Jamais connecté'}</td>
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                       <div style={{position: 'relative'}}>
@@ -607,7 +589,7 @@ const UsersPage = ({ forceTab }) => {
                     </span>
                   </td>
                   <td><span style={{color: 'var(--text-muted)'}}>{c.entreprise?.raisonSociale || c.secteurActivite || 'N/A'}</span></td>
-                  <td><span style={{color: 'var(--text-muted)'}}>{c.createdAt ? new Date(c.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'}) : 'N/A'}</span></td>
+                  <td><span style={{color: 'var(--text-muted)'}}>{c.createdAt ? formatDate(c.createdAt) : 'N/A'}</span></td>
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                       <div style={{position: 'relative'}}>

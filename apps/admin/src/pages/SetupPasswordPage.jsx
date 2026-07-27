@@ -87,8 +87,8 @@ const SetupPasswordPage = () => {
         ) : (
           <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
             <div>
-              <label htmlFor="auto-field-1785016991509-1" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Nouveau mot de passe</label>
-              <input id="auto-field-1785016991509-1"
+              <label htmlFor="setup-password" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Nouveau mot de passe</label>
+              <input id="setup-password"
                 type="password"
                 required
                 minLength={8}
@@ -98,8 +98,8 @@ const SetupPasswordPage = () => {
               />
             </div>
             <div>
-              <label htmlFor="auto-field-1785016991509-2" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Confirmer le mot de passe</label>
-              <input id="auto-field-1785016991509-2"
+              <label htmlFor="setup-confirm-password" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Confirmer le mot de passe</label>
+              <input id="setup-confirm-password"
                 type="password"
                 required
                 minLength={8}

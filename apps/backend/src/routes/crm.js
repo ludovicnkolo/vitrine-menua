@@ -39,6 +39,30 @@ const sendPaginatedResponse = (res, data, total, page, limit) => {
   });
 };
 
+const resolveCreatorId = async (req) => {
+  let creatorId = req.user.id;
+  if (creatorId === 'MASTER-ADMIN') {
+    let masterUser = await prisma.utilisateur.findUnique({ where: { email: 'contact@menuaconsulting.com' } });
+    if (!masterUser) masterUser = await prisma.utilisateur.findFirst();
+    return masterUser?.id || creatorId;
+  }
+  return creatorId;
+};
+
+const generateReference = async (model, prefix) => {
+  const lastRecord = await prisma[model].findFirst({
+    orderBy: { createdAt: 'desc' },
+    select: { reference: true }
+  });
+  let nextNum = 1;
+  if (lastRecord && lastRecord.reference) {
+    const regex = new RegExp(`${prefix}-(\\d+)`);
+    const match = lastRecord.reference.match(regex);
+    if (match) nextNum = Number.parseInt(match[1], 10) + 1;
+  }
+  return `${prefix}-${String(nextNum).padStart(2, '0')}`;
+};
+
 router.use(authenticateJWT);
 
 // --- ROLES ---
@@ -325,25 +349,8 @@ router.get('/dossiers', async (req, res) => {
 router.post('/dossiers', async (req, res) => {
   try {
     const { name, description, priority, origin } = req.body;
-    let creatorId = req.user.id;
-    
-    // Handle the bypass login 'MASTER-ADMIN'
-    if (creatorId === 'MASTER-ADMIN') {
-      let masterUser = await prisma.utilisateur.findUnique({ where: { email: 'contact@menuaconsulting.com' } });
-      if (!masterUser) masterUser = await prisma.utilisateur.findFirst();
-      creatorId = masterUser?.id || creatorId;
-    }
-
-    const lastDossier = await prisma.dossier.findFirst({
-      orderBy: { createdAt: 'desc' },
-      select: { reference: true }
-    });
-    let nextNum = 1;
-    if (lastDossier && lastDossier.reference) {
-      const match = lastDossier.reference.match(/DOS-(\d+)/);
-      if (match) nextNum = Number.parseInt(match[1], 10) + 1;
-    }
-    const reference = `DOS-${String(nextNum).padStart(2, '0')}`;
+    const creatorId = await resolveCreatorId(req);
+    const reference = await generateReference('dossier', 'DOS');
 
     const dossier = await prisma.dossier.create({
       data: {
@@ -467,25 +474,8 @@ router.get('/tasks', async (req, res) => {
 router.post('/tasks', async (req, res) => {
   try {
     const { dossierId, description, assignedToId, parentMissionId, echeance, attachment, messageId } = req.body;
-    let creatorId = req.user.id;
-    
-    // Handle the bypass login 'MASTER-ADMIN' which doesn't exist in DB
-    if (creatorId === 'MASTER-ADMIN') {
-      let masterUser = await prisma.utilisateur.findUnique({ where: { email: 'contact@menuaconsulting.com' } });
-      if (!masterUser) masterUser = await prisma.utilisateur.findFirst();
-      creatorId = masterUser?.id || creatorId;
-    }
-
-    const lastMission = await prisma.mission.findFirst({
-      orderBy: { createdAt: 'desc' },
-      select: { reference: true }
-    });
-    let nextNum = 1;
-    if (lastMission && lastMission.reference) {
-      const match = lastMission.reference.match(/MSN-(\d+)/);
-      if (match) nextNum = Number.parseInt(match[1], 10) + 1;
-    }
-    const reference = `MSN-${String(nextNum).padStart(2, '0')}`;
+    const creatorId = await resolveCreatorId(req);
+    const reference = await generateReference('mission', 'MSN');
 
     const task = await prisma.mission.create({
       data: {
@@ -588,24 +578,8 @@ router.get('/taches', async (req, res) => {
 router.post('/taches', async (req, res) => {
   try {
     const { missionId, description, assignedToId, echeance, attachment } = req.body;
-    let creatorId = req.user.id;
-    
-    if (creatorId === 'MASTER-ADMIN') {
-      let masterUser = await prisma.utilisateur.findUnique({ where: { email: 'contact@menuaconsulting.com' } });
-      if (!masterUser) masterUser = await prisma.utilisateur.findFirst();
-      creatorId = masterUser?.id || creatorId;
-    }
-
-    const lastTache = await prisma.tache.findFirst({
-      orderBy: { createdAt: 'desc' },
-      select: { reference: true }
-    });
-    let nextNum = 1;
-    if (lastTache && lastTache.reference) {
-      const match = lastTache.reference.match(/TCH-(\d+)/);
-      if (match) nextNum = Number.parseInt(match[1], 10) + 1;
-    }
-    const reference = `TCH-${String(nextNum).padStart(2, '0')}`;
+    const creatorId = await resolveCreatorId(req);
+    const reference = await generateReference('tache', 'TCH');
 
     const tache = await prisma.tache.create({
       data: {

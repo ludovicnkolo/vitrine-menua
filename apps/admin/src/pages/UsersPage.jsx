@@ -211,12 +211,12 @@ const UsersPage = ({ forceTab }) => {
             </div>
             
             <div style={{display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', padding: '0.5rem', background: '#F8FAFC', borderRadius: '8px', width: 'fit-content'}}>
-              <label htmlFor="auto-field-1785016991511-1" style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer'}}>
-                <input type="radio" name="ext_type" checked={externalType === 'Particulier'} onChange={() => setExternalType('Particulier')} />
+              <label htmlFor="ext-type-particulier" style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer'}}>
+                <input id="ext-type-particulier" type="radio" name="ext_type" checked={externalType === 'Particulier'} onChange={() => setExternalType('Particulier')} />
                 <span style={{fontWeight: 500}}>Particulier</span>
               </label>
-              <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer'}}>
-                <input type="radio" name="ext_type" checked={externalType === 'Société'} onChange={() => setExternalType('Société')} />
+              <label htmlFor="ext-type-societe" style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer'}}>
+                <input id="ext-type-societe" type="radio" name="ext_type" checked={externalType === 'Société'} onChange={() => setExternalType('Société')} />
                 <span style={{fontWeight: 500}}>Société</span>
               </label>
             </div>

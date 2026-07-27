@@ -15,6 +15,14 @@
     "fr": "L'adresse email fournie est invalide ou le nom de domaine n'existe pas.",
     "en": "The email address provided is invalid or the domain name does not exist."
   },
+  "ERROR_REQUIRED_FIELDS": {
+    "fr": "Veuillez remplir tous les champs obligatoires (marqués d'un astérisque).",
+    "en": "Please fill in all required fields (marked with an asterisk)."
+  },
+  "ERROR_SKILLS_REQUIRED": {
+    "fr": "Veuillez sélectionner au moins une compétence clé.",
+    "en": "Please select at least one key skill."
+  },
   "ERROR_FILE_PDF_ONLY": {
     "fr": "Le fichier doit obligatoirement être au format PDF.",
     "en": "The file must be in PDF format."

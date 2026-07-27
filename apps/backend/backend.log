@@ -35,3 +35,43 @@ Checking email with Abstract API: jifymfffyj@mailinator.com
 Abstract API status: 200 true
 Abstract API data: {"email_address":"jifymfffyj@mailinator.com","suggested_correction":null,"email_deliverability":{"status":"deliverable","status_detail":"valid_email","is_format_valid":true,"is_smtp_valid":true,"is_mx_valid":true,"mx_records":["mail.mailinator.com","mail2.mailinator.com"]},"email_sender":{"first_name":null,"last_name":null,"email_provider_name":null,"organization_name":"Mailinator","organization_type":"commercial"},"email_domain":{"domain":"mailinator.com","domain_age":8426,"is_live_site":true,"registrar":"GoDaddy.com, LLC","registrar_url":"https://godaddy.com","date_registered":"2003-07-02","date_last_renewed":"2026-06-03","date_expires":"2028-07-02","is_risky_tld":false},"email_quality":{"score":0.8,"is_free_email":false,"is_username_suspicious":true,"is_disposable":true,"is_catchall":null,"is_subaddress":false,"is_role":false,"is_dmarc_enforced":true,"is_spf_strict":true,"minimum_age":null},"email_risk":{"address_risk_status":"low","domain_risk_status":"high"},"email_breaches":{"total_breaches":0,"date_first_breached":null,"date_last_breached":null,"breached_domains":[]}}
 Abstract API rejected email (disposable)
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+Backend server running on port 4000
+Running seed_admin.js to ensure default roles and admin exist...
+Admin already exists, role updated: r.fouelefack@menuaconsulting.com
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+Backend server running on port 4000
+Running seed_admin.js to ensure default roles and admin exist...
+Admin already exists, role updated: r.fouelefack@menuaconsulting.com
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+/home/kratos-financials-inc/Documents/kratos/site_web/apps/backend/src/routes/forms.js:163
+      ${isEn 
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1620:18)
+    at Module._compile (node:internal/modules/cjs/loader:1662:20)
+    at Object..js (node:internal/modules/cjs/loader:1820:10)
+    at Module.load (node:internal/modules/cjs/loader:1423:32)
+    at Function._load (node:internal/modules/cjs/loader:1246:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1445:12)
+    at require (node:internal/modules/helpers:135:16)
+    at Object.<anonymous> (/home/kratos-financials-inc/Documents/kratos/site_web/apps/backend/src/index.js:83:21)
+
+Node.js v22.18.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+Backend server running on port 4000
+Running seed_admin.js to ensure default roles and admin exist...
+Admin already exists, role updated: r.fouelefack@menuaconsulting.com
+Checking email with Abstract API: ludovicnkolo01@gmail.com
+Abstract API status: 200 true
+Abstract API data: {"email_address":"ludovicnkolo01@gmail.com","suggested_correction":null,"email_deliverability":{"status":"deliverable","status_detail":"valid_email","is_format_valid":true,"is_smtp_valid":true,"is_mx_valid":true,"mx_records":["gmail-smtp-in.l.google.com","alt1.gmail-smtp-in.l.google.com","alt2.gmail-smtp-in.l.google.com","alt3.gmail-smtp-in.l.google.com","alt4.gmail-smtp-in.l.google.com"]},"email_sender":{"first_name":null,"last_name":null,"email_provider_name":"Google","organization_name":"Gmail","organization_type":"commercial"},"email_domain":{"domain":"gmail.com","domain_age":11306,"is_live_site":true,"registrar":"MarkMonitor Inc.","registrar_url":"https://markmonitor.com","date_registered":"1995-08-13","date_last_renewed":"2025-07-11","date_expires":"2026-08-12","is_risky_tld":false},"email_quality":{"score":0.95,"is_free_email":true,"is_username_suspicious":false,"is_disposable":false,"is_catchall":false,"is_subaddress":false,"is_role":false,"is_dmarc_enforced":true,"is_spf_strict":false,"minimum_age":null},"email_risk":{"address_risk_status":"low","domain_risk_status":"low"},"email_breaches":{"total_breaches":0,"date_first_breached":null,"date_last_breached":null,"breached_domains":[]}}
+Checking email with Abstract API: ludovicnkolo01@gmail.com
+Abstract API status: 200 true
+Abstract API data: {"email_address":"ludovicnkolo01@gmail.com","suggested_correction":null,"email_deliverability":{"status":"deliverable","status_detail":"valid_email","is_format_valid":true,"is_smtp_valid":true,"is_mx_valid":true,"mx_records":["gmail-smtp-in.l.google.com","alt1.gmail-smtp-in.l.google.com","alt2.gmail-smtp-in.l.google.com","alt3.gmail-smtp-in.l.google.com","alt4.gmail-smtp-in.l.google.com"]},"email_sender":{"first_name":null,"last_name":null,"email_provider_name":"Google","organization_name":"Gmail","organization_type":"commercial"},"email_domain":{"domain":"gmail.com","domain_age":11306,"is_live_site":true,"registrar":"MarkMonitor Inc.","registrar_url":"https://markmonitor.com","date_registered":"1995-08-13","date_last_renewed":"2025-07-11","date_expires":"2026-08-12","is_risky_tld":false},"email_quality":{"score":0.95,"is_free_email":true,"is_username_suspicious":false,"is_disposable":false,"is_catchall":false,"is_subaddress":false,"is_role":false,"is_dmarc_enforced":true,"is_spf_strict":false,"minimum_age":null},"email_risk":{"address_risk_status":"low","domain_risk_status":"low"},"email_breaches":{"total_breaches":0,"date_first_breached":null,"date_last_breached":null,"breached_domains":[]}}

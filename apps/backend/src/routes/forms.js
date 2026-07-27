@@ -139,6 +139,55 @@ const buildListRow = (label, htmlList) => `
 `;
 // -------------------------------------
 
+const sendAutoReply = async (email, lang) => {
+  const isEn = lang === 'en' || lang === 'EN';
+
+  const subject = isEn 
+    ? 'MENUA CONSULTING — We have received your request'
+    : 'MENUA CONSULTING — Nous avons bien reçu votre demande';
+
+  const text = isEn 
+    ? `Hello,\n\nWe confirm receipt of your request addressed to MENUA CONSULTING.\nOur team will review it and get back to you to clarify your needs.\n\nTo protect your information, please do not send any sensitive documents by return\nemail unless requested to do so.\n\nBest regards,\nMENUA CONSULTING\nYour operations. Our expertise.`
+    : `Bonjour,\n\nNous vous confirmons la bonne réception de votre demande adressée à MENUA CONSULTING.\nNotre équipe va en prendre connaissance et reviendra vers vous afin de préciser votre besoin.\n\nPour protéger vos informations, merci de ne pas transmettre de document sensible par retour\nd'e-mail sans y avoir été invité.\n\nBien cordialement,\nMENUA CONSULTING\nVos opérations. Notre expertise.`;
+
+  const html = buildEmailTemplate(subject, `
+    <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 15px;">
+      ${isEn ? 'Hello,' : 'Bonjour,'}
+    </p>
+    <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 15px;">
+      ${isEn 
+        ? 'We confirm receipt of your request addressed to MENUA CONSULTING.<br>Our team will review it and get back to you to clarify your needs.' 
+        : 'Nous vous confirmons la bonne réception de votre demande adressée à MENUA CONSULTING.<br>Notre équipe va en prendre connaissance et reviendra vers vous afin de préciser votre besoin.'}
+    </p>
+    <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 15px;">
+      ${isEn 
+        ? 'To protect your information, please do not send any sensitive documents by return email unless requested to do so.' 
+        : "Pour protéger vos informations, merci de ne pas transmettre de document sensible par retour d'e-mail sans y avoir été invité."}
+    </p>
+    <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 0;">
+      ${isEn 
+        ? 'Best regards,<br><strong>MENUA CONSULTING</strong><br><em>Your operations. Our expertise.</em>' 
+        : 'Bien cordialement,<br><strong>MENUA CONSULTING</strong><br><em>Vos opérations. Notre expertise.</em>'}
+    </p>
+  `);
+
+  const mailOptions = {
+    from: process.env.SMTP_FROM,
+    to: email,
+    subject: subject,
+    text: text,
+    html: html
+  };
+
+  try {
+    transporter.sendMail(mailOptions).catch(err => {
+      console.error("Erreur lors de l'envoi de l'accusé de réception (background):", err);
+    });
+  } catch (error) {
+    console.error("Erreur immédiate lors de l'envoi de l'accusé de réception à", email, ":", error);
+  }
+};
+
 router.post('/contact', upload.single('file'), async (req, res) => {
   try {
     const sanitizedBody = sanitizeInput(req.body);
@@ -152,6 +201,17 @@ router.post('/contact', upload.single('file'), async (req, res) => {
 
     if (!senderEmail) {
       return sendResponse(res, 400, 'ERROR_EMAIL_REQUIRED', lang);
+    }
+
+    // Validation des champs obligatoires (*)
+    if (!firstName || !lastName) {
+      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+    }
+    if (!description) {
+      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+    }
+    if (clientType === 'company' && !company) {
+      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
     }
 
     const isEmailValid = await validateEmail(senderEmail);
@@ -278,6 +338,9 @@ router.post('/contact', upload.single('file'), async (req, res) => {
       console.error("Erreur lors de l'enregistrement en DB (Contact):", dbError);
     }
 
+    // Envoi de l'accusé de réception
+    sendAutoReply(senderEmail, lang);
+
     return sendResponse(res, 200, 'SUCCESS_CONTACT', lang);
   } catch (error) {
     const lang = req.query.lang || req.body.lang || 'fr';
@@ -297,6 +360,32 @@ router.post('/join', upload.none(), async (req, res) => {
 
     if (!email) {
       return sendResponse(res, 400, 'ERROR_EMAIL_REQUIRED', lang);
+    }
+
+    // Validation des champs obligatoires (*) pour le formulaire de recrutement
+    if (!firstName || !lastName) {
+      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+    }
+    if (!message) {
+      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+    }
+    if (!experience) {
+      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+    }
+    if (!languages) {
+      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+    }
+    if (!availability) {
+      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+    }
+    // Compétences clés obligatoires
+    const rawSkills = req.body.skills;
+    const hasSkills = rawSkills && (Array.isArray(rawSkills) ? rawSkills.length > 0 : true);
+    if (!hasSkills) {
+      return sendResponse(res, 400, 'ERROR_SKILLS_REQUIRED', lang);
+    }
+    if (profileType === 'company' && !company) {
+      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
     }
 
     const isEmailValid = await validateEmail(email);
@@ -381,6 +470,9 @@ router.post('/join', upload.none(), async (req, res) => {
     } catch (dbError) {
       console.error("Erreur lors de l'enregistrement en DB (Recrutement):", dbError);
     }
+
+    // Envoi de l'accusé de réception
+    sendAutoReply(email, lang);
 
     return sendResponse(res, 200, 'SUCCESS_JOIN', lang);
   } catch (error) {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Link from "@/components/Link";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -15,8 +15,24 @@ export default function NousRejoindre() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error", message: string } | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
+  const [skillsError, setSkillsError] = useState<string | null>(null);
+  const skillsRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    // Validation manuelle des compétences clés (champ obligatoire avec *)
+    const form = e.currentTarget;
+    const checkedSkills = form.querySelectorAll('input[name="skills"]:checked');
+    if (checkedSkills.length === 0) {
+      e.preventDefault();
+      const msg = lang === 'EN'
+        ? 'Please select at least one key skill.'
+        : 'Veuillez sélectionner au moins une compétence clé.';
+      setSkillsError(msg);
+      skillsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => setSkillsError(null), 4000);
+      return;
+    }
+    setSkillsError(null);
     await handleFormSubmit({
       e,
       endpoint: "/api/forms/join",
@@ -152,7 +168,7 @@ export default function NousRejoindre() {
               <div>
                 <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Profil et Expertise", "Profile and Expertise")}</p>
                 
-                <div className="mt-6">
+                <div className="mt-6" ref={skillsRef}>
                   <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-4 block">
                     {t("Compétences clés", "Key skills")} <span className="text-red-500">*</span>
                   </label>
@@ -189,6 +205,14 @@ export default function NousRejoindre() {
                       </div>
                     )})}
                   </div>
+                  {skillsError && (
+                    <div className="flex items-center gap-2 mt-3">
+                      <svg className="shrink-0 text-red-500 w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                      <p className="text-red-500 text-xs font-bold">{skillsError}</p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">

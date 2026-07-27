@@ -53,6 +53,14 @@ const FeedbackModal = ({ isOpen, mode = 'admin', referenceFeedback = null, onClo
         justifyContent: 'center', zIndex: 2000
       }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+          if (e.target === e.currentTarget) onClose();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label="Fermer la modale"
     >
       <div style={{
         background: '#FFF', borderRadius: '12px', width: '90%', maxWidth: '560px',

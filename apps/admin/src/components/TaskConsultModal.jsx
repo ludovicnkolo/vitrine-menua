@@ -6,8 +6,9 @@ import FilePreviewModal from './FilePreviewModal';
 import FeedbackThread from './FeedbackThread';
 
 const TaskConsultModal = ({ task, onClose, titlePrefix = "Consulter la Tâche:" }) => {
-  if (!task) return null;
   const [previewFile, setPreviewFile] = useState(null);
+  
+  if (!task) return null;
 
   const documents = task.documents || [];
 

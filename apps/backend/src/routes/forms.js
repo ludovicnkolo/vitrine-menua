@@ -17,48 +17,51 @@ const validateEmail = async (email) => {
   const emailRegex = /^\S+@\S+\.\S+$/;
   if (!emailRegex.test(email)) return false;
 
+  const cleanEmail = email ? String(email).replace(/[\r\n]+/g, '') : 'unknown';
+
   try {
     const apiKey = '4e1a695bf32b4eedb38d00db465dcbfa';
-    console.log(`Checking email with Abstract API: ${email}`);
+    console.log({ event: "abstract_api_check", email: cleanEmail });
     const response = await fetch(`https://emailreputation.abstractapi.com/v1/?api_key=${apiKey}&email=${encodeURIComponent(email)}`);
-    console.log(`Abstract API status: ${response.status} ${response.ok}`);
+    console.log({ event: "abstract_api_status", status: response.status, ok: response.ok });
     if (response.ok) {
       const data = await response.json();
-      console.log(`Abstract API data:`, JSON.stringify(data));
+      console.log({ event: "abstract_api_response", deliverability: data.email_deliverability?.status, quality: data.email_quality?.is_disposable, risk: data.email_risk?.address_risk_status });
       if (data.email_deliverability) {
         if (data.email_deliverability.status === "undeliverable") {
-          console.log(`Abstract API rejected email (undeliverable)`);
+          console.log({ event: "abstract_api_rejected", reason: "undeliverable", email: cleanEmail });
           return false;
         }
       }
       if (data.email_quality && data.email_quality.is_disposable) {
-        console.log(`Abstract API rejected email (disposable)`);
+        console.log({ event: "abstract_api_rejected", reason: "disposable", email: cleanEmail });
         return false;
       }
       if (data.email_risk && data.email_risk.address_risk_status === "high") {
-        console.log(`Abstract API rejected email (high risk)`);
+        console.log({ event: "abstract_api_rejected", reason: "high_risk", email: cleanEmail });
         return false;
       }
       return true; // Email passes API validation
     }
-    console.log(`Abstract API failed, falling back to DNS...`);
+    console.log({ event: "abstract_api_failed", fallback: "dns" });
     // Fallback if API errors (rate limit, etc)
     const domain = email.split('@')[1];
     const records = await dns.resolveMx(domain);
     return records && records.length > 0;
   } catch (e) {
-    console.error(`Error in validateEmail, falling back to DNS:`, e);
+    console.error({ event: "validate_email_error", fallback: "dns", error: e.message || e });
     // Fallback if fetch fails (network issue)
     const domain = email.split('@')[1];
     try {
       const records = await dns.resolveMx(domain);
       return records && records.length > 0;
     } catch (err) {
-      console.error(`DNS MX check failed:`, err);
+      console.error({ event: "dns_mx_check_failed", error: err.message || err });
       return false;
     }
   }
 };
+
 const upload = multer({ 
   storage: multer.memoryStorage(),
   limits: { fileSize: Number.parseInt(process.env.UPLOAD_MAX_FILE_SIZE) }
@@ -180,16 +183,19 @@ const sendAutoReply = async (email, lang) => {
   };
 
   try {
-    console.log(`Tentative d'envoi de l'accusé de réception à: ${email} (Langue: ${lang})`);
+    const cleanEmail = email ? String(email).replace(/[\r\n]+/g, '') : 'unknown';
+    const cleanLang = lang ? String(lang).replace(/[\r\n]+/g, '') : 'unknown';
+    
+    console.log({ event: "auto_reply_attempt", email: cleanEmail, lang: cleanLang });
     transporter.sendMail(mailOptions)
       .then(info => {
-        console.log(`Accusé de réception envoyé avec succès à ${email}. Message ID: ${info.messageId}`);
+        console.log({ event: "auto_reply_success", email: cleanEmail, messageId: info.messageId });
       })
       .catch(err => {
-        console.error(`Erreur SMTP lors de l'envoi de l'accusé de réception (background) à ${email}:`, err);
+        console.error({ event: "auto_reply_smtp_error", email: cleanEmail, error: err.message || err });
       });
   } catch (error) {
-    console.error("Erreur immédiate lors de l'envoi de l'accusé de réception à", email, ":", error);
+    console.error({ event: "auto_reply_immediate_error", email: email ? String(email).replace(/[\r\n]+/g, '') : 'unknown', error: error.message || error });
   }
 };
 
@@ -340,7 +346,7 @@ router.post('/contact', upload.single('file'), async (req, res) => {
         }
       });
     } catch (dbError) {
-      console.error("Erreur lors de l'enregistrement en DB (Contact):", dbError);
+      console.error({ event: "db_save_error_contact", error: dbError.message || dbError });
     }
 
     // Envoi de l'accusé de réception
@@ -349,7 +355,7 @@ router.post('/contact', upload.single('file'), async (req, res) => {
     return sendResponse(res, 200, 'SUCCESS_CONTACT', lang);
   } catch (error) {
     const lang = req.query.lang || req.body.lang || 'fr';
-    console.error("Erreur lors de l'envoi de l'email de contact:", error);
+    console.error({ event: "contact_email_error", error: error.message || error });
     return sendResponse(res, 500, 'ERROR_SENDING_EMAIL', lang);
   }
 });
@@ -473,7 +479,7 @@ router.post('/join', upload.none(), async (req, res) => {
         }
       });
     } catch (dbError) {
-      console.error("Erreur lors de l'enregistrement en DB (Recrutement):", dbError);
+      console.error({ event: "db_save_error_join", error: dbError.message || dbError });
     }
 
     // Envoi de l'accusé de réception
@@ -482,7 +488,7 @@ router.post('/join', upload.none(), async (req, res) => {
     return sendResponse(res, 200, 'SUCCESS_JOIN', lang);
   } catch (error) {
     const lang = req.query.lang || req.body.lang || 'fr';
-    console.error("Erreur lors de l'envoi de la candidature:", error);
+    console.error({ event: "join_email_error", error: error.message || error });
     return sendResponse(res, 500, 'ERROR_SENDING_EMAIL', lang);
   }
 });

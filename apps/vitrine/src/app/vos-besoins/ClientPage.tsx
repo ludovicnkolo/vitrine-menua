@@ -10,7 +10,7 @@ import BulletList from "@/components/BulletList";
 const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items, reversed = false, bgClass = "bg-[#f5f7fa]", cardBg = "bg-white" }: any) => (
   <section id={id} className={`relative w-full ${bgClass} pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20`}>
     <div className={`laplace-container max-w-6xl mx-auto flex flex-col${reversed ? "-reverse" : ""} lg:flex-row${reversed ? "-reverse" : ""} items-center gap-12 lg:gap-16`}>
-      <div className={`${reversed ? "" : "hidden lg:block "}w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl`}>
+      <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
         <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
       </div>
       <div className={`w-full lg:w-7/12 ${cardBg} p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]`}>
@@ -23,11 +23,7 @@ const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items,
         <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{items.label}</h4>
         <BulletList items={items.list} />
       </div>
-      {reversed && (
-        <div className="w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
-          <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
-        </div>
-      )}
+
     </div>
   </section>
 );
@@ -298,15 +294,17 @@ export default function VosBesoinsPage() {
         items={{
           label: t("Besoins couverts :", "Needs covered:"),
           list: [
-            t("montage des dossiers d'entrée en relation", "assembly of onboarding files"),
-            t("collecte et contrôle des pièces justificatives", "collection and control of supporting documents"),
-            t("contrôle de complétude des dossiers clients", "check of completeness of client files"),
-            t("mise à jour des informations clients", "updating of client information"),
-            t("support administratif aux souscriptions, arbitrages et rachats", "administrative support for subscriptions, arbitrations and redemptions"),
-            t("suivi des demandes clients", "monitoring of client requests"),
-            t("organisation et archivage documentaire", "documentary organization and archiving"),
-            t("mise à jour des bases clients", "updating of client databases"),
-            t("suivi des opérations patrimoniales dans le respect des procédures internes", "monitoring of wealth operations in compliance with internal procedures"),
+            t("préparation des dossiers d'entrée en relation ;", "preparation of onboarding files;"),
+            t("collecte et contrôle des pièces justificatives ;", "collection and control of supporting documents;"),
+            t("contrôle de complétude des dossiers clients ;", "check of completeness of client files;"),
+            t("mise à jour des informations clients ;", "updating of client information;"),
+            t("support administratif aux souscriptions ;", "administrative support for subscriptions;"),
+            t("préparation administrative des demandes d'arbitrage ;", "administrative preparation of arbitration requests;"),
+            t("préparation administrative des demandes de rachat partiel ou total ;", "administrative preparation of partial or total redemption requests;"),
+            t("suivi des demandes clients ;", "monitoring of client requests;"),
+            t("organisation et archivage documentaire ;", "documentary organization and archiving;"),
+            t("mise à jour des bases clients ;", "updating of client databases;"),
+            t("suivi des opérations patrimoniales dans le respect des procédures internes.", "monitoring of wealth operations in compliance with internal procedures.")
           ]
         }}
         bgClass="bg-white"

@@ -243,12 +243,7 @@ export default function NousContacter() {
                 <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">
                   {t("Décrivez votre besoin", "Describe your need")} <span className="text-red-500">*</span>
                 </label>
-                <p className="text-[0.95rem] text-[#6e7891] font-light mb-4 leading-relaxed">
-                  {t(
-                    "Décrivez votre besoin en détail.",
-                    "Describe your need in detail."
-                  )}
-                </p>
+
                 <textarea name="description" rows={5} placeholder={t("Saisissez ou collez votre descriptif ici...", "Type or paste your description here...")} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf] mb-4"></textarea>
                 
                 <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-2 block">

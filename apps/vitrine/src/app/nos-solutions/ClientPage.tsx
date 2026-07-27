@@ -164,11 +164,11 @@ export default function NosSolutionsPage() {
         )}
         listTitle={t("Exemples de besoins :", "Examples of needs:")}
         listItems={[
-          t("surcharge d’activité ou pic de dossiers", "activity overload or peak of files"),
-          t("remplacement temporaire d’un collaborateur absent", "temporary replacement of an absent employee"),
-          t("renfort ponctuel en période de clôture ou de reporting", "ad hoc reinforcement during closing or reporting periods"),
-          t("traitement accéléré de dossiers en retard ou en attente", "accelerated processing of delayed or pending files"),
-          t("mise à disposition progressive de ressources pour sécuriser une montée en charge", "progressive provision of resources to secure an increase in load")
+          t("surcharge d’activité ou pic de dossiers ;", "activity overload or peak of files;"),
+          t("remplacement temporaire d’un collaborateur absent ;", "temporary replacement of an absent employee;"),
+          t("renfort ponctuel en période de clôture ou de reporting ;", "ad hoc reinforcement during closing or reporting periods;"),
+          t("traitement accéléré de dossiers en retard ou en attente ;", "accelerated processing of delayed or pending files;"),
+          t("mobilisation progressive de ressources pour sécuriser une montée en charge.", "progressive mobilization of resources to secure an increase in load.")
         ]}
       />
 

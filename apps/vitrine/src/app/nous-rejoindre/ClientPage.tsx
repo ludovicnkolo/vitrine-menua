@@ -28,7 +28,7 @@ export default function NousRejoindre() {
   };
 
   return (
-    <main className="flex flex-col w-full min-h-screen">
+    <main className="flex flex-col w-full min-h-screen overflow-x-hidden">
       
       {/* ── 7.1 INTRODUCTION (Full Bleed Hero) ── */}
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
@@ -98,7 +98,7 @@ export default function NousRejoindre() {
 
           {/* Right Column (Form) */}
           <div className="w-full lg:w-[60%] bg-[#e8e1d7] border-t-4 border-t-[#141824] p-10 lg:p-16 shadow-xl">
-            <h3 className="text-[1.4rem] sm:text-[1.6rem] xl:text-[1.8rem] whitespace-nowrap font-semibold text-[#141824] mb-10 uppercase tracking-wide">{t("Formulaire de recrutement", "Recruitment Form")}</h3>
+            <h3 className="text-[1.4rem] sm:text-[1.6rem] xl:text-[1.8rem] font-semibold text-[#141824] mb-10 uppercase tracking-wide break-words">{t("Formulaire de recrutement", "Recruitment Form")}</h3>
             
             <form className="space-y-10" onSubmit={handleSubmit}>
 
@@ -240,7 +240,7 @@ export default function NousRejoindre() {
               </div>
 
               <div>
-                <label htmlFor="message" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Brève description de vos motivations", "Brief description of your motivations")} <span className="text-red-500">*</span></label>
+                <label htmlFor="message" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Vos motivations à intégrer Menua Consulting", "Your motivations to join Menua Consulting")} <span className="text-red-500">*</span></label>
                 <textarea id="message" name="message" rows={5} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors" required></textarea>
               </div>
 

@@ -29,7 +29,9 @@ export default function NousConnaitrePage() {
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
             <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
-              {t("Une organisation opérationnelle structurée pour accompagner les entreprises dans l’exécution fiable de leurs fonctions back et middle office.", "An operational organization structured to support companies in the reliable execution of their back and middle office functions.")}
+              {t("Une organisation opérationnelle structurée pour accompagner les entreprises dans l'exécution fiable de leurs fonctions back ", "A trusted operational partner working closely with businesses to deliver reliable back ")}
+              <span className="font-sans font-medium">&amp;</span>
+              {t(" middle office.", " middle-office support.")}
             </p>
             <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
               <Link href="#notre-approche" className="inline-flex items-center gap-3 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
@@ -354,7 +356,7 @@ export default function NousConnaitrePage() {
           <div className="w-full lg:w-7/12 bg-[#e8e1d7] px-6 py-10 lg:pt-16 lg:pb-16 lg:pl-20 lg:pr-32 flex flex-col justify-center shadow-xl">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
-              {t("Accréditations, certifications et cadre d’intervention", "Accreditations, certifications and intervention framework")}
+              {t("Formations, certifications et expertises", "Training, certifications and expertise")}
             </h2>
             
             {/* Mobile Image */}
@@ -391,15 +393,15 @@ export default function NousConnaitrePage() {
               </div>
               <div className="mt-12 pt-4 border-t border-[#141824]/10">
                 <p className="font-bold text-[#141824] mb-6">{t("La dirigeante dispose notamment :", "The executive notably holds:")}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-[0.95rem] font-semibold text-[#141824]/80">
-                  <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0"></div><span>{t("Certification AMF", "AMF Certification")}</span></div>
-                  <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0"></div><span>{t("Contrôle interne ", "Internal control ")}<span className="font-sans font-medium">&amp;</span>{t(" risques", " risks")}</span></div>
-                  <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0"></div><span>{t("Finance d’entreprise", "Corporate finance")}</span></div>
-                  <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0"></div><span>{t("Back ", "Back ")}<span className="font-sans font-medium">&amp;</span>{t(" middle office", " middle office")}</span></div>
-                  <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0"></div><span>{t("Conformité financière", "Financial compliance")}</span></div>
-                  <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0"></div><span>{t("Gestion des risques", "Risk management")}</span></div>
-                  <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0"></div><span>{t("Analyse financière", "Financial analysis")}</span></div>
-                  <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0"></div><span>{t("KYC / AML / reporting", "KYC / AML / reporting")}</span></div>
+                <div className="space-y-4 text-[0.95rem] text-[#141824]/80">
+                  <div className="flex items-start gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0 mt-[0.45rem]"></div><span className="font-semibold">{t("Certification AMF · Contrôle interne et risques · Finance d'entreprise · Back et middle office", "AMF certification · Internal control and risk · Corporate finance · Back and middle office")}</span></div>
+                  <div className="flex items-start gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0 mt-[0.45rem]"></div><span className="font-semibold">{t("Conformité financière · Gestion des risques · Analyse financière · KYC / AML / reporting", "Financial compliance · Risk management · Financial analysis · KYC / AML / reporting")}</span></div>
+
+
+
+
+
+
                 </div>
               </div>
               

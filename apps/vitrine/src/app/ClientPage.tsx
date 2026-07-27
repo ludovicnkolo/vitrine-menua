@@ -79,8 +79,8 @@ export default function Home() {
               <div className="leading-relaxed text-[#141824] text-[1.1rem] md:text-[1.2rem] font-light mb-8 space-y-6">
                 <h2 className="font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
                   {t(
-                    "MENUA CONSULTING",
-                    "MENUA CONSULTING"
+                    "Externalisation back et middle office",
+                    "Back and middle-office outsourcing"
                   )}
                 </h2>
 
@@ -140,15 +140,15 @@ export default function Home() {
                </div>
                <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
                   <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Exécution", "Execution")}</h3>
-                  <p className="text-white/80 font-light text-[1.05rem]">100% Opérationnelle</p>
+                  <p className="text-white/80 font-light text-[1.05rem]">Approche 100 % opérationnelle</p>
                </div>
                <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
                   <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Fiabilité", "Reliability")}</h3>
-                  <p className="text-white/80 font-light text-[1.05rem]">Continuité de service</p>
+                  <p className="text-white/80 font-light text-[1.05rem]">Continuité et qualité de service</p>
                </div>
                <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
                   <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Bilingue", "Bilingual")}</h3>
-                  <p className="text-white/80 font-light text-[1.05rem]">Français / Anglais</p>
+                  <p className="text-white/80 font-light text-[1.05rem]">Français et anglais</p>
                 </div>
             </div>
             
@@ -251,7 +251,7 @@ export default function Home() {
           <div className="w-full md:w-5/12 md:-translate-y-16">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
-              {t("Nos solutions d'externalisation", "Our outsourcing solutions")}
+              {t("Nos solutions", "Our solutions")}
             </h2>
             <p className="text-[#141824] text-[1.1rem] font-light leading-relaxed mb-8">
               {t(

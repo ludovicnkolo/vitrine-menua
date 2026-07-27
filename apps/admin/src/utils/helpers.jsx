@@ -3,6 +3,11 @@ import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
 // --- HELPERS (Badges) ---
 function getStatusBadge(status) {
   const map = {
+    'EN_ATTENTE': { text: 'En attente', class: 'badge-new' },
+    'EN_COURS': { text: 'En cours', class: 'badge-progress' },
+    'EN_FINALISATION': { text: 'En finalisation', class: 'badge-warning' },
+    'EN_CONTROLE': { text: 'En contrôle', class: 'badge-warning' },
+    'TERMINEE': { text: 'Terminée', class: 'badge-success' },
     'NOUVEAU': { text: 'Nouveau', class: 'badge-new' },
     'TO_ASSIGN': { text: 'À attribuer', class: 'badge-warning' },
     'IN_PROGRESS': { text: 'En cours', class: 'badge-progress' },

@@ -149,6 +149,7 @@ model Dossier {
   name        String 
   description String?
   status      String @default("NOUVEAU")
+  previousStatus String?
   priority    String @default("NORMAL")
 
   clientId String?
@@ -183,6 +184,7 @@ model Mission {
   description String
   echeance    DateTime?
   status      String    @default("TO_ASSIGN")
+  previousStatus String?
   attachment  String?
 
   createdAt DateTime @default(now())
@@ -213,6 +215,7 @@ model Tache {
   description String
   echeance    DateTime?
   status      String    @default("TO_ASSIGN")
+  previousStatus String?
   attachment  String?
 
   createdAt DateTime @default(now())

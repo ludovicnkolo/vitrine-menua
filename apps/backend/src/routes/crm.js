@@ -512,9 +512,17 @@ router.post('/tasks', async (req, res) => {
 router.patch('/tasks/:id', async (req, res) => {
   try {
     const { status, assignedToId, description, attachment } = req.body;
-    const dataToUpdate = { status, assignedToId };
+    const dataToUpdate = { assignedToId };
     if (description !== undefined) dataToUpdate.description = description;
     if (attachment !== undefined) dataToUpdate.attachment = attachment;
+    
+    if (status !== undefined) {
+      const currentTask = await prisma.mission.findUnique({ where: { id: req.params.id } });
+      if (currentTask && currentTask.status !== status) {
+        dataToUpdate.status = status;
+        dataToUpdate.previousStatus = currentTask.status;
+      }
+    }
     
     const task = await prisma.mission.update({
       where: { id: req.params.id },
@@ -602,9 +610,17 @@ router.post('/taches', async (req, res) => {
 
 router.patch('/taches/:id', async (req, res) => {
   try {
+    const dataToUpdate = { ...req.body };
+    if (dataToUpdate.status !== undefined) {
+      const currentTache = await prisma.tache.findUnique({ where: { id: req.params.id } });
+      if (currentTache && currentTache.status !== dataToUpdate.status) {
+        dataToUpdate.previousStatus = currentTache.status;
+      }
+    }
+
     const tache = await prisma.tache.update({
       where: { id: req.params.id },
-      data: req.body
+      data: dataToUpdate
     });
     res.json(tache);
   } catch (error) {
@@ -787,20 +803,26 @@ router.delete('/messages/:id', async (req, res) => {
 router.patch('/messages/:id/status', async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status, dossierId } = req.body;
+    
+    const dataToUpdate = { status };
+    if (dossierId !== undefined) {
+      dataToUpdate.dossierId = dossierId;
+    }
+
     const form = await prisma.formulaire.findUnique({ where: { id } });
     if (form) {
-      await prisma.formulaire.update({ where: { id }, data: { status } });
+      await prisma.formulaire.update({ where: { id }, data: dataToUpdate });
       return res.json({ success: true, message: 'Statut mis à jour' });
     }
     const msg = await prisma.messagePersonnel.findUnique({ where: { id } });
     if (msg) {
-      await prisma.messagePersonnel.update({ where: { id }, data: { status } });
+      await prisma.messagePersonnel.update({ where: { id }, data: dataToUpdate });
       return res.json({ success: true, message: 'Statut mis à jour' });
     }
     res.status(404).json({ error: 'Message non trouvé' });
   } catch (error) {
-    console.error(error); res.status(500).json({ error: 'Erreur lors de la mise à jour' });
+    res.status(500).json({ error: 'Erreur lors de la mise à jour' });
   }
 });
 

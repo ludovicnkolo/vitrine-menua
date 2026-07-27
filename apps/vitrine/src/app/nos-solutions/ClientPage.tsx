@@ -6,6 +6,7 @@ import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight } from "lucide-react";
 
 import { ChevronRight } from "lucide-react";
+import BulletList from "@/components/BulletList";
 
 const SolutionSection = ({ id, title, intro, desc, isReversed, listTitle, listItems, bgClass, topDecoClass, titleDecoClass, borderClass, zIndexClass = "z-10" }: any) => {
   return (
@@ -29,14 +30,12 @@ const SolutionSection = ({ id, title, intro, desc, isReversed, listTitle, listIt
             <h4 className="text-center text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
               {listTitle}
             </h4>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-[#6e7891] font-medium text-[0.95rem]">
-              {listItems.map((item: any) => (
-                <li key={item} className="flex items-start gap-4">
-                  <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
-                  <span className="leading-relaxed">{item}</span>
-                </li>
-              ))}
-            </ul>
+            <BulletList 
+              gridCols="grid-cols-1 md:grid-cols-2"
+              gapX="gap-x-8" gapY="gap-y-6"
+              fontWeight="font-medium"
+              items={listItems}
+            />
           </div>
         </div>
       </div>

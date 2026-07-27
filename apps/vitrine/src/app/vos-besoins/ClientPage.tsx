@@ -4,6 +4,7 @@ import Link from "@/components/Link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight, ChevronRight } from "lucide-react";
+import BulletList from "@/components/BulletList";
 
 /** Section claire : image à gauche ou droite + card de liste */
 const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items, reversed = false, bgClass = "bg-[#f5f7fa]", cardBg = "bg-white" }: any) => (
@@ -20,14 +21,7 @@ const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items,
         </div>
         <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">{intro}</p>
         <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{items.label}</h4>
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-[#6e7891] font-light text-[0.95rem]">
-          {items.list.map((item: string) => (
-            <li key={item} className="flex items-start gap-3">
-              <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
+        <BulletList items={items.list} />
       </div>
       {reversed && (
         <div className="w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
@@ -60,14 +54,12 @@ const DarkNeedSection = ({ id, bgClass, topDecoClass, titleDecoClass, title, int
       <div className="w-full lg:w-7/12 relative">
         <div className={`relative bg-white p-10 lg:p-14 shadow-2xl border ${borderClass}`}>
           <h4 className="text-center text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">{listLabel}</h4>
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-[#6e7891] font-medium text-[0.95rem]">
-            {listItems.map((item: string) => (
-              <li key={item} className="flex items-start gap-4">
-                <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
-                <span className="leading-relaxed">{item}</span>
-              </li>
-            ))}
-          </ul>
+          <BulletList 
+            gridCols="grid-cols-1 md:grid-cols-2" 
+            gapX="gap-x-8" gapY="gap-y-6" 
+            fontWeight="font-medium"
+            items={listItems} 
+          />
         </div>
       </div>
     </div>

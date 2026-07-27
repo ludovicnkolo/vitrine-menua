@@ -19,11 +19,21 @@ const DossiersPage = () => {
   const [filterRole, setFilterRole] = useState('all');
   const [filterOrigine, setFilterOrigine] = useState('all');
   const [showSmsModal, setShowSmsModal] = useState(false);
+  
+  // Mission Creation State
+  const [createMissionModal, setCreateMissionModal] = useState(false);
+  const [missionSubject, setMissionSubject] = useState('');
+  const [missionAssignedTo, setMissionAssignedTo] = useState('');
+  const [missionEcheance, setMissionEcheance] = useState('');
+  const [missionDescription, setMissionDescription] = useState('');
+  const [isSubmittingMission, setIsSubmittingMission] = useState(false);
+  
   const menuRef = useRef(null);
 
   // States for real API data
   const [dbDossiers, setDbDossiers] = useState([]);
   const [dbTasks, setDbTasks] = useState([]);
+  const [dbUsers, setDbUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -47,11 +57,13 @@ const DossiersPage = () => {
 
     Promise.all([
       fetch(urlDossiers.toString(), { headers }).then(res => res.json()).catch(() => ({ data: [], totalPages: 1 })),
-      fetch(urlTasks.toString(), { headers }).then(res => res.json()).catch(() => ({ data: [] }))
-    ]).then(([dossiersRes, tasksRes]) => {
+      fetch(urlTasks.toString(), { headers }).then(res => res.json()).catch(() => ({ data: [] })),
+      fetch(getSafeApiUrl('/api/crm/users'), { headers }).then(res => res.json()).catch(() => ([]))
+    ]).then(([dossiersRes, tasksRes, usersRes]) => {
       setDbDossiers(dossiersRes?.data || (Array.isArray(dossiersRes) ? dossiersRes : []));
       setTotalPages(dossiersRes?.totalPages || 1);
       setDbTasks(tasksRes?.data || (Array.isArray(tasksRes) ? tasksRes : []));
+      setDbUsers(Array.isArray(usersRes) ? usersRes : []);
       setIsLoading(false);
     });
   };
@@ -61,8 +73,52 @@ const DossiersPage = () => {
   }, [searchQuery, filterStatus, filterRole, filterOrigine]);
 
   useEffect(() => {
+    setPage(1);
     fetchDossiers();
-  }, [page, filterStatus, filterRole, filterOrigine, searchQuery]);
+  }, [filterStatus, filterRole, filterOrigine, searchQuery]);
+
+  const handleCreateMission = async () => {
+    if (!missionSubject || !missionAssignedTo || !missionEcheance) {
+      alert("Veuillez remplir l'objet, le destinataire et l'échéance.");
+      return;
+    }
+    
+    setIsSubmittingMission(true);
+    const token = localStorage.getItem('adminToken');
+    
+    try {
+      const res = await fetch(getSafeApiUrl('/api/crm/tasks'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          description: `${missionSubject}\n\n${missionDescription}`,
+          assignedToId: missionAssignedTo,
+          dossierId: consultDossier.id,
+          echeance: missionEcheance,
+        })
+      });
+      
+      if (res.ok) {
+        alert("Mission créée avec succès !");
+        setCreateMissionModal(false);
+        setMissionSubject('');
+        setMissionDescription('');
+        setMissionAssignedTo('');
+        setMissionEcheance('');
+        fetchDossiers();
+      } else {
+        alert("Erreur lors de la création de la mission.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Erreur réseau");
+    } finally {
+      setIsSubmittingMission(false);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -166,12 +222,56 @@ const DossiersPage = () => {
         {renderDossierFields(consultDossier, false)}
         {renderAssociatedTasks(associatedTasks, false)}
 
-        <div style={{marginTop: '1.5rem', display: 'flex', justifyContent: 'center'}}>
+        <div style={{marginTop: '1.5rem', display: 'flex', justifyContent: 'center', gap: '1rem'}}>
+          <button type="button" onClick={() => setCreateMissionModal(true)} className="btn btn-primary" style={{display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.75rem 1.5rem'}}>
+            Créer une mission
+          </button>
           <button type="button" onClick={() => setShowSmsModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)', display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.75rem 1.5rem'}}>
             <MessageSquare size={16} />
             SMS Collaborateur
           </button>
         </div>
+
+        {createMissionModal && (
+          <div className="fade-in" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
+            <div style={{background: '#FFF', padding: '2rem', borderRadius: '8px', width: '90%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
+              <h3 style={{marginTop: 0, marginBottom: '1.5rem', fontSize: '1.25rem', fontWeight: 600}}>Nouvelle Mission</h3>
+              
+              <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet de la mission</label>
+                  <input type="text" value={missionSubject} onChange={(e) => setMissionSubject(e.target.value)} placeholder="Sujet..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+                </div>
+                
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigner à</label>
+                    <select value={missionAssignedTo} onChange={(e) => setMissionAssignedTo(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                      <option value="">Sélectionner...</option>
+                      {dbUsers.map(u => (
+                        <option key={u.id} value={u.id}>{u.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance</label>
+                    <input type="date" value={missionEcheance} onChange={(e) => setMissionEcheance(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}} />
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
+                  <textarea value={missionDescription} onChange={(e) => setMissionDescription(e.target.value)} placeholder="Détails de la mission..." style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+                </div>
+              </div>
+              
+              <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
+                <button type="button" onClick={() => setCreateMissionModal(false)} className="btn btn-outline" disabled={isSubmittingMission}>Annuler</button>
+                <button type="button" onClick={handleCreateMission} disabled={isSubmittingMission} className="btn btn-primary">{isSubmittingMission ? 'Création...' : 'Créer la mission'}</button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <SmsModal 
           isOpen={showSmsModal} 

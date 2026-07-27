@@ -7,6 +7,7 @@ import TabsNavigation from '../components/TabsNavigation';
 import ActionDropdown from '../components/ActionDropdown';
 import PaginationControls from '../components/PaginationControls';
 import FilePreviewModal from '../components/FilePreviewModal';
+import AttachmentSelect from '../components/AttachmentSelect';
 
 const DetailField = ({ label, value, children }) => (
   <div>
@@ -156,7 +157,7 @@ const InboxPage = () => {
           
           const newDossierPayload = { 
             name: taskNewDossierName, 
-            description: 'Créé depuis la messagerie', 
+            description: `Créé depuis la messagerie : ${processMsg.nomPrenom || 'Contact'}`, 
             origin: tab.toUpperCase() 
           };
           if (taskDossierSection === 'client') {
@@ -181,43 +182,10 @@ const InboxPage = () => {
           }
           finalDossierId = taskDossierId;
         }
-      }
 
-      if (tab !== 'interne') {
-        if (!taskEcheance) {
-          showToast("Veuillez définir une échéance pour la mission.", "error");
-          setIsSubmitting(false);
-          return;
-        }
+        // Lier le message au dossier et marquer comme traité
+        await apiFetch(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`, 'PATCH', { dossierId: finalDossierId, status: 'TRAITE' });
 
-        let attachmentsArray = [];
-        if (includeAttachedFile) {
-          if (processMsg?.attachment) attachmentsArray.push(...String(processMsg.attachment).split(',').map(f => f.trim()));
-          if (processMsg?.cv) attachmentsArray.push(processMsg.cv);
-          if (processMsg?.contact?.pieceJointe) attachmentsArray.push(processMsg.contact.pieceJointe);
-        }
-        
-        if (newTaskFile) {
-          const uploadedName = await uploadFile(newTaskFile);
-          if (uploadedName) attachmentsArray.push(uploadedName);
-        }
-        
-        const finalAttachment = attachmentsArray.filter(Boolean).join(',') || null;
-
-        const taskRes = await apiFetch(`/api/crm/tasks`, 'POST', {
-            description: `${taskSubject}\n\n${taskDescription}`,
-            assignedToId: taskAssignedToId || null,
-            dossierId: finalDossierId,
-            echeance: taskEcheance,
-            attachment: finalAttachment,
-            messageId: processMsg.id
-        });
-
-        if (!taskRes.ok) {
-          showToast("Erreur lors de la création de la mission.", "error");
-          setIsSubmitting(false);
-          return;
-        }
       } else {
         // Interne reply
         let attachmentsArray = [];
@@ -247,7 +215,7 @@ const InboxPage = () => {
       }
 
       fetchMessages();
-      showToast(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Mission créée et assignée avec succès !', 'success');
+      showToast(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Dossier créé et message traité avec succès !', 'success');
       setCreateTaskModal(false);
       setTaskNewDossierName('');
       setTaskDossierSection('');
@@ -557,21 +525,10 @@ const InboxPage = () => {
                   <div className="card" style={{padding: '1.25rem', flex: 1}}>
                     <span style={{display: 'block', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Fichiers joints</span>
                     <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', display: 'flex', gap: '1rem', alignItems: 'center'}}>
-                      {(processMsg.cv || processMsg.attachment || processMsg.contact?.pieceJointe) ? (
-                        <select 
-                          onChange={(e) => { if(e.target.value) setPreviewFile(e.target.value); e.target.selectedIndex = 0; }}
-                          style={{padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', width: '100%', background: '#FFF', cursor: 'pointer'}}
-                        >
-                          <option value="">-- Sélectionner un fichier pour l'ouvrir --</option>
-                          {processMsg.cv && <option value={processMsg.cv}>{processMsg.cv}</option>}
-                          {processMsg.contact?.pieceJointe && <option value={processMsg.contact.pieceJointe}>{processMsg.contact.pieceJointe}</option>}
-                          {processMsg.attachment && String(processMsg.attachment).split(',').map(f => f.trim()).filter(f => f).map(f => (
-                             <option key={f} value={f}>{f}</option>
-                          ))}
-                        </select>
-                      ) : (
-                        <span style={{color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.25rem'}}>Aucun fichier</span>
-                      )}
+                      <AttachmentSelect 
+                        files={[processMsg.cv, processMsg.attachment, processMsg.contact?.pieceJointe]} 
+                        onPreview={setPreviewFile} 
+                      />
                     </div>
                   </div>
                 )}
@@ -606,7 +563,7 @@ const InboxPage = () => {
               {tab === 'interne' ? (
                 <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Répondre</button>
               ) : (
-                <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une mission</button>
+                <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer un Dossier</button>
               )}
               <button type="button" onClick={handleMarkAsProcessed} className="btn btn-primary">Marquer comme traité</button>
             </div>
@@ -624,34 +581,18 @@ const InboxPage = () => {
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-              <div>
-                <label htmlFor="task-subject" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{tab === 'interne' ? 'Objet de la réponse' : 'Objet'}</label>
-                <input id="task-subject" type="text" value={taskSubject} onChange={(e) => setTaskSubject(e.target.value)} placeholder={tab === 'interne' ? "Sujet..." : "Sujet de la mission..."} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
-              </div>
-
-              <div>
-                <label htmlFor="task-assigned-to" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{tab === 'interne' ? 'Destinataire' : 'Assigner à'}</label>
-                <div style={{display: 'grid', gridTemplateColumns: tab === 'interne' ? '1fr' : '1fr 1fr', gap: '1rem'}}>
-                  <select id="task-assigned-to" value={taskAssignedToId} onChange={(e) => setTaskAssignedToId(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
-                    <option value="">Sélectionner un collaborateur...</option>
-                    {users.map(u => (
-                      <option key={u.id} value={u.id}>{u.name} ({u.role?.name || u.role || 'SANS ROLE'})</option>
-                    ))}
-                  </select>
-                  {tab !== 'interne' && (
-                    <div>
-                      <input 
-                        type="date" 
-                        value={taskEcheance} 
-                        onChange={(e) => setTaskEcheance(e.target.value)} 
-                        className="input-field" 
-                        style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}} 
-                        title="Échéance de la mission"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
+              {tab === 'interne' && (
+                <>
+                  <div>
+                    <label htmlFor="task-subject" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet de la réponse</label>
+                    <input id="task-subject" type="text" value={taskSubject} onChange={(e) => setTaskSubject(e.target.value)} placeholder="Sujet..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+                  </div>
+                  <div>
+                    <label htmlFor="task-message" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message</label>
+                    <textarea id="task-message" value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)} placeholder="Votre réponse..." style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+                  </div>
+                </>
+              )}
 
               {tab !== 'interne' && (
                 <div>
@@ -697,37 +638,28 @@ const InboxPage = () => {
                 </div>
               )}
 
-              <div>
-                <span style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</span>
-                <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
-                  {(processMsg?.cv || processMsg?.attachment || processMsg?.contact?.pieceJointe) && (
-                    <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginBottom: '1rem'}}>
-                      <input type="checkbox" checked={includeAttachedFile} onChange={(e) => setIncludeAttachedFile(e.target.checked)} />
-                      <span style={{fontSize: '0.875rem', color: 'var(--text-main)'}}>{`Inclure les fichiers liés au message (${[processMsg.cv, processMsg.attachment, processMsg.contact?.pieceJointe].filter(Boolean).join(', ')})`}</span>
+              {tab === 'interne' && (
+                <div>
+                  <span style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</span>
+                  <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+                    <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'var(--primary)', marginBottom: 0}}>
+                      <Files size={16} />
+                      <span style={{fontSize: '0.875rem', fontWeight: 500}}>
+                        {newTaskFile ? newTaskFile.name : 'Joindre un fichier...'}
+                      </span>
+                      <input 
+                        type="file" 
+                        style={{display: 'none'}} 
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            setNewTaskFile(e.target.files[0]);
+                          }
+                        }} 
+                      />
                     </label>
-                  )}
-                  <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'var(--primary)', marginBottom: 0}}>
-                    <Files size={16} />
-                    <span style={{fontSize: '0.875rem', fontWeight: 500}}>
-                      {newTaskFile ? newTaskFile.name : 'Joindre un autre fichier...'}
-                    </span>
-                    <input 
-                      type="file" 
-                      style={{display: 'none'}} 
-                      onChange={(e) => {
-                        if (e.target.files && e.target.files.length > 0) {
-                          setNewTaskFile(e.target.files[0]);
-                        }
-                      }} 
-                    />
-                  </label>
+                  </div>
                 </div>
-              </div>
-
-              <div>
-                <label htmlFor="task-message" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{tab === 'interne' ? 'Message' : 'Message / Consignes'}</label>
-                <textarea id="task-message" value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)} placeholder={tab === 'interne' ? "Votre réponse..." : "Détails de la mission à effectuer..."} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
-              </div>
+              )}
             </div>
 
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem'}}>
@@ -736,7 +668,7 @@ const InboxPage = () => {
                 {(() => {
                   if (isSubmitting) return 'Traitement...';
                   if (tab === 'interne') return 'Envoyer';
-                  return 'Créer la mission';
+                  return 'Créer le Dossier';
                 })()}
               </button>
             </div>

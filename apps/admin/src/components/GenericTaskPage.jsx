@@ -5,6 +5,8 @@ import ActionDropdown from '../components/ActionDropdown';
 import FilePreviewModal from '../components/FilePreviewModal';
 import SmsModal from '../components/SmsModal';
 import TaskConsultModal from '../components/TaskConsultModal';
+import AttachmentChips from '../components/AttachmentChips';
+import AttachmentSelect from '../components/AttachmentSelect';
 
 const getSubjectFromTask = (desc) => {
   if (!desc) return 'Sans objet';
@@ -48,22 +50,31 @@ const TaskField = ({ label, value, readOnly = true, onChange = null, isTextarea 
 };
 
 
-const TaskDropdown = ({ taskId, openMenuId, setOpenMenuId, menuRef, tasks, setConsultTask, setEditTask, setEditFormData, fetchData }) => {
+const TaskDropdown = ({ taskId, openMenuId, setOpenMenuId, menuRef, tasks, setConsultTask, setEditTask, setEditFormData, fetchData, currentUser }) => {
+  const task = tasks.find(t => t.id === taskId);
+  const role = currentUser?.role?.name || currentUser?.role || '';
+  const isSuperAdmin = role === 'Super-administrateur' || role === 'Administrateur';
+  const isResp = role === 'Responsable opérationnel' || isSuperAdmin;
+  const isController = role === 'Relecteur' || isResp;
+  
+  const isLockedForCollab = (task?.status === 'EN_FINALISATION' || task?.status === 'EN_CONTROLE' || task?.status === 'TERMINEE') && !isController;
+  
   return (
     <ActionDropdown isOpen={openMenuId === taskId} menuRef={menuRef} width="130px">
-      <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setConsultTask(tasks.find(t => t.id === taskId)); }}>
+      <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setConsultTask(task); }}>
         <Eye size={14} /> Consulter
       </button>
-      <button type="button" className="dropdown-item" onClick={() => { 
-        setOpenMenuId(null); 
-        const task = tasks.find(t => t.id === taskId);
-        setEditTask(task);
-        const subj = getSubjectFromTask(task.description);
-        const msg = getMessageFromTask(task.description);
-        setEditFormData({ subject: subj, message: msg, status: task.status, attachment: task.attachment || '' });
-      }}>
-        <Pencil size={14} color="#D97706" /> Modifier
-      </button>
+      {!isLockedForCollab && (
+        <button type="button" className="dropdown-item" onClick={() => { 
+          setOpenMenuId(null); 
+          setEditTask(task);
+          const subj = getSubjectFromTask(task.description);
+          const msg = getMessageFromTask(task.description);
+          setEditFormData({ subject: subj, message: msg, status: task.status, attachment: task.attachment || '' });
+        }}>
+          <Pencil size={14} color="#D97706" /> Modifier
+        </button>
+      )}
       <button type="button" className="dropdown-item" onClick={async () => { 
         setOpenMenuId(null); 
         if(window.confirm("Supprimer cette mission ?")) {
@@ -93,7 +104,15 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [showSmsModal, setShowSmsModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const menuRef = useRef(null);
+
+  useEffect(() => {
+    try {
+      const userStr = localStorage.getItem('adminUser');
+      if (userStr) setCurrentUser(JSON.parse(userStr));
+    } catch(e) { console.error(e); }
+  }, []);
 
   // Real API  states
   const [tasks, setTasks] = useState([]);
@@ -144,7 +163,9 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       }
 
       setUsers(Array.isArray(dataUsers) ? dataUsers : []);
-    } catch(e) {} finally {
+    } catch(e) {
+      console.error("Erreur de chargement:", e);
+    } finally {
       setLoading(false);
     }
   };
@@ -189,6 +210,35 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       }
     } catch (err) {
       console.error("Erreur mise à jour mission:", err);
+      setErrorMsg("Erreur de connexion.");
+    }
+  };
+
+  const handleWorkflowAction = async (taskId, newStatus) => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const res = await fetch(new URL(getSafeApiUrl(mode === "MISSION" ? `/api/crm/tasks/${encodeURIComponent(taskId)}` : `/api/crm/taches/${encodeURIComponent(taskId)}`)).toString(), {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (res.ok) {
+        fetchData();
+        if (consultTask && consultTask.id === taskId) {
+          setConsultTask({...consultTask, status: newStatus});
+        }
+        if (editTask && editTask.id === taskId) {
+          setEditTask({...editTask, status: newStatus});
+        }
+        setErrorMsg(`Statut passé à ${newStatus}`);
+      } else {
+        setErrorMsg("Erreur lors de la mise à jour du statut.");
+      }
+    } catch (err) {
+      console.error("Erreur action workflow:", err);
       setErrorMsg("Erreur de connexion.");
     }
   };
@@ -245,6 +295,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         setErrorMsg("Erreur lors de la création de la tâche.");
       }
     } catch (e) {
+      console.error("Erreur de connexion:", e);
       setErrorMsg("Erreur de connexion au serveur.");
     } finally {
       setIsSubmitting(false);
@@ -360,19 +411,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           <div>
             <label htmlFor="task-attachment" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
             <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-              {editFormData.attachment && editFormData.attachment.trim() && (
-                <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.75rem'}}>
-                  {editFormData.attachment.split(',').map((att) => att.trim() && (
-                    <div key={att.trim()} style={{display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#FFF', padding: '0.35rem 0.75rem', borderRadius: '4px', border: '1px solid var(--border)', maxWidth: '300px'}}>
-                      <span style={{fontSize: '0.875rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>{att.trim()}</span>
-                      <button type="button" onClick={() => {
-                        const newAtts = editFormData.attachment.split(',').map(a => a.trim()).filter(a => a !== att.trim()).join(',');
-                        setEditFormData({...editFormData, attachment: newAtts});
-                      }} style={{background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '0.25rem', display: 'flex'}} title="Supprimer la pièce jointe"><Trash size={16}/></button>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <AttachmentChips 
+                attachment={editFormData.attachment} 
+                onRemove={(attToRemove) => {
+                  const newAtts = editFormData.attachment.split(',').map(a => a.trim()).filter(a => a !== attToRemove).join(',');
+                  setEditFormData({...editFormData, attachment: newAtts});
+                }} 
+              />
               <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
                 <input id="task-attachment" type="file" onChange={(e) => setTaskFile(e.target.files?.[0])} className="input-field" style={{flex: 1, padding: '0.5rem', fontSize: '0.875rem'}} />
                 {taskFile && <span style={{fontSize: '0.875rem', color: 'var(--primary)'}}>Nouveau fichier à ajouter</span>}
@@ -384,18 +429,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
           <div style={{display: 'flex', alignItems: 'center', gap: '2rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', width: 'fit-content'}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-              <label htmlFor="task-status" style={{fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-main)'}}>{mode === 'MISSION' ? 'Statut de la mission :' : 'Statut de la tâche :'}</label>
+              <span style={{fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-main)'}}>{mode === 'MISSION' ? 'Statut de la mission :' : 'Statut de la tâche :'}</span>
               {getStatusBadge(editTask.status)}
             </div>
-            <select id="task-status" className="input-field" value={editFormData.status} onChange={(e) => setEditFormData({...editFormData, status: e.target.value})} style={{width: '150px', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', fontSize: '0.875rem'}}>
-              <option value="REDEFINIR">Redéfinir...</option>
-              <option value="NOUVEAU">Nouveau</option>
-              <option value="IN_PROGRESS">En cours</option>
-              <option value="WAITING_DOCS">Attente Docs</option>
-              <option value="IN_REVIEW">En révision</option>
-              <option value="VALIDATED">Validé</option>
-              <option value="TO_ASSIGN">À attribuer</option>
-            </select>
+            {/* Le statut est désormais géré via les boutons d'action du workflow */}
           </div>
 
           <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
@@ -464,21 +501,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           <div>
             <label htmlFor="consult-task-attachment" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
             <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
-              {consultTask.attachment ? (
-                <select id="consult-task-attachment" className="input-field" style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} onChange={(e) => {
-                  if (e.target.value) {
-                    setPreviewFile(e.target.value);
-                    e.target.selectedIndex = 0;
-                  }
-                }}>
-                  <option value="">-- Sélectionner un fichier pour l'ouvrir --</option>
-                  {consultTask.attachment.split(',').map((att, idx) => (
-                    <option key={att.trim()} value={att.trim()}>{att.trim()}</option>
-                  ))}
-                </select>
-              ) : (
-                <span style={{fontSize: '0.875rem', color: 'var(--text-muted)'}}>Aucune pièce jointe lors de la création.</span>
-              )}
+              <AttachmentSelect files={[consultTask.attachment]} onPreview={setPreviewFile} />
             </div>
           </div>
 
@@ -489,15 +512,34 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               <span style={{fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-main)'}}>{mode === 'MISSION' ? 'Statut de la mission :' : 'Statut de la tâche :'}</span>
               {getStatusBadge(consultTask.status)}
             </div>
-            <select className="input-field" defaultValue="REDEFINIR" style={{width: '150px', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', fontSize: '0.875rem'}}>
-              <option value="REDEFINIR">Redéfinir...</option>
-              <option value="NOUVEAU">Nouveau</option>
-              <option value="IN_PROGRESS">En cours</option>
-              <option value="WAITING_DOCS">Attente Docs</option>
-              <option value="IN_REVIEW">En révision</option>
-              <option value="VALIDATED">Validé</option>
-              <option value="TO_ASSIGN">À attribuer</option>
-            </select>
+            
+            {(() => {
+              const role = currentUser?.role?.name || currentUser?.role || '';
+              const isSuperAdmin = role === 'Super-administrateur' || role === 'Administrateur';
+              const isResp = role === 'Responsable opérationnel' || isSuperAdmin;
+              const isController = role === 'Relecteur' || isResp;
+              const status = consultTask.status;
+
+              return (
+                <div style={{display: 'flex', gap: '0.5rem'}}>
+                  {(status === 'EN_ATTENTE' || status === 'NOUVEAU' || status === 'TO_ASSIGN') && (
+                    <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-primary" style={{padding: '0.5rem 1rem'}}>Débuter</button>
+                  )}
+                  {(status === 'EN_COURS' || status === 'IN_PROGRESS') && (
+                    <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_FINALISATION')} className="btn btn-outline" style={{borderColor: 'var(--warning)', color: 'var(--warning)', padding: '0.5rem 1rem'}}>Finaliser</button>
+                  )}
+                  {(status === 'EN_FINALISATION') && isController && (
+                    <>
+                      <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_CONTROLE')} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)', padding: '0.5rem 1rem'}}>Contrôler</button>
+                      <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-outline" style={{borderColor: 'var(--danger)', color: 'var(--danger)', padding: '0.5rem 1rem'}}>Rejeter / Réattribuer</button>
+                    </>
+                  )}
+                  {(status === 'EN_CONTROLE' || status === 'EN_FINALISATION') && isResp && (
+                    <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'TERMINEE')} className="btn btn-primary" style={{backgroundColor: 'var(--success)', borderColor: 'var(--success)', padding: '0.5rem 1rem'}}>Terminer</button>
+                  )}
+                </div>
+              );
+            })()}
           </div>
 
           <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
@@ -646,7 +688,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                       <button type="button" onClick={(e) => toggleMenu(e, t.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
                         <MoreVertical size={16} />
                       </button>
-                      <TaskDropdown taskId={t.id} openMenuId={openMenuId} setOpenMenuId={setOpenMenuId} menuRef={menuRef} tasks={tasks} setConsultTask={setConsultTask} setEditTask={setEditTask} setEditFormData={setEditFormData} fetchData={fetchData} />
+                      <TaskDropdown taskId={t.id} openMenuId={openMenuId} setOpenMenuId={setOpenMenuId} menuRef={menuRef} tasks={tasks} setConsultTask={setConsultTask} setEditTask={setEditTask} setEditFormData={setEditFormData} fetchData={fetchData} currentUser={currentUser} />
                     </div>
                   </div>
                 </td>

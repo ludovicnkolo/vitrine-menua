@@ -4,6 +4,7 @@ import Link from "@/components/Link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight } from "lucide-react";
+import BulletList from "@/components/BulletList";
 
 export default function PourquoiMenuaPage() {
   const { t } = useLanguage();
@@ -130,22 +131,18 @@ export default function PourquoiMenuaPage() {
               )}
             </p>
             <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Bénéfices clés :", "Key benefits:")}</h4>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-[#6e7891] font-light text-[0.95rem]">
-              {[
-                t("gain de temps", "time saving"),
-                t("réduction des charges internes", "reduction of internal costs"),
-                t("productivité renforcée", "enhanced productivity"),
-                t("meilleure continuité opérationnelle", "better operational continuity"),
-                t("fiabilité accrue des traitements", "increased processing reliability"),
-                t("meilleure absorption des pics d’activité", "better absorption of activity peaks"),
-                t("suivi plus structuré des dossiers", "more structured monitoring of files"),
-                t("amélioration de la qualité de service", "improvement of service quality"),
-                t("contribution à la fidélisation de vos clients", "contribution to building customer loyalty"),
-                t("Chiffre d’affaires soutenu", "Supported turnover")
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3"><span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span><span>{item}</span></li>
-              ))}
-            </ul>
+            <BulletList items={[
+              t("gain de temps", "time saving"),
+              t("réduction des charges internes", "reduction of internal costs"),
+              t("productivité renforcée", "enhanced productivity"),
+              t("meilleure continuité opérationnelle", "better operational continuity"),
+              t("fiabilité accrue des traitements", "increased processing reliability"),
+              t("meilleure absorption des pics d’activité", "better absorption of activity peaks"),
+              t("suivi plus structuré des dossiers", "more structured monitoring of files"),
+              t("amélioration de la qualité de service", "improvement of service quality"),
+              t("contribution à la fidélisation de vos clients", "contribution to building customer loyalty"),
+              t("Chiffre d’affaires soutenu", "Supported turnover")
+            ]} />
           </div>
         </div>
       </section>
@@ -183,8 +180,11 @@ export default function PourquoiMenuaPage() {
               <h4 className="text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
                 {t("Nos différences :", "Our differences:")}
               </h4>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-[#6e7891] font-medium text-[0.95rem]">
-                {[
+              <BulletList 
+                gridCols="grid-cols-1 md:grid-cols-2"
+                gapX="gap-x-8" gapY="gap-y-6"
+                fontWeight="font-medium"
+                items={[
                   t("spécialisation back et middle office ;", "back and middle office specialization;"),
                   t("approche 100 % opérationnelle ;", "100% operational approach;"),
                   t("intégration aux organisations clientes ;", "integration into client organizations;"),
@@ -193,13 +193,8 @@ export default function PourquoiMenuaPage() {
                   t("suivi structuré des livrables ;", "structured monitoring of deliverables;"),
                   t("mobilisation possible de ressources ou partenaires qualifiés selon les besoins ;", "possible mobilization of resources or qualified partners according to needs;"),
                   t("intervention en français et en anglais.", "intervention in French and English.")
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-4">
-                    <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
-                    <span className="leading-relaxed">{item}</span>
-                  </li>
-                ))}
-              </ul>
+                ]}
+              />
             </div>
           </div>
 
@@ -232,8 +227,10 @@ export default function PourquoiMenuaPage() {
             </p>
             
             <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Nos engagements :", "Our commitments:")}</h4>
-            <ul className="space-y-3 text-[#6e7891] font-light text-[0.95rem]">
-              {[
+            <BulletList 
+              gridCols="grid-cols-1"
+              gapY="space-y-3"
+              items={[
                 t("qualité des livrables", "quality of deliverables"),
                 t("respect des délais", "respect for deadlines"),
                 t("traçabilité des opérations réalisées", "traceability of operations carried out"),
@@ -242,10 +239,8 @@ export default function PourquoiMenuaPage() {
                 t("confidentialité des informations confiées", "confidentiality of entrusted information"),
                 t("respect des procédures internes du client", "compliance with the client's internal procedures"),
                 t("intervention sous supervision des équipes ou professionnels habilités lorsque cela est requis", "intervention under the supervision of authorized teams or professionals when required")
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3"><span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span><span>{item}</span></li>
-              ))}
-            </ul>
+              ]}
+            />
           </div>
           <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
              <img src="/img/pourquoi_4.webp" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />

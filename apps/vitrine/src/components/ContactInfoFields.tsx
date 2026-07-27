@@ -1,7 +1,11 @@
 import React from 'react';
 import { useLanguage } from "@/components/LanguageProvider";
 
-export default function ContactInfoFields() {
+interface ContactInfoFieldsProps {
+  emailError?: string | null;
+}
+
+export default function ContactInfoFields({ emailError }: ContactInfoFieldsProps = {}) {
   const { t } = useLanguage();
 
   return (
@@ -26,7 +30,8 @@ export default function ContactInfoFields() {
           <label htmlFor="email" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">
             {t("E-mail", "Email")} <span className="text-red-500">*</span>
           </label>
-          <input id="email" type="email" name="email" placeholder="votre.email@exemple.com" className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
+          <input id="email" type="email" name="email" placeholder="votre.email@exemple.com" className={`w-full border-b ${emailError ? 'border-red-500' : 'border-[#d1d5db]'} bg-transparent px-0 py-3 text-[1.05rem] ${emailError ? 'text-red-500' : 'text-[#141824]'} focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]`} required />
+          {emailError && <p className="text-red-500 text-xs mt-2 font-bold">{emailError}</p>}
         </div>
         <div>
           <label htmlFor="phone" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">

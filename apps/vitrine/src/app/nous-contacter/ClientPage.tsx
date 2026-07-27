@@ -16,6 +16,7 @@ export default function NousContacter() {
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -68,6 +69,7 @@ export default function NousContacter() {
         lang,
         setSubmitStatus,
         setIsSubmitting,
+        setEmailError,
         onSuccess: () => {
           setSelectedFileName(null);
           setFileError(null);
@@ -204,8 +206,7 @@ export default function NousContacter() {
 
               <div>
                 <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Vos coordonnées", "Your contact details")}</p>
-                
-                <ContactInfoFields />
+                <ContactInfoFields emailError={emailError} />
 
                 {clientType === "company" && (
                   <div className="grid grid-cols-1 md:grid-cols-1 gap-8">

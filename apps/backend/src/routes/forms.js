@@ -17,12 +17,46 @@ const validateEmail = async (email) => {
   const emailRegex = /^\S+@\S+\.\S+$/;
   if (!emailRegex.test(email)) return false;
 
-  const domain = email.split('@')[1];
   try {
+    const apiKey = '4e1a695bf32b4eedb38d00db465dcbfa';
+    console.log(`Checking email with Abstract API: ${email}`);
+    const response = await fetch(`https://emailreputation.abstractapi.com/v1/?api_key=${apiKey}&email=${encodeURIComponent(email)}`);
+    console.log(`Abstract API status: ${response.status} ${response.ok}`);
+    if (response.ok) {
+      const data = await response.json();
+      console.log(`Abstract API data:`, JSON.stringify(data));
+      if (data.email_deliverability) {
+        if (data.email_deliverability.status === "undeliverable") {
+          console.log(`Abstract API rejected email (undeliverable)`);
+          return false;
+        }
+      }
+      if (data.email_quality && data.email_quality.is_disposable) {
+        console.log(`Abstract API rejected email (disposable)`);
+        return false;
+      }
+      if (data.email_risk && data.email_risk.address_risk_status === "high") {
+        console.log(`Abstract API rejected email (high risk)`);
+        return false;
+      }
+      return true; // Email passes API validation
+    }
+    console.log(`Abstract API failed, falling back to DNS...`);
+    // Fallback if API errors (rate limit, etc)
+    const domain = email.split('@')[1];
     const records = await dns.resolveMx(domain);
     return records && records.length > 0;
   } catch (e) {
-    return false;
+    console.error(`Error in validateEmail, falling back to DNS:`, e);
+    // Fallback if fetch fails (network issue)
+    const domain = email.split('@')[1];
+    try {
+      const records = await dns.resolveMx(domain);
+      return records && records.length > 0;
+    } catch (err) {
+      console.error(`DNS MX check failed:`, err);
+      return false;
+    }
   }
 };
 const upload = multer({ 

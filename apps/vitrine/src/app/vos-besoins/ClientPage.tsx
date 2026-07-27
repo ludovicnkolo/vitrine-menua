@@ -82,18 +82,18 @@ export default function VosBesoinsPage() {
         <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
-              {t("Vos besoins", "Your Needs")}
+              {t("Vos besoins", "Your needs")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
             <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
               {t(
                 "Un appui opérationnel structuré pour renforcer vos équipes, sécuriser vos traitements et maintenir la continuité de vos activités.",
-                "Structured operational support to strengthen your teams, secure your processes and maintain the continuity of your activities."
+                "Structured operational support to strengthen your teams, safeguard your processes and maintain continuity."
               )}
             </p>
             <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
               <Link href="/nous-contacter" className="inline-flex items-center gap-3 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
-                {t("Présenter votre besoin", "Submit your need")}
+                {t("Présenter votre besoin", "Tell us about your requirements")}
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -116,7 +116,7 @@ export default function VosBesoinsPage() {
             <div className="absolute left-0 right-0 bottom-0 top-[220px] lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
-              {t("Notre Intervention", "Our Intervention")}
+              {t("Notre Intervention", "Our intervention")}
             </h2>
             <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
               <img src="/img/besoins-intro.webp" alt="Vos besoins" className="w-full h-full object-cover object-center" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
@@ -124,18 +124,18 @@ export default function VosBesoinsPage() {
             <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">
               {formatBrand(t(
                 "MENUA CONSULTING intervient en appui des équipes financières, comptables, conformité, data, patrimoniales et réglementées sur les fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
-                "MENUA CONSULTING provides support to financial, accounting, compliance, data, wealth and regulated teams on back and middle office functions requiring rigor, continuity and operational reliability."
+                "MENUA CONSULTING supports finance, accounting, compliance, data and wealth management teams, as well as teams operating in regulated environments, by providing the rigorous back and middle-office support needed to ensure operational reliability and continuity."
               ))}
             </p>
             <p className="text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
               {t(
                 "Nos interventions s'adaptent aux besoins ponctuels, récurrents ou volumineux : traitement de dossiers, contrôle documentaire, reporting, suivi opérationnel, mise à jour de données, préparation de livrables ou renfort temporaire d'équipes.",
-                "Our interventions adapt to specific, recurring or high-volume needs: file processing, documentary control, reporting, operational monitoring, data updating, preparation of deliverables or temporary team reinforcement."
+                "Our services are designed to meet one-off, recurring or high-volume requirements. This includes file processing, document review, reporting, operational monitoring, data updates, deliverable preparation and temporary team reinforcement."
               )}
             </p>
             <div className="mt-8">
               <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                {t("Présenter votre besoin", "Submit your need")} 
+                {t("Présenter votre besoin", "Tell us about your requirements")} 
                 <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                 <ChevronRight size={18} className="-ml-2" />
               </Link>
@@ -157,10 +157,10 @@ export default function VosBesoinsPage() {
         title={<>{t("Finance", "Finance")} <span className="font-sans font-medium">&amp;</span> {t("Reporting", "Reporting")}</>}
         intro={formatBrand(t(
           "MENUA CONSULTING accompagne les équipes financières dans la production, la structuration et la fiabilisation de reportings destinés au pilotage de l'activité, au suivi de la performance et à l'aide à la décision.",
-          "MENUA CONSULTING supports financial teams in the production, structuring and reliability of reports intended for activity management, performance monitoring and decision-making support."
+          "MENUA CONSULTING supports finance teams by producing, structuring and verifying the reports required for performance management, operational oversight and decision-making."
         ))}
         items={{
-          label: t("Besoins couverts :", "Needs covered:"),
+          label: t("Besoins couverts :", "Our support includes:"),
           list: [
             t("reporting financier", "financial reporting"),
             t("KPI et tableaux de bord", "KPIs and dashboards"),
@@ -188,10 +188,10 @@ export default function VosBesoinsPage() {
         title={t("Contrôle de gestion", "Management control")}
         intro={formatBrand(t(
           "MENUA CONSULTING intervient en appui opérationnel des équipes de contrôle de gestion pour renforcer le suivi budgétaire, l'analyse des écarts et le pilotage de la performance. L'objectif est d'aider les organisations à mieux suivre leurs coûts, leurs marges, leurs objectifs et leurs indicateurs, à partir de données structurées et fiables.",
-          "MENUA CONSULTING provides operational support to management control teams to strengthen budget monitoring, variance analysis and performance management. The objective is to help organizations better monitor their costs, margins, objectives and indicators, based on structured and reliable data."
+          "MENUA CONSULTING provides operational support to management control teams, strengthening budget tracking, variance analysis and performance management. Our goal is to help organisations better monitor costs, margins, objectives and indicators using structured, reliable data."
         ))}
         items={{
-          label: t("Besoins couverts :", "Needs covered:"),
+          label: t("Besoins couverts :", "Our support includes:"),
           list: [
             t("suivi budgétaire", "budget tracking"),
             t("analyse des écarts entre réalisé, budget et prévisionnel", "analysis of variances between actual, budget and forecast"),
@@ -219,13 +219,13 @@ export default function VosBesoinsPage() {
         title={<>{t("Risques", "Risk")} <span className="font-sans font-medium text-[#e8e1d7]">&amp;</span> {t("Conformité", "Compliance")}</>}
         intro={formatBrand(t(
           "MENUA CONSULTING apporte un appui opérationnel aux équipes risques et conformité dans le traitement, le contrôle et la fiabilisation des dossiers sensibles, dans le respect des procédures internes et des exigences applicables.",
-          "MENUA CONSULTING provides operational support to risk and compliance teams in the processing, control and reliability of sensitive files, in compliance with internal procedures and applicable requirements."
+          "Operating within demanding compliance environments, MENUA CONSULTING works alongside risk and compliance teams, handling operational processes that require a rigorous, traceable approach."
         ))}
         disclaimer={formatBrand(t(
           "MENUA CONSULTING intervient en support des équipes habilitées du client. Les validations réglementaires, arbitrages et décisions finales restent de la responsabilité du client ou de ses professionnels autorisés.",
-          "MENUA CONSULTING intervenes in support of the client's authorized teams. Regulatory validations, arbitrations and final decisions remain the responsibility of the client or its authorized professionals."
+          "MENUA CONSULTING supports the client’s authorised teams. Regulatory approvals, judgements and final decisions remain the responsibility of the client or its authorised professionals."
         ))}
-        listLabel={t("Besoins couverts :", "Needs covered:")}
+        listLabel={t("Besoins couverts :", "Our support includes:")}
         listItems={[
           t("KYC", "KYC"),
           t("AML / LCB-FT", "AML / CFT"),
@@ -255,10 +255,10 @@ export default function VosBesoinsPage() {
         title={<>{t("Support comptable", "Accounting")} <span className="font-sans font-medium">&amp;</span> {t("Data", "Data Support")}</>}
         intro={formatBrand(t(
           "MENUA CONSULTING intervient en support opérationnel des équipes comptables, administratives et data dans le traitement, la fiabilisation, le classement et la structuration des informations nécessaires au suivi comptable, administratif et opérationnel. MENUA CONSULTING ne se substitue pas à un expert-comptable lorsque son intervention est requise. Les travaux préparés restent soumis aux contrôles et validations du client ou de son expert-comptable.",
-          "MENUA CONSULTING provides operational support to accounting, administrative and data teams in the processing, reliability, classification and structuring of information necessary for accounting, administrative and operational monitoring. MENUA CONSULTING does not substitute for a chartered accountant when their intervention is required. The prepared work remains subject to the controls and validations of the client or their chartered accountant."
+          "MENUA CONSULTING strengthens accounting, administrative and data teams by handling time-consuming, repetitive or high-volume tasks, allowing them to focus on analysis and validation. MENUA CONSULTING does not replace a chartered accountant. All prepared work remains subject to review and approval by the client or their chartered accountant."
         ))}
         items={{
-          label: t("Besoins couverts :", "Needs covered:"),
+          label: t("Besoins couverts :", "Our support includes:"),
           list: [
             t("collecte, classement et contrôle des pièces comptables", "collection, classification and control of accounting documents"),
             t("rapprochements bancaires", "bank reconciliations"),
@@ -289,10 +289,10 @@ export default function VosBesoinsPage() {
         title={t("Support aux cabinets de gestion de patrimoine / CGP", "Support to wealth management firms / CGP")}
         intro={formatBrand(t(
           "MENUA CONSULTING accompagne les cabinets de gestion de patrimoine, family offices et structures patrimoniales dans le traitement, la préparation et le suivi administratif des dossiers clients. Les conseils, recommandations, arbitrages et validations demeurent sous la responsabilité des professionnels habilités du client. MENUA CONSULTING intervient uniquement sur la préparation et le suivi opérationnels des dossiers.",
-          "MENUA CONSULTING supports wealth management firms, family offices and wealth structures in the processing, preparation and administrative monitoring of client files. Advice, recommendations, arbitrations and validations remain under the responsibility of the client's authorized professionals. MENUA CONSULTING intervenes solely on the operational preparation and monitoring of files."
+          "MENUA CONSULTING supports wealth management firms, family offices and wealth-management structures in the processing, preparation and administrative monitoring of client files. Advice, recommendations, investment decisions and approvals remain the responsibility of the client’s authorised professionals. MENUA CONSULTING focuses strictly on operational preparation and monitoring."
         ))}
         items={{
-          label: t("Besoins couverts :", "Needs covered:"),
+          label: t("Besoins couverts :", "Our support includes:"),
           list: [
             t("préparation des dossiers d'entrée en relation ;", "preparation of onboarding files;"),
             t("collecte et contrôle des pièces justificatives ;", "collection and control of supporting documents;"),
@@ -321,9 +321,9 @@ export default function VosBesoinsPage() {
         title={t("Autres besoins opérationnels", "Other operational needs")}
         intro={formatBrand(t(
           "MENUA CONSULTING peut également intervenir sur des besoins opérationnels ponctuels, transverses ou spécifiques ne relevant pas exclusivement d'une fonction financière, comptable, conformité, patrimoniale ou data. Cette flexibilité permet d'accompagner les organisations en période de surcharge, de transition, de réorganisation ou de besoin temporaire de renfort.",
-          "MENUA CONSULTING can also intervene on ad hoc, transversal or specific operational needs not exclusively related to a financial, accounting, compliance, wealth or data function. This flexibility makes it possible to support organizations during periods of overload, transition, reorganization or temporary need for reinforcement."
+          "MENUA CONSULTING can also manage ad-hoc, cross-functional or specific operational needs that do not fall strictly within a finance, accounting, compliance, wealth or data function. This operational support is a flexible solution designed to address specific resource challenges and help maintain day-to-day delivery."
         ))}
-        listLabel={t("Besoins couverts :", "Needs covered:")}
+        listLabel={t("Besoins couverts :", "You might call on us to manage:")}
         listItems={[
           t("missions ponctuelles de renfort opérationnel", "ad hoc operational reinforcement missions"),
           t("support administratif financier", "financial administrative support"),

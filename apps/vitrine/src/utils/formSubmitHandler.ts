@@ -5,6 +5,7 @@ export const handleFormSubmit = async ({
   onSuccess,
   setSubmitStatus,
   setIsSubmitting,
+  setEmailError,
   successMessage,
   errorMessage,
 }: {
@@ -14,12 +15,14 @@ export const handleFormSubmit = async ({
   onSuccess?: () => void;
   setSubmitStatus: (status: { type: "success" | "error"; message: string } | null) => void;
   setIsSubmitting: (isSubmitting: boolean) => void;
+  setEmailError?: (error: string | null) => void;
   successMessage: string;
   errorMessage: string;
 }) => {
   e.preventDefault();
   setIsSubmitting(true);
   setSubmitStatus(null);
+  if (setEmailError) setEmailError(null);
   
   try {
     const formData = new FormData(e.currentTarget);
@@ -36,8 +39,14 @@ export const handleFormSubmit = async ({
       if (onSuccess) onSuccess();
       setTimeout(() => setSubmitStatus(null), 3000);
     } else {
-      setSubmitStatus({ type: "error", message: data.error || "Une erreur s'est produite." });
-      setTimeout(() => setSubmitStatus(null), 3000);
+      if (setEmailError && (data.code === 'ERROR_EMAIL_INVALID' || data.code === 'ERROR_EMAIL_REQUIRED')) {
+        setEmailError(data.error);
+        // Remove the error after a few seconds or when user changes it
+        setTimeout(() => setEmailError(null), 5000);
+      } else {
+        setSubmitStatus({ type: "error", message: data.error || "Une erreur s'est produite." });
+        setTimeout(() => setSubmitStatus(null), 3000);
+      }
     }
   } catch (error) {
     setSubmitStatus({ type: "error", message: errorMessage });

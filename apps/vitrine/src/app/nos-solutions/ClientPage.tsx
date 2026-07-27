@@ -67,12 +67,12 @@ export default function NosSolutionsPage() {
             <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
               {t(
                 "Des dispositifs d’externalisation flexibles, adaptés à vos contraintes d’urgence, de durée, de volume et d’organisation.",
-                "Flexible outsourcing systems, adapted to your constraints of urgency, duration, volume and organization."
+                "Flexible operational outsourcing arrangements adapted to your requirements for speed, duration, volume and delivery model."
               )}
             </p>
             <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
               <Link href="/nous-contacter" className="inline-flex items-center gap-3 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
-                {t("Présenter votre besoin", "Submit your need")}
+                {t("Présenter votre besoin", "Tell us about your requirements")}
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -110,7 +110,7 @@ export default function NosSolutionsPage() {
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <div className="leading-relaxed text-[#6e7891] text-[1rem] font-light mb-8 space-y-6">
                 <h2 className="text-[#141824] font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
-                  {t("Une Approche Sur Mesure", "A Tailor-made Approach")}
+                  {t("Une Approche Sur Mesure", "A tailored approach")}
                 </h2>
 
                 {/* Mobile Image (Visible only on mobile) */}
@@ -126,13 +126,13 @@ export default function NosSolutionsPage() {
                 <p className="text-[1.1rem] font-medium">
                   {formatBrand(t(
                     "MENUA CONSULTING conçoit des solutions d’externalisation opérationnelle sur mesure pour accompagner les entreprises, cabinets et organisations dans la gestion de leurs fonctions back et middle office.",
-                    "MENUA CONSULTING designs tailor-made operational outsourcing solutions to support companies, firms and organizations in the management of their back and middle office functions."
+                    "MENUA CONSULTING designs tailored operational outsourcing arrangements to support businesses, professional firms and other organisations in the management of their back and middle-office functions."
                   ))}
                 </p>
                 <p>
                   {t(
                     "Nos interventions peuvent répondre à un besoin ponctuel, à une surcharge d’activité, à un volume important de dossiers ou à une organisation récurrente nécessitant continuité, rigueur et fiabilité.",
-                    "Our interventions can meet an ad hoc need, an overload of activity, a large volume of files or a recurring organization requiring continuity, rigor and reliability."
+                    "Our services can address a one-off need, a spike in activity, high case volumes, or an ongoing requirement where continuity, rigour and reliability are essential."
                   )}
                 </p>
               </div>
@@ -153,22 +153,22 @@ export default function NosSolutionsPage() {
         titleDecoClass="bg-[#e8e1d7]"
         borderClass="border-[#e8e1d7] border-t-8 border-t-[#e8e1d7]"
         isReversed={false}
-        title={t("Urgence", "Urgency")}
+        title={t("Urgence", "Responsiveness")}
         intro={formatBrand(t(
           "MENUA CONSULTING peut mobiliser des ressources opérationnelles pour répondre à un besoin immédiat, absorber une surcharge d’activité ou sécuriser la continuité d’un service.",
-          "MENUA CONSULTING can mobilize operational resources to meet an immediate need, absorb an overload of activity or secure the continuity of a service."
+          "MENUA CONSULTING can mobilise operational resources to meet an immediate need, absorb a spike in activity or maintain service continuity."
         ))}
         desc={t(
           "Cette solution est adaptée aux situations nécessitant une réaction rapide, notamment lorsque les équipes internes font face à un pic d’activité, un retard de traitement ou une absence temporaire.",
-          "This solution is adapted to situations requiring a rapid reaction, in particular when internal teams face an activity peak, a processing delay or a temporary absence."
+          "This approach is suited to situations requiring a rapid response, particularly when internal teams face a spike in activity, processing delays or temporary staff absence."
         )}
         listTitle={t("Exemples de besoins :", "Examples of needs:")}
         listItems={[
-          t("surcharge d’activité ou pic de dossiers ;", "activity overload or peak of files;"),
-          t("remplacement temporaire d’un collaborateur absent ;", "temporary replacement of an absent employee;"),
-          t("renfort ponctuel en période de clôture ou de reporting ;", "ad hoc reinforcement during closing or reporting periods;"),
-          t("traitement accéléré de dossiers en retard ou en attente ;", "accelerated processing of delayed or pending files;"),
-          t("mobilisation progressive de ressources pour sécuriser une montée en charge.", "progressive mobilization of resources to secure an increase in load.")
+          t("surcharge d’activité ou pic de dossiers ;", "a surge in activity or spike in case volumes;"),
+          t("remplacement temporaire d’un collaborateur absent ;", "temporary cover for absent staff;"),
+          t("renfort ponctuel en période de clôture ou de reporting ;", "additional support during closing or reporting periods;"),
+          t("traitement accéléré de dossiers en retard ou en attente ;", "accelerated processing for backlogs or pending files;"),
+          t("mobilisation progressive de ressources pour sécuriser une montée en charge.", "gradual mobilisation of resources to support scaling.")
         ]}
       />
 
@@ -184,13 +184,13 @@ export default function NosSolutionsPage() {
           <div className="w-full lg:w-4/12">
             <div className="w-16 h-[3px] bg-[#141824] mb-6" />
             <h2 className="text-[#141824] text-[1.5rem] md:text-[1.8rem] font-bold uppercase tracking-widest mb-8">
-              {t("Durée", "Duration")}
+              {t("Durée", "Flexibility")}
             </h2>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
-              {formatBrand(t("MENUA CONSULTING propose des formats d’intervention flexibles, adaptés aussi bien aux missions courtes qu’aux besoins récurrents.", "MENUA CONSULTING offers flexible intervention formats, adapted to short missions as well as recurring needs."))}
+              {formatBrand(t("MENUA CONSULTING propose des formats d’intervention flexibles, adaptés aussi bien aux missions courtes qu’aux besoins récurrents.", "MENUA CONSULTING offers flexible support arrangements adapted to short missions as well as recurring needs."))}
             </p>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
-              {t("La durée de la mission est définie selon le périmètre, les volumes à traiter, les objectifs attendus et les contraintes propres à l’organisation du client.", "The duration of the mission is defined according to the scope, the volumes to be processed, the expected objectives and the constraints specific to the client's organization.")}
+              {t("La durée de la mission est définie selon le périmètre, les volumes à traiter, les objectifs attendus et les contraintes propres à l’organisation du client.", "Our support arrangements adjust to the length of your requirement, whether for a specific, time-bound engagement or for an ongoing operational partnership.")}
             </p>
             
             {/* Mobile Image */}
@@ -210,34 +210,34 @@ export default function NosSolutionsPage() {
           {/* Right Col: Pillars */}
           <div className="w-full lg:w-8/12 grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Mission courte", "Short mission")}</h4>
+              <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Mission courte", "One-off engagement")}</h4>
               <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
-                {t("pour traiter un besoin identifié sur une période limitée", "to address an identified need over a limited period")}
+                {t("pour traiter un besoin identifié sur une période limitée", "to address a specific need over a limited period")}
               </p>
             </div>
             <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Mission longue", "Long mission")}</h4>
+              <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Mission longue", "Long-term partnership")}</h4>
               <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
-                {t("pour accompagner la gestion d’un portefeuille de dossiers", "to support the management of a portfolio of files")}
+                {t("pour accompagner la gestion d’un portefeuille de dossiers", "to support the ongoing management of a portfolio of files")}
               </p>
             </div>
             <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Intervention ponctuelle", "Ad hoc intervention")}</h4>
+              <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Intervention ponctuelle", "Support during transition")}</h4>
               <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
-                {t("sur un volume de dossiers comptables, financiers, patrimoniaux, conformité ou administratifs", "on a volume of accounting, financial, wealth, compliance or administrative files")}
+                {t("sur un volume de dossiers comptables, financiers, patrimoniaux, conformité ou administratifs", "managing a volume of accounting, financial, wealth, compliance or administrative files")}
               </p>
             </div>
             <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
               <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Externalisation récurrente", "Recurring outsourcing")}</h4>
               <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
-                {t("pour confier durablement tout ou partie de certaines activités opérationnelles", "to durably entrust all or part of certain operational activities")}
+                {t("pour confier durablement tout ou partie de certaines activités opérationnelles", "to entrust all or part of certain operational activities on a long-term basis")}
               </p>
             </div>
 
             <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm md:col-span-1">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Ajustement du dispositif", "System adjustment")}</h4>
+              <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Ajustement du dispositif", "Adjustable arrangements")}</h4>
               <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
-                {t("selon l’évolution de la charge et des priorités du client", "according to the evolution of the client's load and priorities")}
+                {t("selon l’évolution de la charge et des priorités du client", "adapting to changes in the client’s workload and priorities")}
               </p>
             </div>
           </div>
@@ -253,22 +253,22 @@ export default function NosSolutionsPage() {
         titleDecoClass="bg-[#e8e1d7]"
         borderClass="border-[#e8e1d7] border-t-8 border-t-[#e8e1d7]"
         isReversed={true}
-        title={t("Volume", "Volume")}
+        title={t("Volume", "Scalability")}
         intro={formatBrand(t(
           "MENUA CONSULTING adapte le dimensionnement de ses ressources au volume de dossiers, de flux ou d’opérations à traiter.",
-          "MENUA CONSULTING adapts the sizing of its resources to the volume of files, flows or operations to be processed."
+          "We size our teams according to the volume and complexity of the operations to be handled, with the ability to ramp up during peak periods."
         ))}
         desc={t(
           "L’objectif est de garantir une exécution fluide, continue et sécurisée, même lorsque les volumes augmentent ou lorsque plusieurs flux doivent être suivis simultanément.",
-          "The objective is to guarantee fluid, continuous and secure execution, even when volumes increase or when several flows must be tracked simultaneously."
+          "Our goal is to ensure smooth, continuous and secure execution, even as volumes increase or multiple workflows need to be managed simultaneously."
         )}
-        listTitle={t("Dispositifs possibles :", "Possible systems:")}
+        listTitle={t("Dispositifs possibles :", "Possible arrangements:")}
         listItems={[
-          t("une ressource dédiée sur un périmètre précis", "a dedicated resource on a specific scope"),
-          t("un renfort ponctuel pour absorber une surcharge d’activité", "an ad hoc reinforcement to absorb an activity overload"),
-          t("une équipe opérationnelle pour gérer un volume important de dossiers", "an operational team to manage a large volume of files"),
-          t("un dispositif évolutif ajusté selon la charge, les priorités et les délais", "an scalable system adjusted according to the load, priorities and deadlines"),
-          t("une organisation permettant de maintenir la continuité du traitement en cas d’absence ou de variation d’activité", "an organization allowing to maintain the continuity of processing in case of absence or variation of activity")
+          t("une ressource dédiée sur un périmètre précis", "a dedicated resource for a specific scope"),
+          t("un renfort ponctuel pour absorber une surcharge d’activité", "ad-hoc reinforcement to absorb a surge in activity"),
+          t("une équipe opérationnelle pour gérer un volume important de dossiers", "an operational team to manage high volumes of files"),
+          t("un dispositif évolutif ajusté selon la charge, les priorités et les délais", "a scalable arrangement adjusted according to workload, priorities and deadlines"),
+          t("une organisation permettant de maintenir la continuité du traitement en cas d’absence ou de variation d’activité", "an operating model that maintains processing continuity during absences or fluctuations in activity")
         ]}
       />
 
@@ -283,23 +283,23 @@ export default function NosSolutionsPage() {
         titleDecoClass="bg-[#141824]"
         borderClass="border-[#e8e1d7] border-t-8 border-t-[#141824]"
         isReversed={false}
-        title={t("Mode d’organisation", "Organization mode")}
+        title={t("Mode d’organisation", "Delivery model")}
         intro={formatBrand(t(
           "MENUA CONSULTING structure ses interventions selon le format le plus adapté à l’organisation du client : mission dédiée, intervention ponctuelle, traitement de flux ou prise en charge de process définis.",
-          "MENUA CONSULTING structures its interventions according to the format most adapted to the client's organization: dedicated mission, ad hoc intervention, flow processing or management of defined processes."
+          "Our operating framework is built around your internal processes, technical environment and security constraints."
         ))}
         desc={t(
           "Nos équipes s’intègrent aux méthodes, outils, procédures et circuits de validation existants, afin de garantir une exécution fluide, traçable et conforme aux standards internes du client.",
-          "Our teams integrate into existing methods, tools, procedures and validation circuits, in order to guarantee a fluid, traceable execution in line with the client's internal standards."
+          "Our teams integrate seamlessly with your existing methods, tools, procedures and approval workflows to guarantee smooth, traceable delivery in line with your internal standards."
         )}
-        listTitle={t("Modes d’intervention possibles :", "Possible intervention modes:")}
+        listTitle={t("Modes d’intervention possibles :", "Delivery model features:")}
         listItems={[
-          t("dispositif dédié pour un service ou un périmètre clairement identifié", "dedicated system for a clearly identified service or scope"),
-          t("intervention par mission pour un besoin borné dans le temps", "intervention by mission for a time-bound need"),
-          t("prise en charge de flux ou de process récurrents", "management of recurring flows or processes"),
-          t("traitement de dossiers, adhésions, opérations ou demandes selon des règles définies avec le client", "processing of files, memberships, operations or requests according to rules defined with the client"),
-          t("suivi structuré avec points de contrôle réguliers", "structured monitoring with regular control points"),
-          t("reporting opérationnel selon la fréquence convenue", "operational reporting according to the agreed frequency")
+          t("dispositif dédié pour un service ou un périmètre clairement identifié", "a dedicated team for a clearly identified service or scope"),
+          t("intervention par mission pour un besoin borné dans le temps", "project-based support for time-bound requirements"),
+          t("prise en charge de flux ou de process récurrents", "management of recurring workflows or processes"),
+          t("traitement de dossiers, adhésions, opérations ou demandes selon des règles définies avec le client", "processing of files, operations or requests based on rules agreed with the client"),
+          t("suivi structuré avec points de contrôle réguliers", "structured oversight with regular control points"),
+          t("reporting opérationnel selon la fréquence convenue", "operational reporting at an agreed frequency")
         ]}
       />
 
@@ -314,7 +314,7 @@ export default function NosSolutionsPage() {
               <p className="text-[#e5e9f0] font-light text-[1.05rem] leading-relaxed">
                 {formatBrand(t(
                   "MENUA CONSULTING peut intervenir en français et en anglais afin de faciliter la gestion des échanges, des reportings, des contrôles documentaires et des opérations dans un contexte national ou international. D’autres langues peuvent être étudiées selon les besoins spécifiques du client, la nature de la mission et les ressources mobilisables.",
-                  "MENUA CONSULTING can intervene in French and English in order to facilitate the management of exchanges, reports, documentary controls and operations in a national or international context. Other languages can be studied according to the specific needs of the client, the nature of the mission and the resources that can be mobilized."
+                  "MENUA CONSULTING operates in French and English, facilitating communication, reporting, document review and operations in both domestic and international contexts. Additional languages can be accommodated depending on the client’s specific needs, the nature of the engagement and available resources."
                 ))}
               </p>
             </div>
@@ -325,7 +325,7 @@ export default function NosSolutionsPage() {
               <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed">
                 {formatBrand(t(
                   "Chaque solution est construite après analyse du besoin, du volume, des délais, des outils disponibles et du niveau de supervision attendu. MENUA CONSULTING privilégie une approche claire, progressive et contrôlable, afin de garantir une exécution fiable et adaptée aux contraintes réelles de chaque organisation.",
-                  "Each solution is built after analysis of the need, volume, deadlines, available tools and expected level of supervision. MENUA CONSULTING favors a clear, progressive and controllable approach, in order to guarantee reliable execution adapted to the real constraints of each organization."
+                  "Every solution is designed following an assessment of requirements, volumes, timescales, available tools and the expected level of supervision. MENUA CONSULTING favours a clear, phased and manageable approach to ensure reliable delivery tailored to the practical constraints of each organisation."
                 ))}
               </p>
             </div>

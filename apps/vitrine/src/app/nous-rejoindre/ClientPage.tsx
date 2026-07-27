@@ -14,6 +14,7 @@ export default function NousRejoindre() {
   const [profileType, setProfileType] = useState<"individual" | "company">("individual");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error", message: string } | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     await handleFormSubmit({
@@ -22,13 +23,14 @@ export default function NousRejoindre() {
       lang,
       setSubmitStatus,
       setIsSubmitting,
+      setEmailError,
       successMessage: "Votre candidature a été envoyée avec succès.",
       errorMessage: "Impossible d'envoyer la candidature."
     });
   };
 
   return (
-    <main className="flex flex-col w-full min-h-screen overflow-x-hidden">
+    <main className="flex flex-col w-full min-h-screen">
       
       {/* ── 7.1 INTRODUCTION (Full Bleed Hero) ── */}
       <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
@@ -36,7 +38,7 @@ export default function NousRejoindre() {
           <img 
             src="/img/nous-rejoindre-hero-new.webp" 
             alt="Nous rejoindre" 
-            className="w-full h-full object-cover" 
+            className="w-full h-full object-cover object-[center_35%]" 
             onError={(e) => { e.currentTarget.src = "/meeting.webp"; }} 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
@@ -44,13 +46,13 @@ export default function NousRejoindre() {
         <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
-              {t("Nous rejoindre", "Join Us")}
+              {t("Nous rejoindre", "Join us")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
             <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "Rejoignez une organisation exigeante, orientée vers l’exécution, la qualité des livrables et la continuité opérationnelle.",
-                "Join a demanding organization, oriented towards execution, quality of deliverables and operational continuity."
+                "Join a demanding organisation focused on delivery, quality and operational continuity."
               )}
             </p>
           </div>
@@ -65,18 +67,18 @@ export default function NousRejoindre() {
           <div className="w-full lg:w-[40%] flex flex-col gap-8">
             <div className="bg-white border border-[#e8e1d7] border-t-4 border-t-[#141824] p-10 shadow-xl">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.3rem] md:text-[1.5rem] font-bold text-[#141824] mb-6 uppercase tracking-wider">{t("Profils recherchés", "Profiles Sought")}</h2>
+              <h2 className="text-[1.3rem] md:text-[1.5rem] font-bold text-[#141824] mb-6 uppercase tracking-wider">{t("Profils recherchés", "Profiles sought")}</h2>
 
               <div className="flex flex-col gap-6 mb-8">
                 {[
-                  t("Back et middle office", "Back and middle office"),
-                  t("Comptabilité et support administratif", "Accounting and admin support"),
+                  t("Back et middle office", "Back and middle-office specialists"),
+                  t("Comptabilité et support administratif", "Accounting and administrative support"),
                   t("Reporting, data et contrôle de gestion", "Reporting, data and management control"),
                   t("Risques, conformité, KYC / AML", "Risk, compliance, KYC / AML"),
-                  t("Support opérationnel aux acteurs de la gestion de patrimoine / CGP", "Operational support to wealth management players / CGP"),
-                  t("Profils bilingues français / anglais", "Bilingual profiles French / English"),
-                  t("Autres langues appréciées", "Other languages appreciated"),
-                  t("Profils disponibles pour des missions ponctuelles ou récurrentes", "Profiles available for occasional or recurring missions")
+                  t("Support opérationnel aux acteurs de la gestion de patrimoine / CGP", "Operational support for wealth management professionals"),
+                  t("Profils bilingues français / anglais", "Bilingual French / English professionals"),
+                  t("Autres langues appréciées", "Additional languages are an advantage"),
+                  t("Profils disponibles pour des missions ponctuelles ou récurrentes", "Professionals available for one-off or recurring engagements")
                 ].map((title) => (
                   <div key={title} className="flex items-start gap-3 pl-4 ml-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#141824] shrink-0 mt-2" />
@@ -90,7 +92,7 @@ export default function NousRejoindre() {
               <p className="text-[#e5e9f0] text-[1.05rem] font-light leading-relaxed">
                 {formatBrand(t(
                   "MENUA CONSULTING recherche des profils autonomes, rigoureux, fiables et organisés, capables d’intervenir à distance sur des fonctions back et middle office, en français ou en anglais, dans le respect de procédures, de délais et de standards de qualité élevés.",
-                  "MENUA CONSULTING is looking for autonomous, rigorous, reliable and organized profiles, capable of intervening remotely on back and middle office functions, in French or in English, in compliance with procedures, deadlines and high quality standards."
+                  "MENUA CONSULTING is looking for self-sufficient, rigorous, reliable and organised professionals, capable of working remotely on back and middle-office functions (in French or English), while adhering to procedures, deadlines and high quality standards."
                 ))}
               </p>
             </div>
@@ -134,8 +136,7 @@ export default function NousRejoindre() {
 
               <div>
                 <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Informations", "Information")}</p>
-                
-                <ContactInfoFields />
+                <ContactInfoFields emailError={emailError} />
 
                 {profileType === "company" && (
                   <div className="grid grid-cols-1 gap-8 mb-8">

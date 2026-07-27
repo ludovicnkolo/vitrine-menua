@@ -24,9 +24,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const savedLang = localStorage.getItem("menua_lang") as Language;
     let initialLang: Language = "FR";
     
-    if (pathname.startsWith("/en")) {
+    if (window.location.pathname.startsWith("/en")) {
       initialLang = "EN";
-    } else if (pathname.startsWith("/fr")) {
+    } else if (window.location.pathname.startsWith("/fr")) {
       initialLang = "FR";
     } else if (savedLang === "FR" || savedLang === "EN") {
       initialLang = savedLang;

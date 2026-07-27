@@ -1,5 +1,5 @@
 "use client";
-import Link from "@/components/Link";
+import Link, { enRouteMap, frRouteMap } from "@/components/Link";
 import { useState, useEffect } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -21,9 +21,16 @@ export default function Header() {
     setLang(newLang);
     const prefix = newLang === "EN" ? "/en" : "/fr";
     let newPath = pathname;
+    
     if (newPath.startsWith("/en")) newPath = newPath.replace("/en", "");
     if (newPath.startsWith("/fr")) newPath = newPath.replace("/fr", "");
     if (!newPath.startsWith("/")) newPath = "/" + newPath;
+    
+    if (newLang === "EN" && enRouteMap[newPath]) {
+      newPath = enRouteMap[newPath];
+    } else if (newLang === "FR" && frRouteMap[newPath]) {
+      newPath = frRouteMap[newPath];
+    }
     
     // Si c'est la racine, on va sur le préfixe, sinon préfixe + chemin
     const finalPath = newPath === "/" ? prefix : `${prefix}${newPath}`;

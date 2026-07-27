@@ -26,13 +26,13 @@ export default function PourquoiMenuaPage() {
         <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
-              {t("Pourquoi MENUA CONSULTING ?", "Why MENUA CONSULTING?")}
+              {t("Pourquoi MENUA CONSULTING ?", "Why choose us?")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
             <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
               {t(
                 "Un partenaire opérationnel pour renforcer vos équipes, fiabiliser vos traitements et sécuriser la continuité de vos activités.",
-                "An operational partner to strengthen your teams, make your processing reliable and secure the continuity of your activities."
+                "An independent, flexible and specialised approach designed to maintain the delivery of your operations."
               )}
             </p>
             <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
@@ -53,7 +53,7 @@ export default function PourquoiMenuaPage() {
             <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
               <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
               <span className="mx-2">/</span>
-              <span>{t("Pourquoi MENUA CONSULTING ?", "Why MENUA CONSULTING?")}</span>
+              <span>{t("Pourquoi MENUA CONSULTING ?", "Why choose us?")}</span>
             </p>
           </div>
           {/* Text block — full width on mobile, leaves room for image on right on desktop */}
@@ -63,7 +63,7 @@ export default function PourquoiMenuaPage() {
 
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
-              {t("Notre Vision", "Our Vision")}
+              {t("Notre Vision", "Our vision")}
             </h2>
 
             {/* Mobile Image (Visible only on mobile) */}
@@ -79,13 +79,13 @@ export default function PourquoiMenuaPage() {
             <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">
               {formatBrand(t(
                 "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants.",
-                "MENUA CONSULTING supports organizations facing demanding operational execution challenges."
+                "MENUA CONSULTING supports organisations facing demanding operational delivery challenges."
               ))}
             </p>
             <p className="text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
               {formatBrand(t(
                 "Dans des environnements où les délais, la qualité des données, la conformité documentaire et la continuité de service sont essentiels, MENUA CONSULTING apporte un appui structuré aux équipes internes afin de sécuriser le traitement des fonctions back et middle office.",
-                "In environments where deadlines, data quality, documentary compliance and service continuity are essential, MENUA CONSULTING provides structured support to internal teams to secure the processing of back and middle office functions."
+                "In environments where deadlines, data quality, documentary compliance and service continuity are critical, MENUA CONSULTING provides structured support to internal teams to safeguard the processing of back and middle-office functions."
               ))}
             </p>
 
@@ -121,27 +121,27 @@ export default function PourquoiMenuaPage() {
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
               {formatBrand(t(
                 "En externalisant certaines fonctions back et middle office avec MENUA CONSULTING, vos équipes peuvent mieux répartir leur charge, renforcer la continuité opérationnelle et structurer le suivi des dossiers.",
-                "By outsourcing certain back and middle office functions with MENUA CONSULTING, your teams can better distribute their workload, strengthen operational continuity and structure the monitoring of files."
+                "By outsourcing selected back and middle-office functions to MENUA CONSULTING, your teams can distribute their workload more effectively, strengthen operational continuity and structure case-handling."
               ))}
             </p>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
               {t(
                 "Cette organisation contribue à la maîtrise des traitements, à la qualité de service et à la fidélisation des clients.",
-                "This organization contributes to the mastery of processing, service quality and customer loyalty."
+                "This approach supports tighter processing controls, enhanced service quality and stronger client retention."
               )}
             </p>
             <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Bénéfices clés :", "Key benefits:")}</h4>
             <BulletList items={[
-              t("gain de temps", "time saving"),
-              t("réduction des charges internes", "reduction of internal costs"),
-              t("productivité renforcée", "enhanced productivity"),
-              t("meilleure continuité opérationnelle", "better operational continuity"),
-              t("fiabilité accrue des traitements", "increased processing reliability"),
-              t("meilleure absorption des pics d’activité", "better absorption of activity peaks"),
-              t("suivi plus structuré des dossiers", "more structured monitoring of files"),
-              t("amélioration de la qualité de service", "improvement of service quality"),
-              t("contribution à la fidélisation de vos clients", "contribution to building customer loyalty"),
-              t("Chiffre d’affaires soutenu", "Supported turnover")
+              t("gain de temps", "Time savings"),
+              t("réduction des charges internes", "Reduced internal costs"),
+              t("productivité renforcée", "Enhanced productivity"),
+              t("meilleure continuité opérationnelle", "Improved operational continuity"),
+              t("fiabilité accrue des traitements", "Greater processing reliability"),
+              t("meilleure absorption des pics d’activité", "Better absorption of activity spikes"),
+              t("suivi plus structuré des dossiers", "More structured file monitoring"),
+              t("amélioration de la qualité de service", "Improved service quality"),
+              t("contribution à la fidélisation de vos clients", "Contribution to client retention"),
+              t("Chiffre d’affaires soutenu", "Supported revenue")
             ]} />
           </div>
         </div>
@@ -216,13 +216,13 @@ export default function PourquoiMenuaPage() {
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
               {formatBrand(t(
                 "MENUA CONSULTING s’engage sur l’essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
-                "MENUA CONSULTING commits to the essential: the quality of deliverables, respect for deadlines, traceability of operations and clear communication with your teams."
+                "At MENUA CONSULTING, we recognise that the processing we handle is vital to the proper functioning of your organisation. That is why our engagements are governed by strict commitments to rigour, reliability and transparency."
               ))}
             </p>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
               {t(
                 "Nos interventions s’appuient sur un contrôle à quatre yeux, des méthodes de travail structurées, la formation des ressources mobilisées et le respect de vos exigences opérationnelles, qualité et réglementaires.",
-                "Our interventions are based on a four-eyes control, structured working methods, training of mobilized resources and compliance with your operational, quality and regulatory requirements."
+                "Our services rely on four-eyes review, structured workflows, appropriately trained resources, and strict adherence to your operational, quality and regulatory requirements."
               )}
             </p>
             
@@ -231,14 +231,14 @@ export default function PourquoiMenuaPage() {
               gridCols="grid-cols-1"
               gapY="space-y-3"
               items={[
-                t("qualité des livrables", "quality of deliverables"),
-                t("respect des délais", "respect for deadlines"),
-                t("traçabilité des opérations réalisées", "traceability of operations carried out"),
-                t("contrôle à quatre yeux lorsque le périmètre le nécessite", "four-eyes control when the scope requires it"),
-                t("communication claire et régulière", "clear and regular communication"),
-                t("confidentialité des informations confiées", "confidentiality of entrusted information"),
-                t("respect des procédures internes du client", "compliance with the client's internal procedures"),
-                t("intervention sous supervision des équipes ou professionnels habilités lorsque cela est requis", "intervention under the supervision of authorized teams or professionals when required")
+                t("qualité des livrables", "Quality of deliverables"),
+                t("respect des délais", "Strict adherence to deadlines"),
+                t("traçabilité des opérations réalisées", "Traceability of actions and decisions"),
+                t("contrôle à quatre yeux lorsque le périmètre le nécessite", "Four-eyes review where required"),
+                t("communication claire et régulière", "Clear and regular communication"),
+                t("confidentialité des informations confiées", "Data and operational confidentiality"),
+                t("respect des procédures internes du client", "Strict adherence to your procedures and tools"),
+                t("intervention sous supervision des équipes ou professionnels habilités lorsque cela est requis", "Delivery supervised by authorised professionals where required")
               ]}
             />
           </div>

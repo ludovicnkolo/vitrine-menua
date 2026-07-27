@@ -28,6 +28,7 @@ const sendResponse = (res, statusCode, messageKey, lang = 'fr', data = {}) => {
   
   const responseBody = {
     success: isSuccess,
+    code: messageKey,
     ...(isSuccess ? { message } : { error: message }),
     ...data
   };

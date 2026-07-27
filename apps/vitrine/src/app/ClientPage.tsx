@@ -26,20 +26,20 @@ export default function Home() {
         <div className="laplace-container relative z-10 pt-40 md:pt-48 pb-20 mt-8">
           <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
             <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
-              {t("Externalisation opérationnelle des fonctions back ", "Operational outsourcing of back ")}
+              {t("Externalisation opérationnelle des fonctions back ", "Operational outsourcing for back ")}
               <span className="font-sans font-medium">&amp;</span>
-              {t(" middle office", " middle office functions")}
+              {t(" middle office", " middle-office functions")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
             <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
               {t(
                 "Nous sécurisons l’exécution de vos opérations afin de permettre à vos équipes de se concentrer sur leurs décisions stratégiques, leurs validations et leur relation client.",
-                "We secure the execution of your operations to allow your teams to focus on their strategic decisions, their validations and their client relationship."
+                "We work alongside your teams to safeguard day-to-day operations, so they can focus on strategic decisions, approvals and client relationships."
               )}
             </p>
             <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
               <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.85rem] font-bold hover:bg-white transition-colors group">
-                {t("Présenter votre besoin", "Submit your need")}
+                {t("Présenter votre besoin", "Tell us about your requirements")}
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -48,7 +48,7 @@ export default function Home() {
               <p className="text-[0.9rem] lg:text-[0.95rem] text-white font-light italic tracking-wide">
                 {t(
                   "Interventions en français et en anglais – profils opérationnels bilingues.",
-                  "Interventions in French and English – bilingual operational profiles."
+                  "Services delivered in French and English — bilingual operational professionals."
                 )}
               </p>
             </div>
@@ -97,13 +97,13 @@ export default function Home() {
                 <p>
                   {formatBrand(t(
                     "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT, data et réglementées pour sécuriser et renforcer l’exécution de leurs fonctions back et middle office. Nous prenons en charge des opérations clairement définies, selon les procédures, les outils, les priorités et les circuits de validation de chaque client.",
-                    "MENUA CONSULTING supports financial, accounting, wealth, IT, data and regulated teams to secure and strengthen the execution of their back and middle office functions. We take charge of clearly defined operations, according to the procedures, tools, priorities and validation circuits of each client."
+                    "MENUA CONSULTING supports finance, accounting, wealth management, IT and data teams, as well as teams operating in regulated environments, by safeguarding and strengthening the delivery of their back and middle-office functions. We take ownership of clearly defined operations in line with each client’s procedures, tools, priorities and approval workflows."
                   ))}
                 </p>
               </div>
               <div className="flex justify-end mt-8">
                 <Link href="/nous-connaitre" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                  {t("Nous connaître", "About Us")} 
+                  {t("Nous connaître", "About us")} 
                   <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                   <ChevronRight size={18} className="-ml-2" />
                 </Link>
@@ -121,12 +121,12 @@ export default function Home() {
           <div className="w-full md:w-5/12 md:-translate-y-16">
             <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
             <h2 className="text-white text-[1.3rem] md:text-[1.5rem] font-bold mb-6 uppercase tracking-wider">
-              {t("Pourquoi MENUA CONSULTING ?", "Why MENUA CONSULTING?")}
+              {t("Pourquoi MENUA CONSULTING ?", "Why choose us?")}
             </h2>
             <p className="text-[1.1rem] text-[#e5e9f0] font-light leading-relaxed mb-8">
               {formatBrand(t(
                 "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants, avec une approche structurée, traçable et adaptée à leurs contraintes.",
-                "MENUA CONSULTING supports organizations facing demanding operational execution challenges, with a structured, traceable approach adapted to their constraints."
+                "MENUA CONSULTING works closely with organisations facing demanding operational challenges, providing structured, traceable support tailored to their environment and priorities."
               ))}
             </p>
           </div>
@@ -135,20 +135,20 @@ export default function Home() {
           <div className="w-full md:w-7/12 flex flex-col">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-12">
                <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
-                  <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Spécialisation", "Specialization")}</h3>
-                  <p className="text-white/80 font-light text-[1.05rem]">Back et Middle Office</p>
+                  <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Spécialisation", "Specialisation")}</h3>
+                  <p className="text-white/80 font-light text-[1.05rem]">{t("Back et Middle Office", "Back and middle office")}</p>
                </div>
                <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
-                  <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Exécution", "Execution")}</h3>
-                  <p className="text-white/80 font-light text-[1.05rem]">Approche 100 % opérationnelle</p>
+                  <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Exécution", "Delivery")}</h3>
+                  <p className="text-white/80 font-light text-[1.05rem]">{t("Approche 100 % opérationnelle", "A firmly delivery-focused approach")}</p>
                </div>
                <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
                   <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Fiabilité", "Reliability")}</h3>
-                  <p className="text-white/80 font-light text-[1.05rem]">Continuité et qualité de service</p>
+                  <p className="text-white/80 font-light text-[1.05rem]">{t("Continuité et qualité de service", "Business continuity and consistent service quality")}</p>
                </div>
                <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
-                  <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Bilingue", "Bilingual")}</h3>
-                  <p className="text-white/80 font-light text-[1.05rem]">Français et anglais</p>
+                  <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Bilingue", "Bilingual capability")}</h3>
+                  <p className="text-white/80 font-light text-[1.05rem]">{t("Français et anglais", "French and English")}</p>
                 </div>
             </div>
             
@@ -195,7 +195,7 @@ export default function Home() {
 
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
-                {t("Vos besoins", "Your Needs")}
+                {t("Vos besoins", "Operational needs")}
               </h2>
 
               {/* Mobile Image (Visible only on mobile) */}
@@ -210,16 +210,16 @@ export default function Home() {
               <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-10">
                 {formatBrand(t(
                   "Un appui opérationnel adapté aux équipes financières, comptables, patrimoniales, IT, data et réglementées, pour traiter les opérations qui exigent rigueur, continuité et fiabilité.",
-                  "Operational support tailored to financial, accounting, wealth, IT, data and regulated teams, to process operations that require rigor, continuity and reliability."
+                  "Structured operational support for finance, accounting, wealth management, IT and data teams, as well as teams operating in regulated environments, where activities require rigour, continuity and reliable execution."
                 ))}
               </p>
 
               {/* 3 need items */}
               <div className="flex flex-col md:flex-row gap-0 mb-10 border-t border-[#e8e1d7] pt-8">
                 {[
-                  { title: t("Finance et Reporting", "Finance and Reporting"), desc: t("Production, structuration et fiabilisation de reportings financiers...", "Production, structuring and reliability of financial reports..."), href: "/vos-besoins#finance-reporting" },
-                  { title: t("Risques et Conformité", "Risk and Compliance"), desc: t("Appui opérationnel aux équipes risques et conformité dans le traitement...", "Operational support for risk and compliance teams in processing..."), href: "/vos-besoins#risques-conformite" },
-                  { title: t("Support Comptable et Data", "Accounting and Data Support"), desc: t("Appui opérationnel aux équipes comptables, administratives et data...", "Operational support for accounting, administrative and data teams..."), href: "/vos-besoins#support-comptable-data" },
+                  { title: t("Finance et Reporting", "Finance and reporting"), desc: t("Production, structuration et fiabilisation de reportings financiers...", "Production, structuring and reliability of financial reports..."), href: "/vos-besoins#finance-reporting" },
+                  { title: t("Risques et Conformité", "Risk and compliance"), desc: t("Appui opérationnel aux équipes risques et conformité dans le traitement...", "Operational support for risk and compliance teams in processing..."), href: "/vos-besoins#risques-conformite" },
+                  { title: t("Support Comptable et Data", "Accounting and data support"), desc: t("Appui opérationnel aux équipes comptables, administratives et data...", "Operational support for accounting, administrative and data teams..."), href: "/vos-besoins#support-comptable-data" },
                 ].map((item, i, arr) => (
                   <Link key={item.href} href={item.href} className={`flex flex-col gap-2 group flex-1 pr-6 ${i < arr.length - 1 ? "md:border-r border-[#e8e1d7] md:mr-6" : ""}`}>
                     <h3 className="text-[#141824] font-semibold text-[1rem] group-hover:text-[#6e7891] transition-colors">{item.title}</h3>
@@ -233,7 +233,7 @@ export default function Home() {
 
               <div className="flex justify-end mt-4">
                 <Link href="/vos-besoins" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                  {t("Voir tous vos besoins", "See all your needs")} 
+                  {t("Voir tous vos besoins", "Explore your needs")} 
                   <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                   <ChevronRight size={18} className="-ml-2" />
                 </Link>
@@ -251,12 +251,12 @@ export default function Home() {
           <div className="w-full md:w-5/12 md:-translate-y-16">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
-              {t("Nos solutions", "Our solutions")}
+              {t("Nos solutions", "Our engagement models")}
             </h2>
             <p className="text-[#141824] text-[1.1rem] font-light leading-relaxed mb-8">
               {t(
                 "Nous concevons des dispositifs d’externalisation sur mesure, adaptés à vos contraintes d’urgence, de durée, de volume et d’organisation.",
-                "We design tailor-made outsourcing systems, adapted to your constraints of urgency, duration, volume and organization."
+                "We design tailored operational outsourcing arrangements around your requirements for speed, duration, volume and delivery model."
               )}
             </p>
           </div>
@@ -265,26 +265,26 @@ export default function Home() {
           <div className="w-full md:w-7/12 flex flex-col">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-12">
                <div className="border-l-2 border-[#141824]/30 pl-6">
-                  <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Urgence", "Urgency")}</h3>
-                  <p className="text-[#141824]/70 font-light text-[1.05rem]">Réactivité</p>
+                  <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Urgence", "Urgent requirements")}</h3>
+                  <p className="text-[#141824]/70 font-light text-[1.05rem]">{t("Réactivité", "Responsiveness")}</p>
                </div>
                <div className="border-l-2 border-[#141824]/30 pl-6">
                   <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Durée", "Duration")}</h3>
-                  <p className="text-[#141824]/70 font-light text-[1.05rem]">Flexibilité</p>
+                  <p className="text-[#141824]/70 font-light text-[1.05rem]">{t("Flexibilité", "Flexibility")}</p>
                </div>
                <div className="border-l-2 border-[#141824]/30 pl-6">
                   <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Volume", "Volume")}</h3>
-                  <p className="text-[#141824]/70 font-light text-[1.05rem]">Agilité</p>
+                  <p className="text-[#141824]/70 font-light text-[1.05rem]">{t("Agilité", "Scalability")}</p>
                </div>
                 <div className="border-l-2 border-[#141824]/30 pl-6">
-                   <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Format", "Format")}</h3>
-                   <p className="text-[#141824]/70 font-light text-[1.05rem]">Sur Mesure</p>
+                   <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Format", "Delivery model")}</h3>
+                   <p className="text-[#141824]/70 font-light text-[1.05rem]">{t("Sur Mesure", "Tailored")}</p>
                 </div>
             </div>
             
             <div className="hidden md:flex justify-end mt-auto translate-y-12">
               <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                 {t("Découvrir nos solutions", "Discover our solutions")} 
+                 {t("Découvrir nos solutions", "Explore our solutions")} 
                  <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                  <ChevronRight size={18} className="-ml-2" />
                </Link>
@@ -294,7 +294,7 @@ export default function Home() {
           {/* Mobile Button */}
           <div className="mt-8 md:hidden flex justify-end">
             <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-               {t("Découvrir nos solutions", "Discover our solutions")} 
+               {t("Découvrir nos solutions", "Explore our solutions")} 
                <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                <ChevronRight size={18} className="-ml-2" />
              </Link>
@@ -315,12 +315,12 @@ export default function Home() {
             <div className="inline-block text-left max-w-2xl">
               <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
               <h2 className="text-[1.3rem] md:text-[1.5rem] text-white font-bold mb-4 uppercase tracking-wider">
-                {t("Actualités et Veille", "News and Monitoring")}
+                {t("Actualités et Veille", "Insights")}
               </h2>
               <p className="text-[1.1rem] text-[#e5e9f0] font-light leading-relaxed">
                 {t(
                   "Retrouvez nos analyses, publications et contenus consacrés aux enjeux opérationnels, financiers, comptables, patrimoniaux, data et réglementaires.",
-                  "Find our analyses, publications and content dedicated to operational, financial, accounting, wealth, data and regulatory issues."
+                  "Explore our analysis, publications and insights on operational, financial, accounting, wealth-management, data and regulatory matters."
                 )}
               </p>
             </div>
@@ -344,7 +344,7 @@ export default function Home() {
                   ))}
                 </p>
                 <span className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
-                  {t("Découvrir la rubrique", "Discover the section")} <ArrowRight size={14} />
+                  {t("Découvrir la rubrique", "Browse our publications")} <ArrowRight size={14} />
                 </span>
               </div>
             </Link>
@@ -353,7 +353,7 @@ export default function Home() {
           {/* CTA */}
           <div className="flex justify-end mt-4">
             <Link href="/actualites" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-              {t("Voir toutes nos actualités", "See all our news")} 
+              {t("Voir toutes nos actualités", "Browse all publications")} 
               <span className="w-8 h-[1px] bg-white group-hover:w-12 transition-all duration-300"></span>
               <ChevronRight size={18} className="-ml-2" />
             </Link>

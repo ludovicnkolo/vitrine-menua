@@ -265,7 +265,7 @@ export default function NousRejoindre() {
               </div>
 
               <div>
-                <label htmlFor="message" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Vos motivations à intégrer Menua Consulting", "Your motivations to join Menua Consulting")} <span className="text-red-500">*</span></label>
+                <label htmlFor="message" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Vos motivations en quelques mots", "Your motivations in a few words")} <span className="text-red-500">*</span></label>
                 <textarea id="message" name="message" rows={5} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors" required></textarea>
               </div>
 

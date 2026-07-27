@@ -80,3 +80,4 @@ Abstract API data: {"email_address":"ludovicnkolo01@gmail.com","suggested_correc
 Backend server running on port 4000
 Running seed_admin.js to ensure default roles and admin exist...
 Admin already exists, role updated: r.fouelefack@menuaconsulting.com
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m

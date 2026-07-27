@@ -1,70 +1,59 @@
 import React from 'react';
-
-const renderInputField = (label, key, stateObj, setStateFn, type = "text", required = false, isTextarea = false) => {
-  if (isTextarea) {
-    return (
-      <div>
-        <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>{label} {required && <span style={{color: 'red'}}>*</span>}</label>
-        <textarea rows="3" value={stateObj[key] || ''} onChange={e => setStateFn({...stateObj, [key]: e.target.value})} required={required} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
-      </div>
-    );
-  }
-  return (
-    <div>
-      <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>{label} {required && <span style={{color: 'red'}}>*</span>}</label>
-      <input type={type} value={stateObj[key] || ''} onChange={e => setStateFn({...stateObj, [key]: e.target.value})} required={required} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)'}} />
-    </div>
-  );
-};
+import FormField from './FormField';
 
 const ClientFormFields = ({ client, setClient, type = 'Particulier', isEdit = false }) => {
   const isParticulier = type === 'Particulier' || type === 'PARTICULIER';
+  const set = (key) => (e) => setClient({ ...client, [key]: e.target.value });
 
   return (
     <>
       {isParticulier ? (
         <>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            {renderInputField("Nom complet", "name", client, setClient, "text", true)}
-            {renderInputField("Email", "email", client, setClient, "email", true)}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <FormField label="Nom complet"       type="text"  value={client.name}            onChange={set('name')}            required />
+            <FormField label="Email"             type="email" value={client.email}           onChange={set('email')}           required />
           </div>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            {renderInputField("Téléphone", "telephone", client, setClient, "tel")}
-            {renderInputField("Contact secondaire", "contactSecondaire", client, setClient)}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <FormField label="Téléphone"         type="tel"   value={client.telephone}       onChange={set('telephone')} />
+            <FormField label="Contact secondaire"             value={client.contactSecondaire} onChange={set('contactSecondaire')} />
           </div>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            {renderInputField("Secteur d'activité", "secteurActivite", client, setClient)}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <FormField label="Secteur d'activité"             value={client.secteurActivite}  onChange={set('secteurActivite')} />
           </div>
         </>
       ) : (
         <>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            {renderInputField("Nom de la société / Raison Sociale", "raisonSociale", client, setClient, "text", true)}
-            {renderInputField("SIRET", "siret", client, setClient)}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <FormField label="Nom de la société / Raison Sociale" type="text"  value={client.raisonSociale}       onChange={set('raisonSociale')}       required />
+            <FormField label="SIRET"                               value={client.siret}               onChange={set('siret')} />
           </div>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            {renderInputField("Email de l'entreprise", "emailEntreprise", client, setClient, "email")}
-            {renderInputField("Numéro de l'entreprise", "telephoneEntreprise", client, setClient, "tel")}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <FormField label="Email de l'entreprise"  type="email" value={client.emailEntreprise}     onChange={set('emailEntreprise')} />
+            <FormField label="Numéro de l'entreprise" type="tel"   value={client.telephoneEntreprise} onChange={set('telephoneEntreprise')} />
           </div>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            {renderInputField("Nom du contact", "name", client, setClient, "text", true)}
-            {renderInputField("Email du contact", "email", client, setClient, "email", true)}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <FormField label="Nom du contact"   type="text"  value={client.name}  onChange={set('name')}  required />
+            <FormField label="Email du contact" type="email" value={client.email} onChange={set('email')} required />
           </div>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            {renderInputField("Numéro du contact", "telephone", client, setClient, "tel")}
-            {renderInputField("Contact secondaire", "contactSecondaire", client, setClient)}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <FormField label="Numéro du contact"  type="tel" value={client.telephone}        onChange={set('telephone')} />
+            <FormField label="Contact secondaire"            value={client.contactSecondaire} onChange={set('contactSecondaire')} />
           </div>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            {renderInputField("Secteur d'activité", "secteurActivite", client, setClient)}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <FormField label="Secteur d'activité" value={client.secteurActivite} onChange={set('secteurActivite')} />
           </div>
         </>
       )}
-      
+
       {isEdit && (
-        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div>
-            <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500}}>Type de client</label>
-            <select value={client.type || 'Particulier'} onChange={e=>setClient({...client, type: e.target.value})} style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white'}}>
+            <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>Type de client</label>
+            <select
+              value={client.type || 'Particulier'}
+              onChange={set('type')}
+              style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: 'white' }}
+            >
               <option value="Particulier">Particulier</option>
               <option value="Société">Société</option>
             </select>
@@ -72,7 +61,7 @@ const ClientFormFields = ({ client, setClient, type = 'Particulier', isEdit = fa
         </div>
       )}
 
-      {renderInputField("Description client", "description", client, setClient, "text", false, true)}
+      <FormField label="Description client" type="textarea" value={client.description} onChange={set('description')} />
     </>
   );
 };

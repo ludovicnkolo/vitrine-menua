@@ -192,8 +192,8 @@ export default function Header() {
                       </span>
                     </div>
                     <ul>
-                      {menus[key].links.map((link, j) => (
-                        <li key={j}>
+                      {menus[key].links.map((link) => (
+                        <li key={link.href}>
                           <Link
                             href={link.href}
                             onClick={() => setOpenMenu(null)}
@@ -294,9 +294,9 @@ export default function Header() {
                     >
                       {t("Vue d'ensemble", "Overview")}
                     </Link>
-                    {menus[key].links.map((link, j) => (
+                    {menus[key].links.map((link) => (
                       <Link
-                        key={j}
+                        key={link.href}
                         href={link.href}
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="text-[#6e7891] text-[0.9rem] hover:text-[#141824] transition-colors"

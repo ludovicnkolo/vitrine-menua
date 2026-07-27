@@ -149,8 +149,8 @@ export default function NosSolutionsPage() {
                   t("renfort ponctuel en période de clôture ou de reporting", "ad hoc reinforcement during closing or reporting periods"),
                   t("traitement accéléré de dossiers en retard ou en attente", "accelerated processing of delayed or pending files"),
                   t("mise à disposition progressive de ressources pour sécuriser une montée en charge", "progressive provision of resources to secure an increase in load")
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-4">
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-4">
                     <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
                     <span className="leading-relaxed">{item}</span>
                   </li>
@@ -275,8 +275,8 @@ export default function NosSolutionsPage() {
                   t("une équipe opérationnelle pour gérer un volume important de dossiers", "an operational team to manage a large volume of files"),
                   t("un dispositif évolutif ajusté selon la charge, les priorités et les délais", "an scalable system adjusted according to the load, priorities and deadlines"),
                   t("une organisation permettant de maintenir la continuité du traitement en cas d’absence ou de variation d’activité", "an organization allowing to maintain the continuity of processing in case of absence or variation of activity")
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-4">
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-4">
                     <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
                     <span className="leading-relaxed">{item}</span>
                   </li>
@@ -332,8 +332,8 @@ export default function NosSolutionsPage() {
                   t("traitement de dossiers, adhésions, opérations ou demandes selon des règles définies avec le client", "processing of files, memberships, operations or requests according to rules defined with the client"),
                   t("suivi structuré avec points de contrôle réguliers", "structured monitoring with regular control points"),
                   t("reporting opérationnel selon la fréquence convenue", "operational reporting according to the agreed frequency")
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-4">
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-4">
                     <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
                     <span className="leading-relaxed">{item}</span>
                   </li>

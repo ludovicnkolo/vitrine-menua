@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
 import DossiersPage from './DossiersPage';
 import TasksPage from './TasksPage';
 import TachesPage from './TachesPage';
 import SpacePageLayout from '../components/SpacePageLayout';
 
-const WorkspacePage = () => {
-  return (
+const WorkspacePage = () => (
     <SpacePageLayout
       initialTab="dossiers"
       tabs={[
@@ -23,7 +21,6 @@ const WorkspacePage = () => {
         </>
       )}
     </SpacePageLayout>
-  );
-};
+);
 
 export default WorkspacePage;

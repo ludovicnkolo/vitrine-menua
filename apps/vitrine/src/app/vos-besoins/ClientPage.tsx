@@ -140,8 +140,8 @@ export default function VosBesoinsPage() {
                 t("reporting de rentabilité", "profitability reporting"),
                 t("suivi d’activité et indicateurs opérationnels", "activity monitoring and operational indicators"),
                 t("support aux directions financières", "support to financial departments")
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-3"><span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span><span>{item}</span></li>
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3"><span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span><span>{item}</span></li>
               ))}
             </ul>
           </div>
@@ -177,8 +177,8 @@ export default function VosBesoinsPage() {
                 t("mise à jour de fichiers de pilotage", "updating of management files"),
                 t("consolidation des données de gestion", "consolidation of management data"),
                 t("support aux directions financières et responsables opérationnels", "support to financial departments and operational managers")
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-3"><span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span><span>{item}</span></li>
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3"><span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span><span>{item}</span></li>
               ))}
             </ul>
           </div>
@@ -240,8 +240,8 @@ export default function VosBesoinsPage() {
                   t("support aux équipes conformité", "support for compliance teams"),
                   t("suivi des procédures internes", "monitoring of internal procedures"),
                   t("préparation de dossiers pour validation par les équipes habilitées", "preparation of files for validation by authorized teams")
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-4">
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-4">
                     <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
                     <span className="leading-relaxed">{item}</span>
                   </li>
@@ -293,8 +293,8 @@ export default function VosBesoinsPage() {
                 t("préparation de fichiers de reporting", "preparation of reporting files"),
                 t("consolidation de données comptables et opérationnelles", "consolidation of accounting and operational data"),
                 t("archivage et organisation documentaire", "archiving and documentary organization")
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-4">
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-4">
                   <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
                   <span className="leading-relaxed">{item}</span>
                 </li>
@@ -329,8 +329,8 @@ export default function VosBesoinsPage() {
                 t("organisation et archivage documentaire", "documentary organization and archiving"),
                 t("mise à jour des bases clients", "updating of client databases"),
                 t("suivi des opérations patrimoniales dans le respect des procédures internes", "monitoring of wealth operations in compliance with internal procedures")
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-4">
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-4">
                   <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
                   <span className="leading-relaxed">{item}</span>
                 </li>
@@ -385,8 +385,8 @@ export default function VosBesoinsPage() {
                   t("remplacement ou appui temporaire d’équipe", "replacement or temporary team support"),
                   t("coordination entre équipes internes et prestataires externalisés", "coordination between internal teams and outsourced providers"),
                   t("étude de besoins spécifiques non listés dans les rubriques précédentes", "study of specific needs not listed in the previous sections")
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-4">
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-4">
                     <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
                     <span className="leading-relaxed">{item}</span>
                   </li>

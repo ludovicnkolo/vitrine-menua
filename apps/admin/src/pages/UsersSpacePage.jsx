@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
 import UsersPage from './UsersPage';
 import RolesPage from './RolesPage';
 import SpacePageLayout from '../components/SpacePageLayout';
 
-const UsersSpacePage = () => {
-  return (
+const UsersSpacePage = () => (
     <SpacePageLayout
       initialTab="equipe"
       tabs={[
@@ -23,6 +21,5 @@ const UsersSpacePage = () => {
       )}
     </SpacePageLayout>
   );
-};
 
 export default UsersSpacePage;

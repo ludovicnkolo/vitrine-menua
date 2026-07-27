@@ -46,3 +46,19 @@ export const handleFormSubmit = async ({
     setIsSubmitting(false);
   }
 };
+
+/**
+ * Valide un fichier PDF selon les règles métier communes.
+ * @returns {string | null} Message d'erreur, ou null si valide.
+ */
+export function validatePdfFile(file: File | null | undefined): string | null {
+  if (!file || file.size === 0) return null;
+  if (file.type !== "application/pdf") {
+    return "Seuls les fichiers au format PDF sont acceptés.";
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    return "Le fichier PDF est trop volumineux (maximum 5 Mo).";
+  }
+  return null;
+}
+

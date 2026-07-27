@@ -121,13 +121,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       if (res.ok) {
         setEditTask(null);
         fetchData();
-        alert('Mission mise à jour avec succès !');
+        setErrorMsg('Mission mise à jour avec succès !');
       } else {
-        alert("Erreur lors de la mise à jour.");
+        setErrorMsg("Erreur lors de la mise à jour.");
       }
     } catch (err) {
       console.error("Erreur mise à jour mission:", err);
-      alert("Erreur de connexion.");
+      setErrorMsg("Erreur de connexion.");
     }
   };
 
@@ -136,7 +136,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
   const handleCreateSubTask = async () => {
     if (!newTaskMessage || !newTaskAssignedTo || !newTaskEcheance) {
-      alert("Veuillez remplir le message, le destinataire et l'échéance.");
+      setErrorMsg("Veuillez remplir le message, le destinataire et l'échéance.");
       return;
     }
     
@@ -171,7 +171,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       });
       
       if (res.ok) {
-        alert('Tâche créée avec succès !');
+        setErrorMsg('Tâche créée avec succès !');
         setCreateTaskModal(false);
         setNewTaskFile(null);
         setConsultTask(null);
@@ -180,10 +180,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         setNewTaskEcheance('');
         fetchData();
       } else {
-        alert("Erreur lors de la création de la tâche.");
+        setErrorMsg("Erreur lors de la création de la tâche.");
       }
     } catch (e) {
-      alert("Erreur de connexion au serveur.");
+      setErrorMsg("Erreur de connexion au serveur.");
     } finally {
       setIsSubmitting(false);
     }
@@ -445,7 +445,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                       <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(sub.status)}</span>
                     </div>
                     <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                      <button type="button" onClick={(e) => { e.stopPropagation(); alert(`Tâche ${sub.id} supprimée avec succès !`); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)'}} title="Supprimer la tâche liée">
+                      <button type="button" onClick={(e) => { e.stopPropagation(); setErrorMsg(`Tâche ${sub.id} supprimée avec succès !`); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)'}} title="Supprimer la tâche liée">
                         <Trash size={18} />
                       </button>
                     </div>

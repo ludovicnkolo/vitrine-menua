@@ -142,8 +142,8 @@ export default function PourquoiMenuaPage() {
                 t("amélioration de la qualité de service", "improvement of service quality"),
                 t("contribution à la fidélisation de vos clients", "contribution to building customer loyalty"),
                 t("Chiffre d’affaires soutenu", "Supported turnover")
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-3"><span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span><span>{item}</span></li>
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3"><span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span><span>{item}</span></li>
               ))}
             </ul>
           </div>
@@ -193,8 +193,8 @@ export default function PourquoiMenuaPage() {
                   t("suivi structuré des livrables ;", "structured monitoring of deliverables;"),
                   t("mobilisation possible de ressources ou partenaires qualifiés selon les besoins ;", "possible mobilization of resources or qualified partners according to needs;"),
                   t("intervention en français et en anglais.", "intervention in French and English.")
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-4">
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-4">
                     <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
                     <span className="leading-relaxed">{item}</span>
                   </li>
@@ -242,8 +242,8 @@ export default function PourquoiMenuaPage() {
                 t("confidentialité des informations confiées", "confidentiality of entrusted information"),
                 t("respect des procédures internes du client", "compliance with the client's internal procedures"),
                 t("intervention sous supervision des équipes ou professionnels habilités lorsque cela est requis", "intervention under the supervision of authorized teams or professionals when required")
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-3"><span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span><span>{item}</span></li>
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3"><span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span><span>{item}</span></li>
               ))}
             </ul>
           </div>

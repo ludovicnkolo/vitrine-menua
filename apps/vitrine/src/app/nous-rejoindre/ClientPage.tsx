@@ -77,8 +77,8 @@ export default function NousRejoindre() {
                   t("Profils bilingues français / anglais", "Bilingual profiles French / English"),
                   t("Autres langues appréciées", "Other languages appreciated"),
                   t("Profils disponibles pour des missions ponctuelles ou récurrentes", "Profiles available for occasional or recurring missions")
-                ].map((title, i) => (
-                  <div key={i} className="flex items-start gap-3 pl-4 ml-2">
+                ].map((title) => (
+                  <div key={title} className="flex items-start gap-3 pl-4 ml-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#141824] shrink-0 mt-2" />
                     <h4 className="font-bold text-[#141824] text-[1.05rem] leading-snug">{title}</h4>
                   </div>
@@ -163,14 +163,14 @@ export default function NousRejoindre() {
                       t("Risques et Conformité", "Risk and Compliance"),
                       t("Support opérationnel CGP", "Wealth Management Support"),
                       t("Autre", "Other")
-                    ].map((opt, i) => {
+                    ].map((opt) => {
                       const isOther = opt === t("Autre", "Other") || opt === "Autre" || opt === "Other";
                       return (
-                      <div key={i} className={`flex items-start gap-3 text-[1.05rem] text-[#141824] font-light group ${isOther ? 'flex-col sm:flex-row' : ''}`}>
-                        <label htmlFor={`skill_${i}`} className="flex items-start gap-3 cursor-pointer">
+                      <div key={opt} className={`flex items-start gap-3 text-[1.05rem] text-[#141824] font-light group ${isOther ? 'flex-col sm:flex-row' : ''}`}>
+                        <label htmlFor={`skill_${opt.replace(/\s+/g, '_')}`} className="flex items-start gap-3 cursor-pointer">
                           <input 
                             type="checkbox" 
-                            id={`skill_${i}`}
+                            id={`skill_${opt.replace(/\s+/g, '_')}`}
                             name="skills" 
                             value={opt} 
                             className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]"

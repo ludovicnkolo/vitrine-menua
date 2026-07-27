@@ -20,8 +20,8 @@ export default function Breadcrumb({ items, light = false }: { items: Breadcrumb
       <Link href="/" className={`${hoverColor} transition-colors`}>
         {t("Accueil", "Home")}
       </Link>
-      {items.map((item, index) => (
-        <div key={index} className="flex items-center">
+      {items.map((item) => (
+        <div key={item.label} className="flex items-center">
           <ChevronRight size={14} className="mx-2 opacity-50" />
           {item.href ? (
             <Link href={item.href} className={`${hoverColor} transition-colors`}>

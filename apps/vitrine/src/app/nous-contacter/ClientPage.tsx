@@ -7,7 +7,7 @@ import { formatBrand } from "@/utils/formatBrand";
 import SubmitStatusModal from "@/components/SubmitStatusModal";
 import ContactInfoFields from "@/components/ContactInfoFields";
 import FormPrivacyAndSubmit from "@/components/FormPrivacyAndSubmit";
-import { handleFormSubmit } from "@/utils/formSubmitHandler";
+import { handleFormSubmit, validatePdfFile } from "@/utils/formSubmitHandler";
 
 export default function NousContacter() {
   const { t, lang } = useLanguage();
@@ -20,17 +20,14 @@ export default function NousContacter() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.type !== "application/pdf") {
-         setFileError("Seuls les fichiers au format PDF sont acceptés.");
-         setSelectedFileName(null);
-         e.target.value = "";
-      } else if (file.size > 5 * 1024 * 1024) {
-         setFileError("Le fichier PDF est trop volumineux (maximum 5 Mo).");
-         setSelectedFileName(null);
-         e.target.value = "";
+      const error = validatePdfFile(file);
+      if (error) {
+        setFileError(error);
+        setSelectedFileName(null);
+        e.target.value = "";
       } else {
-         setSelectedFileName(file.name);
-         setFileError(null);
+        setSelectedFileName(file.name);
+        setFileError(null);
       }
     } else {
       setSelectedFileName(null);
@@ -56,22 +53,13 @@ export default function NousContacter() {
     
     try {
       const formData = new FormData(e.currentTarget);
-      
-      // Validation du fichier PDF s'il est fourni
       const fileField = formData.get("file") as File | null;
-      if (fileField && fileField.size > 0) {
-        if (fileField.type !== "application/pdf") {
-          setFileError("Seuls les fichiers au format PDF sont acceptés.");
-          setTimeout(() => setFileError(null), 3000);
-          setIsSubmitting(false);
-          return;
-        }
-        if (fileField.size > 5 * 1024 * 1024) { // Limite de 5 Mo
-          setFileError("Le fichier PDF est trop volumineux (maximum 5 Mo).");
-          setTimeout(() => setFileError(null), 3000);
-          setIsSubmitting(false);
-          return;
-        }
+      const pdfError = validatePdfFile(fileField);
+      if (pdfError) {
+        setFileError(pdfError);
+        setTimeout(() => setFileError(null), 3000);
+        setIsSubmitting(false);
+        return;
       }
 
       await handleFormSubmit({
@@ -242,9 +230,9 @@ export default function NousContacter() {
                     t("Support comptable et data", "Accounting and data support"),
                     t("Support opérationnel CGP / gestion de patrimoine", "Wealth Management Support"),
                     t("Autre besoin opérationnel", "Other operational need"),
-                  ].map((opt, i) => (
-                    <label key={i} htmlFor={`need_${i}`} className="flex items-start gap-3 text-[1.05rem] text-[#141824] font-light cursor-pointer group">
-                      <input type="checkbox" id={`need_${i}`} name="needs" value={opt} className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]" /> 
+                  ].map((opt) => (
+                    <label key={opt} htmlFor={`need_${opt.replace(/\s+/g, '_')}`} className="flex items-start gap-3 text-[1.05rem] text-[#141824] font-light cursor-pointer group">
+                      <input type="checkbox" id={`need_${opt.replace(/\s+/g, '_')}`} name="needs" value={opt} className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]" /> 
                       <span className="group-hover:text-[#6e7891] transition-colors">{opt}</span>
                     </label>
                   ))}

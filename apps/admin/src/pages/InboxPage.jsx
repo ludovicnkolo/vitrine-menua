@@ -8,6 +8,15 @@ import ActionDropdown from '../components/ActionDropdown';
 import PaginationControls from '../components/PaginationControls';
 import FilePreviewModal from '../components/FilePreviewModal';
 
+const DetailField = ({ label, value, children }) => (
+  <div>
+    <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>{label}</span>
+    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+      {children || value}
+    </div>
+  </div>
+);
+
 const InboxPage = () => {
   const [tab, setTab] = useState('contact');
   const [filterTraite, setFilterTraite] = useState('all');
@@ -482,88 +491,45 @@ const InboxPage = () => {
             {/* Fields for Contact */}
             {tab === 'contact' && (
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem'}}>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Type de profil</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{extractFieldFromHtml(processMsg.bodyHtml, 'Type de client') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise (B2B)' : 'Particulier')}</div>
-                </div>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom complet</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'}</div>
-                </div>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Email</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'}</div>
-                </div>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Téléphone</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'}</div>
-                </div>
+                <DetailField label="Type de profil" value={extractFieldFromHtml(processMsg.bodyHtml, 'Type de client') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise (B2B)' : 'Particulier')} />
+                <DetailField label="Nom complet" value={processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'} />
+                <DetailField label="Email" value={processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'} />
+                <DetailField label="Téléphone" value={processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'} />
                 {processMsg.statusSubmitter === 'SOCIETE' && (
-                  <div>
-                    <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Société</span>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.raisonSocial || extractFieldFromHtml(processMsg.bodyHtml, 'Société') || 'Non renseigné'}</div>
-                  </div>
+                  <DetailField label="Société" value={processMsg.raisonSocial || extractFieldFromHtml(processMsg.bodyHtml, 'Société') || 'Non renseigné'} />
                 )}
                 <div style={{gridColumn: processMsg.statusSubmitter === 'SOCIETE' ? 'span 1' : 'span 2'}}>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Besoin</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.contact?.typeBesoin || processMsg.objet || 'Non renseigné'}</div>
+                  <DetailField label="Besoin" value={processMsg.contact?.typeBesoin || processMsg.objet || 'Non renseigné'} />
                 </div>
               </div>
             )}
 
+
             {/* Fields for Recrutement */}
             {tab === 'recrutement' && (
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem'}}>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Type de profil</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{extractFieldFromHtml(processMsg.bodyHtml, 'Type de profil') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise (B2B)' : 'Particulier')}</div>
-                </div>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom complet</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'}</div>
-                </div>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Email</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'}</div>
-                </div>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Téléphone</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'}</div>
-                </div>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Compétences clés</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}} title={processMsg.recrutement?.competenceCle || processMsg.objet || 'Non renseigné'}>{processMsg.recrutement?.competenceCle || processMsg.objet || 'Non renseigné'}</div>
-                </div>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Années d'expérience</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.anneeExperience || 'Non renseigné'}</div>
-                </div>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Langues</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.langue || extractFieldFromHtml(processMsg.bodyHtml, 'Langues') || 'Non renseigné'}</div>
-                </div>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Lieu de résidence</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.recrutement?.lieuResidence || extractFieldFromHtml(processMsg.bodyHtml, 'Localisation') || 'Non renseigné'}</div>
-                </div>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Disponibilité</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{extractFieldFromHtml(processMsg.bodyHtml, 'Disponibilité') || 'Non renseigné'}</div>
-                </div>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Profil LinkedIn</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
-                    {processMsg.recrutement?.lienLinkedin ? (
-                      <a href={processMsg.recrutement.lienLinkedin} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>
-                        {processMsg.recrutement.lienLinkedin}
-                      </a>
-                    ) : extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio') ? (
-                      <a href={extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio')} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>
-                        {extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio')}
-                      </a>
-                    ) : 'Non renseigné'}
-                  </div>
-                </div>
+                <DetailField label="Type de profil" value={extractFieldFromHtml(processMsg.bodyHtml, 'Type de profil') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise (B2B)' : 'Particulier')} />
+                <DetailField label="Nom complet" value={processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'} />
+                <DetailField label="Email" value={processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'} />
+                <DetailField label="Téléphone" value={processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'} />
+                <DetailField label="Compétences clés">
+                  <div title={processMsg.recrutement?.competenceCle || processMsg.objet || 'Non renseigné'}>{processMsg.recrutement?.competenceCle || processMsg.objet || 'Non renseigné'}</div>
+                </DetailField>
+                <DetailField label="Années d'expérience" value={processMsg.recrutement?.anneeExperience || 'Non renseigné'} />
+                <DetailField label="Langues" value={processMsg.recrutement?.langue || extractFieldFromHtml(processMsg.bodyHtml, 'Langues') || 'Non renseigné'} />
+                <DetailField label="Lieu de résidence" value={processMsg.recrutement?.lieuResidence || extractFieldFromHtml(processMsg.bodyHtml, 'Localisation') || 'Non renseigné'} />
+                <DetailField label="Disponibilité" value={extractFieldFromHtml(processMsg.bodyHtml, 'Disponibilité') || 'Non renseigné'} />
+                <DetailField label="Profil LinkedIn">
+                  {processMsg.recrutement?.lienLinkedin ? (
+                    <a href={processMsg.recrutement.lienLinkedin} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>
+                      {processMsg.recrutement.lienLinkedin}
+                    </a>
+                  ) : extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio') ? (
+                    <a href={extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio')} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>
+                      {extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio')}
+                    </a>
+                  ) : 'Non renseigné'}
+                </DetailField>
               </div>
             )}
 
@@ -571,45 +537,45 @@ const InboxPage = () => {
             {(tab === 'personnel' || tab === 'interne') && (
               <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                  <div>
-                    <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Nom</span>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.nomPrenom || 'Non renseigné'}</div>
-                  </div>
-                  <div>
-                    <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Email</span>
-                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.email || 'Non renseigné'}</div>
-                  </div>
+                  <DetailField label="Nom" value={processMsg.nomPrenom || 'Non renseigné'} />
+                  <DetailField label="Email" value={processMsg.email || 'Non renseigné'} />
                 </div>
-                <div>
-                  <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Objet</span>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px'}}>{processMsg.objet || 'Aucun objet'}</div>
-                </div>
+                <DetailField label="Objet" value={processMsg.objet || 'Aucun objet'} />
               </div>
             )}
 
-            <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-              {tab !== 'recrutement' && (
-                <div>
-                  <label style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Fichiers joints</label>
-                  <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', display: 'flex', gap: '1rem', alignItems: 'center'}}>
-                    {(processMsg.cv || processMsg.attachment || processMsg.contact?.pieceJointe) ? (
-                      <select 
-                        onChange={(e) => { if(e.target.value) setPreviewFile(e.target.value); e.target.selectedIndex = 0; }}
-                        style={{padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', width: '100%', background: '#FFF', cursor: 'pointer'}}
-                      >
-                        <option value="">-- Sélectionner un fichier pour l'ouvrir --</option>
-                        {processMsg.cv && <option value={processMsg.cv}>{processMsg.cv}</option>}
-                        {processMsg.contact?.pieceJointe && <option value={processMsg.contact.pieceJointe}>{processMsg.contact.pieceJointe}</option>}
-                        {processMsg.attachment && String(processMsg.attachment).split(',').map(f => f.trim()).filter(f => f).map(f => (
-                           <option key={f} value={f}>{f}</option>
-                        ))}
-                      </select>
-                    ) : (
-                      <span style={{color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.25rem'}}>Aucun fichier</span>
-                    )}
-                  </div>
+            {/* Pièces jointes & Contenu */}
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem', marginBottom: '1.5rem', minHeight: '300px'}}>
+              {/* Left column: Actions / Pièces jointes */}
+              <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+                <div className="card" style={{padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+                  <span style={{display: 'block', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Date de réception</span>
+                  <div style={{fontWeight: 600, fontSize: '1.1rem'}}>{formatDate(processMsg.date)} à {formatTime(processMsg.date)}</div>
                 </div>
-              )}
+                
+                {tab !== 'recrutement' && (
+                  <div className="card" style={{padding: '1.25rem', flex: 1}}>
+                    <span style={{display: 'block', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Fichiers joints</span>
+                    <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', display: 'flex', gap: '1rem', alignItems: 'center'}}>
+                      {(processMsg.cv || processMsg.attachment || processMsg.contact?.pieceJointe) ? (
+                        <select 
+                          onChange={(e) => { if(e.target.value) setPreviewFile(e.target.value); e.target.selectedIndex = 0; }}
+                          style={{padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', width: '100%', background: '#FFF', cursor: 'pointer'}}
+                        >
+                          <option value="">-- Sélectionner un fichier pour l'ouvrir --</option>
+                          {processMsg.cv && <option value={processMsg.cv}>{processMsg.cv}</option>}
+                          {processMsg.contact?.pieceJointe && <option value={processMsg.contact.pieceJointe}>{processMsg.contact.pieceJointe}</option>}
+                          {processMsg.attachment && String(processMsg.attachment).split(',').map(f => f.trim()).filter(f => f).map(f => (
+                             <option key={f} value={f}>{f}</option>
+                          ))}
+                        </select>
+                      ) : (
+                        <span style={{color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.25rem'}}>Aucun fichier</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <div className="card" style={{padding: '1.25rem', height: '100%'}}>
                 <span style={{display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>

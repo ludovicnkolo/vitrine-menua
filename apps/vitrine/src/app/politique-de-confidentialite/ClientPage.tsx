@@ -3,13 +3,8 @@ import React from "react";
 import Link from "@/components/Link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
-
-const SectionBlock = ({ title, children }: any) => (
-  <div>
-    <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{title}</h2>
-    {children}
-  </div>
-);
+import SectionBlock from "@/components/SectionBlock";
+import LegalPageHeader from "@/components/LegalPageHeader";
 
 export default function PolitiqueConfidentialite() {
   const { t } = useLanguage();
@@ -18,16 +13,10 @@ export default function PolitiqueConfidentialite() {
     <main className="flex flex-col w-full min-h-screen bg-white pt-32 pb-16">
       <section className="relative w-full mb-20">
         <div className="laplace-container max-w-5xl">
-          <p className="  text-[#6e7891] text-[0.8rem] font-bold tracking-widest uppercase mb-4">
-            <Link href="/" className="hover:text-[#141824] transition-colors">{t("Accueil", "Home")}</Link>
-            <span className="mx-2 text-[#a0aabf]">/</span>
-            <span>{t("Politique de confidentialité", "Privacy Policy")}</span>
-          </p>
-          
-          <h1 className="text-[1.25rem] md:text-[1.5rem] font-bold uppercase tracking-widest mb-4 text-[#141824]">
-            {t("Politique de confidentialité", "Privacy Policy")}
-          </h1>
-          <p className="text-[#6e7891] font-medium mb-12">{t("Dernière mise à jour : juillet 2026.", "Last update: July 2026.")}</p>
+          <LegalPageHeader 
+            title={t("Politique de confidentialité", "Privacy Policy")} 
+            lastUpdate={t("Dernière mise à jour : juillet 2026.", "Last update: July 2026.")} 
+          />
           <div className="space-y-14 text-[#6e7891] text-[1.05rem] font-light leading-relaxed">
             
             {/* 10.1 RESPONSABLE */}

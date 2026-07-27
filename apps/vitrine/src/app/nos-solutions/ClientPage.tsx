@@ -5,6 +5,45 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight } from "lucide-react";
 
+import { ChevronRight } from "lucide-react";
+
+const SolutionSection = ({ id, title, intro, desc, isReversed, listTitle, listItems, bgClass, topDecoClass, titleDecoClass, borderClass, zIndexClass = "z-10" }: any) => {
+  return (
+    <section id={id} className={`relative w-full py-24 scroll-mt-20 overflow-hidden ${bgClass}`}>
+      {topDecoClass && <div className={topDecoClass} />}
+      <div className={`laplace-container relative ${zIndexClass} max-w-7xl mx-auto flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-16 lg:gap-24 items-center`}>
+        <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-4 lg:-translate-y-10">
+          <div className={`w-16 h-[3px] mb-8 ${titleDecoClass}`} />
+          <h3 className={`${bgClass.includes('bg-[#141824]') ? 'text-white' : 'text-[#141824]'} font-bold text-[2rem] lg:text-[2.2rem] leading-tight mb-8`}>
+            {title}
+          </h3>
+          <p className={`${bgClass.includes('bg-[#141824]') ? 'text-[#e5e9f0]' : 'text-[#141824]/80 font-medium'} font-light text-[1.1rem] leading-relaxed mb-6`}>
+            {intro}
+          </p>
+          <p className={`${bgClass.includes('bg-[#141824]') ? 'text-[#e5e9f0]' : 'text-[#141824]/80 font-medium'} font-light text-[1.1rem] leading-relaxed mb-12`}>
+            {desc}
+          </p>
+        </div>
+        <div className="w-full lg:w-7/12 relative">
+          <div className={`relative bg-white p-10 lg:p-14 shadow-2xl border ${borderClass}`}>
+            <h4 className="text-center text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
+              {listTitle}
+            </h4>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-[#6e7891] font-medium text-[0.95rem]">
+              {listItems.map((item: any) => (
+                <li key={item} className="flex items-start gap-4">
+                  <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
+                  <span className="leading-relaxed">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export default function NosSolutionsPage() {
   const { t } = useLanguage();
 
@@ -109,58 +148,32 @@ export default function NosSolutionsPage() {
       {/* ── SEPARATOR ── */}
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
-      {/* ── 4.3 URGENCE (Image Left, Card Right) ── */}
-      <section className="relative w-full bg-[#141824] py-24 scroll-mt-20 overflow-hidden">
-        {/* Subtle geometric accent background */}
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-[#1a1f2e] skew-x-[-10deg] origin-bottom-right hidden lg:block" />
-        
-        <div className="laplace-container relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
-          
-          {/* Left Column: Narrative */}
-          <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-4 lg:-translate-y-10">
-            <div className="w-16 h-[3px] bg-[#e8e1d7] mb-8" />
-            <h3 className="text-white font-bold text-[2rem] lg:text-[2.2rem] leading-tight mb-8">
-              {t("Urgence", "Urgency")}
-            </h3>
-            <p className="text-[#e5e9f0] font-light text-[1.1rem] leading-relaxed mb-6">
-              {formatBrand(t(
-                "MENUA CONSULTING peut mobiliser des ressources opérationnelles pour répondre à un besoin immédiat, absorber une surcharge d’activité ou sécuriser la continuité d’un service.",
-                "MENUA CONSULTING can mobilize operational resources to meet an immediate need, absorb an overload of activity or secure the continuity of a service."
-              ))}
-            </p>
-            <p className="text-[#e5e9f0] font-light text-[1.1rem] leading-relaxed mb-12">
-              {t(
-                "Cette solution est adaptée aux situations nécessitant une réaction rapide, notamment lorsque les équipes internes font face à un pic d’activité, un retard de traitement ou une absence temporaire.",
-                "This solution is adapted to situations requiring a rapid reaction, in particular when internal teams face an activity peak, a processing delay or a temporary absence."
-              )}
-            </p>
-          </div>
-
-          {/* Right Column: Features Card */}
-          <div className="w-full lg:w-7/12 relative">
-            <div className="relative bg-white p-10 lg:p-14 shadow-2xl border border-[#e8e1d7] border-t-8 border-t-[#e8e1d7]">
-              <h4 className="text-center text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
-                {t("Exemples de besoins :", "Examples of needs:")}
-              </h4>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-[#6e7891] font-medium text-[0.95rem]">
-                {[
-                  t("surcharge d’activité ou pic de dossiers", "activity overload or peak of files"),
-                  t("remplacement temporaire d’un collaborateur absent", "temporary replacement of an absent employee"),
-                  t("renfort ponctuel en période de clôture ou de reporting", "ad hoc reinforcement during closing or reporting periods"),
-                  t("traitement accéléré de dossiers en retard ou en attente", "accelerated processing of delayed or pending files"),
-                  t("mise à disposition progressive de ressources pour sécuriser une montée en charge", "progressive provision of resources to secure an increase in load")
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-4">
-                    <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
-                    <span className="leading-relaxed">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-        </div>
-      </section>
+      {/* ── 4.3 URGENCE ── */}
+      <SolutionSection 
+        id="urgence"
+        bgClass="bg-[#141824]"
+        topDecoClass="absolute top-0 right-0 w-1/2 h-full bg-[#1a1f2e] skew-x-[-10deg] origin-bottom-right hidden lg:block"
+        titleDecoClass="bg-[#e8e1d7]"
+        borderClass="border-[#e8e1d7] border-t-8 border-t-[#e8e1d7]"
+        isReversed={false}
+        title={t("Urgence", "Urgency")}
+        intro={formatBrand(t(
+          "MENUA CONSULTING peut mobiliser des ressources opérationnelles pour répondre à un besoin immédiat, absorber une surcharge d’activité ou sécuriser la continuité d’un service.",
+          "MENUA CONSULTING can mobilize operational resources to meet an immediate need, absorb an overload of activity or secure the continuity of a service."
+        ))}
+        desc={t(
+          "Cette solution est adaptée aux situations nécessitant une réaction rapide, notamment lorsque les équipes internes font face à un pic d’activité, un retard de traitement ou une absence temporaire.",
+          "This solution is adapted to situations requiring a rapid reaction, in particular when internal teams face an activity peak, a processing delay or a temporary absence."
+        )}
+        listTitle={t("Exemples de besoins :", "Examples of needs:")}
+        listItems={[
+          t("surcharge d’activité ou pic de dossiers", "activity overload or peak of files"),
+          t("remplacement temporaire d’un collaborateur absent", "temporary replacement of an absent employee"),
+          t("renfort ponctuel en période de clôture ou de reporting", "ad hoc reinforcement during closing or reporting periods"),
+          t("traitement accéléré de dossiers en retard ou en attente", "accelerated processing of delayed or pending files"),
+          t("mise à disposition progressive de ressources pour sécuriser une montée en charge", "progressive provision of resources to secure an increase in load")
+        ]}
+      />
 
       {/* ── SEPARATOR ── */}
       <div className="w-full h-8 md:h-16 bg-white"></div>
@@ -235,114 +248,63 @@ export default function NosSolutionsPage() {
         </div>
       </section>
 
-      {/* ── 4.5 VOLUME (Dark Theme Full Width) ── */}
-      <section className="relative w-full bg-[#141824] pt-16 md:pt-[7.75rem] pb-16 md:pb-24 scroll-mt-20 overflow-hidden">
-        {/* Subtle geometric accent background on the left */}
-        <div className="absolute top-0 left-0 w-1/2 h-full bg-[#1a1f2e] skew-x-[10deg] origin-bottom-left hidden lg:block" />
-        
-        <div className="laplace-container relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row-reverse gap-16 lg:gap-24 items-center">
-          
-          {/* Narrative (Right side visually) */}
-          <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-4 lg:-translate-y-10">
-            <div className="w-16 h-[3px] bg-[#e8e1d7] mb-8" />
-            <h3 className="text-white font-bold text-[2rem] lg:text-[2.2rem] leading-tight mb-8">
-              {t("Volume", "Volume")}
-            </h3>
-            <p className="text-[#e5e9f0] font-light text-[1.1rem] leading-relaxed mb-6">
-              {formatBrand(t(
-                "MENUA CONSULTING adapte le dimensionnement de ses ressources au volume de dossiers, de flux ou d’opérations à traiter.",
-                "MENUA CONSULTING adapts the sizing of its resources to the volume of files, flows or operations to be processed."
-              ))}
-            </p>
-            <p className="text-[#e5e9f0] font-light text-[1.1rem] leading-relaxed mb-12">
-              {t(
-                "L’objectif est de garantir une exécution fluide, continue et sécurisée, même lorsque les volumes augmentent ou lorsque plusieurs flux doivent être suivis simultanément.",
-                "The objective is to guarantee fluid, continuous and secure execution, even when volumes increase or when several flows must be tracked simultaneously."
-              )}
-            </p>
-          </div>
-
-          {/* Features Card (Left side visually) */}
-          <div className="w-full lg:w-7/12 relative">
-            <div className="relative bg-white p-10 lg:p-14 shadow-2xl border border-[#e8e1d7] border-t-8 border-t-[#e8e1d7]">
-              <h4 className="text-center text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
-                {t("Dispositifs possibles :", "Possible systems:")}
-              </h4>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-[#6e7891] font-medium text-[0.95rem]">
-                {[
-                  t("une ressource dédiée sur un périmètre précis", "a dedicated resource on a specific scope"),
-                  t("un renfort ponctuel pour absorber une surcharge d’activité", "an ad hoc reinforcement to absorb an activity overload"),
-                  t("une équipe opérationnelle pour gérer un volume important de dossiers", "an operational team to manage a large volume of files"),
-                  t("un dispositif évolutif ajusté selon la charge, les priorités et les délais", "an scalable system adjusted according to the load, priorities and deadlines"),
-                  t("une organisation permettant de maintenir la continuité du traitement en cas d’absence ou de variation d’activité", "an organization allowing to maintain the continuity of processing in case of absence or variation of activity")
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-4">
-                    <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
-                    <span className="leading-relaxed">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-        </div>
-      </section>
+      {/* ── 4.5 VOLUME ── */}
+      <SolutionSection 
+        id="volume"
+        bgClass="bg-[#141824]"
+        topDecoClass="absolute top-0 left-0 w-1/2 h-full bg-[#1a1f2e] skew-x-[10deg] origin-bottom-left hidden lg:block"
+        titleDecoClass="bg-[#e8e1d7]"
+        borderClass="border-[#e8e1d7] border-t-8 border-t-[#e8e1d7]"
+        isReversed={true}
+        title={t("Volume", "Volume")}
+        intro={formatBrand(t(
+          "MENUA CONSULTING adapte le dimensionnement de ses ressources au volume de dossiers, de flux ou d’opérations à traiter.",
+          "MENUA CONSULTING adapts the sizing of its resources to the volume of files, flows or operations to be processed."
+        ))}
+        desc={t(
+          "L’objectif est de garantir une exécution fluide, continue et sécurisée, même lorsque les volumes augmentent ou lorsque plusieurs flux doivent être suivis simultanément.",
+          "The objective is to guarantee fluid, continuous and secure execution, even when volumes increase or when several flows must be tracked simultaneously."
+        )}
+        listTitle={t("Dispositifs possibles :", "Possible systems:")}
+        listItems={[
+          t("une ressource dédiée sur un périmètre précis", "a dedicated resource on a specific scope"),
+          t("un renfort ponctuel pour absorber une surcharge d’activité", "an ad hoc reinforcement to absorb an activity overload"),
+          t("une équipe opérationnelle pour gérer un volume important de dossiers", "an operational team to manage a large volume of files"),
+          t("un dispositif évolutif ajusté selon la charge, les priorités et les délais", "an scalable system adjusted according to the load, priorities and deadlines"),
+          t("une organisation permettant de maintenir la continuité du traitement en cas d’absence ou de variation d’activité", "an organization allowing to maintain the continuity of processing in case of absence or variation of activity")
+        ]}
+      />
 
       {/* ── SEPARATION BLANC ── */}
       <div className="w-full h-8 md:h-[5.25rem] bg-white"></div>
 
       {/* ── 4.6 MODE D'ORGANISATION ── */}
-      <section className="relative w-full bg-[#e8e1d7] pt-16 md:pt-[7.75rem] pb-16 md:pb-24 scroll-mt-20 overflow-hidden">
-        {/* Subtle geometric accent background on the right */}
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-[#e0d8cd] skew-x-[-10deg] origin-bottom-right hidden lg:block" />
-        
-        <div className="laplace-container relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
-          
-          {/* Narrative (Left side visually) */}
-          <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-4 lg:-translate-y-10">
-            <div className="w-16 h-[3px] bg-[#141824] mb-8" />
-            <h3 className="text-[#141824] font-bold text-[2rem] lg:text-[2.2rem] leading-tight mb-8">
-              {t("Mode d’organisation", "Organization mode")}
-            </h3>
-            <p className="text-[#141824]/80 font-medium text-[1.1rem] leading-relaxed mb-6">
-              {formatBrand(t(
-                "MENUA CONSULTING structure ses interventions selon le format le plus adapté à l’organisation du client : mission dédiée, intervention ponctuelle, traitement de flux ou prise en charge de process définis.",
-                "MENUA CONSULTING structures its interventions according to the format most adapted to the client's organization: dedicated mission, ad hoc intervention, flow processing or management of defined processes."
-              ))}
-            </p>
-            <p className="text-[#141824]/80 font-medium text-[1.1rem] leading-relaxed mb-12">
-              {t(
-                "Nos équipes s’intègrent aux méthodes, outils, procédures et circuits de validation existants, afin de garantir une exécution fluide, traçable et conforme aux standards internes du client.",
-                "Our teams integrate into existing methods, tools, procedures and validation circuits, in order to guarantee a fluid, traceable execution in line with the client's internal standards."
-              )}
-            </p>
-          </div>
-
-          {/* Features Card (Right side visually) */}
-          <div className="w-full lg:w-7/12 relative">
-            <div className="relative bg-white p-10 lg:p-14 shadow-2xl border border-[#e8e1d7] border-t-8 border-t-[#141824]">
-              <h4 className="text-center text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
-                {t("Modes d’intervention possibles :", "Possible intervention modes:")}
-              </h4>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-[#6e7891] font-medium text-[0.95rem]">
-                {[
-                  t("dispositif dédié pour un service ou un périmètre clairement identifié", "dedicated system for a clearly identified service or scope"),
-                  t("intervention par mission pour un besoin borné dans le temps", "intervention by mission for a time-bound need"),
-                  t("prise en charge de flux ou de process récurrents", "management of recurring flows or processes"),
-                  t("traitement de dossiers, adhésions, opérations ou demandes selon des règles définies avec le client", "processing of files, memberships, operations or requests according to rules defined with the client"),
-                  t("suivi structuré avec points de contrôle réguliers", "structured monitoring with regular control points"),
-                  t("reporting opérationnel selon la fréquence convenue", "operational reporting according to the agreed frequency")
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-4">
-                    <span className="w-1.5 h-1.5 bg-[#141824] rounded-full mt-2 shrink-0"></span>
-                    <span className="leading-relaxed">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
+      <SolutionSection 
+        id="organisation"
+        bgClass="bg-[#e8e1d7]"
+        topDecoClass="absolute top-0 right-0 w-1/2 h-full bg-[#e0d8cd] skew-x-[-10deg] origin-bottom-right hidden lg:block"
+        titleDecoClass="bg-[#141824]"
+        borderClass="border-[#e8e1d7] border-t-8 border-t-[#141824]"
+        isReversed={false}
+        title={t("Mode d’organisation", "Organization mode")}
+        intro={formatBrand(t(
+          "MENUA CONSULTING structure ses interventions selon le format le plus adapté à l’organisation du client : mission dédiée, intervention ponctuelle, traitement de flux ou prise en charge de process définis.",
+          "MENUA CONSULTING structures its interventions according to the format most adapted to the client's organization: dedicated mission, ad hoc intervention, flow processing or management of defined processes."
+        ))}
+        desc={t(
+          "Nos équipes s’intègrent aux méthodes, outils, procédures et circuits de validation existants, afin de garantir une exécution fluide, traçable et conforme aux standards internes du client.",
+          "Our teams integrate into existing methods, tools, procedures and validation circuits, in order to guarantee a fluid, traceable execution in line with the client's internal standards."
+        )}
+        listTitle={t("Modes d’intervention possibles :", "Possible intervention modes:")}
+        listItems={[
+          t("dispositif dédié pour un service ou un périmètre clairement identifié", "dedicated system for a clearly identified service or scope"),
+          t("intervention par mission pour un besoin borné dans le temps", "intervention by mission for a time-bound need"),
+          t("prise en charge de flux ou de process récurrents", "management of recurring flows or processes"),
+          t("traitement de dossiers, adhésions, opérations ou demandes selon des règles définies avec le client", "processing of files, memberships, operations or requests according to rules defined with the client"),
+          t("suivi structuré avec points de contrôle réguliers", "structured monitoring with regular control points"),
+          t("reporting opérationnel selon la fréquence convenue", "operational reporting according to the agreed frequency")
+        ]}
+      />
 
       {/* ── 4.7 LANGUES & 4.8 BON A SAVOIR ── */}
       <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">

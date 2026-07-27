@@ -500,7 +500,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 }}>
                   <option value="">-- Sélectionner un fichier pour l'ouvrir --</option>
                   {consultTask.attachment.split(',').map((att, idx) => (
-                    <option key={idx} value={att.trim()}>{att.trim()}</option>
+                    <option key={att.trim()} value={att.trim()}>{att.trim()}</option>
                   ))}
                 </select>
               ) : (

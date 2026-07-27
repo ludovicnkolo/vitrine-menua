@@ -7,7 +7,7 @@ export function formatBrand(text: string) {
   return (
     <React.Fragment>
       {parts.map((part, index) => (
-        <React.Fragment key={index}>
+        <React.Fragment key={`part-${index}`}>
           {part}
           {index < parts.length - 1 && <span className="brand-text">Menua Consulting</span>}
         </React.Fragment>

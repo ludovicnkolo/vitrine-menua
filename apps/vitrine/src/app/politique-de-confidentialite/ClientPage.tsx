@@ -4,6 +4,13 @@ import Link from "@/components/Link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 
+const SectionBlock = ({ title, children }: any) => (
+  <div>
+    <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{title}</h2>
+    {children}
+  </div>
+);
+
 export default function PolitiqueConfidentialite() {
   const { t } = useLanguage();
 
@@ -24,17 +31,15 @@ export default function PolitiqueConfidentialite() {
           <div className="space-y-14 text-[#6e7891] text-[1.05rem] font-light leading-relaxed">
             
             {/* 10.1 RESPONSABLE */}
-            <div>
-              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Responsable", "Controller")}</h2>
+            <SectionBlock title={t("Responsable", "Controller")}>
               <p>{formatBrand(t(
                 "MENUA CONSULTING, SASU située 92 rue des Pyrénées, 75020 Paris, est responsable des traitements réalisés au moyen du site. Contact : contact@menuaconsulting.com.",
                 "MENUA CONSULTING, a SASU located at 92 rue des Pyrénées, 75020 Paris, is responsible for the processing carried out by means of the site. Contact: contact@menuaconsulting.com."
               ))}</p>
-            </div>
+            </SectionBlock>
 
             {/* 10.2 DONNÉES, FINALITÉS ET BASES LÉGALES */}
-            <div>
-              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Données, finalités et bases légales", "Data, purposes and legal bases")}</h2>
+            <SectionBlock title={t("Données, finalités et bases légales", "Data, purposes and legal bases")}>
               <ul className="list-disc pl-6 space-y-4">
                 <li>
                   <strong className="text-[#141824]">{t("Demandes de contact :", "Contact requests:")}</strong>{" "}
@@ -53,20 +58,18 @@ export default function PolitiqueConfidentialite() {
                   {t("journaux techniques, connexions et actions — sécurisation des systèmes, prévention des abus et traçabilité.", "technical logs, connections and actions — system securing, abuse prevention and traceability.")}
                 </li>
               </ul>
-            </div>
+            </SectionBlock>
 
             {/* 10.3 CHAMPS OBLIGATOIRES */}
-            <div>
-              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Champs obligatoires", "Mandatory fields")}</h2>
+            <SectionBlock title={t("Champs obligatoires", "Mandatory fields")}>
               <p>{formatBrand(t(
                 "Les champs obligatoires sont signalés par un astérisque. Sans ces informations, MENUA CONSULTING peut ne pas être en mesure de répondre à la demande ou d’étudier le profil. Les autres informations sont facultatives.",
                 "Mandatory fields are indicated by an asterisk. Without this information, MENUA CONSULTING may not be able to respond to the request or study the profile. Other information is optional."
               ))}</p>
-            </div>
+            </SectionBlock>
 
             {/* 10.4 DESTINATAIRES */}
-            <div>
-              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Destinataires", "Recipients")}</h2>
+            <SectionBlock title={t("Destinataires", "Recipients")}>
               <p className="mb-4">{formatBrand(t(
                 "Les données sont accessibles aux personnes habilitées de MENUA CONSULTING, dans la limite de leurs fonctions et des missions attribuées. Elles peuvent être traitées par des prestataires techniques encadrés contractuellement pour l’hébergement, la maintenance, la messagerie, la sécurité et le fonctionnement du CRM.",
                 "The data is accessible to authorized persons of MENUA CONSULTING, within the limits of their functions and assigned missions. It may be processed by technical service providers contractually bound for hosting, maintenance, messaging, security and CRM operations."
@@ -75,11 +78,10 @@ export default function PolitiqueConfidentialite() {
                 "MENUA CONSULTING ne vend ni ne cède les données à des tiers à des fins de prospection commerciale.",
                 "MENUA CONSULTING does not sell or transfer data to third parties for commercial prospecting purposes."
               ))}</p>
-            </div>
+            </SectionBlock>
 
             {/* 10.5 ACCÈS HORS ESPACE ÉCONOMIQUE EUROPÉEN */}
-            <div>
-              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Accès hors Espace économique européen", "Access outside the European Economic Area")}</h2>
+            <SectionBlock title={t("Accès hors Espace économique européen", "Access outside the European Economic Area")}>
               <p className="mb-4">{formatBrand(t(
                 "Dans le cadre de certaines missions, MENUA CONSULTING peut mobiliser des collaborateurs, partenaires ou prestataires situés en France, dans l’Union européenne ou dans des pays situés hors de l’Espace économique européen, notamment au Cameroun et, le cas échéant, dans d’autres pays africains. Lorsque cela est strictement nécessaire à l’exécution de la mission, certaines données peuvent leur être rendues accessibles dans la seule limite du périmètre qui leur est confié et sous la supervision de MENUA CONSULTING.",
                 "As part of certain missions, MENUA CONSULTING may mobilize employees, partners or service providers located in France, in the European Union or in countries outside the European Economic Area, particularly in Cameroon and, where appropriate, in other African countries. When strictly necessary for the execution of the mission, certain data may be made accessible to them solely within the limits of the scope entrusted to them and under the supervision of MENUA CONSULTING."
@@ -92,11 +94,10 @@ export default function PolitiqueConfidentialite() {
                 "Aucune donnée n’est rendue accessible depuis un pays tiers en l’absence de nécessité opérationnelle liée à la mission et tant que le cadre contractuel, organisationnel et technique applicable n’a pas été validé.",
                 "No data is made accessible from a third country in the absence of an operational need related to the mission and as long as the applicable contractual, organizational and technical framework has not been validated."
               )}</p>
-            </div>
+            </SectionBlock>
 
             {/* 10.6 CONSERVATION */}
-            <div>
-              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Conservation", "Retention")}</h2>
+            <SectionBlock title={t("Conservation", "Retention")}>
               <ul className="list-disc pl-6 space-y-4">
                 <li>
                   <strong className="text-[#141824]">{t("Demandes de contact et prospects :", "Contact requests and prospects:")}</strong>{" "}
@@ -115,20 +116,18 @@ export default function PolitiqueConfidentialite() {
                   {t("durée proportionnée aux besoins de sécurité et de traçabilité définis dans la documentation interne.", "duration proportionate to the security and traceability needs defined in internal documentation.")}
                 </li>
               </ul>
-            </div>
+            </SectionBlock>
 
             {/* 10.7 SÉCURITÉ */}
-            <div>
-              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Sécurité", "Security")}</h2>
+            <SectionBlock title={t("Sécurité", "Security")}>
               <p>{formatBrand(t(
                 "MENUA CONSULTING met en œuvre des mesures destinées à préserver la confidentialité, l’intégrité, la disponibilité et la traçabilité des données, notamment la gestion des habilitations, l’authentification renforcée, la journalisation, les sauvegardes, le chiffrement des communications et la limitation des accès selon les missions.",
                 "MENUA CONSULTING implements measures intended to preserve the confidentiality, integrity, availability and traceability of data, in particular authorization management, strong authentication, logging, backups, communications encryption and access limitation according to missions."
               ))}</p>
-            </div>
+            </SectionBlock>
 
             {/* 10.8 DROITS */}
-            <div>
-              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Droits", "Rights")}</h2>
+            <SectionBlock title={t("Droits", "Rights")}>
               <p className="mb-4">{t(
                 "Vous pouvez, selon les conditions prévues par la réglementation, demander l’accès, la rectification, l’effacement, la limitation ou la portabilité de vos données, et vous opposer à certains traitements. Lorsque le traitement repose sur votre consentement, vous pouvez le retirer à tout moment.",
                 "You can, under the conditions provided by regulations, request access to, rectification, erasure, limitation or portability of your data, and object to certain processing. When processing is based on your consent, you can withdraw it at any time."
@@ -138,11 +137,10 @@ export default function PolitiqueConfidentialite() {
                 "Vous pouvez également saisir la CNIL si vous estimez que vos droits ne sont pas respectés.",
                 "You can also contact the CNIL if you consider that your rights are not respected."
               )}</p>
-            </div>
+            </SectionBlock>
 
             {/* 10.9 COOKIES ET MISE À JOUR */}
-            <div>
-              <h2 className="text-[1.2rem] font-bold text-[#141824] uppercase tracking-widest mb-6 border-b border-[#e8e1d7] pb-3">{t("Cookies et mise à jour", "Cookies and updates")}</h2>
+            <SectionBlock title={t("Cookies et mise à jour", "Cookies and updates")}>
               <p className="mb-4">{t(
                 "Tout traceur non essentiel est soumis au consentement préalable lorsque celui-ci est requis. Le choix peut être modifié ou retiré à tout moment aussi simplement qu’il a été donné.",
                 "Any non-essential tracker is subject to prior consent when required. The choice can be modified or withdrawn at any time as easily as it was given."
@@ -151,7 +149,7 @@ export default function PolitiqueConfidentialite() {
                 "La présente politique peut être mise à jour pour tenir compte des évolutions légales, organisationnelles ou techniques.",
                 "This policy may be updated to reflect legal, organizational or technical developments."
               )}</p>
-            </div>
+            </SectionBlock>
 
           </div>
 

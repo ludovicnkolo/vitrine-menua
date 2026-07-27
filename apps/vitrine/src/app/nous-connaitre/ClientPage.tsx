@@ -249,27 +249,32 @@ export default function NousConnaitrePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {[
               {
+                id: "decouverte",
                 title: t("Découverte", "Discovery"),
                 desc: t("Analyse de votre organisation, de vos processus et de vos contraintes afin de définir précisément le périmètre d’intervention.", "Analysis of your organization, your processes and your constraints in order to precisely define the scope of intervention.")
               },
               {
+                id: "verifications",
                 title: t("Vérifications préalables", "Preliminary checks"),
                 desc: t("Vérification de l’identité juridique, de la situation administrative et de la cohérence opérationnelle du client ou partenaire, afin de sécuriser l’entrée en relation.", "Verification of the legal identity, the administrative situation and the operational consistency of the client or partner, in order to secure the onboarding.")
               },
               {
+                id: "analyse",
                 title: t("Analyse", "Analysis"),
                 desc: t("Construction d’une proposition opérationnelle adaptée à vos besoins, incluant les profils, le mode d’organisation, les délais et les livrables attendus.", "Construction of an operational proposal adapted to your needs, including profiles, organization mode, deadlines and expected deliverables.")
               },
               {
+                id: "mise-en-oeuvre",
                 title: <>{t("Mise en œuvre ", "Implementation ")}<span className="font-sans font-medium">&amp;</span>{t(" intégration", " integration")}</>,
                 desc: t("Déploiement des équipes, intégration aux outils, aux procédures et aux standards de votre organisation.", "Deployment of teams, integration into the tools, procedures and standards of your organization.")
               },
               {
+                id: "suivi",
                 title: t("Suivi dans la durée", "Long-term monitoring"),
                 desc: t("Pilotage continu de la mission, ajustements réguliers, contrôle qualité et suivi des livrables.", "Continuous steering of the mission, regular adjustments, quality control and monitoring of deliverables.")
               }
-            ].map((step, idx) => (
-              <div key={idx} className="bg-white/50 border border-[#141824]/10 p-8 hover:bg-white/80 transition-all duration-300 flex flex-col items-center text-center shadow-sm">
+            ].map((step) => (
+              <div key={step.id} className="bg-white/50 border border-[#141824]/10 p-8 hover:bg-white/80 transition-all duration-300 flex flex-col items-center text-center shadow-sm">
                 <h4 className="text-[1.1rem] font-bold text-[#141824] mb-4 min-h-[3rem]">{step.title}</h4>
                 <p className="text-[#6e7891] text-[0.95rem] font-light leading-relaxed">{step.desc}</p>
               </div>

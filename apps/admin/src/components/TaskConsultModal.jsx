@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import ReadOnlyField from './ReadOnlyField';
-import { getStatusBadge, getSafeApiUrl } from '../utils/helpers';
-import { Paperclip, FileText, Eye, Download } from 'lucide-react';
-import FilePreviewModal from './FilePreviewModal';
-import FeedbackThread from './FeedbackThread';
+import { getStatusBadge, getSafeApiUrl } from '../utils/helpers';   
+import { Paperclip, FileText, Eye, Download } from 'lucide-react';       
+import FilePreviewModal from './FilePreviewModal';       
+import FeedbackThread from './FeedbackThread';    
 
 const TaskConsultModal = ({ task, onClose, titlePrefix = "Consulter la Tâche:" }) => {
   const [previewFile, setPreviewFile] = useState(null);
   
-  if (!task) return null;
+  if (!task) return null;                                                           
 
   const documents = task.documents || [];
 

@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 function replaceInDir(dir) {
   const files = fs.readdirSync(dir);
@@ -11,11 +11,11 @@ function replaceInDir(dir) {
       let content = fs.readFileSync(fullPath, 'utf8');
       const original = content;
       
-      content = content.replace(/\|\|\s*\('http:\/\/localhost:4000'\)/g, '');
-      content = content.replace(/\|\|\s*'http:\/\/localhost:4000'/g, '');
-      
+      content = content.replaceAll(/\|\|\s*\('http:\/\/localhost:4000'\)/g, '');
+      content = content.replaceAll(/\|\|\s*'http:\/\/localhost:4000'/g, '');
+
       // Cleanup `(import.meta.env.VITE_API_URL)` into `import.meta.env.VITE_API_URL` if they were wrapped
-      content = content.replace(/\(import\.meta\.env\.VITE_API_URL\)/g, 'import.meta.env.VITE_API_URL');
+      content = content.replaceAll(/\(import\.meta\.env\.VITE_API_URL\)/g, 'import.meta.env.VITE_API_URL');
       
       if (content !== original) {
         fs.writeFileSync(fullPath, content, 'utf8');

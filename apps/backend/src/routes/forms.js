@@ -14,7 +14,7 @@ const router = express.Router();
 
 const validateEmail = async (email) => {
   if (!email || typeof email !== 'string') return false;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^\S+@\S+\.\S+$/;
   if (!emailRegex.test(email)) return false;
 
   const domain = email.split('@')[1];

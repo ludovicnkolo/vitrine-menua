@@ -6,7 +6,7 @@ import { getStatusBadge } from '../utils/helpers';
 import SmsModal from '../components/SmsModal';
 import PaginationControls from '../components/PaginationControls';
 import ReadOnlyField from '../components/ReadOnlyField';
-import { Trash } from 'lucide-react';
+
 
 const TaskConsultModal = ({ task, onClose, titlePrefix }) => {
   if (!task) return null;

@@ -15,7 +15,7 @@ const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items,
       <div className={`w-full lg:w-7/12 ${cardBg} p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]`}>
         <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">{title}</h3>
         {/* Mobile Image */}
-        <div className={`${reversed ? "block" : "block"} lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden`}>
+        <div className={`block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden`}>
           <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
         </div>
         <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">{intro}</p>

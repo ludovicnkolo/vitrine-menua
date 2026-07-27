@@ -17,6 +17,95 @@ const getMessageFromTask = (desc) => {
   return match ? match[1] : desc;
 };
 
+
+const TaskField = ({ label, value, readOnly = true, onChange = null, isTextarea = false }) => {
+  const id = `field-${label.replace(/\s+/g, '-')}`;
+  return (
+    <div>
+      <label htmlFor={id} style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{label}</label>
+      {isTextarea ? (
+        <textarea 
+          id={id}
+          value={value || ''} 
+          onChange={onChange} 
+          readOnly={readOnly}
+          style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: readOnly ? '1px solid var(--border)' : '1px solid var(--primary)', minHeight: '120px', resize: readOnly ? 'none' : 'vertical', fontFamily: 'inherit', background: readOnly ? '#F8FAFC' : '#FFF', color: 'var(--text-main)'}}
+        />
+      ) : (
+        <input 
+          id={id}
+          type="text" 
+          value={value || ''} 
+          onChange={onChange} 
+          readOnly={readOnly}
+          className="input-field" 
+          style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: readOnly ? '1px solid var(--border)' : '1px solid var(--primary)', background: readOnly ? '#F8FAFC' : '#FFF', color: 'var(--text-main)'}}
+        />
+      )}
+    </div>
+  );
+};
+
+const SubTaskModal = ({ localConsultSubTask, setLocalConsultSubTask }) => {
+  if (!localConsultSubTask) return null;
+  return (
+    <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <div className="fade-in" style={{background: '#FFF', borderRadius: '12px', padding: '2rem', width: '90%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 25px rgba(0,0,0,0.1)'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
+          <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter la Tâche: {localConsultSubTask.reference || localConsultSubTask.id}</h2>
+          <button type="button" onClick={() => setLocalConsultSubTask(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem', marginLeft: 'auto'}}>Fermer</button>
+        </div>
+        <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+          <TaskField label="Objet" value={getSubjectFromTask(localConsultSubTask.description)} />
+          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+            <TaskField label="Créé par" value={localConsultSubTask.createdBy?.name || 'Inconnu'} />
+            <TaskField label="Assigné à" value={localConsultSubTask.assignedTo?.name || 'Non assigné'} />
+          </div>
+          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+            <TaskField label="Date de création" value={new Date(localConsultSubTask.createdAt).toLocaleDateString('fr-FR')} />
+            <TaskField label="Échéance" value={localConsultSubTask.echeance ? new Date(localConsultSubTask.echeance).toLocaleDateString('fr-FR') : 'Non définie'} />
+          </div>
+          <div>
+            <span style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</span>
+            <div style={{padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>{getStatusBadge(localConsultSubTask.status)}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const TaskDropdown = ({ taskId, openMenuId, setOpenMenuId, menuRef, tasks, setConsultTask, setEditTask, setEditFormData, fetchData }) => {
+  return (
+    <ActionDropdown isOpen={openMenuId === taskId} menuRef={menuRef} width="130px">
+      <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setConsultTask(tasks.find(t => t.id === taskId)); }}>
+        <Eye size={14} /> Consulter
+      </button>
+      <button type="button" className="dropdown-item" onClick={() => { 
+        setOpenMenuId(null); 
+        const task = tasks.find(t => t.id === taskId);
+        setEditTask(task);
+        const subj = getSubjectFromTask(task.description);
+        const msg = getMessageFromTask(task.description);
+        setEditFormData({ subject: subj, message: msg, status: task.status, attachment: task.attachment || '' });
+      }}>
+        <Pencil size={14} color="#D97706" /> Modifier
+      </button>
+      <button type="button" className="dropdown-item" onClick={async () => { 
+        setOpenMenuId(null); 
+        if(window.confirm("Supprimer cette mission ?")) {
+           try {
+             const token = localStorage.getItem('adminToken');
+             const res = await fetch(new URL(getSafeApiUrl(`/api/crm/tasks/${encodeURIComponent(taskId)}`)).toString(), { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
+             if (res.ok) fetchData();
+           } catch(e) { console.error("Erreur suppr mission:", e); }
+        }
+      }} style={{color: 'var(--danger)'}}>
+        <Trash size={14} /> Supprimer
+      </button>
+    </ActionDropdown>
+  );
+};
 const GenericTaskPage = ({ mode = "MISSION" }) => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [consultTask, setConsultTask] = useState(null);
@@ -206,95 +295,6 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     else setOpenMenuId(id);
   }
 
-  const renderTaskField = (label, value, readOnly = true, onChange = null, isTextarea = false) => {
-    const id = `field-${label.replace(/\s+/g, '-')}`;
-    return (
-      <div>
-        <label htmlFor={id} style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>{label}</label>
-        {isTextarea ? (
-          <textarea 
-            id={id}
-            value={value || ''} 
-            onChange={onChange} 
-            readOnly={readOnly}
-            style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: readOnly ? '1px solid var(--border)' : '1px solid var(--primary)', minHeight: '120px', resize: readOnly ? 'none' : 'vertical', fontFamily: 'inherit', background: readOnly ? '#F8FAFC' : '#FFF', color: 'var(--text-main)'}}
-          />
-        ) : (
-          <input 
-            id={id}
-            type="text" 
-            value={value || ''} 
-            onChange={onChange} 
-            readOnly={readOnly}
-            className="input-field" 
-            style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: readOnly ? '1px solid var(--border)' : '1px solid var(--primary)', background: readOnly ? '#F8FAFC' : '#FFF', color: 'var(--text-main)'}}
-          />
-        )}
-      </div>
-    );
-  };
-
-  const renderSubTaskModal = () => {
-    if (!localConsultSubTask) return null;
-    return (
-      <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        <div className="fade-in" style={{background: '#FFF', borderRadius: '12px', padding: '2rem', width: '90%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 25px rgba(0,0,0,0.1)'}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-            <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter la Tâche: {localConsultSubTask.reference || localConsultSubTask.id}</h2>
-            <button type="button" onClick={() => setLocalConsultSubTask(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem', marginLeft: 'auto'}}>Fermer</button>
-          </div>
-          <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-            {renderTaskField("Objet", getSubjectFromTask(localConsultSubTask.description))}
-            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-              {renderTaskField("Créé par", localConsultSubTask.createdBy?.name || 'Inconnu')}
-              {renderTaskField("Assigné à", localConsultSubTask.assignedTo?.name || 'Non assigné')}
-            </div>
-            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-              {renderTaskField("Date de création", new Date(localConsultSubTask.createdAt).toLocaleDateString('fr-FR'))}
-              {renderTaskField("Échéance", localConsultSubTask.echeance ? new Date(localConsultSubTask.echeance).toLocaleDateString('fr-FR') : 'Non définie')}
-            </div>
-            <div>
-              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</label>
-              <div style={{padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>{getStatusBadge(localConsultSubTask.status)}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderDropdown = (taskId) => {
-    return (
-      <ActionDropdown isOpen={openMenuId === taskId} menuRef={menuRef} width="130px">
-        <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setConsultTask(tasks.find(t => t.id === taskId)); }}>
-          <Eye size={14} /> Consulter
-        </button>
-        <button type="button" className="dropdown-item" onClick={() => { 
-          setOpenMenuId(null); 
-          const task = tasks.find(t => t.id === taskId);
-          setEditTask(task);
-          const subj = getSubjectFromTask(task.description);
-          const msg = getMessageFromTask(task.description);
-          setEditFormData({ subject: subj, message: msg, status: task.status, attachment: task.attachment || '' });
-        }}>
-          <Pencil size={14} color="#D97706" /> Modifier
-        </button>
-        <button type="button" className="dropdown-item" onClick={async () => { 
-          setOpenMenuId(null); 
-          if(window.confirm("Supprimer cette mission ?")) {
-             try {
-               const token = localStorage.getItem('adminToken');
-               const res = await fetch(new URL(getSafeApiUrl(`/api/crm/tasks/${encodeURIComponent(taskId)}`)).toString(), { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
-               if (res.ok) fetchData();
-             } catch(e) { console.error("Erreur suppr mission:", e); }
-          }
-        }} style={{color: 'var(--danger)'}}>
-          <Trash size={14} /> Supprimer
-        </button>
-      </ActionDropdown>
-    );
-  }
-
   if (createTaskModal) {
     return (
       <div className="fade-in" style={{width: '100%', padding: '0'}}>
@@ -336,8 +336,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               <label htmlFor="new-task-attachment" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
               <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
                 {consultTask?.attachment && (
-                  <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginBottom: '1rem'}}>
-                    <input type="checkbox" checked={includeParentFile} onChange={(e) => setIncludeParentFile(e.target.checked)} />
+                  <label htmlFor="include-parent-file" style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginBottom: '1rem'}}>
+                    <input id="include-parent-file" type="checkbox" checked={includeParentFile} onChange={(e) => setIncludeParentFile(e.target.checked)} />
                     <span style={{fontSize: '0.875rem'}}>Inclure les fichiers de la mission ({consultTask.attachment})</span>
                   </label>
                 )}
@@ -376,13 +376,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         
         <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            {renderTaskField("Créé par", editTask.createdBy?.name || 'Système')}
-            {renderTaskField("Assigné à", editTask.assignedTo?.name || 'Non assigné')}
+            <TaskField label={"Créé par"} value={editTask.createdBy?.name || 'Système'} />
+            <TaskField label={"Assigné à"} value={editTask.assignedTo?.name || 'Non assigné'} />
           </div>
 
           {renderTaskField("Objet", editFormData.subject, false, (e) => setEditFormData({...editFormData, subject: e.target.value}))}
           
-          {renderTaskField(mode === 'MISSION' ? 'Dossier associé' : 'Mission Liée', mode === 'MISSION' ? (editTask.dossier?.reference || editTask.dossier?.name || editTask.dossierId) : (editTask.mission?.reference || editTask.missionId))}
+          <TaskField label={mode === 'MISSION' ? 'Dossier associé' : 'Mission Liée'} value={mode === 'MISSION' ? (editTask.dossier?.reference || editTask.dossier?.name || editTask.dossierId) : (editTask.mission?.reference || editTask.missionId)} />
 
           <div>
             <label htmlFor="task-attachment" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
@@ -465,7 +465,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           <button type="button" onClick={() => { setEditTask(null); setTaskFile(null); }} className="btn btn-outline">Annuler</button>
           <button type="button" onClick={handleUpdateMission} className="btn btn-primary">Enregistrer</button>
         </div>
-        {renderSubTaskModal()}
+        <SubTaskModal localConsultSubTask={localConsultSubTask} setLocalConsultSubTask={setLocalConsultSubTask} />
       </div>
     );
   }
@@ -480,13 +480,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         
         <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            {renderTaskField("Créé par", consultTask.createdBy?.name || 'Système')}
-            {renderTaskField("Assigné à", consultTask.assignedTo?.name || 'Non assigné')}
+            <TaskField label={"Créé par"} value={consultTask.createdBy?.name || 'Système'} />
+            <TaskField label={"Assigné à"} value={consultTask.assignedTo?.name || 'Non assigné'} />
           </div>
 
-          {renderTaskField("Objet", getSubjectFromTask(consultTask.description))}
+          <TaskField label={"Objet"} value={getSubjectFromTask(consultTask.description)} />
           
-          {renderTaskField(mode === 'MISSION' ? 'Dossier associé' : 'Mission Liée', mode === 'MISSION' ? (consultTask.dossier?.reference || consultTask.dossier?.name || consultTask.dossierId) : (consultTask.mission?.reference || consultTask.missionId))}
+          <TaskField label={mode === 'MISSION' ? 'Dossier associé' : 'Mission Liée'} value={mode === 'MISSION' ? (consultTask.dossier?.reference || consultTask.dossier?.name || consultTask.dossierId) : (consultTask.mission?.reference || consultTask.missionId)} />
 
           <div>
             <label htmlFor="consult-task-attachment" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
@@ -509,7 +509,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             </div>
           </div>
 
-          {renderTaskField("Message / Consignes", getMessageFromTask(consultTask.description), true, null, true)}
+          <TaskField label={"Message / Consignes"} value={getMessageFromTask(consultTask.description)} readOnly={true} isTextarea={true} />
 
           <div style={{display: 'flex', alignItems: 'center', gap: '2rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', width: 'fit-content'}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
@@ -576,7 +576,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-primary">Enregistrer</button>
         </div>
         
-        {renderSubTaskModal()}
+        <SubTaskModal localConsultSubTask={localConsultSubTask} setLocalConsultSubTask={setLocalConsultSubTask} />
 
         <FilePreviewModal previewFile={previewFile} onClose={() => setPreviewFile(null)} />
 
@@ -673,7 +673,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                       <button type="button" onClick={(e) => toggleMenu(e, t.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
                         <MoreVertical size={16} />
                       </button>
-                      {renderDropdown(t.id)}
+                      <TaskDropdown taskId={t.id} openMenuId={openMenuId} setOpenMenuId={setOpenMenuId} menuRef={menuRef} tasks={tasks} setConsultTask={setConsultTask} setEditTask={setEditTask} setEditFormData={setEditFormData} fetchData={fetchData} />
                     </div>
                   </div>
                 </td>

@@ -28,15 +28,15 @@ export default function NousConnaitrePage() {
               {t("Nous connaître", "About us")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
-            <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
+            <p className="text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {t("Une organisation opérationnelle structurée pour accompagner les entreprises dans l'exécution fiable de leurs fonctions back ", "A trusted operational partner working closely with businesses to deliver reliable back ")}
               <span className="font-sans font-medium">&amp;</span>
               {t(" middle office.", " middle-office support.")}
             </p>
-            <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
-              <Link href="#notre-approche" className="inline-flex items-center gap-3 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
+            <div className="mt-4">
+              <Link href="#notre-approche" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.8rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
                 {t("Découvrir notre approche", "Discover our approach")}
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>

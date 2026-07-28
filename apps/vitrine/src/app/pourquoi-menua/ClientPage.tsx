@@ -29,16 +29,16 @@ export default function PourquoiMenuaPage() {
               {t("Pourquoi MENUA CONSULTING ?", "Why choose us?")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
-            <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
+            <p className="text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {t(
                 "Un partenaire opérationnel pour renforcer vos équipes, fiabiliser vos traitements et sécuriser la continuité de vos activités.",
                 "An independent, flexible and specialised approach designed to maintain the delivery of your operations."
               )}
             </p>
-            <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
-              <Link href="/nous-contacter" className="inline-flex items-center gap-3 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
+            <div className="mt-4">
+              <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.8rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
                 {t("Présenter votre besoin", "Submit your need")}
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>
@@ -106,7 +106,7 @@ export default function PourquoiMenuaPage() {
       </section>
 
       {/* ── 5.3 BÉNÉFICES (Image Left, Card Right) ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
+      <section id="nos-benefices" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
              <img src="/img/benefices.webp" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
@@ -148,7 +148,7 @@ export default function PourquoiMenuaPage() {
       </section>
 
       {/* ── 5.4 CE QUI FAIT LA DIFFÉRENCE (Dark Theme, Full Width) ── */}
-      <section className="relative w-full bg-[#141824] pt-16 md:pt-[7.75rem] pb-16 md:pb-24 scroll-mt-20 overflow-hidden">
+      <section id="notre-differenciation" className="relative w-full bg-[#141824] pt-16 md:pt-[7.75rem] pb-16 md:pb-24 scroll-mt-20 overflow-hidden">
         {/* Subtle geometric accent background on the left */}
         <div className="absolute top-0 left-0 w-1/2 h-full bg-[#1a1f2e] skew-x-[10deg] origin-bottom-left hidden lg:block" />
         
@@ -205,7 +205,7 @@ export default function PourquoiMenuaPage() {
       <div className="w-full h-8 md:h-[5.25rem] bg-white"></div>
 
       {/* ── 5.5 NOS ENGAGEMENTS (Card Left, Image Right) ── */}
-      <section className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
+      <section id="nos-engagements" className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container max-w-6xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
           <div className="w-full lg:w-7/12 bg-white p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
             <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">{t("Nos engagements", "Our commitments")}</h3>

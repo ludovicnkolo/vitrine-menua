@@ -31,19 +31,13 @@ export default function Home() {
               {t(" middle office", " middle-office functions")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
-            <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
+            <p className="text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {t(
                 "Nous sécurisons l’exécution de vos opérations afin de permettre à vos équipes de se concentrer sur leurs décisions stratégiques, leurs validations et leur relation client.",
                 "We work alongside your teams to safeguard day-to-day operations, so they can focus on strategic decisions, approvals and client relationships."
               )}
             </p>
-            <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
-              <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.85rem] font-bold hover:bg-white transition-colors group">
-                {t("Présenter votre besoin", "Tell us about your requirements")}
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-            <div className="  mt-1 flex items-center gap-2 text-white">
+            <div className="flex items-center gap-2 text-white">
               <Globe size={16} />
               <p className="text-[0.9rem] lg:text-[0.95rem] text-white font-light italic tracking-wide">
                 {t(
@@ -51,6 +45,12 @@ export default function Home() {
                   "Services delivered in French and English — bilingual operational professionals."
                 )}
               </p>
+            </div>
+            <div className="mt-4">
+              <Link href="/nous-connaitre" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.8rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
+                {t("Découvrir notre approche", "Discover our approach")}
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
             </div>
           </div>
         </div>

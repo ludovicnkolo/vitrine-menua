@@ -65,10 +65,10 @@ export default function Header() {
       href: "/vos-besoins",
       links: [
         { label: t("Finance et reporting", "Finance and Reporting"), href: "/vos-besoins#finance-reporting" },
-        { label: t("Contrôle de gestion", "Management Control"), href: "/vos-besoins#controle-de-gestion" },
+        { label: t("Contrôle de gestion", "Management Control"), href: "/vos-besoins#controle-gestion" },
         { label: t("Risques et conformité", "Risk and Compliance"), href: "/vos-besoins#risques-conformite" },
         { label: t("Support comptable et data", "Accounting and Data Support"), href: "/vos-besoins#support-comptable-data" },
-        { label: t("Gestion de patrimoine et CGP", "Wealth Management Support"), href: "/vos-besoins#gestion-patrimoine" },
+        { label: t("Gestion de patrimoine et CGP", "Wealth Management Support"), href: "/vos-besoins#support-cgp" },
         { label: t("Autres besoins opérationnels", "Other Operational Needs"), href: "/vos-besoins#autres-besoins" },
       ],
     },

@@ -64,16 +64,16 @@ export default function NosSolutionsPage() {
               {t("Nos solutions", "Our solutions")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
-            <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
+            <p className="text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {t(
                 "Des dispositifs d’externalisation flexibles, adaptés à vos contraintes d’urgence, de durée, de volume et d’organisation.",
                 "Flexible operational outsourcing arrangements adapted to your requirements for speed, duration, volume and delivery model."
               )}
             </p>
-            <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
-              <Link href="/nous-contacter" className="inline-flex items-center gap-3 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
+            <div className="mt-4">
+              <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.8rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
                 {t("Présenter votre besoin", "Tell us about your requirements")}
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>
@@ -176,7 +176,7 @@ export default function NosSolutionsPage() {
       <div className="w-full h-8 md:h-16 bg-white"></div>
 
       {/* ── 4.4 DURÉE (Notre approche layout) ── */}
-      <section className="w-full bg-white scroll-mt-20">
+      <section id="duree" className="w-full bg-white scroll-mt-20">
         <div className="laplace-container pb-16 lg:pb-24">
           <div className="w-full bg-[#f5f7fa] rounded-sm pt-12 lg:pt-16 pb-12 lg:pb-16 px-6 lg:pl-32 lg:pr-20 flex flex-col lg:flex-row gap-12 lg:gap-16 relative z-10">
           
@@ -304,7 +304,7 @@ export default function NosSolutionsPage() {
       />
 
       {/* ── 4.7 LANGUES & 4.8 BON A SAVOIR ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
+      <section id="langues" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
             

@@ -38,16 +38,16 @@ export default function ActualitesPage() {
               {t("Actualités", "News")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
-            <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-8">
+            <p className="text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {formatBrand(t(
                 "Analyses, repères et publications consacrés aux enjeux opérationnels des entreprises, cabinets et organisations.",
                 "Analyses, benchmarks and publications dedicated to the operational challenges of companies, firms and organizations."
               ))}
             </p>
-            <div className="flex w-full justify-end mb-8 lg:absolute lg:right-12 lg:bottom-28">
-              <Link href="#articles" className="inline-flex items-center gap-3 px-4 py-2 w-fit bg-[#e8e1d7] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white transition-colors group">
+            <div className="mt-4">
+              <Link href="#articles" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.8rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
                 {t("Découvrir nos articles", "Discover our articles")}
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>

@@ -34,7 +34,7 @@ export default function NousConnaitrePage() {
               {t(" middle office.", " middle-office support.")}
             </p>
             <div className="mt-4">
-              <Link href="#notre-approche" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.8rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
+              <Link href="#notre-approche" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
                 {t("Découvrir notre approche", "Discover our approach")}
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>

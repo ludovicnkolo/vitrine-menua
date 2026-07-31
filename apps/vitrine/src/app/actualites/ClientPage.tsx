@@ -45,7 +45,7 @@ export default function ActualitesPage() {
               ))}
             </p>
             <div className="mt-4">
-              <Link href="#articles" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.8rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
+              <Link href="#articles" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
                 {t("Découvrir nos articles", "Discover our articles")}
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>

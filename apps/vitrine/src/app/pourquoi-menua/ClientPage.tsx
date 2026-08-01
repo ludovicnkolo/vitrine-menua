@@ -112,7 +112,8 @@ export default function PourquoiMenuaPage() {
              <img src="/img/benefices.webp" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
           </div>
           <div className="w-full lg:w-7/12 bg-white p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
-            <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">{t("Bénéfices", "Benefits")}</h3>
+            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{t("Bénéfices", "Benefits")}</h2>
             
             {/* Mobile Image */}
             <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
@@ -156,10 +157,10 @@ export default function PourquoiMenuaPage() {
           
           {/* Narrative (Right side visually) */}
           <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-4 lg:-translate-y-10">
-            <div className="w-16 h-[3px] bg-[#e8e1d7] mb-8" />
-            <h3 className="text-white font-bold text-[2rem] lg:text-[2.2rem] leading-tight mb-8">
+            <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
+            <h2 className="text-white text-[1.3rem] md:text-[1.5rem] font-bold uppercase mb-8 leading-tight">
               {t("Ce qui fait la différence", "What makes the difference")}
-            </h3>
+            </h2>
             <p className="text-[#e5e9f0] font-light text-[1.1rem] leading-relaxed mb-6">
               {t(
                 "Spécialistes du back et du middle office, nous ne nous arrêtons pas à l’analyse : nous exécutons.",
@@ -208,7 +209,8 @@ export default function PourquoiMenuaPage() {
       <section id="nos-engagements" className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container max-w-6xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
           <div className="w-full lg:w-7/12 bg-white p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
-            <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">{t("Nos engagements", "Our commitments")}</h3>
+            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{t("Nos engagements", "Our commitments")}</h2>
             {/* Mobile Image */}
             <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] mb-8 rounded-sm shadow-md overflow-hidden">
               <img src="/img/pourquoi_4.webp" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
@@ -252,7 +254,8 @@ export default function PourquoiMenuaPage() {
       <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container max-w-4xl mx-auto text-center">
           <div className="bg-[#e8e1d7] p-10 md:p-16 shadow-xl border-t-4 border-[#141824]">
-            <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6 uppercase tracking-widest">{t("Une relation fondée sur la confiance", "A relationship based on trust")}</h3>
+            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{t("Une relation fondée sur la confiance", "A relationship based on trust")}</h2>
             <p className="text-[#141824]/80 font-medium text-[1.1rem] leading-relaxed mb-6">
               {t(
                 "Chaque mission est cadrée en amont afin de définir le besoin, les responsabilités, les livrables attendus, les délais, les modalités de suivi et les règles de validation.",

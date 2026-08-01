@@ -14,7 +14,8 @@ const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items,
         <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
       </div>
       <div className={`w-full lg:w-7/12 ${cardBg} p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]`}>
-        <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">{title}</h3>
+        <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+        <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{title}</h2>
         {/* Mobile Image */}
         <div className={`block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden`}>
           <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
@@ -34,10 +35,10 @@ const DarkNeedSection = ({ id, bgClass, topDecoClass, titleDecoClass, title, int
     {topDecoClass && <div className={topDecoClass} />}
     <div className="laplace-container relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
       <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-16 lg:-translate-y-36">
-        <div className={`w-16 h-[3px] mb-8 ${titleDecoClass}`} />
-        <h3 className={`${bgClass.includes("bg-[#141824]") ? "text-white" : "text-[#141824]"} font-bold text-[2rem] lg:text-[2.2rem] leading-tight mb-8`}>
+        <div className={`w-16 h-[3px] mb-5 ${titleDecoClass}`} />
+        <h2 className={`${bgClass.includes("bg-[#141824]") ? "text-white" : "text-[#141824]"} text-[1.3rem] md:text-[1.5rem] font-bold uppercase mb-8 leading-tight`}>
           {title}
-        </h3>
+        </h2>
         <p className={`${bgClass.includes("bg-[#141824]") ? "text-[#e5e9f0]" : "text-[#141824]/80 font-medium"} font-light text-[1.1rem] leading-relaxed mb-${disclaimer ? "8" : "12"}`}>
           {intro}
         </p>

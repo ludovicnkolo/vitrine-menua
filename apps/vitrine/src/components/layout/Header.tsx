@@ -191,8 +191,8 @@ export default function Header() {
 
               {/* DROPDOWN */}
               {openMenu === key && (
-                <div className="absolute left-0 top-full pt-0">
-                  <div className="bg-[#e8e1d7] border-t-4 border-[#141824] shadow-xl min-w-[280px] py-3">
+                <div className="absolute left-0 top-full pt-10">
+                  <div className="bg-[#e8e1d7] border-t-4 border-[#141824] rounded-b-lg shadow-xl min-w-[280px] py-3">
                     <div className="px-5 py-2 border-b border-[#141824]/10 mb-2">
                       <span className="text-[#141824] text-[1.1rem] leading-[1.5rem] font-bold">
                         {menus[key].label}
@@ -206,7 +206,6 @@ export default function Header() {
                             onClick={() => setOpenMenu(null)}
                             className="flex items-center gap-3 px-5 py-2.5 text-[#141824]/80 hover:text-[#141824] hover:bg-white/40 text-[13px] leading-[1rem] transition-colors group"
                           >
-                            <span className="w-4 h-px bg-[#141824] shrink-0" />
                             {link.label}
                           </Link>
                         </li>

@@ -12,10 +12,10 @@ const SolutionSection = ({ id, title, intro, desc, isReversed, listTitle, listIt
       {topDecoClass && <div className={topDecoClass} />}
       <div className={`laplace-container relative ${zIndexClass} max-w-7xl mx-auto flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-16 lg:gap-24 items-center`}>
         <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-4 lg:-translate-y-10">
-          <div className={`w-16 h-[3px] mb-8 ${titleDecoClass}`} />
-          <h3 className={`${bgClass.includes('bg-[#141824]') ? 'text-white' : 'text-[#141824]'} font-bold text-[2rem] lg:text-[2.2rem] leading-tight mb-8`}>
+          <div className={`w-16 h-[3px] mb-5 ${titleDecoClass}`} />
+          <h2 className={`${bgClass.includes('bg-[#141824]') ? 'text-white' : 'text-[#141824]'} text-[1.3rem] md:text-[1.5rem] font-bold uppercase mb-8 leading-tight`}>
             {title}
-          </h3>
+          </h2>
           <p className={`${bgClass.includes('bg-[#141824]') ? 'text-[#e5e9f0]' : 'text-[#141824]/80 font-medium'} font-light text-[1.1rem] leading-relaxed mb-6`}>
             {intro}
           </p>
@@ -182,8 +182,8 @@ export default function NosSolutionsPage() {
           
           {/* Left Col: Title & Intro */}
           <div className="w-full lg:w-4/12">
-            <div className="w-16 h-[3px] bg-[#141824] mb-6" />
-            <h2 className="text-[#141824] text-[1.5rem] md:text-[1.8rem] font-bold uppercase tracking-widest mb-8">
+            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
               {t("Durée", "Flexibility")}
             </h2>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">

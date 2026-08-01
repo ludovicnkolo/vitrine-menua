@@ -114,6 +114,70 @@ router.delete('/roles/:id', async (req, res) => {
   }
 });
 
+// --- DASHBOARD STATS ---
+router.get('/dashboard-stats', async (req, res) => {
+  try {
+    const dossiers = await prisma.dossier.findMany({ select: { status: true } });
+    const dossierStats = {
+      total: dossiers.length,
+      ouvert: dossiers.filter(d => d.status === 'OUVERT' || d.status === 'NOUVEAU' || d.status === 'EN_COURS').length,
+      fermer: dossiers.filter(d => d.status === 'FERME' || d.status === 'FERMÉ').length,
+      terminer: dossiers.filter(d => d.status === 'TERMINE' || d.status === 'TERMINÉ').length,
+      archiver: dossiers.filter(d => d.status === 'ARCHIVE' || d.status === 'ARCHIVÉ').length
+    };
+
+    const missions = await prisma.mission.findMany({ select: { status: true } });
+    const missionStats = {
+      total: missions.length,
+      ouvert: missions.filter(m => ['NOUVEAU', 'TO_ASSIGN', 'EN_COURS', 'IN_PROGRESS', 'EN_REVISION', 'EN_FINALISATION', 'EN_CONTROLE', 'A_AMELIORER'].includes(m.status)).length,
+      terminer: missions.filter(m => m.status === 'TERMINEE' || m.status === 'TERMINÉE').length,
+      fermer: missions.filter(m => m.status === 'FERME' || m.status === 'FERMÉ').length,
+      reatribuer: missions.filter(m => m.status === 'REATTRIBUE' || m.status === 'RÉATTRIBUÉ').length,
+      bloquer: missions.filter(m => m.status === 'BLOQUE' || m.status === 'BLOQUÉ').length
+    };
+
+    const taches = await prisma.tache.findMany({ select: { status: true, echeance: true } });
+    const now = new Date();
+    const tacheStats = {
+      encours: taches.filter(t => ['EN_COURS', 'IN_PROGRESS', 'EN_FINALISATION'].includes(t.status)).length,
+      terminuer: taches.filter(t => t.status === 'TERMINEE' || t.status === 'TERMINÉE').length,
+      controler: taches.filter(t => t.status === 'EN_CONTROLE' || t.status === 'A_AMELIORER').length,
+      reattribuer: taches.filter(t => t.status === 'REATTRIBUE' || t.status === 'RÉATTRIBUÉ').length,
+      bloquer: taches.filter(t => t.status === 'BLOQUE' || t.status === 'BLOQUÉ').length,
+      enRetard: taches.filter(t => t.echeance && new Date(t.echeance) < now && !['TERMINEE', 'TERMINÉE', 'FERME', 'FERMÉ', 'ARCHIVE'].includes(t.status)).length
+    };
+
+    const utilisateurs = await prisma.utilisateur.findMany({ select: { isBlocked: true } });
+    const clients = await prisma.client.findMany({ select: { status: true } });
+    const utilisateurStats = {
+      collaborateurs: utilisateurs.length,
+      client: clients.length,
+      actifs: utilisateurs.filter(u => !u.isBlocked).length + clients.filter(c => c.status === 'ACTIF').length,
+      inactifs: utilisateurs.filter(u => u.isBlocked).length + clients.filter(c => c.status !== 'ACTIF').length
+    };
+
+    const formulaires = await prisma.formulaire.findMany({ select: { type: true } });
+    const msgPersonnels = await prisma.messagePersonnel.findMany({ select: { type: true } });
+    const messageStats = {
+      contact: formulaires.filter(f => f.type === 'CONTACT').length,
+      recrutemenet: formulaires.filter(f => f.type === 'RECRUTEMENT').length,
+      interne: msgPersonnels.filter(m => m.type === 'INTERNE').length,
+      personnel: msgPersonnels.filter(m => m.type === 'PERSONNEL').length
+    };
+
+    res.json({
+      dossier: dossierStats,
+      mission: missionStats,
+      taches: tacheStats,
+      utilisateur: utilisateurStats,
+      message: messageStats
+    });
+  } catch(e) {
+    console.error(e);
+    res.status(500).json({ error: 'Erreur de chargement des statistiques' });
+  }
+});
+
 // --- UTILISATEURS ---
 router.get('/users', async (req, res) => {
   try {

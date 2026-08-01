@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, MoreVertical, Pencil, Eye, Trash, MessageSquare, Paperclip, FileText, Download } from 'lucide-react';
+import { Search, MoreVertical, Pencil, Eye, Trash, MessageSquare, Paperclip, FileText, Download, Plus, X, Folder } from 'lucide-react';
 import { getSafeApiUrl, uploadFile, formatDate } from '../utils/helpers';
 import ActionDropdown from '../components/ActionDropdown';
 import { getStatusBadge } from '../utils/helpers';
@@ -32,12 +32,25 @@ const DossiersPage = () => {
   const [selectedDossierDocs, setSelectedDossierDocs] = useState([]);
   const [isSubmittingMission, setIsSubmittingMission] = useState(false);
   
+  // Dossier Creation State
+  const [showCreateDossierModal, setShowCreateDossierModal] = useState(false);
+  const [newDossierData, setNewDossierData] = useState({
+    name: '',
+    description: '',
+    priority: 'NORMAL',
+    origin: '',
+    parentDossierId: '',
+    targetId: ''
+  });
+  const [isSubmittingDossier, setIsSubmittingDossier] = useState(false);
+  
   const menuRef = useRef(null);
 
   // States for real API data
   const [dbDossiers, setDbDossiers] = useState([]);
   const [dbTasks, setDbTasks] = useState([]);
   const [dbUsers, setDbUsers] = useState([]);
+  const [dbClients, setDbClients] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -62,12 +75,14 @@ const DossiersPage = () => {
     Promise.all([
       fetch(urlDossiers.toString(), { headers }).then(res => res.json()).catch(() => ({ data: [], totalPages: 1 })),
       fetch(urlTasks.toString(), { headers }).then(res => res.json()).catch(() => ({ data: [] })),
-      fetch(getSafeApiUrl('/api/crm/users'), { headers }).then(res => res.json()).catch(() => ([]))
-    ]).then(([dossiersRes, tasksRes, usersRes]) => {
+      fetch(getSafeApiUrl('/api/crm/users'), { headers }).then(res => res.json()).catch(() => ([])),
+      fetch(getSafeApiUrl('/api/crm/clients'), { headers }).then(res => res.json()).catch(() => ([]))
+    ]).then(([dossiersRes, tasksRes, usersRes, clientsRes]) => {
       setDbDossiers(dossiersRes?.data || (Array.isArray(dossiersRes) ? dossiersRes : []));
       setTotalPages(dossiersRes?.totalPages || 1);
       setDbTasks(tasksRes?.data || (Array.isArray(tasksRes) ? tasksRes : []));
       setDbUsers(Array.isArray(usersRes) ? usersRes : []);
+      setDbClients(Array.isArray(clientsRes) ? clientsRes : []);
       setIsLoading(false);
     });
   };
@@ -83,7 +98,7 @@ const DossiersPage = () => {
 
   const handleCreateMission = async () => {
     if (!missionSubject || !missionAssignedTo || !missionEcheance) {
-      alert("Veuillez remplir l'objet, le destinataire et l'échéance.");
+      window.customAlert("Veuillez remplir l'objet, le destinataire et l'échéance.");
       return;
     }
     
@@ -152,7 +167,7 @@ const DossiersPage = () => {
           }
         }
 
-        alert("Mission créée avec succès !");
+        window.customAlert("Mission créée avec succès !");
         setCreateMissionModal(false);
         setMissionSubject('');
         setMissionDescription('');
@@ -162,13 +177,101 @@ const DossiersPage = () => {
         setSelectedDossierDocs([]);
         fetchDossiers();
       } else {
-        alert("Erreur lors de la création de la mission.");
+        window.customAlert("Erreur lors de la création de la mission.");
       }
     } catch (e) {
       console.error(e);
-      alert("Erreur réseau");
+      window.customAlert("Erreur réseau");
     } finally {
       setIsSubmittingMission(false);
+    }
+  };
+
+  const handleCreateDossier = async (e) => {
+    e.preventDefault();
+    if (!newDossierData.name) {
+      window.customAlert("Le nom du dossier est requis.");
+      return;
+    }
+    if (!newDossierData.origin) {
+      window.customAlert("Veuillez sélectionner une Origine (Client ou Collaborateur).");
+      return;
+    }
+    if (!newDossierData.targetId) {
+      window.customAlert(`Veuillez sélectionner la Cible (${newDossierData.origin === 'CLIENT' ? 'Client' : 'Collaborateur'}).`);
+      return;
+    }
+
+    setIsSubmittingDossier(true);
+    const token = sessionStorage.getItem('adminToken');
+
+    try {
+      const payload = {
+        name: newDossierData.name,
+        description: newDossierData.description,
+        priority: newDossierData.priority,
+        origin: newDossierData.origin,
+        parentDossierId: newDossierData.parentDossierId || null
+      };
+      
+      if (newDossierData.origin === 'CLIENT' && newDossierData.targetId) {
+        payload.clientId = newDossierData.targetId;
+      } else if (newDossierData.origin === 'COLLABORATEUR' && newDossierData.targetId) {
+        payload.targetUserId = newDossierData.targetId;
+      }
+
+      const res = await fetch(getSafeApiUrl('/api/crm/dossiers'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        window.customAlert("Dossier créé avec succès !");
+        setShowCreateDossierModal(false);
+        setNewDossierData({ name: '', description: '', priority: 'NORMAL', origin: '', parentDossierId: '', targetId: '' });
+        fetchDossiers();
+      } else {
+        const errData = await res.json();
+        window.customAlert("Erreur: " + (errData.error || "Création impossible"));
+      }
+    } catch (err) {
+      console.error(err);
+      window.customAlert("Erreur réseau");
+    } finally {
+      setIsSubmittingDossier(false);
+    }
+  };
+
+  const handleUpdateDossier = async () => {
+    try {
+      const token = sessionStorage.getItem('adminToken');
+      const payload = {
+        name: editDossier.name,
+        description: editDossier.description
+      };
+      const res = await fetch(getSafeApiUrl(`/api/crm/dossiers/${editDossier.id}`), {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        window.customAlert('Dossier modifié avec succès !');
+        setEditDossier(null);
+        fetchDossiers();
+      } else {
+        const errData = await res.json();
+        window.customAlert("Erreur lors de la modification: " + (errData.error || "Impossible de sauvegarder"));
+      }
+    } catch (err) {
+      console.error(err);
+      window.customAlert('Erreur réseau lors de la modification.');
     }
   };
 
@@ -206,35 +309,52 @@ const DossiersPage = () => {
 
 
   const renderDossierFields = (dossier, isEdit) => (
-    <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem'}}>
-      <div>
-        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Nom du dossier</label>
+    <div style={{display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.8fr', gap: '1.5rem', alignItems: 'center', marginBottom: '1.5rem', background: '#F8FAFC', padding: '1rem 1.5rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+        <strong style={{color: 'var(--text-muted)', fontWeight: 600, whiteSpace: 'nowrap'}}>Nom du dossier</strong>
         {isEdit ? (
-          <input type="text" defaultValue={dossier.name} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', background: '#FFF', color: 'var(--text-main)'}} />
+          <input type="text" value={dossier.name || ''} onChange={(e) => setEditDossier({...editDossier, name: e.target.value})} className="input-field" style={{padding: '0.25rem 0.5rem', borderRadius: '4px', border: '1px solid var(--primary)', background: '#FFF', flex: 1}} />
         ) : (
-          <input type="text" value={dossier.name || ''} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-main)'}} />
+          <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{dossier.name || '-'}</span>
         )}
       </div>
-      <ReadOnlyField label="Origine" value={dossier.origin || 'INTERNE'} />
-      <ReadOnlyField label="Créé par" value={dossier.createdBy?.name || 'Inconnu'} />
-      <ReadOnlyField label="Rôle du créateur" value={dossier.createdBy?.role?.name || '-'} />
-      <ReadOnlyField label="Date de création" value={new Date(dossier.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})} />
-      <div>
-        <span style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Statut</span>
-        <div style={{padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', display: 'flex', alignItems: 'center', height: '44px'}}>
-           {getStatusBadge(dossier.status)}
-        </div>
+      <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+        <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Origine :</strong>
+        <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{dossier.origin || 'INTERNE'}</span>
+      </div>
+      <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+        <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Propriétaire du dossier :</strong>
+        <span style={{fontWeight: 500, color: 'var(--text-main)'}}>
+          {dossier.origin === 'CLIENT' 
+            ? (dossier.client?.name || dossier.client?.companyName || dbClients.find(c => c.id === dossier.clientId)?.name || dbClients.find(c => c.id === dossier.clientId)?.companyName || 'Client inconnu') 
+            : dossier.origin === 'COLLABORATEUR'
+            ? (dossier.targetUser?.name || dbUsers.find(u => u.id === dossier.targetUserId)?.name || 'Collaborateur inconnu')
+            : 'MENUA CONSULTING (Interne)'
+          }
+        </span>
+      </div>
+      <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+        <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Créé par :</strong>
+        <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{dossier.createdBy?.name || 'Inconnu'}</span>
+      </div>
+      <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+        <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Date de création :</strong>
+        <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{new Date(dossier.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</span>
+      </div>
+      <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+        <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Rôle :</strong>
+        <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{dossier.createdBy?.role?.name || '-'}</span>
       </div>
     </div>
   );
 
   const renderAssociatedTasks = (tasks, isEdit) => (
-    <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
+    <div style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
       <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>
-        {isEdit ? 'Gérer les missions associées' : 'Missions associées'}
+        {isEdit ? 'Gérer les missions associées' : 'Vues des missions associées'}
       </h4>
       {tasks.length > 0 ? (
-        <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem'}}>
+        <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
           {tasks.map(task => (
             <button type="button" key={task.id} onClick={() => setLocalConsultTask(task)} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} onFocus={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s', width: '100%', textAlign: 'left', fontFamily: 'inherit'}}>
               <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
@@ -243,7 +363,7 @@ const DossiersPage = () => {
               </div>
               {isEdit && (
                 <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                  <button type="button" onClick={(e) => { e.stopPropagation(); alert(`Mission ${task.id} supprimée avec succès !`); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)'}} title="Supprimer la mission">
+                  <button type="button" onClick={(e) => { e.stopPropagation(); window.customAlert(`Mission ${task.id} supprimée avec succès !`); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)'}} title="Supprimer la mission">
                     <Trash size={18} />
                   </button>
                 </div>
@@ -296,15 +416,24 @@ const DossiersPage = () => {
       <div className="fade-in" style={{width: "100%", padding: "0"}}>
         <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
           <button type="button" onClick={() => setConsultDossier(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour</button>
-          <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter le Dossier: {consultDossier.reference || consultDossier.id}</h2>
+          <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>consultation du dossier : {consultDossier.reference || consultDossier.id}</h2>
         </div>
 
         {renderDossierFields(consultDossier, false)}
-        {renderAssociatedTasks(associatedTasks, false)}
-        {renderDocuments(consultDossier.documents || [], 'Documents du dossier')}
+        <div style={{display: 'flex', gap: '2rem', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', alignItems: 'flex-start'}}>
+          <div style={{flex: '0 0 70%'}}>
+            <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Description du dossier</h4>
+            <div style={{padding: '1.5rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', whiteSpace: 'pre-wrap', fontSize: '0.875rem', color: 'var(--text-main)', minHeight: '120px'}}>
+              {consultDossier.description || <span style={{color: 'var(--text-muted)'}}>Aucune description fournie.</span>}
+            </div>
+          </div>
+          <div style={{flex: '1 1 auto', minWidth: 0}}>
+            {renderAssociatedTasks(associatedTasks, false)}
+          </div>
+        </div>
 
-        <div style={{marginTop: '2rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-          <div style={{display: 'flex', gap: '1rem'}}>
+        <div style={{marginTop: '2rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem'}}>
+          <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
             <button type="button" onClick={() => setCreateMissionModal(true)} className="btn btn-primary" style={{display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
               Créer une mission
             </button>
@@ -459,11 +588,25 @@ const DossiersPage = () => {
         </div>
 
         {renderDossierFields(editDossier, true)}
-        {renderAssociatedTasks(associatedTasks, true)}
+        <div style={{display: 'flex', gap: '2rem', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', alignItems: 'flex-start'}}>
+          <div style={{flex: '0 0 70%'}}>
+            <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Description du dossier</h4>
+            <textarea
+              value={editDossier.description || ''}
+              onChange={(e) => setEditDossier({...editDossier, description: e.target.value})}
+              className="input-field"
+              style={{width: '100%', padding: '1.5rem', background: '#FFF', borderRadius: '8px', border: '1px solid var(--primary)', fontSize: '0.875rem', color: 'var(--text-main)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}
+              placeholder="Description du dossier..."
+            />
+          </div>
+          <div style={{flex: '1 1 auto', minWidth: 0}}>
+            {renderAssociatedTasks(associatedTasks, true)}
+          </div>
+        </div>
 
         <div style={{marginTop: '2rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'flex-end', gap: '1rem'}}>
           <button type="button" onClick={() => setEditDossier(null)} className="btn btn-outline">Annuler</button>
-          <button type="button" onClick={() => { setEditDossier(null); alert('Dossier modifié avec succès !'); }} className="btn btn-primary">Enregistrer</button>
+          <button type="button" onClick={handleUpdateDossier} className="btn btn-primary">Enregistrer</button>
         </div>
 
         <TaskConsultModal task={localConsultTask} onClose={() => setLocalConsultTask(null)} titlePrefix="Consulter la Mission:" />
@@ -473,11 +616,18 @@ const DossiersPage = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem'}}>
+      <div className="flex justify-between items-center mb-6" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', alignItems: 'center'}}>
         <div>
           <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)'}}>Tous les Dossiers</h1>
           <p style={{color: 'var(--text-muted)'}}>Gestion complète et cycle de vie</p>
         </div>
+        <button 
+          onClick={() => { setNewDossierData({ name: '', description: '', priority: 'NORMAL', origin: '', parentDossierId: '', targetId: '' }); setShowCreateDossierModal(true); }} 
+          className="btn btn-primary" 
+          style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}
+        >
+          <Plus size={18} /> Nouveau Dossier
+        </button>
       </div>
       
       <div style={{display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem', background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
@@ -541,7 +691,9 @@ const DossiersPage = () => {
           <tbody>
             {isLoading ? (
               <tr><td colSpan="8" style={{textAlign: 'center', padding: '2rem'}}>Chargement des dossiers...</td></tr>
-            ) : dbDossiers.map(d => {
+            ) : dbDossiers.filter(d => !d.parentDossierId).length === 0 ? (
+              <tr><td colSpan="8" style={{textAlign: 'center', padding: '2rem'}}>Aucun dossier principal trouvé.</td></tr>
+            ) : dbDossiers.filter(d => !d.parentDossierId).map(d => {
               const dOrigin = d.origin || 'INTERNE';
               const dCreatorName = d.createdBy?.name || 'Inconnu';
               const dCreatorRole = d.createdBy?.role?.name || '-';
@@ -577,6 +729,60 @@ const DossiersPage = () => {
 
       <PaginationControls page={page} totalPages={totalPages} setPage={setPage} />
       <FilePreviewModal previewFile={previewFile} onClose={() => setPreviewFile(null)} />
+
+      {/* Modal Création Dossier */}
+      {showCreateDossierModal && (
+        <div className="fade-in" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
+          <div style={{background: '#FFF', padding: '2rem', borderRadius: '8px', width: '90%', maxWidth: '500px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
+              <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600}}>Nouveau Dossier</h3>
+              <button onClick={() => setShowCreateDossierModal(false)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)'}}><X size={20}/></button>
+            </div>
+            
+            <form onSubmit={handleCreateDossier}>
+              <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Nom du dossier *</label>
+                  <input required type="text" value={newDossierData.name} onChange={(e) => setNewDossierData({...newDossierData, name: e.target.value})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+                </div>
+
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Description *</label>
+                  <textarea required value={newDossierData.description} onChange={(e) => setNewDossierData({...newDossierData, description: e.target.value})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '80px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+                </div>
+
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Origine *</label>
+                    <select required value={newDossierData.origin} onChange={(e) => setNewDossierData({...newDossierData, origin: e.target.value, targetId: ''})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                      <option value="">-- Sélectionner l'origine --</option>
+                      <option value="CLIENT">Client</option>
+                      <option value="COLLABORATEUR">Collaborateur</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Cible {newDossierData.origin ? `(${newDossierData.origin === 'CLIENT' ? 'Client' : 'Collaborateur'}) *` : '*'}</label>
+                    <select required value={newDossierData.targetId} onChange={(e) => setNewDossierData({...newDossierData, targetId: e.target.value})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}} disabled={!newDossierData.origin}>
+                      <option value="">-- Sélectionner --</option>
+                      {newDossierData.origin === 'CLIENT' && dbClients.map(c => (
+                        <option key={c.id} value={c.id}>{c.nom} {c.prenom}</option>
+                      ))}
+                      {newDossierData.origin === 'COLLABORATEUR' && dbUsers.map(u => (
+                        <option key={u.id} value={u.id}>{u.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
+                <button type="button" onClick={() => setShowCreateDossierModal(false)} className="btn btn-outline" disabled={isSubmittingDossier}>Annuler</button>
+                <button type="submit" disabled={isSubmittingDossier || !newDossierData.name.trim() || !newDossierData.description.trim() || !newDossierData.origin || !newDossierData.targetId} className="btn btn-primary" style={{ opacity: (!newDossierData.name.trim() || !newDossierData.description.trim() || !newDossierData.origin || !newDossierData.targetId) ? 0.5 : 1 }}>{isSubmittingDossier ? 'Création...' : 'Créer le dossier'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

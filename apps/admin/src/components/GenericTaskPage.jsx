@@ -18,8 +18,10 @@ const getSubjectFromTask = (desc) => {
 
 const getMessageFromTask = (desc) => {
   if (!desc) return 'Aucun message';
-  const match = desc.match(/Consignes: ([\s\S]*)/);
-  return match ? match[1] : desc;
+  const match = desc.match(/Consignes:\s*([\s\S]*)/);
+  if (match) return match[1];
+  const lines = desc.split('\n');
+  return lines.length > 1 ? lines.slice(1).join('\n').trim() : desc;
 };
 
 
@@ -79,7 +81,7 @@ const TaskDropdown = ({ taskId, openMenuId, setOpenMenuId, menuRef, tasks, setCo
       )}
       <button type="button" className="dropdown-item" onClick={async () => { 
         setOpenMenuId(null); 
-        if(window.confirm("Supprimer cette mission ?")) {
+        if(await window.customConfirm("Voulez-vous vraiment supprimer cette mission ?", "Supprimer la mission")) {
            try {
              const token = sessionStorage.getItem('adminToken');
              const res = await fetch(new URL(getSafeApiUrl(`/api/crm/tasks/${encodeURIComponent(taskId)}`)).toString(), { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
@@ -596,73 +598,58 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         </div>
         
         <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            <TaskField label={"Créé par"} value={consultTask.createdBy?.name || 'Système'} />
-            <TaskField label={"Assigné à"} value={consultTask.assignedTo?.name || 'Non assigné'} />
+          <div style={{display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.8fr', gap: '1.5rem', alignItems: 'center', marginBottom: '1.5rem', background: '#F8FAFC', padding: '1rem 1.5rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Créé par :</strong>
+              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.createdBy?.name || 'Système'}</span>
+            </div>
+            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Rôle :</strong>
+              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.createdBy?.role?.name || '-'}</span>
+            </div>
+            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Date de création :</strong>
+              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{new Date(consultTask.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</span>
+            </div>
+            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Assigné à :</strong>
+              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.assignedTo?.name || 'Non assigné'}</span>
+            </div>
+            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Rôle :</strong>
+              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.assignedTo?.role?.name || '-'}</span>
+            </div>
+            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>{mode === 'MISSION' ? 'Dossier associé :' : 'Mission Liée :'}</strong>
+              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>
+                {mode === 'MISSION' 
+                  ? ((consultTask.dossier?.name ? `${consultTask.dossier.name} (${consultTask.dossier.reference || 'DOS-' + consultTask.dossier.id})` : consultTask.dossierId)) 
+                  : (consultTask.mission?.reference || consultTask.missionId)}
+              </span>
+            </div>
           </div>
 
-          <TaskField label={"Objet"} value={getSubjectFromTask(consultTask.description)} />
-          
-          <TaskField label={mode === 'MISSION' ? 'Dossier associé' : 'Mission Liée'} value={mode === 'MISSION' ? (consultTask.dossier?.reference || consultTask.dossier?.name || consultTask.dossierId) : (consultTask.mission?.reference || consultTask.missionId)} />
-
-          <div>
-            <label htmlFor="consult-task-attachment" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
-            <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+            <strong style={{color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.875rem'}}>Pièces jointes :</strong>
+            <div style={{flex: 1, maxWidth: '300px', background: '#F8FAFC', padding: '0.25rem 0.5rem', borderRadius: '6px', border: '1px solid var(--border)'}}>
               <AttachmentSelect files={[consultTask.attachment]} onPreview={setPreviewFile} />
             </div>
           </div>
 
-          <TaskField label={"Message / Consignes"} value={getMessageFromTask(consultTask.description)} readOnly={true} isTextarea={true} />
+          <TaskField label={"Objet"} value={getSubjectFromTask(consultTask.description)} />
 
-          <div style={{display: 'flex', alignItems: 'center', gap: '2rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', width: 'fit-content'}}>
-            <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-              <span style={{fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-main)'}}>{mode === 'MISSION' ? 'Statut de la mission :' : 'Statut de la tâche :'}</span>
-              {getStatusBadge(consultTask.status)}
+        <div style={{display: 'flex', gap: '2rem', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', alignItems: 'flex-start'}}>
+          <div style={{flex: '0 0 70%'}}>
+            <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Consignes</h4>
+            <div style={{padding: '1.5rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', whiteSpace: 'pre-wrap', fontSize: '0.875rem', color: 'var(--text-main)', minHeight: '120px'}}>
+              {getMessageFromTask(consultTask.description) || <span style={{color: 'var(--text-muted)'}}>Aucune consigne fournie.</span>}
             </div>
-            
-            {(() => {
-              const role = currentUser?.role?.name || currentUser?.role || '';
-              const isSuperAdmin = role === 'Super-administrateur' || role === 'Administrateur' || currentUser?.id === 'MASTER-ADMIN';
-              const isResp = role === 'Responsable opérationnel' || isSuperAdmin;
-              const isController = role === 'Relecteur' || isResp;
-              const status = consultTask.status;
-
-              return (
-                <div style={{display: 'flex', gap: '0.5rem', flexWrap: 'wrap'}}>
-                  {(status === 'EN_ATTENTE' || status === 'NOUVEAU' || status === 'TO_ASSIGN') && (
-                    <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-primary" style={{padding: '0.5rem 1rem'}}>Débuter</button>
-                  )}
-                  {(status === 'EN_COURS' || status === 'IN_PROGRESS' || status === 'EN_REVISION') && (
-                    <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_FINALISATION')} className="btn btn-outline" style={{borderColor: 'var(--warning)', color: 'var(--warning)', padding: '0.5rem 1rem'}}>Finaliser</button>
-                  )}
-                  {status === 'EN_FINALISATION' && isController && (
-                    <>
-                      <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_CONTROLE')} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)', padding: '0.5rem 1rem'}}>Contrôler</button>
-                      <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-outline" style={{borderColor: 'var(--danger)', color: 'var(--danger)', padding: '0.5rem 1rem'}}>Rejeter</button>
-                    </>
-                  )}
-                  {status === 'EN_CONTROLE' && isSuperAdmin && (
-                    <button type="button" onClick={() => setShowAdminFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#B91C1C', color: '#B91C1C', padding: '0.5rem 1rem'}}>
-                      ✦ À améliorer
-                    </button>
-                  )}
-                  {status === 'A_AMELIORER' && isController && (
-                    <button type="button" onClick={() => setShowManagerFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#6D28D9', color: '#6D28D9', padding: '0.5rem 1rem'}}>
-                      ✎ Corriger
-                    </button>
-                  )}
-                  {(status === 'EN_CONTROLE' || status === 'A_AMELIORER') && isResp && (
-                    <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'TERMINEE')} className="btn btn-primary" style={{backgroundColor: 'var(--success)', borderColor: 'var(--success)', padding: '0.5rem 1rem'}}>Terminer</button>
-                  )}
-                </div>
-              );
-            })()}
           </div>
-
-          <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
+          
+          <div style={{flex: '1 1 auto', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column'}}>
             <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Tâches liées</h4>
             {consultTask.taches && consultTask.taches.length > 0 ? (
-              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem'}}>
+              <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto', flex: 1}}>
                 {consultTask.taches.map((sub) => (
                   <button 
                     type="button"
@@ -687,6 +674,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                </div>
             )}
           </div>
+        </div>
 
           {/* Fil de corrections — visible selon le rôle et le statut */}
           <FeedbackThread
@@ -696,11 +684,18 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           />
         </div>
 
-        <div style={{marginTop: '1.5rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'center'}}>
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem', marginBottom: '1.5rem'}}>
           <button type="button" onClick={() => setShowSmsModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)', display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.75rem 1.5rem'}}>
             <MessageSquare size={16} />
             SMS Collaborateur
           </button>
+
+          <div style={{display: 'flex', gap: '1rem'}}>
+            <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Retour</button>
+            {mode === 'MISSION' && (
+              <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une tâche</button>
+            )}
+          </div>
         </div>
 
         <SmsModal 
@@ -708,13 +703,6 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           onClose={() => setShowSmsModal(false)} 
           contextData={{ missionId: consultTask.id, dossierId: consultTask.dossierId }} 
         />
-
-        <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem'}}>
-          <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Retour</button>
-          {mode === 'MISSION' && (
-            <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une tâche</button>
-          )}
-        </div>
         
         <TaskConsultModal task={localConsultSubTask} onClose={() => setLocalConsultSubTask(null)} />
         <FilePreviewModal previewFile={previewFile} onClose={() => setPreviewFile(null)} />

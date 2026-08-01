@@ -16,6 +16,8 @@ import SetupPasswordPage from './pages/SetupPasswordPage';
 import WorkspacePage from './pages/WorkspacePage';
 import UsersSpacePage from './pages/UsersSpacePage';
 import SystemSpacePage from './pages/SystemSpacePage';
+import GlobalAlerts from './components/GlobalAlerts';
+import './utils/AlertService'; // initialize overrides
 
 const MOCK_USER = {
   id: 'U-001',
@@ -201,6 +203,7 @@ function App() {
 
   return (
     <div className="app-layout">
+      <GlobalAlerts />
       {/* Sidebar */}
       <aside style={{
           width: 250,

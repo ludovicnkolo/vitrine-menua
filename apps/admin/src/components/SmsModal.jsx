@@ -33,7 +33,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!targetUserId || !content || !subject) {
-      alert("Veuillez remplir l'objet, le contenu et le destinataire.");
+      window.customAlert("Veuillez remplir l'objet, le contenu et le destinataire.");
       return;
     }
 
@@ -83,18 +83,18 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
       });
 
       if (res.ok) {
-        alert("SMS envoyé avec succès !");
+        window.customAlert("SMS envoyé avec succès !");
         onClose();
         setSubject('');
         setContent('');
         setTargetUserId('');
         setFile(null);
       } else {
-        alert("Erreur lors de l'envoi du SMS.");
+        window.customAlert("Erreur lors de l'envoi du SMS.");
       }
     } catch (err) {
       console.error(err);
-      alert("Erreur réseau.");
+      window.customAlert("Erreur réseau.");
     } finally {
       setLoading(false);
     }

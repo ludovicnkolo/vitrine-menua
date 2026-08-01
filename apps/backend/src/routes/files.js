@@ -116,7 +116,6 @@ router.get('/view/:bucket/:filename', authenticateJWT, (req, res) => {
 
   const options = {
     headers: {
-      'Content-Type': 'application/pdf',
       'Content-Disposition': 'inline',
       'Content-Security-Policy': "default-src 'self' 'unsafe-inline'; object-src 'self' blob:; frame-src 'self' blob:;"
     }

@@ -100,7 +100,7 @@ const UsersPage = ({ forceTab }) => {
   };
   
   const handleDeleteUser = async (id) => {
-    if (!window.confirm('Voulez-vous vraiment supprimer ce membre interne ?')) return;
+    if (!(await window.customConfirm('Voulez-vous vraiment supprimer ce membre interne ?', 'Suppression'))) return;
     try {
       const res = await fetch(getSafeApiUrl(`/api/crm/users/${encodeURIComponent(id)}`), {
         method: 'DELETE',
@@ -112,7 +112,7 @@ const UsersPage = ({ forceTab }) => {
   };
 
   const handleDeleteClient = async (id) => {
-    if (!window.confirm('Voulez-vous vraiment supprimer ce membre externe ?')) return;
+    if (!(await window.customConfirm('Voulez-vous vraiment supprimer ce membre externe ?', 'Suppression'))) return;
     try {
       const res = await fetch(getSafeApiUrl(`/api/crm/clients/${encodeURIComponent(id)}`), {
         method: 'DELETE',

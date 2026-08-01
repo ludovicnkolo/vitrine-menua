@@ -287,7 +287,7 @@ const InboxPage = ({ userRole }) => {
 
   const handleAssignSubmit = async () => {
     if (!selectedAssignee) {
-      alert("Veuillez sélectionner un collaborateur.");
+      window.customAlert("Veuillez sélectionner un collaborateur.");
       return;
     }
     setIsSubmitting(true);
@@ -306,11 +306,11 @@ const InboxPage = ({ userRole }) => {
         setSelectedAssignee('');
         fetchMessages();
       } else {
-        alert("Erreur lors de l'assignation");
+        window.customAlert("Erreur lors de l'assignation");
       }
     } catch (e) {
       console.error(e);
-      alert("Erreur réseau");
+      window.customAlert("Erreur réseau");
     } finally {
       setIsSubmitting(false);
     }

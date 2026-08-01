@@ -4,13 +4,16 @@ import { getSafeApiUrl } from '../utils/helpers';
 
 const FilePreviewModal = ({ previewFile, onClose }) => {
   const [previewBlobUrl, setPreviewBlobUrl] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (!previewFile) {
       if (previewBlobUrl) URL.revokeObjectURL(previewBlobUrl);
       setPreviewBlobUrl(null);
+      setError(false);
       return;
     }
+    setError(false);
     const fetchPdf = async () => {
       try {
         const token = sessionStorage.getItem('adminToken');
@@ -28,9 +31,12 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
           const blob = await res.blob();
           const objUrl = URL.createObjectURL(blob);
           setPreviewBlobUrl(objUrl);
+        } else {
+          setError(true);
         }
       } catch (err) {
         console.error("Error fetching file for preview:", err);
+        setError(true);
       }
     };
     fetchPdf();
@@ -57,6 +63,13 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
         <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E2E8F0', padding: '2rem'}}>
           <div style={{width: '100%', height: '100%', background: '#FFF', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden'}}>
             {(() => {
+              if (error) {
+                return (
+                  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--danger)'}}>
+                    Fichier introuvable ou inaccessible.
+                  </div>
+                );
+              }
               if (!previewBlobUrl) {
                 return (
                   <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>

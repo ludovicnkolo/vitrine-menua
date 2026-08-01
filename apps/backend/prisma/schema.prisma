@@ -159,6 +159,10 @@ model Dossier {
   targetUserId String?
   targetUser   Utilisateur? @relation("DossierTarget", fields: [targetUserId], references: [id], onDelete: SetNull)
 
+  parentDossierId String?
+  parentDossier   Dossier?  @relation("SubDossiers", fields: [parentDossierId], references: [id])
+  subDossiers     Dossier[] @relation("SubDossiers")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

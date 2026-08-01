@@ -382,7 +382,9 @@ router.get('/dossiers', async (req, res) => {
         }, 
         client: true, 
         createdBy: { include: { role: true } },
-        documents: { include: { uploadedBy: true }, orderBy: { createdAt: 'desc' } }
+        documents: { include: { uploadedBy: true }, orderBy: { createdAt: 'desc' } },
+        subDossiers: true,
+        parentDossier: true
       }
     });
     sendPaginatedResponse(res, dossiers, total, page, limit);
@@ -407,7 +409,8 @@ router.post('/dossiers', async (req, res) => {
         origin: origin || 'INTERNE',
         createdById: creatorId,
         clientId: req.body.clientId || null,
-        targetUserId: req.body.targetUserId || null
+        targetUserId: req.body.targetUserId || null,
+        parentDossierId: req.body.parentDossierId || null
       }
     });
 
@@ -447,13 +450,37 @@ router.get('/audit', async (req, res) => {
 
 router.patch('/dossiers/:id', async (req, res) => {
   try {
-    const { status, name } = req.body;
+    const { status, name, description } = req.body;
+    const updateData = {};
+    if (status !== undefined) updateData.status = status;
+    if (name !== undefined) updateData.name = name;
+    if (description !== undefined) updateData.description = description;
+
     const dossier = await prisma.dossier.update({
       where: { id: req.params.id },
-      data: { status, name }
+      data: updateData
     });
 
-    await prisma.auditLog.create({ data: { userId: req.user.id, action: 'MODIFICATION_DOSSIER', targetId: dossier.id, targetType: 'DOSSIER', details: `Statut modifié: ${status || 'Inchangé'}`, dossierId: dossier.id }});
+    let validUserId = req.user.id;
+    if (validUserId === 'MASTER-ADMIN') {
+      const masterUser = await prisma.utilisateur.findFirst();
+      validUserId = masterUser ? masterUser.id : null;
+    }
+
+    try {
+      await prisma.auditLog.create({ 
+        data: { 
+          userId: validUserId, 
+          action: 'MODIFICATION_DOSSIER', 
+          targetId: dossier.id, 
+          targetType: 'DOSSIER', 
+          details: `Dossier modifié: ${name || dossier.name}`, 
+          dossierId: dossier.id 
+        }
+      });
+    } catch(auditErr) {
+      console.warn("Audit log creation failed:", auditErr);
+    }
 
     res.json(dossier);
   } catch (error) {
@@ -806,7 +833,28 @@ router.get('/documents/:type/:id', async (req, res) => {
 
 router.delete('/documents/:id', async (req, res) => {
   try {
+    const doc = await prisma.document.findUnique({ where: { id: req.params.id } });
+    if (!doc) return res.status(404).json({ error: 'Document introuvable.' });
+    
     await prisma.document.delete({ where: { id: req.params.id } });
+    
+    try {
+      const fs = require('node:fs');
+      const path = require('node:path');
+      const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
+      const filePath = path.join(rootPath, doc.url);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      } else {
+        const fallbackPath = path.join(__dirname, '../../../storage', doc.url);
+        if (fs.existsSync(fallbackPath)) {
+          fs.unlinkSync(fallbackPath);
+        }
+      }
+    } catch (fsErr) {
+      console.error("Erreur de suppression physique du fichier:", fsErr);
+    }
+    
     res.json({ success: true });
   } catch (error) {
     console.error(error);

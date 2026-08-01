@@ -773,12 +773,11 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           <thead>
             <tr>
               <th style={{ width: '10%', textAlign: 'left' }}>ID</th>
-              <th style={{ width: '15%', textAlign: 'left' }}>{mode === 'MISSION' ? 'Nom dossier' : 'ID Mission'}</th>
-              <th style={{ width: '15%', textAlign: 'left' }}>Objet</th>
-              <th style={{ width: '15%', textAlign: 'left' }}>Récepteur</th>
+              <th style={{ width: '20%', textAlign: 'left' }}>{mode === 'MISSION' ? 'Nom dossier' : 'ID Mission'}</th>
+              <th style={{ width: '20%', textAlign: 'left' }}>Affecté à</th>
               <th style={{ width: '10%', textAlign: 'right', paddingRight: '0.5rem' }}>Échéance</th>
               <th style={{ width: '15%', textAlign: 'center' }}>Statut</th>
-              <th style={{ width: '10%', textAlign: 'left' }}>Date</th>
+              <th style={{ width: '15%', textAlign: 'left' }}>Date</th>
               <th style={{ width: '10%', textAlign: 'center' }}>Actions</th>
             </tr>
           </thead>
@@ -791,15 +790,11 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   </strong>
                 </td>
                 <td style={{ textAlign: 'left' }}>
-                  <span className="truncate-text" style={{color: 'var(--primary)', fontWeight: 500, fontSize: "0.875rem", margin: 0}}>
+                  <div style={{color: 'var(--primary)', fontWeight: 500, fontSize: "0.875rem", margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '170px'}} title={mode === 'MISSION' ? (t.dossier?.name || t.dossierId) : (t.mission?.reference || t.missionId)}>
                     {mode === 'MISSION' ? (t.dossier?.name || t.dossierId) : (t.mission?.reference || t.missionId)}
-                  </span>
+                  </div>
                 </td>
-                <td style={{ textAlign: 'left' }}>
-                  <span className="truncate-text" style={{fontSize: "0.875rem", margin: 0}} title={t.description}>
-                    {t.description ? t.description.split('\n')[0].replace('Objet:', '').trim() : 'Sans objet'}
-                  </span>
-                </td>
+
                 <td style={{ textAlign: 'left' }}>
                   <span className="truncate-name" style={{fontSize: "0.875rem", margin: 0}}>
                     {t.assignedTo?.name || 'Non assigné'}

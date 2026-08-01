@@ -678,37 +678,36 @@ const DossiersPage = () => {
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Nom du dossier</th>
-              <th>Origine</th>
-              <th>Créé par</th>
-              <th>Statut</th>
-              <th>Rôle</th>
-              <th>Date de création</th>
-              <th>Actions</th>
+              <th style={{ width: '10%' }}>ID</th>
+              <th style={{ width: '22%' }}>Nom du dossier</th>
+              <th style={{ width: '15%' }}>Origine</th>
+              <th style={{ width: '20%' }}>Propriétaire</th>
+              <th style={{ width: '10%' }}>Statut</th>
+              <th style={{ width: '13%' }}>Date de création</th>
+              <th style={{ width: '10%' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
-              <tr><td colSpan="8" style={{textAlign: 'center', padding: '2rem'}}>Chargement des dossiers...</td></tr>
+              <tr><td colSpan="7" style={{textAlign: 'center', padding: '2rem'}}>Chargement des dossiers...</td></tr>
             ) : dbDossiers.filter(d => !d.parentDossierId).length === 0 ? (
-              <tr><td colSpan="8" style={{textAlign: 'center', padding: '2rem'}}>Aucun dossier principal trouvé.</td></tr>
+              <tr><td colSpan="7" style={{textAlign: 'center', padding: '2rem'}}>Aucun dossier principal trouvé.</td></tr>
             ) : dbDossiers.filter(d => !d.parentDossierId).map(d => {
               const dOrigin = d.origin || 'INTERNE';
-              const dCreatorName = d.createdBy?.name || 'Inconnu';
+              const dOwner = d.origin === 'CLIENT' 
+                ? (d.client?.name || d.client?.companyName || dbClients.find(c => c.id === d.clientId)?.name || dbClients.find(c => c.id === d.clientId)?.companyName || 'Client inconnu') 
+                : d.origin === 'COLLABORATEUR'
+                ? (d.targetUser?.name || dbUsers.find(u => u.id === d.targetUserId)?.name || 'Collaborateur inconnu')
+                : 'MENUA CONSULTING (Interne)';
               const dCreatorRole = d.createdBy?.role?.name || '-';
               return (
               <tr key={d.id}>
-                <td><div className="truncate-text" style={{fontWeight: 500}}>{d.reference || d.id}</div></td>
+                <td><div style={{whiteSpace: 'nowrap', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '90px'}} title={d.reference || d.id}>{d.reference || d.id}</div></td>
                 <td><strong className="truncate-name" style={{color: 'var(--text-main)'}}>{d.name}</strong></td>
-                <td><span style={{color: 'var(--text-muted)', fontSize: '0.875rem', textTransform: 'capitalize'}}>{dOrigin}</span></td>
-                <td><div className="truncate-text">{dCreatorName}</div></td>
+                <td><div style={{color: 'var(--text-muted)', fontSize: '0.875rem', textTransform: 'capitalize', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px'}} title={dOrigin}>{dOrigin}</div></td>
+                <td><div style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '160px'}} title={dOwner}>{dOwner}</div></td>
                 <td><div className="truncate-text">{getStatusBadge(d.status)}</div></td>
-                <td>
-                  <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 500, background: dCreatorRole === 'ADMIN' ? '#EFF6FF' : '#F5F3FF', color: dCreatorRole === 'ADMIN' ? '#2563EB' : '#7C3AED'}}>
-                    {dCreatorRole}
-                  </span>
-                </td>
+
                 <td style={{color: 'var(--text-muted)', whiteSpace: "nowrap", fontSize: "0.875rem"}}>{new Date(d.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</td>
                 <td>
                   <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>

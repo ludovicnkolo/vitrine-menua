@@ -532,20 +532,20 @@ const UsersPage = ({ forceTab }) => {
           <table>
             <thead>
               <tr>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Rôle</th>
-                <th>Statut</th>
-                <th>Dernière Connexion</th>
-                <th>Actions</th>
+                <th style={{ width: '20%' }}>Nom</th>
+                <th style={{ width: '22%' }}>Email</th>
+                <th style={{ width: '25%' }}>Rôle</th>
+                <th style={{ width: '10%' }}>Statut</th>
+                <th style={{ width: '15%' }}>Dernière Connexion</th>
+                <th style={{ width: '8%' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {users.map(u => (
                 <tr key={u.id}>
                   <td><strong className="truncate-name" style={{}}>{u.name}</strong></td>
-                  <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{u.email}</span></td>
-                  <td><div className="truncate-text">{getRoleBadge(u.role?.name || 'Non défini')}</div></td>
+                  <td><div style={{maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: "var(--text-muted)", fontSize: "0.875rem"}} title={u.email}>{u.email}</div></td>
+                  <td style={{textAlign: 'center'}}>{getRoleBadge(u.role?.name || 'Non défini')}</td>
                   <td>
                     <span style={{color: !u.isBlocked ? 'var(--success)' : 'var(--danger)', fontWeight: 500}}>
                       {!u.isBlocked ? 'Actif' : 'Inactif'}
@@ -570,21 +570,21 @@ const UsersPage = ({ forceTab }) => {
           <table>
             <thead>
               <tr>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Type</th>
-                <th>État</th>
-                <th>Activité</th>
-                <th>Date de création</th>
-                <th>Actions</th>
+                <th style={{ width: '15%' }}>Nom</th>
+                <th style={{ width: '20%' }}>Email</th>
+                <th style={{ width: '10%' }}>Type</th>
+                <th style={{ width: '8%' }}>État</th>
+                <th style={{ width: '22%' }}>Activité</th>
+                <th style={{ width: '17%' }}>Date de création</th>
+                <th style={{ width: '8%' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {clients.map(c => (
                 <tr key={c.id}>
                   <td><strong className="truncate-name">{c.name}</strong></td>
-                  <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{c.email}</span></td>
-                  <td>
+                  <td><div style={{maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: "var(--text-muted)", fontSize: "0.875rem"}} title={c.email}>{c.email}</div></td>
+                  <td style={{textAlign: 'center'}}>
                     <span style={{
                       display: 'inline-block',
                       padding: '0.25rem 0.75rem',
@@ -597,7 +597,7 @@ const UsersPage = ({ forceTab }) => {
                       {c.type === 'SOCIETE' ? 'Entreprise' : c.type === 'PARTICULIER' ? 'Particulier' : c.type === 'ANONYME' ? 'Anonyme' : (c.type || 'Particulier')}
                     </span>
                   </td>
-                  <td>
+                  <td style={{textAlign: 'center'}}>
                     <span style={{
                       display: 'inline-block',
                       padding: '0.2rem 0.6rem',

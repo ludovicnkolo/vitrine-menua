@@ -19,6 +19,10 @@ const validateEmail = async (email) => {
 
   const cleanEmail = email ? String(email).replace(/[\r\n]+/g, '') : 'unknown';
 
+  if (process.env.ENABLE_EXTERNAL_EMAIL_VERIFICATION === 'false' || process.env.ENABLE_EXTERNAL_EMAIL_VERIFICATION === '0') {
+    return true; // Bypass external verification
+  }
+
   try {
     const apiKey = '4e1a695bf32b4eedb38d00db465dcbfa';
     console.log({ event: "abstract_api_check", email: cleanEmail });

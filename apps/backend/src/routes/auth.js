@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
 
     if (email === MASTER_EMAIL && password === MASTER_PASS) {
       const token = jwt.sign(
-        { id: 'MASTER-ADMIN', email: MASTER_EMAIL, role: 'ADMIN' },
+        { id: 'MASTER-ADMIN', email: MASTER_EMAIL, role: 'Super-administrateur' },
         JWT_SECRET,
         { expiresIn: '12h' }
       );
@@ -41,7 +41,7 @@ router.post('/login', async (req, res) => {
           id: 'MASTER-ADMIN',
           name: process.env.MASTER_ADMIN_NAME || 'Super Administrateur',
           email: MASTER_EMAIL,
-          role: 'ADMIN',
+          role: 'Super-administrateur',
           profile: process.env.MASTER_ADMIN_PROFILE || 'Master'
         }
       });

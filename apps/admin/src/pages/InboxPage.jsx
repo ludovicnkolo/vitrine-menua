@@ -444,29 +444,32 @@ const InboxPage = ({ userRole }) => {
         <table>
           <thead>
             <tr>
-              <th style={{ width: '10%' }}>Statut</th>
-              <th style={{ width: tab === 'interne' ? '15%' : '20%' }}>{tab === 'interne' ? 'Emetteur' : 'Nom'}</th>
-              <th style={{ width: '20%' }}>{tab === 'recrutement' ? 'E-mail' : 'Email'}</th>
+              <th style={{ width: '5%' }}>№</th>
+              <th style={{ width: '12%', whiteSpace: 'nowrap' }}>Statut</th>
+              <th style={{ width: tab === 'interne' ? '15%' : '18%' }}>{tab === 'interne' ? 'Emetteur' : 'Nom'}</th>
+              <th style={{ width: '18%' }}>{tab === 'recrutement' ? 'E-mail' : 'Email'}</th>
               <th style={{ width: '10%' }}>{tab === 'interne' ? 'Source' : 'Type'}</th>
-              <th style={{ width: tab === 'interne' ? '15%' : '20%' }}>
+              <th style={{ width: tab === 'interne' ? '15%' : '17%' }}>
                 {tab === 'contact' ? 'Besoins' : tab === 'recrutement' ? 'Compétences' : tab === 'interne' ? 'ID' : 'Sujet'}
               </th>
-              <th style={{ width: tab === 'interne' ? '15%' : '10%' }}>Date</th>
-              <th style={{ width: tab === 'interne' ? '15%' : '10%' }}>Actions</th>
+              <th style={{ width: '12%' }}>Date</th>
+              <th style={{ width: '8%' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {(() => {
               if (loading) {
-                return <tr><td colSpan="7" style={{textAlign: 'center', padding: '2rem'}}>Chargement des messages...</td></tr>;
+                return <tr><td colSpan="8" style={{textAlign: 'center', padding: '2rem'}}>Chargement des messages...</td></tr>;
               }
 
-              const renderMessageRow = (m, col2, col3, typeBadgeText, typeBadgeBg, typeBadgeColor, col5, col5Style) => (
+              const renderMessageRow = (m, index, col2, col3, typeBadgeText, typeBadgeBg, typeBadgeColor, col5, col5Style) => (
                 <tr key={m.id}>
+                  <td style={{ fontWeight: 500, color: 'var(--text-muted)' }}>{index + 1}</td>
                   <td>
                     <span style={{
                       padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                      background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569'
+                      background: m.status === 'NOUVEAU' ? '#FEE2E2' : '#F1F5F9', color: m.status === 'NOUVEAU' ? '#DC2626' : '#475569',
+                      whiteSpace: 'nowrap'
                     }}>{m.status.charAt(0).toUpperCase() + m.status.slice(1).toLowerCase().replaceAll('_', " ")}</span>
                   </td>
                   <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{col2}</strong></td>
@@ -492,24 +495,24 @@ const InboxPage = ({ userRole }) => {
               );
               
               if (tab === 'contact') {
-                return messages.map(m => renderMessageRow(
-                  m, m.nomPrenom, m.email,
+                return messages.map((m, i) => renderMessageRow(
+                  m, i, m.nomPrenom, m.email,
                   m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier', '#E0E7FF', '#4F46E5',
                   m.contact?.typeBesoin || m.objet
                 ));
               }
 
               if (tab === 'recrutement') {
-                return messages.map(m => renderMessageRow(
-                  m, m.nomPrenom, m.email,
+                return messages.map((m, i) => renderMessageRow(
+                  m, i, m.nomPrenom, m.email,
                   m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier', '#FEF3C7', '#D97706',
                   m.recrutement?.competenceCle || m.objet
                 ));
               }
 
               if (tab === 'interne') {
-                return messages.map(m => renderMessageRow(
-                  m, m.nomPrenom || 'Système', m.email || '-',
+                return messages.map((m, i) => renderMessageRow(
+                  m, i, m.nomPrenom || 'Système', m.email || '-',
                   m.sourceType || m.subType || 'Interne', '#F1F5F9', '#64748B',
                   <span title={m.sourceRef || m.formulaireId || m.id}>{m.sourceRef || (m.formulaireId ? m.formulaireId.split('-')[0] : m.id)}</span>,
                   {color: "var(--text-muted)", fontSize: "0.75rem", fontFamily: "monospace"}
@@ -517,8 +520,8 @@ const InboxPage = ({ userRole }) => {
               }
 
               // Fallback
-              return messages.map(m => renderMessageRow(
-                m, m.nomPrenom, m.email,
+              return messages.map((m, i) => renderMessageRow(
+                m, i, m.nomPrenom, m.email,
                 m.sourceType || m.subType || 'Indéfini', '#F1F5F9', '#64748B',
                 m.objet,
                 {fontWeight: m.status === "NOUVEAU" ? 600 : 400, fontSize: "0.875rem"}

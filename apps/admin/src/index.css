@@ -200,7 +200,7 @@ th, td {
 }
 
 th {
-  background: var(--surface);
+  background: #F8FAFC;
   font-weight: 600;
   color: var(--text-muted);
   font-size: 0.75rem;

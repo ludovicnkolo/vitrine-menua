@@ -121,4 +121,21 @@ app.listen(PORT, () => {
   } catch (err) {
     console.error('Failed to run seed_admin.js on startup:', err);
   }
+
+  // Lancement de l'export de la base de données toutes les 10 minutes
+  try {
+    const exportDatabase = require('../export_db');
+    // On fait un premier export au démarrage (optionnel, mais utile)
+    exportDatabase();
+    
+    const DIX_MINUTES = 10 * 60 * 1000;
+    setInterval(() => {
+      const date = new Date().toLocaleString();
+      console.log(`[${date}] Nouvelle exécution planifiée de l'export...`);
+      exportDatabase();
+    }, DIX_MINUTES);
+    console.log('Tâche d\'export automatique de la base de données configurée (toutes les 10 min).');
+  } catch (err) {
+    console.error('Erreur lors du paramétrage de l\'export automatique :', err);
+  }
 });

@@ -40,7 +40,8 @@ const DossiersPage = () => {
     priority: 'NORMAL',
     origin: '',
     parentDossierId: '',
-    targetId: ''
+    targetId: '',
+    categorie: ''
   });
   const [isSubmittingDossier, setIsSubmittingDossier] = useState(false);
   
@@ -201,6 +202,10 @@ const DossiersPage = () => {
       window.customAlert(`Veuillez sélectionner la Cible (${newDossierData.origin === 'CLIENT' ? 'Client' : 'Collaborateur'}).`);
       return;
     }
+    if (!newDossierData.categorie) {
+      window.customAlert("Veuillez sélectionner une catégorie.");
+      return;
+    }
 
     setIsSubmittingDossier(true);
     const token = sessionStorage.getItem('adminToken');
@@ -211,7 +216,8 @@ const DossiersPage = () => {
         description: newDossierData.description,
         priority: newDossierData.priority,
         origin: newDossierData.origin,
-        parentDossierId: newDossierData.parentDossierId || null
+        parentDossierId: newDossierData.parentDossierId || null,
+        categorie: newDossierData.categorie
       };
       
       if (newDossierData.origin === 'CLIENT' && newDossierData.targetId) {
@@ -232,7 +238,7 @@ const DossiersPage = () => {
       if (res.ok) {
         window.customAlert("Dossier créé avec succès !");
         setShowCreateDossierModal(false);
-        setNewDossierData({ name: '', description: '', priority: 'NORMAL', origin: '', parentDossierId: '', targetId: '' });
+        setNewDossierData({ name: '', description: '', priority: 'NORMAL', origin: '', parentDossierId: '', targetId: '', categorie: '' });
         fetchDossiers();
       } else {
         const errData = await res.json();
@@ -321,6 +327,10 @@ const DossiersPage = () => {
       <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
         <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Origine :</strong>
         <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{dossier.origin || 'INTERNE'}</span>
+      </div>
+      <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+        <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Catégorie :</strong>
+        <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{dossier.categorie || '-'}</span>
       </div>
       <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
         <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Propriétaire du dossier :</strong>
@@ -622,7 +632,7 @@ const DossiersPage = () => {
           <p style={{color: 'var(--text-muted)'}}>Gestion complète et cycle de vie</p>
         </div>
         <button 
-          onClick={() => { setNewDossierData({ name: '', description: '', priority: 'NORMAL', origin: '', parentDossierId: '', targetId: '' }); setShowCreateDossierModal(true); }} 
+          onClick={() => { setNewDossierData({ name: '', description: '', priority: 'NORMAL', origin: '', parentDossierId: '', targetId: '', categorie: '' }); setShowCreateDossierModal(true); }} 
           className="btn btn-primary" 
           style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}
         >
@@ -750,6 +760,16 @@ const DossiersPage = () => {
                   <textarea required value={newDossierData.description} onChange={(e) => setNewDossierData({...newDossierData, description: e.target.value})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '80px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
                 </div>
 
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Catégorie *</label>
+                  <select required value={newDossierData.categorie} onChange={(e) => setNewDossierData({...newDossierData, categorie: e.target.value})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                    <option value="">-- Sélectionner une catégorie --</option>
+                    <option value="Dossiers prospects">Dossiers prospects</option>
+                    <option value="Dossiers clients">Dossiers clients</option>
+                    <option value="Dossiers référentiels">Dossiers référentiels</option>
+                  </select>
+                </div>
+
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                   <div>
                     <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Origine *</label>
@@ -776,7 +796,7 @@ const DossiersPage = () => {
               
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
                 <button type="button" onClick={() => setShowCreateDossierModal(false)} className="btn btn-outline" disabled={isSubmittingDossier}>Annuler</button>
-                <button type="submit" disabled={isSubmittingDossier || !newDossierData.name.trim() || !newDossierData.description.trim() || !newDossierData.origin || !newDossierData.targetId} className="btn btn-primary" style={{ opacity: (!newDossierData.name.trim() || !newDossierData.description.trim() || !newDossierData.origin || !newDossierData.targetId) ? 0.5 : 1 }}>{isSubmittingDossier ? 'Création...' : 'Créer le dossier'}</button>
+                <button type="submit" disabled={isSubmittingDossier || !newDossierData.name.trim() || !newDossierData.description.trim() || !newDossierData.origin || !newDossierData.targetId || !newDossierData.categorie} className="btn btn-primary" style={{ opacity: (!newDossierData.name.trim() || !newDossierData.description.trim() || !newDossierData.origin || !newDossierData.targetId || !newDossierData.categorie) ? 0.5 : 1 }}>{isSubmittingDossier ? 'Création...' : 'Créer le dossier'}</button>
               </div>
             </form>
           </div>

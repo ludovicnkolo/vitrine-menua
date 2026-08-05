@@ -459,7 +459,7 @@ router.get('/dossiers', async (req, res) => {
 
 router.post('/dossiers', async (req, res) => {
   try {
-    const { name, description, priority, origin } = req.body;
+    const { name, description, priority, origin, categorie } = req.body;
     const creatorId = await resolveCreatorId(req);
     const reference = await generateReference('dossier', 'DOS');
 
@@ -474,9 +474,36 @@ router.post('/dossiers', async (req, res) => {
         createdById: creatorId,
         clientId: req.body.clientId || null,
         targetUserId: req.body.targetUserId || null,
-        parentDossierId: req.body.parentDossierId || null
+        parentDossierId: req.body.parentDossierId || null,
+        categorie: categorie || null
       }
     });
+
+    if (categorie === 'Dossiers clients' && !req.body.parentDossierId) {
+      const defaultSubFolders = [
+        'ADMINISTRATION & FINANCES',
+        'OPÉRATIONS & RÉALISATIONS',
+        'RELATIONS & DÉVELOPPEMENT'
+      ];
+      for (const folderName of defaultSubFolders) {
+        const subRef = await generateReference('dossier', 'DOS');
+        await prisma.dossier.create({
+          data: {
+            reference: subRef,
+            name: folderName,
+            description: `Sous-dossier par défaut: ${folderName}`,
+            priority: priority || 'NORMAL',
+            status: 'OUVERT',
+            origin: origin || 'INTERNE',
+            createdById: creatorId,
+            clientId: req.body.clientId || null,
+            targetUserId: req.body.targetUserId || null,
+            parentDossierId: dossier.id,
+            categorie: categorie || null
+          }
+        });
+      }
+    }
 
     await prisma.auditLog.create({ data: { userId: creatorId, action: 'CREATION_DOSSIER', targetId: dossier.id, targetType: 'DOSSIER', details: `Dossier créé: ${dossier.name}`, dossierId: dossier.id }});
 
@@ -554,6 +581,9 @@ router.patch('/dossiers/:id', async (req, res) => {
 
 router.delete('/dossiers/:id', async (req, res) => {
   try {
+    await prisma.dossier.deleteMany({
+      where: { parentDossierId: req.params.id }
+    });
     await prisma.dossier.delete({
       where: { id: req.params.id }
     });

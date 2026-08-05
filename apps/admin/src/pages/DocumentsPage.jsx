@@ -175,16 +175,26 @@ export default function DocumentsPage() {
     return () => document.removeEventListener('click', closeContextMenu);
   }, []);
 
-  const handleDeleteDossier = async (id) => {
+  const handleDeleteDossier = async (folder) => {
+    if (!folder.parentDossierId) {
+      window.customAlert("Les dossiers principaux ne peuvent être supprimés que via l'interface principale 'Dossiers'.");
+      return;
+    }
+    const protectedNames = ['ADMINISTRATION & FINANCES', 'OPÉRATIONS & RÉALISATIONS', 'RELATIONS & DÉVELOPPEMENT'];
+    if (protectedNames.includes(folder.name)) {
+      window.customAlert("Ce sous-dossier par défaut ne peut pas être supprimé de la GED.");
+      return;
+    }
+
     if (!(await window.customConfirm("Voulez-vous vraiment supprimer ce dossier ? Cette action est irréversible.", "Suppression de dossier"))) return;
     try {
       const token = sessionStorage.getItem('adminToken');
-      const res = await fetch(getSafeApiUrl(`/api/crm/dossiers/${id}`), {
+      const res = await fetch(getSafeApiUrl(`/api/crm/dossiers/${folder.id}`), {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
-        setDossiers(prev => prev.filter(d => d.id !== id && d.parentDossierId !== id));
+        setDossiers(prev => prev.filter(d => d.id !== folder.id && d.parentDossierId !== folder.id));
         fetchDossiers();
       } else window.customAlert("Erreur lors de la suppression");
     } catch (e) {
@@ -392,12 +402,12 @@ export default function DocumentsPage() {
                       key={folder.id} 
                       onDoubleClick={() => navigateToFromSearch(folder.id, true)}
                       onContextMenu={(e) => { e.stopPropagation(); handleContextMenu(e, folder, 'folder'); }}
-                      style={{ width: '120px', background: '#F8FAFC', border: '1px solid var(--border)', padding: '1rem 0.5rem', borderRadius: '0.5rem', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', transition: 'background 0.2s, border-color 0.2s' }}
+                      style={{ width: '150px', background: '#F8FAFC', border: '1px solid var(--border)', padding: '1rem 0.5rem', borderRadius: '0.5rem', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', transition: 'background 0.2s, border-color 0.2s' }}
                       onMouseOver={(e) => { e.currentTarget.style.background = '#F1F5F9'; e.currentTarget.style.borderColor = 'var(--primary)'; }}
                       onMouseOut={(e) => { e.currentTarget.style.background = '#F8FAFC'; e.currentTarget.style.borderColor = 'var(--border)'; }}
                     >
                       <Folder size={40} color="#eab308" fill="#eab308" />
-                      <div style={{ textAlign: 'center', wordBreak: 'break-word', fontWeight: '500', color: 'var(--text-main)', fontSize: '0.85rem', width: '100%' }}>{folder.name}</div>
+                      <div style={{ textAlign: 'center', wordBreak: 'normal', overflowWrap: 'anywhere', fontWeight: '500', color: 'var(--text-main)', fontSize: '0.75rem', width: '100%' }}>{folder.name}</div>
                     </div>
                   ))}
                 </div>
@@ -415,10 +425,10 @@ export default function DocumentsPage() {
                       key={doc.id}
                       onDoubleClick={() => setPreviewFile(doc.url)}
                       onContextMenu={(e) => { e.stopPropagation(); handleContextMenu(e, doc, 'file'); }}
-                      style={{ width: '120px', background: '#F8FAFC', border: '1px solid var(--border)', padding: '1rem 0.5rem', borderRadius: '0.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
+                      style={{ width: '150px', background: '#F8FAFC', border: '1px solid var(--border)', padding: '1rem 0.5rem', borderRadius: '0.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
                     >
                       <Icon size={40} color={color} />
-                      <div style={{ textAlign: 'center', wordBreak: 'break-word', fontSize: '0.85rem', color: 'var(--text-main)', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={doc.name}>{doc.name}</div>
+                      <div style={{ textAlign: 'center', wordBreak: 'normal', overflowWrap: 'anywhere', fontSize: '0.75rem', color: 'var(--text-main)', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={doc.name}>{doc.name}</div>
                       <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Dans: {doc.dossierName}</div>
                     </div>
                   )})}
@@ -437,12 +447,12 @@ export default function DocumentsPage() {
                 key={folder.id} 
                 onDoubleClick={() => navigateTo(folder)}
                 onContextMenu={(e) => { e.stopPropagation(); handleContextMenu(e, folder, 'folder'); }}
-                style={{ width: '120px', background: '#F8FAFC', border: '1px solid var(--border)', padding: '1rem 0.5rem', borderRadius: '0.5rem', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', transition: 'background 0.2s, border-color 0.2s' }}
+                style={{ width: '150px', background: '#F8FAFC', border: '1px solid var(--border)', padding: '1rem 0.5rem', borderRadius: '0.5rem', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', transition: 'background 0.2s, border-color 0.2s' }}
                 onMouseOver={(e) => { e.currentTarget.style.background = '#F1F5F9'; e.currentTarget.style.borderColor = 'var(--primary)'; }}
                 onMouseOut={(e) => { e.currentTarget.style.background = '#F8FAFC'; e.currentTarget.style.borderColor = 'var(--border)'; }}
               >
                 <Folder size={40} color="#eab308" fill="#eab308" />
-                <div style={{ textAlign: 'center', wordBreak: 'break-word', fontWeight: '500', color: 'var(--text-main)', fontSize: '0.85rem', width: '100%' }}>{folder.name}</div>
+                <div style={{ textAlign: 'center', wordBreak: 'normal', overflowWrap: 'anywhere', fontWeight: '500', color: 'var(--text-main)', fontSize: '0.75rem', width: '100%' }}>{folder.name}</div>
               </div>
             ))}
 
@@ -454,10 +464,10 @@ export default function DocumentsPage() {
                 key={doc.id}
                 onDoubleClick={() => setPreviewFile(doc.url)}
                 onContextMenu={(e) => { e.stopPropagation(); handleContextMenu(e, doc, 'file'); }}
-                style={{ width: '120px', background: '#F8FAFC', border: '1px solid var(--border)', padding: '1rem 0.5rem', borderRadius: '0.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
+                style={{ width: '150px', background: '#F8FAFC', border: '1px solid var(--border)', padding: '1rem 0.5rem', borderRadius: '0.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
               >
                 <Icon size={40} color={color} />
-                <div style={{ textAlign: 'center', wordBreak: 'break-word', fontSize: '0.85rem', color: 'var(--text-main)', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={doc.name}>{doc.name}</div>
+                <div style={{ textAlign: 'center', wordBreak: 'normal', overflowWrap: 'anywhere', fontSize: '0.75rem', color: 'var(--text-main)', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={doc.name}>{doc.name}</div>
               </div>
             )})}
           </div>
@@ -517,7 +527,7 @@ export default function DocumentsPage() {
                 <Edit size={16} /> Renommer
               </button>
               <button 
-                onClick={() => { closeContextMenu(); handleDeleteDossier(contextMenu.item.id); }}
+                onClick={() => { closeContextMenu(); handleDeleteDossier(contextMenu.item); }}
                 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--danger)' }}
                 onMouseOver={(e) => e.currentTarget.style.background = '#FEF2F2'}
                 onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}

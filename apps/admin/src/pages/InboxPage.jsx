@@ -18,6 +18,15 @@ const DetailField = ({ label, value, children }) => (
   </div>
 );
 
+const InlineDetailField = ({ label, value, children }) => (
+  <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+    <span style={{fontWeight: 500, color: 'var(--text-muted)'}}>{label} :</span>
+    <div style={{color: 'var(--text-main)', display: 'flex', alignItems: 'center'}}>
+      {children || value}
+    </div>
+  </div>
+);
+
 const InboxPage = ({ userRole }) => {
   const [tab, setTab] = useState((userRole === 'Collaborateur' || userRole === 'Relecteur') ? 'interne' : 'contact');
   const [filterTraite, setFilterTraite] = useState('all');
@@ -375,7 +384,7 @@ const InboxPage = ({ userRole }) => {
     return (
       <ActionDropdown isOpen={openMenuId === m.id} menuRef={menuRef} width="150px">
         <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setProcessMsg(m); }}>
-          <Pencil size={14} /> Traiter
+          <Eye size={14} /> Consulter
         </button>
         {(userRole === 'Administrateur' || userRole === 'Super administrateur') && (
           <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setAssignMsg(m); }}>
@@ -539,11 +548,11 @@ const InboxPage = ({ userRole }) => {
       {processMsg && !createTaskModal && (
         <div className="fade-in" style={{padding: "1rem"}}>
           <div className="" style={{width: "100%", padding: "0"}}>
-            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-              <button type="button" onClick={() => setProcessMsg(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
-              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>
+            <div style={{display: 'flex', alignItems: 'center', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem', position: 'relative'}}>
+              <button type="button" onClick={() => setProcessMsg(null)} className="btn btn-outline-primary" style={{padding: "0.5rem 1rem", position: 'absolute', left: 0}}>RETOUR</button>
+              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600, width: '100%', textAlign: 'center'}}>
                 {(() => {
-                  if (tab === 'contact') return 'Détails du Contact';
+                  if (tab === 'contact') return 'CONSULTATION DU MESSAGE : FORMULAIRE DE CONTACT';
                   if (tab === 'recrutement') return 'Détails de la Candidature';
                   return 'Détails du Message';
                 })()}
@@ -552,17 +561,19 @@ const InboxPage = ({ userRole }) => {
             
             {/* Fields for Contact */}
             {tab === 'contact' && (
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem'}}>
-                <DetailField label="Type de profil" value={extractFieldFromHtml(processMsg.bodyHtml, 'Type de client') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise (B2B)' : 'Particulier')} />
-                <DetailField label="Nom complet" value={processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'} />
-                <DetailField label="Email" value={processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'} />
-                <DetailField label="Téléphone" value={processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'} />
+              <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem'}}>
+                <InlineDetailField label="Type de contact" value={(extractFieldFromHtml(processMsg.bodyHtml, 'Type de client') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier')).replace(' / Organisation', '').replace(' (B2B)', '')} />
+                <InlineDetailField label={processMsg.statusSubmitter === 'SOCIETE' ? "Nom du contact de l'entreprise" : "Nom complet"} value={processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'} />
                 {processMsg.statusSubmitter === 'SOCIETE' && (
-                  <DetailField label="Société" value={processMsg.raisonSocial || extractFieldFromHtml(processMsg.bodyHtml, 'Société') || 'Non renseigné'} />
+                  <InlineDetailField label="Société" value={processMsg.raisonSocial || extractFieldFromHtml(processMsg.bodyHtml, 'Société') || 'Non renseigné'} />
                 )}
-                <div style={{gridColumn: processMsg.statusSubmitter === 'SOCIETE' ? 'span 1' : 'span 2'}}>
-                  <DetailField label="Besoin" value={processMsg.contact?.typeBesoin || processMsg.objet || 'Non renseigné'} />
-                </div>
+                <InlineDetailField label="Téléphone" value={processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'} />
+                <InlineDetailField label="Email" value={processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'} />
+                <InlineDetailField label="Fichiers joints">
+                  <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
+                    <AttachmentSelect files={[processMsg.cv, processMsg.attachment, processMsg.contact?.pieceJointe]} onPreview={setPreviewFile} />
+                  </div>
+                </InlineDetailField>
               </div>
             )}
 
@@ -570,7 +581,7 @@ const InboxPage = ({ userRole }) => {
             {/* Fields for Recrutement */}
             {tab === 'recrutement' && (
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem'}}>
-                <DetailField label="Type de profil" value={extractFieldFromHtml(processMsg.bodyHtml, 'Type de profil') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise (B2B)' : 'Particulier')} />
+                <DetailField label="Type de contact" value={extractFieldFromHtml(processMsg.bodyHtml, 'Type de profil') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise (B2B)' : 'Particulier')} />
                 <DetailField label="Nom complet" value={processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'} />
                 <DetailField label="Email" value={processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'} />
                 <DetailField label="Téléphone" value={processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'} />
@@ -607,16 +618,22 @@ const InboxPage = ({ userRole }) => {
             )}
 
             {/* Pièces jointes & Contenu */}
-            <div style={{display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem', marginBottom: '1.5rem', minHeight: '300px'}}>
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 4fr', gap: '1.5rem', marginBottom: '1.5rem', minHeight: '300px'}}>
               {/* Left column: Actions / Pièces jointes */}
               <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                <div className="card" style={{padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                  <span style={{display: 'block', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Date de réception</span>
-                  <div style={{fontWeight: 600, fontSize: '1.1rem'}}>{formatDate(processMsg.createdAt || processMsg.date)} à {new Date(processMsg.createdAt || processMsg.date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}</div>
-                </div>
-                
-                {tab !== 'recrutement' && (
-                  <div className="card" style={{padding: '1.25rem', flex: 1}}>
+                {tab === 'contact' ? (
+                  <div className="card" style={{padding: '1.25rem'}}>
+                    <span style={{display: 'block', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Besoins</span>
+                    <ul style={{margin: 0, paddingLeft: '1.5rem', color: 'var(--text-main)', fontSize: '0.875rem'}}>
+                      {(processMsg.contact?.typeBesoin || processMsg.objet || 'Non renseigné')
+                        .split(',')
+                        .map((b, idx) => (
+                          <li key={idx} style={{marginBottom: '0.5rem', lineHeight: '1.5'}}>{b.trim()}</li>
+                        ))}
+                    </ul>
+                  </div>
+                ) : tab !== 'recrutement' && (
+                  <div className="card" style={{padding: '1.25rem'}}>
                     <span style={{display: 'block', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Fichiers joints</span>
                     <div style={{width: '100%', padding: '0.5rem', background: '#F8FAFC', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '38px', display: 'flex', gap: '1rem', alignItems: 'center'}}>
                       <AttachmentSelect 
@@ -652,16 +669,15 @@ const InboxPage = ({ userRole }) => {
               </div>
             </div>
             
-            <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
-              <button type="button" onClick={() => setProcessMsg(null)} className="btn btn-outline">Fermer</button>
-              {tab === 'interne' ? (
-                <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Répondre</button>
-              ) : (
-                processMsg.status !== 'TRAITE' && <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer un Dossier</button>
-              )}
-              {processMsg.status !== 'TRAITE' && (
-                <button type="button" onClick={handleMarkAsProcessed} className="btn btn-primary">Marquer comme traité</button>
-              )}
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 4fr', gap: '1.5rem', marginTop: '2rem'}}>
+              <div></div>
+              <div style={{display: 'flex', justifyContent: 'center', gap: '1rem'}}>
+                {tab === 'interne' ? (
+                  <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline-primary">RÉPONDRE</button>
+                ) : (
+                  processMsg.status !== 'TRAITE' && <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline-primary">DÉMARRER LE TRAITEMENT</button>
+                )}
+              </div>
             </div>
           </div>
         </div>

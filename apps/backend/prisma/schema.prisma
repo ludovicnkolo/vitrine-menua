@@ -14,7 +14,7 @@ model Role {
   name        String   @unique // ex: ADMINISTRATEUR, ASSOCIÉ, JURISTE
   description String?
   status      String   @default("Actif")
-  permissions String?  // JSON des droits
+  permissions String? // JSON des droits
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -23,35 +23,35 @@ model Role {
 
 // ─── UTILISATEURS DU SYSTÈME (Admin & Associés) ──────────────────────────────
 model Utilisateur {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  password    String
-  name        String
-  
-  roleId      String?
-  role        Role?    @relation(fields: [roleId], references: [id], onDelete: SetNull)
-  
-  telephone   String?
-  lieuResidence String?
-  experienceCle String?
-  langues     String?
-  profile     String? 
-  idCardUrl   String?
-  resetToken  String?
-  resetTokenExpiry DateTime?
-  isBlocked   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id       String @id @default(uuid())
+  email    String @unique
+  password String
+  name     String
 
-  assignedMissions Mission[]     @relation("AssignedMissions")
-  createdMissions  Mission[]     @relation("CreatedMissions")
-  assignedTaches   Tache[]       @relation("AssignedTaches")
-  createdTaches    Tache[]       @relation("CreatedTaches")
-  assignedFormulaires Formulaire[]  @relation("AssignedFormulaires")
-  createdDossiers  Dossier[]
-  targetDossiers   Dossier[]     @relation("DossierTarget")
-  documents        Document[]
-  auditLogs        AuditLog[]
+  roleId String?
+  role   Role?   @relation(fields: [roleId], references: [id], onDelete: SetNull)
+
+  telephone        String?
+  lieuResidence    String?
+  experienceCle    String?
+  langues          String?
+  profile          String?
+  idCardUrl        String?
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  isBlocked        Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  assignedMissions          Mission[]          @relation("AssignedMissions")
+  createdMissions           Mission[]          @relation("CreatedMissions")
+  assignedTaches            Tache[]            @relation("AssignedTaches")
+  createdTaches             Tache[]            @relation("CreatedTaches")
+  assignedFormulaires       Formulaire[]       @relation("AssignedFormulaires")
+  createdDossiers           Dossier[]
+  targetDossiers            Dossier[]          @relation("DossierTarget")
+  documents                 Document[]
+  auditLogs                 AuditLog[]
   assignedMessagePersonnels MessagePersonnel[] @relation("AssignedMessagePersonnels")
 }
 
@@ -71,15 +71,15 @@ model Client {
 
   entreprise ClientEntreprise?
 
-  dossiers Dossier[]
+  dossiers    Dossier[]
   formulaires Formulaire[]
 }
 
 model ClientEntreprise {
-  id                  String @id @default(uuid())
-  clientId            String @unique
-  client              Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  
+  id       String @id @default(uuid())
+  clientId String @unique
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
   siret               String?
   raisonSociale       String?
   emailEntreprise     String?
@@ -89,17 +89,17 @@ model ClientEntreprise {
 // ─── FORMULAIRES (Entrées du site web) ─────────────────────────────────
 model Formulaire {
   id              String  @id @default(uuid())
-  formulaireId    String  @unique 
-  type            String  @default("CONTACT") 
-  statusSubmitter String? 
+  formulaireId    String  @unique
+  type            String  @default("CONTACT")
+  statusSubmitter String?
   nomPrenom       String
   email           String
   telephone       String?
   description     String?
   raisonSocial    String?
   objet           String?
-  bodyHtml        String? 
-  status          String @default("NOUVEAU")
+  bodyHtml        String?
+  status          String  @default("NOUVEAU")
   isAnonyme       Boolean @default(true)
 
   clientId String?
@@ -108,8 +108,14 @@ model Formulaire {
   dossierId String?
   dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: SetNull)
 
+  missionId String?
+  mission   Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+
+  tacheId String?
+  tache   Tache?  @relation(fields: [tacheId], references: [id], onDelete: SetNull)
+
   assignedToId String?
-  assignedTo   Utilisateur?   @relation("AssignedFormulaires", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedTo   Utilisateur? @relation("AssignedFormulaires", fields: [assignedToId], references: [id], onDelete: SetNull)
 
   recrutement FormulaireRecrutement?
   contact     FormulaireContact?
@@ -122,8 +128,8 @@ model Formulaire {
 }
 
 model FormulaireRecrutement {
-  id              String @id @default(uuid())
-  formulaireId    String @unique
+  id              String     @id @default(uuid())
+  formulaireId    String     @unique
   formulaire      Formulaire @relation(fields: [formulaireId], references: [id], onDelete: Cascade)
   competenceCle   String?
   anneeExperience String?
@@ -133,26 +139,26 @@ model FormulaireRecrutement {
 }
 
 model FormulaireContact {
-  id              String @id @default(uuid())
-  formulaireId    String @unique
-  formulaire      Formulaire @relation(fields: [formulaireId], references: [id], onDelete: Cascade)
-  typeBesoin      String?
-  pieceJointe     String? 
+  id           String     @id @default(uuid())
+  formulaireId String     @unique
+  formulaire   Formulaire @relation(fields: [formulaireId], references: [id], onDelete: Cascade)
+  typeBesoin   String?
+  pieceJointe  String?
 }
 
 // ─── DOSSIERS (Catégorisation des requêtes clients) ───────────────────────────
 model Dossier {
-  origin      String @default("INTERNE")
-  createdById String?
-  createdBy   Utilisateur? @relation(fields: [createdById], references: [id], onDelete: SetNull)
-  id          String  @id @default(uuid())
-  reference   String? @unique
-  name        String 
-  description String?
-  status      String @default("NOUVEAU")
+  origin         String       @default("INTERNE")
+  createdById    String?
+  createdBy      Utilisateur? @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  id             String       @id @default(uuid())
+  reference      String?      @unique
+  name           String
+  description    String?
+  status         String       @default("NOUVEAU")
   previousStatus String?
-  priority    String @default("NORMAL")
-  categorie   String?
+  priority       String       @default("NORMAL")
+  categorie      String?
 
   clientId String?
   client   Client? @relation(fields: [clientId], references: [id], onDelete: Cascade)
@@ -167,93 +173,113 @@ model Dossier {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  formulaires  Formulaire[]
-  missions  Mission[]
-  documents Document[]
-  auditLogs AuditLog[]
+  formulaires       Formulaire[]
+  missions          Mission[]
+  documents         Document[]
+  auditLogs         AuditLog[]
   messagePersonnels MessagePersonnel[]
+
+  missionsLinked        Mission[] @relation("MissionDossierLinked")
+  authorizedForMissions Mission[] @relation("MissionAuthorizedDossiers")
+
+  tachesLinked        Tache[] @relation("TacheDossierLinked")
+  authorizedForTaches Tache[] @relation("TacheAuthorizedDossiers")
 }
 
 // ─── MISSIONS (Anciennement Tasks) ────────────────────────────────────────────
 model Mission {
-  id           String  @id @default(uuid())
-  reference    String? @unique
-  dossierId    String
-  dossier      Dossier @relation(fields: [dossierId], references: [id], onDelete: Cascade)
-  
-  assignedToId String?
-  assignedTo   Utilisateur?   @relation("AssignedMissions", fields: [assignedToId], references: [id])
-  
-  createdById  String
-  createdBy    Utilisateur    @relation("CreatedMissions", fields: [createdById], references: [id])
+  id        String  @id @default(uuid())
+  reference String? @unique
+  dossierId String
+  dossier   Dossier @relation(fields: [dossierId], references: [id], onDelete: Cascade)
 
-  description String
-  echeance    DateTime?
-  status      String    @default("TO_ASSIGN")
+  assignedToId String?
+  assignedTo   Utilisateur? @relation("AssignedMissions", fields: [assignedToId], references: [id])
+
+  createdById String
+  createdBy   Utilisateur @relation("CreatedMissions", fields: [createdById], references: [id])
+
+  description    String
+  echeance       DateTime?
+  status         String    @default("TO_ASSIGN")
   previousStatus String?
-  attachment  String?
+  attachment     String?
+
+  dossierMissionId String?
+  dossierMission   Dossier? @relation("MissionDossierLinked", fields: [dossierMissionId], references: [id], onDelete: SetNull)
+
+  authorizedDossiers Dossier[] @relation("MissionAuthorizedDossiers")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   parentMissionId String?
-  parentMission   Mission? @relation("SubMissions", fields: [parentMissionId], references: [id])
+  parentMission   Mission?  @relation("SubMissions", fields: [parentMissionId], references: [id])
   subMissions     Mission[] @relation("SubMissions")
 
-  documents Document[]
+  documents         Document[]
   messagePersonnels MessagePersonnel[]
-  taches    Tache[]
+  formulaires       Formulaire[]
+  taches            Tache[]
 }
 
 // ─── TACHES (Liées aux Missions) ─────────────────────────────────────────────
 model Tache {
-  id           String  @id @default(uuid())
-  reference    String? @unique
-  missionId    String
-  mission      Mission @relation(fields: [missionId], references: [id], onDelete: Cascade)
-  
-  assignedToId String?
-  assignedTo   Utilisateur?   @relation("AssignedTaches", fields: [assignedToId], references: [id])
-  
-  createdById  String
-  createdBy    Utilisateur    @relation("CreatedTaches", fields: [createdById], references: [id])
+  id        String  @id @default(uuid())
+  reference String? @unique
+  missionId String
+  mission   Mission @relation(fields: [missionId], references: [id], onDelete: Cascade)
 
-  description String
-  echeance    DateTime?
-  status      String    @default("TO_ASSIGN")
-  previousStatus String?
-  attachment  String?
-  adminFeedback String?
+  assignedToId String?
+  assignedTo   Utilisateur? @relation("AssignedTaches", fields: [assignedToId], references: [id])
+
+  createdById String
+  createdBy   Utilisateur @relation("CreatedTaches", fields: [createdById], references: [id])
+
+  description     String
+  echeance        DateTime?
+  status          String    @default("TO_ASSIGN")
+  previousStatus  String?
+  attachment      String?
+  adminFeedback   String?
   managerFeedback String?
+
+  dossierTacheId String?
+  dossierTache   Dossier? @relation("TacheDossierLinked", fields: [dossierTacheId], references: [id], onDelete: SetNull)
+
+  authorizedDossiers Dossier[] @relation("TacheAuthorizedDossiers")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  messagePersonnels MessagePersonnel[]
+  formulaires       Formulaire[]
 }
 
 // ─── DOCUMENTS GLOBAUX ────────────────────────────────────────────────────────
 model Document {
-  id           String @id @default(uuid())
+  id           String      @id @default(uuid())
   name         String
   url          String
   uploadedById String
-  uploadedBy   Utilisateur   @relation(fields: [uploadedById], references: [id])
+  uploadedBy   Utilisateur @relation(fields: [uploadedById], references: [id])
 
   dossierId String?
   dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: Cascade)
 
   missionId String?
-  mission   Mission?   @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  mission   Mission? @relation(fields: [missionId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }
 
 // ─── AUDIT TRAIL ──────────────────────────────────────────────────────────────
 model AuditLog {
-  id     String  @id @default(uuid())
+  id     String       @id @default(uuid())
   userId String?
-  user   Utilisateur?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user   Utilisateur? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  action String 
+  action     String
   targetId   String?
   targetType String?
   details    String?
@@ -269,25 +295,27 @@ model AuditLog {
 
 // ─── MESSAGES (Interne & Personnel) ──────────────────────────────────────────
 model MessagePersonnel {
-  id          String   @id @default(uuid())
-  messageId   String   @unique
-  type        String   @default("PERSONNEL") 
-  subType     String   @default("Indéfini")
-  status      String   @default("NOUVEAU")
-  nomPrenom   String
-  email       String
-  objet       String?
-  bodyText    String?
-  attachment  String?
-  createdAt   DateTime @default(now())
-  receivedAt  DateTime @default(now())
+  id         String   @id @default(uuid())
+  messageId  String   @unique
+  type       String   @default("PERSONNEL")
+  subType    String   @default("Indéfini")
+  status     String   @default("NOUVEAU")
+  nomPrenom  String
+  email      String
+  objet      String?
+  bodyText   String?
+  attachment String?
+  createdAt  DateTime @default(now())
+  receivedAt DateTime @default(now())
 
-  dossierId   String?
-  dossier     Dossier? @relation(fields: [dossierId], references: [id], onDelete: SetNull)
+  dossierId String?
+  dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: SetNull)
 
-  missionId   String?
-  mission     Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+  missionId String?
+  mission   Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
 
   assignedToId String?
   assignedTo   Utilisateur? @relation("AssignedMessagePersonnels", fields: [assignedToId], references: [id], onDelete: SetNull)
+  Tache        Tache?       @relation(fields: [tacheId], references: [id])
+  tacheId      String?
 }

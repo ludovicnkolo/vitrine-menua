@@ -117,7 +117,10 @@ router.delete('/roles/:id', async (req, res) => {
 // --- DASHBOARD STATS ---
 router.get('/dashboard-stats', async (req, res) => {
   try {
-    const dossiers = await prisma.dossier.findMany({ select: { status: true } });
+    const dossiers = await prisma.dossier.findMany({ 
+      where: { parentDossierId: null },
+      select: { status: true } 
+    });
     const dossierStats = {
       total: dossiers.length,
       ouvert: dossiers.filter(d => d.status === 'OUVERT' || d.status === 'NOUVEAU' || d.status === 'EN_COURS').length,
@@ -165,12 +168,99 @@ router.get('/dashboard-stats', async (req, res) => {
       personnel: msgPersonnels.filter(m => m.type === 'PERSONNEL').length
     };
 
+    // --- CHARTS DATA ---
+    // 1. Evolution (last 12 months)
+    const oneYearAgo = new Date();
+    oneYearAgo.setMonth(oneYearAgo.getMonth() - 11);
+    oneYearAgo.setDate(1);
+    oneYearAgo.setHours(0,0,0,0);
+    
+    const allTaches = await prisma.tache.findMany({
+      where: { createdAt: { gte: oneYearAgo } },
+      select: { createdAt: true, status: true }
+    });
+    const allMissions = await prisma.mission.findMany({
+      where: { createdAt: { gte: oneYearAgo } },
+      select: { createdAt: true, status: true }
+    });
+    
+    const evolutionMap = {};
+    const moisNoms = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+    
+    for (let i = 11; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(d.getMonth() - i);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const label = `${moisNoms[d.getMonth()]} ${d.getFullYear().toString().substring(2)}`;
+      evolutionMap[key] = { date: label, crees: 0, termines: 0 };
+    }
+    
+    [...allTaches, ...allMissions].forEach(item => {
+      const d = item.createdAt;
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      if (evolutionMap[key]) {
+        evolutionMap[key].crees += 1;
+        if (item.status === 'TERMINEE' || item.status === 'TERMINÉE') {
+          evolutionMap[key].termines += 1;
+        }
+      }
+    });
+
+    // 2. Performance (Taches per user)
+    const activeUsers = await prisma.utilisateur.findMany({
+      where: { isBlocked: false },
+      select: { id: true, name: true }
+    });
+    const userTaches = await prisma.tache.findMany({
+      where: { assignedToId: { in: activeUsers.map(u => u.id) } },
+      select: { assignedToId: true, status: true, echeance: true }
+    });
+    
+    const perfMap = {};
+    activeUsers.forEach(u => {
+      perfMap[u.id] = { name: u.name, terminees: 0, encours: 0, enretard: 0, bloquees: 0 };
+    });
+    userTaches.forEach(t => {
+      const p = perfMap[t.assignedToId];
+      if (!p) return;
+      if (t.status === 'TERMINEE' || t.status === 'TERMINÉE') p.terminees += 1;
+      else if (t.status === 'BLOQUE' || t.status === 'BLOQUÉ') p.bloquees += 1;
+      else if (t.echeance && new Date(t.echeance) < now && !['TERMINEE', 'TERMINÉE', 'FERME', 'FERMÉ', 'ARCHIVE'].includes(t.status)) p.enretard += 1;
+      else p.encours += 1;
+    });
+
+    // 3. Repartition Dossiers
+    const allDossiers = await prisma.dossier.findMany({ 
+      where: { parentDossierId: null },
+      select: { categorie: true } 
+    });
+    const repMap = {};
+    allDossiers.forEach(d => {
+      const cat = d.categorie || 'Non catégorisé';
+      repMap[cat] = (repMap[cat] || 0) + 1;
+    });
+
+    // 4. Messages Funnel
+    const allFormulaires = await prisma.formulaire.findMany({ select: { status: true } });
+    const allMsgPersonnels = await prisma.messagePersonnel.findMany({ select: { status: true } });
+    const allMsgs = [...allFormulaires, ...allMsgPersonnels];
+    
     res.json({
       dossier: dossierStats,
       mission: missionStats,
       taches: tacheStats,
       utilisateur: utilisateurStats,
-      message: messageStats
+      message: messageStats,
+      charts: {
+        evolution: Object.values(evolutionMap),
+        performance: Object.values(perfMap),
+        repartition: Object.keys(repMap).map(k => ({ name: k, value: repMap[k] })),
+        funnel: [
+          { name: 'Reçus', value: allMsgs.length },
+          { name: 'Lus & Classés', value: allMsgs.filter(m => m.status === 'CLASSE').length },
+          { name: 'Traités', value: allMsgs.filter(m => m.status === 'TRAITE').length }
+        ]
+      }
     });
   } catch(e) {
     console.error(e);
@@ -396,26 +486,30 @@ router.get('/dossiers', async (req, res) => {
     const { page, limit, skip } = getPaginationParams(req.query);
     const { search, status, role, origin } = req.query;
 
-    if (req.user.role === 'Collaborateur') {
-      return res.status(403).json({ error: 'Accès interdit aux dossiers pour les collaborateurs.' });
-    }
 
+
+    let inMemoryFilter = false;
     const where = {};
-
-    if (req.user.role === 'Responsable opérationnel') {
-      where.OR = [
-        { origin: { not: 'INTERNE' } },
-        { targetUserId: req.user.id },
-        { createdById: req.user.id },
-        { missions: { some: { assignedToId: req.user.id } } }
-      ];
-    } else if (req.user.role === 'Relecteur') {
-      where.OR = [
-        { targetUserId: req.user.id },
-        { createdById: req.user.id },
-        { missions: { some: { assignedToId: req.user.id } } },
-        { missions: { some: { taches: { some: { assignedToId: req.user.id } } } } }
-      ];
+    if (req.query.rootOnly === 'true') {
+      where.parentDossierId = null;
+      if (req.user.role === 'Responsable opérationnel') {
+        where.OR = [
+          { targetUserId: req.user.id },
+          { createdById: req.user.id },
+          { missions: { some: { assignedToId: req.user.id } } }
+        ];
+      } else if (req.user.role === 'Relecteur' || req.user.role === 'Collaborateur') {
+        where.OR = [
+          { targetUserId: req.user.id },
+          { createdById: req.user.id },
+          { missions: { some: { assignedToId: req.user.id } } },
+          { missions: { some: { taches: { some: { assignedToId: req.user.id } } } } }
+        ];
+      }
+    } else {
+      if (req.user.role === 'Responsable opérationnel' || req.user.role === 'Relecteur' || req.user.role === 'Collaborateur') {
+        inMemoryFilter = true;
+      }
     }
 
     if (status && status !== 'all') where.status = status;
@@ -434,23 +528,105 @@ router.get('/dossiers', async (req, res) => {
       ];
     }
     
-    const total = await prisma.dossier.count({ where });
-    const dossiers = await prisma.dossier.findMany({
+    let total = await prisma.dossier.count({ where });
+    let dossiers = await prisma.dossier.findMany({
       where,
-      skip,
-      take: limit,
-      orderBy: { createdAt: 'desc' },
+      skip: inMemoryFilter ? undefined : skip,
+      take: inMemoryFilter ? undefined : limit,
+      orderBy: { reference: 'desc' },
       include: { 
         missions: {
-          include: { assignedTo: { include: { role: true } } }
-        }, 
+          include: { assignedTo: { include: { role: true } }, taches: true }
+        },
+        authorizedForMissions: {
+          include: { assignedTo: true, taches: true }
+        },
+        missionsLinked: {
+          include: { assignedTo: true, taches: true }
+        },
+        tachesLinked: {
+          include: { assignedTo: true }
+        },
+        authorizedForTaches: {
+          include: { assignedTo: true }
+        },
         client: true, 
         createdBy: { include: { role: true } },
         documents: { include: { uploadedBy: true }, orderBy: { createdAt: 'desc' } },
-        subDossiers: true,
+        subDossiers: { include: { subDossiers: true } },
         parentDossier: true
       }
     });
+
+    if (inMemoryFilter) {
+      let accessibleSet = new Set();
+      const dossiersMap = new Map();
+      dossiers.forEach(d => dossiersMap.set(d.id, d));
+      
+      const getDescendants = (folderId) => {
+        let desc = [];
+        dossiers.forEach(d => {
+          if (d.parentDossierId === folderId) {
+            desc.push(d.id);
+            desc = desc.concat(getDescendants(d.id));
+          }
+        });
+        return desc;
+      };
+
+      const getAncestors = (folderId) => {
+        let anc = [];
+        let current = dossiersMap.get(folderId);
+        while (current && current.parentDossierId) {
+          anc.push(current.parentDossierId);
+          current = dossiersMap.get(current.parentDossierId);
+        }
+        return anc;
+      };
+
+      dossiers.forEach(d => {
+        let hasFullAccess = false;
+        if (d.createdById === req.user.id || d.targetUserId === req.user.id) {
+          hasFullAccess = true;
+        }
+        
+        if (hasFullAccess) {
+           accessibleSet.add(d.id);
+           getDescendants(d.id).forEach(id => accessibleSet.add(id));
+           getAncestors(d.id).forEach(id => accessibleSet.add(id));
+        } else {
+           let isAuthorized = false;
+           if (d.authorizedForMissions && d.authorizedForMissions.some(m => m.assignedToId === req.user.id)) isAuthorized = true;
+           if (d.missionsLinked && d.missionsLinked.some(m => m.assignedToId === req.user.id)) isAuthorized = true;
+           if (d.authorizedForTaches && d.authorizedForTaches.some(t => t.assignedToId === req.user.id)) isAuthorized = true;
+           if (d.tachesLinked && d.tachesLinked.some(t => t.assignedToId === req.user.id)) isAuthorized = true;
+           
+           if (req.user.role === 'Relecteur') {
+             if (d.authorizedForMissions && d.authorizedForMissions.some(m => m.taches.some(t => t.assignedToId === req.user.id))) isAuthorized = true;
+             if (d.missionsLinked && d.missionsLinked.some(m => m.taches.some(t => t.assignedToId === req.user.id))) isAuthorized = true;
+           }
+           
+           if (isAuthorized) {
+              accessibleSet.add(d.id);
+              getDescendants(d.id).forEach(id => accessibleSet.add(id));
+              getAncestors(d.id).forEach(id => accessibleSet.add(id));
+           } else {
+              let hasMissionOnRoot = false;
+              if (d.missions && d.missions.some(m => m.assignedToId === req.user.id)) hasMissionOnRoot = true;
+              if (req.user.role === 'Relecteur' && d.missions && d.missions.some(m => m.taches.some(t => t.assignedToId === req.user.id))) hasMissionOnRoot = true;
+              
+              if (hasMissionOnRoot) {
+                 accessibleSet.add(d.id);
+              }
+           }
+        }
+      });
+
+      dossiers = dossiers.filter(d => accessibleSet.has(d.id));
+      total = dossiers.length;
+      if (limit) dossiers = dossiers.slice(skip, skip + limit);
+    }
+
     sendPaginatedResponse(res, dossiers, total, page, limit);
   } catch (error) {
     console.error(error); console.error(error); res.status(500).json({ error: error.message });
@@ -593,15 +769,40 @@ router.delete('/dossiers/:id', async (req, res) => {
   }
 });
 
+router.get('/dossiers/:id/tree', async (req, res) => {
+  try {
+    const allDossiers = await prisma.dossier.findMany({
+      select: { id: true, name: true, parentDossierId: true, reference: true }
+    });
+    
+    const buildTree = (parentId) => {
+      return allDossiers
+        .filter(d => d.parentDossierId === parentId)
+        .map(d => ({
+          ...d,
+          subDossiers: buildTree(d.id)
+        }));
+    };
+    
+    const rootDossier = allDossiers.find(d => d.id === req.params.id);
+    if (!rootDossier) {
+      return res.status(404).json({ error: 'Dossier non trouvé' });
+    }
+    
+    rootDossier.subDossiers = buildTree(rootDossier.id);
+    res.json(rootDossier);
+  } catch (error) {
+    console.error(error); res.status(500).json({ error: 'Erreur lors de la récupération de l\'arborescence.' });
+  }
+});
+
 // --- TÂCHES ---
 router.get('/tasks', async (req, res) => {
   try {
     const { page, limit, skip } = getPaginationParams(req.query);
     const { search, status } = req.query;
 
-    if (req.user.role === 'Collaborateur') {
-      return res.status(403).json({ error: 'Accès interdit aux missions pour les collaborateurs.' });
-    }
+
 
     const where = { parentMissionId: null }; // Only parent tasks
 
@@ -612,7 +813,7 @@ router.get('/tasks', async (req, res) => {
         { createdById: req.user.id },
         { taches: { some: { assignedToId: req.user.id } } }
       ];
-    } else if (req.user.role === 'Relecteur') {
+    } else if (req.user.role === 'Relecteur' || req.user.role === 'Collaborateur') {
       where.OR = [
         { assignedToId: req.user.id },
         { createdById: req.user.id },
@@ -638,9 +839,11 @@ router.get('/tasks', async (req, res) => {
       where,
       skip,
       take: limit,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { reference: 'desc' },
       include: { 
-        dossier: true, 
+        dossier: { include: { subDossiers: true } }, 
+        dossierMission: { include: { subDossiers: true } },
+        authorizedDossiers: { include: { subDossiers: true } },
         assignedTo: { include: { role: true } }, 
         createdBy: { include: { role: true } },
         documents: { include: { uploadedBy: true }, orderBy: { createdAt: 'desc' } },
@@ -660,7 +863,7 @@ router.get('/tasks', async (req, res) => {
 
 router.post('/tasks', async (req, res) => {
   try {
-    const { dossierId, description, assignedToId, parentMissionId, echeance, attachment, messageId } = req.body;
+    const { dossierId, description, assignedToId, parentMissionId, echeance, attachment, messageId, dossierMissionId, authorizedDossierIds } = req.body;
     const creatorId = await resolveCreatorId(req);
     const reference = await generateReference('mission', 'MSN');
 
@@ -674,7 +877,11 @@ router.post('/tasks', async (req, res) => {
         status: 'TO_ASSIGN',
         echeance: echeance ? new Date(echeance) : null,
         attachment,
-        ...(parentMissionId && { parentMissionId })
+        ...(parentMissionId && { parentMissionId }),
+        ...(dossierMissionId && { dossierMissionId }),
+        ...(authorizedDossierIds && authorizedDossierIds.length > 0 && {
+          authorizedDossiers: { connect: authorizedDossierIds.map(id => ({ id })) }
+        })
       }
     });
 
@@ -744,7 +951,6 @@ router.get('/taches', async (req, res) => {
       where.assignedToId = req.user.id;
     } else if (req.user.role === 'Responsable opérationnel') {
       where.OR = [
-        { mission: { dossier: { origin: { not: 'INTERNE' } } } },
         { assignedToId: req.user.id },
         { createdById: req.user.id },
         { mission: { assignedToId: req.user.id } }
@@ -776,10 +982,12 @@ router.get('/taches', async (req, res) => {
       take: limit,
       include: {
         mission: true,
+        dossierTache: { include: { subDossiers: true } },
+        authorizedDossiers: { include: { subDossiers: true } },
         assignedTo: { select: { id: true, name: true, role: true } },
         createdBy: { select: { id: true, name: true } }
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { reference: 'desc' }
     });
     sendPaginatedResponse(res, taches, total, page, limit);
   } catch (error) {
@@ -789,21 +997,33 @@ router.get('/taches', async (req, res) => {
 
 router.post('/taches', async (req, res) => {
   try {
-    const { missionId, description, assignedToId, echeance, attachment } = req.body;
+    const { missionId, description, assignedToId, echeance, attachment, dossierTacheId, authorizedDossierIds } = req.body;
     const creatorId = await resolveCreatorId(req);
     const reference = await generateReference('tache', 'TCH');
 
+    const tacheData = {
+      reference,
+      description,
+      missionId,
+      assignedToId,
+      createdById: creatorId,
+      status: 'TO_ASSIGN',
+      echeance: echeance ? new Date(echeance) : null,
+      attachment
+    };
+
+    if (dossierTacheId) {
+      tacheData.dossierTacheId = dossierTacheId;
+    }
+
+    if (authorizedDossierIds && authorizedDossierIds.length > 0) {
+      tacheData.authorizedDossiers = {
+        connect: authorizedDossierIds.map(id => ({ id }))
+      };
+    }
+
     const tache = await prisma.tache.create({
-      data: {
-        reference,
-        description,
-        missionId,
-        assignedToId,
-        createdById: creatorId,
-        status: 'TO_ASSIGN',
-        echeance: echeance ? new Date(echeance) : null,
-        attachment
-      }
+      data: tacheData
     });
 
     res.json(tache);
@@ -959,7 +1179,8 @@ router.delete('/documents/:id', async (req, res) => {
 // --- MESSAGES (FORMULAIRES) ---
 router.post('/messages/interne', async (req, res) => {
   try {
-    const { subType, objet, bodyText, attachment, dossierId, missionId } = req.body;
+    const { subType, objet, bodyText, attachment, dossierId, missionId, tacheId, assignedToId } = req.body;
+    console.log("PAYLOAD RECEIVED IN /messages/interne:", req.body);
     
     // Récupérer les infos complètes de l'expéditeur
     let senderName = req.user?.id === 'MASTER-ADMIN' ? (process.env.MASTER_ADMIN_NAME || 'Super Administrateur') : 'Administrateur';
@@ -991,12 +1212,14 @@ router.post('/messages/interne', async (req, res) => {
         status: 'EN_ATTENTE',
         dossierId: dossierId || null,
         missionId: missionId || null,
+        tacheId: tacheId || null,
+        assignedToId: assignedToId || null,
       }
     });
     res.json({ success: true, data: message });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la création du message interne.' });
+    res.status(500).json({ error: 'Erreur lors de la création du message interne.', details: error.message });
   }
 });
 
@@ -1062,7 +1285,8 @@ router.get('/messages', async (req, res) => {
       if (req.user.role === 'Collaborateur' || req.user.role === 'Relecteur') {
         where.OR = [
           { subType: { contains: req.user.name, mode: 'insensitive' } },
-          { email: req.user.email }
+          { email: req.user.email },
+          { assignedToId: req.user.id }
         ];
       } else if (req.user.role === 'Responsable opérationnel') {
         where.assignedToId = req.user.id;
@@ -1095,7 +1319,7 @@ router.get('/messages', async (req, res) => {
          orderBy: { createdAt: 'desc' },
          skip,
          take: limit,
-         include: { dossier: true, mission: true }
+         include: { dossier: true, mission: true, Tache: true }
       });
 
       messages = records.map(e => ({
@@ -1109,8 +1333,12 @@ router.get('/messages', async (req, res) => {
         subType: e.subType || 'Indéfini',
         attachment: e.attachment,
         createdAt: e.createdAt,
-        sourceType: e.mission ? 'Mission' : (e.dossier ? 'Dossier' : null),
-        sourceRef: e.mission?.reference || e.dossier?.reference || e.id
+        dossierId: e.dossierId,
+        missionId: e.missionId,
+        tacheId: e.tacheId,
+        assignedToId: e.assignedToId,
+        sourceType: e.Tache ? 'Tâche' : (e.mission ? 'Mission' : (e.dossier ? 'Dossier' : null)),
+        sourceRef: e.Tache?.reference || e.mission?.reference || e.dossier?.reference || e.id
       }));
     }
 
@@ -1173,11 +1401,27 @@ router.delete('/messages/:id', async (req, res) => {
 router.patch('/messages/:id/status', async (req, res) => {
   try {
     const { id } = req.params;
-    const { status, dossierId } = req.body;
+    const { status, dossierId, lieuTraitement, numeroReference } = req.body;
     
     const dataToUpdate = { status };
     if (dossierId !== undefined) {
       dataToUpdate.dossierId = dossierId;
+    }
+
+    if (numeroReference && lieuTraitement) {
+      if (lieuTraitement === 'Dossier') {
+         const entity = await prisma.dossier.findFirst({ where: { reference: numeroReference } });
+         if (!entity) return res.status(404).json({ error: `Le Dossier avec la référence "${numeroReference}" n'existe pas.` });
+         dataToUpdate.dossierId = entity.id;
+      } else if (lieuTraitement === 'Mission') {
+         const entity = await prisma.mission.findFirst({ where: { reference: numeroReference } });
+         if (!entity) return res.status(404).json({ error: `La Mission avec la référence "${numeroReference}" n'existe pas.` });
+         dataToUpdate.missionId = entity.id;
+      } else if (lieuTraitement === 'Tâche') {
+         const entity = await prisma.tache.findFirst({ where: { reference: numeroReference } });
+         if (!entity) return res.status(404).json({ error: `La Tâche avec la référence "${numeroReference}" n'existe pas.` });
+         dataToUpdate.tacheId = entity.id;
+      }
     }
 
     const form = await prisma.formulaire.findUnique({ where: { id } });

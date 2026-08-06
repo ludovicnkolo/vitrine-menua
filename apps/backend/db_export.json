@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-03T18:20:13.226Z",
-      "updatedAt": "2026-08-05T13:26:28.852Z"
+      "updatedAt": "2026-08-06T13:09:54.141Z"
     },
     {
       "id": "51860697-2832-40da-a067-fd805d545116",
@@ -16,7 +16,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-08-03T18:20:13.233Z",
-      "updatedAt": "2026-08-05T13:26:28.868Z"
+      "updatedAt": "2026-08-06T13:09:54.153Z"
     },
     {
       "id": "7117eded-907b-44ea-a27c-fb3d64ff3e48",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-08-03T18:20:13.237Z",
-      "updatedAt": "2026-08-05T13:26:28.873Z"
+      "updatedAt": "2026-08-06T13:09:54.170Z"
     },
     {
       "id": "67213b1a-e3ff-4d3f-b447-c808302f9511",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-08-03T18:20:13.242Z",
-      "updatedAt": "2026-08-05T13:26:28.878Z"
+      "updatedAt": "2026-08-06T13:09:54.182Z"
     },
     {
       "id": "2eee1d66-4117-4bdb-9e34-1b6d60239a39",
@@ -43,14 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-03T18:20:13.247Z",
-      "updatedAt": "2026-08-05T13:26:28.885Z"
+      "updatedAt": "2026-08-06T13:09:54.189Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$n8uW3wv8VaiMvXUeRZFjjOaxCiN5X6mPscu.UiMmxoHI83wFvYb2.",
+      "password": "$2a$10$aNuT2oe6YsBEjx7UwWIEhu.IO1.3LVUIoNdoJBXcAUvPSWPRUu5pC",
       "name": "Rosette Fouelefack",
       "roleId": "d9a3ad86-d614-430d-9f46-bf5649d40421",
       "telephone": "+33659207511",
@@ -63,7 +63,43 @@
       "resetTokenExpiry": null,
       "isBlocked": false,
       "createdAt": "2026-08-03T18:20:13.372Z",
-      "updatedAt": "2026-08-05T13:26:29.073Z"
+      "updatedAt": "2026-08-06T13:09:54.347Z"
+    },
+    {
+      "id": "db279b85-69ec-4208-9423-b6958e43198e",
+      "email": "ludovicnkolo01@gmail.com",
+      "password": "$2a$10$AEEXtCuruqXoKIKZYhbz2.tUiXSOzgLG6r9hT54rpgu5RfFg.OycS",
+      "name": "Repellendus Veniam",
+      "roleId": "67213b1a-e3ff-4d3f-b447-c808302f9511",
+      "telephone": "+1 (457) 843-8658",
+      "lieuResidence": "Et suscipit enim bla",
+      "experienceCle": "Laboris magni ration",
+      "langues": "Non laudantium ad N",
+      "profile": "Minus voluptatem ali",
+      "idCardUrl": null,
+      "resetToken": null,
+      "resetTokenExpiry": null,
+      "isBlocked": false,
+      "createdAt": "2026-08-05T15:26:00.283Z",
+      "updatedAt": "2026-08-06T01:19:08.719Z"
+    },
+    {
+      "id": "dad5aaa2-1626-422b-81ae-919f892a1d32",
+      "email": "jadura@mailinator.com",
+      "password": "$2a$10$isv.gbZINCOSivVQlynOjegCs7DfaB1v/jj1tQ5dnxv9yElln55FO",
+      "name": "Illum odio eu ea fu",
+      "roleId": "51860697-2832-40da-a067-fd805d545116",
+      "telephone": "+1 (585) 774-3538",
+      "lieuResidence": "Ut aut aut autem aut",
+      "experienceCle": "Nam deserunt laborum",
+      "langues": "Minim ad quia ut nos",
+      "profile": "Ullamco et excepteur",
+      "idCardUrl": null,
+      "resetToken": "7326b939b52ac4c1b828aa5aeaff44413483196adada75c16daf03ea66c66e22",
+      "resetTokenExpiry": "2026-08-07T08:26:40.983Z",
+      "isBlocked": false,
+      "createdAt": "2026-08-06T08:26:41.107Z",
+      "updatedAt": "2026-08-06T08:26:41.107Z"
     }
   ],
   "clients": [],
@@ -81,14 +117,16 @@
       "raisonSocial": null,
       "objet": "Demande de collaboration",
       "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Type de profil</strong> : \n    <span style=\"margin-left: 4px;\">Particulier</span>\n  </div>\n\n        \n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Nom complet</strong> : \n    <span style=\"margin-left: 4px;\">Goodwin Marshall</span>\n  </div>\n\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Email</strong> : \n    <span style=\"margin-left: 4px;\">ludovicnkolo01@gmail.com</span>\n  </div>\n\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Téléphone</strong> : \n    <span style=\"margin-left: 4px;\">+1 (377) 785-4239</span>\n  </div>\n\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Expérience</strong> : \n    <span style=\"margin-left: 4px;\">Plus de 10 ans</span>\n  </div>\n\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Langues</strong> : \n    <span style=\"margin-left: 4px;\">Iure nulla quia labo</span>\n  </div>\n\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Localisation</strong> : \n    <span style=\"margin-left: 4px;\">Iste aut proident f</span>\n  </div>\n\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Disponibilité</strong> : \n    <span style=\"margin-left: 4px;\">Immédiate</span>\n  </div>\n\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">LinkedIn / Portfolio</strong> : \n    <span style=\"margin-left: 4px;\"><a href=\"https://www.vihef.org\" style=\"color: #141824;\">https://www.vihef.org</a></span>\n  </div>\n\n      </div>\n      \n  <div style=\"margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;\">\n    <strong style=\"color: #141824; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;\">Compétences clés</strong>\n    <ul style=\"margin:0; padding-left: 20px; color: #4a5568; font-size: 14px;\"><li style=\"margin-bottom: 5px;\">Support opérationnel CGP</li></ul>\n  </div>\n\n      \n  <div style=\"margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;\">\n    <strong style=\"color: #141824; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 12px;\">Message / Motivations</strong>\n    <div style=\"color: #4a5568; font-size: 14px; line-height: 1.6; background-color: #fcfcfc; padding: 15px; border-radius: 4px;\">Laboris porro sit u</div>\n  </div>\n\n    ",
-      "status": "EN_ATTENTE",
+      "status": "CLASSE",
       "isAnonyme": true,
       "clientId": null,
       "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
       "assignedToId": null,
       "receivedAt": "2026-08-03T18:22:01.592Z",
       "createdAt": "2026-08-03T18:22:01.592Z",
-      "updatedAt": "2026-08-03T18:22:01.592Z"
+      "updatedAt": "2026-08-05T20:44:35.651Z"
     },
     {
       "id": "890e9076-04c0-46a9-9473-8d760cb7f1bc",
@@ -106,6 +144,8 @@
       "isAnonyme": true,
       "clientId": null,
       "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
       "assignedToId": null,
       "receivedAt": "2026-08-03T18:33:06.599Z",
       "createdAt": "2026-08-03T18:33:06.599Z",
@@ -127,6 +167,8 @@
       "isAnonyme": true,
       "clientId": null,
       "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
       "assignedToId": null,
       "receivedAt": "2026-08-03T18:33:57.099Z",
       "createdAt": "2026-08-03T18:33:57.099Z",
@@ -148,6 +190,8 @@
       "isAnonyme": true,
       "clientId": null,
       "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
       "assignedToId": null,
       "receivedAt": "2026-08-03T18:36:03.112Z",
       "createdAt": "2026-08-03T18:36:03.112Z",
@@ -165,14 +209,16 @@
       "raisonSocial": null,
       "objet": "Demande de contact",
       "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Type de client</strong> : \n    <span style=\"margin-left: 4px;\">Particulier</span>\n  </div>\n\n        \n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Nom complet</strong> : \n    <span style=\"margin-left: 4px;\">Stacy Rios</span>\n  </div>\n\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Email</strong> : \n    <span style=\"margin-left: 4px;\">lyzaafsgglwwkrkrod@mailinator.com</span>\n  </div>\n\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Téléphone</strong> : \n    <span style=\"margin-left: 4px;\">+1 (606) 969-1948</span>\n  </div>\n\n      </div>\n      \n  <div style=\"margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;\">\n    <strong style=\"color: #141824; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;\">Besoins identifiés</strong>\n    <ul style=\"margin:0; padding-left: 20px; color: #4a5568; font-size: 14px;\"><li style=\"margin-bottom: 5px;\">Finance et reporting</li><li style=\"margin-bottom: 5px;\">Risques et conformité</li><li style=\"margin-bottom: 5px;\">Support comptable et data</li><li style=\"margin-bottom: 5px;\">Support opérationnel CGP / gestion de patrimoine</li></ul>\n  </div>\n\n      \n  <div style=\"margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;\">\n    <strong style=\"color: #141824; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 12px;\">Description du besoin</strong>\n    <div style=\"color: #4a5568; font-size: 14px; line-height: 1.6; background-color: #fcfcfc; padding: 15px; border-radius: 4px;\">Ah, les animaux. Ces êtres de souffle et de mouvement, ces énigmes vivantes qui partagent notre monde sans jamais tout à fait nous appartenir. Ils sont les gardiens silencieux de nos mémoires ancestrales, les témoins muets de l'évolution d’une planète qu’ils ont parcourue bien avant que l’homme n’y pose son premier pied maladroit. Que ce soit le fauve aux yeux d’or dont le pelage tacheté se confond avec l’ombre mouvante de la savane, ou l’humble abeille dont le vol obstiné trace dans l’air des lignes invisibles qui soutiennent l’équilibre délicat de nos écosystèmes, chaque créature, des plus microscopiques aux plus imposantes, tisse un fil dans la trame immense du vivant. Leur diversité est un livre ouvert sur les prodiges de l’adaptation : l’otarie qui glisse dans l’eau comme une pensée fluide, le colibri dont le cœur battant est une prouesse de frénésie, le caméléon qui change de robe au gré de ses humeurs, et ce majestueux éléphant dont la mémoire, dit-on, défie le temps et dont les pas feutrés ébranlent la terre tout en respectant le silence des forêts. Ils parlent des langues que nous n’entendons pas, mais leur chant, leur rugissement, leur bourdonnement ou leur simple présence vibrent en nous, réveillant cette part sauvage que la civilisation a trop souvent endormie sous les strates du confort et de la raison. Leur regard est un miroir : quand on plonge dans les prunelles d’un loup, on y devine une lueur de liberté et de danger, une mémoire des nuits étoilées où la meute hurlait à la lune, tandis que l’œil doux d’une vache semble contenir toute la patience du monde, celle des plaines herbeuses que l’aube caresse de ses doigts de lumière. Ces compagnons de route, qu’ils soient domestiques ou libres, nous enseignent l’essentiel : l’oiseau qui construit son nid avec une ingéniosité folle nous rappelle que l’art n’est pas l’apanage des humains, la fourmi qui porte cent fois son poids nous souffle le secret de la persévérance, et la baleine dont le chant traverse des océans entiers est une ode à la communication, à ce besoin viscéral d’exister et de dire au cosmos : \"Je suis là.\" Pourtant, dans notre course effrénée vers le progrès, nous avons trop souvent oublié que nous ne sommes pas les maîtres de ce royaume, mais seulement les intendants d’un héritage fragile ; que chaque espèce disparue est une page arrachée du grand livre de la vie, une note perdue dans la symphonie du monde. Et si nous prenions le temps, juste un instant, d’observer le vol tourbillonnant des hirondelles au crépuscule, le jeu espiègle des loutres dans la rivière, ou le regard impassible du hibou perché dans son chêne, nous comprendrions peut-être que les animaux ne sont pas des êtres inférieurs, mais des frères d’itinérance, des âmes d’air, d’eau et de terre qui nous convient à une plus grande humilité, à une plus grande tendresse, et surtout, à un émerveillement renouvelé devant la beauté brute, sauvage et infiniment précieuse de ce monde partagé.</div>\n  </div>\n\n    ",
-      "status": "EN_ATTENTE",
+      "status": "LU",
       "isAnonyme": true,
       "clientId": null,
       "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
       "assignedToId": null,
       "receivedAt": "2026-08-03T18:37:11.364Z",
       "createdAt": "2026-08-03T18:37:11.364Z",
-      "updatedAt": "2026-08-03T18:37:11.364Z"
+      "updatedAt": "2026-08-05T18:31:51.913Z"
     },
     {
       "id": "a0648861-6196-4341-8210-e94bb4a9b744",
@@ -186,14 +232,16 @@
       "raisonSocial": "Gibbs and Bass Traders",
       "objet": "Demande de contact",
       "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Type de client</strong> : \n    <span style=\"margin-left: 4px;\">Entreprise / Organisation</span>\n  </div>\n\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Société</strong> : \n    <span style=\"margin-left: 4px;\">Gibbs and Bass Traders</span>\n  </div>\n\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Nom complet</strong> : \n    <span style=\"margin-left: 4px;\">Nita Fitzgerald</span>\n  </div>\n\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Email</strong> : \n    <span style=\"margin-left: 4px;\">rigwqef8nnfnqneni@mailinator.com</span>\n  </div>\n\n        \n  <div style=\"margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;\">\n    <strong style=\"color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;\">Téléphone</strong> : \n    <span style=\"margin-left: 4px;\">+1 (986) 525-9866</span>\n  </div>\n\n      </div>\n      \n  <div style=\"margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;\">\n    <strong style=\"color: #141824; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;\">Besoins identifiés</strong>\n    <ul style=\"margin:0; padding-left: 20px; color: #4a5568; font-size: 14px;\"><li style=\"margin-bottom: 5px;\">Renfort opérationnel</li><li style=\"margin-bottom: 5px;\">Externalisation back office</li><li style=\"margin-bottom: 5px;\">Externalisation middle office</li></ul>\n  </div>\n\n      \n  <div style=\"margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;\">\n    <strong style=\"color: #141824; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 12px;\">Description du besoin</strong>\n    <div style=\"color: #4a5568; font-size: 14px; line-height: 1.6; background-color: #fcfcfc; padding: 15px; border-radius: 4px;\">Ah, les animaux. Ces êtres de souffle et de mouvement, ces énigmes vivantes qui partagent notre monde sans jamais tout à fait nous appartenir. Ils sont les gardiens silencieux de nos mémoires ancestrales, les témoins muets de l'évolution d’une planète qu’ils ont parcourue bien avant que l’homme n’y pose son premier pied maladroit. Que ce soit le fauve aux yeux d’or dont le pelage tacheté se confond avec l’ombre mouvante de la savane, ou l’humble abeille dont le vol obstiné trace dans l’air des lignes invisibles qui soutiennent l’équilibre délicat de nos écosystèmes, chaque créature, des plus microscopiques aux plus imposantes, tisse un fil dans la trame immense du vivant. Leur diversité est un livre ouvert sur les prodiges de l’adaptation : l’otarie qui glisse dans l’eau comme une pensée fluide, le colibri dont le cœur battant est une prouesse de frénésie, le caméléon qui change de robe au gré de ses humeurs, et ce majestueux éléphant dont la mémoire, dit-on, défie le temps et dont les pas feutrés ébranlent la terre tout en respectant le silence des forêts. Ils parlent des langues que nous n’entendons pas, mais leur chant, leur rugissement, leur bourdonnement ou leur simple présence vibrent en nous, réveillant cette part sauvage que la civilisation a trop souvent endormie sous les strates du confort et de la raison. Leur regard est un miroir : quand on plonge dans les prunelles d’un loup, on y devine une lueur de liberté et de danger, une mémoire des nuits étoilées où la meute hurlait à la lune, tandis que l’œil doux d’une vache semble contenir toute la patience du monde, celle des plaines herbeuses que l’aube caresse de ses doigts de lumière. Ces compagnons de route, qu’ils soient domestiques ou libres, nous enseignent l’essentiel : l’oiseau qui construit son nid avec une ingéniosité folle nous rappelle que l’art n’est pas l’apanage des humains, la fourmi qui porte cent fois son poids nous souffle le secret de la persévérance, et la baleine dont le chant traverse des océans entiers est une ode à la communication, à ce besoin viscéral d’exister et de dire au cosmos : \"Je suis là.\" Pourtant, dans notre course effrénée vers le progrès, nous avons trop souvent oublié que nous ne sommes pas les maîtres de ce royaume, mais seulement les intendants d’un héritage fragile ; que chaque espèce disparue est une page arrachée du grand livre de la vie, une note perdue dans la symphonie du monde. Et si nous prenions le temps, juste un instant, d’observer le vol tourbillonnant des hirondelles au crépuscule, le jeu espiègle des loutres dans la rivière, ou le regard impassible du hibou perché dans son chêne, nous comprendrions peut-être que les animaux ne sont pas des êtres inférieurs, mais des frères d’itinérance, des âmes d’air, d’eau et de terre qui nous convient à une plus grande humilité, à une plus grande tendresse, et surtout, à un émerveillement renouvelé devant la beauté brute, sauvage et infiniment précieuse de ce monde partagé.</div>\n  </div>\n\n    ",
-      "status": "EN_ATTENTE",
+      "status": "TRAITE",
       "isAnonyme": true,
       "clientId": null,
       "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
       "assignedToId": null,
       "receivedAt": "2026-08-03T18:37:53.341Z",
       "createdAt": "2026-08-03T18:37:53.341Z",
-      "updatedAt": "2026-08-03T18:37:53.341Z"
+      "updatedAt": "2026-08-05T18:55:02.928Z"
     }
   ],
   "formulaireRecrutements": [
@@ -367,6 +415,601 @@
       "parentDossierId": "be894807-2833-427c-b0e0-155ce6e17fda",
       "createdAt": "2026-08-05T13:42:05.894Z",
       "updatedAt": "2026-08-05T13:42:05.894Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "a2bb612d-67d1-4d86-bc76-63207bfeea86",
+      "reference": "DOS-08",
+      "name": "Voluptatem Quam qui",
+      "description": "Ad delectus debitis",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": null,
+      "createdAt": "2026-08-05T13:50:13.720Z",
+      "updatedAt": "2026-08-05T13:50:13.720Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "e63cb8d9-0247-4a9a-bff1-a6173953710b",
+      "reference": "DOS-09",
+      "name": "ADMINISTRATION & FINANCES",
+      "description": "Sous-dossier par défaut: ADMINISTRATION & FINANCES",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": "a2bb612d-67d1-4d86-bc76-63207bfeea86",
+      "createdAt": "2026-08-05T13:50:13.738Z",
+      "updatedAt": "2026-08-05T13:50:13.738Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "50c83aa1-ca3b-4323-b755-9cdb7bb1ec8d",
+      "reference": "DOS-10",
+      "name": "OPÉRATIONS & RÉALISATIONS",
+      "description": "Sous-dossier par défaut: OPÉRATIONS & RÉALISATIONS",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": "a2bb612d-67d1-4d86-bc76-63207bfeea86",
+      "createdAt": "2026-08-05T13:50:13.751Z",
+      "updatedAt": "2026-08-05T13:50:13.751Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "e24b9812-0131-4f5e-a568-c25b6bd4cee2",
+      "reference": "DOS-11",
+      "name": "RELATIONS & DÉVELOPPEMENT",
+      "description": "Sous-dossier par défaut: RELATIONS & DÉVELOPPEMENT",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": "a2bb612d-67d1-4d86-bc76-63207bfeea86",
+      "createdAt": "2026-08-05T13:50:13.765Z",
+      "updatedAt": "2026-08-05T13:50:13.765Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "23bd81e9-7954-4e7e-867e-521706c68c7d",
+      "reference": "DOS-12",
+      "name": "sv sngng",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "50c83aa1-ca3b-4323-b755-9cdb7bb1ec8d",
+      "createdAt": "2026-08-05T14:48:20.960Z",
+      "updatedAt": "2026-08-05T14:48:20.960Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "79cb0fb3-7885-41fa-b6f8-1e4661eb932a",
+      "reference": "DOS-13",
+      "name": "a ksgnwqjrngoirwhg",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "23bd81e9-7954-4e7e-867e-521706c68c7d",
+      "createdAt": "2026-08-05T14:48:29.355Z",
+      "updatedAt": "2026-08-05T14:48:29.355Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "ce119f40-8689-4fde-acdf-9df8da84dd09",
+      "reference": "DOS-14",
+      "name": "Laudantium pariatur",
+      "description": "Officia animi eiusm",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": null,
+      "createdAt": "2026-08-05T15:00:27.923Z",
+      "updatedAt": "2026-08-05T15:00:27.923Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "901051bc-9a95-4901-8f35-d79865b25a00",
+      "reference": "DOS-15",
+      "name": "ADMINISTRATION & FINANCES",
+      "description": "Sous-dossier par défaut: ADMINISTRATION & FINANCES",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": "ce119f40-8689-4fde-acdf-9df8da84dd09",
+      "createdAt": "2026-08-05T15:00:27.938Z",
+      "updatedAt": "2026-08-05T15:00:27.938Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "c07a9073-503f-421a-aa07-5f0476c5908f",
+      "reference": "DOS-16",
+      "name": "OPÉRATIONS & RÉALISATIONS",
+      "description": "Sous-dossier par défaut: OPÉRATIONS & RÉALISATIONS",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": "ce119f40-8689-4fde-acdf-9df8da84dd09",
+      "createdAt": "2026-08-05T15:00:27.942Z",
+      "updatedAt": "2026-08-05T15:00:27.942Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "526d75b1-49c0-4455-be4f-fe9ba8717ca9",
+      "reference": "DOS-17",
+      "name": "RELATIONS & DÉVELOPPEMENT",
+      "description": "Sous-dossier par défaut: RELATIONS & DÉVELOPPEMENT",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": "ce119f40-8689-4fde-acdf-9df8da84dd09",
+      "createdAt": "2026-08-05T15:00:27.948Z",
+      "updatedAt": "2026-08-05T15:00:27.948Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "886436fb-ba41-4696-81eb-96a160268c80",
+      "reference": "DOS-18",
+      "name": "kkerggg",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "c07a9073-503f-421a-aa07-5f0476c5908f",
+      "createdAt": "2026-08-05T15:07:40.535Z",
+      "updatedAt": "2026-08-05T15:07:40.535Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "663176c6-26ae-4eeb-9f6c-5312ef58049d",
+      "reference": "DOS-19",
+      "name": "cni",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "50c83aa1-ca3b-4323-b755-9cdb7bb1ec8d",
+      "createdAt": "2026-08-05T15:21:59.454Z",
+      "updatedAt": "2026-08-05T15:21:59.454Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "34efec66-54f9-4364-b098-5ec9663e9c28",
+      "reference": "DOS-20",
+      "name": "passeport",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "50c83aa1-ca3b-4323-b755-9cdb7bb1ec8d",
+      "createdAt": "2026-08-05T15:22:07.501Z",
+      "updatedAt": "2026-08-05T15:22:07.501Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "25794356-2c62-4137-9a8a-a3eeff5ff9f3",
+      "reference": "DOS-21",
+      "name": "contrat",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "23bd81e9-7954-4e7e-867e-521706c68c7d",
+      "createdAt": "2026-08-05T15:22:38.741Z",
+      "updatedAt": "2026-08-05T15:22:38.741Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "e233c76a-01a8-4f22-a06b-f3713fbf3faa",
+      "reference": "DOS-22",
+      "name": "dossierTest",
+      "description": "pour faire les tests",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": null,
+      "createdAt": "2026-08-05T16:35:54.885Z",
+      "updatedAt": "2026-08-05T16:35:54.885Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "8d271bce-0425-4a5b-bd63-ff3307ca579e",
+      "reference": "DOS-23",
+      "name": "ADMINISTRATION & FINANCES",
+      "description": "Sous-dossier par défaut: ADMINISTRATION & FINANCES",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": "e233c76a-01a8-4f22-a06b-f3713fbf3faa",
+      "createdAt": "2026-08-05T16:35:54.895Z",
+      "updatedAt": "2026-08-05T16:35:54.895Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "883b20a4-00dd-4c21-83f2-4f929ae1aec6",
+      "reference": "DOS-24",
+      "name": "OPÉRATIONS & RÉALISATIONS",
+      "description": "Sous-dossier par défaut: OPÉRATIONS & RÉALISATIONS",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": "e233c76a-01a8-4f22-a06b-f3713fbf3faa",
+      "createdAt": "2026-08-05T16:35:54.900Z",
+      "updatedAt": "2026-08-05T16:35:54.900Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "c222c813-63c5-42be-8d64-9c71203e264c",
+      "reference": "DOS-25",
+      "name": "RELATIONS & DÉVELOPPEMENT",
+      "description": "Sous-dossier par défaut: RELATIONS & DÉVELOPPEMENT",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": "e233c76a-01a8-4f22-a06b-f3713fbf3faa",
+      "createdAt": "2026-08-05T16:35:54.906Z",
+      "updatedAt": "2026-08-05T16:35:54.906Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "e9077266-bb4c-4664-8fa1-047bfb832e1d",
+      "reference": "DOS-26",
+      "name": "controle cni",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "883b20a4-00dd-4c21-83f2-4f929ae1aec6",
+      "createdAt": "2026-08-05T16:36:28.663Z",
+      "updatedAt": "2026-08-05T16:36:28.663Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "479147d9-ee2e-4a9f-b77f-6529aee25b33",
+      "reference": "DOS-27",
+      "name": "controle passport",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "883b20a4-00dd-4c21-83f2-4f929ae1aec6",
+      "createdAt": "2026-08-05T16:36:40.271Z",
+      "updatedAt": "2026-08-05T16:36:40.271Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "19a7b5a1-fa57-4e96-b2e6-f3a0e6a1e100",
+      "reference": "DOS-28",
+      "name": "invalidite",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "883b20a4-00dd-4c21-83f2-4f929ae1aec6",
+      "createdAt": "2026-08-05T16:37:13.575Z",
+      "updatedAt": "2026-08-05T16:37:13.575Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "233e8b68-5d3e-45ee-ad11-20ee6a10d5ed",
+      "reference": "DOS-29",
+      "name": "cni",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "e9077266-bb4c-4664-8fa1-047bfb832e1d",
+      "createdAt": "2026-08-05T16:37:20.665Z",
+      "updatedAt": "2026-08-05T16:37:20.665Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "ac4c0af0-27cd-4500-848c-4d940acff753",
+      "reference": "DOS-30",
+      "name": "ovh",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "479147d9-ee2e-4a9f-b77f-6529aee25b33",
+      "createdAt": "2026-08-05T16:37:58.641Z",
+      "updatedAt": "2026-08-05T16:37:58.641Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "4205af93-e6f6-49ae-a34f-201cf076a9f7",
+      "reference": "DOS-31",
+      "name": "INJS",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "479147d9-ee2e-4a9f-b77f-6529aee25b33",
+      "createdAt": "2026-08-05T16:38:08.743Z",
+      "updatedAt": "2026-08-05T16:38:08.743Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "1e2048c9-4176-444e-a524-e24766d2cc06",
+      "reference": "DOS-32",
+      "name": "testComplet",
+      "description": "dfsggf",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": null,
+      "createdAt": "2026-08-06T02:46:23.907Z",
+      "updatedAt": "2026-08-06T02:46:23.907Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "d3913908-9a28-40a1-aa47-e02a9c126e7e",
+      "reference": "DOS-33",
+      "name": "ADMINISTRATION & FINANCES",
+      "description": "Sous-dossier par défaut: ADMINISTRATION & FINANCES",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": "1e2048c9-4176-444e-a524-e24766d2cc06",
+      "createdAt": "2026-08-06T02:46:23.926Z",
+      "updatedAt": "2026-08-06T02:46:23.926Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "9af45297-64c6-44cf-b277-7388fc4dfb22",
+      "reference": "DOS-34",
+      "name": "OPÉRATIONS & RÉALISATIONS",
+      "description": "Sous-dossier par défaut: OPÉRATIONS & RÉALISATIONS",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": "1e2048c9-4176-444e-a524-e24766d2cc06",
+      "createdAt": "2026-08-06T02:46:23.939Z",
+      "updatedAt": "2026-08-06T02:46:23.939Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "4714f9f4-61ec-4498-8fab-6ab8769b3329",
+      "reference": "DOS-35",
+      "name": "RELATIONS & DÉVELOPPEMENT",
+      "description": "Sous-dossier par défaut: RELATIONS & DÉVELOPPEMENT",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "parentDossierId": "1e2048c9-4176-444e-a524-e24766d2cc06",
+      "createdAt": "2026-08-06T02:46:23.954Z",
+      "updatedAt": "2026-08-06T02:46:23.954Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "reference": "DOS-36",
+      "name": "dos1",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "9af45297-64c6-44cf-b277-7388fc4dfb22",
+      "createdAt": "2026-08-06T02:47:16.607Z",
+      "updatedAt": "2026-08-06T02:47:16.607Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "1a45df29-e8a9-4016-9edc-9722cbd8b3bd",
+      "reference": "DOS-37",
+      "name": "dos2",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "9af45297-64c6-44cf-b277-7388fc4dfb22",
+      "createdAt": "2026-08-06T02:47:25.486Z",
+      "updatedAt": "2026-08-06T02:47:25.486Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "260aac0c-0dee-47d0-98c8-4a70bd5967ac",
+      "reference": "DOS-38",
+      "name": "dos3",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "9af45297-64c6-44cf-b277-7388fc4dfb22",
+      "createdAt": "2026-08-06T02:47:33.964Z",
+      "updatedAt": "2026-08-06T02:47:33.964Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "e4c0f257-d78d-40d6-a84f-fb41a519ece9",
+      "reference": "DOS-39",
+      "name": "dos3_1",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "260aac0c-0dee-47d0-98c8-4a70bd5967ac",
+      "createdAt": "2026-08-06T02:47:49.039Z",
+      "updatedAt": "2026-08-06T02:47:49.039Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "d153ede5-551c-439d-80be-255910df488b",
+      "reference": "DOS-40",
+      "name": "dos3_2",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "260aac0c-0dee-47d0-98c8-4a70bd5967ac",
+      "createdAt": "2026-08-06T02:48:00.440Z",
+      "updatedAt": "2026-08-06T02:48:00.440Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "d86d3488-66ab-4f57-acab-236fbfc6a980",
+      "reference": "DOS-41",
+      "name": "dos3_3",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "260aac0c-0dee-47d0-98c8-4a70bd5967ac",
+      "createdAt": "2026-08-06T02:48:12.249Z",
+      "updatedAt": "2026-08-06T02:48:12.249Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "id": "d7dc6408-c86d-4382-932b-014054fba9db",
+      "reference": "DOS-42",
+      "name": "dos3_1_1",
+      "description": "Sous-dossier GED",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "parentDossierId": "e4c0f257-d78d-40d6-a84f-fb41a519ece9",
+      "createdAt": "2026-08-06T02:48:39.080Z",
+      "updatedAt": "2026-08-06T02:48:39.080Z"
     }
   ],
   "missions": [
@@ -381,12 +1024,112 @@
       "status": "TO_ASSIGN",
       "previousStatus": null,
       "attachment": null,
+      "dossierMissionId": null,
       "createdAt": "2026-08-05T13:32:35.814Z",
       "updatedAt": "2026-08-05T13:32:35.814Z",
       "parentMissionId": null
+    },
+    {
+      "id": "af26761a-1d75-42e4-805a-b893cfaf7491",
+      "reference": "MSN-02",
+      "dossierId": "a2bb612d-67d1-4d86-bc76-63207bfeea86",
+      "assignedToId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "description": "Consectetur culpa \n\nRatione esse fuga ",
+      "echeance": "1992-09-15T00:00:00.000Z",
+      "status": "TO_ASSIGN",
+      "previousStatus": null,
+      "attachment": null,
+      "dossierMissionId": "25794356-2c62-4137-9a8a-a3eeff5ff9f3",
+      "createdAt": "2026-08-05T15:24:59.451Z",
+      "updatedAt": "2026-08-05T15:24:59.451Z",
+      "parentMissionId": null
+    },
+    {
+      "id": "efe887b4-3ff1-4190-b227-193910db0852",
+      "reference": "MSN-03",
+      "dossierId": "a2bb612d-67d1-4d86-bc76-63207bfeea86",
+      "assignedToId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "description": "njgsgh bsfgbfgbsiuf teste\n\ndfah esdnsbgbgg fgsfgbg",
+      "echeance": "2026-04-12T00:00:00.000Z",
+      "status": "TO_ASSIGN",
+      "previousStatus": null,
+      "attachment": null,
+      "dossierMissionId": "79cb0fb3-7885-41fa-b6f8-1e4661eb932a",
+      "createdAt": "2026-08-05T15:47:40.834Z",
+      "updatedAt": "2026-08-05T15:47:40.834Z",
+      "parentMissionId": null
+    },
+    {
+      "id": "cf815e1c-2411-44e2-a676-c6d9bac41447",
+      "reference": "MSN-04",
+      "dossierId": "e233c76a-01a8-4f22-a06b-f3713fbf3faa",
+      "assignedToId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "description": "pournnnn\n\nrwqnjngngiegu",
+      "echeance": "2026-02-12T00:00:00.000Z",
+      "status": "TO_ASSIGN",
+      "previousStatus": null,
+      "attachment": null,
+      "dossierMissionId": "4205af93-e6f6-49ae-a34f-201cf076a9f7",
+      "createdAt": "2026-08-05T16:39:51.151Z",
+      "updatedAt": "2026-08-05T16:39:51.151Z",
+      "parentMissionId": null
+    },
+    {
+      "id": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
+      "reference": "MSN-05",
+      "dossierId": "1e2048c9-4176-444e-a524-e24766d2cc06",
+      "assignedToId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "description": "sgfg\n\nsgfgfgf",
+      "echeance": "2026-05-23T00:00:00.000Z",
+      "status": "TO_ASSIGN",
+      "previousStatus": null,
+      "attachment": null,
+      "dossierMissionId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "createdAt": "2026-08-06T02:52:09.733Z",
+      "updatedAt": "2026-08-06T02:52:09.733Z",
+      "parentMissionId": null
     }
   ],
-  "taches": [],
+  "taches": [
+    {
+      "id": "050ec952-0268-4b4f-b581-ef6e408cb6f8",
+      "reference": "TCH-01",
+      "missionId": "cf815e1c-2411-44e2-a676-c6d9bac41447",
+      "assignedToId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "description": "Objet: Et veniam nemo in q\n\nConsignes: Accusantium voluptat",
+      "echeance": "1978-02-24T00:00:00.000Z",
+      "status": "TO_ASSIGN",
+      "previousStatus": null,
+      "attachment": null,
+      "adminFeedback": null,
+      "managerFeedback": null,
+      "dossierTacheId": "4205af93-e6f6-49ae-a34f-201cf076a9f7",
+      "createdAt": "2026-08-06T01:35:32.378Z",
+      "updatedAt": "2026-08-06T01:35:32.378Z"
+    },
+    {
+      "id": "877208d5-a90f-4d5c-8440-1ec88dc6bd40",
+      "reference": "TCH-02",
+      "missionId": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
+      "assignedToId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "createdById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "description": "Objet: Lorem voluptas in sa\n\nConsignes: Blanditiis facere qu",
+      "echeance": "1996-02-17T00:00:00.000Z",
+      "status": "TO_ASSIGN",
+      "previousStatus": null,
+      "attachment": null,
+      "adminFeedback": null,
+      "managerFeedback": null,
+      "dossierTacheId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "createdAt": "2026-08-06T02:53:56.201Z",
+      "updatedAt": "2026-08-06T02:53:56.201Z"
+    }
+  ],
   "documents": [
     {
       "id": "a6694e5a-1fcc-4680-b505-fa115d50d199",
@@ -396,6 +1139,24 @@
       "dossierId": "1d319b20-fe95-4241-a3ba-4766e27fa297",
       "missionId": null,
       "createdAt": "2026-08-05T12:47:29.780Z"
+    },
+    {
+      "id": "dc6a76ce-f78f-4d8b-9205-2f1e12f20559",
+      "name": "no17_15_mars_2026_sujetexa.com_.pdf",
+      "url": "ged/1785947860331-73485fb2b0e364a3-no17_15_mars_2026_sujetexa.com_.pdf",
+      "uploadedById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "dossierId": "233e8b68-5d3e-45ee-ad11-20ee6a10d5ed",
+      "missionId": null,
+      "createdAt": "2026-08-05T16:37:40.351Z"
+    },
+    {
+      "id": "0c771b7f-9a33-4dc8-990d-f961746399af",
+      "name": "cvnkolo.pdf",
+      "url": "ged/1785984533632-cef7ea8eef932e5e-cvnkolo.pdf",
+      "uploadedById": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "dossierId": "e4c0f257-d78d-40d6-a84f-fb41a519ece9",
+      "missionId": null,
+      "createdAt": "2026-08-06T02:48:53.690Z"
     }
   ],
   "auditLogs": [
@@ -442,6 +1203,358 @@
       "dossierId": "17cf00e1-6506-4770-a786-edb7f8cdb9ee",
       "formulaireId": null,
       "createdAt": "2026-08-05T13:42:05.907Z"
+    },
+    {
+      "id": "b22e21d6-2d50-4b13-84be-14dbb69d139f",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "a2bb612d-67d1-4d86-bc76-63207bfeea86",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: Voluptatem Quam qui",
+      "dossierId": "a2bb612d-67d1-4d86-bc76-63207bfeea86",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T13:50:13.775Z"
+    },
+    {
+      "id": "a4c76b27-2698-471c-aa1b-6c33aec6e0e0",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "23bd81e9-7954-4e7e-867e-521706c68c7d",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: sv sngng",
+      "dossierId": "23bd81e9-7954-4e7e-867e-521706c68c7d",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T14:48:20.976Z"
+    },
+    {
+      "id": "e5f32c9b-a911-4bf9-b3be-9dc68ff313d9",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "79cb0fb3-7885-41fa-b6f8-1e4661eb932a",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: a ksgnwqjrngoirwhg",
+      "dossierId": "79cb0fb3-7885-41fa-b6f8-1e4661eb932a",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T14:48:29.372Z"
+    },
+    {
+      "id": "2b82e395-643c-4789-8c6a-782b47193e3a",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "ce119f40-8689-4fde-acdf-9df8da84dd09",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: Laudantium pariatur",
+      "dossierId": "ce119f40-8689-4fde-acdf-9df8da84dd09",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T15:00:27.952Z"
+    },
+    {
+      "id": "f7715bb7-2d3d-451c-8c0d-2614d322d143",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "886436fb-ba41-4696-81eb-96a160268c80",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: kkerggg",
+      "dossierId": "886436fb-ba41-4696-81eb-96a160268c80",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T15:07:40.549Z"
+    },
+    {
+      "id": "0e29ed52-6d83-483c-9f26-5a76f875243e",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "663176c6-26ae-4eeb-9f6c-5312ef58049d",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: cni",
+      "dossierId": "663176c6-26ae-4eeb-9f6c-5312ef58049d",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T15:21:59.467Z"
+    },
+    {
+      "id": "93b24523-5ea5-410e-804e-7f1392d44874",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "34efec66-54f9-4364-b098-5ec9663e9c28",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: passeport",
+      "dossierId": "34efec66-54f9-4364-b098-5ec9663e9c28",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T15:22:07.510Z"
+    },
+    {
+      "id": "d31e37ba-1649-41ee-b2b0-5e559ae93369",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "25794356-2c62-4137-9a8a-a3eeff5ff9f3",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: contrat",
+      "dossierId": "25794356-2c62-4137-9a8a-a3eeff5ff9f3",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T15:22:38.758Z"
+    },
+    {
+      "id": "bfd3176b-6d42-43b6-8174-77a42ca734e9",
+      "userId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-08-05T15:28:48.902Z"
+    },
+    {
+      "id": "3d37a796-45ba-46d1-9bed-54290c036fcc",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "e233c76a-01a8-4f22-a06b-f3713fbf3faa",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dossierTest",
+      "dossierId": "e233c76a-01a8-4f22-a06b-f3713fbf3faa",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T16:35:54.913Z"
+    },
+    {
+      "id": "c4607155-0184-4bbf-99a8-e9ec5be1a26a",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "e9077266-bb4c-4664-8fa1-047bfb832e1d",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: controle cni",
+      "dossierId": "e9077266-bb4c-4664-8fa1-047bfb832e1d",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T16:36:28.672Z"
+    },
+    {
+      "id": "3156e0eb-be25-467a-81f1-d399ae739f58",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "479147d9-ee2e-4a9f-b77f-6529aee25b33",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: controle passport",
+      "dossierId": "479147d9-ee2e-4a9f-b77f-6529aee25b33",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T16:36:40.279Z"
+    },
+    {
+      "id": "28bd9e13-e15f-43c2-b932-89f0feffad23",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "19a7b5a1-fa57-4e96-b2e6-f3a0e6a1e100",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: invalidite",
+      "dossierId": "19a7b5a1-fa57-4e96-b2e6-f3a0e6a1e100",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T16:37:13.584Z"
+    },
+    {
+      "id": "f190cf47-5d67-4db7-880b-4bcadcab8302",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "233e8b68-5d3e-45ee-ad11-20ee6a10d5ed",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: cni",
+      "dossierId": "233e8b68-5d3e-45ee-ad11-20ee6a10d5ed",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T16:37:20.677Z"
+    },
+    {
+      "id": "e3951496-3bee-4f2f-91bf-79c7925fccda",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "ac4c0af0-27cd-4500-848c-4d940acff753",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: ovh",
+      "dossierId": "ac4c0af0-27cd-4500-848c-4d940acff753",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T16:37:58.650Z"
+    },
+    {
+      "id": "d5fc707a-198f-4e73-ba7b-55745deb9593",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "4205af93-e6f6-49ae-a34f-201cf076a9f7",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: INJS",
+      "dossierId": "4205af93-e6f6-49ae-a34f-201cf076a9f7",
+      "formulaireId": null,
+      "createdAt": "2026-08-05T16:38:08.752Z"
+    },
+    {
+      "id": "2ad6b85e-f11c-404b-98ae-12e6751a858b",
+      "userId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-08-06T01:19:22.726Z"
+    },
+    {
+      "id": "5cfa50f2-b350-4598-95a7-2cb1e731a451",
+      "userId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-08-06T01:19:45.946Z"
+    },
+    {
+      "id": "5bea321f-c5b2-42d7-8ce8-e41a6813ad04",
+      "userId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-08-06T01:20:17.181Z"
+    },
+    {
+      "id": "ece23449-ec9d-4314-a24b-0ae3a35621df",
+      "userId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-08-06T01:35:50.238Z"
+    },
+    {
+      "id": "6bfb4110-a051-4c4e-9ced-b4169565ca6b",
+      "userId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-08-06T02:21:55.376Z"
+    },
+    {
+      "id": "ee049fad-d4aa-40c4-9a20-d8a9be5751fa",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "1e2048c9-4176-444e-a524-e24766d2cc06",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: testComplet",
+      "dossierId": "1e2048c9-4176-444e-a524-e24766d2cc06",
+      "formulaireId": null,
+      "createdAt": "2026-08-06T02:46:23.965Z"
+    },
+    {
+      "id": "5a76a5a3-a3e7-4e0a-b987-f00a841fe7e7",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dos1",
+      "dossierId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "formulaireId": null,
+      "createdAt": "2026-08-06T02:47:16.627Z"
+    },
+    {
+      "id": "450153aa-ced8-419a-86ca-9999a555f463",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "1a45df29-e8a9-4016-9edc-9722cbd8b3bd",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dos2",
+      "dossierId": "1a45df29-e8a9-4016-9edc-9722cbd8b3bd",
+      "formulaireId": null,
+      "createdAt": "2026-08-06T02:47:25.504Z"
+    },
+    {
+      "id": "918571f3-ccd4-483f-a72d-b09433d8d7f7",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "260aac0c-0dee-47d0-98c8-4a70bd5967ac",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dos3",
+      "dossierId": "260aac0c-0dee-47d0-98c8-4a70bd5967ac",
+      "formulaireId": null,
+      "createdAt": "2026-08-06T02:47:33.981Z"
+    },
+    {
+      "id": "c490b27f-51da-4372-886f-ffa6ac7ee12e",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "e4c0f257-d78d-40d6-a84f-fb41a519ece9",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dos3_1",
+      "dossierId": "e4c0f257-d78d-40d6-a84f-fb41a519ece9",
+      "formulaireId": null,
+      "createdAt": "2026-08-06T02:47:49.054Z"
+    },
+    {
+      "id": "62c3fc72-550d-4008-88f3-af53f58878bf",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "d153ede5-551c-439d-80be-255910df488b",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dos3_2",
+      "dossierId": "d153ede5-551c-439d-80be-255910df488b",
+      "formulaireId": null,
+      "createdAt": "2026-08-06T02:48:00.445Z"
+    },
+    {
+      "id": "c05dbd89-d71d-43e7-b728-195323136766",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "d86d3488-66ab-4f57-acab-236fbfc6a980",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dos3_3",
+      "dossierId": "d86d3488-66ab-4f57-acab-236fbfc6a980",
+      "formulaireId": null,
+      "createdAt": "2026-08-06T02:48:12.266Z"
+    },
+    {
+      "id": "c6b997de-335b-4235-8958-eb45a0ed83a9",
+      "userId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "action": "CREATION_DOSSIER",
+      "targetId": "d7dc6408-c86d-4382-932b-014054fba9db",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dos3_1_1",
+      "dossierId": "d7dc6408-c86d-4382-932b-014054fba9db",
+      "formulaireId": null,
+      "createdAt": "2026-08-06T02:48:39.096Z"
+    },
+    {
+      "id": "174b465e-e421-4310-ace0-3f59805ae233",
+      "userId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-08-06T11:37:01.219Z"
+    },
+    {
+      "id": "83fb602b-60da-4a35-abb1-5d7c3e9db0e6",
+      "userId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-08-06T12:14:38.461Z"
+    },
+    {
+      "id": "252d2e59-15e0-4528-aca4-1ab4b8eca586",
+      "userId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-08-06T13:08:28.898Z"
     }
   ],
   "messagePersonnels": [
@@ -460,7 +1573,8 @@
       "receivedAt": "2026-01-08T10:30:09.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "79ff6159-90b5-4f4a-8a87-6a6ac14fab0b",
@@ -477,7 +1591,8 @@
       "receivedAt": "2026-01-09T14:46:45.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "ce9b3a11-e440-4d95-aa1f-306f8cfbde20",
@@ -494,7 +1609,8 @@
       "receivedAt": "2026-01-10T12:47:51.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "42b37b19-3105-40e3-a94e-cf71b6c05f6f",
@@ -511,7 +1627,8 @@
       "receivedAt": "2026-01-10T16:03:32.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "e3ec1b26-8f27-4e4a-af31-2ad0e7d4b3ae",
@@ -528,7 +1645,8 @@
       "receivedAt": "2026-01-10T16:22:05.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "cc2d6cb3-2431-4d3e-ac2c-4c5f9b4f3a98",
@@ -545,7 +1663,8 @@
       "receivedAt": "2026-01-10T16:29:05.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "163d94ad-d2b5-4525-9d6f-e7c2c6bf32af",
@@ -562,7 +1681,8 @@
       "receivedAt": "2026-01-12T10:35:35.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "9989da75-bbe4-4b78-bf42-e54c88235f30",
@@ -579,7 +1699,8 @@
       "receivedAt": "2026-01-12T10:37:28.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "23c17f6a-bcca-4aeb-989c-7bc222386703",
@@ -596,7 +1717,8 @@
       "receivedAt": "2026-01-12T10:37:30.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "c349a589-b1ae-44ea-a065-5ee5b3e84bd6",
@@ -613,7 +1735,8 @@
       "receivedAt": "2026-05-07T08:10:25.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "0a2ab0a5-94c2-4b48-b2b8-dbefab3fcae2",
@@ -630,7 +1753,8 @@
       "receivedAt": "2026-06-09T07:09:52.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "c1ceafc2-cc46-4776-b31a-527b6775c81e",
@@ -647,7 +1771,8 @@
       "receivedAt": "2026-06-18T11:56:31.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "4c70ecf8-1ec5-4d4d-9cb0-e523f206b38c",
@@ -664,7 +1789,8 @@
       "receivedAt": "2026-06-25T10:31:44.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "0d1f2b5a-358d-4a2e-9b6f-b8ce2faa3610",
@@ -681,7 +1807,8 @@
       "receivedAt": "2026-06-27T08:09:30.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "c74eb0a5-67af-4449-a1d5-40b60f0e3860",
@@ -698,7 +1825,8 @@
       "receivedAt": "2026-07-17T15:42:49.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "a4222a6f-d4ac-447d-b1b2-6543934cab35",
@@ -715,7 +1843,8 @@
       "receivedAt": "2026-07-17T15:44:14.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "a0fe86ad-adde-4226-a13b-021d36f0fadc",
@@ -732,7 +1861,8 @@
       "receivedAt": "2026-07-17T15:45:40.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "2b50e58f-3a65-4db5-a3aa-aab4957c06eb",
@@ -749,7 +1879,8 @@
       "receivedAt": "2026-07-17T15:52:40.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "1c0bf127-094c-4368-8a2b-3bf9c62ffd81",
@@ -766,7 +1897,8 @@
       "receivedAt": "2026-07-17T15:56:58.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "0a7bd448-1b62-46eb-9c40-816fb459e6c3",
@@ -783,7 +1915,8 @@
       "receivedAt": "2026-07-18T18:36:33.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "f7c4fb1f-2cb7-41f3-82fb-b980ffa9b641",
@@ -800,7 +1933,8 @@
       "receivedAt": "2026-07-18T18:53:35.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "c87ef14c-9244-4d07-bebd-afcf08723b59",
@@ -817,7 +1951,8 @@
       "receivedAt": "2026-07-19T12:40:53.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "dfe2918a-79b9-4f1c-9ad3-8135b676fc7e",
@@ -834,7 +1969,8 @@
       "receivedAt": "2026-07-21T08:17:38.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "c7f4aaf6-2a6e-4a25-a5f7-6e8f5086d6f9",
@@ -851,7 +1987,8 @@
       "receivedAt": "2026-07-21T08:21:27.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "faa47688-5713-4173-b1df-41733a3ef0da",
@@ -868,7 +2005,8 @@
       "receivedAt": "2026-07-21T20:54:29.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "8113ed13-bee5-45ec-887c-db67ed1e97ae",
@@ -885,7 +2023,8 @@
       "receivedAt": "2026-07-21T20:58:56.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "5b595fff-4644-4b0a-9b15-7c7e553c5634",
@@ -902,7 +2041,8 @@
       "receivedAt": "2026-07-21T21:08:57.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "b180c4be-e7be-4d41-b0c2-dbf3324e17df",
@@ -919,7 +2059,8 @@
       "receivedAt": "2026-07-21T21:24:17.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "c2f18df6-7f8c-4b69-b671-078bf57a8a57",
@@ -936,7 +2077,8 @@
       "receivedAt": "2026-07-22T18:50:32.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "ec8a1731-7075-4a47-86d8-8e2721dcf0d9",
@@ -953,7 +2095,8 @@
       "receivedAt": "2026-07-23T21:42:49.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "e3042308-d49a-443d-b23b-1024f8a340d8",
@@ -970,7 +2113,8 @@
       "receivedAt": "2026-07-23T21:47:50.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "e02d9aff-af41-425f-bbbd-5a4be541d778",
@@ -987,7 +2131,8 @@
       "receivedAt": "2026-07-23T21:51:39.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "adee69cc-5e6c-4200-9bcc-5e70335bdea8",
@@ -1004,7 +2149,8 @@
       "receivedAt": "2026-07-25T18:33:26.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "0bf0368b-663d-4f77-be0e-b386c287dfac",
@@ -1021,7 +2167,8 @@
       "receivedAt": "2026-07-27T19:20:11.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "54f34393-6388-4f49-bdac-1d22404ad0ed",
@@ -1038,7 +2185,8 @@
       "receivedAt": "2026-07-27T19:44:22.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "22650569-e1b9-44ce-ae3b-a084c7e1695f",
@@ -1055,14 +2203,15 @@
       "receivedAt": "2026-07-27T19:48:05.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "a2da4674-60f2-44ee-a97a-5993fe428abc",
       "messageId": "<5dc8b6ac-a86d-ab36-7da5-b419b73e3760@menuaconsulting.com>",
       "type": "PERSONNEL",
       "subType": "Indéfini",
-      "status": "EN_ATTENTE",
+      "status": "TRAITE",
       "nomPrenom": "MENUA CONSULTING",
       "email": "ludovicnkolo01@gmail.com",
       "objet": "Demande de collaboration",
@@ -1071,15 +2220,16 @@
       "createdAt": "2026-07-27T19:54:52.000Z",
       "receivedAt": "2026-07-27T19:54:52.000Z",
       "dossierId": null,
-      "missionId": null,
-      "assignedToId": null
+      "missionId": "af26761a-1d75-42e4-805a-b893cfaf7491",
+      "assignedToId": null,
+      "tacheId": null
     },
     {
       "id": "eadfe161-2480-4be8-b400-13ee08ef95b8",
       "messageId": "<6e284deb-8fca-b000-1356-8776625efa85@menuaconsulting.com>",
       "type": "PERSONNEL",
       "subType": "Indéfini",
-      "status": "EN_ATTENTE",
+      "status": "CLASSE",
       "nomPrenom": "MENUA CONSULTING",
       "email": "rosettef@hotmail.fr",
       "objet": "Demande de contact",
@@ -1089,7 +2239,188 @@
       "receivedAt": "2026-07-27T20:02:46.000Z",
       "dossierId": null,
       "missionId": null,
-      "assignedToId": null
+      "assignedToId": null,
+      "tacheId": null
+    },
+    {
+      "id": "7ecfe33c-faff-41d6-b9e3-02ddd0ac5cfd",
+      "messageId": "47251624-76af-4d94-ae8a-ba70c5c78118",
+      "type": "INTERNE",
+      "subType": "Test SMS",
+      "status": "EN_ATTENTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "Test",
+      "bodyText": "Hello",
+      "attachment": null,
+      "createdAt": "2026-08-06T12:02:30.102Z",
+      "receivedAt": "2026-08-06T12:02:30.102Z",
+      "dossierId": null,
+      "missionId": null,
+      "assignedToId": null,
+      "tacheId": null
+    },
+    {
+      "id": "138dad20-e671-4737-83cd-34a41db6391d",
+      "messageId": "16f4d05b-316b-471f-baf2-dd0be4994f53",
+      "type": "INTERNE",
+      "subType": "SMS Collaborateur pour Inconnu",
+      "status": "EN_ATTENTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "sdav mnv",
+      "bodyText": "d ka jv",
+      "attachment": null,
+      "createdAt": "2026-08-06T12:08:35.946Z",
+      "receivedAt": "2026-08-06T12:08:35.946Z",
+      "dossierId": null,
+      "missionId": null,
+      "assignedToId": null,
+      "tacheId": null
+    },
+    {
+      "id": "2e8a8e88-89f2-48b6-89a3-3f1c7eb29e76",
+      "messageId": "b6437293-e630-4ad7-8cd9-1b05b52a8fb3",
+      "type": "INTERNE",
+      "subType": "SMS Collaborateur pour Rosette Fouelefack",
+      "status": "TRAITE",
+      "nomPrenom": "Repellendus Veniam",
+      "email": "ludovicnkolo01@gmail.com",
+      "objet": "ghdyttd",
+      "bodyText": "huyfuyfjfufu",
+      "attachment": null,
+      "createdAt": "2026-08-06T12:29:44.483Z",
+      "receivedAt": "2026-08-06T12:29:44.483Z",
+      "dossierId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "missionId": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
+      "assignedToId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "tacheId": "877208d5-a90f-4d5c-8440-1ec88dc6bd40"
+    },
+    {
+      "id": "b52beab1-6166-45a2-8f71-8ba0088ae140",
+      "messageId": "2ad39e51-6bcb-4df4-9968-e54ffec766af",
+      "type": "INTERNE",
+      "subType": "Réponse à Repellendus Veniam",
+      "status": "EN_ATTENTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "bhgguy",
+      "bodyText": "merci man",
+      "attachment": null,
+      "createdAt": "2026-08-06T12:30:36.871Z",
+      "receivedAt": "2026-08-06T12:30:36.871Z",
+      "dossierId": null,
+      "missionId": null,
+      "assignedToId": null,
+      "tacheId": null
+    },
+    {
+      "id": "b77b32ad-d021-4d9b-abe0-df1389c18c55",
+      "messageId": "556bb813-9c14-4924-8832-c92813a98151",
+      "type": "INTERNE",
+      "subType": "SMS Collaborateur pour Rosette Fouelefack",
+      "status": "TRAITE",
+      "nomPrenom": "Repellendus Veniam",
+      "email": "ludovicnkolo01@gmail.com",
+      "objet": "bjvhvhvv bgcycyt",
+      "bodyText": "vhgfyf tfvftfy yfyvf",
+      "attachment": null,
+      "createdAt": "2026-08-06T12:46:39.032Z",
+      "receivedAt": "2026-08-06T12:46:39.032Z",
+      "dossierId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "missionId": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
+      "assignedToId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "tacheId": "877208d5-a90f-4d5c-8440-1ec88dc6bd40"
+    },
+    {
+      "id": "d112bf8b-673b-428d-bfae-7c651f7c147f",
+      "messageId": "1484e9b3-5f7e-4132-a9ce-6eacab66b3ca",
+      "type": "INTERNE",
+      "subType": "Réponse à Repellendus Veniam",
+      "status": "EN_ATTENTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "bghggvhgv",
+      "bodyText": "tu veux qoui ",
+      "attachment": null,
+      "createdAt": "2026-08-06T12:51:59.163Z",
+      "receivedAt": "2026-08-06T12:51:59.163Z",
+      "dossierId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "missionId": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
+      "assignedToId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "tacheId": "877208d5-a90f-4d5c-8440-1ec88dc6bd40"
+    },
+    {
+      "id": "a4d760e9-f301-4a93-ac93-4161e1ad19c6",
+      "messageId": "e4256a3c-b0db-43d6-be44-1cdb528278a8",
+      "type": "INTERNE",
+      "subType": "SMS Collaborateur pour Repellendus Veniam",
+      "status": "TRAITE",
+      "nomPrenom": "Repellendus Veniam",
+      "email": "ludovicnkolo01@gmail.com",
+      "objet": "fddbdb",
+      "bodyText": "sfavfbb",
+      "attachment": null,
+      "createdAt": "2026-08-06T12:53:48.779Z",
+      "receivedAt": "2026-08-06T12:53:48.779Z",
+      "dossierId": "4205af93-e6f6-49ae-a34f-201cf076a9f7",
+      "missionId": "cf815e1c-2411-44e2-a676-c6d9bac41447",
+      "assignedToId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "tacheId": "050ec952-0268-4b4f-b581-ef6e408cb6f8"
+    },
+    {
+      "id": "5aa24b7e-90d1-4982-a99d-b7a8c513adcf",
+      "messageId": "fa71c4be-56b1-4fe2-8d53-389c7a9bff5c",
+      "type": "INTERNE",
+      "subType": "Réponse à Repellendus Veniam",
+      "status": "EN_ATTENTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "bghggvhgv",
+      "bodyText": "tu veux qoui ",
+      "attachment": null,
+      "createdAt": "2026-08-06T12:54:09.973Z",
+      "receivedAt": "2026-08-06T12:54:09.973Z",
+      "dossierId": "4205af93-e6f6-49ae-a34f-201cf076a9f7",
+      "missionId": "cf815e1c-2411-44e2-a676-c6d9bac41447",
+      "assignedToId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "tacheId": "050ec952-0268-4b4f-b581-ef6e408cb6f8"
+    },
+    {
+      "id": "db5117c4-56b6-472f-a57c-d2820bd9c4d4",
+      "messageId": "0df7740d-d6bc-42e6-906f-eb1fa4718ab5",
+      "type": "INTERNE",
+      "subType": "SMS Collaborateur pour Rosette Fouelefack",
+      "status": "TRAITE",
+      "nomPrenom": "Repellendus Veniam",
+      "email": "ludovicnkolo01@gmail.com",
+      "objet": "Message concernant TCH-02",
+      "bodyText": "sagbbjf sjkagjbsf nasbf sasjkgbsfig svakjsfjgb",
+      "attachment": null,
+      "createdAt": "2026-08-06T13:08:59.534Z",
+      "receivedAt": "2026-08-06T13:08:59.534Z",
+      "dossierId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "missionId": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
+      "assignedToId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "tacheId": "877208d5-a90f-4d5c-8440-1ec88dc6bd40"
+    },
+    {
+      "id": "d1412372-96aa-4cf9-b892-9205dd2ed9ee",
+      "messageId": "015120c4-6d39-40ae-b528-73d10c7c5f23",
+      "type": "INTERNE",
+      "subType": "Réponse à Repellendus Veniam",
+      "status": "EN_ATTENTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "djdsbbdif",
+      "bodyText": "af jbdb",
+      "attachment": null,
+      "createdAt": "2026-08-06T13:09:33.275Z",
+      "receivedAt": "2026-08-06T13:09:33.275Z",
+      "dossierId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "missionId": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
+      "assignedToId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "tacheId": "877208d5-a90f-4d5c-8440-1ec88dc6bd40"
     }
   ]
 }

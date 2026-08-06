@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, MoreVertical, Pencil, Eye, Trash, MessageSquare, Paperclip, FileText, Download, Plus, X, Folder } from 'lucide-react';
+import { Search, MoreVertical, Pencil, Eye, Trash, MessageSquare, Paperclip, FileText, Download, Plus, X, Folder, ChevronRight, ChevronDown, CheckSquare, Square } from 'lucide-react';
 import { getSafeApiUrl, uploadFile, formatDate } from '../utils/helpers';
 import ActionDropdown from '../components/ActionDropdown';
 import { getStatusBadge } from '../utils/helpers';
@@ -8,7 +8,7 @@ import PaginationControls from '../components/PaginationControls';
 import ReadOnlyField from '../components/ReadOnlyField';
 import TaskConsultModal from '../components/TaskConsultModal';
 import FilePreviewModal from '../components/FilePreviewModal';
-
+import GedExplorer, { flattenFolderIds } from '../components/GedExplorer';
 
 const DossiersPage = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -30,7 +30,33 @@ const DossiersPage = () => {
   const [missionDescription, setMissionDescription] = useState('');
   const [missionFile, setMissionFile] = useState(null);
   const [selectedDossierDocs, setSelectedDossierDocs] = useState([]);
+  const [missionDossierId, setMissionDossierId] = useState('');
+  const [authorizedDossierIds, setAuthorizedDossierIds] = useState([]);
   const [isSubmittingMission, setIsSubmittingMission] = useState(false);
+  const [operationalTree, setOperationalTree] = useState(null);
+
+  useEffect(() => {
+    if (createMissionModal && consultDossier) {
+      const fetchTree = async () => {
+        try {
+          const token = sessionStorage.getItem('adminToken');
+          const operationalDossier = consultDossier.subDossiers?.find(d => d.name === 'OPÉRATIONS & RÉALISATIONS');
+          if (operationalDossier) {
+            const res = await fetch(getSafeApiUrl(`/api/crm/dossiers/${operationalDossier.id}/tree`), {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+              const data = await res.json();
+              setOperationalTree(data);
+            }
+          }
+        } catch (e) { console.error(e); }
+      };
+      fetchTree();
+    } else {
+      setOperationalTree(null);
+    }
+  }, [createMissionModal, consultDossier]);
   
   // Dossier Creation State
   const [showCreateDossierModal, setShowCreateDossierModal] = useState(false);
@@ -63,7 +89,8 @@ const DossiersPage = () => {
     
     const urlDossiers = new URL(getSafeApiUrl('/api/crm/dossiers'));
     urlDossiers.searchParams.set('page', page);
-    urlDossiers.searchParams.set('limit', 4);
+    urlDossiers.searchParams.set('limit', 15);
+    urlDossiers.searchParams.set('rootOnly', 'true');
     if (searchQuery) urlDossiers.searchParams.set('search', searchQuery);
     if (filterStatus) urlDossiers.searchParams.set('status', filterStatus);
     if (filterRole) urlDossiers.searchParams.set('role', filterRole);
@@ -124,7 +151,9 @@ const DossiersPage = () => {
           assignedToId: missionAssignedTo,
           dossierId: consultDossier.id,
           echeance: missionEcheance,
-          attachment: attachmentFilename
+          attachment: attachmentFilename,
+          dossierMissionId: missionDossierId || null,
+          authorizedDossierIds: authorizedDossierIds
         })
       });
       
@@ -176,6 +205,8 @@ const DossiersPage = () => {
         setMissionEcheance('');
         setMissionFile(null);
         setSelectedDossierDocs([]);
+        setMissionDossierId('');
+        setAuthorizedDossierIds([]);
         fetchDossiers();
       } else {
         window.customAlert("Erreur lors de la création de la mission.");
@@ -495,9 +526,12 @@ const DossiersPage = () => {
         )}
 
 
-        {createMissionModal && (
+        {createMissionModal && (() => {
+          const operationalDossier = consultDossier?.subDossiers?.find(d => d.name === 'OPÉRATIONS & RÉALISATIONS');
+          const operationalSubFolders = operationalDossier ? [operationalDossier, ...(operationalDossier.subDossiers || [])] : [];
+          return (
           <div className="fade-in" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
-            <div style={{background: '#FFF', padding: '2rem', borderRadius: '8px', width: '90%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
+            <div style={{background: '#FFF', padding: '2rem', borderRadius: '8px', width: '90%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
               <h3 style={{marginTop: 0, marginBottom: '1.5rem', fontSize: '1.25rem', fontWeight: 600}}>Nouvelle Mission</h3>
               
               <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -505,6 +539,63 @@ const DossiersPage = () => {
                   <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet de la mission</label>
                   <input type="text" value={missionSubject} onChange={(e) => setMissionSubject(e.target.value)} placeholder="Sujet..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
                 </div>
+
+                {operationalTree && (
+                  <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '2rem'}}>
+                      <div>
+                        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>Dossier mission (Sélection unique)</label>
+                        <div style={{maxHeight: '300px', overflowY: 'auto'}}>
+                          <GedExplorer 
+                            tree={operationalTree} 
+                            multiSelect={false}
+                            selectedId={missionDossierId} 
+                            onSelectId={setMissionDossierId} 
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>Dossiers autorisés (Sélection multiple avec sous-dossiers)</label>
+                        <div style={{maxHeight: '300px', overflowY: 'auto'}}>
+                          <GedExplorer 
+                            tree={operationalTree} 
+                            multiSelect={true}
+                            selectedIds={authorizedDossierIds} 
+                            onToggleChildren={(child) => {
+                              const ids = flattenFolderIds(child);
+                              if (authorizedDossierIds.includes(child.id)) {
+                                setAuthorizedDossierIds(prev => prev.filter(id => !ids.includes(id)));
+                              } else {
+                                setAuthorizedDossierIds(prev => Array.from(new Set([...prev, ...ids])));
+                              }
+                            }} 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    {authorizedDossierIds.length > 0 && (() => {
+                      const getNames = (folder, ids) => {
+                        let names = [];
+                        if (ids.includes(folder.id)) names.push(folder.name);
+                        if (folder.subDossiers) {
+                          folder.subDossiers.forEach(sub => names = [...names, ...getNames(sub, ids)]);
+                        }
+                        return names;
+                      };
+                      const selectedNames = getNames(operationalTree, authorizedDossierIds);
+                      return (
+                        <div style={{padding: '0.75rem', background: '#e0f2fe', borderRadius: '8px', fontSize: '0.875rem', border: '1px solid #bae6fd'}}>
+                          <strong style={{display: 'block', marginBottom: '0.25rem', color: '#0369a1'}}>Panier des dossiers autorisés :</strong>
+                          <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem'}}>
+                            {selectedNames.map((name, i) => (
+                              <span key={i} style={{background: '#FFF', color: '#0369a1', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 500, border: '1px solid #7dd3fc'}}>{name}</span>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                )}
                 
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                   <div>
@@ -570,12 +661,13 @@ const DossiersPage = () => {
               </div>
               
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
-                <button type="button" onClick={() => { setCreateMissionModal(false); setSelectedDossierDocs([]); }} className="btn btn-outline" disabled={isSubmittingMission}>Annuler</button>
+                <button type="button" onClick={() => { setCreateMissionModal(false); setSelectedDossierDocs([]); setMissionDossierId(''); setAuthorizedDossierIds([]); }} className="btn btn-outline" disabled={isSubmittingMission}>Annuler</button>
                 <button type="button" onClick={handleCreateMission} disabled={isSubmittingMission} className="btn btn-primary">{isSubmittingMission ? 'Création...' : 'Créer la mission'}</button>
               </div>
             </div>
           </div>
-        )}
+          );
+        })()}
 
         <SmsModal 
           isOpen={showSmsModal} 

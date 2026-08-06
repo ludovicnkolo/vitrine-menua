@@ -7,8 +7,9 @@ import SmsModal from '../components/SmsModal';
 import TaskConsultModal from '../components/TaskConsultModal';
 import AttachmentChips from '../components/AttachmentChips';
 import AttachmentSelect from '../components/AttachmentSelect';
-import FeedbackModal from '../components/FeedbackModal';
 import FeedbackThread from '../components/FeedbackThread';
+import FeedbackModal from '../components/FeedbackModal';
+import GedExplorer from '../components/GedExplorer';
 
 const getSubjectFromTask = (desc) => {
   if (!desc) return 'Sans objet';
@@ -142,6 +143,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const [newTaskMessage, setNewTaskMessage] = useState('');
   const [newTaskAssignedTo, setNewTaskAssignedTo] = useState('');
   const [newTaskEcheance, setNewTaskEcheance] = useState('');
+  const [selectedDossierTacheId, setSelectedDossierTacheId] = useState('');
+  const [selectedAuthorizedTacheIds, setSelectedAuthorizedTacheIds] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchData = async () => {
@@ -152,7 +155,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       
       const urlTasks = new URL(getSafeApiUrl(mode === "MISSION" ? `/api/crm/tasks` : `/api/crm/taches`));
       urlTasks.searchParams.append('page', page);
-      urlTasks.searchParams.append('limit', '5');
+      urlTasks.searchParams.append('limit', '15');
       urlTasks.searchParams.append('status', filterStatus);
       urlTasks.searchParams.append('search', searchQuery);
 
@@ -335,7 +338,9 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           description: `Objet: ${newTaskSubject}\n\nConsignes: ${newTaskMessage}`,
           assignedToId: newTaskAssignedTo,
           echeance: newTaskEcheance,
-          attachment: attachmentName
+          attachment: attachmentName,
+          dossierTacheId: selectedDossierTacheId,
+          authorizedDossierIds: selectedAuthorizedTacheIds
         })
       });
       
@@ -348,6 +353,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         setNewTaskSubject('');
         setNewTaskMessage('');
         setNewTaskEcheance('');
+        setSelectedDossierTacheId('');
+        setSelectedAuthorizedTacheIds([]);
         fetchData();
       } else {
         setErrorMsg("Erreur lors de la création de la tâche.");
@@ -413,6 +420,73 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               <label htmlFor="new-task-mission-associee" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Mission associée</label>
               <input id="new-task-mission-associee" type="text" value={consultTask?.reference || consultTask?.id || ''} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-muted)'}} />
             </div>
+
+            {/* Dossiers liés à la tâche (GED) */}
+            {consultTask && (consultTask.dossierMission || consultTask.dossier) && (
+              <div style={{display: 'flex', gap: '1rem', marginTop: '1rem', marginBottom: '1rem'}}>
+                <div style={{flex: 1}}>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
+                    Dossier tâche (Opérationnel) *
+                  </label>
+                  <GedExplorer 
+                    tree={{ 
+                      name: 'Dossier de la mission', 
+                      id: 'root',
+                      subDossiers: [
+                        consultTask.dossierMission || consultTask.dossier
+                      ].filter(Boolean)
+                    }}
+                    hideBreadcrumb={false}
+                    multiSelect={false}
+                    selectedId={selectedDossierTacheId}
+                    onSelectId={(id) => setSelectedDossierTacheId(id)}
+                  />
+                </div>
+
+                <div style={{flex: 1}}>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
+                    Dossiers autorisés
+                  </label>
+                  <GedExplorer 
+                    tree={{ 
+                      name: 'Dossiers autorisés de la mission',
+                      id: 'root',
+                      subDossiers: (consultTask.authorizedDossiers || []).filter(Boolean)
+                    }}
+                    hideBreadcrumb={false}
+                    multiSelect={true}
+                    selectedIds={selectedAuthorizedTacheIds}
+                    onSelectId={(id, multi) => {
+                       if (selectedAuthorizedTacheIds.includes(id)) {
+                          setSelectedAuthorizedTacheIds(selectedAuthorizedTacheIds.filter(x => x !== id));
+                       } else {
+                          setSelectedAuthorizedTacheIds([...selectedAuthorizedTacheIds, id]);
+                       }
+                    }}
+                    onToggleChildren={(child) => {
+                       if (selectedAuthorizedTacheIds.includes(child.id)) {
+                          setSelectedAuthorizedTacheIds(selectedAuthorizedTacheIds.filter(x => x !== child.id));
+                       } else {
+                          setSelectedAuthorizedTacheIds([...selectedAuthorizedTacheIds, child.id]);
+                       }
+                    }}
+                  />
+                  {selectedAuthorizedTacheIds.length > 0 && (
+                    <div style={{marginTop: '1rem', padding: '1rem', background: '#e0f2fe', borderRadius: '8px', border: '1px solid #bae6fd'}}>
+                      <h4 style={{margin: '0 0 0.5rem 0', fontSize: '0.875rem', color: '#0369a1'}}>Panier des dossiers autorisés ({selectedAuthorizedTacheIds.length})</h4>
+                      <ul style={{margin: 0, paddingLeft: '1.5rem', fontSize: '0.875rem', color: '#0c4a6e'}}>
+                        {selectedAuthorizedTacheIds.map(id => {
+                          const rootDoss = consultTask.dossierMission || consultTask.dossier;
+                          const flatAuthorized = (consultTask.authorizedDossiers || []).flatMap(d => [d, ...(d.subDossiers || [])]);
+                          const d = flatAuthorized.find(x => x.id === id) || (rootDoss?.id === id ? rootDoss : null) || rootDoss?.subDossiers?.find(x => x.id === id);
+                          return <li key={id}>{d ? d.name : id}</li>;
+                        })}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div>
               <label htmlFor="new-task-attachment" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
@@ -627,6 +701,20 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   : (consultTask.mission?.reference || consultTask.missionId)}
               </span>
             </div>
+            {mode !== 'MISSION' && consultTask.dossierTache && (
+              <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+                <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Dossier tâche :</strong>
+                <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.dossierTache.name}</span>
+              </div>
+            )}
+            {mode !== 'MISSION' && consultTask.authorizedDossiers && consultTask.authorizedDossiers.length > 0 && (
+              <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+                <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Dossiers autorisés :</strong>
+                <span style={{fontWeight: 500, color: 'var(--text-main)'}}>
+                  {consultTask.authorizedDossiers.map(d => d.name).join(', ')}
+                </span>
+              </div>
+            )}
           </div>
 
           <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
@@ -701,7 +789,14 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         <SmsModal 
           isOpen={showSmsModal} 
           onClose={() => setShowSmsModal(false)} 
-          contextData={{ missionId: consultTask.id, dossierId: consultTask.dossierId }} 
+          contextData={{ 
+            missionId: mode === 'MISSION' ? consultTask.id : consultTask.missionId,
+            dossierId: mode === 'MISSION' ? consultTask.dossierId : (consultTask.dossierTacheId || null),
+            tacheId: mode === 'TACHE' ? consultTask.id : null,
+            createdById: consultTask.createdById,
+            assignedToId: consultTask.assignedToId,
+            reference: consultTask.reference
+          }} 
         />
         
         <TaskConsultModal task={localConsultSubTask} onClose={() => setLocalConsultSubTask(null)} />

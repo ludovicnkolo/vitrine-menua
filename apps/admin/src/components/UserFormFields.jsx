@@ -72,14 +72,6 @@ const UserFormFields = ({ user, setUser, rolesList, isEdit, setSelectedFile }) =
 
       <FormField label="Description profil" type="textarea" value={user.profile} onChange={handleChange('profile')} />
 
-      <div>
-        <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>
-          Pièce d'identité ({isEdit ? 'Upload nouvelle pièce' : 'Upload'})
-        </label>
-        <input type="file" onChange={(e) => setSelectedFile(e.target.files[0])}
-          style={{ width: '100%', padding: '0.5rem', background: 'var(--bg-color)', borderRadius: '4px', border: '1px dashed var(--text-muted)' }} />
-        {isEdit && <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>Fichier actuel : document_identite.pdf</div>}
-      </div>
     </>
   );
 };

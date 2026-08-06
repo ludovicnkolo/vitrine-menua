@@ -98,12 +98,12 @@ function App() {
     window.fetch = async (...args) => {
       try {
         const response = await originalFetch(...args);
-        // Si l'utilisateur a été rendu inactif, le backend renverra 401 ou 403.
-        if (response.status === 401 || response.status === 403) {
+        // Si l'utilisateur a été rendu inactif ou son token est expiré, le backend renverra 401.
+        if (response.status === 401) {
           const clone = response.clone();
           try {
             const data = await clone.json();
-            if (data?.action === 'FORCE_LOGOUT' || response.status === 401 || response.status === 403) {
+            if (data?.action === 'FORCE_LOGOUT' || response.status === 401) {
               console.error("Accès révoqué ou session expirée. Déconnexion forcée.");
               handleLogout();
             }

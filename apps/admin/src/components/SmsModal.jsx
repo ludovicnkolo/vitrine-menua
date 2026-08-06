@@ -9,6 +9,14 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
   const [content, setContent] = useState('');
   const [targetUserId, setTargetUserId] = useState('');
   const [file, setFile] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    try {
+      const userStr = sessionStorage.getItem('adminUser');
+      if (userStr) setCurrentUser(JSON.parse(userStr));
+    } catch(e) {}
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -29,6 +37,21 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
       fetchUsers();
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen && contextData && currentUser) {
+      if (contextData.assignedToId && contextData.createdById) {
+        if (currentUser.id === contextData.assignedToId) setTargetUserId(contextData.createdById);
+        else setTargetUserId(contextData.assignedToId);
+      }
+      if (contextData.reference) {
+        setSubject(`Message concernant ${contextData.reference}`);
+      }
+    }
+  }, [isOpen, contextData, currentUser]);
+
+  const isAutoAssigned = !!(contextData?.assignedToId && contextData?.createdById);
+  const isAutoSubject = !!contextData?.reference;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,6 +94,8 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
         attachment: attachmentStr,
         dossierId: contextData?.dossierId || null,
         missionId: contextData?.missionId || null,
+        tacheId: contextData?.tacheId || null,
+        assignedToId: targetUserId
       };
 
       const res = await fetch(getSafeApiUrl(`/api/crm/messages/interne`), {
@@ -90,7 +115,8 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
         setTargetUserId('');
         setFile(null);
       } else {
-        window.customAlert("Erreur lors de l'envoi du SMS.");
+        const errData = await res.json().catch(() => ({}));
+        window.customAlert(`Erreur lors de l'envoi du SMS: ${errData.details || errData.error || res.statusText}`);
       }
     } catch (err) {
       console.error(err);
@@ -111,6 +137,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
         </div>
 
         <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+          {!isAutoAssigned && (
           <div>
             <label htmlFor="smsDestinataire" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Destinataire (Collaborateur)</label>
             <select id="smsDestinataire" value={targetUserId} onChange={(e) => setTargetUserId(e.target.value)} required className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
@@ -120,11 +147,14 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
               ))}
             </select>
           </div>
+          )}
 
+          {!isAutoSubject && (
           <div>
             <label htmlFor="smsSubject" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet</label>
             <input id="smsSubject" type="text" value={subject} onChange={(e) => setSubject(e.target.value)} required placeholder="Sujet du SMS" className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}} />
           </div>
+          )}
 
           <div>
             <label htmlFor="smsContent" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Contenu du message</label>

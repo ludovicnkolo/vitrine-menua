@@ -405,6 +405,8 @@ export default function DocumentsPage() {
                       style={{ width: '150px', background: '#F8FAFC', border: '1px solid var(--border)', padding: '1rem 0.5rem', borderRadius: '0.5rem', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', transition: 'background 0.2s, border-color 0.2s' }}
                       onMouseOver={(e) => { e.currentTarget.style.background = '#F1F5F9'; e.currentTarget.style.borderColor = 'var(--primary)'; }}
                       onMouseOut={(e) => { e.currentTarget.style.background = '#F8FAFC'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+                      onFocus={(e) => { e.currentTarget.style.background = '#F1F5F9'; e.currentTarget.style.borderColor = 'var(--primary)'; }}
+                      onBlur={(e) => { e.currentTarget.style.background = '#F8FAFC'; e.currentTarget.style.borderColor = 'var(--border)'; }}
                     >
                       <Folder size={40} color="#eab308" fill="#eab308" />
                       <div style={{ textAlign: 'center', wordBreak: 'normal', overflowWrap: 'anywhere', fontWeight: '500', color: 'var(--text-main)', fontSize: '0.75rem', width: '100%' }}>{folder.name}</div>
@@ -450,6 +452,8 @@ export default function DocumentsPage() {
                 style={{ width: '150px', background: '#F8FAFC', border: '1px solid var(--border)', padding: '1rem 0.5rem', borderRadius: '0.5rem', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', transition: 'background 0.2s, border-color 0.2s' }}
                 onMouseOver={(e) => { e.currentTarget.style.background = '#F1F5F9'; e.currentTarget.style.borderColor = 'var(--primary)'; }}
                 onMouseOut={(e) => { e.currentTarget.style.background = '#F8FAFC'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+                onFocus={(e) => { e.currentTarget.style.background = '#F1F5F9'; e.currentTarget.style.borderColor = 'var(--primary)'; }}
+                onBlur={(e) => { e.currentTarget.style.background = '#F8FAFC'; e.currentTarget.style.borderColor = 'var(--border)'; }}
               >
                 <Folder size={40} color="#eab308" fill="#eab308" />
                 <div style={{ textAlign: 'center', wordBreak: 'normal', overflowWrap: 'anywhere', fontWeight: '500', color: 'var(--text-main)', fontSize: '0.75rem', width: '100%' }}>{folder.name}</div>
@@ -484,6 +488,8 @@ export default function DocumentsPage() {
             zIndex: 9999, minWidth: '180px', padding: '0.5rem 0'
           }}
           onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+          role="presentation"
         >
           {contextMenu.type === 'empty' && (
             <>
@@ -492,6 +498,8 @@ export default function DocumentsPage() {
                 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--text-main)' }}
                 onMouseOver={(e) => e.currentTarget.style.background = '#F1F5F9'}
                 onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                onFocus={(e) => e.currentTarget.style.background = '#F1F5F9'}
+                onBlur={(e) => e.currentTarget.style.background = 'transparent'}
               >
                 <Folder size={16} /> Nouveau sous-dossier
               </button>
@@ -501,6 +509,8 @@ export default function DocumentsPage() {
                   style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--text-main)' }}
                   onMouseOver={(e) => e.currentTarget.style.background = '#F1F5F9'}
                   onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                  onFocus={(e) => e.currentTarget.style.background = '#F1F5F9'}
+                  onBlur={(e) => e.currentTarget.style.background = 'transparent'}
                 >
                   <File size={16} /> Ajouter un fichier
                 </button>
@@ -515,6 +525,8 @@ export default function DocumentsPage() {
                 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--text-main)' }}
                 onMouseOver={(e) => e.currentTarget.style.background = '#F1F5F9'}
                 onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                onFocus={(e) => e.currentTarget.style.background = '#F1F5F9'}
+                onBlur={(e) => e.currentTarget.style.background = 'transparent'}
               >
                 <Folder size={16} /> Ouvrir
               </button>
@@ -523,6 +535,8 @@ export default function DocumentsPage() {
                 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--text-main)' }}
                 onMouseOver={(e) => e.currentTarget.style.background = '#F1F5F9'}
                 onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                onFocus={(e) => e.currentTarget.style.background = '#F1F5F9'}
+                onBlur={(e) => e.currentTarget.style.background = 'transparent'}
               >
                 <Edit size={16} /> Renommer
               </button>
@@ -531,6 +545,8 @@ export default function DocumentsPage() {
                 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--danger)' }}
                 onMouseOver={(e) => e.currentTarget.style.background = '#FEF2F2'}
                 onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                onFocus={(e) => e.currentTarget.style.background = '#FEF2F2'}
+                onBlur={(e) => e.currentTarget.style.background = 'transparent'}
               >
                 <Trash size={16} /> Supprimer
               </button>
@@ -544,6 +560,8 @@ export default function DocumentsPage() {
                 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--text-main)' }}
                 onMouseOver={(e) => e.currentTarget.style.background = '#F1F5F9'}
                 onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                onFocus={(e) => e.currentTarget.style.background = '#F1F5F9'}
+                onBlur={(e) => e.currentTarget.style.background = 'transparent'}
               >
                 <FileText size={16} /> Ouvrir le fichier
               </button>
@@ -552,6 +570,8 @@ export default function DocumentsPage() {
                 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--danger)' }}
                 onMouseOver={(e) => e.currentTarget.style.background = '#FEF2F2'}
                 onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                onFocus={(e) => e.currentTarget.style.background = '#FEF2F2'}
+                onBlur={(e) => e.currentTarget.style.background = 'transparent'}
               >
                 <Trash size={16} /> Supprimer
               </button>

@@ -26,6 +26,9 @@ const GedExplorer = ({ tree, multiSelect, selectedIds = [], selectedId, onSelect
             <React.Fragment key={folder.id}>
               <span 
                 onClick={() => setPath(path.slice(0, index + 1))}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setPath(path.slice(0, index + 1)); } }}
+                tabIndex={0}
+                role="button"
                 style={{cursor: 'pointer', color: 'var(--primary)', fontWeight: index === path.length - 1 ? 600 : 400}}
               >
                 {folder.name}
@@ -58,6 +61,18 @@ const GedExplorer = ({ tree, multiSelect, selectedIds = [], selectedId, onSelect
                      multiSelect ? onToggleChildren(child) : onSelectId(child.id);
                    }
                  }}
+                 onKeyDown={(e) => {
+                   if (e.key === 'Enter' || e.key === ' ') {
+                     e.preventDefault();
+                     if (!hideBreadcrumb) {
+                       setPath([...path, child]);
+                     } else {
+                       multiSelect ? onToggleChildren(child) : onSelectId(child.id);
+                     }
+                   }
+                 }}
+                 tabIndex={0}
+                 role="button"
                  style={{border: isSelected ? '2px solid var(--primary)' : '1px solid #e2e8f0', borderRadius: '8px', padding: '1.5rem 0.5rem', cursor: 'pointer', textAlign: 'center', background: isSelected ? '#e0f2fe' : '#FFF', transition: 'all 0.2s', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}
                >
                  <Folder size={40} style={{color: '#eab308'}} fill={isSelected ? '#fef08a' : 'none'} />

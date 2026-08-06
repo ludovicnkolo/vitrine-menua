@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-03T18:20:13.226Z",
-      "updatedAt": "2026-08-06T13:09:54.141Z"
+      "updatedAt": "2026-08-06T17:38:22.288Z"
     },
     {
       "id": "51860697-2832-40da-a067-fd805d545116",
@@ -16,7 +16,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-08-03T18:20:13.233Z",
-      "updatedAt": "2026-08-06T13:09:54.153Z"
+      "updatedAt": "2026-08-06T17:38:22.296Z"
     },
     {
       "id": "7117eded-907b-44ea-a27c-fb3d64ff3e48",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-08-03T18:20:13.237Z",
-      "updatedAt": "2026-08-06T13:09:54.170Z"
+      "updatedAt": "2026-08-06T17:38:22.302Z"
     },
     {
       "id": "67213b1a-e3ff-4d3f-b447-c808302f9511",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-08-03T18:20:13.242Z",
-      "updatedAt": "2026-08-06T13:09:54.182Z"
+      "updatedAt": "2026-08-06T17:38:22.307Z"
     },
     {
       "id": "2eee1d66-4117-4bdb-9e34-1b6d60239a39",
@@ -43,14 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-03T18:20:13.247Z",
-      "updatedAt": "2026-08-06T13:09:54.189Z"
+      "updatedAt": "2026-08-06T17:38:22.312Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$aNuT2oe6YsBEjx7UwWIEhu.IO1.3LVUIoNdoJBXcAUvPSWPRUu5pC",
+      "password": "$2a$10$S5zLimtMAuX0omsaX2bM4uqJGtfMfvBucg.S12Lf6taAk87qg5kWe",
       "name": "Rosette Fouelefack",
       "roleId": "d9a3ad86-d614-430d-9f46-bf5649d40421",
       "telephone": "+33659207511",
@@ -63,7 +63,7 @@
       "resetTokenExpiry": null,
       "isBlocked": false,
       "createdAt": "2026-08-03T18:20:13.372Z",
-      "updatedAt": "2026-08-06T13:09:54.347Z"
+      "updatedAt": "2026-08-06T17:38:22.440Z"
     },
     {
       "id": "db279b85-69ec-4208-9423-b6958e43198e",
@@ -1555,6 +1555,17 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-08-06T13:08:28.898Z"
+    },
+    {
+      "id": "6e6c8139-884a-40ab-b3dd-24dd03640e9d",
+      "userId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-08-06T15:04:24.113Z"
     }
   ],
   "messagePersonnels": [
@@ -2417,6 +2428,168 @@
       "attachment": null,
       "createdAt": "2026-08-06T13:09:33.275Z",
       "receivedAt": "2026-08-06T13:09:33.275Z",
+      "dossierId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "missionId": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
+      "assignedToId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "tacheId": "877208d5-a90f-4d5c-8440-1ec88dc6bd40"
+    },
+    {
+      "id": "9444005b-7923-4e80-bbd0-637bda74641e",
+      "messageId": "6c9df1e0-c41d-4670-b44b-064fbfcb0c39",
+      "type": "INTERNE",
+      "subType": "SMS Collaborateur pour Rosette Fouelefack",
+      "status": "TRAITE",
+      "nomPrenom": "Repellendus Veniam",
+      "email": "ludovicnkolo01@gmail.com",
+      "objet": "Message concernant TCH-02",
+      "bodyText": "bonjour monsieur ",
+      "attachment": null,
+      "createdAt": "2026-08-06T13:40:05.013Z",
+      "receivedAt": "2026-08-06T13:40:05.013Z",
+      "dossierId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "missionId": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
+      "assignedToId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "tacheId": "877208d5-a90f-4d5c-8440-1ec88dc6bd40"
+    },
+    {
+      "id": "247b77dd-55c8-43f4-8645-22762d4ac5aa",
+      "messageId": "1320f308-94a6-469b-aef2-2a8cc32b2dd3",
+      "type": "INTERNE",
+      "subType": "Réponse à Repellendus Veniam",
+      "status": "EN_ATTENTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "Message concernant TCH-02",
+      "bodyText": "oui salut ",
+      "attachment": null,
+      "createdAt": "2026-08-06T13:40:43.587Z",
+      "receivedAt": "2026-08-06T13:40:43.587Z",
+      "dossierId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "missionId": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
+      "assignedToId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "tacheId": "877208d5-a90f-4d5c-8440-1ec88dc6bd40"
+    },
+    {
+      "id": "84ae40d3-b350-4b00-832e-b46b184fe8f1",
+      "messageId": "3259e3e5-778b-4919-ac11-ed94fcc3bef6",
+      "type": "INTERNE",
+      "subType": "SMS Collaborateur pour Rosette Fouelefack",
+      "status": "TRAITE",
+      "nomPrenom": "Repellendus Veniam",
+      "email": "ludovicnkolo01@gmail.com",
+      "objet": "Message concernant TCH-01",
+      "bodyText": "sanvknkvnskvskj",
+      "attachment": null,
+      "createdAt": "2026-08-06T15:04:42.340Z",
+      "receivedAt": "2026-08-06T15:04:42.340Z",
+      "dossierId": "4205af93-e6f6-49ae-a34f-201cf076a9f7",
+      "missionId": "cf815e1c-2411-44e2-a676-c6d9bac41447",
+      "assignedToId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "tacheId": "050ec952-0268-4b4f-b581-ef6e408cb6f8"
+    },
+    {
+      "id": "8b5698fc-2b72-4372-b161-668c0631fc46",
+      "messageId": "16b317cb-553e-4780-a192-fbe3a8a649bd",
+      "type": "INTERNE",
+      "subType": "Réponse à Repellendus Veniam",
+      "status": "EN_ATTENTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "Message concernant TCH-01",
+      "bodyText": "fannvsva v kjsabvsibdv",
+      "attachment": null,
+      "createdAt": "2026-08-06T15:05:11.051Z",
+      "receivedAt": "2026-08-06T15:05:11.051Z",
+      "dossierId": "4205af93-e6f6-49ae-a34f-201cf076a9f7",
+      "missionId": "cf815e1c-2411-44e2-a676-c6d9bac41447",
+      "assignedToId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "tacheId": "050ec952-0268-4b4f-b581-ef6e408cb6f8"
+    },
+    {
+      "id": "7590f874-7f0f-4577-8de2-c6d03b15a3d6",
+      "messageId": "eb8d1c14-fe22-4fc7-ab70-7f6d25622480",
+      "type": "INTERNE",
+      "subType": "Réponse à Repellendus Veniam",
+      "status": "EN_ATTENTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "Message concernant TCH-01",
+      "bodyText": "fannvsva v kjsabvsibdv",
+      "attachment": null,
+      "createdAt": "2026-08-06T15:13:57.245Z",
+      "receivedAt": "2026-08-06T15:13:57.245Z",
+      "dossierId": "4205af93-e6f6-49ae-a34f-201cf076a9f7",
+      "missionId": "cf815e1c-2411-44e2-a676-c6d9bac41447",
+      "assignedToId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "tacheId": "050ec952-0268-4b4f-b581-ef6e408cb6f8"
+    },
+    {
+      "id": "ae34d520-088a-4084-a903-32d83a90f42e",
+      "messageId": "51973be8-b61e-403d-95ae-4fd529b489c5",
+      "type": "INTERNE",
+      "subType": "SMS Collaborateur pour Rosette Fouelefack",
+      "status": "TRAITE",
+      "nomPrenom": "Repellendus Veniam",
+      "email": "ludovicnkolo01@gmail.com",
+      "objet": "Message concernant TCH-02",
+      "bodyText": "hvgycg gvyt6d6 gvyt7y",
+      "attachment": null,
+      "createdAt": "2026-08-06T15:29:09.781Z",
+      "receivedAt": "2026-08-06T15:29:09.781Z",
+      "dossierId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "missionId": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
+      "assignedToId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "tacheId": "877208d5-a90f-4d5c-8440-1ec88dc6bd40"
+    },
+    {
+      "id": "b8662d8d-6027-4fd3-bb0d-1429e94c7263",
+      "messageId": "bc70498e-d0d8-437d-9c3e-dd25baeaf10e",
+      "type": "INTERNE",
+      "subType": "Réponse à Repellendus Veniam",
+      "status": "TRAITE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "Message concernant TCH-02",
+      "bodyText": "b hbhg",
+      "attachment": null,
+      "createdAt": "2026-08-06T15:29:38.511Z",
+      "receivedAt": "2026-08-06T15:29:38.511Z",
+      "dossierId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "missionId": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
+      "assignedToId": "db279b85-69ec-4208-9423-b6958e43198e",
+      "tacheId": "877208d5-a90f-4d5c-8440-1ec88dc6bd40"
+    },
+    {
+      "id": "32de9fcf-0ec8-4c95-8940-91d53b7b4ecd",
+      "messageId": "36517a6f-a67c-42e2-bf90-260c95ef1844",
+      "type": "INTERNE",
+      "subType": "Réponse à Rosette Fouelefack",
+      "status": "TRAITE",
+      "nomPrenom": "Repellendus Veniam",
+      "email": "ludovicnkolo01@gmail.com",
+      "objet": "Message concernant TCH-02",
+      "bodyText": "imbecile",
+      "attachment": null,
+      "createdAt": "2026-08-06T15:47:59.697Z",
+      "receivedAt": "2026-08-06T15:47:59.697Z",
+      "dossierId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
+      "missionId": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
+      "assignedToId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",
+      "tacheId": "877208d5-a90f-4d5c-8440-1ec88dc6bd40"
+    },
+    {
+      "id": "3e5af80d-cef2-40f0-940e-cd20dd254ebd",
+      "messageId": "b36029d4-9acd-4719-acdc-9c9531508f50",
+      "type": "INTERNE",
+      "subType": "Réponse à Repellendus Veniam",
+      "status": "EN_ATTENTE",
+      "nomPrenom": "Repellendus Veniam",
+      "email": "ludovicnkolo01@gmail.com",
+      "objet": "Message concernant TCH-02",
+      "bodyText": "je voulais des eclaircissement sur le role des client svp",
+      "attachment": null,
+      "createdAt": "2026-08-06T16:48:42.036Z",
+      "receivedAt": "2026-08-06T16:48:42.036Z",
       "dossierId": "1f0a1b99-1996-46dc-9829-32031e8cd7b6",
       "missionId": "fcf4956f-8878-4c57-be9d-e64589e82dd0",
       "assignedToId": "57958cee-da2a-4e4c-a6d1-c0dda7b95067",

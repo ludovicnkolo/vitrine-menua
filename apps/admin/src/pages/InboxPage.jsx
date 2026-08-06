@@ -1,7 +1,7 @@
 import { getSafeApiUrl, apiFetch, uploadFile, formatDate, extractFieldFromHtml, extractBlockFromHtml } from '../utils/helpers';
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  MoreVertical, CheckCircle, AlertCircle, Mail, Pencil, Eye, Trash, Files, Paperclip, FileText
+  MoreVertical, CheckCircle, AlertCircle, Mail, Pencil, Eye, Trash, Files, Paperclip, FileText, Send
 } from 'lucide-react';
 import TabsNavigation from '../components/TabsNavigation';
 import ActionDropdown from '../components/ActionDropdown';
@@ -288,7 +288,7 @@ const InboxPage = ({ userRole }) => {
 
         const replyRes = await apiFetch(`/api/crm/messages/interne`, 'POST', {
             subType: `Réponse à ${processMsg.nomPrenom}`,
-            objet: taskSubject,
+            objet: processMsg.sourceRef ? `Message concernant ${processMsg.sourceRef}` : (processMsg.objet || 'Réponse'),
             bodyText: taskDescription,
             attachment: finalAttachment,
             dossierId: processMsg.dossierId || null,
@@ -315,12 +315,15 @@ const InboxPage = ({ userRole }) => {
 
       fetchMessages();
       showToast(tab === 'interne' ? 'Réponse envoyée avec succès !' : 'Dossier créé et message traité avec succès !', 'success');
-      setCreateTaskModal(false);
+      
+      if (tab !== 'interne') {
+        setCreateTaskModal(false);
+        setProcessMsg(null);
+      }
+      
       setTaskNewDossierName('');
       setTaskDossierSection('');
       setTaskDossierCible('');
-      setIncludeAttachedFile(false);
-      setProcessMsg(null);
       setNewTaskFile(null);
       setDossierFile(null);
       setSelectedMsgDocs([]);
@@ -329,7 +332,7 @@ const InboxPage = ({ userRole }) => {
       setTaskEcheance('');
     } catch (error) {
       console.error(error);
-      showToast('Une erreur est survenue.', 'error');
+      showToast(`Erreur inattendue: ${error.message || 'Une erreur est survenue.'}`, 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -618,7 +621,33 @@ const InboxPage = ({ userRole }) => {
               }
 
               if (tab === 'interne') {
-                return messages.map((m, i) => renderMessageRow(
+                const groupedMessages = [];
+                const seenGroups = new Set();
+                
+                messages.forEach(m => {
+                  const groupId = m.tacheId || m.missionId || m.dossierId || m.id;
+                  if (!seenGroups.has(groupId)) {
+                    seenGroups.add(groupId);
+                    
+                    // Find all messages in this group
+                    const groupMsgs = messages.filter(x => 
+                      (x.tacheId && x.tacheId === groupId) || 
+                      (x.missionId && x.missionId === groupId) || 
+                      (x.dossierId && x.dossierId === groupId) || 
+                      x.id === groupId
+                    );
+                    
+                    // The overall status is defined by the latest message in the thread
+                    const latestMsg = groupMsgs.reduce((prev, current) => 
+                      (new Date(prev.createdAt) > new Date(current.createdAt)) ? prev : current
+                    );
+                    
+                    // Replace the status with the latest message's status
+                    groupedMessages.push({ ...latestMsg, originalMessage: m });
+                  }
+                });
+
+                return groupedMessages.map((m, i) => renderMessageRow(
                   m, i, m.nomPrenom || 'Système', m.email || '-',
                   m.sourceType || m.subType || 'Interne', '#F1F5F9', '#64748B',
                   <span title={m.sourceRef || m.formulaireId || m.id}>{m.sourceRef || (m.formulaireId ? m.formulaireId.split('-')[0] : m.id)}</span>,
@@ -762,37 +791,62 @@ const InboxPage = ({ userRole }) => {
                     return 'Message / Lettre de motivation';
                   })()}
                 </span>
-                <div style={{background: 'var(--bg-light)', padding: '1rem', borderRadius: '8px', flex: 1, minHeight: '120px', maxHeight: '500px', overflowY: 'auto', overflowX: 'hidden'}}>
+                <div style={{background: 'var(--bg-light)', padding: '1rem', borderRadius: '8px', flex: 1, minHeight: '120px', maxHeight: '500px', overflowY: 'auto', overflowX: 'hidden', display: 'flex', flexDirection: 'column'}}>
                   {tab === 'interne' ? (
-                    <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                      {conversationMessages.map(m => {
-                        const isMe = m.email === currentUser?.email || m.nomPrenom === currentUser?.name;
-                        return (
-                          <div key={m.id} style={{
-                            alignSelf: isMe ? 'flex-end' : 'flex-start',
-                            background: isMe ? 'var(--primary)' : '#FFF',
-                            color: isMe ? '#FFF' : 'var(--text-main)',
-                            padding: '1rem',
-                            borderRadius: '12px',
-                            border: isMe ? 'none' : '1px solid var(--border)',
-                            maxWidth: '80%',
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-                          }}>
-                            <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.75rem', color: isMe ? 'rgba(255,255,255,0.8)' : 'var(--text-muted)', gap: '1rem'}}>
-                              <strong>{m.nomPrenom}</strong>
-                              <span>{formatDate(m.createdAt)}</span>
-                            </div>
-                            <div style={{whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontSize: '0.9rem', lineHeight: '1.5'}}>
-                              {m.bodyText || (m.bodyHtml ? <div dangerouslySetInnerHTML={{ __html: m.bodyHtml }} /> : 'Aucun contenu.')}
-                            </div>
-                            {m.attachment && (
-                              <div style={{marginTop: '0.5rem'}}>
-                                <AttachmentSelect files={[m.attachment]} onPreview={setPreviewFile} />
+                    <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
+                      <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, paddingRight: '0.5rem'}}>
+                        {conversationMessages.map(m => {
+                          const isMe = m.email === currentUser?.email || m.nomPrenom === currentUser?.name;
+                          return (
+                            <div key={m.id} style={{
+                              alignSelf: isMe ? 'flex-end' : 'flex-start',
+                              background: isMe ? 'var(--primary)' : '#FFF',
+                              color: isMe ? '#FFF' : 'var(--text-main)',
+                              padding: '1rem',
+                              borderRadius: '12px',
+                              border: isMe ? 'none' : '1px solid var(--border)',
+                              maxWidth: '80%',
+                              boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                            }}>
+                              <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.75rem', color: isMe ? 'rgba(255,255,255,0.8)' : 'var(--text-muted)', gap: '1rem'}}>
+                                <strong>{m.nomPrenom}</strong>
+                                <span>{formatDate(m.createdAt)}</span>
                               </div>
-                            )}
-                          </div>
-                        );
-                      })}
+                              <div style={{whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontSize: '0.9rem', lineHeight: '1.5'}}>
+                                {m.bodyText || (m.bodyHtml ? <div dangerouslySetInnerHTML={{ __html: m.bodyHtml }} /> : 'Aucun contenu.')}
+                              </div>
+                              {m.attachment && (
+                                <div style={{marginTop: '0.5rem'}}>
+                                  <AttachmentSelect files={[m.attachment]} onPreview={setPreviewFile} />
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {getDisplayStatus(processMsg.status) !== 'TRAITÉ' && (
+                        <div style={{display: 'flex', gap: '0.75rem', marginTop: '1.5rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
+                          <input 
+                            type="text" 
+                            placeholder="Écrivez votre message..." 
+                            value={taskDescription}
+                            onChange={(e) => setTaskDescription(e.target.value)}
+                            onKeyDown={(e) => { if (e.key === 'Enter' && taskDescription.trim() && !isSubmitting) handleCreateTask(); }}
+                            style={{flex: 1, padding: '0.75rem 1.25rem', borderRadius: '24px', border: '1px solid var(--border)', outline: 'none', background: '#FFF', fontSize: '0.95rem'}}
+                            disabled={isSubmitting}
+                          />
+                          <button 
+                            type="button" 
+                            onClick={handleCreateTask}
+                            disabled={isSubmitting || !taskDescription.trim()}
+                            style={{background: 'var(--primary)', color: '#FFF', border: 'none', borderRadius: '50%', width: '45px', height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', opacity: (isSubmitting || !taskDescription.trim()) ? 0.5 : 1}}
+                            title="Envoyer"
+                          >
+                            <Send size={18} />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div style={{whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'var(--text-main)', fontSize: '0.9rem', lineHeight: '1.5'}}>
@@ -812,16 +866,16 @@ const InboxPage = ({ userRole }) => {
               </div>
             </div>
             
-            <div style={{display: 'grid', gridTemplateColumns: '1fr 4fr', gap: '1.5rem', marginTop: '2rem'}}>
-              <div></div>
-              <div style={{display: 'flex', justifyContent: 'center', gap: '1rem'}}>
-                {tab === 'interne' ? (
-                  getDisplayStatus(processMsg.status) !== 'TRAITÉ' && <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline-primary">RÉPONDRE</button>
-                ) : (
-                  getDisplayStatus(processMsg.status) !== 'TRAITÉ' && <button type="button" onClick={() => setShowActionChoiceModal(true)} className="btn btn-outline-primary">DÉMARRER LE TRAITEMENT</button>
-                )}
+            {tab !== 'interne' && (
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 4fr', gap: '1.5rem', marginTop: '2rem'}}>
+                <div></div>
+                <div style={{display: 'flex', justifyContent: 'center', gap: '1rem'}}>
+                  {getDisplayStatus(processMsg.status) !== 'TRAITÉ' && (
+                    <button type="button" onClick={() => setShowActionChoiceModal(true)} className="btn btn-outline-primary">DÉMARRER LE TRAITEMENT</button>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}
@@ -910,7 +964,7 @@ const InboxPage = ({ userRole }) => {
         <div className="fade-in" style={{width: '100%', padding: '0'}}>
           <div className="" style={{width: '100%', padding: '0'}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-              <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setIncludeAttachedFile(false); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
+              <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); }} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
               <h3 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>{tab === 'interne' ? 'Répondre au message' : 'Nouveau Dossier'}</h3>
             </div>
             
@@ -1024,7 +1078,7 @@ const InboxPage = ({ userRole }) => {
             </div>
 
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem'}}>
-              <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setDossierFile(null); setSelectedMsgDocs([]); setIncludeAttachedFile(false); }} className="btn btn-outline" disabled={isSubmitting}>Annuler</button>
+              <button type="button" onClick={() => { setCreateTaskModal(false); setNewTaskFile(null); setDossierFile(null); setSelectedMsgDocs([]); }} className="btn btn-outline" disabled={isSubmitting}>Annuler</button>
               <button type="button" onClick={handleCreateTask} disabled={isSubmitting} className="btn btn-primary">
                 {(() => {
                   if (isSubmitting) return 'Traitement...';

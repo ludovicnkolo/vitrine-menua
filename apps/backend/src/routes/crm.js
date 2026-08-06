@@ -521,10 +521,10 @@ router.get('/dossiers', async (req, res) => {
     if (search) {
       const s = search.toLowerCase();
       where.OR = [
-        { id: { contains: s, mode: 'insensitive' } },
-        { reference: { contains: s, mode: 'insensitive' } },
-        { name: { contains: s, mode: 'insensitive' } },
-        { createdBy: { name: { contains: s, mode: 'insensitive' } } }
+        { id: { contains: s} },
+        { reference: { contains: s} },
+        { name: { contains: s} },
+        { createdBy: { name: { contains: s} } }
       ];
     }
     
@@ -825,12 +825,12 @@ router.get('/tasks', async (req, res) => {
     if (search) {
       const s = search.toLowerCase();
       where.OR = [
-        { reference: { contains: s, mode: 'insensitive' } },
-        { dossier: { name: { contains: s, mode: 'insensitive' } } },
-        { dossier: { reference: { contains: s, mode: 'insensitive' } } },
-        { dossierId: { contains: s, mode: 'insensitive' } },
-        { createdBy: { name: { contains: s, mode: 'insensitive' } } },
-        { assignedTo: { name: { contains: s, mode: 'insensitive' } } }
+        { reference: { contains: s} },
+        { dossier: { name: { contains: s} } },
+        { dossier: { reference: { contains: s} } },
+        { dossierId: { contains: s} },
+        { createdBy: { name: { contains: s} } },
+        { assignedTo: { name: { contains: s} } }
       ];
     }
     
@@ -967,11 +967,11 @@ router.get('/taches', async (req, res) => {
     if (search) {
       const s = search.toLowerCase();
       where.OR = [
-        { reference: { contains: s, mode: 'insensitive' } },
-        { mission: { reference: { contains: s, mode: 'insensitive' } } },
-        { missionId: { contains: s, mode: 'insensitive' } },
-        { createdBy: { name: { contains: s, mode: 'insensitive' } } },
-        { assignedTo: { name: { contains: s, mode: 'insensitive' } } }
+        { reference: { contains: s} },
+        { mission: { reference: { contains: s} } },
+        { missionId: { contains: s} },
+        { createdBy: { name: { contains: s} } },
+        { assignedTo: { name: { contains: s} } }
       ];
     }
 
@@ -1284,9 +1284,11 @@ router.get('/messages', async (req, res) => {
       
       if (req.user.role === 'Collaborateur' || req.user.role === 'Relecteur') {
         where.OR = [
-          { subType: { contains: req.user.name, mode: 'insensitive' } },
+          { subType: { contains: req.user.name } },
           { email: req.user.email },
-          { assignedToId: req.user.id }
+          { assignedToId: req.user.id },
+          { Tache: { assignedToId: req.user.id } },
+          { mission: { assignedToId: req.user.id } }
         ];
       } else if (req.user.role === 'Responsable opérationnel') {
         where.assignedToId = req.user.id;

@@ -288,7 +288,8 @@ const DossiersPage = () => {
       const token = sessionStorage.getItem('adminToken');
       const payload = {
         name: editDossier.name,
-        description: editDossier.description
+        description: editDossier.description,
+        status: editDossier.status
       };
       const res = await fetch(getSafeApiUrl(`/api/crm/dossiers/${editDossier.id}`), {
         method: 'PATCH',
@@ -377,6 +378,20 @@ const DossiersPage = () => {
       <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
         <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Créé par :</strong>
         <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{dossier.createdBy?.name || 'Inconnu'}</span>
+      </div>
+      <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+        <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Statut :</strong>
+        {isEdit && (currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Super-administrateur' || currentUser?.role?.name === 'Administrateur' || currentUser?.role === 'Administrateur') ? (
+          <select value={editDossier?.status || dossier.status || 'NOUVEAU'} onChange={(e) => setEditDossier({...editDossier, status: e.target.value})} className="input-field" style={{padding: '0.25rem 0.5rem', borderRadius: '4px', border: '1px solid var(--primary)', background: '#FFF'}}>
+            <option value="NOUVEAU">Nouveau</option>
+            <option value="OUVERT">Ouvert</option>
+            <option value="BLOQUE">Bloqué</option>
+            <option value="CLOTURE">Clôturé</option>
+            <option value="ARCHIVE">Archivé</option>
+          </select>
+        ) : (
+          <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{getStatusBadge(dossier.status)}</span>
+        )}
       </div>
       <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
         <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Date de création :</strong>
@@ -751,8 +766,10 @@ const DossiersPage = () => {
           style={{padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', minWidth: '150px'}}
         >
           <option value="all">Statut: Tous</option>
+          <option value="NOUVEAU">Nouveau</option>
           <option value="OUVERT">Ouvert</option>
-          <option value="FERME">Fermé</option>
+          <option value="BLOQUE">Bloqué</option>
+          <option value="CLOTURE">Clôturé</option>
           <option value="ARCHIVE">Archivé</option>
         </select>
         <select 

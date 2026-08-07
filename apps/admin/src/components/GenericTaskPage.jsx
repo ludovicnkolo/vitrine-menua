@@ -270,7 +270,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         ? getSafeApiUrl(`/api/crm/tasks/${encodeURIComponent(consultTask.id)}`)
         : getSafeApiUrl(`/api/crm/taches/${encodeURIComponent(consultTask.id)}`);
 
-      const newStatus = feedbackMode === 'admin' ? 'A_AMELIORER' : 'EN_REVISION';
+      const newStatus = 'A_CORRIGER';
       const body = feedbackMode === 'admin'
         ? { status: newStatus, adminFeedback: feedbackText }
         : { status: newStatus, managerFeedback: feedbackText };
@@ -778,8 +778,40 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             SMS Collaborateur
           </button>
 
-          <div style={{display: 'flex', gap: '1rem'}}>
+          <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'flex-end', flex: 1}}>
             <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Retour</button>
+            
+            {/* Nouvelles actions selon le workflow */}
+            {mode === 'TACHE' && consultTask.status === 'NOUVEAU' && (
+              <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-primary" style={{background: 'var(--primary)'}}>Débuter</button>
+            )}
+            
+            {mode === 'TACHE' && consultTask.status === 'EN_COURS' && (
+              <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'A_VERIFIER')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>Finaliser</button>
+            )}
+            
+            {mode === 'TACHE' && consultTask.status === 'A_VERIFIER' && isResp && (
+               <>
+                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_CONTROLE')} className="btn btn-primary" style={{background: '#8B5CF6', borderColor: '#8B5CF6'}}>Valider (Au Contrôleur)</button>
+                 <button type="button" onClick={() => setShowManagerFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#EF4444', color: '#EF4444'}}>Renvoyer pour correction</button>
+                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'REATTRIBUEE')} className="btn btn-outline" style={{borderColor: '#F59E0B', color: '#F59E0B'}}>Détacher & Réattribuer</button>
+               </>
+            )}
+
+            {mode === 'TACHE' && consultTask.status === 'EN_CONTROLE' && (isSuperAdmin || role === 'Relecteur') && (
+               <>
+                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_VALIDATION_FINALE')} className="btn btn-primary" style={{background: '#6366F1', borderColor: '#6366F1'}}>Accord (Au Super Admin)</button>
+                 <button type="button" onClick={() => setShowManagerFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#EF4444', color: '#EF4444'}}>Renvoyer pour correction</button>
+               </>
+            )}
+
+            {mode === 'TACHE' && consultTask.status === 'EN_VALIDATION_FINALE' && isSuperAdmin && (
+               <>
+                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'TERMINEE')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>Validation Définitive</button>
+                 <button type="button" onClick={() => setShowAdminFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#EF4444', color: '#EF4444'}}>Renvoyer pour correction</button>
+               </>
+            )}
+
             {mode === 'MISSION' && (
               <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une tâche</button>
             )}
@@ -853,14 +885,24 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           style={{padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', minWidth: '200px'}}
         >
           <option value="all">Tous les statuts</option>
-          <option value="TO_ASSIGN">À attribuer</option>
-          <option value="EN_ATTENTE">En attente</option>
-          <option value="EN_COURS">En cours</option>
-          <option value="EN_FINALISATION">En finalisation</option>
-          <option value="EN_CONTROLE">En contrôle</option>
-          <option value="A_AMELIORER">À améliorer</option>
-          <option value="EN_REVISION">En révision</option>
-          <option value="TERMINEE">Terminée</option>
+          {mode === 'TACHE' ? (
+            <>
+              <option value="NOUVEAU">Nouveau</option>
+              <option value="EN_COURS">En cours</option>
+              <option value="A_VERIFIER">À vérifier</option>
+              <option value="A_CORRIGER">À corriger</option>
+              <option value="REATTRIBUEE">Réattribuée</option>
+              <option value="EN_CONTROLE">En contrôle</option>
+              <option value="EN_VALIDATION_FINALE">En validation finale</option>
+              <option value="TERMINEE">Terminée</option>
+            </>
+          ) : (
+            <>
+              <option value="NON_DEMARREE">Non démarrée</option>
+              <option value="EN_COURS">En cours</option>
+              <option value="TERMINEE">Terminée</option>
+            </>
+          )}
         </select>
       </div>
       <div className="table-wrapper">

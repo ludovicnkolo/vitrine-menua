@@ -123,31 +123,31 @@ router.get('/dashboard-stats', async (req, res) => {
     });
     const dossierStats = {
       total: dossiers.length,
-      ouvert: dossiers.filter(d => d.status === 'OUVERT' || d.status === 'NOUVEAU' || d.status === 'EN_COURS').length,
-      fermer: dossiers.filter(d => d.status === 'FERME' || d.status === 'FERMÉ').length,
-      terminer: dossiers.filter(d => d.status === 'TERMINE' || d.status === 'TERMINÉ').length,
-      archiver: dossiers.filter(d => d.status === 'ARCHIVE' || d.status === 'ARCHIVÉ').length
+      ouvert: dossiers.filter(d => d.status === 'OUVERT' || d.status === 'NOUVEAU').length,
+      fermer: dossiers.filter(d => d.status === 'CLOTURE').length,
+      terminer: 0, // Plus de statut TERMINE pour les dossiers
+      archiver: dossiers.filter(d => d.status === 'ARCHIVE').length
     };
 
     const missions = await prisma.mission.findMany({ select: { status: true } });
     const missionStats = {
       total: missions.length,
-      ouvert: missions.filter(m => ['NOUVEAU', 'TO_ASSIGN', 'EN_COURS', 'IN_PROGRESS', 'EN_REVISION', 'EN_FINALISATION', 'EN_CONTROLE', 'A_AMELIORER'].includes(m.status)).length,
-      terminer: missions.filter(m => m.status === 'TERMINEE' || m.status === 'TERMINÉE').length,
-      fermer: missions.filter(m => m.status === 'FERME' || m.status === 'FERMÉ').length,
-      reatribuer: missions.filter(m => m.status === 'REATTRIBUE' || m.status === 'RÉATTRIBUÉ').length,
-      bloquer: missions.filter(m => m.status === 'BLOQUE' || m.status === 'BLOQUÉ').length
+      ouvert: missions.filter(m => ['NON_DEMARREE', 'EN_COURS'].includes(m.status)).length,
+      terminer: missions.filter(m => m.status === 'TERMINEE').length,
+      fermer: 0,
+      reatribuer: 0,
+      bloquer: 0
     };
 
     const taches = await prisma.tache.findMany({ select: { status: true, echeance: true } });
     const now = new Date();
     const tacheStats = {
-      encours: taches.filter(t => ['EN_COURS', 'IN_PROGRESS', 'EN_FINALISATION'].includes(t.status)).length,
-      terminuer: taches.filter(t => t.status === 'TERMINEE' || t.status === 'TERMINÉE').length,
-      controler: taches.filter(t => t.status === 'EN_CONTROLE' || t.status === 'A_AMELIORER').length,
-      reattribuer: taches.filter(t => t.status === 'REATTRIBUE' || t.status === 'RÉATTRIBUÉ').length,
-      bloquer: taches.filter(t => t.status === 'BLOQUE' || t.status === 'BLOQUÉ').length,
-      enRetard: taches.filter(t => t.echeance && new Date(t.echeance) < now && !['TERMINEE', 'TERMINÉE', 'FERME', 'FERMÉ', 'ARCHIVE'].includes(t.status)).length
+      encours: taches.filter(t => ['EN_COURS'].includes(t.status)).length,
+      terminuer: taches.filter(t => t.status === 'TERMINEE').length,
+      controler: taches.filter(t => ['A_VERIFIER', 'EN_CONTROLE', 'EN_VALIDATION_FINALE'].includes(t.status)).length,
+      reattribuer: taches.filter(t => ['A_CORRIGER', 'REATTRIBUEE'].includes(t.status)).length,
+      bloquer: 0,
+      enRetard: taches.filter(t => t.echeance && new Date(t.echeance) < now && !['TERMINEE', 'ARCHIVE'].includes(t.status)).length
     };
 
     const utilisateurs = await prisma.utilisateur.findMany({ select: { isBlocked: true } });
@@ -200,7 +200,7 @@ router.get('/dashboard-stats', async (req, res) => {
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
       if (evolutionMap[key]) {
         evolutionMap[key].crees += 1;
-        if (item.status === 'TERMINEE' || item.status === 'TERMINÉE') {
+        if (item.status === 'TERMINEE') {
           evolutionMap[key].termines += 1;
         }
       }
@@ -223,9 +223,9 @@ router.get('/dashboard-stats', async (req, res) => {
     userTaches.forEach(t => {
       const p = perfMap[t.assignedToId];
       if (!p) return;
-      if (t.status === 'TERMINEE' || t.status === 'TERMINÉE') p.terminees += 1;
-      else if (t.status === 'BLOQUE' || t.status === 'BLOQUÉ') p.bloquees += 1;
-      else if (t.echeance && new Date(t.echeance) < now && !['TERMINEE', 'TERMINÉE', 'FERME', 'FERMÉ', 'ARCHIVE'].includes(t.status)) p.enretard += 1;
+      if (t.status === 'TERMINEE') p.terminees += 1;
+      else if (t.status === 'BLOQUE') p.bloquees += 1;
+      else if (t.echeance && new Date(t.echeance) < now && !['TERMINEE', 'ARCHIVE'].includes(t.status)) p.enretard += 1;
       else p.encours += 1;
     });
 
@@ -645,7 +645,7 @@ router.post('/dossiers', async (req, res) => {
         name,
         description,
         priority: priority || 'NORMAL',
-        status: 'OUVERT', // mapped from NOUVEAU
+        status: 'NOUVEAU',
         origin: origin || 'INTERNE',
         createdById: creatorId,
         clientId: req.body.clientId || null,
@@ -874,7 +874,7 @@ router.post('/tasks', async (req, res) => {
         dossierId,
         assignedToId,
         createdById: creatorId,
-        status: 'TO_ASSIGN',
+        status: 'NON_DEMARREE',
         echeance: echeance ? new Date(echeance) : null,
         attachment,
         ...(parentMissionId && { parentMissionId }),
@@ -1007,7 +1007,7 @@ router.post('/taches', async (req, res) => {
       missionId,
       assignedToId,
       createdById: creatorId,
-      status: 'TO_ASSIGN',
+      status: 'NOUVEAU',
       echeance: echeance ? new Date(echeance) : null,
       attachment
     };
@@ -1032,6 +1032,45 @@ router.post('/taches', async (req, res) => {
   }
 });
 
+
+async function checkAndUpdateMissionStatus(missionId, prisma) {
+  const mission = await prisma.mission.findUnique({ where: { id: missionId }, include: { taches: true, dossier: { include: { missions: true } } } });
+  if (!mission) return;
+
+  const allTaches = mission.taches;
+  let newStatus = mission.status;
+
+  if (allTaches.length > 0 && allTaches.every(t => t.status === 'TERMINEE')) {
+    newStatus = 'TERMINEE';
+  } else if (mission.status === 'NON_DEMARREE' && allTaches.some(t => t.status !== 'NOUVEAU')) {
+    newStatus = 'EN_COURS';
+  } else if (mission.status === 'TERMINEE' && allTaches.some(t => t.status !== 'TERMINEE')) {
+    newStatus = 'EN_COURS';
+  }
+
+  if (newStatus !== mission.status) {
+    await prisma.mission.update({ where: { id: mission.id }, data: { status: newStatus, previousStatus: mission.status } });
+    if (newStatus === 'TERMINEE' && mission.dossier) {
+       checkAndUpdateDossierStatus(mission.dossier, prisma);
+    } else if (newStatus === 'EN_COURS' && mission.dossier && mission.dossier.status === 'NOUVEAU') {
+       await prisma.dossier.update({ where: { id: mission.dossier.id }, data: { status: 'OUVERT' } });
+    }
+  }
+}
+
+async function checkAndUpdateDossierStatus(dossier, prisma) {
+  const freshDossier = await prisma.dossier.findUnique({ where: { id: dossier.id }, include: { missions: true } });
+  if (!freshDossier) return;
+  const allMissions = freshDossier.missions;
+  if (allMissions.length > 0 && allMissions.every(m => m.status === 'TERMINEE')) {
+    if (freshDossier.status !== 'CLOTURE' && freshDossier.status !== 'ARCHIVE' && freshDossier.status !== 'BLOQUE') {
+       await prisma.dossier.update({ where: { id: freshDossier.id }, data: { status: 'CLOTURE', previousStatus: freshDossier.status } });
+    }
+  } else if (freshDossier.status === 'CLOTURE' && allMissions.some(m => m.status !== 'TERMINEE')) {
+       await prisma.dossier.update({ where: { id: freshDossier.id }, data: { status: 'OUVERT', previousStatus: freshDossier.status } });
+  }
+}
+
 router.patch('/taches/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -1047,49 +1086,36 @@ router.patch('/taches/:id', async (req, res) => {
     // Build the data payload
     const dataToUpdate = { ...rest };
 
-    // --- Validate status transitions ---
     if (status !== undefined && status !== currentTache.status) {
-      // A_AMELIORER can only be set by Super-Admin, requires adminFeedback
-      if (status === 'A_AMELIORER') {
-        if (!isSuperAdmin) {
-          return res.status(403).json({ error: 'Seul le Super-Administrateur peut passer une tâche en "À améliorer".' });
-        }
-        if (!adminFeedback || !adminFeedback.trim()) {
-          return res.status(400).json({ error: 'Veuillez saisir les instructions d\'amélioration.' });
-        }
-        dataToUpdate.adminFeedback = adminFeedback.trim();
+      if (status === 'A_CORRIGER' || status === 'REATTRIBUEE') {
+         if (managerFeedback) dataToUpdate.managerFeedback = managerFeedback.trim();
       }
-
-      // EN_REVISION can only be set by Controller/Manager, requires managerFeedback
-      if (status === 'EN_REVISION') {
-        if (!isController) {
-          return res.status(403).json({ error: 'Seul un Contrôleur ou Responsable peut passer une tâche en "En révision".' });
-        }
-        if (!managerFeedback || !managerFeedback.trim()) {
-          return res.status(400).json({ error: 'Veuillez saisir vos corrections avant de soumettre.' });
-        }
-        dataToUpdate.managerFeedback = managerFeedback.trim();
+      if (status === 'EN_VALIDATION_FINALE' || status === 'A_CORRIGER') {
+         if (adminFeedback) dataToUpdate.adminFeedback = adminFeedback.trim();
       }
 
       dataToUpdate.previousStatus = currentTache.status;
       dataToUpdate.status = status;
     } else if (status !== undefined) {
-      // status unchanged, just allow field updates
-      if (adminFeedback !== undefined && isSuperAdmin) dataToUpdate.adminFeedback = adminFeedback;
-      if (managerFeedback !== undefined && isController) dataToUpdate.managerFeedback = managerFeedback;
+      if (adminFeedback !== undefined) dataToUpdate.adminFeedback = adminFeedback;
+      if (managerFeedback !== undefined) dataToUpdate.managerFeedback = managerFeedback;
     }
 
     const tache = await prisma.tache.update({
       where: { id },
       data: dataToUpdate
     });
+    
+    if (status !== undefined && status !== currentTache.status && tache.missionId) {
+       await checkAndUpdateMissionStatus(tache.missionId, prisma);
+    }
+
     res.json(tache);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur de mise à jour.' });
   }
 });
-
 
 router.delete('/taches/:id', async (req, res) => {
   try {

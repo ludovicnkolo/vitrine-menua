@@ -5,8 +5,8 @@ import { ChevronDown, ChevronUp, AlertTriangle, Wrench } from 'lucide-react';
  * FeedbackThread — Affiche les blocs de corrections sous la consultation d'une tâche
  *
  * Props:
- *  - adminFeedback: string|null  — Instructions de l'Admin (A_AMELIORER)
- *  - managerFeedback: string|null — Corrections du Contrôleur (EN_REVISION)
+ *  - adminFeedback: string|null  — Instructions de l'Admin (A_CORRIGER)
+ *  - managerFeedback: string|null — Corrections du Contrôleur (A_CORRIGER)
  *  - currentStatus: string
  */
 const FeedbackThread = ({ adminFeedback, managerFeedback, currentStatus }) => {

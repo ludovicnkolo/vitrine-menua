@@ -45,6 +45,7 @@ model Utilisateur {
 
   assignedMissions          Mission[]          @relation("AssignedMissions")
   createdMissions           Mission[]          @relation("CreatedMissions")
+  dossiersTraites           Dossier[]          @relation("DossierTraitant")
   assignedTaches            Tache[]            @relation("AssignedTaches")
   createdTaches             Tache[]            @relation("CreatedTaches")
   assignedFormulaires       Formulaire[]       @relation("AssignedFormulaires")
@@ -165,6 +166,9 @@ model Dossier {
 
   targetUserId String?
   targetUser   Utilisateur? @relation("DossierTarget", fields: [targetUserId], references: [id], onDelete: SetNull)
+
+  traitantId String?
+  traitant   Utilisateur? @relation("DossierTraitant", fields: [traitantId], references: [id], onDelete: SetNull)
 
   parentDossierId String?
   parentDossier   Dossier?  @relation("SubDossiers", fields: [parentDossierId], references: [id])

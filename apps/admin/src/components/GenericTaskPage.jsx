@@ -113,6 +113,11 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const menuRef = useRef(null);
 
+  const role = currentUser?.role?.name || currentUser?.role || '';
+  const isSuperAdmin = role === 'Super-administrateur' || role === 'Administrateur';
+  const isResp = role === 'Responsable opérationnel' || isSuperAdmin;
+  const isController = role === 'Relecteur' || isResp;
+
   // Feedback workflow modals
   const [showAdminFeedbackModal, setShowAdminFeedbackModal] = useState(false);
   const [showManagerFeedbackModal, setShowManagerFeedbackModal] = useState(false);
@@ -404,7 +409,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 <label htmlFor="new-task-assigned-to" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigner à</label>
                 <select id="new-task-assigned-to" className="input-field" value={newTaskAssignedTo} onChange={(e) => setNewTaskAssignedTo(e.target.value)} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
                   <option value="">-- Sélectionner un membre --</option>
-                  {users.map(u => (
+                  {users.filter(u => u.role?.name === 'Collaborateur' || u.role?.name === 'Responsable opérationnel' || u.role?.name === 'Super-administrateur' || u.role?.name === 'Administrateur').map(u => (
                     <option key={u.id} value={u.id}>{u.name} ({u.role?.name || 'Sans rôle'})</option>
                   ))}
                 </select>
@@ -412,7 +417,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
               <div>
                 <label htmlFor="new-task-echeance" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance</label>
-                <input id="new-task-echeance" type="date" value={newTaskEcheance} onChange={(e) => setNewTaskEcheance(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+                <input id="new-task-echeance" type="date" min={new Date().toISOString().split('T')[0]} value={newTaskEcheance} onChange={(e) => setNewTaskEcheance(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
               </div>
             </div>
 
@@ -548,13 +553,6 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     </div>
                   </div>
                 )}
-                <label htmlFor="new-task-attachment" style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'var(--primary)', marginBottom: 0}}>
-                  <Files size={16} />
-                  <span style={{fontSize: '0.875rem', fontWeight: 500}}>
-                    {newTaskFile ? newTaskFile.name : 'Joindre un autre fichier...'}
-                  </span>
-                  <input id="new-task-attachment" type="file" style={{display: 'none'}} onChange={(e) => { if (e.target.files && e.target.files.length > 0) setNewTaskFile(e.target.files[0]); }} />
-                </label>
               </div>
             </div>
 
@@ -812,7 +810,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                </>
             )}
 
-            {mode === 'MISSION' && (
+            {mode === 'MISSION' && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
               <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une tâche</button>
             )}
           </div>

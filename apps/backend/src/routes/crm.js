@@ -63,6 +63,33 @@ const generateReference = async (model, prefix) => {
   return `${prefix}-${String(nextNum).padStart(2, '0')}`;
 };
 
+const generateSubDossierReference = async (parentDossierId) => {
+  const parent = await prisma.dossier.findUnique({ where: { id: parentDossierId }, select: { reference: true } });
+  if (!parent || !parent.reference) return `DOS-SUB-${Math.floor(Math.random() * 1000)}`;
+  
+  const children = await prisma.dossier.findMany({ 
+    where: { parentDossierId },
+    select: { reference: true }
+  });
+  
+  let maxSeq = 0;
+  for (const child of children) {
+    if (!child.reference) continue;
+    const parts = child.reference.split('-');
+    if (parts.length >= 3) {
+      const seq = parseInt(parts[parts.length - 1], 10);
+      if (!isNaN(seq) && seq > maxSeq) {
+        maxSeq = seq;
+      }
+    } else if (parts.length === 2) {
+        // Just in case it was a DOS-XX format incorrectly saved as a child previously
+        const seq = parseInt(parts[1], 10);
+        if (!isNaN(seq) && seq > maxSeq) maxSeq = seq;
+    }
+  }
+  return `${parent.reference}-${String(maxSeq + 1).padStart(2, '0')}`;
+};
+
 router.use(authenticateJWT);
 
 // --- ROLES ---
@@ -496,12 +523,14 @@ router.get('/dossiers', async (req, res) => {
         where.OR = [
           { targetUserId: req.user.id },
           { createdById: req.user.id },
+          { traitantId: req.user.id },
           { missions: { some: { assignedToId: req.user.id } } }
         ];
       } else if (req.user.role === 'Relecteur' || req.user.role === 'Collaborateur') {
         where.OR = [
           { targetUserId: req.user.id },
           { createdById: req.user.id },
+          { traitantId: req.user.id },
           { missions: { some: { assignedToId: req.user.id } } },
           { missions: { some: { taches: { some: { assignedToId: req.user.id } } } } }
         ];
@@ -535,6 +564,7 @@ router.get('/dossiers', async (req, res) => {
       take: inMemoryFilter ? undefined : limit,
       orderBy: { reference: 'desc' },
       include: { 
+        traitant: { include: { role: true } },
         missions: {
           include: { assignedTo: { include: { role: true } }, taches: true }
         },
@@ -586,7 +616,7 @@ router.get('/dossiers', async (req, res) => {
 
       dossiers.forEach(d => {
         let hasFullAccess = false;
-        if (d.createdById === req.user.id || d.targetUserId === req.user.id) {
+        if (d.createdById === req.user.id || d.targetUserId === req.user.id || d.traitantId === req.user.id) {
           hasFullAccess = true;
         }
         
@@ -637,7 +667,10 @@ router.post('/dossiers', async (req, res) => {
   try {
     const { name, description, priority, origin, categorie } = req.body;
     const creatorId = await resolveCreatorId(req);
-    const reference = await generateReference('dossier', 'DOS');
+    const isSubFolder = req.body.parentDossierId ? true : false;
+    const reference = isSubFolder 
+      ? await generateSubDossierReference(req.body.parentDossierId)
+      : await generateReference('dossier', 'DOS');
 
     const dossier = await prisma.dossier.create({
       data: {
@@ -648,6 +681,7 @@ router.post('/dossiers', async (req, res) => {
         status: 'NOUVEAU',
         origin: origin || 'INTERNE',
         createdById: creatorId,
+        traitantId: req.body.traitantId || null,
         clientId: req.body.clientId || null,
         targetUserId: req.body.targetUserId || null,
         parentDossierId: req.body.parentDossierId || null,
@@ -662,7 +696,7 @@ router.post('/dossiers', async (req, res) => {
         'RELATIONS & DÉVELOPPEMENT'
       ];
       for (const folderName of defaultSubFolders) {
-        const subRef = await generateReference('dossier', 'DOS');
+        const subRef = await generateSubDossierReference(dossier.id);
         await prisma.dossier.create({
           data: {
             reference: subRef,
@@ -672,6 +706,7 @@ router.post('/dossiers', async (req, res) => {
             status: 'OUVERT',
             origin: origin || 'INTERNE',
             createdById: creatorId,
+            traitantId: req.body.traitantId || null,
             clientId: req.body.clientId || null,
             targetUserId: req.body.targetUserId || null,
             parentDossierId: dossier.id,
@@ -717,11 +752,12 @@ router.get('/audit', async (req, res) => {
 
 router.patch('/dossiers/:id', async (req, res) => {
   try {
-    const { status, name, description } = req.body;
+    const { status, name, description, traitantId } = req.body;
     const updateData = {};
     if (status !== undefined) updateData.status = status;
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description;
+    if (traitantId !== undefined) updateData.traitantId = traitantId;
 
     const dossier = await prisma.dossier.update({
       where: { id: req.params.id },

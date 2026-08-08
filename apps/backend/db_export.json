@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-08T11:11:48.414Z",
-      "updatedAt": "2026-08-08T11:11:48.414Z"
+      "updatedAt": "2026-08-08T11:46:13.746Z"
     },
     {
       "id": "f2946c84-8e7e-4985-8f08-920ff0d8535f",
@@ -16,7 +16,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-08-08T11:11:48.422Z",
-      "updatedAt": "2026-08-08T11:11:48.422Z"
+      "updatedAt": "2026-08-08T11:46:13.752Z"
     },
     {
       "id": "c73f4e34-cbd4-4dab-a9b9-8b33253d2f2e",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-08-08T11:11:48.429Z",
-      "updatedAt": "2026-08-08T11:11:48.429Z"
+      "updatedAt": "2026-08-08T11:46:13.760Z"
     },
     {
       "id": "16e4d4ae-840e-432a-b885-1f295491999e",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-08-08T11:11:48.436Z",
-      "updatedAt": "2026-08-08T11:11:48.436Z"
+      "updatedAt": "2026-08-08T11:46:13.766Z"
     },
     {
       "id": "442e4d5a-eb7a-4367-bc0b-ca2daefe846b",
@@ -43,14 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-08T11:11:48.444Z",
-      "updatedAt": "2026-08-08T11:11:48.444Z"
+      "updatedAt": "2026-08-08T11:46:13.771Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$1uIa7nmRr.3UaVQKRLlJdeyCJmXrIc5mTxZUFc7C.tSFvBVG8jrUq",
+      "password": "$2a$10$xocRiWs0RLiZ/t.mUvK0ke5yak.rVdEBWfQvwsZrm7TSrDOvr928G",
       "name": "Rosette Fouelefack",
       "roleId": "8d160b97-91b7-4ab7-870f-a0d4062b3ac2",
       "telephone": "+33659207511",
@@ -63,7 +63,7 @@
       "resetTokenExpiry": null,
       "isBlocked": false,
       "createdAt": "2026-08-08T11:11:48.601Z",
-      "updatedAt": "2026-08-08T11:11:48.601Z"
+      "updatedAt": "2026-08-08T11:46:13.910Z"
     },
     {
       "id": "dd022259-0ff8-4cc9-ae0d-2328a6dbd22c",
@@ -100,6 +100,24 @@
       "isBlocked": false,
       "createdAt": "2026-08-08T11:21:25.545Z",
       "updatedAt": "2026-08-08T11:21:25.545Z"
+    },
+    {
+      "id": "7381bff9-99da-409d-94f0-28b41fc86fc3",
+      "email": "rel@gmail.com",
+      "password": "$2a$10$fOpyhtDBAuDyHLZ99B5nfeVzD6VfDgpNc50dcTtqffX96.IM2DeN.",
+      "name": "Distinctio Corporis",
+      "roleId": "c73f4e34-cbd4-4dab-a9b9-8b33253d2f2e",
+      "telephone": "+1 (313) 499-4876",
+      "lieuResidence": "Officia voluptatem ",
+      "experienceCle": "Laborum veritatis ma",
+      "langues": "Laborum in et accusa",
+      "profile": "Quidem autem ad saep",
+      "idCardUrl": null,
+      "resetToken": "37b30d252c0e8cf3afe7e540754c15d9373423dd4c9c047d697a66e9201b03d9",
+      "resetTokenExpiry": "2026-08-09T11:21:55.302Z",
+      "isBlocked": false,
+      "createdAt": "2026-08-08T11:21:55.510Z",
+      "updatedAt": "2026-08-08T11:21:55.510Z"
     }
   ],
   "clients": [],
@@ -107,10 +125,189 @@
   "formulaires": [],
   "formulaireRecrutements": [],
   "formulaireContacts": [],
-  "dossiers": [],
+  "dossiers": [
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "id": "0925a027-8f9b-42ba-b1a1-0c233870aa3f",
+      "reference": "DOS-01",
+      "name": "nkolo-bomba-marc",
+      "description": "Ingenieur en genie numerique",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "traitantId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "parentDossierId": null,
+      "createdAt": "2026-08-08T11:23:27.356Z",
+      "updatedAt": "2026-08-08T11:23:27.356Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "id": "bdd8abd8-e530-4b2d-9699-832f2f4b7cf7",
+      "reference": "DOS-01-01",
+      "name": "ADMINISTRATION & FINANCES",
+      "description": "Sous-dossier par défaut: ADMINISTRATION & FINANCES",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "traitantId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "parentDossierId": "0925a027-8f9b-42ba-b1a1-0c233870aa3f",
+      "createdAt": "2026-08-08T11:23:27.378Z",
+      "updatedAt": "2026-08-08T11:23:27.378Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "id": "6e05fa65-35d7-412a-b16f-af9dbafdf58e",
+      "reference": "DOS-01-02",
+      "name": "OPÉRATIONS & RÉALISATIONS",
+      "description": "Sous-dossier par défaut: OPÉRATIONS & RÉALISATIONS",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "traitantId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "parentDossierId": "0925a027-8f9b-42ba-b1a1-0c233870aa3f",
+      "createdAt": "2026-08-08T11:23:27.401Z",
+      "updatedAt": "2026-08-08T11:23:27.401Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "id": "1d92014e-363f-473b-aba8-b3bb250bb185",
+      "reference": "DOS-01-03",
+      "name": "RELATIONS & DÉVELOPPEMENT",
+      "description": "Sous-dossier par défaut: RELATIONS & DÉVELOPPEMENT",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "traitantId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "parentDossierId": "0925a027-8f9b-42ba-b1a1-0c233870aa3f",
+      "createdAt": "2026-08-08T11:23:27.429Z",
+      "updatedAt": "2026-08-08T11:23:27.429Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "id": "52ebf8e8-3bef-40f3-969c-4fd92913ea09",
+      "reference": "DOS-02",
+      "name": "Velit rerum culpa s",
+      "description": "Enim minus sunt beat",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "traitantId": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "parentDossierId": null,
+      "createdAt": "2026-08-08T11:27:14.602Z",
+      "updatedAt": "2026-08-08T11:27:14.602Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "id": "1b635a4b-b488-49fe-959c-3a08e1153a42",
+      "reference": "DOS-02-01",
+      "name": "ADMINISTRATION & FINANCES",
+      "description": "Sous-dossier par défaut: ADMINISTRATION & FINANCES",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "traitantId": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "parentDossierId": "52ebf8e8-3bef-40f3-969c-4fd92913ea09",
+      "createdAt": "2026-08-08T11:27:14.632Z",
+      "updatedAt": "2026-08-08T11:27:14.632Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "id": "e5a4149e-68be-40ac-9811-f28a5d9fdf77",
+      "reference": "DOS-02-02",
+      "name": "OPÉRATIONS & RÉALISATIONS",
+      "description": "Sous-dossier par défaut: OPÉRATIONS & RÉALISATIONS",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "traitantId": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "parentDossierId": "52ebf8e8-3bef-40f3-969c-4fd92913ea09",
+      "createdAt": "2026-08-08T11:27:14.660Z",
+      "updatedAt": "2026-08-08T11:27:14.660Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "id": "a5c1c851-c2ab-4c4d-a137-597f026aaf74",
+      "reference": "DOS-02-03",
+      "name": "RELATIONS & DÉVELOPPEMENT",
+      "description": "Sous-dossier par défaut: RELATIONS & DÉVELOPPEMENT",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "traitantId": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "parentDossierId": "52ebf8e8-3bef-40f3-969c-4fd92913ea09",
+      "createdAt": "2026-08-08T11:27:14.693Z",
+      "updatedAt": "2026-08-08T11:27:14.693Z"
+    }
+  ],
   "missions": [],
   "taches": [],
   "documents": [],
-  "auditLogs": [],
+  "auditLogs": [
+    {
+      "id": "070c25fc-fcb8-4b80-a54d-d17e116ce951",
+      "userId": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "action": "CREATION_DOSSIER",
+      "targetId": "0925a027-8f9b-42ba-b1a1-0c233870aa3f",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: nkolo-bomba-marc",
+      "dossierId": "0925a027-8f9b-42ba-b1a1-0c233870aa3f",
+      "formulaireId": null,
+      "createdAt": "2026-08-08T11:23:27.453Z"
+    },
+    {
+      "id": "8ffca031-09d9-4150-b769-c7da864192f7",
+      "userId": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "action": "CREATION_DOSSIER",
+      "targetId": "52ebf8e8-3bef-40f3-969c-4fd92913ea09",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: Velit rerum culpa s",
+      "dossierId": "52ebf8e8-3bef-40f3-969c-4fd92913ea09",
+      "formulaireId": null,
+      "createdAt": "2026-08-08T11:27:14.712Z"
+    },
+    {
+      "id": "6397fc25-7f3a-4438-ab46-64e431501154",
+      "userId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-08-08T11:34:44.104Z"
+    }
+  ],
   "messagePersonnels": []
 }

@@ -127,8 +127,24 @@ const DossiersPage = () => {
   }, [filterStatus, filterRole, filterOrigine, searchQuery]);
 
   const handleCreateMission = async () => {
-    if (!missionSubject || !missionAssignedTo || !missionEcheance) {
-      window.customAlert("Veuillez remplir l'objet, le destinataire et l'échéance.");
+    if (!missionSubject) {
+      window.customAlert("L'objet de la mission est requis.");
+      return;
+    }
+    if (!missionDossierId) {
+      window.customAlert("Veuillez sélectionner un dossier mission.");
+      return;
+    }
+    if (!missionAssignedTo) {
+      window.customAlert("Veuillez sélectionner un responsable à assigner.");
+      return;
+    }
+    if (!missionEcheance) {
+      window.customAlert("L'échéance est requise.");
+      return;
+    }
+    if (!missionDescription || !missionDescription.trim()) {
+      window.customAlert("Le message / consignes est requis.");
       return;
     }
     
@@ -333,17 +349,23 @@ const DossiersPage = () => {
   };
 
   const renderDropdown = (id) => {
+    const userRole = currentUser?.role?.name || currentUser?.role || '';
+    const isAdm = userRole === 'Super-administrateur' || userRole === 'Administrateur';
     return (
       <ActionDropdown isOpen={openMenuId === id} menuRef={menuRef} width="150px">
         <button type="button" className="dropdown-item" onClick={() => { setConsultDossier(dbDossiers.find(d => d.id === id)); setOpenMenuId(null); }}>
           <Eye size={14} color="var(--primary)" /> Consulter
         </button>
-        <button type="button" className="dropdown-item" onClick={() => { setEditDossier(dbDossiers.find(d => d.id === id)); setOpenMenuId(null); }}>
-          <Pencil size={14} color="#D97706" /> Modifier
-        </button>
-        <button type="button" className="dropdown-item danger" onClick={() => setOpenMenuId(null)}>
-          <Trash size={14} /> Supprimer
-        </button>
+        {isAdm && (
+          <button type="button" className="dropdown-item" onClick={() => { setEditDossier(dbDossiers.find(d => d.id === id)); setOpenMenuId(null); }}>
+            <Pencil size={14} color="#D97706" /> Modifier
+          </button>
+        )}
+        {isAdm && (
+          <button type="button" className="dropdown-item danger" onClick={() => setOpenMenuId(null)}>
+            <Trash size={14} /> Supprimer
+          </button>
+        )}
       </ActionDropdown>
     );
   };
@@ -760,17 +782,18 @@ const DossiersPage = () => {
           <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)'}}>Tous les Dossiers</h1>
           <p style={{color: 'var(--text-muted)'}}>Gestion complète et cycle de vie</p>
         </div>
-        <button 
-          onClick={() => { 
-            const isAllowedTraitant = currentUser?.role === 'Super-administrateur' || currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Administrateur' || currentUser?.role?.name === 'Administrateur' || currentUser?.role === 'Responsable opérationnel' || currentUser?.role?.name === 'Responsable opérationnel';
-            setNewDossierData({ name: '', description: '', priority: 'NORMAL', origin: '', parentDossierId: '', targetId: '', categorie: '', traitantId: isAllowedTraitant ? currentUser.id : '' }); 
-            setShowCreateDossierModal(true); 
-          }} 
-          className="btn btn-primary" 
-          style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}
-        >
-          <Plus size={18} /> Nouveau Dossier
-        </button>
+        {(currentUser?.role === 'Super-administrateur' || currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Administrateur' || currentUser?.role?.name === 'Administrateur') && (
+          <button 
+            onClick={() => { 
+              setNewDossierData({ name: '', description: '', priority: 'NORMAL', origin: '', parentDossierId: '', targetId: '', categorie: '', traitantId: currentUser.id }); 
+              setShowCreateDossierModal(true); 
+            }} 
+            className="btn btn-primary" 
+            style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}
+          >
+            <Plus size={18} /> Nouveau Dossier
+          </button>
+        )}
       </div>
       
       <div style={{display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem', background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>

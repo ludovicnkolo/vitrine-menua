@@ -520,18 +520,14 @@ router.get('/dossiers', async (req, res) => {
     if (req.query.rootOnly === 'true') {
       where.parentDossierId = null;
       if (req.user.role === 'Responsable opérationnel') {
+        // Only sees dossiers where they are explicitly the traitant, or have a mission
         where.OR = [
-          { targetUserId: req.user.id },
-          { createdById: req.user.id },
           { traitantId: req.user.id },
           { missions: { some: { assignedToId: req.user.id } } }
         ];
       } else if (req.user.role === 'Relecteur' || req.user.role === 'Collaborateur') {
+        // Only sees dossiers where they have a task assigned
         where.OR = [
-          { targetUserId: req.user.id },
-          { createdById: req.user.id },
-          { traitantId: req.user.id },
-          { missions: { some: { assignedToId: req.user.id } } },
           { missions: { some: { taches: { some: { assignedToId: req.user.id } } } } }
         ];
       }
@@ -618,9 +614,8 @@ router.get('/dossiers', async (req, res) => {
       const writeSet = new Set();
 
       dossiers.forEach(d => {
-        // --- Full creator/traitant access: sees + writes all descendants ---
-        const isOwner = d.createdById === req.user.id || d.traitantId === req.user.id;
-        if (isOwner) {
+        // --- Traitant: sees + writes all descendants of this dossier ---
+        if (d.traitantId === req.user.id) {
           accessibleSet.add(d.id);
           writeSet.add(d.id);
           getDescendants(d.id).forEach(id => { accessibleSet.add(id); writeSet.add(id); });
@@ -628,22 +623,14 @@ router.get('/dossiers', async (req, res) => {
           return;
         }
 
-        // --- targetUserId: sees this dossier + strict ancestor path (read-only navigation) ---
-        if (d.targetUserId === req.user.id) {
-          accessibleSet.add(d.id);
-          getAncestors(d.id).forEach(id => accessibleSet.add(id));
-          // Do NOT add siblings/descendants from fullAccess path
-          return;
-        }
-
-        // --- Mission/Tache assigned: authorized dossiers visible + descendants writable ---
+        // --- Mission/Tache assigned: authorized dossiers visible + dossier mission writable ---
         let isAuthorized = false;
         if (d.authorizedForMissions && d.authorizedForMissions.some(m => m.assignedToId === req.user.id)) isAuthorized = true;
         if (d.missionsLinked && d.missionsLinked.some(m => m.assignedToId === req.user.id)) isAuthorized = true;
         if (d.authorizedForTaches && d.authorizedForTaches.some(t => t.assignedToId === req.user.id)) isAuthorized = true;
         if (d.tachesLinked && d.tachesLinked.some(t => t.assignedToId === req.user.id)) isAuthorized = true;
         
-        if (req.user.role === 'Relecteur') {
+        if (req.user.role === 'Relecteur' || req.user.role === 'Collaborateur') {
           if (d.authorizedForMissions && d.authorizedForMissions.some(m => m.taches.some(t => t.assignedToId === req.user.id))) isAuthorized = true;
           if (d.missionsLinked && d.missionsLinked.some(m => m.taches.some(t => t.assignedToId === req.user.id))) isAuthorized = true;
         }
@@ -651,9 +638,9 @@ router.get('/dossiers', async (req, res) => {
         if (isAuthorized) {
           accessibleSet.add(d.id);
           getDescendants(d.id).forEach(id => accessibleSet.add(id));
-          getAncestors(d.id).forEach(id => accessibleSet.add(id)); // nav only
+          getAncestors(d.id).forEach(id => accessibleSet.add(id)); // nav only, read-only
 
-          // Write access only on dossierMission / dossierTache (missionsLinked / tachesLinked)
+          // Write access only on the explicit dossierMission / dossierTache
           if (d.missionsLinked && d.missionsLinked.some(m => m.assignedToId === req.user.id)) {
             writeSet.add(d.id);
             getDescendants(d.id).forEach(id => writeSet.add(id));
@@ -663,9 +650,9 @@ router.get('/dossiers', async (req, res) => {
             getDescendants(d.id).forEach(id => writeSet.add(id));
           }
         } else {
-          // Dossier that directly holds a mission assigned to user (root-level mission)
+          // Dossier that directly holds a mission assigned to user (root-level mission, no sub-dossier)
           const hasMissionOnRoot = (d.missions && d.missions.some(m => m.assignedToId === req.user.id))
-            || (req.user.role === 'Relecteur' && d.missions && d.missions.some(m => m.taches.some(t => t.assignedToId === req.user.id)));
+            || ((req.user.role === 'Relecteur' || req.user.role === 'Collaborateur') && d.missions && d.missions.some(m => m.taches.some(t => t.assignedToId === req.user.id)));
           
           if (hasMissionOnRoot) {
             accessibleSet.add(d.id);

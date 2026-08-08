@@ -107,7 +107,8 @@ export default function DocumentsPage() {
   // Find current folder's documents (Documents attached to the current dossier)
   const currentFolder = dossiers.find(d => d.id === currentFolderId);
   const documents = currentFolder ? currentFolder.documents || [] : [];
-  const canWriteCurrent = currentFolder ? currentFolder.canWrite : isSuperAdmin;
+  // Super admins bypass inMemoryFilter, so canWrite is never set for them → grant it always
+  const canWriteCurrent = isSuperAdmin || (currentFolder ? !!currentFolder.canWrite : false);
 
   const navigateTo = (folder) => {
     setCurrentPath([...currentPath, { id: folder.id, name: folder.name }]);

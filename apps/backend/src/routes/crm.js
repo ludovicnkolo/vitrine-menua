@@ -682,6 +682,10 @@ router.get('/dossiers', async (req, res) => {
 // Force nodemon restart to load new Prisma Client
 router.post('/dossiers', async (req, res) => {
   try {
+    if (req.user.role !== 'Super-administrateur' && req.user.role !== 'Administrateur') {
+      return res.status(403).json({ error: "Accès refusé. Seul un administrateur peut créer un dossier." });
+    }
+
     const { name, description, priority, origin, categorie } = req.body;
     const creatorId = await resolveCreatorId(req);
     const isSubFolder = req.body.parentDossierId ? true : false;
@@ -769,6 +773,10 @@ router.get('/audit', async (req, res) => {
 
 router.patch('/dossiers/:id', async (req, res) => {
   try {
+    if (req.user.role !== 'Super-administrateur' && req.user.role !== 'Administrateur') {
+      return res.status(403).json({ error: "Accès refusé. Seul un administrateur peut modifier un dossier." });
+    }
+
     const { status, name, description, traitantId } = req.body;
     const updateData = {};
     if (status !== undefined) updateData.status = status;

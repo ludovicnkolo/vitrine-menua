@@ -592,7 +592,7 @@ const DossiersPage = () => {
               
               <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet de la mission</label>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet de la mission *</label>
                   <input type="text" value={missionSubject} onChange={(e) => setMissionSubject(e.target.value)} placeholder="Sujet..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
                 </div>
 
@@ -600,7 +600,7 @@ const DossiersPage = () => {
                   <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
                     <div style={{display: 'flex', flexDirection: 'column', gap: '2rem'}}>
                       <div>
-                        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>Dossier mission (Sélection unique)</label>
+                        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>Dossier mission (Sélection unique) *</label>
                         <div style={{maxHeight: '300px', overflowY: 'auto'}}>
                           <GedExplorer 
                             tree={operationalTree} 
@@ -669,7 +669,7 @@ const DossiersPage = () => {
                 
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                   <div>
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigner à</label>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigner à *</label>
                     <select value={missionAssignedTo} onChange={(e) => setMissionAssignedTo(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
                       <option value="">Sélectionner...</option>
                       {dbUsers.filter(u => u.role?.name === 'Responsable opérationnel' || u.role?.name === 'Super-administrateur' || u.role?.name === 'Administrateur').map(u => (
@@ -678,13 +678,13 @@ const DossiersPage = () => {
                     </select>
                   </div>
                   <div>
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance</label>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance *</label>
                     <input type="date" min={new Date().toISOString().split('T')[0]} value={missionEcheance} onChange={(e) => setMissionEcheance(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}} />
                   </div>
                 </div>
 
                 <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes *</label>
                   <textarea value={missionDescription} onChange={(e) => setMissionDescription(e.target.value)} placeholder="Détails de la mission..." style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
                 </div>
 

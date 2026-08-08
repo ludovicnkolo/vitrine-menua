@@ -693,6 +693,12 @@ router.post('/dossiers', async (req, res) => {
       ? await generateSubDossierReference(req.body.parentDossierId)
       : await generateReference('dossier', 'DOS');
 
+    let traitantId = req.body.traitantId || null;
+    if (traitantId === 'MASTER-ADMIN') traitantId = creatorId;
+
+    let targetUserId = req.body.targetUserId || null;
+    if (targetUserId === 'MASTER-ADMIN') targetUserId = creatorId;
+
     const dossier = await prisma.dossier.create({
       data: {
         reference,
@@ -702,9 +708,9 @@ router.post('/dossiers', async (req, res) => {
         status: 'NOUVEAU',
         origin: origin || 'INTERNE',
         createdById: creatorId,
-        traitantId: req.body.traitantId || null,
+        traitantId: traitantId,
         clientId: req.body.clientId || null,
-        targetUserId: req.body.targetUserId || null,
+        targetUserId: targetUserId,
         parentDossierId: req.body.parentDossierId || null,
         categorie: categorie || null
       }
@@ -727,9 +733,9 @@ router.post('/dossiers', async (req, res) => {
             status: 'OUVERT',
             origin: origin || 'INTERNE',
             createdById: creatorId,
-            traitantId: req.body.traitantId || null,
+            traitantId: traitantId,
             clientId: req.body.clientId || null,
-            targetUserId: req.body.targetUserId || null,
+            targetUserId: targetUserId,
             parentDossierId: dossier.id,
             categorie: categorie || null
           }
@@ -782,7 +788,9 @@ router.patch('/dossiers/:id', async (req, res) => {
     if (status !== undefined) updateData.status = status;
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description;
-    if (traitantId !== undefined) updateData.traitantId = traitantId;
+    if (traitantId !== undefined) {
+      updateData.traitantId = traitantId === 'MASTER-ADMIN' ? await resolveCreatorId(req) : traitantId;
+    }
 
     const dossier = await prisma.dossier.update({
       where: { id: req.params.id },

@@ -11,7 +11,7 @@ export const flattenFolderIds = (folder) => {
   return ids;
 };
 
-const GedExplorer = ({ tree, multiSelect, selectedIds = [], selectedId, onSelectId, onToggleChildren, hideBreadcrumb = false }) => {
+const GedExplorer = ({ tree, multiSelect, selectedIds = [], selectedId, onSelectId, onToggleChildren, hideBreadcrumb = false, disabledIds = [] }) => {
   const [path, setPath] = useState([tree]);
 
   const currentFolder = path[path.length - 1];
@@ -46,12 +46,14 @@ const GedExplorer = ({ tree, multiSelect, selectedIds = [], selectedId, onSelect
           return (
             <div key={child.id} style={{position: 'relative', width: '110px'}}>
                <div style={{position: 'absolute', top: '4px', left: '4px', zIndex: 10}}>
-                 <input 
-                   type={multiSelect ? "checkbox" : "radio"} 
-                   checked={isSelected}
-                   onChange={() => multiSelect ? onToggleChildren(child) : onSelectId(child.id)}
-                   style={{cursor: 'pointer'}}
-                 />
+                 {!disabledIds.includes(child.id) && (
+                   <input 
+                     type={multiSelect ? "checkbox" : "radio"} 
+                     checked={isSelected}
+                     onChange={() => multiSelect ? onToggleChildren(child) : onSelectId(child.id)}
+                     style={{cursor: 'pointer'}}
+                   />
+                 )}
                </div>
                <div 
                  onClick={() => {

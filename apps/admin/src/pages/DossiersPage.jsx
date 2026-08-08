@@ -588,46 +588,60 @@ const DossiersPage = () => {
                           />
                         </div>
                       </div>
-                      <div>
-                        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>Dossiers autorisés (Sélection multiple avec sous-dossiers)</label>
-                        <div style={{maxHeight: '300px', overflowY: 'auto'}}>
-                          <GedExplorer 
-                            tree={operationalTree} 
-                            multiSelect={true}
-                            selectedIds={authorizedDossierIds} 
-                            onToggleChildren={(child) => {
-                              const ids = flattenFolderIds(child);
-                              if (authorizedDossierIds.includes(child.id)) {
-                                setAuthorizedDossierIds(prev => prev.filter(id => !ids.includes(id)));
-                              } else {
-                                setAuthorizedDossierIds(prev => Array.from(new Set([...prev, ...ids])));
-                              }
-                            }} 
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    {authorizedDossierIds.length > 0 && (() => {
-                      const getNames = (folder, ids) => {
-                        let names = [];
-                        if (ids.includes(folder.id)) names.push(folder.name);
-                        if (folder.subDossiers) {
-                          folder.subDossiers.forEach(sub => names = [...names, ...getNames(sub, ids)]);
-                        }
-                        return names;
-                      };
-                      const selectedNames = getNames(operationalTree, authorizedDossierIds);
-                      return (
-                        <div style={{padding: '0.75rem', background: '#e0f2fe', borderRadius: '8px', fontSize: '0.875rem', border: '1px solid #bae6fd'}}>
-                          <strong style={{display: 'block', marginBottom: '0.25rem', color: '#0369a1'}}>Panier des dossiers autorisés :</strong>
-                          <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem'}}>
-                            {selectedNames.map((name, i) => (
-                              <span key={i} style={{background: '#FFF', color: '#0369a1', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 500, border: '1px solid #7dd3fc'}}>{name}</span>
-                            ))}
+                      {/* Authorized dossiers: exclude the selected mission dossier (auto-included) */}
+                      {(() => {
+                        const filteredTree = {
+                          ...operationalTree,
+                          subDossiers: (operationalTree.subDossiers || []).filter(d => d.id !== missionDossierId)
+                        };
+                        if (filteredTree.subDossiers.length === 0) return null;
+                        return (
+                          <div>
+                            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
+                              Dossiers autorisés <span style={{fontWeight: 400, color: 'var(--text-muted)', fontSize: '0.8rem'}}>(lecture seule)</span>
+                            </label>
+                            <div style={{maxHeight: '300px', overflowY: 'auto'}}>
+                              <GedExplorer 
+                                tree={filteredTree} 
+                                multiSelect={true}
+                                selectedIds={authorizedDossierIds} 
+                                disabledIds={missionDossierId ? [missionDossierId] : []}
+                                onToggleChildren={(child) => {
+                                  const ids = flattenFolderIds(child);
+                                  if (authorizedDossierIds.includes(child.id)) {
+                                    setAuthorizedDossierIds(prev => prev.filter(id => !ids.includes(id)));
+                                  } else {
+                                    setAuthorizedDossierIds(prev => Array.from(new Set([...prev, ...ids])));
+                                  }
+                                }} 
+                              />
+                            </div>
+                            {authorizedDossierIds.length > 0 && (() => {
+                              const getNames = (folder, ids) => {
+                                let names = [];
+                                if (ids.includes(folder.id)) names.push(folder.name);
+                                if (folder.subDossiers) {
+                                  folder.subDossiers.forEach(sub => names = [...names, ...getNames(sub, ids)]);
+                                }
+                                return names;
+                              };
+                              const selectedNames = getNames(filteredTree, authorizedDossierIds);
+                              if (selectedNames.length === 0) return null;
+                              return (
+                                <div style={{padding: '0.75rem', background: '#e0f2fe', borderRadius: '8px', fontSize: '0.875rem', border: '1px solid #bae6fd', marginTop: '0.5rem'}}>
+                                  <strong style={{display: 'block', marginBottom: '0.25rem', color: '#0369a1'}}>Panier des dossiers autorisés :</strong>
+                                  <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem'}}>
+                                    {selectedNames.map((name, i) => (
+                                      <span key={i} style={{background: '#FFF', color: '#0369a1', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 500, border: '1px solid #7dd3fc'}}>{name}</span>
+                                    ))}
+                                  </div>
+                                </div>
+                              );
+                            })()}
                           </div>
-                        </div>
-                      );
-                    })()}
+                        );
+                      })()}
+                    </div>
                   </div>
                 )}
                 

@@ -448,48 +448,56 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   />
                 </div>
 
-                <div style={{flex: 1}}>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
-                    Dossiers autorisés
-                  </label>
-                  <GedExplorer 
-                    tree={{ 
-                      name: 'Dossiers autorisés de la mission',
-                      id: 'root',
-                      subDossiers: (consultTask.authorizedDossiers || []).filter(Boolean)
-                    }}
-                    hideBreadcrumb={false}
-                    multiSelect={true}
-                    selectedIds={selectedAuthorizedTacheIds}
-                    onSelectId={(id, multi) => {
-                       if (selectedAuthorizedTacheIds.includes(id)) {
-                          setSelectedAuthorizedTacheIds(selectedAuthorizedTacheIds.filter(x => x !== id));
-                       } else {
-                          setSelectedAuthorizedTacheIds([...selectedAuthorizedTacheIds, id]);
-                       }
-                    }}
-                    onToggleChildren={(child) => {
-                       if (selectedAuthorizedTacheIds.includes(child.id)) {
-                          setSelectedAuthorizedTacheIds(selectedAuthorizedTacheIds.filter(x => x !== child.id));
-                       } else {
-                          setSelectedAuthorizedTacheIds([...selectedAuthorizedTacheIds, child.id]);
-                       }
-                    }}
-                  />
-                  {selectedAuthorizedTacheIds.length > 0 && (
-                    <div style={{marginTop: '1rem', padding: '1rem', background: '#e0f2fe', borderRadius: '8px', border: '1px solid #bae6fd'}}>
-                      <h4 style={{margin: '0 0 0.5rem 0', fontSize: '0.875rem', color: '#0369a1'}}>Panier des dossiers autorisés ({selectedAuthorizedTacheIds.length})</h4>
-                      <ul style={{margin: 0, paddingLeft: '1.5rem', fontSize: '0.875rem', color: '#0c4a6e'}}>
-                        {selectedAuthorizedTacheIds.map(id => {
-                          const rootDoss = consultTask.dossierMission || consultTask.dossier;
-                          const flatAuthorized = (consultTask.authorizedDossiers || []).flatMap(d => [d, ...(d.subDossiers || [])]);
-                          const d = flatAuthorized.find(x => x.id === id) || (rootDoss?.id === id ? rootDoss : null) || rootDoss?.subDossiers?.find(x => x.id === id);
-                          return <li key={id}>{d ? d.name : id}</li>;
-                        })}
-                      </ul>
+                {/* Dossiers autorisés: exclude the mission dossier (already auto-included) */}
+                {(() => {
+                  const missionDossId = (consultTask.dossierMission || consultTask.dossier)?.id;
+                  const otherAuthorized = (consultTask.authorizedDossiers || []).filter(d => d.id !== missionDossId);
+                  if (otherAuthorized.length === 0) return null;
+                  return (
+                    <div style={{flex: 1}}>
+                      <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
+                        Dossiers autorisés <span style={{fontWeight: 400, color: 'var(--text-muted)', fontSize: '0.8rem'}}>(lecture seule)</span>
+                      </label>
+                      <GedExplorer 
+                        tree={{ 
+                          name: 'Dossiers autorisés de la mission',
+                          id: 'root',
+                          subDossiers: otherAuthorized
+                        }}
+                        hideBreadcrumb={false}
+                        multiSelect={true}
+                        selectedIds={selectedAuthorizedTacheIds}
+                        disabledIds={selectedDossierTacheId ? [selectedDossierTacheId] : []}
+                        onSelectId={(id) => {
+                           if (selectedAuthorizedTacheIds.includes(id)) {
+                              setSelectedAuthorizedTacheIds(selectedAuthorizedTacheIds.filter(x => x !== id));
+                           } else {
+                              setSelectedAuthorizedTacheIds([...selectedAuthorizedTacheIds, id]);
+                           }
+                        }}
+                        onToggleChildren={(child) => {
+                           if (selectedAuthorizedTacheIds.includes(child.id)) {
+                              setSelectedAuthorizedTacheIds(selectedAuthorizedTacheIds.filter(x => x !== child.id));
+                           } else {
+                              setSelectedAuthorizedTacheIds([...selectedAuthorizedTacheIds, child.id]);
+                           }
+                        }}
+                      />
+                      {selectedAuthorizedTacheIds.length > 0 && (
+                        <div style={{marginTop: '1rem', padding: '1rem', background: '#e0f2fe', borderRadius: '8px', border: '1px solid #bae6fd'}}>
+                          <h4 style={{margin: '0 0 0.5rem 0', fontSize: '0.875rem', color: '#0369a1'}}>Panier des dossiers autorisés ({selectedAuthorizedTacheIds.length})</h4>
+                          <ul style={{margin: 0, paddingLeft: '1.5rem', fontSize: '0.875rem', color: '#0c4a6e'}}>
+                            {selectedAuthorizedTacheIds.map(id => {
+                              const flatAuthorized = otherAuthorized.flatMap(d => [d, ...(d.subDossiers || [])]);
+                              const d = flatAuthorized.find(x => x.id === id);
+                              return <li key={id}>{d ? d.name : id}</li>;
+                            })}
+                          </ul>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
+                  );
+                })()}
               </div>
             )}
 

@@ -614,45 +614,74 @@ router.get('/dossiers', async (req, res) => {
         return anc;
       };
 
+      // writeSet: dossiers where user can create sub-folders and upload files
+      const writeSet = new Set();
+
       dossiers.forEach(d => {
-        let hasFullAccess = false;
-        if (d.createdById === req.user.id || d.targetUserId === req.user.id || d.traitantId === req.user.id) {
-          hasFullAccess = true;
+        // --- Full creator/traitant access: sees + writes all descendants ---
+        const isOwner = d.createdById === req.user.id || d.traitantId === req.user.id;
+        if (isOwner) {
+          accessibleSet.add(d.id);
+          writeSet.add(d.id);
+          getDescendants(d.id).forEach(id => { accessibleSet.add(id); writeSet.add(id); });
+          getAncestors(d.id).forEach(id => accessibleSet.add(id)); // ancestors: nav only
+          return;
+        }
+
+        // --- targetUserId: sees this dossier + strict ancestor path (read-only navigation) ---
+        if (d.targetUserId === req.user.id) {
+          accessibleSet.add(d.id);
+          getAncestors(d.id).forEach(id => accessibleSet.add(id));
+          // Do NOT add siblings/descendants from fullAccess path
+          return;
+        }
+
+        // --- Mission/Tache assigned: authorized dossiers visible + descendants writable ---
+        let isAuthorized = false;
+        if (d.authorizedForMissions && d.authorizedForMissions.some(m => m.assignedToId === req.user.id)) isAuthorized = true;
+        if (d.missionsLinked && d.missionsLinked.some(m => m.assignedToId === req.user.id)) isAuthorized = true;
+        if (d.authorizedForTaches && d.authorizedForTaches.some(t => t.assignedToId === req.user.id)) isAuthorized = true;
+        if (d.tachesLinked && d.tachesLinked.some(t => t.assignedToId === req.user.id)) isAuthorized = true;
+        
+        if (req.user.role === 'Relecteur') {
+          if (d.authorizedForMissions && d.authorizedForMissions.some(m => m.taches.some(t => t.assignedToId === req.user.id))) isAuthorized = true;
+          if (d.missionsLinked && d.missionsLinked.some(m => m.taches.some(t => t.assignedToId === req.user.id))) isAuthorized = true;
         }
         
-        if (hasFullAccess) {
-           accessibleSet.add(d.id);
-           getDescendants(d.id).forEach(id => accessibleSet.add(id));
-           getAncestors(d.id).forEach(id => accessibleSet.add(id));
+        if (isAuthorized) {
+          accessibleSet.add(d.id);
+          getDescendants(d.id).forEach(id => accessibleSet.add(id));
+          getAncestors(d.id).forEach(id => accessibleSet.add(id)); // nav only
+
+          // Write access only on dossierMission / dossierTache (missionsLinked / tachesLinked)
+          if (d.missionsLinked && d.missionsLinked.some(m => m.assignedToId === req.user.id)) {
+            writeSet.add(d.id);
+            getDescendants(d.id).forEach(id => writeSet.add(id));
+          }
+          if (d.tachesLinked && d.tachesLinked.some(t => t.assignedToId === req.user.id)) {
+            writeSet.add(d.id);
+            getDescendants(d.id).forEach(id => writeSet.add(id));
+          }
         } else {
-           let isAuthorized = false;
-           if (d.authorizedForMissions && d.authorizedForMissions.some(m => m.assignedToId === req.user.id)) isAuthorized = true;
-           if (d.missionsLinked && d.missionsLinked.some(m => m.assignedToId === req.user.id)) isAuthorized = true;
-           if (d.authorizedForTaches && d.authorizedForTaches.some(t => t.assignedToId === req.user.id)) isAuthorized = true;
-           if (d.tachesLinked && d.tachesLinked.some(t => t.assignedToId === req.user.id)) isAuthorized = true;
-           
-           if (req.user.role === 'Relecteur') {
-             if (d.authorizedForMissions && d.authorizedForMissions.some(m => m.taches.some(t => t.assignedToId === req.user.id))) isAuthorized = true;
-             if (d.missionsLinked && d.missionsLinked.some(m => m.taches.some(t => t.assignedToId === req.user.id))) isAuthorized = true;
-           }
-           
-           if (isAuthorized) {
-              accessibleSet.add(d.id);
-              getDescendants(d.id).forEach(id => accessibleSet.add(id));
-              getAncestors(d.id).forEach(id => accessibleSet.add(id));
-           } else {
-              let hasMissionOnRoot = false;
-              if (d.missions && d.missions.some(m => m.assignedToId === req.user.id)) hasMissionOnRoot = true;
-              if (req.user.role === 'Relecteur' && d.missions && d.missions.some(m => m.taches.some(t => t.assignedToId === req.user.id))) hasMissionOnRoot = true;
-              
-              if (hasMissionOnRoot) {
-                 accessibleSet.add(d.id);
-              }
-           }
+          // Dossier that directly holds a mission assigned to user (root-level mission)
+          const hasMissionOnRoot = (d.missions && d.missions.some(m => m.assignedToId === req.user.id))
+            || (req.user.role === 'Relecteur' && d.missions && d.missions.some(m => m.taches.some(t => t.assignedToId === req.user.id)));
+          
+          if (hasMissionOnRoot) {
+            accessibleSet.add(d.id);
+          }
         }
       });
 
       dossiers = dossiers.filter(d => accessibleSet.has(d.id));
+      
+      // Use the writeSet computed during access resolution
+      const isSuperAdm = req.user.role === 'Super-administrateur' || req.user.role === 'Administrateur';
+      dossiers = dossiers.map(d => ({
+        ...d,
+        canWrite: isSuperAdm || writeSet.has(d.id)
+      }));
+
       total = dossiers.length;
       if (limit) dossiers = dossiers.slice(skip, skip + limit);
     }
@@ -663,6 +692,7 @@ router.get('/dossiers', async (req, res) => {
   }
 });
 
+// Force nodemon restart to load new Prisma Client
 router.post('/dossiers', async (req, res) => {
   try {
     const { name, description, priority, origin, categorie } = req.body;

@@ -72,6 +72,11 @@ export default function DocumentsPage() {
 
   const [previewFile, setPreviewFile] = useState(null);
 
+  const currentUserStr = sessionStorage.getItem('adminUser');
+  const currentUser = currentUserStr ? JSON.parse(currentUserStr) : {};
+  const userRole = currentUser.role?.name || currentUser.role || '';
+  const isSuperAdmin = userRole === 'Super-administrateur' || userRole === 'Administrateur';
+
   useEffect(() => {
     fetchDossiers();
   }, []);
@@ -102,6 +107,7 @@ export default function DocumentsPage() {
   // Find current folder's documents (Documents attached to the current dossier)
   const currentFolder = dossiers.find(d => d.id === currentFolderId);
   const documents = currentFolder ? currentFolder.documents || [] : [];
+  const canWriteCurrent = currentFolder ? currentFolder.canWrite : isSuperAdmin;
 
   const navigateTo = (folder) => {
     setCurrentPath([...currentPath, { id: folder.id, name: folder.name }]);
@@ -491,7 +497,7 @@ export default function DocumentsPage() {
           onKeyDown={(e) => e.stopPropagation()}
           role="presentation"
         >
-          {contextMenu.type === 'empty' && (
+          {contextMenu.type === 'empty' && canWriteCurrent && (
             <>
               <button 
                 onClick={() => { closeContextMenu(); setShowNewFolderModal(true); }}
@@ -530,26 +536,30 @@ export default function DocumentsPage() {
               >
                 <Folder size={16} /> Ouvrir
               </button>
-              <button 
-                onClick={() => { closeContextMenu(); setRenameItem(contextMenu.item); setRenameName(contextMenu.item.name); setShowRenameModal(true); }}
-                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--text-main)' }}
-                onMouseOver={(e) => e.currentTarget.style.background = '#F1F5F9'}
-                onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
-                onFocus={(e) => e.currentTarget.style.background = '#F1F5F9'}
-                onBlur={(e) => e.currentTarget.style.background = 'transparent'}
-              >
-                <Edit size={16} /> Renommer
-              </button>
-              <button 
-                onClick={() => { closeContextMenu(); handleDeleteDossier(contextMenu.item); }}
-                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--danger)' }}
-                onMouseOver={(e) => e.currentTarget.style.background = '#FEF2F2'}
-                onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
-                onFocus={(e) => e.currentTarget.style.background = '#FEF2F2'}
-                onBlur={(e) => e.currentTarget.style.background = 'transparent'}
-              >
-                <Trash size={16} /> Supprimer
-              </button>
+              {contextMenu.item.canWrite && (
+                <>
+                  <button 
+                    onClick={() => { closeContextMenu(); setRenameItem(contextMenu.item); setRenameName(contextMenu.item.name); setShowRenameModal(true); }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--text-main)' }}
+                    onMouseOver={(e) => e.currentTarget.style.background = '#F1F5F9'}
+                    onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                    onFocus={(e) => e.currentTarget.style.background = '#F1F5F9'}
+                    onBlur={(e) => e.currentTarget.style.background = 'transparent'}
+                  >
+                    <Edit size={16} /> Renommer
+                  </button>
+                  <button 
+                    onClick={() => { closeContextMenu(); handleDeleteDossier(contextMenu.item); }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--danger)' }}
+                    onMouseOver={(e) => e.currentTarget.style.background = '#FEF2F2'}
+                    onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                    onFocus={(e) => e.currentTarget.style.background = '#FEF2F2'}
+                    onBlur={(e) => e.currentTarget.style.background = 'transparent'}
+                  >
+                    <Trash size={16} /> Supprimer
+                  </button>
+                </>
+              )}
             </>
           )}
 
@@ -565,16 +575,18 @@ export default function DocumentsPage() {
               >
                 <FileText size={16} /> Ouvrir le fichier
               </button>
-              <button 
-                onClick={() => { closeContextMenu(); handleDeleteDocument(contextMenu.item.id); }}
-                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--danger)' }}
-                onMouseOver={(e) => e.currentTarget.style.background = '#FEF2F2'}
-                onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
-                onFocus={(e) => e.currentTarget.style.background = '#FEF2F2'}
-                onBlur={(e) => e.currentTarget.style.background = 'transparent'}
-              >
-                <Trash size={16} /> Supprimer
-              </button>
+              {canWriteCurrent && (
+                <button 
+                  onClick={() => { closeContextMenu(); handleDeleteDocument(contextMenu.item.id); }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--danger)' }}
+                  onMouseOver={(e) => e.currentTarget.style.background = '#FEF2F2'}
+                  onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                  onFocus={(e) => e.currentTarget.style.background = '#FEF2F2'}
+                  onBlur={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  <Trash size={16} /> Supprimer
+                </button>
+              )}
             </>
           )}
         </div>

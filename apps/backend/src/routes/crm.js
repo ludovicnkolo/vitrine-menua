@@ -699,36 +699,37 @@ router.post('/dossiers', async (req, res) => {
     let targetUserId = req.body.targetUserId || null;
     if (targetUserId === 'MASTER-ADMIN') targetUserId = creatorId;
 
-    const dossier = await prisma.dossier.create({
-      data: {
-        reference,
-        name,
-        description,
-        priority: priority || 'NORMAL',
-        status: 'NOUVEAU',
-        origin: origin || 'INTERNE',
-        createdById: creatorId,
-        traitantId: traitantId,
-        clientId: req.body.clientId || null,
-        targetUserId: targetUserId,
-        parentDossierId: req.body.parentDossierId || null,
-        categorie: categorie || null
-      }
-    });
+    const defaultSubFolders = (categorie === 'Dossiers clients' && !req.body.parentDossierId)
+      ? ['ADMINISTRATION & FINANCES', 'OPÉRATIONS & RÉALISATIONS', 'RELATIONS & DÉVELOPPEMENT']
+      : [];
 
-    if (categorie === 'Dossiers clients' && !req.body.parentDossierId) {
-      const defaultSubFolders = [
-        'ADMINISTRATION & FINANCES',
-        'OPÉRATIONS & RÉALISATIONS',
-        'RELATIONS & DÉVELOPPEMENT'
-      ];
-      for (const folderName of defaultSubFolders) {
-        const subRef = await generateSubDossierReference(dossier.id);
-        await prisma.dossier.create({
+    // Use a transaction to atomically create the main dossier + all GED sub-folders
+    const dossier = await prisma.$transaction(async (tx) => {
+      const created = await tx.dossier.create({
+        data: {
+          reference,
+          name,
+          description,
+          priority: priority || 'NORMAL',
+          status: 'NOUVEAU',
+          origin: origin || 'INTERNE',
+          createdById: creatorId,
+          traitantId: traitantId,
+          clientId: req.body.clientId || null,
+          targetUserId: targetUserId,
+          parentDossierId: req.body.parentDossierId || null,
+          categorie: categorie || null
+        }
+      });
+
+      // Create default GED sub-folders with deterministic references (index-based, no DB query)
+      for (let i = 0; i < defaultSubFolders.length; i++) {
+        const subRef = `${reference}-${String(i + 1).padStart(2, '0')}`;
+        await tx.dossier.create({
           data: {
             reference: subRef,
-            name: folderName,
-            description: `Sous-dossier par défaut: ${folderName}`,
+            name: defaultSubFolders[i],
+            description: `Sous-dossier par défaut: ${defaultSubFolders[i]}`,
             priority: priority || 'NORMAL',
             status: 'OUVERT',
             origin: origin || 'INTERNE',
@@ -736,12 +737,14 @@ router.post('/dossiers', async (req, res) => {
             traitantId: traitantId,
             clientId: req.body.clientId || null,
             targetUserId: targetUserId,
-            parentDossierId: dossier.id,
+            parentDossierId: created.id,
             categorie: categorie || null
           }
         });
       }
-    }
+
+      return created;
+    });
 
     await prisma.auditLog.create({ data: { userId: creatorId, action: 'CREATION_DOSSIER', targetId: dossier.id, targetType: 'DOSSIER', details: `Dossier créé: ${dossier.name}`, dossierId: dossier.id }});
 

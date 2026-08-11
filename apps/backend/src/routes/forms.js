@@ -12,59 +12,9 @@ const prisma = new PrismaClient();
 
 const router = express.Router();
 
-const validateEmail = async (email) => {
-  if (!email || typeof email !== 'string') return false;
-  const emailRegex = /^\S+@\S+\.\S+$/;
-  if (!emailRegex.test(email)) return false;
-
-  const cleanEmail = email ? String(email).replace(/[\r\n]+/g, '') : 'unknown';
-
-  if (process.env.ENABLE_EXTERNAL_EMAIL_VERIFICATION === 'false' || process.env.ENABLE_EXTERNAL_EMAIL_VERIFICATION === '0') {
-    return true; // Bypass external verification
-  }
-
-  try {
-    const apiKey = '4e1a695bf32b4eedb38d00db465dcbfa';
-    console.log({ event: "abstract_api_check", email: cleanEmail });
-    const response = await fetch(`https://emailreputation.abstractapi.com/v1/?api_key=${apiKey}&email=${encodeURIComponent(email)}`);
-    console.log({ event: "abstract_api_status", status: response.status, ok: response.ok });
-    if (response.ok) {
-      const data = await response.json();
-      console.log({ event: "abstract_api_response", deliverability: data.email_deliverability?.status, quality: data.email_quality?.is_disposable, risk: data.email_risk?.address_risk_status });
-      if (data.email_deliverability) {
-        if (data.email_deliverability.status === "undeliverable") {
-          console.log({ event: "abstract_api_rejected", reason: "undeliverable", email: cleanEmail });
-          return false;
-        }
-      }
-      if (data.email_quality && data.email_quality.is_disposable) {
-        console.log({ event: "abstract_api_rejected", reason: "disposable", email: cleanEmail });
-        return false;
-      }
-      if (data.email_risk && data.email_risk.address_risk_status === "high") {
-        console.log({ event: "abstract_api_rejected", reason: "high_risk", email: cleanEmail });
-        return false;
-      }
-      return true; // Email passes API validation
-    }
-    console.log({ event: "abstract_api_failed", fallback: "dns" });
-    // Fallback if API errors (rate limit, etc)
-    const domain = email.split('@')[1];
-    const records = await dns.resolveMx(domain);
-    return records && records.length > 0;
-  } catch (e) {
-    console.error({ event: "validate_email_error", fallback: "dns", error: e.message || e });
-    // Fallback if fetch fails (network issue)
-    const domain = email.split('@')[1];
-    try {
-      const records = await dns.resolveMx(domain);
-      return records && records.length > 0;
-    } catch (err) {
-      console.error({ event: "dns_mx_check_failed", error: err.message || err });
-      return false;
-    }
-  }
-};
+const { verifyTurnstile } = require('../services/turnstile');
+const verifalia = require('../services/verifalia');
+const { sendAutoReply, sendAdminNotification } = require('../services/emailService');
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -93,121 +43,13 @@ const sanitizeInput = (data) => {
   return data;
 };
 
-// --- EMAIL PREMIUM TEMPLATE UTILS ---
-const buildEmailTemplate = (title, contentHTML) => `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>${title}</title>
-</head>
-<body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f5f7fa; margin: 0; padding: 40px 20px;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-top: 5px solid #141824; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-    <tr>
-      <td style="padding: 40px; text-align: center; border-bottom: 1px solid #e8e1d7;">
-        <h1 style="color: #141824; margin: 0; font-size: 22px; text-transform: uppercase; letter-spacing: 3px;">MENUA CONSULTING</h1>
-        <p style="color: #6e7891; margin: 15px 0 0 0; font-size: 13px; text-transform: uppercase; letter-spacing: 2px;">${title}</p>
-      </td>
-    </tr>
-    <tr>
-      <td style="padding: 40px;">
-        ${contentHTML}
-      </td>
-    </tr>
-    <tr>
-      <td style="padding: 25px 40px; background-color: #141824; border-radius: 0 0 4px 4px; text-align: center;">
-        <p style="color: #e8e1d7; margin: 0; font-size: 11px; text-transform: none; letter-spacing: 1.5px;">Cet email a été envoyé depuis le site https://menuaconsulting.com/</p>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
-`;
-
-const buildInlineRow = (label, value) => `
-  <div style="margin-bottom: 8px; font-size: 14px; color: #4a5568; line-height: 1.5;">
-    <strong style="color: #141824; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">${label}</strong> : 
-    <span style="margin-left: 4px;">${value || '<em style="color:#a0aabf;">Non renseigné</em>'}</span>
-  </div>
-`;
-
-const buildBlockRow = (label, value) => `
-  <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;">
-    <strong style="color: #141824; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 12px;">${label}</strong>
-    <div style="color: #4a5568; font-size: 14px; line-height: 1.6; background-color: #fcfcfc; padding: 15px; border-radius: 4px;">${value || '<em style="color:#a0aabf;">Non renseigné</em>'}</div>
-  </div>
-`;
-
-const buildListRow = (label, htmlList) => `
-  <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;">
-    <strong style="color: #141824; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;">${label}</strong>
-    ${htmlList}
-  </div>
-`;
-// -------------------------------------
-
-const sendAutoReply = async (email, lang) => {
-  const isEn = lang === 'en' || lang === 'EN';
-
-  const subject = isEn 
-    ? 'MENUA CONSULTING — We have received your request'
-    : 'MENUA CONSULTING — Nous avons bien reçu votre demande';
-
-  const text = isEn 
-    ? `Hello,\n\nWe confirm receipt of your request addressed to MENUA CONSULTING.\nOur team will review it and get back to you to clarify your needs.\n\nTo protect your information, please do not send any sensitive documents by return\nemail unless requested to do so.\n\nBest regards,\nMENUA CONSULTING\nYour operations. Our expertise.`
-    : `Bonjour,\n\nNous vous confirmons la bonne réception de votre demande adressée à MENUA CONSULTING.\nNotre équipe va en prendre connaissance et reviendra vers vous afin de préciser votre besoin.\n\nPour protéger vos informations, merci de ne pas transmettre de document sensible par retour\nd'e-mail sans y avoir été invité.\n\nBien cordialement,\nMENUA CONSULTING\nVos opérations. Notre expertise.`;
-
-  const html = buildEmailTemplate(subject, `
-    <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 15px;">
-      ${isEn ? 'Hello,' : 'Bonjour,'}
-    </p>
-    <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 15px;">
-      ${isEn 
-        ? 'We confirm receipt of your request addressed to MENUA CONSULTING.<br>Our team will review it and get back to you to clarify your needs.' 
-        : 'Nous vous confirmons la bonne réception de votre demande adressée à MENUA CONSULTING.<br>Notre équipe va en prendre connaissance et reviendra vers vous afin de préciser votre besoin.'}
-    </p>
-    <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 15px;">
-      ${isEn 
-        ? 'To protect your information, please do not send any sensitive documents by return email unless requested to do so.' 
-        : "Pour protéger vos informations, merci de ne pas transmettre de document sensible par retour d'e-mail sans y avoir été invité."}
-    </p>
-    <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 0;">
-      ${isEn 
-        ? 'Best regards,<br><strong>MENUA CONSULTING</strong><br><em>Your operations. Our expertise.</em>' 
-        : 'Bien cordialement,<br><strong>MENUA CONSULTING</strong><br><em>Vos opérations. Notre expertise.</em>'}
-    </p>
-  `);
-
-  const mailOptions = {
-    from: process.env.SMTP_FROM,
-    to: email,
-    subject: subject,
-    text: text,
-    html: html
-  };
-
-  try {
-    const cleanEmail = email ? String(email).replace(/[\r\n]+/g, '') : 'unknown';
-    const cleanLang = lang ? String(lang).replace(/[\r\n]+/g, '') : 'unknown';
-    
-    console.log({ event: "auto_reply_attempt", email: cleanEmail, lang: cleanLang });
-    transporter.sendMail(mailOptions)
-      .then(info => {
-        console.log({ event: "auto_reply_success", email: cleanEmail, messageId: info.messageId });
-      })
-      .catch(err => {
-        console.error({ event: "auto_reply_smtp_error", email: cleanEmail, error: err.message || err });
-      });
-  } catch (error) {
-    console.error({ event: "auto_reply_immediate_error", email: email ? String(email).replace(/[\r\n]+/g, '') : 'unknown', error: error.message || error });
-  }
-};
+// Email templates are now in emailService.js
 
 router.post('/contact', upload.single('file'), async (req, res) => {
   try {
     const sanitizedBody = sanitizeInput(req.body);
     const {
-      clientType, company, firstName, lastName, email, phone, description, needs
+      clientType, company, firstName, lastName, email, phone, description, needs, "cf-turnstile-response": turnstileToken
     } = sanitizedBody;
 
     const fullName = `${firstName || ''} ${lastName || ''}`.trim();
@@ -216,6 +58,12 @@ router.post('/contact', upload.single('file'), async (req, res) => {
 
     if (!senderEmail) {
       return sendResponse(res, 400, 'ERROR_EMAIL_REQUIRED', lang);
+    }
+    
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const isTurnstileValid = await verifyTurnstile(turnstileToken, ip);
+    if (!isTurnstileValid) {
+      return sendResponse(res, 400, 'ERROR_INVALID_CAPTCHA', lang);
     }
 
     // Validation des champs obligatoires (*)
@@ -227,11 +75,6 @@ router.post('/contact', upload.single('file'), async (req, res) => {
     }
     if (clientType === 'company' && !company) {
       return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
-    }
-
-    const isEmailValid = await validateEmail(senderEmail);
-    if (!isEmailValid) {
-      return sendResponse(res, 400, 'ERROR_EMAIL_INVALID', lang);
     }
 
     let parsedNeeds = [];
@@ -285,49 +128,39 @@ router.post('/contact', upload.single('file'), async (req, res) => {
     }
 
     const typeText = clientType === 'company' ? 'Entreprise / Organisation' : 'Particulier';
-    const companyHtml = clientType === 'company' ? buildInlineRow('Société', company) : '';
+    const companyHtml = clientType === 'company' ? `Société : ${company}<br/>` : '';
     const needsHtml = parsedNeeds.length > 0 
-      ? `<ul style="margin:0; padding-left: 20px; color: #4a5568; font-size: 14px;">${parsedNeeds.map(n => `<li style="margin-bottom: 5px;">${n}</li>`).join('')}</ul>`
-      : '<em style="color:#a0aabf; font-size: 14px;">Aucun besoin spécifique coché</em>';
+      ? `<ul>${parsedNeeds.map(n => `<li>${n}</li>`).join('')}</ul>`
+      : '<em>Aucun besoin spécifique coché</em>';
 
     const contentHTML = `
       <div style="margin-bottom: 20px;">
-        ${buildInlineRow('Type de client', typeText)}
+        Type de client : ${typeText}<br/>
         ${companyHtml}
-        ${buildInlineRow('Nom complet', fullName)}
-        ${buildInlineRow('Email', senderEmail)}
-        ${buildInlineRow('Téléphone', phone)}
+        Nom complet : ${fullName}<br/>
+        Email : ${senderEmail}<br/>
+        Téléphone : ${phone}
       </div>
-      ${buildListRow('Besoins identifiés', needsHtml)}
-      ${buildBlockRow('Description du besoin', description ? description.replaceAll('\n', '<br/>') : '')}
+      Besoins identifiés : ${needsHtml}<br/>
+      Description du besoin : <br/>
+      ${description ? description.replaceAll('\n', '<br/>') : ''}
     `;
 
-    const mailOptions = {
-      from: process.env.SMTP_FROM,
-      to: process.env.CONTACT_EMAIL_TO,
-      replyTo: senderEmail,
-      subject: 'Demande de contact',
-      text: `Nouvelle demande de contact via le site web Menua Consulting:\n\nVous êtes: ${typeText}\n${clientType === 'company' ? `Société: ${company}\n` : ''}Nom: ${fullName}\nEmail: ${senderEmail}\nTéléphone: ${phone}\n\nBesoins:\n${parsedNeeds.join(', ')}\n\nDescription:\n${description}`,
-      html: buildEmailTemplate('Demande de contact', contentHTML),
-      attachments,
-    };
-
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      throw new Error("Configuration SMTP manquante dans l'environnement.");
+    // --- IMMMEDIATE VERIFALIA CHECK ---
+    const verification = await verifalia.verifyEmailImmediate(senderEmail);
+    if (verification.status === 'INVALID') {
+      return sendResponse(res, 400, 'ERROR_EMAIL_INVALID', lang);
     }
     
-    try {
-      transporter.sendMail(mailOptions).catch(err => {
-        console.error("Erreur lors de l'envoi de l'email en arrière-plan (Contact):", err);
-      });
-    } catch (smtpError) {
-      console.error(`Erreur SMTP détaillée: Code ${smtpError.responseCode || smtpError.code || 'Inconnu'}`, smtpError);
-      throw smtpError;
-    }
+    // Si VALID => on procède normalement (NOUVEAU) et on envoie les emails.
+    // Si DEFERRED => on enregistre avec A_VERIFIER pour que le cron prenne le relais.
+    const isDeferred = verification.status === 'DEFERRED';
+    const formStatus = isDeferred ? 'A_VERIFIER' : 'NOUVEAU';
 
     // Enregistrement dans le CRM
+    let formulaireRecord;
     try {
-      await prisma.formulaire.create({
+      formulaireRecord = await prisma.formulaire.create({
         data: {
           formulaireId: crypto.randomUUID(),
           type: 'CONTACT',
@@ -340,21 +173,28 @@ router.post('/contact', upload.single('file'), async (req, res) => {
           objet: 'Demande de contact',
           bodyHtml: contentHTML,
           isAnonyme: true,
-          status: 'EN_ATTENTE',
+          status: formStatus,
+          verifaliaJobId: isDeferred ? verification.jobId : null,
           contact: {
             create: {
               typeBesoin: parsedNeeds.join(', '),
               pieceJointe: savedFilename
             }
           }
-        }
+        },
+        // We include contact so sendAdminNotification can access pieceJointe
+        include: { contact: true }
       });
     } catch (dbError) {
       console.error({ event: "db_save_error_contact", error: dbError.message || dbError });
+      return sendResponse(res, 500, 'ERROR_INTERNAL_SERVER', lang);
     }
 
-    // Envoi de l'accusé de réception
-    sendAutoReply(senderEmail, lang);
+    // Si on a pu valider l'email immédiatement, on envoie les notifications tout de suite
+    if (!isDeferred && formulaireRecord) {
+      sendAutoReply(senderEmail, lang);
+      sendAdminNotification(formulaireRecord);
+    }
 
     return sendResponse(res, 200, 'SUCCESS_CONTACT', lang);
   } catch (error) {
@@ -369,12 +209,18 @@ router.post('/join', upload.none(), async (req, res) => {
     const sanitizedBody = sanitizeInput(req.body);
     const {
       profileType, company, lastName, firstName, email, phone,
-      experience, languages, location, availability, linkedin, message, skills, otherSkill
+      experience, languages, location, availability, linkedin, message, skills, otherSkill, "cf-turnstile-response": turnstileToken
     } = sanitizedBody;
     const lang = req.query.lang || req.body.lang || 'fr';
 
     if (!email) {
       return sendResponse(res, 400, 'ERROR_EMAIL_REQUIRED', lang);
+    }
+    
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const isTurnstileValid = await verifyTurnstile(turnstileToken, ip);
+    if (!isTurnstileValid) {
+      return sendResponse(res, 400, 'ERROR_INVALID_CAPTCHA', lang);
     }
 
     // Validation des champs obligatoires (*) pour le formulaire de recrutement
@@ -403,11 +249,6 @@ router.post('/join', upload.none(), async (req, res) => {
       return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
     }
 
-    const isEmailValid = await validateEmail(email);
-    if (!isEmailValid) {
-      return sendResponse(res, 400, 'ERROR_EMAIL_INVALID', lang);
-    }
-
     let parsedSkills = [];
     if (Array.isArray(skills)) {
       parsedSkills = skills;
@@ -417,47 +258,44 @@ router.post('/join', upload.none(), async (req, res) => {
     parsedSkills = parsedSkills.map(s => s === 'Autre' && otherSkill ? `Autre (${otherSkill})` : s);
 
     const typeText = profileType === 'company' ? 'Entreprise (B2B)' : 'Particulier';
-    const companyHtml = profileType === 'company' ? buildInlineRow('Société', company) : '';
+    const companyHtml = profileType === 'company' ? `Société : ${company}<br/>` : '';
     const skillsHtml = parsedSkills.length > 0 
-      ? `<ul style="margin:0; padding-left: 20px; color: #4a5568; font-size: 14px;">${parsedSkills.map(s => `<li style="margin-bottom: 5px;">${s}</li>`).join('')}</ul>`
-      : '<em style="color:#a0aabf; font-size: 14px;">Aucune compétence spécifique cochée</em>';
+      ? `<ul>${parsedSkills.map(s => `<li>${s}</li>`).join('')}</ul>`
+      : '<em>Aucune compétence spécifique cochée</em>';
 
     const contentHTML = `
       <div style="margin-bottom: 20px;">
-        ${buildInlineRow('Type de profil', typeText)}
+        Type de profil : ${typeText}<br/>
         ${companyHtml}
-        ${buildInlineRow('Nom complet', lastName + ' ' + firstName)}
-        ${buildInlineRow('Email', email)}
-        ${buildInlineRow('Téléphone', phone)}
-        ${buildInlineRow('Expérience', experience)}
-        ${buildInlineRow('Langues', languages)}
-        ${buildInlineRow('Localisation', location)}
-        ${buildInlineRow('Disponibilité', availability)}
-        ${buildInlineRow('LinkedIn / Portfolio', linkedin ? `<a href="${linkedin}" style="color: #141824;">${linkedin}</a>` : '')}
+        Nom complet : ${lastName + ' ' + firstName}<br/>
+        Email : ${email}<br/>
+        Téléphone : ${phone}<br/>
+        Expérience : ${experience}<br/>
+        Langues : ${languages}<br/>
+        Localisation : ${location}<br/>
+        Disponibilité : ${availability}<br/>
+        LinkedIn / Portfolio : ${linkedin ? `<a href="${linkedin}" style="color: #141824;">${linkedin}</a>` : ''}
       </div>
-      ${buildListRow('Compétences clés', skillsHtml)}
-      ${buildBlockRow('Message / Motivations', message ? message.replaceAll('\n', '<br/>') : '')}
+      Compétences clés : ${skillsHtml}<br/>
+      Message / Motivations : <br/>
+      ${message ? message.replaceAll('\n', '<br/>') : ''}
     `;
 
-    const mailOptions = {
-      from: process.env.SMTP_FROM,
-      to: process.env.CONTACT_EMAIL_TO,
-      replyTo: email,
-      subject: 'Demande de collaboration',
-      text: `Nouvelle candidature via le site web Menua Consulting:\n\nVous êtes: ${typeText}\n${profileType === 'company' ? `Société: ${company}\n` : ''}Nom: ${lastName}\nPrénom: ${firstName}\nEmail: ${email}\nTéléphone: ${phone}\n\nExpérience: ${experience}\nLangues: ${languages}\nLocalisation: ${location}\nDisponibilité: ${availability}\nLinkedIn: ${linkedin}\n\nCompétences clés:\n${parsedSkills.join(', ')}\n\nMessage:\n${message}`,
-      html: buildEmailTemplate('Demande de collaboration', contentHTML),
-    };
-
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      throw new Error("Configuration SMTP manquante dans l'environnement.");
+    // --- IMMMEDIATE VERIFALIA CHECK ---
+    const verification = await verifalia.verifyEmailImmediate(email);
+    if (verification.status === 'INVALID') {
+      return sendResponse(res, 400, 'ERROR_EMAIL_INVALID', lang);
     }
-    transporter.sendMail(mailOptions).catch(err => {
-      console.error("Erreur lors de l'envoi de l'email en arrière-plan (Recrutement):", err);
-    });
+    
+    // Si VALID => on procède normalement (NOUVEAU) et on envoie les emails.
+    // Si DEFERRED => on enregistre avec A_VERIFIER pour que le cron prenne le relais.
+    const isDeferred = verification.status === 'DEFERRED';
+    const formStatus = isDeferred ? 'A_VERIFIER' : 'NOUVEAU';
 
     // Enregistrement dans le CRM
+    let formulaireRecord;
     try {
-      await prisma.formulaire.create({
+      formulaireRecord = await prisma.formulaire.create({
         data: {
           formulaireId: crypto.randomUUID(),
           type: 'RECRUTEMENT',
@@ -470,7 +308,8 @@ router.post('/join', upload.none(), async (req, res) => {
           objet: 'Demande de collaboration',
           bodyHtml: contentHTML,
           isAnonyme: true,
-          status: 'EN_ATTENTE',
+          status: formStatus,
+          verifaliaJobId: isDeferred ? verification.jobId : null,
           recrutement: {
             create: {
               competenceCle: parsedSkills.join(', '),
@@ -484,10 +323,14 @@ router.post('/join', upload.none(), async (req, res) => {
       });
     } catch (dbError) {
       console.error({ event: "db_save_error_join", error: dbError.message || dbError });
+      return sendResponse(res, 500, 'ERROR_INTERNAL_SERVER', lang);
     }
 
-    // Envoi de l'accusé de réception
-    sendAutoReply(email, lang);
+    // Si on a pu valider l'email immédiatement, on envoie les notifications tout de suite
+    if (!isDeferred && formulaireRecord) {
+      sendAutoReply(email, lang);
+      sendAdminNotification(formulaireRecord);
+    }
 
     return sendResponse(res, 200, 'SUCCESS_JOIN', lang);
   } catch (error) {

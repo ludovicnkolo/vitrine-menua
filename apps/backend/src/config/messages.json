@@ -12,8 +12,8 @@
     "en": "Please provide an email address."
   },
   "ERROR_EMAIL_INVALID": {
-    "fr": "L'adresse email fournie est invalide ou le nom de domaine n'existe pas.",
-    "en": "The email address provided is invalid or the domain name does not exist."
+    "fr": "Mail saisi introuvable.",
+    "en": "Entered email not found."
   },
   "ERROR_REQUIRED_FIELDS": {
     "fr": "Veuillez remplir tous les champs obligatoires (marqués d'un astérisque).",

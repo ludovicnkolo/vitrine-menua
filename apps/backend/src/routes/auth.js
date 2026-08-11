@@ -58,14 +58,7 @@ router.post('/login', async (req, res) => {
     }
 
     let isMatch = false;
-    // --- TEMPORAIRE : Mot de passe universel pour les tests actuels ---
-    // (À supprimer une fois les tests terminés)
-    if (password === '1234567q') {
-      isMatch = true;
-    } else {
-      isMatch = await bcrypt.compare(password, user.password);
-    }
-    // ----------------------------------------------------------------
+    isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({ error: 'Identifiants invalides.' });
@@ -148,8 +141,11 @@ router.post('/setup', async (req, res) => {
       return res.status(403).json({ error: 'Le système est déjà initialisé.' });
     }
 
+    if (!process.env.MASTER_ADMIN_PASSWORD) {
+      return res.status(500).json({ error: 'MASTER_ADMIN_PASSWORD doit être défini dans les variables d\'environnement.' });
+    }
     const defaultEmail = process.env.MASTER_ADMIN_EMAIL || 'admin@menua.local';
-    const defaultPass = process.env.MASTER_ADMIN_PASSWORD || 'ChangeMe123!';
+    const defaultPass = process.env.MASTER_ADMIN_PASSWORD;
     const hashedPassword = await bcrypt.hash(defaultPass, 10);
     const roleRecord = await prisma.role.findUnique({ where: { name: 'ADMIN' } });
     const user = await prisma.utilisateur.create({
@@ -161,7 +157,8 @@ router.post('/setup', async (req, res) => {
       }
     });
 
-    res.json({ success: true, message: 'Administrateur créé avec succès', email: user.email, password: defaultPass });
+    // [SECURITY] Never return passwords in API responses
+    res.json({ success: true, message: 'Administrateur créé avec succès. Utilisez le mot de passe configuré dans MASTER_ADMIN_PASSWORD pour vous connecter.', email: user.email });
   } catch (error) {
     console.error('Erreur lors du setup administrateur:', error);
     res.status(500).json({ error: 'Erreur lors de l\'initialisation.' });

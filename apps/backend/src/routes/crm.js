@@ -1278,7 +1278,7 @@ router.delete('/documents/:id', async (req, res) => {
 router.post('/messages/interne', async (req, res) => {
   try {
     const { subType, objet, bodyText, attachment, dossierId, missionId, tacheId, assignedToId } = req.body;
-    console.log("PAYLOAD RECEIVED IN /messages/interne:", req.body);
+    // [SECURITY] req.body intentionally not logged — contains PII (names, message content)
     
     // Récupérer les infos complètes de l'expéditeur
     let senderName = req.user?.id === 'MASTER-ADMIN' ? (process.env.MASTER_ADMIN_NAME || 'Super Administrateur') : 'Administrateur';

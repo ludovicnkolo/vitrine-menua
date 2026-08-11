@@ -41,8 +41,8 @@ export const handleFormSubmit = async ({
     } else {
       if (setEmailError && (data.code === 'ERROR_EMAIL_INVALID' || data.code === 'ERROR_EMAIL_REQUIRED')) {
         setEmailError(data.error);
-        // Efface l'erreur après 4 secondes
-        setTimeout(() => setEmailError(null), 4000);
+        // Efface l'erreur après 5 secondes
+        setTimeout(() => setEmailError(null), 5000);
       } else {
         setSubmitStatus({ type: "error", message: data.error || "Une erreur s'est produite." });
         setTimeout(() => setSubmitStatus(null), 3000);

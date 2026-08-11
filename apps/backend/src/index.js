@@ -8,6 +8,20 @@ const rateLimit = require('express-rate-limit');
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
+// ─── VALIDATION DES VARIABLES D'ENVIRONNEMENT CRITIQUES ────────────────────────
+// Fail fast at startup — never silently run with missing secrets
+const REQUIRED_ENV_VARS = [
+  'JWT_SECRET',
+  'SMTP_HOST', 'SMTP_USER', 'SMTP_PASS',
+  'VERIFALIA_USERNAME', 'VERIFALIA_PASSWORD',
+];
+const missingVars = REQUIRED_ENV_VARS.filter(v => !process.env[v]);
+if (missingVars.length > 0) {
+  console.error(`[STARTUP] FATAL — Variables d'environnement manquantes: ${missingVars.join(', ')}`);
+  console.error('[STARTUP] Le serveur refuse de démarrer. Vérifiez votre fichier .env.');
+  process.exit(1);
+}
+
 const app = express();
 const prisma = new PrismaClient();
 
@@ -137,5 +151,14 @@ app.listen(PORT, () => {
     console.log('Tâche d\'export automatique de la base de données configurée (toutes les 10 min).');
   } catch (err) {
     console.error('Erreur lors du paramétrage de l\'export automatique :', err);
+  }
+
+  // Start Verifalia Cron
+  try {
+    const { startVerifaliaCron } = require('./services/verifaliaCron');
+    startVerifaliaCron();
+    console.log('Verifalia Cron started.');
+  } catch (err) {
+    console.error('Failed to start Verifalia Cron:', err);
   }
 });

@@ -102,6 +102,10 @@ model Formulaire {
   bodyHtml        String?
   status          String  @default("NOUVEAU")
   isAnonyme       Boolean @default(true)
+  verifaliaJobId      String?
+  verifaliaStatus     String?
+  verifaliaNextRetry  DateTime?
+  verifaliaRetries    Int      @default(0)
 
   clientId String?
   client   Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)

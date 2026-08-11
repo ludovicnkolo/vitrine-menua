@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-08T11:11:48.414Z",
-      "updatedAt": "2026-08-08T13:13:20.715Z"
+      "updatedAt": "2026-08-10T13:41:33.831Z"
     },
     {
       "id": "f2946c84-8e7e-4985-8f08-920ff0d8535f",
@@ -16,7 +16,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-08-08T11:11:48.422Z",
-      "updatedAt": "2026-08-08T13:13:20.741Z"
+      "updatedAt": "2026-08-10T13:41:33.854Z"
     },
     {
       "id": "c73f4e34-cbd4-4dab-a9b9-8b33253d2f2e",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-08-08T11:11:48.429Z",
-      "updatedAt": "2026-08-08T13:13:20.775Z"
+      "updatedAt": "2026-08-10T13:41:33.863Z"
     },
     {
       "id": "16e4d4ae-840e-432a-b885-1f295491999e",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-08-08T11:11:48.436Z",
-      "updatedAt": "2026-08-08T13:13:20.807Z"
+      "updatedAt": "2026-08-10T13:41:33.871Z"
     },
     {
       "id": "442e4d5a-eb7a-4367-bc0b-ca2daefe846b",
@@ -43,14 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-08T11:11:48.444Z",
-      "updatedAt": "2026-08-08T13:13:20.847Z"
+      "updatedAt": "2026-08-10T13:41:33.878Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$1C3M/MxDvjAiiiyeRGOTwuMoTD.OV6FJBu4b3WWH1lJ6e8ntu/0Ge",
+      "password": "$2a$10$qiqpEx7.L.CcMXcPkYaJCuRy3lO41jkdZUZ52XSR53Gzohr6trSXu",
       "name": "Rosette Fouelefack",
       "roleId": "8d160b97-91b7-4ab7-870f-a0d4062b3ac2",
       "telephone": "+33659207511",
@@ -63,7 +63,7 @@
       "resetTokenExpiry": null,
       "isBlocked": false,
       "createdAt": "2026-08-08T11:11:48.601Z",
-      "updatedAt": "2026-08-08T13:13:22.852Z"
+      "updatedAt": "2026-08-10T13:41:34.057Z"
     },
     {
       "id": "dd022259-0ff8-4cc9-ae0d-2328a6dbd22c",
@@ -269,6 +269,78 @@
       "parentDossierId": "52ebf8e8-3bef-40f3-969c-4fd92913ea09",
       "createdAt": "2026-08-08T11:27:14.693Z",
       "updatedAt": "2026-08-08T11:27:14.693Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "id": "816648ea-4920-4b6d-8d0e-8e267f1e8976",
+      "reference": "DOS-03",
+      "name": "Repudiandae tempore",
+      "description": "Eum et modi dignissi",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "traitantId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "parentDossierId": null,
+      "createdAt": "2026-08-08T13:23:23.209Z",
+      "updatedAt": "2026-08-08T13:23:23.209Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "id": "ff01fbb8-42dc-43cf-9145-f42ddfc44c1a",
+      "reference": "DOS-03-01",
+      "name": "ADMINISTRATION & FINANCES",
+      "description": "Sous-dossier par défaut: ADMINISTRATION & FINANCES",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "traitantId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "parentDossierId": "816648ea-4920-4b6d-8d0e-8e267f1e8976",
+      "createdAt": "2026-08-08T13:23:23.238Z",
+      "updatedAt": "2026-08-08T13:23:23.238Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "id": "d2158fee-a0e7-402a-abea-863878f98ce7",
+      "reference": "DOS-03-02",
+      "name": "OPÉRATIONS & RÉALISATIONS",
+      "description": "Sous-dossier par défaut: OPÉRATIONS & RÉALISATIONS",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "traitantId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "parentDossierId": "816648ea-4920-4b6d-8d0e-8e267f1e8976",
+      "createdAt": "2026-08-08T13:23:23.265Z",
+      "updatedAt": "2026-08-08T13:23:23.265Z"
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "id": "1e47c09a-656b-4b77-918e-2eb920a7f244",
+      "reference": "DOS-03-03",
+      "name": "RELATIONS & DÉVELOPPEMENT",
+      "description": "Sous-dossier par défaut: RELATIONS & DÉVELOPPEMENT",
+      "status": "OUVERT",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": "Dossiers clients",
+      "clientId": null,
+      "targetUserId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "traitantId": "c572702a-7c43-4332-9a78-21e6df8b34b3",
+      "parentDossierId": "816648ea-4920-4b6d-8d0e-8e267f1e8976",
+      "createdAt": "2026-08-08T13:23:23.295Z",
+      "updatedAt": "2026-08-08T13:23:23.295Z"
     }
   ],
   "missions": [],
@@ -307,6 +379,17 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-08-08T11:34:44.104Z"
+    },
+    {
+      "id": "fb8a35e5-c0c8-4a7d-9f2e-cf4e327ca2ba",
+      "userId": "0f0310ae-af63-41bc-8fb0-66a8fcbd542c",
+      "action": "CREATION_DOSSIER",
+      "targetId": "816648ea-4920-4b6d-8d0e-8e267f1e8976",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: Repudiandae tempore",
+      "dossierId": "816648ea-4920-4b6d-8d0e-8e267f1e8976",
+      "formulaireId": null,
+      "createdAt": "2026-08-08T13:23:23.322Z"
     }
   ],
   "messagePersonnels": [

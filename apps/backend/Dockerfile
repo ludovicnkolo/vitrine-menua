@@ -2,7 +2,7 @@ FROM node:22-bookworm-slim
 RUN apt-get update -y && apt-get install -y --no-install-recommends openssl && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm install --ignore-scripts
 # Copie sélective pour éviter l'inclusion de fichiers sensibles
 COPY src/ ./src/
 COPY prisma/ ./prisma/

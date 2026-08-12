@@ -10,7 +10,11 @@ async function testFull(email) {
       fetchedJob = await verifaliaService.getJob(job.id);
     }
     const entriesData = await verifaliaService.getJobEntries(job.id);
-    console.log(`Email: ${email} ->`, JSON.stringify(entriesData.data[0], null, 2));
+    console.log({
+      message: 'Verification Completed',
+      email: email,
+      verification_result: entriesData.data[0]
+    });
   } catch (err) {
     console.error(err);
   }

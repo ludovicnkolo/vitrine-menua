@@ -349,12 +349,12 @@ const CMSPage = () => {
                   )}
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column', flexGrow: 1, padding: '1.5rem'}}>
+                  <p style={{color: '#6e7891', fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.05em', marginBottom: '0.5rem', textTransform: 'uppercase'}}>
+                    {new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </p>
                   <h3 style={{color: '#141824', fontWeight: 600, fontSize: '1.1rem', lineHeight: 1.3, marginBottom: '0.75rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
                     {title || 'Titre de la publication...'}
                   </h3>
-                  <p style={{color: '#6e7891', fontSize: '0.85rem', fontWeight: 300, lineHeight: 1.6, marginBottom: '0.5rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
-                    {excerpt || 'Le résumé de la publication s\'affichera ici...'}
-                  </p>
                   <p style={{color: '#a0aec0', fontSize: '0.75rem', fontWeight: 300, lineHeight: 1.5, flexGrow: 1, marginBottom: '1rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
                     {contentHtml ? contentHtml.replace(/<[^>]+>/g, '') : 'Extrait du contenu complet de l\'article...'}
                   </p>

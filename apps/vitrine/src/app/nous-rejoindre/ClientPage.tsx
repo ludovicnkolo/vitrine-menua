@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "@/components/Link";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -8,6 +8,21 @@ import SubmitStatusModal from "@/components/SubmitStatusModal";
 import ContactInfoFields from "@/components/ContactInfoFields";
 import FormPrivacyAndSubmit from "@/components/FormPrivacyAndSubmit";
 import { handleFormSubmit } from "@/utils/formSubmitHandler";
+
+const LANGUAGES = [
+  { value: "Allemand",    label_fr: "Allemand",           label_en: "German" },
+  { value: "Anglais",     label_fr: "Anglais",            label_en: "English" },
+  { value: "Arabe",       label_fr: "Arabe",              label_en: "Arabic" },
+  { value: "Coréen",      label_fr: "Coréen",             label_en: "Korean" },
+  { value: "Espagnol",    label_fr: "Espagnol",           label_en: "Spanish" },
+  { value: "Français",    label_fr: "Français",           label_en: "French" },
+  { value: "Italien",     label_fr: "Italien",            label_en: "Italian" },
+  { value: "Japonais",    label_fr: "Japonais",           label_en: "Japanese" },
+  { value: "Mandarin",    label_fr: "Mandarin (chinois)", label_en: "Mandarin (Chinese)" },
+  { value: "Néerlandais", label_fr: "Néerlandais",        label_en: "Dutch" },
+  { value: "Polonais",    label_fr: "Polonais",           label_en: "Polish" },
+  { value: "Portugais",   label_fr: "Portugais",          label_en: "Portuguese" },
+];
 
 export default function NousRejoindre() {
   const { t, lang } = useLanguage();
@@ -18,8 +33,31 @@ export default function NousRejoindre() {
   const [skillsError, setSkillsError] = useState<string | null>(null);
   const skillsRef = useRef<HTMLDivElement>(null);
 
+  // ── Languages multi-select state ──────────────────────────────────────────
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [languagesError, setLanguagesError] = useState<string | null>(null);
+  const langDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (langDropdownRef.current && !langDropdownRef.current.contains(e.target as Node)) {
+        setLangDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  function toggleLanguage(value: string) {
+    setSelectedLanguages(prev =>
+      prev.includes(value) ? prev.filter(l => l !== value) : [...prev, value]
+    );
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    // Validation manuelle des compétences clés (champ obligatoire avec *)
+    // Validation compétences clés
     const form = e.currentTarget;
     const checkedSkills = form.querySelectorAll('input[name="skills"]:checked');
     if (checkedSkills.length === 0) {
@@ -33,6 +71,20 @@ export default function NousRejoindre() {
       return;
     }
     setSkillsError(null);
+
+    // Validation langues
+    if (selectedLanguages.length === 0) {
+      e.preventDefault();
+      const msg = lang === 'EN'
+        ? 'Please select at least one language.'
+        : 'Veuillez sélectionner au moins une langue.';
+      setLanguagesError(msg);
+      langDropdownRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => setLanguagesError(null), 4000);
+      return;
+    }
+    setLanguagesError(null);
+
     await handleFormSubmit({
       e,
       endpoint: "/api/forms/join",
@@ -67,7 +119,7 @@ export default function NousRejoindre() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
             <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
-                "Rejoignez une organisation exigeante, orientée vers l’exécution, la qualité des livrables et la continuité opérationnelle.",
+                "Rejoignez une organisation exigeante, orientée vers l'exécution, la qualité des livrables et la continuité opérationnelle.",
                 "Join a demanding organisation focused on delivery, quality and operational continuity."
               )}
             </p>
@@ -107,7 +159,7 @@ export default function NousRejoindre() {
             <div className="bg-[#141824] text-white p-10 shadow-xl border-t-4 border-t-[#e8e1d7]">
               <p className="text-[#e5e9f0] text-[1.05rem] font-light leading-relaxed">
                 {formatBrand(t(
-                  "MENUA CONSULTING recherche des profils autonomes, rigoureux, fiables et organisés, capables d’intervenir à distance sur des fonctions back et middle office, en français ou en anglais, dans le respect de procédures, de délais et de standards de qualité élevés.",
+                  "MENUA CONSULTING recherche des profils autonomes, rigoureux, fiables et organisés, capables d'intervenir à distance sur des fonctions back et middle office, en français ou en anglais, dans le respect de procédures, de délais et de standards de qualité élevés.",
                   "MENUA CONSULTING is looking for self-sufficient, rigorous, reliable and organised professionals, capable of working remotely on back and middle-office functions (in French or English), while adhering to procedures, deadlines and high quality standards."
                 ))}
               </p>
@@ -226,9 +278,111 @@ export default function NousRejoindre() {
                       <option value="Plus de 10 ans">{t("Plus de 10 ans", "More than 10 years")}</option>
                     </select>
                   </div>
-                  <div>
-                    <label htmlFor="languages" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Langues parlées", "Languages spoken")} <span className="text-red-500">*</span></label>
-                    <input id="languages" type="text" name="languages" placeholder={t("Ex: Français, Anglais...", "E.g. French, English...")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors" required />
+
+                  {/* ── Langues parlées – multi-select custom ── */}
+                  <div ref={langDropdownRef} className="relative">
+                    <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">
+                      {t("Langues parlées", "Languages spoken")} <span className="text-red-500">*</span>
+                    </label>
+
+                    {/* Valeur transmise au backend */}
+                    <input type="hidden" name="languages" value={selectedLanguages.join(", ")} />
+
+                    {/* Bouton déclencheur */}
+                    <button
+                      type="button"
+                      onClick={() => setLangDropdownOpen(o => !o)}
+                      className={`w-full flex items-center justify-between border-b py-3 px-0 text-[1.05rem] focus:outline-none transition-colors ${
+                        selectedLanguages.length > 0
+                          ? "border-[#141824] text-[#141824]"
+                          : languagesError
+                          ? "border-red-500 text-[#a0aabf]"
+                          : "border-[#d1d5db] text-[#a0aabf]"
+                      }`}
+                    >
+                      <span className="truncate">
+                        {selectedLanguages.length === 0
+                          ? t("Sélectionnez vos langues", "Select your languages")
+                          : selectedLanguages.map(val => {
+                              const item = LANGUAGES.find(l => l.value === val);
+                              return item ? (lang === 'EN' ? item.label_en : item.label_fr) : val;
+                            }).join(", ")}
+                      </span>
+                      <svg
+                        className={`w-4 h-4 shrink-0 ml-2 text-[#6e7891] transition-transform duration-200 ${langDropdownOpen ? "rotate-180" : ""}`}
+                        viewBox="0 0 20 20" fill="currentColor"
+                      >
+                        <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.085l3.71-3.755a.75.75 0 111.08 1.04l-4.24 4.293a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+
+                    {/* Panneau déroulant */}
+                    {langDropdownOpen && (
+                      <div className="absolute z-50 left-0 right-0 mt-1 bg-white border border-[#d1d5db] shadow-lg max-h-64 overflow-y-auto">
+                        {[...LANGUAGES]
+                          .sort((a, b) => {
+                            const la = lang === 'EN' ? a.label_en : a.label_fr;
+                            const lb = lang === 'EN' ? b.label_en : b.label_fr;
+                            return la.localeCompare(lb);
+                          })
+                          .map(item => {
+                            const isSelected = selectedLanguages.includes(item.value);
+                            const displayLabel = lang === 'EN' ? item.label_en : item.label_fr;
+                            return (
+                              <label
+                                key={item.value}
+                                className={`flex items-center gap-3 px-4 py-2.5 cursor-pointer transition-colors text-[0.95rem] ${
+                                  isSelected ? "bg-[#f0ede8] text-[#141824] font-medium" : "text-[#141824] hover:bg-[#f8f6f3]"
+                                }`}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={() => toggleLanguage(item.value)}
+                                  className="accent-[#141824] w-4 h-4 shrink-0"
+                                />
+                                <span>{displayLabel}</span>
+                              </label>
+                            );
+                          })}
+                      </div>
+                    )}
+
+
+                    {/* Tags des langues sélectionnées */}
+                    {selectedLanguages.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        {selectedLanguages.map(val => {
+                          const item = LANGUAGES.find(langItem => langItem.value === val);
+                          const displayLabel = item ? (lang === 'EN' ? item.label_en : item.label_fr) : val;
+                          return (
+                          <span
+                            key={val}
+                            className="inline-flex items-center gap-1.5 bg-[#141824] text-white text-[0.78rem] font-medium px-2.5 py-1"
+                          >
+                            {displayLabel}
+                            <button
+                              type="button"
+                              onClick={() => toggleLanguage(val)}
+                              className="hover:text-[#e8e1d7] transition-colors leading-none"
+                              aria-label={`Retirer ${displayLabel}`}
+                            >
+                              ×
+                            </button>
+                          </span>
+                        )})}
+                      </div>
+                    )}
+
+                    {/* Message d'erreur */}
+                    {languagesError && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <svg className="shrink-0 text-red-500 w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        <p className="text-red-500 text-xs font-bold">{languagesError}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -258,7 +412,7 @@ export default function NousRejoindre() {
               <div className="bg-[#f5f7fa] py-3 px-4 border-l-4 border-[#141824]">
                 <p className="text-[0.85rem] text-[#6e7891] italic leading-relaxed">
                   {formatBrand(t(
-                    "Aucun document n’est demandé à ce stade. Si votre profil est retenu, MENUA CONSULTING vous contactera afin de vous indiquer les éventuelles pièces complémentaires à transmettre.",
+                    "Aucun document n'est demandé à ce stade. Si votre profil est retenu, MENUA CONSULTING vous contactera afin de vous indiquer les éventuelles pièces complémentaires à transmettre.",
                     "No document is required at this stage. If your profile is selected, MENUA CONSULTING will contact you to indicate the additional documents to provide."
                   ))}
                 </p>

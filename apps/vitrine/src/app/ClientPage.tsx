@@ -9,6 +9,12 @@ export default function Home() {
   const { t } = useLanguage();
   const [publications, setPublications] = useState<any[]>([]);
 
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "";
+    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString('fr-FR', options);
+  };
+
   useEffect(() => {
     const fetchPubs = async () => {
       try {
@@ -349,7 +355,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {publications.length > 0 ? (
               publications.map((pub) => (
-                <Link key={pub.id} href={`/actualites#${pub.id}`} className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300">
+                <Link key={pub.id} href={`/actualites/${pub.id}`} className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300">
                   <div className="h-[180px] overflow-hidden bg-[#1a1f2e] flex items-center justify-center relative">
                     {pub.coverImageUrl ? (
                       <img src={pub.coverImageUrl} alt={pub.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -363,6 +369,9 @@ export default function Home() {
                     )}
                   </div>
                   <div className="flex flex-col flex-grow p-6">
+                    <p className="text-white/50 text-[0.7rem] font-medium tracking-wide mb-2 uppercase">
+                      {formatDate(pub.publishedAt || pub.createdAt)}
+                    </p>
                     <h3 className="text-white font-semibold text-[1.1rem] leading-snug mb-3 line-clamp-2">{pub.title}</h3>
                     <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4 line-clamp-3">
                       {pub.excerpt || "Découvrez notre nouvelle publication et l'analyse détaillée de nos experts métier sur ce sujet."}

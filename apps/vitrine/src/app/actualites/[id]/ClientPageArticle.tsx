@@ -66,53 +66,53 @@ export default function ClientPageArticle({ id }: { id: string }) {
 
   return (
     <main className="flex flex-col w-full bg-[#fafafa]">
-      {/* BANNER WITH OVERLAPPING TEXT BOX */}
-      <section className="relative w-full" style={{ minHeight: '60vh' }}>
-        {/* Background Image */}
-        <div className="absolute inset-0 w-full h-full bg-[#1a1f2e]">
-          {publication.coverImageUrl ? (
-             <img src={publication.coverImageUrl} alt={publication.title} className="w-full h-full object-cover opacity-90" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <span className="text-white/10 font-bold tracking-[0.2em] uppercase text-4xl">MENUA CONSULTING</span>
-            </div>
-          )}
-        </div>
+      <section className="container mx-auto px-4 md:px-6 pt-32 pb-24 flex flex-col items-center">
         
-        {/* Overlay Box */}
-        <div className="relative z-10 container mx-auto px-6 h-full flex flex-col justify-end pb-0 pt-[30vh]">
-          <div className="bg-white p-8 md:p-12 max-w-4xl shadow-xl transform translate-y-16">
+        <div className="w-full max-w-4xl relative">
+          
+          {/* Image Box */}
+          <div className="w-full h-[350px] md:h-[450px] bg-[#1a1f2e] relative overflow-hidden">
+            {publication.coverImageUrl ? (
+               <img src={publication.coverImageUrl} alt={publication.title} className="w-full h-full object-cover opacity-95" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <span className="text-white/10 font-bold tracking-[0.2em] uppercase text-2xl md:text-4xl text-center">MENUA CONSULTING</span>
+              </div>
+            )}
+          </div>
+          
+          {/* Overlay Box */}
+          <div className="relative z-10 bg-white p-8 md:p-12 shadow-xl -mt-20 md:-mt-28 mx-4 md:mx-12">
             <div className="flex flex-wrap items-center justify-between mb-4">
                {publication.category && (
                  <span className="bg-[#e8e1d7] text-[#141824] px-4 py-1 text-xs font-bold uppercase tracking-wider mb-2">
                    {publication.category}
                  </span>
                )}
-               <span className="text-[#c1a070] text-sm font-semibold tracking-wide uppercase ml-auto">
+               <span className="text-[#141824]/60 text-[0.75rem] font-medium tracking-wide uppercase ml-auto">
                  {formatDate(publication.publishedAt || publication.createdAt)}
                </span>
             </div>
             
-            <h1 className="text-[#141824] text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mt-4 uppercase">
+            <h1 className="text-[#141824] text-3xl md:text-4xl font-bold leading-tight mt-4 uppercase">
               {publication.title}
             </h1>
           </div>
-        </div>
-      </section>
 
-      {/* ARTICLE CONTENT */}
-      <section className="container mx-auto px-6 pt-32 pb-24">
-        <div className="max-w-4xl bg-transparent">
-          <div 
-            className="prose prose-lg max-w-none text-[#333] font-light leading-relaxed prose-headings:font-bold prose-headings:text-[#141824] prose-headings:uppercase prose-a:text-[#c1a070] prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl prose-img:shadow-md"
-            dangerouslySetInnerHTML={{ __html: publication.contentHtml || '' }}
-          />
-        </div>
-        
-        <div className="mt-20 pt-8 border-t border-[#e8e1d7] max-w-4xl">
-          <a href="/actualites" className="inline-flex items-center gap-3 text-[#141824] font-bold uppercase tracking-wider text-sm hover:text-[#c1a070] transition-colors">
-            <ArrowLeft size={18} /> RETOUR AUX ACTUALITÉS
-          </a>
+          {/* ARTICLE CONTENT */}
+          <div className="mt-12 px-4 md:px-12">
+            <div 
+              className="prose prose-lg max-w-none text-[#333] font-light leading-relaxed prose-headings:font-bold prose-headings:text-[#141824] prose-headings:uppercase prose-a:text-[#c1a070] prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl prose-img:shadow-md"
+              dangerouslySetInnerHTML={{ __html: publication.contentHtml || '' }}
+            />
+            
+            <div className="mt-20 pt-8 border-t border-[#e8e1d7]">
+              <a href="/actualites" className="inline-flex items-center gap-3 text-[#141824] font-bold uppercase tracking-wider text-sm hover:text-[#c1a070] transition-colors">
+                <ArrowLeft size={18} /> RETOUR AUX ACTUALITÉS
+              </a>
+            </div>
+          </div>
+          
         </div>
       </section>
     </main>

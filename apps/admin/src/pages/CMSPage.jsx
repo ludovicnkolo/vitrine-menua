@@ -83,7 +83,7 @@ const CMSPage = () => {
       title,
       type: 'ACTUALITE',
       category,
-      excerpt,
+      excerpt: '',
       contentHtml,
       coverImage,
       status

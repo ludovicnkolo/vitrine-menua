@@ -150,6 +150,31 @@ router.get('/public', async (req, res) => {
   }
 });
 
+// Route publique pour récupérer une publication spécifique
+router.get('/public/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const pub = await prisma.publication.findUnique({
+      where: { id },
+      include: { author: { select: { name: true } } }
+    });
+
+    if (!pub || pub.status !== 'PUBLIE') {
+      return res.status(404).json({ success: false, error: 'Publication introuvable.' });
+    }
+
+    let imageUrl = pub.coverImage;
+    if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
+      imageUrl = await getPresignedUrl(imageUrl, 24 * 3600, true);
+    }
+    
+    res.json({ success: true, data: { ...pub, coverImageUrl: imageUrl } });
+  } catch (error) {
+    console.error("Erreur GET publication publique:", error);
+    res.status(500).json({ success: false, error: 'Erreur serveur.' });
+  }
+});
+
 // Route d'upload d'image pour le CMS
 router.post('/upload', authenticateJWT, upload.single('image'), async (req, res) => {
   try {

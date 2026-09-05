@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Files, Users, Settings, Inbox, LogOut } from 'lucide-react';
+import { LayoutDashboard, Files, Users, Settings, Inbox, LogOut, Globe } from 'lucide-react';
 import { getSafeApiUrl } from './utils/helpers';
 
 import DashboardPage from './pages/DashboardPage';
@@ -16,6 +16,8 @@ import SetupPasswordPage from './pages/SetupPasswordPage';
 import WorkspacePage from './pages/WorkspacePage';
 import UsersSpacePage from './pages/UsersSpacePage';
 import SystemSpacePage from './pages/SystemSpacePage';
+import CMSPage from './pages/CMSPage';
+import MagicLinkDropPage from './pages/MagicLinkDropPage';
 import GlobalAlerts from './components/GlobalAlerts';
 import './utils/AlertService'; // initialize overrides
 
@@ -175,8 +177,16 @@ function App() {
     );
   }
 
+  if (location.pathname.startsWith('/magic-drop/')) {
+    return (
+      <Routes>
+        <Route path="/magic-drop/:token" element={<MagicLinkDropPage />} />
+      </Routes>
+    );
+  }
+
   if (!token || !user) {
-    if (location.pathname !== '/') {
+    if (location.pathname !== '/' && !location.pathname.startsWith('/magic-drop/')) {
       window.location.replace('/');
       return null;
     }
@@ -197,6 +207,7 @@ function App() {
   const canSeeWorkspace  = isSuperAdmin || isRespOp || isRelecteur || isCollaborateur;
   const canSeeUsers      = isSuperAdmin;
   const canSeeSystem     = isSuperAdmin || isAdminTech || isRespOp || isRelecteur || isCollaborateur;
+  const canSeeCMS        = isSuperAdmin || isRespOp || isCollaborateur;
 
   // Passer le rôle en prop pour filtrer le contenu à l'intérieur des pages
   const userRoleForPages = role;
@@ -254,6 +265,13 @@ function App() {
               Espace système
             </Link>
           )}
+
+          {canSeeCMS && (
+            <Link to="/cms" className={`nav-item ${location.pathname.includes('/cms') ? 'active' : ''}`}>
+              <Globe size={20} />
+              Site Web (CMS)
+            </Link>
+          )}
         </nav>
         {/* Profil juste après les onglets — pas de grand vide révélateur */}
         <div style={{padding: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '1.5rem'}}>
@@ -286,6 +304,7 @@ function App() {
             {canSeeWorkspace && <Route path="/workspace" element={<WorkspacePage userRole={userRoleForPages} />} />}
             {canSeeUsers && <Route path="/users-space" element={<UsersSpacePage />} />}
             {canSeeSystem && <Route path="/system-space" element={<SystemSpacePage userRole={userRoleForPages} />} />}
+            {canSeeCMS && <Route path="/cms" element={<CMSPage />} />}
 
             {/* Legacy routes */}
             <Route path="/dossiers" element={<DossiersPage />} />

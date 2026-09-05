@@ -52,6 +52,7 @@ const InboxPage = ({ userRole }) => {
   const [previewFile, setPreviewFile] = useState(null);
   const [messages, setMessages] = useState([]);
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(12);
   const [totalPages, setTotalPages] = useState(1);
   const [users, setUsers] = useState([]);
   const [dossiers, setDossiers] = useState([]);
@@ -104,7 +105,7 @@ const InboxPage = ({ userRole }) => {
       const urlMessages = new URL(getSafeApiUrl(`/api/crm/messages`));
       urlMessages.searchParams.append('type', tab);
       urlMessages.searchParams.append('page', page);
-      urlMessages.searchParams.append('limit', '6');
+      urlMessages.searchParams.append('limit', limit.toString());
       urlMessages.searchParams.append('status', filterTraite);
       urlMessages.searchParams.append('search', searchQuery);
 
@@ -149,7 +150,11 @@ const InboxPage = ({ userRole }) => {
 
   useEffect(() => {
     setPage(1);
-  }, [tab, filterTraite, searchQuery]);
+  }, [tab, filterTraite, searchQuery, limit]);
+
+  useEffect(() => {
+    fetchMessages();
+  }, [tab, filterTraite, page, searchQuery, limit]);
 
   useEffect(() => {
     try {
@@ -457,6 +462,20 @@ const InboxPage = ({ userRole }) => {
     }
   };
 
+  const handleUpdateProperty = async (property, value) => {
+    if (!processMsg) return;
+    try {
+      const res = await apiFetch(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`, 'PATCH', { [property]: value });
+      if (!res.ok) throw new Error("Erreur de mise à jour");
+      showToast(`${property === 'priorite' ? 'Priorité' : 'Étiquette'} mise à jour.`, "success");
+      setProcessMsg({ ...processMsg, [property]: value });
+      setMessages(messages.map(m => m.id === processMsg.id ? { ...m, [property]: value } : m));
+    } catch (err) {
+      console.error(err);
+      showToast("Impossible de mettre à jour le message.", "error");
+    }
+  };
+
   const confirmDelete = async () => {
     if (!deleteMsg) return;
     try {
@@ -512,7 +531,7 @@ const InboxPage = ({ userRole }) => {
                 { id: 'contact', label: 'Contact' },
                 { id: 'recrutement', label: 'Recrutement' },
                 { id: 'interne', label: 'Interne' },
-                { id: 'personnel', label: 'Personnel' }
+                { id: 'personnel', label: 'Boîte e-mail' }
               ]
           } 
           activeTab={tab} 
@@ -537,6 +556,17 @@ const InboxPage = ({ userRole }) => {
             <option value="non_traite">Non Traités</option>
             <option value="traite">Traités</option>
           </select>
+          
+          <select 
+            value={limit}
+            onChange={(e) => { setLimit(Number(e.target.value)); setPage(1); }}
+            style={{padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', fontSize: '0.875rem', outline: 'none', cursor: 'pointer'}}
+          >
+            <option value={12}>12 par page</option>
+            <option value={25}>25 par page</option>
+            <option value={50}>50 par page</option>
+          </select>
+
           {tab === 'personnel' && (
             <button type="button"
               onClick={handleSyncEmails} 
@@ -555,10 +585,11 @@ const InboxPage = ({ userRole }) => {
           <thead>
             <tr>
               <th style={{ width: '5%' }}>№</th>
-              <th style={{ width: '12%', whiteSpace: 'nowrap' }}>Statut</th>
+              {tab === 'personnel' && <th style={{ width: '8%', whiteSpace: 'nowrap' }}>Priorité</th>}
+              <th style={{ width: '10%', whiteSpace: 'nowrap' }}>Statut</th>
               <th style={{ width: tab === 'interne' ? '15%' : '18%' }}>{tab === 'interne' ? 'Emetteur' : 'Nom'}</th>
               <th style={{ width: '18%' }}>{tab === 'recrutement' ? 'E-mail' : 'Email'}</th>
-              <th style={{ width: '10%' }}>{tab === 'interne' ? 'Source' : 'Type'}</th>
+              <th style={{ width: '10%' }}>{tab === 'interne' ? 'Source' : (tab === 'personnel' ? 'Étiquette' : 'Type')}</th>
               <th style={{ width: tab === 'interne' ? '15%' : '17%' }}>
                 {tab === 'contact' ? 'Besoins' : tab === 'recrutement' ? 'Compétences' : tab === 'interne' ? 'ID' : 'Sujet'}
               </th>
@@ -572,9 +603,25 @@ const InboxPage = ({ userRole }) => {
                 return <tr><td colSpan="8" style={{textAlign: 'center', padding: '2rem'}}>Chargement des messages...</td></tr>;
               }
 
+              const getPriorityBadge = (p) => {
+                if (p === 'Urgent') return { bg: '#FEE2E2', color: '#DC2626' }; // Red
+                if (p === 'Prioritaire') return { bg: '#FEF3C7', color: '#D97706' }; // Orange
+                return { bg: '#DCFCE7', color: '#166534' }; // Green for Normal
+              };
+
               const renderMessageRow = (m, index, col2, col3, typeBadgeText, typeBadgeBg, typeBadgeColor, col5, col5Style) => (
                 <tr key={m.id}>
                   <td style={{ fontWeight: 500, color: 'var(--text-muted)' }}>{index + 1}</td>
+                  {tab === 'personnel' && (
+                    <td>
+                      <span style={{
+                        padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase',
+                        background: getPriorityBadge(m.priorite || 'Normal').bg, color: getPriorityBadge(m.priorite || 'Normal').color
+                      }}>
+                        {m.priorite || 'Normal'}
+                      </span>
+                    </td>
+                  )}
                   <td>
                     <span style={{
                       padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
@@ -586,7 +633,7 @@ const InboxPage = ({ userRole }) => {
                   <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{col3}</span></td>
                   <td>
                     <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: typeBadgeBg, color: typeBadgeColor}}>
-                      {typeBadgeText}
+                      {tab === 'personnel' ? (m.etiquette || 'Général') : typeBadgeText}
                     </span>
                   </td>
                   <td><div className="truncate-text" style={col5Style || {fontSize: "0.875rem"}}>{col5}</div></td>
@@ -743,6 +790,34 @@ const InboxPage = ({ userRole }) => {
                 <InlineDetailField label="Nom" value={processMsg.nomPrenom || 'Non renseigné'} />
                 <InlineDetailField label="Email" value={processMsg.email || 'Non renseigné'} />
                 <InlineDetailField label="Objet" value={processMsg.objet || 'Aucun objet'} />
+                {tab === 'personnel' && (
+                  <>
+                    <InlineDetailField label="Priorité">
+                      <select 
+                        value={processMsg.priorite || 'Normal'} 
+                        onChange={(e) => handleUpdateProperty('priorite', e.target.value)}
+                        style={{padding: '0.25rem 0.5rem', borderRadius: '4px', border: '1px solid var(--border)', outline: 'none', background: '#FFF'}}
+                      >
+                        <option value="Normal">Normal</option>
+                        <option value="Prioritaire">Prioritaire</option>
+                        <option value="Urgent">Urgent</option>
+                      </select>
+                    </InlineDetailField>
+                    <InlineDetailField label="Étiquette">
+                      <select 
+                        value={processMsg.etiquette || ''} 
+                        onChange={(e) => handleUpdateProperty('etiquette', e.target.value)}
+                        style={{padding: '0.25rem 0.5rem', borderRadius: '4px', border: '1px solid var(--border)', outline: 'none', background: '#FFF'}}
+                      >
+                        <option value="">Général</option>
+                        <option value="Prospect">Prospect</option>
+                        <option value="Candidature">Candidature</option>
+                        <option value="Partenaire">Partenaire</option>
+                        <option value="Spam">Spam</option>
+                      </select>
+                    </InlineDetailField>
+                  </>
+                )}
                 <InlineDetailField label="Fichiers joints">
                   <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
                     <AttachmentSelect files={[processMsg.cv, processMsg.attachment, processMsg.contact?.pieceJointe]} onPreview={setPreviewFile} />
@@ -869,9 +944,14 @@ const InboxPage = ({ userRole }) => {
             {tab !== 'interne' && (
               <div style={{display: 'grid', gridTemplateColumns: '1fr 4fr', gap: '1.5rem', marginTop: '2rem'}}>
                 <div></div>
-                <div style={{display: 'flex', justifyContent: 'center', gap: '1rem'}}>
+                <div style={{display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap'}}>
+                  {processMsg.dossierId && (
+                    <button type="button" onClick={() => window.location.href = `/dossiers?open=${processMsg.dossierId}`} className="btn btn-outline-success" style={{fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                      <Files size={16} /> Ouvrir le Dossier Lié
+                    </button>
+                  )}
                   {getDisplayStatus(processMsg.status) !== 'TRAITÉ' && (
-                    <button type="button" onClick={() => setShowActionChoiceModal(true)} className="btn btn-outline-primary">DÉMARRER LE TRAITEMENT</button>
+                    <button type="button" onClick={() => setShowActionChoiceModal(true)} className="btn btn-outline-primary" style={{fontWeight: 600}}>DÉMARRER LE TRAITEMENT</button>
                   )}
                 </div>
               </div>

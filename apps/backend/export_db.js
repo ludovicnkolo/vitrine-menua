@@ -25,7 +25,11 @@ async function exportDatabase() {
       messagePersonnels: await prisma.messagePersonnel.findMany(),
     };
 
-    const filePath = path.join(__dirname, 'db_export.json');
+    const backupDir = path.join(__dirname, 'backups');
+    if (!fs.existsSync(backupDir)) {
+      fs.mkdirSync(backupDir, { recursive: true });
+    }
+    const filePath = path.join(backupDir, 'db_export.json');
 
     // Écrire les données dans le fichier JSON (cela écrase automatiquement l'ancien fichier s'il existe)
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');

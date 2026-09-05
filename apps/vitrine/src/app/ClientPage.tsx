@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "@/components/Link";
 import { ArrowRight, Globe, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -7,6 +7,25 @@ import { formatBrand } from "@/utils/formatBrand";
 
 export default function Home() {
   const { t } = useLanguage();
+  const [publications, setPublications] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchPubs = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+        const res = await fetch(`${apiUrl}/api/cms/public?type=ACTUALITE`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.data)) {
+            setPublications(data.data.slice(0, 3));
+          }
+        }
+      } catch (err) {
+        console.error("Erreur lors de la récupération des actualités:", err);
+      }
+    };
+    fetchPubs();
+  }, []);
 
   return (
     <main className="flex flex-col w-full min-h-screen">
@@ -327,27 +346,51 @@ export default function Home() {
 
           </div>
 
-          {/* 3 Article Cards (Placeholder) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {/* Articles will be dynamically injected here. Displaying a single placeholder for now. */}
-            <Link href="/actualites" className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300 md:col-span-1 md:col-start-2">
-              {/* Image Placeholder */}
-              <div className="h-[180px] overflow-hidden bg-[#1a1f2e] flex items-center justify-center">
-                <span className="text-[#e8e1d7]/20 font-bold tracking-widest uppercase text-lg">MENUA CONSULTING</span>
-              </div>
-              {/* Content */}
-              <div className="flex flex-col flex-grow p-6">
-                <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4">
-                  {formatBrand(t(
-                    "Cette rubrique accueillera prochainement les analyses et publications de MENUA CONSULTING consacrées aux évolutions opérationnelles, aux méthodes de travail, à la fiabilisation des processus et à la continuité d’activité.",
-                    "This section will soon host MENUA CONSULTING's analyses and publications dedicated to operational developments, working methods, process reliability and business continuity."
-                  ))}
-                </p>
-                <span className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
-                  {t("Découvrir la rubrique", "Browse our publications")} <ArrowRight size={14} />
-                </span>
-              </div>
-            </Link>
+            {publications.length > 0 ? (
+              publications.map((pub) => (
+                <Link key={pub.id} href={`/actualites#${pub.id}`} className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300">
+                  <div className="h-[180px] overflow-hidden bg-[#1a1f2e] flex items-center justify-center relative">
+                    {pub.coverImageUrl ? (
+                      <img src={pub.coverImageUrl} alt={pub.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    ) : (
+                      <span className="text-[#e8e1d7]/20 font-bold tracking-widest uppercase text-lg">MENUA CONSULTING</span>
+                    )}
+                    {pub.category && (
+                      <div className="absolute top-4 left-4 bg-[#e8e1d7] text-[#141824] px-3 py-1 text-[0.7rem] font-bold uppercase tracking-wider">
+                        {pub.category}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col flex-grow p-6">
+                    <h3 className="text-white font-semibold text-[1.1rem] leading-snug mb-3 line-clamp-2">{pub.title}</h3>
+                    <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4 line-clamp-3">
+                      {pub.excerpt || "Découvrez notre nouvelle publication et l'analyse détaillée de nos experts métier sur ce sujet."}
+                    </p>
+                    <span className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
+                      {t("Lire l'article", "Read article")} <ArrowRight size={14} />
+                    </span>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <Link href="/actualites" className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300 md:col-span-1 md:col-start-2">
+                <div className="h-[180px] overflow-hidden bg-[#1a1f2e] flex items-center justify-center">
+                  <span className="text-[#e8e1d7]/20 font-bold tracking-widest uppercase text-lg">MENUA CONSULTING</span>
+                </div>
+                <div className="flex flex-col flex-grow p-6">
+                  <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4">
+                    {formatBrand(t(
+                      "Cette rubrique accueillera prochainement les analyses et publications de MENUA CONSULTING consacrées aux évolutions opérationnelles, aux méthodes de travail, à la fiabilisation des processus et à la continuité d’activité.",
+                      "This section will soon host MENUA CONSULTING's analyses and publications dedicated to operational developments, working methods, process reliability and business continuity."
+                    ))}
+                  </p>
+                  <span className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
+                    {t("Découvrir la rubrique", "Browse our publications")} <ArrowRight size={14} />
+                  </span>
+                </div>
+              </Link>
+            )}
           </div>
 
           {/* CTA */}

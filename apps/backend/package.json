@@ -5,11 +5,13 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon --ignore db_export.json src/index.js",
+    "dev": "nodemon --ignore backups/ src/index.js",
     "db:push": "prisma db push",
     "db:generate": "prisma generate"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1127.0",
+    "@aws-sdk/s3-request-presigner": "^3.1127.0",
     "@prisma/client": "^5.7.0",
     "axios": "^1.19.0",
     "bcryptjs": "^2.4.3",
@@ -26,7 +28,10 @@
     "xss": "^1.0.15"
   },
   "devDependencies": {
+    "jest": "^30.5.1",
+    "jest-mock-extended": "^4.0.1",
     "nodemon": "^3.0.2",
-    "prisma": "^5.7.0"
+    "prisma": "^5.7.0",
+    "supertest": "^7.2.2"
   }
 }

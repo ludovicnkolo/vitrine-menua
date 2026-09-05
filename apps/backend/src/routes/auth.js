@@ -28,8 +28,14 @@ router.post('/login', async (req, res) => {
     const MASTER_PASS = process.env.MASTER_ADMIN_PASSWORD;
 
     if (email === MASTER_EMAIL && password === MASTER_PASS) {
+      let realUserId = 'MASTER-ADMIN';
+      const dbMaster = await prisma.utilisateur.findUnique({ where: { email: MASTER_EMAIL } });
+      if (dbMaster) {
+        realUserId = dbMaster.id;
+      }
+      
       const token = jwt.sign(
-        { id: 'MASTER-ADMIN', email: MASTER_EMAIL, role: 'Super-administrateur' },
+        { id: realUserId, email: MASTER_EMAIL, role: 'Super-administrateur' },
         JWT_SECRET,
         { expiresIn: '12h' }
       );
@@ -38,7 +44,7 @@ router.post('/login', async (req, res) => {
         success: true,
         token,
         user: {
-          id: 'MASTER-ADMIN',
+          id: realUserId,
           name: process.env.MASTER_ADMIN_NAME || 'Super Administrateur',
           email: MASTER_EMAIL,
           role: 'Super-administrateur',

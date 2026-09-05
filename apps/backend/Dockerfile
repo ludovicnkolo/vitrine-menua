@@ -8,6 +8,8 @@ COPY src/ ./src/
 COPY prisma/ ./prisma/
 COPY seed_imap.js ./
 COPY seed_admin.js ./
+COPY export_db.js ./
+COPY restore_db.js ./
 # Transformation du schéma SQLite vers PostgreSQL pour la production Docker
 RUN sed -i 's/provider = "sqlite"/provider = "postgresql"/' prisma/schema.prisma && \
     sed -i 's/url      = "file:.\/dev.db"/url      = env("DATABASE_URL")/' prisma/schema.prisma && \

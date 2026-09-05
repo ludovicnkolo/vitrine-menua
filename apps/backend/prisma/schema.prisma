@@ -54,6 +54,7 @@ model Utilisateur {
   documents                 Document[]
   auditLogs                 AuditLog[]
   assignedMessagePersonnels MessagePersonnel[] @relation("AssignedMessagePersonnels")
+  publications              Publication[]
 }
 
 // ─── CLIENTS (Personnes externes au CRM) ──────────────────────────────────────
@@ -96,6 +97,7 @@ model Formulaire {
   nomPrenom       String
   email           String
   telephone       String?
+  priority        String  @default("NORMAL")
   description     String?
   raisonSocial    String?
   objet           String?
@@ -192,6 +194,8 @@ model Dossier {
 
   tachesLinked        Tache[] @relation("TacheDossierLinked")
   authorizedForTaches Tache[] @relation("TacheAuthorizedDossiers")
+  
+  liensMagiques       LienMagique[]
 }
 
 // ─── MISSIONS (Anciennement Tasks) ────────────────────────────────────────────
@@ -279,6 +283,7 @@ model Document {
   mission   Mission? @relation(fields: [missionId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
+  isDeleted Boolean  @default(false)
 }
 
 // ─── AUDIT TRAIL ──────────────────────────────────────────────────────────────
@@ -313,6 +318,11 @@ model MessagePersonnel {
   objet      String?
   bodyText   String?
   attachment String?
+  
+  etiquette  String?
+  priorite   String   @default("Normal")
+  isDeleted  Boolean  @default(false)
+
   createdAt  DateTime @default(now())
   receivedAt DateTime @default(now())
 
@@ -327,3 +337,35 @@ model MessagePersonnel {
   Tache        Tache?       @relation(fields: [tacheId], references: [id])
   tacheId      String?
 }
+
+// ─── CMS (Publications, Offres d'emploi, Articles) ───────────────────────────
+model Publication {
+  id          String   @id @default(uuid())
+  title       String
+  type        String   @default("ACTUALITE") // ACTUALITE, OFFRE_EMPLOI
+  category    String?  // Ex: "Blog", "Événement", "CDI", "Stage"
+  excerpt     String?  // Résumé court
+  location    String?  // Localisation pour les offres
+  contentHtml String?
+  coverImage  String?  // URL S3 de l'image
+  status      String   @default("BROUILLON") // BROUILLON, PUBLIE
+  authorId    String
+  author      Utilisateur @relation(fields: [authorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime?
+}
+
+// ─── LIENS MAGIQUES (Acquisition & Livraison) ────────────────────────────────
+model LienMagique {
+  id          String   @id @default(uuid())
+  token       String   @unique @default(uuid())
+  type        String   // "ACQUISITION" (Client upload) ou "LIVRAISON" (Client download)
+  dossierId   String
+  dossier     Dossier  @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+  createdBy   String   // id de l'utilisateur qui a généré le lien
+  expiresAt   DateTime
+  isUsed      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+

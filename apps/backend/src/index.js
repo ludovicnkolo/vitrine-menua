@@ -109,6 +109,14 @@ app.use('/api/files', filesRouter);
 const crmRouter = require('./routes/crm');
 app.use('/api/crm', crmRouter);
 
+// CMS routes (Publications, Offres)
+const cmsRouter = require('./routes/cms');
+app.use('/api/cms', cmsRouter);
+
+// Magic Links routes
+const magicRouter = require('./routes/magic');
+app.use('/api/magic', magicRouter);
+
 // Get all dossiers
 app.get('/api/dossiers', async (req, res) => {
   try {
@@ -142,13 +150,19 @@ app.listen(PORT, () => {
     // On fait un premier export au démarrage (optionnel, mais utile)
     exportDatabase();
     
-    const DIX_MINUTES = 10 * 60 * 1000;
-    setInterval(() => {
-      const date = new Date().toLocaleString();
-      console.log(`[${date}] Nouvelle exécution planifiée de l'export...`);
-      exportDatabase();
-    }, DIX_MINUTES);
-    console.log('Tâche d\'export automatique de la base de données configurée (toutes les 10 min).');
+    const intervalMinStr = process.env.DB_BACKUP_INTERVAL_MINUTES || '10';
+    const intervalMin = parseInt(intervalMinStr, 10);
+    if (intervalMin > 0) {
+      const intervalMs = intervalMin * 60 * 1000;
+      setInterval(() => {
+        const date = new Date().toLocaleString();
+        console.log(`[${date}] Nouvelle exécution planifiée de l'export...`);
+        exportDatabase();
+      }, intervalMs);
+      console.log(`Tâche d'export automatique de la base de données configurée (toutes les ${intervalMin} min).`);
+    } else {
+      console.log(`Export automatique désactivé (DB_BACKUP_INTERVAL_MINUTES=${intervalMinStr}).`);
+    }
   } catch (err) {
     console.error('Erreur lors du paramétrage de l\'export automatique :', err);
   }

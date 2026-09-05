@@ -7,41 +7,10 @@ const { authenticateJWT } = require('../middlewares/auth');
 
 const router = express.Router();
 
-// Configuration du stockage Multer (DiskStorage) vers l'architecture des buckets
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    // Le bucket est envoyé par le frontend (ex: 'vitrine/formulaires_contact', 'admin/rapports')
-    let bucket = req.body.bucket || 'temp';
-    
-    // Validation stricte anti-path traversal (SonarQube Blocker fix)
-    // 1. Bloquer les segments dangereux évidents
-    if (bucket.includes('..') || bucket.startsWith('/') || bucket.startsWith('\\')) {
-      bucket = 'temp';
-    }
+const { uploadToS3, getPresignedUrl } = require('../services/s3Service');
 
-    // Le dossier racine (le faux disque de 20Go monté)
-    const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
-    const resolvedRoot = path.resolve(rootPath);
-    const destPath = path.resolve(rootPath, bucket);
-
-    // 2. Vérification que le chemin résolu est bien un enfant du rootPath (protection absolue)
-    if (!destPath.startsWith(resolvedRoot + path.sep) && destPath !== resolvedRoot) {
-      return cb(new Error(`Accès refusé : chemin de bucket invalide '${bucket}'`));
-    }
-
-    // Création automatique du sous-dossier (bucket) s'il n'existe pas
-    fs.mkdirSync(destPath, { recursive: true });
-    cb(null, destPath);
-  },
-  filename: function (req, file, cb) {
-    // Générer un nom de fichier 100% unique (Timestamp + Nombre aléatoire + Nom d'origine nettoyé)
-    const randomHex = crypto.randomBytes(8).toString('hex');
-    const uniqueSuffix = Date.now() + '-' + randomHex;
-    // On nettoie le nom original pour éviter les caractères bizarres
-    const safeOriginalName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
-    cb(null, uniqueSuffix + '-' + safeOriginalName);
-  }
-});
+// Utilisation du stockage en mémoire pour multer avant l'envoi vers S3
+const storage = multer.memoryStorage();
 
 const upload = multer({ 
   storage: storage,
@@ -54,85 +23,79 @@ const upload = multer({
 });
 
 // Route POST : Upload sécurisé d'un fichier dans un bucket
-router.post('/upload', authenticateJWT, upload.single('file'), (req, res) => {
+router.post('/upload', authenticateJWT, upload.single('file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, error: 'Aucun fichier uploadé.' });
   }
 
-  // Le fichier est maintenant physiquement sur le disque virtuel (ex: /app/storage/buckets/dossiers_clients/...)
-  res.json({
-    success: true,
-    message: 'Fichier sauvegardé avec succès.',
-    fileData: {
-      filename: req.file.filename,
-      bucket: req.body.bucket || 'temp',
-      path: `${req.body.bucket || 'temp'}/${req.file.filename}`, // Chemin relatif à sauvegarder en BDD
-      size: req.file.size,
-      mimetype: req.file.mimetype
+  try {
+    let bucket = req.body.bucket || 'temp';
+    if (bucket.includes('..') || bucket.startsWith('/') || bucket.startsWith('\\')) {
+      bucket = 'temp';
     }
-  });
-});
 
-// Route GET : Téléchargement sécurisé (Stream) via le backend
-router.get('/download/:bucket/:filename', authenticateJWT, (req, res) => {
-  const { bucket, filename } = req.params;
-  
-  // Validation stricte pour empêcher la navigation dans les dossiers (Path Traversal)
-  if (bucket.includes('..') || filename.includes('..') || bucket.includes('/') || filename.includes('/')) {
-    return res.status(403).json({ success: false, error: 'Accès interdit.' });
-  }
+    const randomHex = crypto.randomBytes(8).toString('hex');
+    const uniqueSuffix = Date.now() + '-' + randomHex;
+    const safeOriginalName = req.file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const finalFilename = uniqueSuffix + '-' + safeOriginalName;
+    const s3Key = `${bucket}/${finalFilename}`;
 
-  const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
-  const filePath = path.join(rootPath, bucket, filename);
+    // Upload to S3 directly from memory
+    await uploadToS3(req.file.buffer, s3Key, req.file.mimetype);
 
-  // Suppression de fs.existsSync pour éviter la faille TOCTOU (Time-of-Check to Time-of-Use)
-
-  // Optionnel : Ajouter ici une logique métier pour vérifier si req.user a le droit de lire ce fichier spécifique
-  
-  // Renvoyer le fichier sous forme de flux (Download)
-  const absoluteFilePath = path.resolve(filePath);
-  res.download(absoluteFilePath, filename, (err) => {
-    if (err) {
-      console.error("Erreur lors de l'envoi du fichier:", err);
-      // Ne pas renvoyer de réponse si les headers ont déjà été envoyés
-      if (!res.headersSent) {
-        res.status(500).json({ success: false, error: 'Erreur lors du téléchargement.' });
+    res.json({
+      success: true,
+      message: 'Fichier sauvegardé avec succès sur S3.',
+      fileData: {
+        filename: finalFilename,
+        bucket: bucket,
+        path: s3Key, // Chemin relatif/S3 Key à sauvegarder en BDD
+        size: req.file.size,
+        mimetype: req.file.mimetype
       }
-    }
-  });
+    });
+  } catch (error) {
+    console.error("S3 Upload Error:", error);
+    res.status(500).json({ success: false, error: 'Erreur lors de l\'upload vers S3.' });
+  }
 });
 
-// Route GET : Consultation inline (Stream) pour affichage dans le navigateur
-router.get('/view/:bucket/:filename', authenticateJWT, (req, res) => {
+// Route GET : Téléchargement sécurisé via le backend (Redirection S3 Presigned URL)
+router.get('/download/:bucket/:filename', authenticateJWT, async (req, res) => {
   const { bucket, filename } = req.params;
   
   if (bucket.includes('..') || filename.includes('..') || bucket.includes('/') || filename.includes('/')) {
     return res.status(403).json({ success: false, error: 'Accès interdit.' });
   }
 
-  const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
-  const filePath = path.resolve(rootPath, bucket, filename);
-  const fallbackPath = path.resolve(__dirname, '../../../storage', bucket, filename);
+  const s3Key = `${bucket}/${filename}`;
 
-  const options = {
-    headers: {
-      'Content-Disposition': 'inline',
-      'Content-Security-Policy': "default-src 'self' 'unsafe-inline'; object-src 'self' blob:; frame-src 'self' blob:;"
-    }
-  };
+  try {
+    const url = await getPresignedUrl(s3Key, 3600, false); // false = force download via content-disposition
+    res.redirect(url);
+  } catch (error) {
+    console.error("Erreur génération URL S3:", error);
+    res.status(500).json({ success: false, error: 'Erreur lors de la génération du lien de téléchargement.' });
+  }
+});
 
-  // Lecture directe du fichier (évite la faille TOCTOU de fs.existsSync)
-  res.sendFile(filePath, options, (err) => {
-    if (err) {
-      // Si introuvable, on tente le fallback local
-      res.sendFile(fallbackPath, options, (errFallback) => {
-        if (errFallback && !res.headersSent) {
-          console.error("Fichier introuvable:", errFallback.message);
-          res.status(404).json({ success: false, error: 'Fichier introuvable.' });
-        }
-      });
-    }
-  });
+// Route GET : Consultation inline (Affichage navigateur via Presigned URL)
+router.get('/view/:bucket/:filename', authenticateJWT, async (req, res) => {
+  const { bucket, filename } = req.params;
+  
+  if (bucket.includes('..') || filename.includes('..') || bucket.includes('/') || filename.includes('/')) {
+    return res.status(403).json({ success: false, error: 'Accès interdit.' });
+  }
+
+  const s3Key = `${bucket}/${filename}`;
+
+  try {
+    const url = await getPresignedUrl(s3Key, 3600, true); // true = inline display
+    res.redirect(url);
+  } catch (error) {
+    console.error("Erreur génération URL S3 inline:", error);
+    res.status(500).json({ success: false, error: 'Erreur de lecture du fichier.' });
+  }
 });
 
 module.exports = router;

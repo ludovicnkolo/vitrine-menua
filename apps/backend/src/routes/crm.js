@@ -1,11 +1,10 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../prisma');
 const crypto = require('node:crypto');
 const imaps = require('imap-simple');
 const simpleParser = require('mailparser').simpleParser;
 const fs = require('node:fs');
 const path = require('node:path');
-const prisma = new PrismaClient();
 const router = express.Router();
 
 const { authenticateJWT } = require('../middlewares/auth');
@@ -141,157 +140,110 @@ router.delete('/roles/:id', async (req, res) => {
   }
 });
 
-// --- DASHBOARD STATS ---
+// --- DASHBOARD STATS (TOUR DE CONTROLE) ---
 router.get('/dashboard-stats', async (req, res) => {
   try {
-    const dossiers = await prisma.dossier.findMany({ 
-      where: { parentDossierId: null },
-      select: { status: true } 
-    });
-    const dossierStats = {
-      total: dossiers.length,
-      ouvert: dossiers.filter(d => d.status === 'OUVERT' || d.status === 'NOUVEAU').length,
-      fermer: dossiers.filter(d => d.status === 'CLOTURE').length,
-      terminer: 0, // Plus de statut TERMINE pour les dossiers
-      archiver: dossiers.filter(d => d.status === 'ARCHIVE').length
-    };
-
-    const missions = await prisma.mission.findMany({ select: { status: true } });
-    const missionStats = {
-      total: missions.length,
-      ouvert: missions.filter(m => ['NON_DEMARREE', 'EN_COURS'].includes(m.status)).length,
-      terminer: missions.filter(m => m.status === 'TERMINEE').length,
-      fermer: 0,
-      reatribuer: 0,
-      bloquer: 0
-    };
-
-    const taches = await prisma.tache.findMany({ select: { status: true, echeance: true } });
     const now = new Date();
-    const tacheStats = {
-      encours: taches.filter(t => ['EN_COURS'].includes(t.status)).length,
-      terminuer: taches.filter(t => t.status === 'TERMINEE').length,
-      controler: taches.filter(t => ['A_VERIFIER', 'EN_CONTROLE', 'EN_VALIDATION_FINALE'].includes(t.status)).length,
-      reattribuer: taches.filter(t => ['A_CORRIGER', 'REATTRIBUEE'].includes(t.status)).length,
-      bloquer: 0,
-      enRetard: taches.filter(t => t.echeance && new Date(t.echeance) < now && !['TERMINEE', 'ARCHIVE'].includes(t.status)).length
-    };
+    const twentyFourHoursFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
-    const utilisateurs = await prisma.utilisateur.findMany({ select: { isBlocked: true } });
-    const clients = await prisma.client.findMany({ select: { status: true } });
-    const utilisateurStats = {
-      collaborateurs: utilisateurs.length,
-      client: clients.length,
-      actifs: utilisateurs.filter(u => !u.isBlocked).length + clients.filter(c => c.status === 'ACTIF').length,
-      inactifs: utilisateurs.filter(u => u.isBlocked).length + clients.filter(c => c.status !== 'ACTIF').length
-    };
+    // 1. Radar des Urgences et Engagements (SLAs)
+    const urgentsFormulaires = await prisma.formulaire.count({ where: { status: { not: 'TRAITE' }, priority: 'URGENT' } });
+    const urgentsMessages = await prisma.messagePersonnel.count({ where: { status: { not: 'TRAITE' }, priorite: 'URGENT' } });
+    const alertesPrioritaires = urgentsFormulaires + urgentsMessages;
 
-    const formulaires = await prisma.formulaire.findMany({ select: { type: true } });
-    const msgPersonnels = await prisma.messagePersonnel.findMany({ select: { type: true } });
-    const messageStats = {
-      contact: formulaires.filter(f => f.type === 'CONTACT').length,
-      recrutemenet: formulaires.filter(f => f.type === 'RECRUTEMENT').length,
-      interne: msgPersonnels.filter(m => m.type === 'INTERNE').length,
-      personnel: msgPersonnels.filter(m => m.type === 'PERSONNEL').length
-    };
-
-    // --- CHARTS DATA ---
-    // 1. Evolution (last 12 months)
-    const oneYearAgo = new Date();
-    oneYearAgo.setMonth(oneYearAgo.getMonth() - 11);
-    oneYearAgo.setDate(1);
-    oneYearAgo.setHours(0,0,0,0);
-    
-    const allTaches = await prisma.tache.findMany({
-      where: { createdAt: { gte: oneYearAgo } },
-      select: { createdAt: true, status: true }
-    });
-    const allMissions = await prisma.mission.findMany({
-      where: { createdAt: { gte: oneYearAgo } },
-      select: { createdAt: true, status: true }
-    });
-    
-    const evolutionMap = {};
-    const moisNoms = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
-    
-    for (let i = 11; i >= 0; i--) {
-      const d = new Date();
-      d.setMonth(d.getMonth() - i);
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      const label = `${moisNoms[d.getMonth()]} ${d.getFullYear().toString().substring(2)}`;
-      evolutionMap[key] = { date: label, crees: 0, termines: 0 };
-    }
-    
-    [...allTaches, ...allMissions].forEach(item => {
-      const d = item.createdAt;
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      if (evolutionMap[key]) {
-        evolutionMap[key].crees += 1;
-        if (item.status === 'TERMINEE') {
-          evolutionMap[key].termines += 1;
-        }
+    const tachesCritiques = await prisma.tache.count({
+      where: {
+        status: { notIn: ['TERMINEE', 'ARCHIVE'] },
+        echeance: { lte: twentyFourHoursFromNow }
       }
     });
+    const missionsCritiques = await prisma.mission.count({
+      where: {
+        status: { notIn: ['TERMINEE', 'ANNULEE'] },
+        echeance: { lte: twentyFourHoursFromNow }
+      }
+    });
+    const delaisCritiques = tachesCritiques + missionsCritiques;
 
-    // 2. Performance (Taches per user)
+    // 2. Santé des Opérations (Détection des goulots)
+    const dossiersBloques = await prisma.dossier.count({ where: { status: 'EN_ATTENTE_CLIENT' } });
+    const tachesBloquees = await prisma.tache.count({ where: { status: 'BLOQUEE' } });
+    const operationsBloquees = dossiersBloques + tachesBloquees;
+
+    const verificationsEnAttente = await prisma.tache.count({
+      where: { status: 'A_CONTROLER' }
+    });
+
+    // 3. Flux d'Acquisition (Lien Magique)
+    // On simule par les documents récents créés par des clients
+    const nouveauxDepots = await prisma.document.count({
+      where: { createdAt: { gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } }
+    });
+
+    // 4. Météo de Charge (Gestion RH & Capacité)
     const activeUsers = await prisma.utilisateur.findMany({
-      where: { isBlocked: false },
+      where: { isBlocked: false, role: { name: { not: 'Client' } } },
       select: { id: true, name: true }
     });
     const userTaches = await prisma.tache.findMany({
-      where: { assignedToId: { in: activeUsers.map(u => u.id) } },
-      select: { assignedToId: true, status: true, echeance: true }
+      where: { assignedToId: { in: activeUsers.map(u => u.id) }, status: 'EN_COURS' },
+      select: { assignedToId: true }
     });
     
-    const perfMap = {};
-    activeUsers.forEach(u => {
-      perfMap[u.id] = { name: u.name, terminees: 0, encours: 0, enretard: 0, bloquees: 0 };
-    });
-    userTaches.forEach(t => {
-      const p = perfMap[t.assignedToId];
-      if (!p) return;
-      if (t.status === 'TERMINEE') p.terminees += 1;
-      else if (t.status === 'BLOQUE') p.bloquees += 1;
-      else if (t.echeance && new Date(t.echeance) < now && !['TERMINEE', 'ARCHIVE'].includes(t.status)) p.enretard += 1;
-      else p.encours += 1;
+    const meteoCharge = activeUsers.map(u => {
+      const count = userTaches.filter(t => t.assignedToId === u.id).length;
+      let etat = 'VERT';
+      if (count > 5) etat = 'ROUGE';
+      else if (count >= 3) etat = 'ORANGE';
+      return { name: u.name, tachesEnCours: count, etat };
     });
 
-    // 3. Repartition Dossiers
-    const allDossiers = await prisma.dossier.findMany({ 
-      where: { parentDossierId: null },
-      select: { categorie: true } 
-    });
-    const repMap = {};
-    allDossiers.forEach(d => {
-      const cat = d.categorie || 'Non catégorisé';
-      repMap[cat] = (repMap[cat] || 0) + 1;
-    });
-
-    // 4. Messages Funnel
-    const allFormulaires = await prisma.formulaire.findMany({ select: { status: true } });
-    const allMsgPersonnels = await prisma.messagePersonnel.findMany({ select: { status: true } });
-    const allMsgs = [...allFormulaires, ...allMsgPersonnels];
+    // 5. Entonnoir de Production (Période)
+    const startDateQuery = req.query.startDate;
+    const endDateQuery = req.query.endDate;
     
+    let startPeriod, endPeriod;
+    
+    if (startDateQuery) {
+      startPeriod = new Date(startDateQuery);
+      startPeriod.setHours(0,0,0,0);
+    } else {
+      startPeriod = new Date(now);
+      startPeriod.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1)); // Lundi
+      startPeriod.setHours(0,0,0,0);
+    }
+    
+    if (endDateQuery) {
+      endPeriod = new Date(endDateQuery);
+      endPeriod.setHours(23,59,59,999);
+    } else {
+      endPeriod = new Date(now);
+    }
+
+    const messagesTraitesPeriode = await prisma.formulaire.count({ where: { status: 'TRAITE', updatedAt: { gte: startPeriod, lte: endPeriod } } }) +
+                                   await prisma.messagePersonnel.count({ where: { status: 'TRAITE', createdAt: { gte: startPeriod, lte: endPeriod } } });
+    
+    const missionsDemarreesPeriode = await prisma.mission.count({ where: { createdAt: { gte: startPeriod, lte: endPeriod } } });
+    const tachesCompleteesPeriode = await prisma.tache.count({ where: { status: 'TERMINEE', updatedAt: { gte: startPeriod, lte: endPeriod } } });
+    const dossiersCloturesPeriode = await prisma.dossier.count({ where: { status: 'CLOTURE', updatedAt: { gte: startPeriod, lte: endPeriod } } });
+
     res.json({
-      dossier: dossierStats,
-      mission: missionStats,
-      taches: tacheStats,
-      utilisateur: utilisateurStats,
-      message: messageStats,
-      charts: {
-        evolution: Object.values(evolutionMap),
-        performance: Object.values(perfMap),
-        repartition: Object.keys(repMap).map(k => ({ name: k, value: repMap[k] })),
-        funnel: [
-          { name: 'Reçus', value: allMsgs.length },
-          { name: 'Lus & Classés', value: allMsgs.filter(m => m.status === 'CLASSE').length },
-          { name: 'Traités', value: allMsgs.filter(m => m.status === 'TRAITE').length }
-        ]
-      }
+      alertesPrioritaires,
+      delaisCritiques,
+      operationsBloquees,
+      verificationsEnAttente,
+      nouveauxDepots,
+      meteoCharge,
+      entonnoirPeriode: [
+        { name: 'Messages Traités', value: messagesTraitesPeriode },
+        { name: 'Missions Démarrées', value: missionsDemarreesPeriode },
+        { name: 'Tâches Terminées', value: tachesCompleteesPeriode },
+        { name: 'Dossiers Clôturés', value: dossiersCloturesPeriode }
+      ]
     });
   } catch(e) {
     console.error(e);
-    res.status(500).json({ error: 'Erreur de chargement des statistiques' });
+    res.status(500).json({ error: 'Erreur de chargement des statistiques', details: e.message, stack: e.stack });
   }
 });
 
@@ -788,7 +740,20 @@ router.patch('/dossiers/:id', async (req, res) => {
 
     const { status, name, description, traitantId } = req.body;
     const updateData = {};
-    if (status !== undefined) updateData.status = status;
+    if (status !== undefined) {
+      if (status === 'CLOTURE' || status === 'ARCHIVE') {
+        const incompleteMissions = await prisma.mission.count({
+          where: { dossierId: req.params.id, status: { notIn: ['TERMINEE', 'ANNULEE'] } }
+        });
+        const incompleteTaches = await prisma.tache.count({
+          where: { dossierId: req.params.id, status: { notIn: ['TERMINEE', 'ANNULEE'] } }
+        });
+        if (incompleteMissions > 0 || incompleteTaches > 0) {
+          return res.status(400).json({ error: "Impossible de clôturer ou d'archiver le dossier : des missions ou tâches ne sont pas terminées." });
+        }
+      }
+      updateData.status = status;
+    }
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description;
     if (traitantId !== undefined) {
@@ -829,12 +794,29 @@ router.patch('/dossiers/:id', async (req, res) => {
 
 router.delete('/dossiers/:id', async (req, res) => {
   try {
+    if (req.user.role !== 'Super-administrateur' && req.user.role !== 'Administrateur') {
+      return res.status(403).json({ error: "Accès refusé. Seul un administrateur peut supprimer un dossier." });
+    }
+    
     await prisma.dossier.deleteMany({
       where: { parentDossierId: req.params.id }
     });
-    await prisma.dossier.delete({
+    const dossier = await prisma.dossier.delete({
       where: { id: req.params.id }
     });
+
+    try {
+      await prisma.auditLog.create({ 
+        data: { 
+          userId: req.user.id, 
+          action: 'SUPPRESSION_DOSSIER', 
+          targetId: req.params.id, 
+          targetType: 'DOSSIER', 
+          details: `Dossier supprimé: ${dossier.name}` 
+        }
+      });
+    } catch(e) {}
+
     res.json({ success: true, message: 'Dossier supprimé' });
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression.' });
@@ -983,6 +965,14 @@ router.patch('/tasks/:id', async (req, res) => {
     if (attachment !== undefined) dataToUpdate.attachment = attachment;
     
     if (status !== undefined) {
+      if (status === 'TERMINEE') {
+        const incompleteTaches = await prisma.tache.count({
+          where: { missionId: req.params.id, status: { notIn: ['TERMINEE', 'ANNULEE'] } }
+        });
+        if (incompleteTaches > 0) {
+          return res.status(400).json({ error: "Impossible de terminer la mission : certaines tâches associées ne sont pas terminées." });
+        }
+      }
       const currentTask = await prisma.mission.findUnique({ where: { id: req.params.id } });
       if (currentTask && currentTask.status !== status) {
         dataToUpdate.status = status;
@@ -1002,10 +992,27 @@ router.patch('/tasks/:id', async (req, res) => {
 
 router.delete('/tasks/:id', async (req, res) => {
   try {
-    await prisma.mission.delete({
+    if (req.user.role !== 'Super-administrateur' && req.user.role !== 'Administrateur') {
+      return res.status(403).json({ error: "Accès refusé. Seul un administrateur peut supprimer une mission." });
+    }
+
+    const mission = await prisma.mission.delete({
       where: { id: req.params.id }
     });
-    res.json({ success: true, message: 'Tâche supprimée' });
+
+    try {
+      await prisma.auditLog.create({ 
+        data: { 
+          userId: req.user.id, 
+          action: 'SUPPRESSION_MISSION', 
+          targetId: req.params.id, 
+          targetType: 'MISSION', 
+          details: `Mission supprimée: ${mission.subject || mission.id}` 
+        }
+      });
+    } catch(e) {}
+
+    res.json({ success: true, message: 'Mission supprimée' });
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression.' });
   }
@@ -1191,9 +1198,26 @@ router.patch('/taches/:id', async (req, res) => {
 
 router.delete('/taches/:id', async (req, res) => {
   try {
-    await prisma.tache.delete({
+    if (req.user.role !== 'Super-administrateur' && req.user.role !== 'Administrateur') {
+      return res.status(403).json({ error: "Accès refusé. Seul un administrateur peut supprimer une tâche." });
+    }
+    
+    const tache = await prisma.tache.delete({
       where: { id: req.params.id }
     });
+
+    try {
+      await prisma.auditLog.create({ 
+        data: { 
+          userId: req.user.id, 
+          action: 'SUPPRESSION_TACHE', 
+          targetId: req.params.id, 
+          targetType: 'TACHE', 
+          details: `Tâche supprimée: ${tache.subject || tache.id}` 
+        }
+      });
+    } catch(e) {}
+
     res.json({ success: true, message: 'Tâche supprimée' });
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression.' });
@@ -1251,20 +1275,10 @@ router.delete('/documents/:id', async (req, res) => {
     await prisma.document.delete({ where: { id: req.params.id } });
     
     try {
-      const fs = require('node:fs');
-      const path = require('node:path');
-      const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
-      const filePath = path.join(rootPath, doc.url);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      } else {
-        const fallbackPath = path.join(__dirname, '../../../storage', doc.url);
-        if (fs.existsSync(fallbackPath)) {
-          fs.unlinkSync(fallbackPath);
-        }
-      }
+      const { deleteFromS3 } = require('../services/s3Service');
+      await deleteFromS3(doc.url);
     } catch (fsErr) {
-      console.error("Erreur de suppression physique du fichier:", fsErr);
+      console.error("Erreur de suppression S3 du fichier:", fsErr);
     }
     
     res.json({ success: true });
@@ -1378,7 +1392,7 @@ router.get('/messages', async (req, res) => {
         recrutement: f.recrutement
       }));
     } else {
-      let where = { type: tabType };
+      let where = { type: tabType, isDeleted: false };
       
       if (req.user.role === 'Collaborateur' || req.user.role === 'Relecteur') {
         where.OR = [
@@ -1432,6 +1446,8 @@ router.get('/messages', async (req, res) => {
         bodyHtml: e.bodyText || e.bodyHtml,
         subType: e.subType || 'Indéfini',
         attachment: e.attachment,
+        etiquette: e.etiquette,
+        priorite: e.priorite,
         createdAt: e.createdAt,
         dossierId: e.dossierId,
         missionId: e.missionId,
@@ -1501,9 +1517,12 @@ router.delete('/messages/:id', async (req, res) => {
 router.patch('/messages/:id/status', async (req, res) => {
   try {
     const { id } = req.params;
-    const { status, dossierId, lieuTraitement, numeroReference } = req.body;
+    const { status, dossierId, lieuTraitement, numeroReference, etiquette, priorite } = req.body;
     
-    const dataToUpdate = { status };
+    const dataToUpdate = {};
+    if (status !== undefined) dataToUpdate.status = status;
+    if (etiquette !== undefined) dataToUpdate.etiquette = etiquette;
+    if (priorite !== undefined) dataToUpdate.priorite = priorite;
     if (dossierId !== undefined) {
       dataToUpdate.dossierId = dossierId;
     }
@@ -1537,6 +1556,30 @@ router.patch('/messages/:id/status', async (req, res) => {
     res.status(404).json({ error: 'Message non trouvé' });
   } catch (error) {
     res.status(500).json({ error: 'Erreur lors de la mise à jour' });
+  }
+});
+
+// Nouvelle route : Soft Delete d'un message
+router.delete('/messages/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const msg = await prisma.messagePersonnel.findUnique({ where: { id } });
+    
+    if (msg) {
+      await prisma.messagePersonnel.update({ where: { id }, data: { isDeleted: true } });
+      return res.json({ success: true, message: 'Message supprimé avec succès (Soft Delete).' });
+    }
+    
+    const form = await prisma.formulaire.findUnique({ where: { id } });
+    if (form) {
+      await prisma.formulaire.delete({ where: { id } });
+      return res.json({ success: true, message: 'Formulaire supprimé avec succès.' });
+    }
+
+    res.status(404).json({ error: 'Message/Formulaire introuvable.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la suppression.' });
   }
 });
 

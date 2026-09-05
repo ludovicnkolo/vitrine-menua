@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "@/components/Link";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -8,6 +8,30 @@ import { formatBrand } from "@/utils/formatBrand";
 export default function ActualitesPage() {
   const { t } = useLanguage();
   const [activeFilter, setActiveFilter] = useState("TOUTES LES ACTUALITÉS");
+  const [publications, setPublications] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchPubs = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+        const res = await fetch(`${apiUrl}/api/cms/public?type=ACTUALITE`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.data)) {
+            setPublications(data.data);
+          }
+        }
+      } catch (err) {
+        console.error("Erreur lors de la récupération des actualités:", err);
+      }
+    };
+    fetchPubs();
+  }, []);
+
+  const featuredPub = publications.length > 0 ? publications[0] : null;
+  const filteredPubs = activeFilter === "TOUTES LES ACTUALITÉS" 
+    ? publications.slice(1) // exclude featured
+    : publications.filter(p => p.category === activeFilter);
 
   const filters = [
     { key: "TOUTES LES ACTUALITÉS", fr: "TOUTES LES ACTUALITÉS", en: "ALL NEWS" },
@@ -18,6 +42,12 @@ export default function ActualitesPage() {
     { key: "GESTION DE PATRIMOINE", fr: "GESTION DE PATRIMOINE", en: "WEALTH MANAGEMENT" },
     { key: "ORGANISATION ET EXTERNALISATION", fr: "ORGANISATION ET EXTERNALISATION", en: "ORGANIZATION AND OUTSOURCING" }
   ];
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString('fr-FR', options);
+  };
 
   return (
     <main className="flex flex-col w-full min-h-screen bg-white">
@@ -79,29 +109,66 @@ export default function ActualitesPage() {
 
           </div>
 
-          {/* Featured Card (Placeholder) */}
-          <div className="bg-white border border-[#e8e1d7] flex flex-col md:flex-row w-full group hover:border-[#141824] transition-all duration-300">
-            <div className="w-full md:w-1/2 h-[250px] md:h-auto overflow-hidden bg-[#f5f7fa] flex items-center justify-center">
-               <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-xl">MENUA CONSULTING</span>
-            </div>
-            
-            <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white group-hover:bg-[#141824] transition-colors duration-300">
-              <p className="text-[#6e7891] group-hover:text-white/70 text-[1.1rem] font-light leading-relaxed mb-8 transition-colors duration-300">
-                {formatBrand(t(
-                  "Cette rubrique accueillera prochainement les analyses et publications de MENUA CONSULTING consacrées aux évolutions opérationnelles, aux méthodes de travail, à la fiabilisation des processus et à la continuité d’activité.",
-                  "This section will soon host MENUA CONSULTING's analyses and publications dedicated to operational developments, working methods, process reliability and business continuity."
-                ))}
-              </p>
+          {/* Featured Card */}
+          {featuredPub ? (
+            <div className="bg-white border border-[#e8e1d7] flex flex-col md:flex-row w-full group hover:border-[#141824] transition-all duration-300">
+              <div className="w-full md:w-1/2 h-[250px] md:h-[400px] overflow-hidden bg-[#f5f7fa] flex items-center justify-center relative">
+                {featuredPub.coverImageUrl ? (
+                  <img src={featuredPub.coverImageUrl} alt={featuredPub.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                ) : (
+                  <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-xl">MENUA CONSULTING</span>
+                )}
+                {featuredPub.category && (
+                  <div className="absolute top-4 left-4 bg-[#e8e1d7] text-[#141824] px-4 py-2 text-[0.8rem] font-bold uppercase tracking-wider">
+                    {featuredPub.category}
+                  </div>
+                )}
+              </div>
               
-              <div className="flex justify-end mt-auto">
-                <a href="#articles" className="inline-flex items-center gap-2 text-[#141824] group-hover:text-white font-bold tracking-wider uppercase text-[0.7rem] transition-colors duration-300">
-                  {t("DÉCOUVRIR LA RUBRIQUE", "DISCOVER THE SECTION")} 
-                  <span className="w-6 h-[1px] bg-[#141824] group-hover:bg-white group-hover:w-10 transition-all duration-300"></span>
-                  <ChevronRight size={14} className="-ml-2 group-hover:text-white transition-colors duration-300" />
-                </a>
+              <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white group-hover:bg-[#141824] transition-colors duration-300">
+                <p className="text-[#6e7891] group-hover:text-white/70 text-[0.8rem] font-medium tracking-wide mb-3 transition-colors duration-300">
+                  {featuredPub.publishedAt ? formatDate(featuredPub.publishedAt) : formatDate(featuredPub.createdAt)}
+                </p>
+                <h3 className="text-[#141824] group-hover:text-white text-[1.4rem] font-bold leading-tight mb-4 transition-colors duration-300">
+                  {featuredPub.title}
+                </h3>
+                <p className="text-[#6e7891] group-hover:text-white/70 text-[1.1rem] font-light leading-relaxed mb-8 transition-colors duration-300 line-clamp-4">
+                  {featuredPub.excerpt || "Découvrez notre nouvelle publication et l'analyse détaillée de nos experts métier sur ce sujet."}
+                </p>
+                
+                <div className="flex justify-end mt-auto">
+                  <a href={`/actualites#${featuredPub.id}`} className="inline-flex items-center gap-2 text-[#141824] group-hover:text-white font-bold tracking-wider uppercase text-[0.7rem] transition-colors duration-300">
+                    {t("LIRE L'ARTICLE", "READ ARTICLE")} 
+                    <span className="w-6 h-[1px] bg-[#141824] group-hover:bg-white group-hover:w-10 transition-all duration-300"></span>
+                    <ChevronRight size={14} className="-ml-2 group-hover:text-white transition-colors duration-300" />
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="bg-white border border-[#e8e1d7] flex flex-col md:flex-row w-full group hover:border-[#141824] transition-all duration-300">
+              <div className="w-full md:w-1/2 h-[250px] md:h-auto overflow-hidden bg-[#f5f7fa] flex items-center justify-center">
+                 <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-xl">MENUA CONSULTING</span>
+              </div>
+              
+              <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white group-hover:bg-[#141824] transition-colors duration-300">
+                <p className="text-[#6e7891] group-hover:text-white/70 text-[1.1rem] font-light leading-relaxed mb-8 transition-colors duration-300">
+                  {formatBrand(t(
+                    "Cette rubrique accueillera prochainement les analyses et publications de MENUA CONSULTING consacrées aux évolutions opérationnelles, aux méthodes de travail, à la fiabilisation des processus et à la continuité d’activité.",
+                    "This section will soon host MENUA CONSULTING's analyses and publications dedicated to operational developments, working methods, process reliability and business continuity."
+                  ))}
+                </p>
+                
+                <div className="flex justify-end mt-auto">
+                  <a href="#articles" className="inline-flex items-center gap-2 text-[#141824] group-hover:text-white font-bold tracking-wider uppercase text-[0.7rem] transition-colors duration-300">
+                    {t("DÉCOUVRIR LA RUBRIQUE", "DISCOVER THE SECTION")} 
+                    <span className="w-6 h-[1px] bg-[#141824] group-hover:bg-white group-hover:w-10 transition-all duration-300"></span>
+                    <ChevronRight size={14} className="-ml-2 group-hover:text-white transition-colors duration-300" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -136,7 +203,40 @@ export default function ActualitesPage() {
             {/* Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-              {/* Cards will be dynamically injected here via API/admin route */}
+              {filteredPubs.map(pub => (
+                <div key={pub.id} className="group flex flex-col bg-white border border-[#e8e1d7] hover:border-[#141824] transition-all duration-300 h-full">
+                  <div className="h-[200px] overflow-hidden bg-[#f5f7fa] relative flex items-center justify-center">
+                    {pub.coverImageUrl ? (
+                      <img src={pub.coverImageUrl} alt={pub.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    ) : (
+                      <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-sm">MENUA CONSULTING</span>
+                    )}
+                    {pub.category && (
+                      <div className="absolute top-3 left-3 bg-[#e8e1d7] text-[#141824] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wider">
+                        {pub.category}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col flex-grow p-6">
+                    <p className="text-[#6e7891] text-[0.75rem] font-medium tracking-wide mb-2">
+                      {pub.publishedAt ? formatDate(pub.publishedAt) : formatDate(pub.createdAt)}
+                    </p>
+                    <h4 className="text-[#141824] font-semibold text-[1.1rem] leading-snug mb-3 line-clamp-2">{pub.title}</h4>
+                    <p className="text-[#6e7891] text-[0.85rem] font-light leading-relaxed flex-grow mb-4 line-clamp-3">
+                      {pub.excerpt || "Analyse détaillée de nos experts métier sur ce sujet."}
+                    </p>
+                    <a href={`/actualites#${pub.id}`} className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.7rem] group-hover:gap-3 transition-all">
+                      {t("LIRE L'ARTICLE", "READ ARTICLE")} <ArrowRight size={14} />
+                    </a>
+                  </div>
+                </div>
+              ))}
+
+              {filteredPubs.length === 0 && publications.length > 0 && (
+                <div className="col-span-full py-12 text-center text-[#6e7891]">
+                  Aucune publication dans cette rubrique pour le moment.
+                </div>
+              )}
 
             </div>
           </div>

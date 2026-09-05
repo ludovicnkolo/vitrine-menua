@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, MoreVertical, Pencil, Eye, Trash, MessageSquare, Paperclip, FileText, Download, Plus, X, Folder, ChevronRight, ChevronDown, CheckSquare, Square } from 'lucide-react';
+import { Search, MoreVertical, Pencil, Eye, Trash, MessageSquare, Paperclip, FileText, Download, Plus, X, Folder, ChevronRight, ChevronDown, CheckSquare, Square, Link as LinkIcon } from 'lucide-react';
 import { getSafeApiUrl, uploadFile, formatDate } from '../utils/helpers';
 import ActionDropdown from '../components/ActionDropdown';
 import { getStatusBadge } from '../utils/helpers';
@@ -34,6 +34,12 @@ const DossiersPage = () => {
   const [authorizedDossierIds, setAuthorizedDossierIds] = useState([]);
   const [isSubmittingMission, setIsSubmittingMission] = useState(false);
   const [operationalTree, setOperationalTree] = useState(null);
+
+  // Magic Link State
+  const [showMagicModal, setShowMagicModal] = useState(false);
+  const [magicType, setMagicType] = useState('ACQUISITION');
+  const [magicExpires, setMagicExpires] = useState('7');
+  const [generatedMagicUrl, setGeneratedMagicUrl] = useState('');
 
   useEffect(() => {
     if (createMissionModal && consultDossier) {
@@ -236,6 +242,29 @@ const DossiersPage = () => {
       setIsSubmittingMission(false);
     }
   };
+
+  const handleGenerateMagicLink = async () => {
+    try {
+      const token = sessionStorage.getItem('adminToken');
+      const res = await fetch(getSafeApiUrl('/api/magic/generate'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ dossierId: consultDossier.id, type: magicType, expiresInDays: magicExpires })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        // Since we are building an integrated CRM, we can point it to a specific route in the admin app
+        const magicUrl = `${window.location.origin}/magic-drop/${data.data.token}`;
+        setGeneratedMagicUrl(magicUrl);
+      } else {
+        window.customAlert("Erreur lors de la génération du lien.");
+      }
+    } catch (err) {
+      console.error(err);
+      window.customAlert("Erreur réseau");
+    }
+  };
+
 
   const handleCreateDossier = async (e) => {
     e.preventDefault();
@@ -537,6 +566,9 @@ const DossiersPage = () => {
             <button type="button" onClick={() => setShowSmsModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)', display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
               <MessageSquare size={16} /> Envoyer SMS
             </button>
+            <button type="button" onClick={() => { setShowMagicModal(true); setGeneratedMagicUrl(''); }} className="btn btn-outline" style={{borderColor: 'var(--secondary)', color: 'var(--secondary-dark)', display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
+              <LinkIcon size={16} /> Générer Lien Magique
+            </button>
           </div>
           <button type="button" onClick={() => setConsultDossier(null)} className="btn btn-outline">Fermer</button>
         </div>
@@ -577,6 +609,54 @@ const DossiersPage = () => {
                 <button type="button" onClick={() => { setShowSmsModal(false); setSmsPhone(''); setSmsMessage(''); }} className="btn btn-outline" disabled={isSubmittingSms}>Annuler</button>
                 <button type="button" onClick={handleSendSms} disabled={isSubmittingSms} className="btn btn-primary">{isSubmittingSms ? 'Envoi...' : 'Envoyer SMS'}</button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Magic Link */}
+        {showMagicModal && (
+          <div className="fade-in" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
+            <div className="card" style={{width: '90%', maxWidth: '500px', padding: '2rem'}}>
+              <h3 style={{marginTop: 0, marginBottom: '1.5rem', fontSize: '1.25rem'}}>Lien Magique (Dossier: {consultDossier.reference || consultDossier.id})</h3>
+              
+              {!generatedMagicUrl ? (
+                <>
+                  <div style={{marginBottom: '1.5rem'}}>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Type de lien</label>
+                    <select value={magicType} onChange={e => setMagicType(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+                      <option value="ACQUISITION">Acquisition (Le client dépose des fichiers)</option>
+                      <option value="LIVRAISON">Livraison (Le client télécharge des fichiers)</option>
+                    </select>
+                  </div>
+                  <div style={{marginBottom: '1.5rem'}}>
+                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Validité (jours)</label>
+                    <select value={magicExpires} onChange={e => setMagicExpires(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+                      <option value="1">1 jour</option>
+                      <option value="7">7 jours</option>
+                      <option value="30">30 jours</option>
+                    </select>
+                  </div>
+                  <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
+                    <button type="button" onClick={() => setShowMagicModal(false)} className="btn btn-outline">Annuler</button>
+                    <button type="button" onClick={handleGenerateMagicLink} className="btn btn-primary" style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                      <LinkIcon size={16} /> Générer
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div style={{padding: '1.5rem', background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '8px', marginBottom: '1.5rem'}}>
+                    <p style={{margin: '0 0 1rem 0', color: '#166534', fontWeight: 500}}>Lien généré avec succès ! Vous pouvez le copier et l'envoyer au client.</p>
+                    <div style={{display: 'flex', gap: '0.5rem'}}>
+                      <input type="text" readOnly value={generatedMagicUrl} className="input-field" style={{flex: 1, padding: '0.75rem', borderRadius: '8px', border: '1px solid #BBF7D0', background: '#FFF'}} />
+                      <button type="button" onClick={() => { navigator.clipboard.writeText(generatedMagicUrl); window.customAlert('Lien copié !'); }} className="btn btn-primary">Copier</button>
+                    </div>
+                  </div>
+                  <div style={{display: 'flex', justifyContent: 'center'}}>
+                    <button type="button" onClick={() => setShowMagicModal(false)} className="btn btn-outline">Fermer</button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}

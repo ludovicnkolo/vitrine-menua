@@ -17,20 +17,22 @@ const authenticateJWT = (req, res, next) => {
         return res.status(401).json({ error: 'Token invalide ou expiré.' });
       }
       
-      if (user.id !== 'MASTER-ADMIN') {
-        const { PrismaClient } = require('@prisma/client');
-        const prisma = new PrismaClient();
-        try {
-          const dbUser = await prisma.utilisateur.findUnique({ where: { id: user.id } });
-          if (!dbUser) {
-            return res.status(401).json({ error: 'Utilisateur introuvable en base. Veuillez vous reconnecter.', action: 'FORCE_LOGOUT' });
-          }
-          if (dbUser.isBlocked) {
-            return res.status(401).json({ error: 'Votre compte a été désactivé par l\'administrateur.', action: 'FORCE_LOGOUT' });
-          }
-        } catch (dbError) {
-          return res.status(500).json({ error: 'Erreur de vérification utilisateur' });
+      if (user.id === 'MASTER-ADMIN') {
+        return res.status(401).json({ error: 'Session obsolète. Veuillez vous reconnecter.', action: 'FORCE_LOGOUT' });
+      }
+
+      const { PrismaClient } = require('@prisma/client');
+      const prisma = new PrismaClient();
+      try {
+        const dbUser = await prisma.utilisateur.findUnique({ where: { id: user.id } });
+        if (!dbUser) {
+          return res.status(401).json({ error: 'Utilisateur introuvable en base. Veuillez vous reconnecter.', action: 'FORCE_LOGOUT' });
         }
+        if (dbUser.isBlocked) {
+          return res.status(401).json({ error: 'Votre compte a été désactivé par l\'administrateur.', action: 'FORCE_LOGOUT' });
+        }
+      } catch (dbError) {
+        return res.status(500).json({ error: 'Erreur de vérification utilisateur' });
       }
 
       req.user = user;

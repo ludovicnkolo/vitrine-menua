@@ -49,12 +49,12 @@ function App() {
     }
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = (reason = '') => {
     sessionStorage.removeItem('adminToken');
     sessionStorage.removeItem('adminUser');
     setToken(null);
     setUser(null);
-    window.location.href = '/'; // Force reload to clear all states and redirect to login
+    window.location.href = reason ? `/?logout=${reason}` : '/'; // Force reload to clear all states and redirect to login
   };
 
   // --- HAUTE SÉCURITÉ : Intercepteur global & Déconnexion pour inactivité ---
@@ -107,10 +107,10 @@ function App() {
             const data = await clone.json();
             if (data?.action === 'FORCE_LOGOUT' || response.status === 401) {
               console.error("Accès révoqué ou session expirée. Déconnexion forcée.");
-              handleLogout();
+              handleLogout('expired');
             }
           } catch (e) {
-            handleLogout();
+            handleLogout('expired');
           }
         }
         return response;

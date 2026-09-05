@@ -7,6 +7,14 @@ const LoginPage = ({ onLogin }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('logout') === 'expired') {
+      setError('Votre session a expiré. Veuillez vous reconnecter.');
+      window.history.replaceState({}, document.title, '/');
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

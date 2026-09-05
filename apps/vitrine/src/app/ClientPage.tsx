@@ -18,8 +18,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPubs = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
-        const res = await fetch(`${apiUrl}/api/cms/public?type=ACTUALITE`);
+        const res = await fetch('/api/cms/public?type=ACTUALITE');
         if (res.ok) {
           const data = await res.json();
           if (data.success && Array.isArray(data.data)) {
@@ -72,7 +71,7 @@ export default function Home() {
               </p>
             </div>
             <div className="mt-4">
-              <Link href="/nous-connaitre" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
+              <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
                 {t("Présenter votre besoin", "Tell us about your requirements")}
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -328,6 +327,7 @@ export default function Home() {
         </div>
       </section>
 
+      {publications.length > 0 && <>
       {/* ── SEPARATION BLANC ── */}
       <div className="w-full h-8 md:h-[5.25rem] bg-white"></div>
 
@@ -353,8 +353,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {publications.length > 0 ? (
-              publications.map((pub) => (
+            {publications.map((pub) => (
                 <Link key={pub.id} href={`/actualites/${pub.id}`} className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300">
                   <div className="h-[180px] overflow-hidden bg-[#1a1f2e] flex items-center justify-center relative">
                     {pub.coverImageUrl ? (
@@ -381,25 +380,7 @@ export default function Home() {
                     </span>
                   </div>
                 </Link>
-              ))
-            ) : (
-              <Link href="/actualites" className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300 md:col-span-1 md:col-start-2">
-                <div className="h-[180px] overflow-hidden bg-[#1a1f2e] flex items-center justify-center">
-                  <span className="text-[#e8e1d7]/20 font-bold tracking-widest uppercase text-lg">MENUA CONSULTING</span>
-                </div>
-                <div className="flex flex-col flex-grow p-6">
-                  <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4">
-                    {formatBrand(t(
-                      "Cette rubrique accueillera prochainement les analyses et publications de MENUA CONSULTING consacrées aux évolutions opérationnelles, aux méthodes de travail, à la fiabilisation des processus et à la continuité d’activité.",
-                      "This section will soon host MENUA CONSULTING's analyses and publications dedicated to operational developments, working methods, process reliability and business continuity."
-                    ))}
-                  </p>
-                  <span className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
-                    {t("Découvrir la rubrique", "Browse our publications")} <ArrowRight size={14} />
-                  </span>
-                </div>
-              </Link>
-            )}
+              ))}
           </div>
 
           {/* CTA */}
@@ -413,6 +394,7 @@ export default function Home() {
 
         </div>
       </section>
+      </>}
 
 
 

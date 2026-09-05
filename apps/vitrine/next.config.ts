@@ -73,7 +73,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/api/:path*',
-        destination: process.env.NODE_ENV === 'production' ? (process.env.BACKEND_URL || 'https://backend:4000') + '/api/:path*' : 'http://localhost:4000/api/:path*',
+        destination: process.env.NODE_ENV === 'production' ? (process.env.BACKEND_URL || 'http://backend:4000') + '/api/:path*' : 'http://localhost:4000/api/:path*',
       },
     ];
   },

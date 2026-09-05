@@ -164,8 +164,6 @@ const InboxPage = ({ userRole }) => {
   }, []);
 
   useEffect(() => {
-    fetchMessages();
-
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setOpenMenuId(null);
@@ -173,7 +171,7 @@ const InboxPage = ({ userRole }) => {
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [page, tab, filterTraite, searchQuery]);
+  }, []);
 
 
   const toggleMenu = (e, id) => {

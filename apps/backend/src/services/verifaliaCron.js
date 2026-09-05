@@ -83,7 +83,7 @@ async function processVerifaliaJobs() {
             const result = entriesData.data[0];
             
             // Classification: Deliverable, Risky, Undeliverable, Unknown
-            if (!result.isDisposableEmailAddress && (result.classification === 'Deliverable' || result.classification === 'Risky')) {
+            if (!result.isDisposableEmailAddress && result.classification === 'Deliverable') {
               await prisma.formulaire.update({
                 where: { id: form.id },
                 data: {
@@ -110,12 +110,13 @@ async function processVerifaliaJobs() {
                 }
               });
             } else {
-              // Unknown
               await prisma.formulaire.update({
                 where: { id: form.id },
                 data: {
                   status: 'CONTROLE_MANUEL',
-                  verifaliaStatus: 'COMPLETED_UNKNOWN'
+                  verifaliaStatus: result.classification === 'Risky'
+                    ? 'COMPLETED_RISKY'
+                    : 'COMPLETED_UNKNOWN'
                 }
               });
             }

@@ -18,7 +18,8 @@ const authenticateJWT = (req, res, next) => {
       }
       
       if (user.id === 'MASTER-ADMIN') {
-        return res.status(401).json({ error: 'Session obsolète. Veuillez vous reconnecter.', action: 'FORCE_LOGOUT' });
+        req.user = user;
+        return next();
       }
 
       const { PrismaClient } = require('@prisma/client');

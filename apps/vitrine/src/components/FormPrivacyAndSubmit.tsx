@@ -20,8 +20,8 @@ export default function FormPrivacyAndSubmit({ id, isSubmitting, submitText, sub
   ));
 
   const textJoin = formatBrand(t(
-    "Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin de répondre à votre demande et d'en assurer le suivi. Elles peuvent être conservées jusqu'à 3 ans après le dernier échange. Vous disposez de droits sur vos données personnelles et pouvez les exercer à l'adresse : contact@menuaconsulting.com. Pour en savoir plus, consultez notre",
-    "The information collected via this form is processed by MENUA CONSULTING in order to respond to your request and ensure its follow-up. They can be kept for up to 3 years after the last exchange. You have rights over your personal data and can exercise them at the address: contact@menuaconsulting.com. To learn more, consult our"
+    "Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin de répondre à votre demande et d'en assurer le suivi. Elles peuvent être conservées jusqu'à 2 ans après le dernier échange. Vous disposez de droits sur vos données personnelles et pouvez les exercer à l'adresse : contact@menuaconsulting.com. Pour en savoir plus, consultez notre",
+    "The information collected via this form is processed by MENUA CONSULTING in order to respond to your request and ensure its follow-up. They can be kept for up to 2 years after the last exchange. You have rights over your personal data and can exercise them at the address: contact@menuaconsulting.com. To learn more, consult our"
   ));
 
   const text = type === 'contact' ? textContact : textJoin;
@@ -32,11 +32,11 @@ export default function FormPrivacyAndSubmit({ id, isSubmitting, submitText, sub
         <label htmlFor={id} className="flex items-start gap-4 text-[1.05rem] text-[#6e7891] cursor-pointer group font-light">
           <input type="checkbox" id={id} className="accent-[#141824] mt-1 shrink-0 w-5 h-5" required />
           <span>
-            {t("J’ai pris connaissance de la", "I have read the")} <Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("politique de confidentialité", "Privacy Policy")}</Link>. <span className="text-red-500">*</span>
+            {t("J’ai pris connaissance de la", "I have read the")} <Link href={t("/politique-de-confidentialite", "/en/privacy-policy")} className="text-[#141824] hover:underline font-bold">{t("politique de confidentialité", "Privacy Policy")}</Link>. <span className="text-red-500">*</span>
           </span>
         </label>
         <p className="text-[0.85rem] text-[#6e7891] font-light mt-4 leading-relaxed">
-          {text}{" "}<Link href="/politique-de-confidentialite" className="text-[#141824] hover:underline font-bold">{t("Politique de confidentialité", "Privacy Policy")}</Link>.
+          {text}{" "}<Link href={t("/politique-de-confidentialite", "/en/privacy-policy")} className="text-[#141824] hover:underline font-bold">{t("Politique de confidentialité", "Privacy Policy")}</Link>.
         </p>
       </div>
 

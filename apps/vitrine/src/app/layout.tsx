@@ -31,6 +31,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fr_FR",
     alternateLocale: "en_US",
+    images: [{ url: '/img/logo-clean-light.webp', width: 1200, height: 630, alt: 'Menua Consulting' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Menua Consulting',
+    description: 'Externalisation opérationnelle back et middle office.',
+    images: ['/img/logo-clean-light.webp'],
   },
 };
 
@@ -53,6 +60,29 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
       </head>
       <body className={`min-h-screen flex flex-col antialiased bg-[#f5f7fa] text-[#141824]`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'ProfessionalService',
+              name: 'Menua Consulting',
+              url: 'https://menuaconsulting.com',
+              logo: 'https://menuaconsulting.com/img/logo-clean-light.webp',
+              email: 'contact@menuaconsulting.com',
+              telephone: '+33686877914',
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: '92 rue des Pyrénées',
+                postalCode: '75020',
+                addressLocality: 'Paris',
+                addressCountry: 'FR'
+              },
+              areaServed: 'FR',
+              serviceType: 'Externalisation opérationnelle back et middle office'
+            })
+          }}
+        />
         <LanguageProvider>
           <ScrollObserver />
           <Header />

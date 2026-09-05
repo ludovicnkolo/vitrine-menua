@@ -192,8 +192,10 @@ router.post('/contact', upload.single('file'), async (req, res) => {
 
     // Si on a pu valider l'email immédiatement, on envoie les notifications tout de suite
     if (!isDeferred && formulaireRecord) {
-      sendAutoReply(senderEmail, lang);
-      sendAdminNotification(formulaireRecord);
+      await Promise.all([
+        sendAutoReply(senderEmail, lang),
+        sendAdminNotification(formulaireRecord)
+      ]);
     }
 
     return sendResponse(res, 200, 'SUCCESS_CONTACT', lang);

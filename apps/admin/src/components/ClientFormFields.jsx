@@ -15,7 +15,7 @@ const ClientFormFields = ({ client, setClient, type = 'Particulier', isEdit = fa
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <FormField label="Téléphone"         type="tel"   value={client.telephone}       onChange={set('telephone')} />
-            <FormField label="Contact secondaire"             value={client.contactSecondaire} onChange={set('contactSecondaire')} />
+            <FormField label="Seconde personne à contacter" value={client.contactSecondaire} onChange={set('contactSecondaire')} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <FormField label="Secteur d'activité"             value={client.secteurActivite}  onChange={set('secteurActivite')} />
@@ -29,15 +29,15 @@ const ClientFormFields = ({ client, setClient, type = 'Particulier', isEdit = fa
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <FormField label="Email de l'entreprise"  type="email" value={client.emailEntreprise}     onChange={set('emailEntreprise')} />
-            <FormField label="Numéro de l'entreprise" type="tel"   value={client.telephoneEntreprise} onChange={set('telephoneEntreprise')} />
+            <FormField label="Téléphone de l'entreprise" type="tel" value={client.telephoneEntreprise} onChange={set('telephoneEntreprise')} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <FormField label="Nom du contact"   type="text"  value={client.name}  onChange={set('name')}  required />
             <FormField label="Email du contact" type="email" value={client.email} onChange={set('email')} required />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <FormField label="Numéro du contact"  type="tel" value={client.telephone}        onChange={set('telephone')} />
-            <FormField label="Contact secondaire"            value={client.contactSecondaire} onChange={set('contactSecondaire')} />
+            <FormField label="Téléphone du contact" type="tel" value={client.telephone} onChange={set('telephone')} />
+            <FormField label="Seconde personne à contacter" value={client.contactSecondaire} onChange={set('contactSecondaire')} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <FormField label="Secteur d'activité" value={client.secteurActivite} onChange={set('secteurActivite')} />

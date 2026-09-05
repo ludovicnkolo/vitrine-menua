@@ -13,8 +13,7 @@ export default function ActualitesPage() {
   useEffect(() => {
     const fetchPubs = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
-        const res = await fetch(`${apiUrl}/api/cms/public?type=ACTUALITE`);
+        const res = await fetch('/api/cms/public?type=ACTUALITE');
         if (res.ok) {
           const data = await res.json();
           if (data.success && Array.isArray(data.data)) {

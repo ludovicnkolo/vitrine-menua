@@ -81,9 +81,9 @@ export { getStatusBadge, getPriorityBadge, getRoleBadge, getMessageStatusBadge }
 
 function getSafeApiUrl(path) {
   const base = import.meta.env.VITE_API_URL || '';
-  if (!base) return path;
   try {
-    const url = new URL(path, base);
+    const origin = base || window.location.origin;
+    const url = new URL(path, origin);
     if (url.protocol !== 'http:' && url.protocol !== 'https:') return path;
     return url.toString();
   } catch(e) {

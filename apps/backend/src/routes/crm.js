@@ -411,7 +411,12 @@ router.post('/clients', async (req, res) => {
     });
     res.status(201).json(client);
   } catch (error) {
-    console.error(error); res.status(500).json({ error: 'Erreur lors de la création du client.' });
+    console.error(error);
+    if (error.code === 'P2002') {
+      const duplicateField = Array.isArray(error.meta?.target) ? error.meta.target.join(', ') : 'email';
+      return res.status(409).json({ error: `Un client existe déjà avec cette donnée (${duplicateField}).` });
+    }
+    res.status(500).json({ error: 'Impossible de créer le client. Vérifiez les données saisies et réessayez.' });
   }
 });
 

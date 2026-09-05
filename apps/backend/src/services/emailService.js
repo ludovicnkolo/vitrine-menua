@@ -77,6 +77,7 @@ const sendAutoReply = async (email) => {
     console.log({ event: "auto_reply_success", email: email, messageId: info.messageId });
   } catch (error) {
     console.error({ event: "auto_reply_immediate_error", email, error: error.message || error });
+    throw error;
   }
 };
 
@@ -115,6 +116,7 @@ const sendAdminNotification = async (formulaire) => {
     console.log({ event: "admin_notification_success", email: formulaire.email });
   } catch (error) {
     console.error(`Erreur SMTP détaillée: Code ${error.responseCode || error.code || 'Inconnu'}`, error);
+    throw error;
   }
 };
 

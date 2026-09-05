@@ -1,51 +1,20 @@
 "use client";
 import React, { useState } from "react";
 import Link from "@/components/Link";
-import { ArrowRight, MapPin, Mail, Phone, Building2, UploadCloud, CheckCircle2, AlertCircle } from "lucide-react";
+import { ArrowRight, MapPin, Mail, Phone, Building2, CheckCircle2, AlertCircle } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 import SubmitStatusModal from "@/components/SubmitStatusModal";
 import ContactInfoFields from "@/components/ContactInfoFields";
 import FormPrivacyAndSubmit from "@/components/FormPrivacyAndSubmit";
-import { handleFormSubmit, validatePdfFile } from "@/utils/formSubmitHandler";
+import { handleFormSubmit } from "@/utils/formSubmitHandler";
 
 export default function NousContacter() {
   const { t, lang } = useLanguage();
   const [clientType, setClientType] = useState<"company" | "individual">("company");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
-  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
-  const [fileError, setFileError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const error = validatePdfFile(file);
-      if (error) {
-        setFileError(error);
-        setSelectedFileName(null);
-        e.target.value = "";
-      } else {
-        setSelectedFileName(file.name);
-        setFileError(null);
-      }
-    } else {
-      setSelectedFileName(null);
-      setFileError(null);
-    }
-  };
-
-  const handleRemoveFile = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setSelectedFileName(null);
-    setFileError(null);
-    const fileInput = document.querySelector('input[name="file"]') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = "";
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,16 +22,6 @@ export default function NousContacter() {
     setSubmitStatus(null);
     
     try {
-      const formData = new FormData(e.currentTarget);
-      const fileField = formData.get("file") as File | null;
-      const pdfError = validatePdfFile(fileField);
-      if (pdfError) {
-        setFileError(pdfError);
-        setTimeout(() => setFileError(null), 3000);
-        setIsSubmitting(false);
-        return;
-      }
-
       await handleFormSubmit({
         e,
         endpoint: "/api/forms/contact",
@@ -71,8 +30,6 @@ export default function NousContacter() {
         setIsSubmitting,
         setEmailError,
         onSuccess: () => {
-          setSelectedFileName(null);
-          setFileError(null);
         },
         successMessage: "Votre demande a été envoyée avec succès.",
         errorMessage: "Impossible d'envoyer le formulaire."
@@ -245,40 +202,7 @@ export default function NousContacter() {
                   {t("Décrivez votre besoin", "Describe your need")} <span className="text-red-500">*</span>
                 </label>
 
-                <textarea name="description" rows={5} required placeholder={t("Saisissez ou collez votre descriptif ici...", "Type or paste your description here...")} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf] mb-4"></textarea>
-                
-                <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-2 block">
-                  {t("Pièce jointe", "Attachment")}
-                </label>
-                <p className="text-[#141824] font-medium italic text-[0.85rem] mb-4">
-                  {t("Si vous en disposez, vous pouvez joindre une fiche de mission, un cahier des charges ou un document décrivant votre besoin.", "If available, you can attach an assignment brief, specifications, or a document describing your needs.")}
-                </p>
-
-                <div className={`w-full border-2 border-dashed ${selectedFileName ? 'border-green-500 bg-green-50/30' : 'border-[#d1d5db] bg-[#f5f7fa]'} py-2 px-4 text-center hover:bg-[#e8e1d7]/30 transition-colors cursor-pointer rounded-sm`}>
-                   <label htmlFor="fileUploadContact" className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
-                     {selectedFileName ? (
-                       <div className="flex flex-col items-center">
-                         <span className="text-green-700 font-bold text-[1rem] mb-2">{selectedFileName}</span>
-                         <span className="text-[#6e7891] text-[0.85rem]">{t("Cliquez ici pour remplacer le document", "Click here to replace the document")}</span>
-                         <button type="button" 
-                           onClick={handleRemoveFile}
-                           className="mt-4 px-4 py-1.5 text-[0.75rem] font-bold uppercase tracking-wider text-red-600 bg-red-50 hover:bg-red-100 rounded-full transition-colors border border-red-200"
-                         >
-                           {t("Supprimer ce document", "Remove this document")}
-                         </button>
-                       </div>
-                     ) : (
-                       <div className="flex flex-col items-center">
-                         <UploadCloud className="w-6 h-6 text-[#6e7891] mb-1 opacity-80" />
-                         <span className="text-[#6e7891] text-[0.85rem] text-center">
-                           {t("Déposez votre document ici", "Drop your document here")}
-                         </span>
-                         {fileError && <span className="text-red-500 text-[0.7rem] font-bold mt-2">{fileError}</span>}
-                       </div>
-                     )}
-                     <input type="file" id="fileUploadContact" name="file" className="hidden" accept=".pdf,application/pdf" onChange={handleFileChange} />
-                   </label>
-                </div>
+                <textarea name="description" rows={5} required placeholder={t("Saisissez ou collez votre descriptif ici...", "Type or paste your description here...")} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf]"></textarea>
               </div>
 
               <FormPrivacyAndSubmit 

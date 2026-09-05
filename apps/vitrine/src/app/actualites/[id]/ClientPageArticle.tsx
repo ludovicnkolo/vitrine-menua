@@ -21,8 +21,7 @@ export default function ClientPageArticle({ id }: { id: string }) {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
-        const res = await fetch(`${apiUrl}/api/cms/public/${id}`);
+        const res = await fetch(`/api/cms/public/${id}`);
         const data = await res.json();
         if (data.success) {
           setPublication(data.data);

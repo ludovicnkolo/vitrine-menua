@@ -90,7 +90,7 @@ export default function PolitiqueConfidentialite() {
               <ul className="list-disc pl-6 space-y-4">
                 <li>
                   <strong className="text-[#141824]">{t("Demandes de contact et prospects :", "Contact requests and prospects:")}</strong>{" "}
-                  {t("durée du suivi, puis jusqu’à trois ans à compter du dernier contact actif.", "duration of follow-up, then up to three years from the last active contact.")}
+                  {t("durée du suivi, puis jusqu’à deux ans à compter du dernier contact actif.", "duration of follow-up, then up to two years from the last active contact.")}
                 </li>
                 <li>
                   <strong className="text-[#141824]">{t("Candidatures :", "Applications:")}</strong>{" "}

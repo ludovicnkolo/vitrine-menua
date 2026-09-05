@@ -25,7 +25,13 @@ const LoginPage = ({ onLogin }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
-      const data = await res.json();
+      const responseText = await res.text();
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch {
+        throw new Error(`Réponse inattendue du serveur (${res.status})`);
+      }
       if (data.success && data.token) {
         onLogin(data.token, data.user);
       } else {

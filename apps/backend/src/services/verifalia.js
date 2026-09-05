@@ -188,9 +188,15 @@ class VerifaliaService {
           return { status: 'INVALID', reason: 'Email invalide, inexistant ou jetable' };
         }
         
-        // Treat Deliverable, Risky, Unknown as valid for immediate check (or at least, let it through)
-        // If we want to be strict, we could block Risky too, but usually Undeliverable is the main issue.
-        return { status: 'VALID' };
+        if (result.classification === 'Deliverable' && !result.isDisposableEmailAddress) {
+          return { status: 'VALID' };
+        }
+
+        return {
+          status: 'DEFERRED',
+          jobId: job.id,
+          reason: result.classification || 'Unknown'
+        };
       }
 
       // If not completed in time, defer it to cron

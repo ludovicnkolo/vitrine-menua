@@ -357,7 +357,15 @@ export default function Home() {
                 <Link key={pub.id} href={`/actualites/${pub.id}`} className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300">
                   <div className="h-[180px] overflow-hidden bg-[#1a1f2e] flex items-center justify-center relative">
                     {pub.coverImageUrl ? (
-                      <img src={pub.coverImageUrl} alt={pub.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                      <>
+                        <img 
+                          src={pub.coverImageUrl} 
+                          alt={pub.title} 
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#1a1f2e]" 
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                        <span className="text-[#e8e1d7]/20 font-bold tracking-widest uppercase text-lg z-0">MENUA CONSULTING</span>
+                      </>
                     ) : (
                       <span className="text-[#e8e1d7]/20 font-bold tracking-widest uppercase text-lg">MENUA CONSULTING</span>
                     )}

@@ -198,7 +198,15 @@ export default function ActualitesPage() {
                 <div key={pub.id} className="group flex flex-col bg-white border border-[#e8e1d7] hover:border-[#141824] transition-all duration-300 h-full">
                   <div className="h-[200px] overflow-hidden bg-[#f5f7fa] relative flex items-center justify-center">
                     {pub.coverImageUrl ? (
-                      <img src={pub.coverImageUrl} alt={pub.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                      <>
+                        <img 
+                          src={pub.coverImageUrl} 
+                          alt={pub.title} 
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#f5f7fa]" 
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                        <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-sm z-0">MENUA CONSULTING</span>
+                      </>
                     ) : (
                       <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-sm">MENUA CONSULTING</span>
                     )}

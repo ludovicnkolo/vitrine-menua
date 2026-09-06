@@ -338,20 +338,42 @@ export default function DocumentsPage() {
     <div style={{ padding: '2rem', color: 'var(--text-main)', display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-main)', margin: 0 }}>Explorateur de Fichiers (GED)</h2>
-        <div style={{ position: 'relative', width: '300px' }}>
-          <Search size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
-          <input 
-            type="text" 
-            placeholder="Rechercher dossiers, fichiers..." 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ width: '100%', padding: '0.6rem 2rem 0.6rem 2.2rem', borderRadius: '0.5rem', border: '1px solid var(--border)', background: '#F8FAFC' }}
-          />
-          {searchQuery && (
-            <button onClick={() => setSearchQuery('')} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
-              <X size={16} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          {canWriteCurrent && currentFolderId && (
+            <button 
+              type="button" 
+              onClick={() => setShowUploadModal(true)} 
+              className="btn btn-primary"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#141824', color: '#FFF', padding: '0.6rem 1rem', borderRadius: '0.5rem', fontWeight: 600, fontSize: '0.875rem', border: 'none', cursor: 'pointer' }}
+            >
+              <Upload size={16} /> Importer un document
             </button>
           )}
+          {canWriteCurrent && (
+            <button 
+              type="button" 
+              onClick={() => setShowNewFolderModal(true)} 
+              className="btn btn-outline"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#FFF', color: '#141824', border: '1px solid var(--border)', padding: '0.6rem 1rem', borderRadius: '0.5rem', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer' }}
+            >
+              <Plus size={16} /> Nouveau dossier
+            </button>
+          )}
+          <div style={{ position: 'relative', width: '280px' }}>
+            <Search size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+            <input 
+              type="text" 
+              placeholder="Rechercher dossiers, fichiers..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ width: '100%', padding: '0.6rem 2rem 0.6rem 2.2rem', borderRadius: '0.5rem', border: '1px solid var(--border)', background: '#F8FAFC' }}
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
+                <X size={16} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
       
@@ -386,8 +408,19 @@ export default function DocumentsPage() {
       >
         
         {!isSearching && childFolders.length === 0 && documents.length === 0 && (
-          <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '3rem' }}>
-            Ce dossier est vide.
+          <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+            <Folder size={48} color="#94A3B8" />
+            <p style={{ margin: 0, fontSize: '1rem', fontWeight: 500 }}>Ce dossier est vide.</p>
+            {canWriteCurrent && currentFolderId && (
+              <button 
+                type="button" 
+                onClick={() => setShowUploadModal(true)} 
+                className="btn btn-primary"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#141824', color: '#FFF', padding: '0.6rem 1.25rem', borderRadius: '0.5rem', fontWeight: 600, fontSize: '0.875rem', border: 'none', cursor: 'pointer' }}
+              >
+                <Upload size={16} /> Importer un document ici
+              </button>
+            )}
           </div>
         )}
 

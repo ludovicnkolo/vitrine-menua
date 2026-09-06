@@ -134,7 +134,7 @@ export default function PourquoiMenuaPage() {
             <h4 className="text-center text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Bénéfices clés :", "Key benefits:")}</h4>
             <BulletList items={[
               t("gain de temps", "Time savings"),
-              t("réduction des charges internes", "Reduced internal costs"),
+              t("meilleure maîtrise de la charge interne", "Tighter control over internal workload"),
               t("productivité renforcée", "Enhanced productivity"),
               t("meilleure continuité opérationnelle", "Improved operational continuity"),
               t("fiabilité accrue des traitements", "Greater processing reliability"),
@@ -142,7 +142,7 @@ export default function PourquoiMenuaPage() {
               t("suivi plus structuré des dossiers", "More structured file monitoring"),
               t("amélioration de la qualité de service", "Improved service quality"),
               t("contribution à la fidélisation de vos clients", "Contribution to client retention"),
-              t("Chiffre d’affaires soutenu", "Supported revenue")
+              t("contribution à la continuité de l’activité", "Contribution to business continuity")
             ]} />
           </div>
         </div>
@@ -169,8 +169,8 @@ export default function PourquoiMenuaPage() {
             </p>
             <p className="text-[#e5e9f0] font-light text-[1.1rem] leading-relaxed mb-12">
               {t(
-                "Notre approche 100% opérationnelle, notre intégration aux organisations clientes et notre capacité d’intervention en français comme en anglais nous permettent d’intervenir dans des environnements exigeants, structurés et ouverts à l’international.",
-                "Our 100% operational approach, our integration into client organizations and our capacity to intervene in French and English allow us to intervene in demanding, structured and internationally open environments."
+                "Notre approche 100 % opérationnelle, notre intégration aux organisations clientes et notre capacité d’intervention en français comme en anglais nous permettent d’intervenir dans des environnements exigeants, structurés et ouverts à l’international.",
+                "Our 100% operational focus, seamless integration into client organizations, and bilingual delivery in French and English enable us to operate effectively in demanding, structured, and international environments."
               )}
             </p>
           </div>
@@ -192,8 +192,8 @@ export default function PourquoiMenuaPage() {
                   t("interventions adaptées aux procédures internes du client ;", "interventions adapted to the client's internal procedures;"),
                   t("exécution fiable et continue ;", "reliable and continuous execution;"),
                   t("suivi structuré des livrables ;", "structured monitoring of deliverables;"),
-                  t("mobilisation possible de ressources ou partenaires qualifiés selon les besoins ;", "possible mobilization of resources or qualified partners according to needs;"),
-                  t("intervention en français et en anglais.", "intervention in French and English.")
+                  t("mobilisation possible de ressources ou partenaires qualifiés selon les besoins ;", "targeted deployment of qualified resources or partners tailored to project requirements;"),
+                  t("intervention en français et en anglais.", "bilingual delivery in French and English.")
                 ]}
               />
             </div>

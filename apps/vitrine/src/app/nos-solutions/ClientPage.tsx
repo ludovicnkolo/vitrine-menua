@@ -110,7 +110,7 @@ export default function NosSolutionsPage() {
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <div className="leading-relaxed text-[#6e7891] text-[1rem] font-light mb-8 space-y-6">
                 <h2 className="text-[#141824] font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
-                  {t("Une Approche Sur Mesure", "A tailored approach")}
+                  {t("Une approche sur mesure", "A tailored approach")}
                 </h2>
 
                 {/* Mobile Image (Visible only on mobile) */}

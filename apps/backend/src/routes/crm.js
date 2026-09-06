@@ -7,8 +7,26 @@ const fs = require('node:fs');
 const path = require('node:path');
 const router = express.Router();
 
-const { authenticateJWT } = require('../middlewares/auth');
+const { authenticateJWT, requireRoles } = require('../middlewares/auth');
 const { transporter } = require('../utils/mailer');
+
+const logAudit = async (userId, action, targetId, targetType, details, dossierId = null) => {
+  try {
+    const validUserId = (userId && userId !== 'MASTER-ADMIN') ? userId : null;
+    await prisma.auditLog.create({
+      data: {
+        userId: validUserId,
+        action,
+        targetId: targetId ? String(targetId) : null,
+        targetType,
+        details: details || '',
+        dossierId
+      }
+    });
+  } catch (err) {
+    console.error('[AUDIT ERROR]', err.message);
+  }
+};
 
 const imapConfig = {
   imap: {
@@ -101,19 +119,20 @@ router.get('/roles', async (req, res) => {
   }
 });
 
-router.post('/roles', async (req, res) => {
+router.post('/roles', requireRoles('Super-administrateur', 'Administrateur technique'), async (req, res) => {
   try {
     const { name, permissions, description, status } = req.body;
     const role = await prisma.role.create({
       data: { name, permissions, description, status: status || 'Actif' }
     });
+    await logAudit(req.user?.id, 'CREATION_ROLE', role.id, 'ROLE', `Rôle créé : ${role.name}`);
     res.json(role);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-router.patch('/roles/:id', async (req, res) => {
+router.patch('/roles/:id', requireRoles('Super-administrateur', 'Administrateur technique'), async (req, res) => {
   try {
     const { name, permissions, description, status } = req.body;
     const role = await prisma.role.update({
@@ -125,15 +144,18 @@ router.patch('/roles/:id', async (req, res) => {
         ...(status && { status }) 
       }
     });
+    await logAudit(req.user?.id, 'MODIFICATION_ROLE', role.id, 'ROLE', `Rôle modifié : ${role.name}`);
     res.json(role);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-router.delete('/roles/:id', async (req, res) => {
+router.delete('/roles/:id', requireRoles('Super-administrateur', 'Administrateur technique'), async (req, res) => {
   try {
+    const existing = await prisma.role.findUnique({ where: { id: req.params.id } });
     await prisma.role.delete({ where: { id: req.params.id } });
+    await logAudit(req.user?.id, 'SUPPRESSION_ROLE', req.params.id, 'ROLE', `Rôle supprimé : ${existing?.name || req.params.id}`);
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -251,7 +273,7 @@ router.get('/dashboard-stats', async (req, res) => {
 router.get('/users', async (req, res) => {
   try {
     const users = await prisma.utilisateur.findMany({
-      select: { id: true, name: true, email: true, roleId: true, role: true, profile: true, idCardUrl: true, isBlocked: true, createdAt: true, telephone: true, lieuResidence: true, experienceCle: true, langues: true }
+      select: { id: true, name: true, email: true, roleId: true, role: true, profile: true, idCardUrl: true, isBlocked: true, lastLogin: true, createdAt: true, telephone: true, lieuResidence: true, experienceCle: true, langues: true }
     });
     res.json(users);
   } catch (error) {
@@ -259,7 +281,7 @@ router.get('/users', async (req, res) => {
   }
 });
 
-router.post('/users', async (req, res) => {
+router.post('/users', requireRoles('Super-administrateur', 'Responsable opérationnel'), async (req, res) => {
   try {
     const { name, email, roleId, phone, country, city, education, status, profile, idCardUrl, telephone, lieuResidence, experienceCle, langues } = req.body;
     const bcrypt = require('bcryptjs');
@@ -312,6 +334,8 @@ router.post('/users', async (req, res) => {
       }
     });
     
+    await logAudit(req.user?.id, 'CREATION_UTILISATEUR', user.id, 'USER', `Utilisateur créé : ${user.name} (${user.email})`);
+
     // Send email — Use ADMIN_FRONTEND_URL env var (the CRM admin frontend, NOT the backend)
     try {
       const adminFrontend = process.env.ADMIN_FRONTEND_URL || 'http://localhost:5173';
@@ -341,7 +365,7 @@ router.post('/users', async (req, res) => {
 });
 
 
-router.patch('/users/:id', async (req, res) => {
+router.patch('/users/:id', requireRoles('Super-administrateur', 'Responsable opérationnel'), async (req, res) => {
   try {
     const { name, email, roleId, profile, status, idCardUrl, telephone, lieuResidence, experienceCle, langues } = req.body;
     const user = await prisma.utilisateur.update({
@@ -359,15 +383,18 @@ router.patch('/users/:id', async (req, res) => {
         ...(status && { isBlocked: status === 'Inactif' })
       }
     });
+    await logAudit(req.user?.id, 'MODIFICATION_UTILISATEUR', user.id, 'USER', `Utilisateur modifié : ${user.name}`);
     res.json(user);
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la mise à jour.' });
   }
 });
 
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/:id', requireRoles('Super-administrateur', 'Responsable opérationnel'), async (req, res) => {
   try {
+    const existing = await prisma.utilisateur.findUnique({ where: { id: req.params.id } });
     await prisma.utilisateur.delete({ where: { id: req.params.id } });
+    await logAudit(req.user?.id, 'SUPPRESSION_UTILISATEUR', req.params.id, 'USER', `Utilisateur supprimé : ${existing?.name || req.params.id}`);
     res.json({ success: true });
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression.' });
@@ -409,6 +436,7 @@ router.post('/clients', async (req, res) => {
         })
       }
     });
+    await logAudit(req.user?.id, 'CREATION_CLIENT', client.id, 'CLIENT', `Client créé : ${client.name} (${client.type})`);
     res.status(201).json(client);
   } catch (error) {
     console.error(error);
@@ -449,15 +477,18 @@ router.patch('/clients/:id', async (req, res) => {
         ...(entrepriseUpdate && { entreprise: entrepriseUpdate })
       }
     });
+    await logAudit(req.user?.id, 'MODIFICATION_CLIENT', client.id, 'CLIENT', `Client modifié : ${client.name}`);
     res.json(client);
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la mise à jour.' });
   }
 });
 
-router.delete('/clients/:id', async (req, res) => {
+router.delete('/clients/:id', requireRoles('Super-administrateur', 'Responsable opérationnel'), async (req, res) => {
   try {
+    const existing = await prisma.client.findUnique({ where: { id: req.params.id } });
     await prisma.client.delete({ where: { id: req.params.id } });
+    await logAudit(req.user?.id, 'SUPPRESSION_CLIENT', req.params.id, 'CLIENT', `Client supprimé : ${existing?.name || req.params.id}`);
     res.json({ success: true });
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression.' });
@@ -724,7 +755,7 @@ router.get('/dashboard-stats', async (req, res) => {
 });
 
 // --- AUDIT LOGS ---
-router.get('/audit', async (req, res) => {
+router.get('/audit', requireRoles('Super-administrateur', 'Administrateur technique'), async (req, res) => {
   try {
     const logs = await prisma.auditLog.findMany({
       include: { user: { include: { role: true } } },
@@ -1356,8 +1387,15 @@ router.get('/messages', async (req, res) => {
       }
 
       let where = { type: tabType };
+      const andConditions = [];
+
       if (req.user.role === 'Responsable opérationnel') {
-        where.assignedToId = req.user.id;
+        andConditions.push({
+          OR: [
+            { assignedToId: req.user.id },
+            { assignedToId: null }
+          ]
+        });
       }
       if (statusFilter === 'traite') {
          where.status = { in: ['TERMINE', 'ARCHIVE'] };
@@ -1365,10 +1403,15 @@ router.get('/messages', async (req, res) => {
          where.status = { notIn: ['TERMINE', 'ARCHIVE'] };
       }
       if (search) {
-         where.OR = [
-           { nomPrenom: { contains: search } },
-           { email: { contains: search } }
-         ];
+         andConditions.push({
+           OR: [
+             { nomPrenom: { contains: search } },
+             { email: { contains: search } }
+           ]
+         });
+      }
+      if (andConditions.length > 0) {
+        where.AND = andConditions;
       }
       
       total = await prisma.formulaire.count({ where });
@@ -1394,7 +1437,8 @@ router.get('/messages', async (req, res) => {
         bodyHtml: f.bodyHtml,
         createdAt: f.createdAt,
         contact: f.contact,
-        recrutement: f.recrutement
+        recrutement: f.recrutement,
+        verifaliaStatus: f.verifaliaStatus
       }));
     } else {
       let where = { type: tabType, isDeleted: false };

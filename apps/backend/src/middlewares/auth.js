@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const prisma = require('../prisma');
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const authenticateJWT = (req, res, next) => {
@@ -22,8 +23,6 @@ const authenticateJWT = (req, res, next) => {
         return next();
       }
 
-      const { PrismaClient } = require('@prisma/client');
-      const prisma = new PrismaClient();
       try {
         const dbUser = await prisma.utilisateur.findUnique({ where: { id: user.id } });
         if (!dbUser) {
@@ -44,4 +43,20 @@ const authenticateJWT = (req, res, next) => {
   }
 };
 
-module.exports = { authenticateJWT, JWT_SECRET };
+const requireRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Non authentifié.' });
+    }
+    // Super-administrateur always has full privileges
+    if (req.user.role === 'Super-administrateur' || req.user.id === 'MASTER-ADMIN') {
+      return next();
+    }
+    if (allowedRoles.includes(req.user.role)) {
+      return next();
+    }
+    return res.status(403).json({ error: 'Accès interdit : privilèges insuffisants.' });
+  };
+};
+
+module.exports = { authenticateJWT, requireRoles, JWT_SECRET };

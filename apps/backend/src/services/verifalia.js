@@ -172,8 +172,8 @@ class VerifaliaService {
       let fetchedJob = job;
       let attempts = 0;
       
-      // Wait for completion (max 4 attempts, 1s apart = 4s total)
-      while (fetchedJob.status !== 'Completed' && attempts < 4) {
+      // Wait for completion (max 6 attempts, 1s apart = 6s total)
+      while (fetchedJob.status !== 'Completed' && attempts < 6) {
         await new Promise(resolve => setTimeout(resolve, 1000));
         fetchedJob = await this.getJob(job.id);
         attempts++;

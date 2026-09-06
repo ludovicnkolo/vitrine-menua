@@ -27,7 +27,6 @@ export const frRouteMap: Record<string, string> = Object.entries(enRouteMap).red
 
 export default function Link({ href, children, ...props }: LinkProps) {
   const { lang } = useLanguage();
-  const prefix = lang === "EN" ? "/en" : "/fr";
   
   let finalHref = href;
   if (typeof href === "string" && href.startsWith("/") && !href.startsWith("/en/") && !href.startsWith("/fr/") && href !== "/en" && href !== "/fr") {
@@ -46,12 +45,15 @@ export default function Link({ href, children, ...props }: LinkProps) {
       suffix = href.substring(splitIndex);
     }
 
-    if (lang === "EN" && enRouteMap[pathToTranslate]) {
-      pathToTranslate = enRouteMap[pathToTranslate];
+    if (lang === "EN") {
+      if (enRouteMap[pathToTranslate]) {
+        pathToTranslate = enRouteMap[pathToTranslate];
+      }
+      const translatedHref = pathToTranslate + suffix;
+      finalHref = translatedHref === "/" ? "/en" : `/en${translatedHref}`;
+    } else {
+      finalHref = pathToTranslate + suffix;
     }
-
-    const translatedHref = pathToTranslate + suffix;
-    finalHref = translatedHref === "/" ? prefix : `${prefix}${translatedHref}`;
   }
 
   return (

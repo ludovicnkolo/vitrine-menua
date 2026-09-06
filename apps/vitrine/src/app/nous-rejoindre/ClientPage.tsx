@@ -437,7 +437,7 @@ export default function NousRejoindre() {
 
 
 
-      <SubmitStatusModal status={submitStatus} />
+      <SubmitStatusModal status={submitStatus} onClose={() => setSubmitStatus(null)} />
     </main>
   );
 }

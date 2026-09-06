@@ -3,17 +3,21 @@
     "fr": "Votre demande de contact a été envoyée avec succès.",
     "en": "Your contact request has been sent successfully."
   },
+  "SUCCESS_CONTACT_SUBMISSION": {
+    "fr": "Votre demande de contact a été transmise avec succès.",
+    "en": "Your contact request has been submitted successfully."
+  },
   "SUCCESS_JOIN": {
     "fr": "Votre candidature a été envoyée avec succès.",
     "en": "Your application has been sent successfully."
   },
   "ERROR_EMAIL_REQUIRED": {
-    "fr": "Veuillez fournir une adresse email.",
-    "en": "Please provide an email address."
+    "fr": "Veuillez fournir une adresse email valide.",
+    "en": "Please provide a valid email address."
   },
   "ERROR_EMAIL_INVALID": {
-    "fr": "Mail saisi introuvable.",
-    "en": "Entered email not found."
+    "fr": "L'adresse email renseignée est invalide ou introuvable. Veuillez vérifier son orthographe.",
+    "en": "The provided email address is invalid or not deliverable. Please check spelling."
   },
   "ERROR_REQUIRED_FIELDS": {
     "fr": "Veuillez remplir tous les champs obligatoires (marqués d'un astérisque).",

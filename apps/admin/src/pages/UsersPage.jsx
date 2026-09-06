@@ -197,7 +197,7 @@ const UsersPage = ({ forceTab }) => {
           <div className="" style={{width: "100%", padding: "0"}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
               <button type="button" onClick={() => setShowExternalModal(false)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
-              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Ajouter un Membre Externe</h2>
+              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Ajouter un Client</h2>
             </div>
             
             <div style={{display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', padding: '0.5rem', background: '#F8FAFC', borderRadius: '8px', width: 'fit-content'}}>
@@ -216,9 +216,9 @@ const UsersPage = ({ forceTab }) => {
               <ClientFormFields client={newClient} setClient={setNewClient} type={externalType} isEdit={false} />
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem'}}>
                 <button type="button" onClick={() => setShowExternalModal(false)} className="btn btn-outline">Annuler</button>
-                <button type="submit" disabled={loading} className="btn btn-primary">{loading ? 'Création...' : 'Créer le membre'}</button>
+                <button type="submit" disabled={loading} className="btn btn-primary">{loading ? 'Création...' : 'Créer le client'}</button>
               </div>
-</form>
+            </form>
           </div>
         </div>
       )}
@@ -229,7 +229,7 @@ const UsersPage = ({ forceTab }) => {
           <div className="" style={{width: "100%", padding: "0"}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
               <button type="button" onClick={() => setEditExternal(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
-              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Modifier un Membre Externe</h2>
+              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Modifier le Client</h2>
             </div>
             
             <form onSubmit={handleUpdateClient} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -250,7 +250,7 @@ const UsersPage = ({ forceTab }) => {
           <div className="" style={{width: "100%", padding: "0"}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
               <button type="button" onClick={() => setConsultExternal(null)} className="btn btn-outline" style={{padding: "0.5rem 1rem", color: "var(--text-main)"}}>← Retour</button>
-              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter un Membre Externe</h2>
+              <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Consulter la Fiche Client</h2>
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
@@ -551,7 +551,7 @@ const UsersPage = ({ forceTab }) => {
                       {!u.isBlocked ? 'Actif' : 'Inactif'}
                     </span>
                   </td>
-                  <td style={{color: 'var(--text-muted)', fontSize: '0.875rem', whiteSpace: 'nowrap'}}>{u.createdAt ? formatDate(u.createdAt) : 'Jamais connecté'}</td>
+                  <td style={{color: 'var(--text-muted)', fontSize: '0.875rem', whiteSpace: 'nowrap'}}>{u.lastLogin ? formatDate(u.lastLogin) : 'Jamais connecté'}</td>
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
                       <div style={{position: 'relative'}}>

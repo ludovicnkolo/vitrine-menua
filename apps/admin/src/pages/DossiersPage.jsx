@@ -563,9 +563,6 @@ const DossiersPage = () => {
                 Créer une mission
               </button>
             )}
-            <button type="button" onClick={() => setShowSmsModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)', display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
-              <MessageSquare size={16} /> Envoyer SMS
-            </button>
             <button type="button" onClick={() => { setShowMagicModal(true); setGeneratedMagicUrl(''); }} className="btn btn-outline" style={{borderColor: 'var(--secondary)', color: 'var(--secondary-dark)', display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
               <LinkIcon size={16} /> Générer Lien Magique
             </button>

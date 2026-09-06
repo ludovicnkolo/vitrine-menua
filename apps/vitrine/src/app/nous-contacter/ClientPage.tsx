@@ -36,7 +36,6 @@ export default function NousContacter() {
       });
     } catch (error) {
       setSubmitStatus({ type: "error", message: "Impossible d'envoyer le formulaire." });
-      setTimeout(() => setSubmitStatus(null), 3000);
       setIsSubmitting(false);
     }
   };
@@ -220,7 +219,7 @@ export default function NousContacter() {
       </section>
 
 
-      <SubmitStatusModal status={submitStatus} />
+      <SubmitStatusModal status={submitStatus} onClose={() => setSubmitStatus(null)} />
     </main>
   );
 }

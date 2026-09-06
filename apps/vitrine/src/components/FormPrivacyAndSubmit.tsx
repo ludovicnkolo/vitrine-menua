@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/components/LanguageProvider';
 import { formatBrand } from '@/utils/formatBrand';
+import TurnstileWidget from '@/components/TurnstileWidget';
 
 interface FormPrivacyAndSubmitProps {
   id: string;
@@ -40,8 +41,10 @@ export default function FormPrivacyAndSubmit({ id, isSubmitting, submitText, sub
         </p>
       </div>
 
-      <div className="flex justify-center pt-6">
-        <button type="submit" disabled={isSubmitting} className="inline-flex items-center justify-center bg-[#141824] text-white px-10 py-4 font-bold uppercase tracking-wider text-[0.85rem] hover:bg-[#1f2638] transition-colors duration-300 w-full md:w-auto disabled:opacity-70 disabled:cursor-not-allowed">
+      <TurnstileWidget />
+
+      <div className="flex justify-center pt-2">
+        <button type="submit" disabled={isSubmitting} className="inline-flex items-center justify-center bg-[#141824] text-white px-10 py-4 font-bold uppercase tracking-wider text-[0.85rem] hover:bg-[#1f2638] transition-colors duration-300 w-full md:w-auto disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer">
           {isSubmitting ? submittingText : submitText}
         </button>
       </div>

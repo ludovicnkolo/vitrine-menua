@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { LayoutDashboard, Files, Users, Settings, Inbox, LogOut, Globe } from 'lucide-react';
 import { getSafeApiUrl } from './utils/helpers';
 
@@ -306,21 +306,15 @@ function App() {
             {canSeeSystem && <Route path="/system-space" element={<SystemSpacePage userRole={userRoleForPages} />} />}
             {canSeeCMS && <Route path="/cms" element={<CMSPage />} />}
 
-            {/* Legacy routes */}
-            <Route path="/dossiers" element={<DossiersPage />} />
-            <Route path="/taches" element={<TachesPage />} />
-            <Route path="/tasks" element={<TasksPage />} />
-            <Route path="/users" element={<UsersPage />} />
-            <Route path="/roles" element={<RolesPage />} />
-            <Route path="/audit" element={<AuditPage />} />
-            <Route path="/settings" element={
-              <div>
-                <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '1.5rem'}}>Configuration</h1>
-                <div className="card">
-                  <p>Réglages de la plateforme (En construction)</p>
-                </div>
-              </div>
-            } />
+            {/* Redirections sécurisées pour anciennes routes (bloque l'accès non autorisé par URL directe) */}
+            <Route path="/dossiers" element={canSeeWorkspace ? <Navigate to="/workspace" replace /> : <Navigate to="/" replace />} />
+            <Route path="/taches" element={canSeeWorkspace ? <Navigate to="/workspace" replace /> : <Navigate to="/" replace />} />
+            <Route path="/tasks" element={canSeeWorkspace ? <Navigate to="/workspace" replace /> : <Navigate to="/" replace />} />
+            <Route path="/users" element={canSeeUsers ? <Navigate to="/users-space" replace /> : <Navigate to="/" replace />} />
+            <Route path="/roles" element={canSeeSystem ? <Navigate to="/system-space" replace /> : <Navigate to="/" replace />} />
+            <Route path="/audit" element={canSeeSystem ? <Navigate to="/system-space" replace /> : <Navigate to="/" replace />} />
+            <Route path="/settings" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
       </main>

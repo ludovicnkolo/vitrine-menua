@@ -778,11 +778,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           />
         </div>
 
-        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem', marginBottom: '1.5rem'}}>
-          <button type="button" onClick={() => setShowSmsModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)', display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.75rem 1.5rem'}}>
-            <MessageSquare size={16} />
-            SMS Collaborateur
-          </button>
+        <div style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: '1.5rem', marginBottom: '1.5rem'}}>
 
           <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'flex-end', flex: 1}}>
             <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Retour</button>

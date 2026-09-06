@@ -57,7 +57,7 @@ export default function AuditPage() {
         </div>
         <div style={{background: 'rgba(59, 130, 246, 0.1)', color: '#3B82F6', padding: '0.75rem 1.25rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 500}}>
           <Shield size={20} />
-          Système Sécurisé
+          Journal d'activité & traçabilité
         </div>
       </div>
 

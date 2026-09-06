@@ -258,7 +258,7 @@ export default function ActualitesPage() {
                 {t("Suivez notre actualité et nos publications professionnelles", "Follow our news and professional publications")}
               </h3>
               <p className="text-[#e5e9f0] text-[0.95rem] font-light">
-                {t("Retrouvez nos articles, analyses et retours d'expériences sur LinkedIn.", "Find our articles, analyzes and feedback on LinkedIn.")}
+                {t("Retrouvez nos articles, analyses et retours d'expérience sur LinkedIn.", "Explore our insights, operational analyses, and practical feedback on LinkedIn.")}
               </p>
             </div>
           </div>

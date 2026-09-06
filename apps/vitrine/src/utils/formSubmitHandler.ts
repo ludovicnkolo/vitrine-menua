@@ -37,20 +37,19 @@ export const handleFormSubmit = async ({
       setSubmitStatus({ type: "success", message: data.message || successMessage });
       (e.target as HTMLFormElement).reset();
       if (onSuccess) onSuccess();
-      setTimeout(() => setSubmitStatus(null), 15000);
+      setTimeout(() => setSubmitStatus(null), 18000); // 18 secondes
     } else {
       if (setEmailError && (data.code === 'ERROR_EMAIL_INVALID' || data.code === 'ERROR_EMAIL_REQUIRED')) {
         setEmailError(data.error);
-        // Efface l'erreur après 5 secondes
-        setTimeout(() => setEmailError(null), 5000);
+        setTimeout(() => setEmailError(null), 8000);
       } else {
         setSubmitStatus({ type: "error", message: data.error || "Une erreur s'est produite." });
-        setTimeout(() => setSubmitStatus(null), 15000);
+        // L'erreur reste affichée jusqu'à fermeture manuelle par l'utilisateur
       }
     }
   } catch (error) {
     setSubmitStatus({ type: "error", message: errorMessage });
-    setTimeout(() => setSubmitStatus(null), 15000);
+    // L'erreur reste affichée jusqu'à fermeture manuelle par l'utilisateur
   } finally {
     setIsSubmitting(false);
   }

@@ -14,37 +14,42 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Language>("FR");
+export function LanguageProvider({ 
+  children, 
+  initialLang = "FR" 
+}: { 
+  children: React.ReactNode; 
+  initialLang?: Language;
+}) {
+  const [lang, setLangState] = useState<Language>(initialLang);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
-    // Priority: URL > LocalStorage > Default (FR)
-    const savedLang = localStorage.getItem("menua_lang") as Language;
-    let initialLang: Language = "FR";
-    
+    let currentLang: Language = initialLang;
     if (window.location.pathname.startsWith("/en")) {
-      initialLang = "EN";
-    } else if (window.location.pathname.startsWith("/fr")) {
-      initialLang = "FR";
-    } else if (savedLang === "FR" || savedLang === "EN") {
-      initialLang = savedLang;
+      currentLang = "EN";
+    } else if (window.location.pathname.startsWith("/fr") || window.location.pathname === "/") {
+      currentLang = "FR";
+    } else {
+      const savedLang = localStorage.getItem("menua_lang") as Language;
+      if (savedLang === "FR" || savedLang === "EN") {
+        currentLang = savedLang;
+      }
     }
-    
-    setLangState(initialLang);
+    setLangState(currentLang);
     setMounted(true);
-  }, [pathname]);
+  }, [pathname, initialLang]);
 
   const setLang = (newLang: Language) => {
     setLangState(newLang);
     localStorage.setItem("menua_lang", newLang);
   };
 
-  // Simple translation helper: if lang is EN, return enText, otherwise frText
+  // Translation helper: returns enText if lang is EN (works on SSR and client)
   const t = (frText: string, enText: string) => {
-    if (!mounted) return frText; // Default to FR for SSR to avoid hydration mismatch
-    return lang === "EN" ? enText : frText;
+    const activeLang = lang || initialLang;
+    return activeLang === "EN" ? enText : frText;
   };
 
   return (

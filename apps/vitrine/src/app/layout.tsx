@@ -45,14 +45,19 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import ScrollObserver from "@/components/ScrollObserver";
+import { headers } from "next/headers";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const locale = headersList.get("x-locale") === "en" ? "en" : "fr";
+  const initialLang = locale === "en" ? "EN" : "FR";
+
   return (
-    <html lang="fr" data-scroll-behavior="smooth" translate="no" className="notranslate">
+    <html lang={locale} data-scroll-behavior="smooth" translate="no" className="notranslate">
       <head>
         <meta name="google" content="notranslate" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -83,7 +88,7 @@ export default function RootLayout({
             })
           }}
         />
-        <LanguageProvider>
+        <LanguageProvider initialLang={initialLang}>
           <ScrollObserver />
           <Header />
           {children}

@@ -329,7 +329,7 @@ export default function NousConnaitrePage() {
               {/* Text content (main focus) */}
               <div className="flex-1">
                 <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
-                  {t("Rosette Fouelefack dispose d’une expérience en finance, gestion des risques, conformité, appui aux environnements patrimoniaux et opérations back ", "Rosette Fouelefack has experience across finance, risk management, compliance, wealth-management environments and back ")}<span className="font-sans font-medium">&amp;</span>{t(" middle office, acquise auprès d’organisations bancaires, financiers réglementés.", " middle-office operations, gained within banking, financial and regulated organisations.")}
+                  {t("Rosette Fouelefack dispose d’une expérience en finance, gestion des risques, conformité, appui aux environnements patrimoniaux et opérations back ", "Rosette Fouelefack has experience across finance, risk management, compliance, wealth-management environments and back ")}<span className="font-sans font-medium">&amp;</span>{t(" middle office, acquise au sein d’organisations bancaires et d’acteurs financiers réglementés.", " middle-office operations, gained within banking institutions and regulated financial entities.")}
                 </p>
                 <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
                   {formatBrand(t(

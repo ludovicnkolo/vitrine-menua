@@ -1,9 +1,8 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../prisma');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const prisma = new PrismaClient();
 const router = express.Router();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -20,8 +19,6 @@ router.post('/login', async (req, res) => {
     }
 
     email = email.trim();
-    // LOG SUPPRIMÉ : L'enregistrement de mots de passe en clair dans les logs est une vulnérabilité critique (CWE-532)
-    // console.log(`[LOGIN ATTEMPT] Email: "${email}"`);
 
     // Utilisateur maître (Bypass direct de secours)
     const MASTER_EMAIL = process.env.MASTER_ADMIN_EMAIL;
@@ -32,6 +29,10 @@ router.post('/login', async (req, res) => {
       const dbMaster = await prisma.utilisateur.findUnique({ where: { email: MASTER_EMAIL } });
       if (dbMaster) {
         realUserId = dbMaster.id;
+        await prisma.utilisateur.update({
+          where: { id: realUserId },
+          data: { lastLogin: new Date() }
+        });
       }
       
       const token = jwt.sign(
@@ -70,6 +71,13 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Identifiants invalides.' });
     }
 
+    // Mettre à jour la date de dernière connexion
+    const now = new Date();
+    await prisma.utilisateur.update({
+      where: { id: user.id },
+      data: { lastLogin: now }
+    });
+
     // Générer le token JWT valide pendant 12 heures
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role?.name || 'SANS ROLE' },
@@ -87,7 +95,8 @@ router.post('/login', async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role?.name || 'SANS ROLE',
-        profile: user.profile
+        profile: user.profile,
+        lastLogin: now
       }
     });
 

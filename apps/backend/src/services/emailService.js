@@ -32,8 +32,8 @@ const buildEmailTemplate = (title, contentHTML) => `
 </html>
 `;
 
-const sendAutoReply = async (email) => {
-  const isEn = false; // We can default to FR if language isn't stored in DB
+const sendAutoReply = async (email, lang = 'fr') => {
+  const isEn = (lang || '').toLowerCase() === 'en';
 
   const subject = isEn 
     ? 'MENUA CONSULTING — We have received your request'

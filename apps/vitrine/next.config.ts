@@ -47,30 +47,6 @@ const nextConfig: NextConfig = {
   // Proxy les requêtes /api vers le backend pour éviter les 404 quand on accède via le port 3000
   async rewrites() {
     return [
-      { source: '/en/about-us', destination: '/nous-connaitre' },
-      { source: '/en/about-us/:path*', destination: '/nous-connaitre/:path*' },
-      { source: '/en/your-needs', destination: '/vos-besoins' },
-      { source: '/en/your-needs/:path*', destination: '/vos-besoins/:path*' },
-      { source: '/en/our-solutions', destination: '/nos-solutions' },
-      { source: '/en/our-solutions/:path*', destination: '/nos-solutions/:path*' },
-      { source: '/en/why-choose-us', destination: '/pourquoi-menua' },
-      { source: '/en/why-choose-us/:path*', destination: '/pourquoi-menua/:path*' },
-      { source: '/en/news', destination: '/actualites' },
-      { source: '/en/news/:path*', destination: '/actualites/:path*' },
-      { source: '/en/join-us', destination: '/nous-rejoindre' },
-      { source: '/en/join-us/:path*', destination: '/nous-rejoindre/:path*' },
-      { source: '/en/contact-us', destination: '/nous-contacter' },
-      { source: '/en/contact-us/:path*', destination: '/nous-contacter/:path*' },
-      { source: '/en/legal-notices', destination: '/mentions-legales' },
-      { source: '/en/privacy-policy', destination: '/politique-de-confidentialite' },
-      {
-        source: '/en',
-        destination: '/',
-      },
-      {
-        source: '/en/:path*',
-        destination: '/:path*',
-      },
       {
         source: '/api/:path*',
         destination: process.env.NODE_ENV === 'production' ? (process.env.BACKEND_URL || 'http://backend:4000') + '/api/:path*' : 'http://localhost:4000/api/:path*',

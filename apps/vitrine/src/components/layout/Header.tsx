@@ -19,7 +19,6 @@ export default function Header() {
   const handleLanguageSwitch = (newLang: "FR" | "EN") => {
     if (lang === newLang) return;
     setLang(newLang);
-    const prefix = newLang === "EN" ? "/en" : "/fr";
     let newPath = pathname;
     
     if (newPath.startsWith("/en")) newPath = newPath.replace("/en", "");
@@ -32,8 +31,8 @@ export default function Header() {
       newPath = frRouteMap[newPath];
     }
     
-    // Si c'est la racine, on va sur le préfixe, sinon préfixe + chemin
-    const finalPath = newPath === "/" ? prefix : `${prefix}${newPath}`;
+    // Si c'est la racine, on va sur /en ou /, sinon /en/chemin ou /chemin
+    const finalPath = newLang === "EN" ? (newPath === "/" ? "/en" : `/en${newPath}`) : newPath;
     router.push(finalPath);
   };
 

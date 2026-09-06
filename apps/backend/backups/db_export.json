@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.919Z",
-      "updatedAt": "2026-09-05T02:49:30.192Z"
+      "updatedAt": "2026-09-06T10:56:11.494Z"
     },
     {
       "id": "9b78a989-65aa-4d4d-903f-63d05b49f39b",
@@ -16,7 +16,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.927Z",
-      "updatedAt": "2026-09-05T02:49:30.213Z"
+      "updatedAt": "2026-09-06T10:56:11.515Z"
     },
     {
       "id": "b059904b-0f2d-488c-8211-f6d7b1ff9326",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-08-11T17:49:06.972Z",
-      "updatedAt": "2026-09-05T02:49:30.229Z"
+      "updatedAt": "2026-09-06T10:56:11.576Z"
     },
     {
       "id": "0ebd584a-a058-448f-a92d-028755745096",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-08-11T17:49:06.978Z",
-      "updatedAt": "2026-09-05T02:49:30.259Z"
+      "updatedAt": "2026-09-06T10:56:11.598Z"
     },
     {
       "id": "9cda2a10-5a4d-4e1c-8992-5a44a911dd83",
@@ -43,7 +43,7 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.988Z",
-      "updatedAt": "2026-09-05T02:49:30.274Z"
+      "updatedAt": "2026-09-06T10:56:11.614Z"
     },
     {
       "id": "352391ed-d4ed-448a-847a-9eefc7b601f4",
@@ -59,7 +59,7 @@
     {
       "id": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$U0MYH7.bR9YFQ/0W0jydFu1Abm00rM2syy23uibgPOJinGRLtiOcy",
+      "password": "$2a$10$hjJSLB77UAF8qNMNGNKY3uue26dOPiakX/DxvloHCpXwRYjZhXQVW",
       "name": "Rosette Fouelefack",
       "roleId": "6b7502fd-dbf0-4cdb-9cfa-749dfb987171",
       "telephone": "+33659207511",
@@ -71,12 +71,146 @@
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
+      "lastLogin": "2026-09-06T10:30:09.175Z",
       "createdAt": "2026-08-11T17:49:07.301Z",
-      "updatedAt": "2026-09-05T02:49:30.479Z"
+      "updatedAt": "2026-09-06T10:56:11.829Z"
+    },
+    {
+      "id": "9ed4992c-a314-41d3-9eb2-543549312c75",
+      "email": "collab-test@menuaconsulting.com",
+      "password": "$2a$10$3Q1PDcZfg5IzVqkuZxkRLuUMAMa6JXQtzsH0aQJEsO3.A1EaecLkC",
+      "name": "Collaborateur Test",
+      "roleId": "0ebd584a-a058-448f-a92d-028755745096",
+      "telephone": "0601020304",
+      "lieuResidence": null,
+      "experienceCle": null,
+      "langues": null,
+      "profile": "Opérations Back & Middle Office",
+      "idCardUrl": null,
+      "resetToken": null,
+      "resetTokenExpiry": null,
+      "isBlocked": false,
+      "lastLogin": "2026-09-06T10:40:43.063Z",
+      "createdAt": "2026-09-06T10:40:43.065Z",
+      "updatedAt": "2026-09-06T10:47:18.300Z"
+    },
+    {
+      "id": "5c6687fc-5ed5-4a88-91bb-2b76e6382965",
+      "email": "relecteur-test@menuaconsulting.com",
+      "password": "$2a$10$3Q1PDcZfg5IzVqkuZxkRLuUMAMa6JXQtzsH0aQJEsO3.A1EaecLkC",
+      "name": "Relecteur Test",
+      "roleId": "b059904b-0f2d-488c-8211-f6d7b1ff9326",
+      "telephone": "0602030405",
+      "lieuResidence": null,
+      "experienceCle": null,
+      "langues": null,
+      "profile": "Contrôle Qualité & Conformité",
+      "idCardUrl": null,
+      "resetToken": null,
+      "resetTokenExpiry": null,
+      "isBlocked": false,
+      "lastLogin": "2026-09-06T10:40:43.095Z",
+      "createdAt": "2026-09-06T10:40:43.096Z",
+      "updatedAt": "2026-09-06T10:47:18.321Z"
+    },
+    {
+      "id": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "email": "responsable-test@menuaconsulting.com",
+      "password": "$2a$10$3Q1PDcZfg5IzVqkuZxkRLuUMAMa6JXQtzsH0aQJEsO3.A1EaecLkC",
+      "name": "Responsable Test",
+      "roleId": "9b78a989-65aa-4d4d-903f-63d05b49f39b",
+      "telephone": "0603040506",
+      "lieuResidence": null,
+      "experienceCle": null,
+      "langues": null,
+      "profile": "Management Opérationnel",
+      "idCardUrl": null,
+      "resetToken": null,
+      "resetTokenExpiry": null,
+      "isBlocked": false,
+      "lastLogin": "2026-09-06T10:40:43.124Z",
+      "createdAt": "2026-09-06T10:40:43.126Z",
+      "updatedAt": "2026-09-06T10:47:18.339Z"
+    },
+    {
+      "id": "eb40cfe8-eea6-48d7-bf1b-4bc71b6cdbbb",
+      "email": "admintech-test@menuaconsulting.com",
+      "password": "$2a$10$3Q1PDcZfg5IzVqkuZxkRLuUMAMa6JXQtzsH0aQJEsO3.A1EaecLkC",
+      "name": "AdminTech Test",
+      "roleId": "9cda2a10-5a4d-4e1c-8992-5a44a911dd83",
+      "telephone": "0604050607",
+      "lieuResidence": null,
+      "experienceCle": null,
+      "langues": null,
+      "profile": "Administration Système & Sécurité",
+      "idCardUrl": null,
+      "resetToken": null,
+      "resetTokenExpiry": null,
+      "isBlocked": false,
+      "lastLogin": "2026-09-06T10:40:43.140Z",
+      "createdAt": "2026-09-06T10:40:43.140Z",
+      "updatedAt": "2026-09-06T10:47:18.350Z"
     }
   ],
-  "clients": [],
-  "clientEntreprises": [],
+  "clients": [
+    {
+      "id": "aeec7614-4340-450f-b250-25474a60deb6",
+      "type": "Société",
+      "email": "alpha@client-test.fr",
+      "name": "Marc Delattre",
+      "telephone": "0140000001",
+      "contactSecondaire": null,
+      "secteurActivite": "Banque et Finance",
+      "description": "Client de recette - Société financière de premier plan",
+      "status": "ACTIF",
+      "createdAt": "2026-09-06T10:40:43.162Z",
+      "updatedAt": "2026-09-06T10:40:43.162Z"
+    },
+    {
+      "id": "f06902dd-d713-4b73-aec4-8f2b739e8b7d",
+      "type": "Société",
+      "email": "beta@client-test.fr",
+      "name": "Sophie Bernard",
+      "telephone": "0140000002",
+      "contactSecondaire": null,
+      "secteurActivite": "Gestion de Patrimoine",
+      "description": "Client de recette - Cabinet de gestion de patrimoine",
+      "status": "ACTIF",
+      "createdAt": "2026-09-06T10:40:43.178Z",
+      "updatedAt": "2026-09-06T10:40:43.178Z"
+    },
+    {
+      "id": "2f1c3eac-c25a-4dbc-8e2a-0d5a685a9e1c",
+      "type": "Particulier",
+      "email": "j.dupont@test.fr",
+      "name": "Jean Dupont",
+      "telephone": "0612345678",
+      "contactSecondaire": null,
+      "secteurActivite": "Gestion privée",
+      "description": "Client de recette - Particulier investisseur",
+      "status": "ACTIF",
+      "createdAt": "2026-09-06T10:40:43.284Z",
+      "updatedAt": "2026-09-06T10:40:43.284Z"
+    }
+  ],
+  "clientEntreprises": [
+    {
+      "id": "ae101e5f-cc2a-450c-b6ec-bc3ee46d59dc",
+      "clientId": "aeec7614-4340-450f-b250-25474a60deb6",
+      "siret": "12345678900012",
+      "raisonSociale": "Alpha Finance SAS",
+      "emailEntreprise": "contact@alpha-finance.fr",
+      "telephoneEntreprise": "0140000001"
+    },
+    {
+      "id": "2e78a449-5aca-4220-b62a-f1d96f2ca8b3",
+      "clientId": "f06902dd-d713-4b73-aec4-8f2b739e8b7d",
+      "siret": "98765432100034",
+      "raisonSociale": "Beta Gestion SARL",
+      "emailEntreprise": "contact@beta-gestion.fr",
+      "telephoneEntreprise": "0140000002"
+    }
+  ],
   "formulaires": [
     {
       "id": "2e9f8b4f-4a30-45b4-8ac9-35e0254f75c8",
@@ -119,11 +253,262 @@
     }
   ],
   "formulaireContacts": [],
-  "dossiers": [],
-  "missions": [],
-  "taches": [],
-  "documents": [],
-  "auditLogs": [],
+  "dossiers": [
+    {
+      "origin": "CLIENT",
+      "createdById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "id": "e8d3cb9d-4b8b-43cb-9ecc-c1f2f0eba807",
+      "reference": null,
+      "name": "DOSSIER ALPHA - GESTION DELEGUEE 2026",
+      "description": "Dossier complet de test pour la recette opérationnelle",
+      "status": "ACTIF",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": "aeec7614-4340-450f-b250-25474a60deb6",
+      "targetUserId": null,
+      "traitantId": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "parentDossierId": null,
+      "createdAt": "2026-09-06T10:47:18.371Z",
+      "updatedAt": "2026-09-06T10:47:18.371Z"
+    },
+    {
+      "origin": "CLIENT",
+      "createdById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "id": "969e6095-b2dd-444f-b5fb-0a028b3bf54f",
+      "reference": null,
+      "name": "ADMINISTRATION & FINANCES",
+      "description": "Sous-dossier standard ADMINISTRATION & FINANCES",
+      "status": "ACTIF",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": "aeec7614-4340-450f-b250-25474a60deb6",
+      "targetUserId": null,
+      "traitantId": null,
+      "parentDossierId": "e8d3cb9d-4b8b-43cb-9ecc-c1f2f0eba807",
+      "createdAt": "2026-09-06T10:47:18.387Z",
+      "updatedAt": "2026-09-06T10:47:18.387Z"
+    },
+    {
+      "origin": "CLIENT",
+      "createdById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "id": "184c3cb4-2434-49ac-b1cb-69830f72fd7b",
+      "reference": null,
+      "name": "OPÉRATIONS & RÉALISATIONS",
+      "description": "Sous-dossier standard OPÉRATIONS & RÉALISATIONS",
+      "status": "ACTIF",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": "aeec7614-4340-450f-b250-25474a60deb6",
+      "targetUserId": null,
+      "traitantId": null,
+      "parentDossierId": "e8d3cb9d-4b8b-43cb-9ecc-c1f2f0eba807",
+      "createdAt": "2026-09-06T10:47:18.403Z",
+      "updatedAt": "2026-09-06T10:47:18.403Z"
+    },
+    {
+      "origin": "CLIENT",
+      "createdById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "id": "05c62f41-2ece-4166-825e-c03ea6ecacc3",
+      "reference": null,
+      "name": "RELATIONS & DÉVELOPPEMENT",
+      "description": "Sous-dossier standard RELATIONS & DÉVELOPPEMENT",
+      "status": "ACTIF",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": "aeec7614-4340-450f-b250-25474a60deb6",
+      "targetUserId": null,
+      "traitantId": null,
+      "parentDossierId": "e8d3cb9d-4b8b-43cb-9ecc-c1f2f0eba807",
+      "createdAt": "2026-09-06T10:47:18.412Z",
+      "updatedAt": "2026-09-06T10:47:18.412Z"
+    }
+  ],
+  "missions": [
+    {
+      "id": "17d72b98-d490-4477-b518-8ea2379ba1bd",
+      "reference": null,
+      "dossierId": "e8d3cb9d-4b8b-43cb-9ecc-c1f2f0eba807",
+      "assignedToId": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "createdById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "description": "MISSION REVUE KYC & REPORTING Q3 - Contrôle documentaire et conformité LCB-FT",
+      "echeance": null,
+      "status": "EN_COURS",
+      "previousStatus": null,
+      "attachment": null,
+      "dossierMissionId": null,
+      "createdAt": "2026-09-06T10:47:18.427Z",
+      "updatedAt": "2026-09-06T10:47:18.427Z",
+      "parentMissionId": null
+    }
+  ],
+  "taches": [
+    {
+      "id": "7e2146c5-0817-46fb-99de-dc74b84c9e90",
+      "reference": null,
+      "missionId": "17d72b98-d490-4477-b518-8ea2379ba1bd",
+      "assignedToId": "9ed4992c-a314-41d3-9eb2-543549312c75",
+      "createdById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "description": "Collecte des justificatifs d'identité et Kbis",
+      "echeance": null,
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "attachment": null,
+      "adminFeedback": null,
+      "managerFeedback": null,
+      "dossierTacheId": null,
+      "createdAt": "2026-09-06T10:47:18.439Z",
+      "updatedAt": "2026-09-06T10:47:18.439Z"
+    },
+    {
+      "id": "39e07924-94f8-49c4-8300-dbfe55717963",
+      "reference": null,
+      "missionId": "17d72b98-d490-4477-b518-8ea2379ba1bd",
+      "assignedToId": "9ed4992c-a314-41d3-9eb2-543549312c75",
+      "createdById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "description": "Contrôle de conformité et filtrage LCB-FT",
+      "echeance": null,
+      "status": "EN_COURS",
+      "previousStatus": null,
+      "attachment": null,
+      "adminFeedback": null,
+      "managerFeedback": null,
+      "dossierTacheId": null,
+      "createdAt": "2026-09-06T10:47:18.477Z",
+      "updatedAt": "2026-09-06T10:47:18.477Z"
+    },
+    {
+      "id": "f9133e2a-98f3-4eaf-81fd-aee5e796100f",
+      "reference": null,
+      "missionId": "17d72b98-d490-4477-b518-8ea2379ba1bd",
+      "assignedToId": "9ed4992c-a314-41d3-9eb2-543549312c75",
+      "createdById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "description": "Rapprochement bancaire et validation comptable",
+      "echeance": null,
+      "status": "A_CORRIGER",
+      "previousStatus": null,
+      "attachment": null,
+      "adminFeedback": null,
+      "managerFeedback": "Attente de document client (Relevé de compte certifié)",
+      "dossierTacheId": null,
+      "createdAt": "2026-09-06T10:47:18.490Z",
+      "updatedAt": "2026-09-06T10:47:18.490Z"
+    },
+    {
+      "id": "2f02c2c8-ba02-4c32-a7b9-5942190ea36d",
+      "reference": null,
+      "missionId": "17d72b98-d490-4477-b518-8ea2379ba1bd",
+      "assignedToId": "5c6687fc-5ed5-4a88-91bb-2b76e6382965",
+      "createdById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "description": "Revue contradictoire et audit qualité",
+      "echeance": null,
+      "status": "EN_VALIDATION_FINALE",
+      "previousStatus": null,
+      "attachment": null,
+      "adminFeedback": "En attente de relecture contradictoire",
+      "managerFeedback": null,
+      "dossierTacheId": null,
+      "createdAt": "2026-09-06T10:47:18.506Z",
+      "updatedAt": "2026-09-06T10:47:18.506Z"
+    },
+    {
+      "id": "f5e26481-adda-4a85-a84a-f92e1007cba8",
+      "reference": null,
+      "missionId": "17d72b98-d490-4477-b518-8ea2379ba1bd",
+      "assignedToId": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "createdById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "description": "Rapport d'exécution et clôture mensuelle",
+      "echeance": null,
+      "status": "TERMINEE",
+      "previousStatus": null,
+      "attachment": null,
+      "adminFeedback": null,
+      "managerFeedback": null,
+      "dossierTacheId": null,
+      "createdAt": "2026-09-06T10:47:18.520Z",
+      "updatedAt": "2026-09-06T10:47:18.520Z"
+    }
+  ],
+  "documents": [
+    {
+      "id": "f26e2a85-57cd-4c19-aa46-9fb8e3d4dee8",
+      "name": "KBIS_Alpha_Finance_SAS.pdf",
+      "url": "ged/recette/3aa5ddf7-e27a-4746-a6f2-16afece2b77b-KBIS_Alpha_Finance_SAS.pdf",
+      "uploadedById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "dossierId": "969e6095-b2dd-444f-b5fb-0a028b3bf54f",
+      "missionId": null,
+      "createdAt": "2026-09-06T10:47:20.523Z",
+      "isDeleted": false
+    },
+    {
+      "id": "7ec6438f-255d-445c-be37-7f81d6bebc2e",
+      "name": "Convention_Delegation_Gestion.pdf",
+      "url": "ged/recette/9c018490-7c68-4292-8787-41d3741569bd-Convention_Delegation_Gestion.pdf",
+      "uploadedById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "dossierId": "969e6095-b2dd-444f-b5fb-0a028b3bf54f",
+      "missionId": null,
+      "createdAt": "2026-09-06T10:47:20.750Z",
+      "isDeleted": false
+    },
+    {
+      "id": "0b7d60a2-547d-46a9-9855-4a8e8196d01a",
+      "name": "Rapport_Controle_KYC_Q3.pdf",
+      "url": "ged/recette/cb708815-ac65-4e5d-9c95-53e55976a357-Rapport_Controle_KYC_Q3.pdf",
+      "uploadedById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "dossierId": "184c3cb4-2434-49ac-b1cb-69830f72fd7b",
+      "missionId": null,
+      "createdAt": "2026-09-06T10:47:21.026Z",
+      "isDeleted": false
+    },
+    {
+      "id": "0b2e6f8c-2249-4d70-a9c1-9f85e545b210",
+      "name": "Attestation_Conformite_2026.pdf",
+      "url": "ged/recette/0bb01e5d-2bef-459f-a906-7ab012a1f38f-Attestation_Conformite_2026.pdf",
+      "uploadedById": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "dossierId": "05c62f41-2ece-4166-825e-c03ea6ecacc3",
+      "missionId": null,
+      "createdAt": "2026-09-06T10:47:21.337Z",
+      "isDeleted": false
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "247485df-c9da-4d91-8ad4-b5d45a74f2d7",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "CREATION_ROLE",
+      "targetId": "6df24289-8966-4227-ba37-198291fd50c2",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1788691170321",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-06T10:39:30.358Z"
+    },
+    {
+      "id": "e56d7fe2-05a8-47fc-bb1f-8b3f42c1e18b",
+      "userId": "9877e958-72cb-4680-ad8e-590e7e633628",
+      "action": "RECETTE_INITIALISATION",
+      "targetId": null,
+      "targetType": "SYSTEME",
+      "details": "Initialisation complète du jeu de données de recette MENUA CONSULTING (comptes, clients, dossiers, tâches, GED)",
+      "dossierId": "e8d3cb9d-4b8b-43cb-9ecc-c1f2f0eba807",
+      "formulaireId": null,
+      "createdAt": "2026-09-06T10:47:21.360Z"
+    },
+    {
+      "id": "58737098-602d-4218-b524-b0f81691bfce",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "CREATION_ROLE",
+      "targetId": "23684372-3cf5-47bc-8ecc-cc91263afb70",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1788691854523",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-06T10:50:54.607Z"
+    }
+  ],
   "messagePersonnels": [
     {
       "id": "c022ccd1-933e-4b6c-afa5-4ae26bbbb5c6",

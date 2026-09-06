@@ -45,7 +45,7 @@ const sanitizeInput = (data) => {
 
 // Email templates are now in emailService.js
 
-router.post('/contact', upload.single('file'), async (req, res) => {
+router.post('/contact', upload.none(), async (req, res) => {
   try {
     const sanitizedBody = sanitizeInput(req.body);
     const {
@@ -84,49 +84,6 @@ router.post('/contact', upload.single('file'), async (req, res) => {
       parsedNeeds = [needs];
     }
 
-    let attachments = [];
-    let savedFilename = null;
-    if (req.file) {
-      if (req.file.mimetype !== 'application/pdf') {
-        return sendResponse(res, 400, 'ERROR_FILE_PDF_ONLY', lang);
-      }
-      const magicBytes = req.file.buffer.toString('hex', 0, 5);
-      if (magicBytes !== '255044462d') { // %PDF-
-        return sendResponse(res, 400, 'ERROR_FILE_CORRUPTED', lang);
-      }
-      if (req.file.size > Number.parseInt(process.env.UPLOAD_MAX_FILE_SIZE)) {
-        return sendResponse(res, 400, 'ERROR_FILE_TOO_LARGE', lang);
-      }
-      attachments.push({
-        filename: req.file.originalname,
-        content: req.file.buffer,
-      });
-
-      // Sauvegarde physique du fichier pour le CRM
-      try {
-        let destPath;
-        const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
-        try {
-          destPath = require('node:path').join(rootPath, 'formulaires');
-          require('node:fs').mkdirSync(destPath, { recursive: true });
-        } catch (dirErr) {
-          // Fallback to local storage if permission denied
-          destPath = require('node:path').join(__dirname, '../../../storage/formulaires');
-          require('node:fs').mkdirSync(destPath, { recursive: true });
-        }
-        
-        const randomHex = crypto.randomBytes(8).toString('hex');
-        const uniqueSuffix = Date.now() + '-' + randomHex;
-        const safeOriginalName = req.file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
-        savedFilename = uniqueSuffix + '-' + safeOriginalName;
-        
-        require('node:fs').writeFileSync(require('node:path').join(destPath, savedFilename), req.file.buffer);
-      } catch (err) {
-        console.error("Impossible de sauvegarder le fichier :", err);
-        savedFilename = req.file.originalname; // ultimate fallback
-      }
-    }
-
     const typeText = clientType === 'company' ? 'Entreprise / Organisation' : 'Particulier';
     const companyHtml = clientType === 'company' ? `Société : ${company}<br/>` : '';
     const needsHtml = parsedNeeds.length > 0 
@@ -146,7 +103,7 @@ router.post('/contact', upload.single('file'), async (req, res) => {
       ${description ? description.replaceAll('\n', '<br/>') : ''}
     `;
 
-    // --- IMMMEDIATE VERIFALIA CHECK ---
+    // --- IMMEDIATE VERIFALIA CHECK ---
     const verification = await verifalia.verifyEmailImmediate(senderEmail);
     if (verification.status === 'INVALID') {
       return sendResponse(res, 400, 'ERROR_EMAIL_INVALID', lang);
@@ -175,14 +132,14 @@ router.post('/contact', upload.single('file'), async (req, res) => {
           isAnonyme: true,
           status: formStatus,
           verifaliaJobId: isDeferred ? verification.jobId : null,
+          verifaliaStatus: verification.status === 'VALID' ? 'COMPLETED_VALID' : (verification.reason || 'A_VERIFIER'),
           contact: {
             create: {
               typeBesoin: parsedNeeds.join(', '),
-              pieceJointe: savedFilename
+              pieceJointe: null
             }
           }
         },
-        // We include contact so sendAdminNotification can access pieceJointe
         include: { contact: true }
       });
     } catch (dbError) {
@@ -196,6 +153,9 @@ router.post('/contact', upload.single('file'), async (req, res) => {
         sendAutoReply(senderEmail, lang),
         sendAdminNotification(formulaireRecord)
       ]);
+    } else if (formulaireRecord) {
+      // Pour les cas différés / à vérifier : notifier l'administrateur interne, mais PAS d'envoi externe
+      await sendAdminNotification(formulaireRecord);
     }
 
     return sendResponse(res, 200, 'SUCCESS_CONTACT', lang);
@@ -312,6 +272,7 @@ router.post('/join', upload.none(), async (req, res) => {
           isAnonyme: true,
           status: formStatus,
           verifaliaJobId: isDeferred ? verification.jobId : null,
+          verifaliaStatus: verification.status === 'VALID' ? 'COMPLETED_VALID' : (verification.reason || 'A_VERIFIER'),
           recrutement: {
             create: {
               competenceCle: parsedSkills.join(', '),
@@ -331,6 +292,8 @@ router.post('/join', upload.none(), async (req, res) => {
     // Si on a pu valider l'email immédiatement, on envoie les notifications tout de suite
     if (!isDeferred && formulaireRecord) {
       sendAutoReply(email, lang);
+      sendAdminNotification(formulaireRecord);
+    } else if (formulaireRecord) {
       sendAdminNotification(formulaireRecord);
     }
 

@@ -18,22 +18,26 @@ export default function Header() {
 
   const handleLanguageSwitch = (newLang: "FR" | "EN") => {
     if (lang === newLang) return;
-    setLang(newLang);
+    
     let newPath = pathname;
     
     if (newPath.startsWith("/en")) newPath = newPath.replace("/en", "");
     if (newPath.startsWith("/fr")) newPath = newPath.replace("/fr", "");
     if (!newPath.startsWith("/")) newPath = "/" + newPath;
     
-    if (newLang === "EN" && enRouteMap[newPath]) {
-      newPath = enRouteMap[newPath];
-    } else if (newLang === "FR" && frRouteMap[newPath]) {
-      newPath = frRouteMap[newPath];
+    if (newLang === "EN") {
+      if (enRouteMap[newPath]) {
+        newPath = enRouteMap[newPath];
+      }
+      const finalPath = newPath === "/" ? "/en" : `/en${newPath}`;
+      window.location.href = finalPath;
+    } else {
+      if (frRouteMap[newPath]) {
+        newPath = frRouteMap[newPath];
+      }
+      const finalPath = newPath === "/" ? "/fr" : `/fr${newPath}`;
+      window.location.href = finalPath;
     }
-    
-    // Si c'est la racine, on va sur /en ou /, sinon /en/chemin ou /chemin
-    const finalPath = newLang === "EN" ? (newPath === "/" ? "/en" : `/en${newPath}`) : newPath;
-    router.push(finalPath);
   };
 
   useEffect(() => {

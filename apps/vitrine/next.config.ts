@@ -39,14 +39,21 @@ const nextConfig: NextConfig = {
       { source: '/nos-solutions/urgence', destination: '/nos-solutions', permanent: true },
       { source: '/nous-connaitre/notre-methodologie', destination: '/nous-connaitre', permanent: true },
       { source: '/nous-connaitre/presentation-du-cabinet', destination: '/nous-connaitre', permanent: true },
-      { source: '/pourquoi-menua/nos-benefices', destination: '/pourquoi-menua', permanent: true },
-      { source: '/fr', destination: '/', permanent: true },
-      { source: '/fr/:path*', destination: '/:path*', permanent: true }
+      { source: '/pourquoi-menua/nos-benefices', destination: '/pourquoi-menua', permanent: true }
     ];
   },
   // Proxy les requêtes /api vers le backend pour éviter les 404 quand on accède via le port 3000
+  // Et support transparent de /fr et /fr/* sans redirection
   async rewrites() {
     return [
+      {
+        source: '/fr',
+        destination: '/',
+      },
+      {
+        source: '/fr/:path*',
+        destination: '/:path*',
+      },
       {
         source: '/api/:path*',
         destination: process.env.NODE_ENV === 'production' ? (process.env.BACKEND_URL || 'http://backend:4000') + '/api/:path*' : 'http://localhost:4000/api/:path*',

@@ -1,6 +1,7 @@
 "use client";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { useLanguage } from "./LanguageProvider";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 interface LinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof NextLinkProps>, NextLinkProps {
@@ -27,6 +28,8 @@ export const frRouteMap: Record<string, string> = Object.entries(enRouteMap).red
 
 export default function Link({ href, children, ...props }: LinkProps) {
   const { lang } = useLanguage();
+  const currentPathname = usePathname();
+  const isFrPrefix = currentPathname?.startsWith("/fr");
   
   let finalHref = href;
   if (typeof href === "string" && href.startsWith("/") && !href.startsWith("/en/") && !href.startsWith("/fr/") && href !== "/en" && href !== "/fr") {
@@ -51,6 +54,8 @@ export default function Link({ href, children, ...props }: LinkProps) {
       }
       const translatedHref = pathToTranslate + suffix;
       finalHref = translatedHref === "/" ? "/en" : `/en${translatedHref}`;
+    } else if (isFrPrefix) {
+      finalHref = pathToTranslate === "/" ? "/fr" : `/fr${pathToTranslate}${suffix}`;
     } else {
       finalHref = pathToTranslate + suffix;
     }

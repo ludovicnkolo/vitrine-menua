@@ -401,14 +401,16 @@ export default function Home() {
             )}
           </div>
 
-          {/* CTA */}
-          <div className="flex justify-end mt-4">
-            <Link href="/actualites" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-              {t("Voir toutes nos actualités", "Browse all publications")} 
-              <span className="w-8 h-[1px] bg-white group-hover:w-12 transition-all duration-300"></span>
-              <ChevronRight size={18} className="-ml-2" />
-            </Link>
-          </div>
+          {/* CTA — visible uniquement si des publications existent */}
+          {publications.length > 0 && (
+            <div className="flex justify-end mt-4">
+              <Link href="/actualites" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
+                {t("Voir toutes nos actualités", "Browse all publications")} 
+                <span className="w-8 h-[1px] bg-white group-hover:w-12 transition-all duration-300"></span>
+                <ChevronRight size={18} className="-ml-2" />
+              </Link>
+            </div>
+          )}
 
         </div>
       </section>

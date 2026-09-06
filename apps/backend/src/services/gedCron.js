@@ -3,21 +3,21 @@ const prisma = new PrismaClient();
 const { S3Client, ListObjectsV2Command, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
 const s3Client = new S3Client({
-  endpoint: process.env.OVH_ENDPOINT,
-  region: process.env.OVH_REGION || 'gra',
+  endpoint: process.env.S3_ENDPOINT,
+  region: process.env.S3_REGION || 'eu-west-par',
   credentials: {
-    accessKeyId: process.env.OVH_ACCESS_KEY,
-    secretAccessKey: process.env.OVH_SECRET_KEY,
+    accessKeyId: process.env.S3_ACCESS_KEY,
+    secretAccessKey: process.env.S3_SECRET_KEY,
   },
 });
 
-const BUCKET_NAME = process.env.OVH_BUCKET_NAME;
+const BUCKET_NAME = process.env.S3_BUCKET;
 
 async function processGedCleanup() {
   console.log('[GED Cron] Démarrage du nettoyage des fichiers orphelins...');
   try {
     if (!BUCKET_NAME) {
-      console.error('[GED Cron] OVH_BUCKET_NAME non défini.');
+      console.error('[GED Cron] S3_BUCKET non défini.');
       return;
     }
 

@@ -58,12 +58,9 @@ export default function DocumentsPage() {
   const [currentPath, setCurrentPath] = useState([]); // [{id, name}]
   const [searchQuery, setSearchQuery] = useState('');
   
-  const [contextMenu, setContextMenu] = useState(null);
+  // Modals state
   const [showNewFolderModal, setShowNewFolderModal] = useState(false);
-  const [newFolderName, setNewFolderName] = useState('');
-  
   const [showUploadModal, setShowUploadModal] = useState(false);
-  const [uploadFile, setUploadFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [showRenameModal, setShowRenameModal] = useState(false);
@@ -288,6 +285,62 @@ export default function DocumentsPage() {
     }
   };
 
+  const fetchTrash = async () => {
+    setLoadingTrash(true);
+    try {
+      const token = sessionStorage.getItem('adminToken');
+      const res = await fetch(getSafeApiUrl('/api/crm/documents/trash/list'), {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setTrashItems(data);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingTrash(false);
+    }
+  };
+
+  const handleOpenTrash = () => {
+    setShowTrashModal(true);
+    fetchTrash();
+  };
+
+  const handleRestoreTrash = async (id) => {
+    try {
+      const token = sessionStorage.getItem('adminToken');
+      const res = await fetch(getSafeApiUrl(`/api/crm/documents/${id}/restore`), {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        window.customAlert("Document restauré avec succès.");
+        fetchTrash();
+        fetchDossiers(); // Refresh explorer
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handlePurgeTrash = async (id) => {
+    if (!(await window.customConfirm("Voulez-vous PURGER ce document ? Il sera définitivement supprimé d'OVH et de la base de données. Action irréversible.", "Purge définitive"))) return;
+    try {
+      const token = sessionStorage.getItem('adminToken');
+      const res = await fetch(getSafeApiUrl(`/api/crm/documents/${id}/purge`), {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        fetchTrash();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleUploadFile = async (e) => {
     e.preventDefault();
     if (!uploadFile || !currentFolderId) return;
@@ -297,36 +350,27 @@ export default function DocumentsPage() {
       
       const formData = new FormData();
       formData.append('bucket', 'ged'); // MUST be before file for multer
+      formData.append('dossierId', currentFolderId);
+      formData.append('name', uploadFile.name);
       formData.append('file', uploadFile);
 
-      const uploadRes = await fetch(getSafeApiUrl('/api/files/upload'), {
+      const uploadRes = await fetch(getSafeApiUrl('/api/files/upload-and-attach'), {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData
       });
       
       if (uploadRes.ok) {
-        const uploadData = await uploadRes.json();
-        
-        const docRes = await fetch(getSafeApiUrl('/api/crm/documents'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-          body: JSON.stringify({
-            name: uploadFile.name,
-            filename: uploadData.fileData.filename,
-            bucket: 'ged',
-            dossierId: currentFolderId
-          })
-        });
-
-        if (docRes.ok) {
-          setShowUploadModal(false);
-          setUploadFile(null);
-          fetchDossiers();
-        } else window.customAlert("Erreur de liaison document");
-      } else window.customAlert("Erreur d'upload");
+        setShowUploadModal(false);
+        setUploadFile(null);
+        fetchDossiers();
+      } else {
+        const errorData = await uploadRes.json().catch(() => ({}));
+        window.customAlert(errorData.error || "Erreur d'upload");
+      }
     } catch (e) {
       console.error(e);
+      window.customAlert("Erreur de connexion");
     } finally {
       setIsSubmitting(false);
     }
@@ -346,7 +390,7 @@ export default function DocumentsPage() {
               className="btn btn-primary"
               style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#141824', color: '#FFF', padding: '0.6rem 1rem', borderRadius: '0.5rem', fontWeight: 600, fontSize: '0.875rem', border: 'none', cursor: 'pointer' }}
             >
-              <Upload size={16} /> Importer un document
+              <Upload size={16} /> Importer
             </button>
           )}
           {canWriteCurrent && (
@@ -356,7 +400,17 @@ export default function DocumentsPage() {
               className="btn btn-outline"
               style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#FFF', color: '#141824', border: '1px solid var(--border)', padding: '0.6rem 1rem', borderRadius: '0.5rem', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer' }}
             >
-              <Plus size={16} /> Nouveau dossier
+              <Plus size={16} /> Nouveau
+            </button>
+          )}
+          {isSuperAdmin && (
+            <button 
+              type="button" 
+              onClick={handleOpenTrash} 
+              className="btn btn-outline"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#FEF2F2', color: 'var(--danger)', border: '1px solid #FECACA', padding: '0.6rem 1rem', borderRadius: '0.5rem', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer' }}
+            >
+              <Trash size={16} /> Corbeille
             </button>
           )}
           <div style={{ position: 'relative', width: '280px' }}>
@@ -687,6 +741,66 @@ export default function DocumentsPage() {
                 <button type="submit" disabled={isSubmitting || !renameName.trim()} className="btn btn-primary">{isSubmitting ? 'Sauvegarde...' : 'Renommer'}</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Corbeille */}
+      {showTrashModal && (
+        <div className="fade-in" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100}}>
+          <div style={{background: '#FFF', padding: '2rem', borderRadius: '8px', width: '90%', maxWidth: '800px', maxHeight: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
+              <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                <Trash size={24} color="var(--danger)"/> Corbeille
+              </h3>
+              <button onClick={() => setShowTrashModal(false)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)'}}><X size={20}/></button>
+            </div>
+            
+            <div style={{flex: 1, overflowY: 'auto', border: '1px solid var(--border)', borderRadius: '8px'}}>
+              {loadingTrash ? (
+                <div style={{padding: '2rem', textAlign: 'center', color: 'var(--text-muted)'}}>Chargement...</div>
+              ) : trashItems.length === 0 ? (
+                <div style={{padding: '3rem', textAlign: 'center', color: 'var(--text-muted)'}}>La corbeille est vide.</div>
+              ) : (
+                <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                  <thead>
+                    <tr style={{background: '#F8FAFC', borderBottom: '1px solid var(--border)', textAlign: 'left'}}>
+                      <th style={{padding: '1rem', fontWeight: 600, color: 'var(--text-muted)'}}>Nom</th>
+                      <th style={{padding: '1rem', fontWeight: 600, color: 'var(--text-muted)'}}>Dossier</th>
+                      <th style={{padding: '1rem', fontWeight: 600, color: 'var(--text-muted)'}}>Date de suppression</th>
+                      <th style={{padding: '1rem', fontWeight: 600, color: 'var(--text-muted)', textAlign: 'right'}}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {trashItems.map(item => (
+                      <tr key={item.id} style={{borderBottom: '1px solid var(--border)'}}>
+                        <td style={{padding: '1rem', color: 'var(--text-main)', fontWeight: 500}}>{item.name}</td>
+                        <td style={{padding: '1rem', color: 'var(--text-muted)'}}>{item.dossier?.name || '-'}</td>
+                        <td style={{padding: '1rem', color: 'var(--text-muted)'}}>{new Date(item.updatedAt).toLocaleDateString()}</td>
+                        <td style={{padding: '1rem', textAlign: 'right'}}>
+                          <button 
+                            onClick={() => handleRestoreTrash(item.id)}
+                            style={{background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', marginRight: '1rem', fontWeight: 500}}
+                          >
+                            Restaurer
+                          </button>
+                          <button 
+                            onClick={() => handlePurgeTrash(item.id)}
+                            style={{background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', fontWeight: 500}}
+                          >
+                            Purger
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+            
+            <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem'}}>
+              <button type="button" onClick={() => setShowTrashModal(false)} className="btn btn-outline">Fermer</button>
+            </div>
           </div>
         </div>
       )}

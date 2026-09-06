@@ -175,4 +175,13 @@ app.listen(PORT, () => {
   } catch (err) {
     console.error('Failed to start Verifalia Cron:', err);
   }
+
+  // Start GED Cleanup Cron
+  try {
+    const { startGedCron } = require('./services/gedCron');
+    startGedCron();
+    console.log('GED Cron started.');
+  } catch (err) {
+    console.error('Failed to start GED Cron:', err);
+  }
 });

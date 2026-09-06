@@ -191,5 +191,95 @@ router.get('/view/:bucket/:filename', authenticateJWT, async (req, res) => {
     res.status(500).json({ success: false, error: 'Erreur de lecture du fichier.' });
   }
 });
+// ─── P3 : REMPLACEMENT DE DOCUMENT (PHYSIQUE) ────────────────────────────────
+// Remplace le fichier S3 d'un document existant, en conservant son ID en base.
+// Si l'upload réussit mais la BDD échoue, le nouveau fichier S3 est supprimé (rollback).
+// Si tout réussit, l'ancien fichier S3 est supprimé pour libérer de l'espace.
+router.post('/replace/:id', authenticateJWT, upload.single('file'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, error: 'Aucun fichier uploadé.' });
+  }
+
+  try {
+    const docId = req.params.id;
+    const document = await prisma.document.findUnique({ where: { id: docId } });
+    if (!document) {
+      return res.status(404).json({ success: false, error: 'Document introuvable.' });
+    }
+    if (document.isDeleted) {
+      return res.status(409).json({ success: false, error: 'Ce document est dans la corbeille. Restaurez-le pour le modifier.' });
+    }
+
+    const oldS3Key = document.url;
+    let bucket = oldS3Key.split('/')[0] || 'ged';
+
+    const randomHex = crypto.randomBytes(8).toString('hex');
+    const uniqueSuffix = Date.now() + '-' + randomHex;
+    const safeOriginalName = req.file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const finalFilename = uniqueSuffix + '-' + safeOriginalName;
+    const newS3Key = `${bucket}/${finalFilename}`;
+
+    // ── ÉTAPE 1 : Upload nouveau fichier S3
+    try {
+      await uploadToS3(req.file.buffer, newS3Key, req.file.mimetype);
+    } catch (s3Error) {
+      console.error({ event: 'replace_s3_upload_failed', error: s3Error.message });
+      return res.status(502).json({ success: false, error: 'Erreur lors de l\'upload du nouveau fichier vers OVH.' });
+    }
+
+    // ── ÉTAPE 2 : Mise à jour BDD (avec rollback)
+    let updatedDoc;
+    try {
+      updatedDoc = await prisma.document.update({
+        where: { id: docId },
+        data: {
+          url: newS3Key,
+          // Optionnel: on peut mettre à jour le nom si le client le souhaite, 
+          // mais généralement on garde le nom logique ou on prend le nouveau originalname.
+          // Ici on met à jour le nom si on le reçoit, sinon le nom d'origine du fichier.
+          name: req.body.name || req.file.originalname
+        },
+        include: { uploadedBy: true }
+      });
+    } catch (dbError) {
+      // ── ROLLBACK : Suppression du nouveau fichier S3
+      console.error({ event: 'replace_db_update_failed_rolling_back_s3', newS3Key, error: dbError.message });
+      try {
+        await deleteFromS3(newS3Key);
+      } catch (rollbackError) {}
+      return res.status(500).json({ success: false, error: 'Erreur lors de la mise à jour en base de données.' });
+    }
+
+    // ── ÉTAPE 3 : Suppression de l'ANCIEN fichier S3
+    try {
+      await deleteFromS3(oldS3Key);
+    } catch (cleanupError) {
+      console.warn({ event: 'replace_old_s3_cleanup_failed', oldS3Key, error: cleanupError.message });
+      // Non bloquant. Le cron P4 finira par nettoyer les orphelins si nécessaire, 
+      // bien que cet ancien fichier n'ait plus de ref en BDD.
+    }
+
+    // Audit trail
+    try {
+      await logAudit(
+        req.user?.id,
+        'MODIFICATION_DOCUMENT',
+        document.id,
+        'DOCUMENT',
+        `Document remplacé: ${document.name} -> ${updatedDoc.name}`,
+        document.dossierId || null
+      );
+    } catch (e) {}
+
+    return res.json({
+      success: true,
+      message: 'Fichier remplacé avec succès.',
+      document: updatedDoc
+    });
+  } catch (error) {
+    console.error("Replace Error:", error);
+    res.status(500).json({ success: false, error: 'Erreur serveur lors du remplacement.' });
+  }
+});
 
 module.exports = router;

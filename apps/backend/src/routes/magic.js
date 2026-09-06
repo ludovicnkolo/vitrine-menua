@@ -8,6 +8,7 @@ const path = require('path');
 
 const router = express.Router();
 const prisma = new PrismaClient();
+const { logAudit } = require('../utils/audit');
 
 // Multer in memory for S3 upload
 const upload = multer({
@@ -38,6 +39,15 @@ router.post('/generate', authenticateJWT, async (req, res) => {
       }
     });
 
+    await logAudit(
+      req.user.id,
+      'CREATION_LIEN_MAGIQUE',
+      magicLink.id,
+      'MAGIC_LINK',
+      `Lien magique (${type}) généré pour le dossier`,
+      dossierId
+    );
+
     res.json({ success: true, data: magicLink });
   } catch (error) {
     console.error("Erreur génération lien magique:", error);
@@ -63,7 +73,18 @@ router.get('/dossier/:dossierId', authenticateJWT, async (req, res) => {
 // Revoke a Magic Link
 router.delete('/:id', authenticateJWT, async (req, res) => {
   try {
-    await prisma.lienMagique.delete({ where: { id: req.params.id } });
+    const link = await prisma.lienMagique.findUnique({ where: { id: req.params.id } });
+    if (link) {
+      await prisma.lienMagique.delete({ where: { id: req.params.id } });
+      await logAudit(
+        req.user.id,
+        'REVOCATION_LIEN_MAGIQUE',
+        req.params.id,
+        'MAGIC_LINK',
+        `Lien magique révoqué`,
+        link.dossierId
+      );
+    }
     res.json({ success: true });
   } catch (error) {
     console.error("Erreur révocation lien magique:", error);
@@ -166,7 +187,17 @@ router.post('/upload/:token', upload.array('files', 10), async (req, res) => {
       uploadedDocs.push(doc);
     }
 
-    // Optionally mark link as used if it's a one-time link, but here we can keep it open until expiry
+    if (uploadedDocs.length > 0) {
+      await logAudit(
+        magicLink.createdBy,
+        'DEPOT_DOCUMENT_MAGIQUE',
+        uploadedDocs[0].id,
+        'DOCUMENT',
+        `${uploadedDocs.length} document(s) déposé(s) via Lien Magique (${uploadedDocs.map(d => d.name).join(', ')})`,
+        magicLink.dossierId
+      );
+    }
+
     res.json({ success: true, message: `${uploadedDocs.length} fichier(s) uploadé(s) avec succès.`, count: uploadedDocs.length });
   } catch (error) {
     console.error("Erreur upload via lien magique:", error);

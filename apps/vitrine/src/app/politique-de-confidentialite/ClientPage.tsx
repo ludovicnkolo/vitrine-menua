@@ -44,7 +44,7 @@ export default function PolitiqueConfidentialite() {
                 </li>
                 <li>
                   <strong className="text-[#141824]">{t("Sécurité :", "Security:")}</strong>{" "}
-                  {t("journaux techniques, connexions et actions — sécurisation des systèmes, prévention des abus et traçabilité.", "technical logs, connections and actions — system securing, abuse prevention and traceability.")}
+                  {t("journaux techniques, connexions et actions — sécurisation des systèmes, prévention des abus et traçabilité.", "technical logs, connection data and user activity — securing information systems, fraud and abuse prevention, and audit traceability.")}
                 </li>
               </ul>
             </SectionBlock>
@@ -53,7 +53,7 @@ export default function PolitiqueConfidentialite() {
             <SectionBlock title={t("Champs obligatoires", "Mandatory fields")}>
               <p>{formatBrand(t(
                 "Les champs obligatoires sont signalés par un astérisque. Sans ces informations, MENUA CONSULTING peut ne pas être en mesure de répondre à la demande ou d’étudier le profil. Les autres informations sont facultatives.",
-                "Mandatory fields are indicated by an asterisk. Without this information, MENUA CONSULTING may not be able to respond to the request or study the profile. Other information is optional."
+                "Mandatory fields are indicated by an asterisk. Without this information, MENUA CONSULTING may not be able to respond to the enquiry or assess the candidate's profile. Other fields are optional."
               ))}</p>
             </SectionBlock>
 
@@ -61,11 +61,11 @@ export default function PolitiqueConfidentialite() {
             <SectionBlock title={t("Destinataires", "Recipients")}>
               <p className="mb-4">{formatBrand(t(
                 "Les données sont accessibles aux personnes habilitées de MENUA CONSULTING, dans la limite de leurs fonctions et des missions attribuées. Elles peuvent être traitées par des prestataires techniques encadrés contractuellement pour l’hébergement, la maintenance, la messagerie, la sécurité et le fonctionnement du CRM.",
-                "The data is accessible to authorized persons of MENUA CONSULTING, within the limits of their functions and assigned missions. It may be processed by technical service providers contractually bound for hosting, maintenance, messaging, security and CRM operations."
+                "Data is accessible to authorised personnel at MENUA CONSULTING, strictly within the scope of their assigned duties and engagements. It may be processed by technical service providers bound by formal data processing agreements for hosting, maintenance, messaging, IT security and CRM management."
               ))}</p>
               <p>{formatBrand(t(
                 "MENUA CONSULTING ne vend ni ne cède les données à des tiers à des fins de prospection commerciale.",
-                "MENUA CONSULTING does not sell or transfer data to third parties for commercial prospecting purposes."
+                "MENUA CONSULTING does not sell, lease or transfer personal data to third parties for direct marketing purposes."
               ))}</p>
             </SectionBlock>
 
@@ -73,15 +73,15 @@ export default function PolitiqueConfidentialite() {
             <SectionBlock title={t("Accès hors Espace économique européen", "Access outside the European Economic Area")}>
               <p className="mb-4">{formatBrand(t(
                 "Dans le cadre de certaines missions, MENUA CONSULTING peut mobiliser des collaborateurs, partenaires ou prestataires situés en France, dans l’Union européenne ou dans des pays situés hors de l’Espace économique européen, notamment au Cameroun et, le cas échéant, dans d’autres pays africains. Lorsque cela est strictement nécessaire à l’exécution de la mission, certaines données peuvent leur être rendues accessibles dans la seule limite du périmètre qui leur est confié et sous la supervision de MENUA CONSULTING.",
-                "As part of certain missions, MENUA CONSULTING may mobilize employees, partners or service providers located in France, in the European Union or in countries outside the European Economic Area, particularly in Cameroon and, where appropriate, in other African countries. When strictly necessary for the execution of the mission, certain data may be made accessible to them solely within the limits of the scope entrusted to them and under the supervision of MENUA CONSULTING."
+                "In connection with certain client engagements, MENUA CONSULTING may deploy staff, partner entities or vetted service providers located in France, within the European Union, or in countries outside the European Economic Area, notably in Cameroon and, where applicable, other African jurisdictions. Where strictly necessary for the delivery of the engagement, relevant operational data may be accessed by them solely within the boundaries of the tasks assigned to them and under the direct supervision of MENUA CONSULTING."
               ))}</p>
               <p className="mb-4">{formatBrand(t(
                 "Avant tout accès depuis un pays situé hors de l’Espace économique européen, MENUA CONSULTING met en place les garanties contractuelles et les mesures de sécurité requises par la réglementation applicable. Les accès sont individualisés, limités aux seules données nécessaires, traçables, contrôlés et révocables. Ils sont encadrés par des engagements de confidentialité et, lorsque cela est requis, par les clauses contractuelles types de la Commission européenne ainsi que par les mesures complémentaires appropriées.",
-                "Before any access from a country outside the European Economic Area, MENUA CONSULTING implements the contractual guarantees and security measures required by applicable regulations. Access is individualized, limited to strictly necessary data, traceable, controlled and revocable. They are governed by confidentiality commitments and, when required, by standard contractual clauses of the European Commission as well as appropriate complementary measures."
+                "Prior to any access from a jurisdiction outside the European Economic Area, MENUA CONSULTING establishes the contractual safeguards and security controls required by applicable data protection regulations. Access is individualised, restricted to strictly necessary data, auditable, monitored and revocable. It is governed by binding non-disclosure agreements and, where required, the European Commission's Standard Contractual Clauses (SCCs) alongside appropriate supplementary technical and organisational measures."
               ))}</p>
               <p>{t(
                 "Aucune donnée n’est rendue accessible depuis un pays tiers en l’absence de nécessité opérationnelle liée à la mission et tant que le cadre contractuel, organisationnel et technique applicable n’a pas été validé.",
-                "No data is made accessible from a third country in the absence of an operational need related to the mission and as long as the applicable contractual, organizational and technical framework has not been validated."
+                "No data is made accessible from a third country without a legitimate operational requirement tied to the engagement, and until the applicable contractual, organisational and technical safeguards have been validated."
               )}</p>
             </SectionBlock>
 

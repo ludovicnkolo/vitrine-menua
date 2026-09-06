@@ -3,7 +3,6 @@ import { Search, MoreVertical, Pencil, Eye, Trash, MessageSquare, Paperclip, Fil
 import { getSafeApiUrl, uploadFile, formatDate } from '../utils/helpers';
 import ActionDropdown from '../components/ActionDropdown';
 import { getStatusBadge } from '../utils/helpers';
-import SmsModal from '../components/SmsModal';
 import PaginationControls from '../components/PaginationControls';
 import ReadOnlyField from '../components/ReadOnlyField';
 import TaskConsultModal from '../components/TaskConsultModal';
@@ -20,7 +19,6 @@ const DossiersPage = () => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterRole, setFilterRole] = useState('all');
   const [filterOrigine, setFilterOrigine] = useState('all');
-  const [showSmsModal, setShowSmsModal] = useState(false);
   
   // Mission Creation State
   const [createMissionModal, setCreateMissionModal] = useState(false);
@@ -570,46 +568,6 @@ const DossiersPage = () => {
           <button type="button" onClick={() => setConsultDossier(null)} className="btn btn-outline">Fermer</button>
         </div>
 
-        {/* Modal SMS */}
-        {showSmsModal && (
-          <div className="fade-in" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
-            <div className="card" style={{width: '90%', maxWidth: '500px', padding: '2rem'}}>
-              <h3 style={{marginTop: 0, marginBottom: '1.5rem', fontSize: '1.25rem'}}>Envoyer un SMS (Dossier: {consultDossier.reference || consultDossier.id})</h3>
-              
-              <div style={{marginBottom: '1.5rem'}}>
-                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Numéro de téléphone</label>
-                <input 
-                  type="text" 
-                  value={smsPhone} 
-                  onChange={(e) => setSmsPhone(e.target.value)} 
-                  placeholder="+33600000000"
-                  className="input-field" 
-                  style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} 
-                />
-              </div>
-
-              <div style={{marginBottom: '1.5rem'}}>
-                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message</label>
-                <textarea 
-                  value={smsMessage} 
-                  onChange={(e) => setSmsMessage(e.target.value)} 
-                  placeholder="Votre message SMS..."
-                  className="input-field" 
-                  style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '100px', resize: 'vertical', fontFamily: 'inherit'}}
-                />
-                <div style={{textAlign: 'right', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem'}}>
-                  {smsMessage.length} / 160 caractères
-                </div>
-              </div>
-
-              <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
-                <button type="button" onClick={() => { setShowSmsModal(false); setSmsPhone(''); setSmsMessage(''); }} className="btn btn-outline" disabled={isSubmittingSms}>Annuler</button>
-                <button type="button" onClick={handleSendSms} disabled={isSubmittingSms} className="btn btn-primary">{isSubmittingSms ? 'Envoi...' : 'Envoyer SMS'}</button>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Modal Magic Link */}
         {showMagicModal && (
           <div className="fade-in" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
@@ -804,12 +762,6 @@ const DossiersPage = () => {
           </div>
           );
         })()}
-
-        <SmsModal 
-          isOpen={showSmsModal} 
-          onClose={() => setShowSmsModal(false)} 
-          contextData={{ dossierId: consultDossier.id }} 
-        />
 
         <TaskConsultModal task={localConsultTask} onClose={() => setLocalConsultTask(null)} titlePrefix="Consulter la Mission:" />
       </div>

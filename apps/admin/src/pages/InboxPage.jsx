@@ -43,6 +43,18 @@ const getStatusBadge = (status) => {
   return { bg: '#F1F5F9', color: '#475569' };
 };
 
+const getVerifaliaBadge = (vStatus) => {
+  if (!vStatus) return { text: 'Non vérifié', bg: '#F1F5F9', color: '#64748B' };
+  const s = String(vStatus).toUpperCase();
+  if (s.includes('VALID') || s === 'DELIVERABLE' || s === 'COMPLETED_VALID') {
+    return { text: 'Valide', bg: '#DCFCE7', color: '#166534' };
+  }
+  if (s.includes('INVALID') || s === 'UNDELIVERABLE') {
+    return { text: 'Invalide', bg: '#FEE2E2', color: '#991B1B' };
+  }
+  return { text: 'À vérifier', bg: '#FEF3C7', color: '#92400E' };
+};
+
 const InboxPage = ({ userRole }) => {
   const [tab, setTab] = useState((userRole === 'Collaborateur' || userRole === 'Relecteur') ? 'interne' : 'contact');
   const [filterTraite, setFilterTraite] = useState('all');
@@ -92,7 +104,9 @@ const InboxPage = ({ userRole }) => {
 
   const showToast = (message, type = 'success') => {
     setToast({ show: true, message, type });
-    setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 3000);
+    if (type === 'success') {
+      setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 18000);
+    }
   };
 
   const fetchMessages = async () => {
@@ -587,6 +601,9 @@ const InboxPage = ({ userRole }) => {
               <th style={{ width: '10%', whiteSpace: 'nowrap' }}>Statut</th>
               <th style={{ width: tab === 'interne' ? '15%' : '18%' }}>{tab === 'interne' ? 'Emetteur' : 'Nom'}</th>
               <th style={{ width: '18%' }}>{tab === 'recrutement' ? 'E-mail' : 'Email'}</th>
+              {(tab === 'contact' || tab === 'recrutement') && (
+                <th style={{ width: '10%', whiteSpace: 'nowrap' }}>Vérification</th>
+              )}
               <th style={{ width: '10%' }}>{tab === 'interne' ? 'Source' : (tab === 'personnel' ? 'Étiquette' : 'Type')}</th>
               <th style={{ width: tab === 'interne' ? '15%' : '17%' }}>
                 {tab === 'contact' ? 'Besoins' : tab === 'recrutement' ? 'Compétences' : tab === 'interne' ? 'ID' : 'Sujet'}
@@ -598,7 +615,7 @@ const InboxPage = ({ userRole }) => {
           <tbody>
             {(() => {
               if (loading) {
-                return <tr><td colSpan="8" style={{textAlign: 'center', padding: '2rem'}}>Chargement des messages...</td></tr>;
+                return <tr><td colSpan="10" style={{textAlign: 'center', padding: '2rem'}}>Chargement des messages...</td></tr>;
               }
 
               const getPriorityBadge = (p) => {
@@ -629,6 +646,21 @@ const InboxPage = ({ userRole }) => {
                   </td>
                   <td><strong className="truncate-name" style={{fontSize: "0.875rem"}}>{col2}</strong></td>
                   <td><span className="truncate-text" style={{color: "var(--text-muted)", fontSize: "0.875rem"}}>{col3}</span></td>
+                  {(tab === 'contact' || tab === 'recrutement') && (
+                    <td>
+                      {(() => {
+                        const vb = getVerifaliaBadge(m.verifaliaStatus);
+                        return (
+                          <span style={{
+                            padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 600,
+                            background: vb.bg, color: vb.color, whiteSpace: 'nowrap', display: 'inline-block'
+                          }}>
+                            {vb.text}
+                          </span>
+                        );
+                      })()}
+                    </td>
+                  )}
                   <td>
                     <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: typeBadgeBg, color: typeBadgeColor}}>
                       {tab === 'personnel' ? (m.etiquette || 'Général') : typeBadgeText}
@@ -743,6 +775,7 @@ const InboxPage = ({ userRole }) => {
                 )}
                 <InlineDetailField label="Téléphone" value={processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'} />
                 <InlineDetailField label="Email" value={processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'} />
+                <InlineDetailField label="Statut Vérification Email" value={processMsg.verifaliaStatus ? `${getVerifaliaBadge(processMsg.verifaliaStatus).text} (${processMsg.verifaliaStatus})` : 'Non vérifié'} />
                 <InlineDetailField label="Fichiers joints">
                   <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
                     <AttachmentSelect files={[processMsg.cv, processMsg.attachment, processMsg.contact?.pieceJointe]} onPreview={setPreviewFile} />
@@ -759,6 +792,7 @@ const InboxPage = ({ userRole }) => {
                 <InlineDetailField label="Nom complet" value={processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'} />
                 <InlineDetailField label="Email" value={processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'} />
                 <InlineDetailField label="Téléphone" value={processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'} />
+                <InlineDetailField label="Statut Vérification Email" value={processMsg.verifaliaStatus ? `${getVerifaliaBadge(processMsg.verifaliaStatus).text} (${processMsg.verifaliaStatus})` : 'Non vérifié'} />
                 <InlineDetailField label="Années d'expérience" value={processMsg.recrutement?.anneeExperience || 'Non renseigné'} />
                 <InlineDetailField label="Langues" value={processMsg.recrutement?.langue || extractFieldFromHtml(processMsg.bodyHtml, 'Langues') || 'Non renseigné'} />
                 <InlineDetailField label="Lieu de résidence" value={processMsg.recrutement?.lieuResidence || extractFieldFromHtml(processMsg.bodyHtml, 'Localisation') || 'Non renseigné'} />
@@ -1222,13 +1256,26 @@ const InboxPage = ({ userRole }) => {
           position: 'fixed', bottom: '20px', right: '20px', 
           background: toast.type === 'error' ? '#FEE2E2' : '#DCFCE7',
           color: toast.type === 'error' ? '#991B1B' : '#166534',
+          border: toast.type === 'error' ? '1px solid #F87171' : '1px solid #86EFAC',
           padding: '1rem 1.5rem', borderRadius: '8px', 
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 9999,
-          display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 500,
-          animation: 'slideIn 0.3s ease-out'
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 9999,
+          display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 500,
+          animation: 'slideIn 0.3s ease-out', maxWidth: '420px'
         }}>
           {toast.type === 'error' ? <AlertCircle size={20} /> : <CheckCircle size={20} />}
-          {toast.message}
+          <span style={{ flex: 1, fontSize: '0.9rem' }}>{toast.message}</span>
+          <button 
+            type="button" 
+            onClick={() => setToast({ show: false, message: '', type: 'success' })}
+            style={{ 
+              background: 'transparent', border: 'none', cursor: 'pointer', 
+              color: 'inherit', fontWeight: 'bold', fontSize: '1.1rem', padding: '0 4px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center' 
+            }}
+            title="Fermer"
+          >
+            ✕
+          </button>
         </div>
       )}
     </div>

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     languages: {
       'fr-FR': 'https://menuaconsulting.com/politique-de-confidentialite',
       'en-US': 'https://menuaconsulting.com/en/privacy-policy',
+      'x-default': 'https://menuaconsulting.com/politique-de-confidentialite',
     },
   },
   openGraph: {

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     languages: {
       'fr-FR': 'https://menuaconsulting.com/mentions-legales',
       'en-US': 'https://menuaconsulting.com/en/legal-notices',
+      'x-default': 'https://menuaconsulting.com/mentions-legales',
     },
   },
   openGraph: {

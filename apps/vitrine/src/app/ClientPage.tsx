@@ -47,31 +47,31 @@ export default function Home() {
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
         
-        <div className="laplace-container relative z-10 pt-28 md:pt-32 lg:pt-36 landscape:pt-24 landscape:md:pt-28 pb-12 md:pb-16 mt-4 md:mt-0">
-          <div className="max-w-3xl">
-            <h1 className="text-white text-[1.25rem] sm:text-[1.75rem] md:text-[2.15rem] lg:text-[2.5rem] landscape:md:text-[1.85rem] leading-[1.15] mb-4 font-bold uppercase tracking-wider">
+        <div className="laplace-container relative z-10 pt-40 md:pt-48 pb-20 mt-8">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
+            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
               {t("Externalisation opérationnelle des fonctions back ", "Operational outsourcing for back ")}
               <span className="font-sans font-medium">&amp;</span>
               {t(" middle office", " middle-office functions")}
             </h1>
-            <div className="w-20 h-[2px] bg-[#e8e1d7] mb-4"></div>
-            <p className="text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] landscape:md:text-[1rem] text-[#e5e9f0] font-light max-w-2xl mb-3 leading-relaxed">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
+            <p className="text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {t(
                 "Nous sécurisons l’exécution de vos opérations afin de permettre à vos équipes de se concentrer sur leurs décisions stratégiques, leurs validations et leur relation client.",
                 "We work alongside your teams to safeguard day-to-day operations, so they can focus on strategic decisions, approvals and client relationships."
               )}
             </p>
-            <div className="flex items-center gap-2 text-white mb-6">
+            <div className="flex items-center gap-2 text-white">
               <Globe size={16} />
-              <p className="text-[0.85rem] md:text-[0.95rem] text-white font-light italic tracking-wide">
+              <p className="text-[0.9rem] lg:text-[0.95rem] text-white font-light italic tracking-wide">
                 {t(
                   "Interventions en français et en anglais – profils opérationnels bilingues.",
                   "Services delivered in French and English — bilingual operational professionals."
                 )}
               </p>
             </div>
-            <div>
-              <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/70 text-white uppercase tracking-wider text-[0.9rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
+            <div className="mt-4">
+              <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
                 {t("Présenter votre besoin", "Tell us about your requirements")}
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>

@@ -71,16 +71,16 @@ export default function MentionsLegales() {
               ))}</p>
               <p className="mb-4">{formatBrand(t(
                 "MENUA CONSULTING réalise des prestations d’externalisation opérationnelle et de support back et middle office au moyen de ressources opérationnelles spécialisées. Les prestations sont exécutées selon le périmètre contractuel, les procédures, les outils, les habilitations et les circuits de validation définis avec le client.",
-                "MENUA CONSULTING provides operational outsourcing and back and middle office support services using specialized operational resources. Services are performed according to the contractual scope, procedures, tools, authorizations and validation circuits defined with the client."
+                "MENUA CONSULTING provides operational outsourcing and back and middle-office support services using specialized operational resources. Services are performed in accordance with the contractual scope, procedures, systems, authorizations and approval workflows agreed with the client."
               ))}</p>
               <p>{t(
                 "Lorsque le périmètre concerne une activité réglementée, comptable, juridique, fiscale, patrimoniale ou financière, les conseils, décisions, arbitrages, validations et actes réservés restent sous la responsabilité du client ou de ses professionnels habilités.",
-                "When the scope concerns a regulated, accounting, legal, tax, wealth or financial activity, advice, decisions, arbitration, validations and reserved acts remain the responsibility of the client or its authorized professionals."
+                "When the scope relates to regulated accounting, legal, tax, wealth management or financial activities, all advice, discretionary decisions, investment switch/reallocation decisions, final approvals and reserved statutory acts remain the sole responsibility of the client or its authorized professionals."
               )}</p>
             </SectionBlock>
 
             {/* 9.5 INFORMATIONS, PROPRIÉTÉ INTELLECTUELLE ET RESPONSABILITÉ */}
-            <SectionBlock title={t("Informations, propriété intellectuelle et responsabilité", "Information, intellectual property and responsibility")}>
+            <SectionBlock title={t("Informations, propriété intellectuelle et responsabilité", "Information, intellectual property and liability")}>
               <p className="mb-4">{formatBrand(t(
                 "Les informations publiées sont fournies à titre informatif et ne constituent ni une consultation juridique, ni un conseil comptable ou fiscal, ni un conseil patrimonial personnalisé, ni une recommandation financière. Sauf mention contraire, les textes, éléments graphiques, logos, images et documents du site sont protégés. Toute reproduction ou adaptation nécessite l’autorisation écrite préalable de MENUA CONSULTING.",
                 "The information published is provided for informational purposes and does not constitute a legal consultation, accounting or tax advice, personalized wealth advice, or financial recommendation. Unless otherwise stated, the texts, graphic elements, logos, images and documents of the site are protected. Any reproduction or adaptation requires the prior written authorization of MENUA CONSULTING."

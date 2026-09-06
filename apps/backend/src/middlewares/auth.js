@@ -24,18 +24,27 @@ const authenticateJWT = (req, res, next) => {
       }
 
       try {
-        const dbUser = await prisma.utilisateur.findUnique({ where: { id: user.id } });
+        const dbUser = await prisma.utilisateur.findUnique({
+          where: { id: user.id },
+          include: { role: true }
+        });
         if (!dbUser) {
           return res.status(401).json({ error: 'Utilisateur introuvable en base. Veuillez vous reconnecter.', action: 'FORCE_LOGOUT' });
         }
         if (dbUser.isBlocked) {
           return res.status(401).json({ error: 'Votre compte a été désactivé par l\'administrateur.', action: 'FORCE_LOGOUT' });
         }
+        req.user = {
+          ...user,
+          role: dbUser.role?.name || user.role || 'Collaborateur',
+          name: dbUser.name,
+          email: dbUser.email
+        };
       } catch (dbError) {
-        return res.status(500).json({ error: 'Erreur de vérification utilisateur' });
+        console.error('[AUTH DB ERROR]', dbError?.message || dbError);
+        return res.status(500).json({ error: 'Erreur de vérification utilisateur: service indisponible.' });
       }
 
-      req.user = user;
       next();
     });
   } else {

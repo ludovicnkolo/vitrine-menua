@@ -295,17 +295,17 @@ export default function VosBesoinsPage() {
         items={{
           label: t("Besoins couverts :", "Our support includes:"),
           list: [
-            t("préparation des dossiers d'entrée en relation ;", "preparation of onboarding files;"),
-            t("collecte et contrôle des pièces justificatives ;", "collection and control of supporting documents;"),
-            t("contrôle de complétude des dossiers clients ;", "check of completeness of client files;"),
-            t("mise à jour des informations clients ;", "updating of client information;"),
+            t("préparation des dossiers d'entrée en relation ;", "preparation of client onboarding files;"),
+            t("collecte et contrôle des pièces justificatives ;", "collection and verification of supporting documents;"),
+            t("contrôle de complétude des dossiers clients ;", "client file completeness reviews;"),
+            t("mise à jour des informations clients ;", "updating client records and KYC data;"),
             t("support administratif aux souscriptions ;", "administrative support for subscriptions;"),
-            t("préparation administrative des demandes d'arbitrage ;", "administrative preparation of arbitration requests;"),
-            t("préparation administrative des demandes de rachat partiel ou total ;", "administrative preparation of partial or total redemption requests;"),
-            t("suivi des demandes clients ;", "monitoring of client requests;"),
-            t("organisation et archivage documentaire ;", "documentary organization and archiving;"),
-            t("mise à jour des bases clients ;", "updating of client databases;"),
-            t("suivi des opérations patrimoniales dans le respect des procédures internes.", "monitoring of wealth operations in compliance with internal procedures.")
+            t("préparation administrative des demandes d'arbitrage ;", "administrative preparation of investment switch and reallocation requests;"),
+            t("préparation administrative des demandes de rachat partiel ou total ;", "administrative preparation of partial or full surrender requests;"),
+            t("suivi des demandes clients ;", "tracking client enquiries and requests;"),
+            t("organisation et archivage documentaire ;", "document management and archiving;"),
+            t("mise à jour des bases clients ;", "maintaining client databases;"),
+            t("suivi des opérations patrimoniales dans le respect des procédures internes.", "monitoring wealth operations in compliance with internal procedures.")
           ]
         }}
         bgClass="bg-white"

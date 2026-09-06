@@ -22,7 +22,9 @@ const CMSPage = () => {
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
   const showToast = (message, type = 'success') => {
     setToast({ show: true, message, type });
-    setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 3000);
+    if (type === 'success') {
+      setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 18000);
+    }
   };
 
   const fetchPublications = async () => {
@@ -83,7 +85,7 @@ const CMSPage = () => {
       title,
       type: 'ACTUALITE',
       category,
-      excerpt: '',
+      excerpt: excerpt || '',
       contentHtml,
       coverImage,
       status
@@ -168,10 +170,22 @@ const CMSPage = () => {
         <div style={{
           position: 'fixed', bottom: '2rem', right: '2rem', 
           background: toast.type === 'success' ? '#10B981' : '#EF4444', 
-          color: '#FFF', padding: '1rem 2rem', borderRadius: '8px', 
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 9999, fontWeight: 500
+          color: '#FFF', padding: '1rem 1.5rem', borderRadius: '8px', 
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 9999, fontWeight: 500,
+          display: 'flex', alignItems: 'center', gap: '0.75rem', maxWidth: '420px'
         }}>
-          {toast.message}
+          <span style={{ flex: 1, fontSize: '0.9rem' }}>{toast.message}</span>
+          <button 
+            type="button" 
+            onClick={() => setToast({ show: false, message: '', type: 'success' })}
+            style={{ 
+              background: 'transparent', border: 'none', cursor: 'pointer', 
+              color: '#FFF', fontWeight: 'bold', fontSize: '1.1rem', padding: '0 4px'
+            }}
+            title="Fermer"
+          >
+            ✕
+          </button>
         </div>
       )}
 

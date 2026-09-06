@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     languages: {
       'fr-FR': 'https://menuaconsulting.com/nous-connaitre',
       'en-US': 'https://menuaconsulting.com/en/about-us',
+      'x-default': 'https://menuaconsulting.com/nous-connaitre',
     },
   },
   openGraph: {

@@ -19,7 +19,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
 endobj
 4 0 obj
-<< /Length 120 >>
+<< /Length 180 >>
 stream
 BT
 /F1 18 Tf
@@ -39,9 +39,9 @@ xref
 0000000000 65535 f 
 0000000009 00000 n 
 0000000058 00000 n 
-0000000115 00000 n 
-0000000236 00000 n 
-0000000408 00000 n 
+00000000115 00000 n 
+00000000236 00000 n 
+00000000408 00000 n 
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
@@ -53,7 +53,23 @@ startxref
 async function main() {
   console.log('=== DEBUT SEED JEU DE RECETTE MENUA CONSULTING ===');
 
-  // 1. ROLES
+  // 0. PURGE DES DONNEES OBSOLETES / DUMMY TEXT
+  try {
+    const allForms = await prisma.formulaire.findMany();
+    for (const df of allForms) {
+      const isDummy = (df.description && df.description.toLowerCase().includes('voluptatem')) ||
+                      (df.bodyHtml && df.bodyHtml.toLowerCase().includes('voluptatem')) ||
+                      df.raisonSocial === 'nvjdvdh';
+      if (isDummy) {
+        await prisma.formulaire.delete({ where: { id: df.id } });
+        console.log(`- Formulaire résiduel purgé : ${df.id} (${df.nomPrenom})`);
+      }
+    }
+  } catch (err) {
+    console.warn('Avertissement purge dummy:', err.message);
+  }
+
+  // 1. ROLES SYSTEME
   const roleNames = [
     'Super-administrateur',
     'Responsable opérationnel',
@@ -78,7 +94,7 @@ async function main() {
     roleMap[name] = role.id;
   }
 
-  // 2. COMPTES DE TEST (Mot de passe : RecetteMenua2026!)
+  // 2. COMPTES UTILISATEURS DE RECETTE (MDP : RecetteMenua2026!)
   const testPasswordPlain = 'RecetteMenua2026!';
   const hashedPassword = await bcrypt.hash(testPasswordPlain, 10);
 
@@ -129,7 +145,7 @@ async function main() {
           lastLogin: new Date()
         }
       });
-      console.log(`+ Compte utilisateur créé : ${u.email} (${u.role})`);
+      console.log(`+ Compte créé : ${u.email} (${u.role})`);
     } else {
       user = await prisma.utilisateur.update({
         where: { id: user.id },
@@ -139,18 +155,25 @@ async function main() {
           isBlocked: false
         }
       });
-      console.log(`~ Compte utilisateur mis à jour : ${u.email} (${u.role})`);
+      console.log(`~ Compte mis à jour : ${u.email} (${u.role})`);
     }
     userMap[u.role] = user;
   }
 
-  // 3. CLIENTS DE TEST
-  // 3.1 Client Alpha (Société)
-  let clientAlpha = await prisma.client.findFirst({ where: { email: 'alpha@client-test.fr' }, include: { entreprise: true } });
+  const responsableUser = userMap['Responsable opérationnel'];
+  const collabUser = userMap['Collaborateur'];
+  const relecteurUser = userMap['Relecteur'];
+
+  // 3. CLIENTS DE RECETTE STRICTS
+  // 3.1 CLIENT TEST ALPHA (Société)
+  let clientAlpha = await prisma.client.findFirst({
+    where: { OR: [{ name: 'CLIENT TEST ALPHA' }, { email: 'alpha@client-test.fr' }] },
+    include: { entreprise: true }
+  });
   if (!clientAlpha) {
     clientAlpha = await prisma.client.create({
       data: {
-        name: 'Marc Delattre',
+        name: 'CLIENT TEST ALPHA',
         email: 'alpha@client-test.fr',
         telephone: '0140000001',
         type: 'Société',
@@ -160,23 +183,33 @@ async function main() {
         entreprise: {
           create: {
             siret: '12345678900012',
-            raisonSociale: 'Alpha Finance SAS',
-            emailEntreprise: 'contact@alpha-finance.fr',
+            raisonSociale: 'CLIENT TEST ALPHA SAS',
+            emailEntreprise: 'contact@client-test-alpha.fr',
             telephoneEntreprise: '0140000001'
           }
         }
       },
       include: { entreprise: true }
     });
-    console.log(`+ Client créé : Alpha Finance SAS (Société)`);
+    console.log(`+ Client créé : CLIENT TEST ALPHA (Société)`);
+  } else {
+    clientAlpha = await prisma.client.update({
+      where: { id: clientAlpha.id },
+      data: { name: 'CLIENT TEST ALPHA', type: 'Société' },
+      include: { entreprise: true }
+    });
+    console.log(`~ Client actualisé : CLIENT TEST ALPHA`);
   }
 
-  // 3.2 Client Beta (Société)
-  let clientBeta = await prisma.client.findFirst({ where: { email: 'beta@client-test.fr' }, include: { entreprise: true } });
+  // 3.2 CLIENT TEST BETA (Société)
+  let clientBeta = await prisma.client.findFirst({
+    where: { OR: [{ name: 'CLIENT TEST BETA' }, { email: 'beta@client-test.fr' }] },
+    include: { entreprise: true }
+  });
   if (!clientBeta) {
     clientBeta = await prisma.client.create({
       data: {
-        name: 'Sophie Bernard',
+        name: 'CLIENT TEST BETA',
         email: 'beta@client-test.fr',
         telephone: '0140000002',
         type: 'Société',
@@ -186,23 +219,32 @@ async function main() {
         entreprise: {
           create: {
             siret: '98765432100034',
-            raisonSociale: 'Beta Gestion SARL',
-            emailEntreprise: 'contact@beta-gestion.fr',
+            raisonSociale: 'CLIENT TEST BETA SARL',
+            emailEntreprise: 'contact@client-test-beta.fr',
             telephoneEntreprise: '0140000002'
           }
         }
       },
       include: { entreprise: true }
     });
-    console.log(`+ Client créé : Beta Gestion SARL (Société)`);
+    console.log(`+ Client créé : CLIENT TEST BETA (Société)`);
+  } else {
+    clientBeta = await prisma.client.update({
+      where: { id: clientBeta.id },
+      data: { name: 'CLIENT TEST BETA', type: 'Société' },
+      include: { entreprise: true }
+    });
+    console.log(`~ Client actualisé : CLIENT TEST BETA`);
   }
 
-  // 3.3 Client Particulier
-  let clientParticulier = await prisma.client.findFirst({ where: { email: 'j.dupont@test.fr' } });
+  // 3.3 CLIENT TEST PARTICULIER (Particulier)
+  let clientParticulier = await prisma.client.findFirst({
+    where: { OR: [{ name: 'CLIENT TEST PARTICULIER' }, { email: 'j.dupont@test.fr' }] }
+  });
   if (!clientParticulier) {
     clientParticulier = await prisma.client.create({
       data: {
-        name: 'Jean Dupont',
+        name: 'CLIENT TEST PARTICULIER',
         email: 'j.dupont@test.fr',
         telephone: '0612345678',
         type: 'Particulier',
@@ -211,34 +253,43 @@ async function main() {
         description: 'Client de recette - Particulier investisseur'
       }
     });
-    console.log(`+ Client créé : Jean Dupont (Particulier)`);
+    console.log(`+ Client créé : CLIENT TEST PARTICULIER (Particulier)`);
+  } else {
+    clientParticulier = await prisma.client.update({
+      where: { id: clientParticulier.id },
+      data: { name: 'CLIENT TEST PARTICULIER', type: 'Particulier' }
+    });
+    console.log(`~ Client actualisé : CLIENT TEST PARTICULIER`);
   }
 
-  // 4. DOSSIER PRINCIPAL DE TEST
+  // 4. DOSSIER TEST01 & SOUS-DOSSIERS
   let rootDossier = await prisma.dossier.findFirst({
-    where: { name: 'DOSSIER ALPHA - GESTION DELEGUEE 2026', parentDossierId: null }
+    where: { OR: [{ name: 'DOSSIER TEST01' }, { reference: 'DOS-TEST01' }] }
   });
-
-  const responsableUser = userMap['Responsable opérationnel'];
-  const collabUser = userMap['Collaborateur'];
-  const relecteurUser = userMap['Relecteur'];
 
   if (!rootDossier) {
     rootDossier = await prisma.dossier.create({
       data: {
-        name: 'DOSSIER ALPHA - GESTION DELEGUEE 2026',
-        description: 'Dossier complet de test pour la recette opérationnelle',
-        status: 'ACTIF',
+        name: 'DOSSIER TEST01',
+        reference: 'DOS-TEST01',
+        description: 'Dossier principal de test - Délégation de gestion opérationnelle 2026',
+        status: 'OUVERT',
         origin: 'CLIENT',
         clientId: clientAlpha.id,
         createdById: responsableUser.id,
         traitantId: responsableUser.id
       }
     });
-    console.log(`+ Dossier principal créé : ${rootDossier.name}`);
+    console.log(`+ Dossier créé : ${rootDossier.name} (${rootDossier.reference})`);
+  } else {
+    rootDossier = await prisma.dossier.update({
+      where: { id: rootDossier.id },
+      data: { name: 'DOSSIER TEST01', reference: 'DOS-TEST01', clientId: clientAlpha.id }
+    });
+    console.log(`~ Dossier actualisé : ${rootDossier.name}`);
   }
 
-  // 4.1 Sous-dossiers par défaut
+  // Sous-dossiers
   const subFolderNames = [
     'ADMINISTRATION & FINANCES',
     'OPÉRATIONS & RÉALISATIONS',
@@ -255,7 +306,7 @@ async function main() {
         data: {
           name: sfName,
           description: `Sous-dossier standard ${sfName}`,
-          status: 'ACTIF',
+          status: 'OUVERT',
           origin: 'CLIENT',
           parentDossierId: rootDossier.id,
           clientId: clientAlpha.id,
@@ -267,15 +318,42 @@ async function main() {
     subFolders[sfName] = sf;
   }
 
-  // 5. MISSION DE RECETTE & TÂCHES COUVRANT TOUS LES STATUTS
+  // Dossiers complémentaires couvrant les différents statuts de recette
+  const additionalDossiers = [
+    { name: 'DOSSIER TEST02 - NOUVEAU', ref: 'DOS-TEST02', status: 'NOUVEAU', client: clientBeta.id },
+    { name: 'DOSSIER TEST03 - EN COURS', ref: 'DOS-TEST03', status: 'OUVERT', client: clientBeta.id },
+    { name: 'DOSSIER TEST04 - EN ATTENTE DOCS', ref: 'DOS-TEST04', status: 'EN_ATTENTE_CLIENT', client: clientParticulier.id },
+    { name: 'DOSSIER TEST05 - CLOTURE', ref: 'DOS-TEST05', status: 'CLOTURE', client: clientAlpha.id }
+  ];
+
+  for (const ad of additionalDossiers) {
+    let existing = await prisma.dossier.findFirst({ where: { reference: ad.ref } });
+    if (!existing) {
+      await prisma.dossier.create({
+        data: {
+          name: ad.name,
+          reference: ad.ref,
+          status: ad.status,
+          description: `Dossier de test pour statut ${ad.status}`,
+          clientId: ad.client,
+          createdById: responsableUser.id,
+          traitantId: collabUser.id
+        }
+      });
+      console.log(`+ Dossier créé [${ad.status}] : ${ad.name}`);
+    }
+  }
+
+  // 5. MISSION TEST01 & TACHES ASSOCIEES
   let mission = await prisma.mission.findFirst({
-    where: { dossierId: rootDossier.id }
+    where: { OR: [{ description: { startsWith: 'MISSION TEST01' } }, { reference: 'MSN-TEST01' }] }
   });
 
   if (!mission) {
     mission = await prisma.mission.create({
       data: {
-        description: 'MISSION REVUE KYC & REPORTING Q3 - Contrôle documentaire et conformité LCB-FT',
+        reference: 'MSN-TEST01',
+        description: 'MISSION TEST01 - Traitement des souscriptions et conformité KYC Q3',
         status: 'EN_COURS',
         dossierId: rootDossier.id,
         createdById: responsableUser.id,
@@ -283,34 +361,39 @@ async function main() {
       }
     });
     console.log(`+ Mission créée : ${mission.description}`);
+  } else {
+    mission = await prisma.mission.update({
+      where: { id: mission.id },
+      data: { reference: 'MSN-TEST01', description: 'MISSION TEST01 - Traitement des souscriptions et conformité KYC Q3', dossierId: rootDossier.id }
+    });
   }
 
   // Tâches avec statuts distincts
   const tasksData = [
     {
-      description: "Collecte des justificatifs d'identité et Kbis",
+      description: "01 - Collecte et contrôle de complétude des justificatifs clients",
       status: 'NOUVEAU',
       assignedToId: collabUser.id
     },
     {
-      description: 'Contrôle de conformité et filtrage LCB-FT',
+      description: '02 - Préparation administrative et filtrage LCB-FT',
       status: 'EN_COURS',
       assignedToId: collabUser.id
     },
     {
-      description: 'Rapprochement bancaire et validation comptable',
+      description: '03 - Contrôle qualité et validation conformité',
       status: 'A_CORRIGER',
-      managerFeedback: 'Attente de document client (Relevé de compte certifié)',
+      managerFeedback: 'Pièce justificative illisible - demande de renouvellement adressée au client',
       assignedToId: collabUser.id
     },
     {
-      description: 'Revue contradictoire et audit qualité',
+      description: '04 - Revue contradictoire et visa final',
       status: 'EN_VALIDATION_FINALE',
-      adminFeedback: 'En attente de relecture contradictoire',
+      adminFeedback: 'Dossier prêt pour visa final relecteur',
       assignedToId: relecteurUser.id
     },
     {
-      description: "Rapport d'exécution et clôture mensuelle",
+      description: "05 - Rapport d'exécution et archivage opérationnel",
       status: 'TERMINEE',
       assignedToId: responsableUser.id
     }
@@ -328,6 +411,7 @@ async function main() {
           managerFeedback: t.managerFeedback || null,
           adminFeedback: t.adminFeedback || null,
           missionId: mission.id,
+          dossierTacheId: rootDossier.id,
           createdById: responsableUser.id,
           assignedToId: t.assignedToId
         }
@@ -336,35 +420,35 @@ async function main() {
     }
   }
 
-  // 6. DOCUMENTS DE RECETTE DANS LA GED
-  const testPdfs = [
+  // 6. DOCUMENTS SPECIFIQUES ATTENDUS DANS LA GED (4 PDFS EXACTS)
+  const expectedPdfs = [
     {
-      name: 'KBIS_Alpha_Finance_SAS.pdf',
-      subfolder: 'ADMINISTRATION & FINANCES',
-      title: 'Extrait KBIS - Alpha Finance SAS',
-      text: 'Extrait certifie conforme du registre du commerce et des societes. SIRET: 12345678900012'
-    },
-    {
-      name: 'Convention_Delegation_Gestion.pdf',
-      subfolder: 'ADMINISTRATION & FINANCES',
-      title: 'Convention Cadre d Externalisation',
-      text: 'Contrat de prestations de services back et middle office signe entre Alpha Finance SAS et MENUA CONSULTING.'
-    },
-    {
-      name: 'Rapport_Controle_KYC_Q3.pdf',
+      name: '01_Fiche_mission_TEST.pdf',
       subfolder: 'OPÉRATIONS & RÉALISATIONS',
-      title: 'Rapport d Audit Conformite KYC Q3',
-      text: 'Compte-rendu d execution des diligences de vigilance et analyse du risque de blanchiment.'
+      title: 'FICHE MISSION TEST01 - MENUA CONSULTING',
+      text: 'Cadrage operationnel, calendrier d intervention, livrables attendus et circuits de validation.'
     },
     {
-      name: 'Attestation_Conformite_2026.pdf',
-      subfolder: 'RELATIONS & DÉVELOPPEMENT',
-      title: 'Attestation Annuelle de Conformite',
-      text: 'Attestation de conformite operationnelle delivree dans le cadre du suivi contractuel 2026.'
+      name: '02_Piece_client_TEST.pdf',
+      subfolder: 'ADMINISTRATION & FINANCES',
+      title: 'PIECE CLIENT TEST - JUSTIFICATIF KYC',
+      text: 'Piece d identite et extrait d immatriculation certifies dans le cadre de la procedure LCB-FT.'
+    },
+    {
+      name: '03_Livrable_TEST.pdf',
+      subfolder: 'OPÉRATIONS & RÉALISATIONS',
+      title: 'LIVRABLE TEST01 - RAPPORT D EXECUTION',
+      text: 'Rapport operationnel recapitulatif des operations effectuees et indicateurs de qualite.'
+    },
+    {
+      name: '04_Justificatif_TEST.pdf',
+      subfolder: 'ADMINISTRATION & FINANCES',
+      title: 'JUSTIFICATIF TEST - AUDIT TRAIL',
+      text: 'Releve d execution et attestation de conformite documentaire pour la mission de recette.'
     }
   ];
 
-  for (const docInfo of testPdfs) {
+  for (const docInfo of expectedPdfs) {
     const targetFolder = subFolders[docInfo.subfolder] || rootDossier;
     let existingDoc = await prisma.document.findFirst({
       where: { name: docInfo.name, dossierId: targetFolder.id }
@@ -390,16 +474,80 @@ async function main() {
         }
       });
       console.log(`  + Document GED enregistré : ${docInfo.name} (Dossier: ${docInfo.subfolder})`);
+    } else {
+      console.log(`  = Document GED déjà présent : ${docInfo.name}`);
     }
   }
 
-  // 7. AUDIT TRAIL RECORD
+  // 7. FORMULAIRES DE RECETTE PROPRES (avec statut Verifalia valide)
+  let testFormContact = await prisma.formulaire.findFirst({
+    where: { email: 'contact.recette@martin-associes.fr' }
+  });
+  if (!testFormContact) {
+    await prisma.formulaire.create({
+      data: {
+        formulaireId: crypto.randomUUID(),
+        type: 'CONTACT',
+        statusSubmitter: 'SOCIETE',
+        nomPrenom: 'Sophie Martin',
+        email: 'contact.recette@martin-associes.fr',
+        telephone: '0142334455',
+        priority: 'NORMAL',
+        description: 'Demande de prestations de renfort back-office pour opérations de souscription et KYC.',
+        raisonSocial: 'Cabinet Martin & Associés',
+        objet: 'Demande d accompagnement opérationnel',
+        bodyHtml: '<div>Société : Cabinet Martin & Associés<br/>Contact : Sophie Martin<br/>Email : contact.recette@martin-associes.fr<br/>Besoin : Renfort back-office</div>',
+        status: 'NOUVEAU',
+        verifaliaStatus: 'COMPLETED_VALID',
+        contact: {
+          create: {
+            typeBesoin: 'Support opérationnel back office'
+          }
+        }
+      }
+    });
+    console.log(`+ Formulaire Contact créé avec Verifalia COMPLETED_VALID : contact.recette@martin-associes.fr`);
+  }
+
+  let testFormRecrutement = await prisma.formulaire.findFirst({
+    where: { email: 'alexandre.recette@email.fr' }
+  });
+  if (!testFormRecrutement) {
+    await prisma.formulaire.create({
+      data: {
+        formulaireId: crypto.randomUUID(),
+        type: 'RECRUTEMENT',
+        statusSubmitter: 'PARTICULIER',
+        nomPrenom: 'Alexandre Leroy',
+        email: 'alexandre.recette@email.fr',
+        telephone: '0688990011',
+        priority: 'NORMAL',
+        description: 'Candidature profil opérationnel senior en gestion des opérations et middle-office financier.',
+        objet: 'Candidature Opérationnel Senior',
+        bodyHtml: '<div>Candidat : Alexandre Leroy<br/>Email : alexandre.recette@email.fr<br/>Expérience : 8 ans</div>',
+        status: 'NOUVEAU',
+        verifaliaStatus: 'COMPLETED_VALID',
+        recrutement: {
+          create: {
+            competenceCle: 'Back et middle office, Reporting et Data',
+            anneeExperience: '5 à 10 ans',
+            lieuResidence: 'Paris / Île-de-France',
+            langue: 'Français (bilingue), Anglais (professionnel)',
+            lienLinkedin: 'https://linkedin.com/in/alexandre-leroy-recette'
+          }
+        }
+      }
+    });
+    console.log(`+ Formulaire Recrutement créé avec Verifalia COMPLETED_VALID : alexandre.recette@email.fr`);
+  }
+
+  // 8. AUDIT LOG D'INITIALISATION
   await prisma.auditLog.create({
     data: {
       userId: responsableUser.id,
       action: 'RECETTE_INITIALISATION',
       targetType: 'SYSTEME',
-      details: 'Initialisation complète du jeu de données de recette MENUA CONSULTING (comptes, clients, dossiers, tâches, GED)',
+      details: 'Initialisation complète du jeu de données de recette MENUA CONSULTING (comptes, CLIENT TEST ALPHA/BETA/PARTICULIER, DOSSIER TEST01, MISSION TEST01, 4 PDF GED, formulaires qualifiés)',
       dossierId: rootDossier.id
     }
   });

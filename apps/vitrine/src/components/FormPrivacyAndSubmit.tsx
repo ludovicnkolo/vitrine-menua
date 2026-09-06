@@ -17,12 +17,12 @@ export default function FormPrivacyAndSubmit({ id, isSubmitting, submitText, sub
   
   const textContact = formatBrand(t(
     "Les informations recueillies sont traitées par MENUA CONSULTING afin de répondre à votre demande et d’en assurer le suivi. Les champs signalés par un astérisque sont obligatoires. Pour connaître les destinataires, les durées de conservation et exercer vos droits, consultez notre",
-    "The collected information is processed by MENUA CONSULTING in order to respond to your request and ensure its follow-up. Fields marked with an asterisk are mandatory. To know the recipients, the retention periods and to exercise your rights, consult our"
+    "The collected information is processed by MENUA CONSULTING to process your enquiry and manage ongoing communications. Fields marked with an asterisk are mandatory. For information on recipients, data retention periods and exercising your statutory rights, please review our"
   ));
 
   const textJoin = formatBrand(t(
     "Les informations recueillies via ce formulaire sont traitées par MENUA CONSULTING afin de répondre à votre demande et d'en assurer le suivi. Elles peuvent être conservées jusqu'à 2 ans après le dernier échange. Vous disposez de droits sur vos données personnelles et pouvez les exercer à l'adresse : contact@menuaconsulting.com. Pour en savoir plus, consultez notre",
-    "The information collected via this form is processed by MENUA CONSULTING in order to respond to your request and ensure its follow-up. They can be kept for up to 2 years after the last exchange. You have rights over your personal data and can exercise them at the address: contact@menuaconsulting.com. To learn more, consult our"
+    "The information collected via this form is processed by MENUA CONSULTING to process your application and manage ongoing communications. Data may be retained for up to 2 years following our last contact. You have statutory rights over your personal data and may exercise them at: contact@menuaconsulting.com. To find out more, please review our"
   ));
 
   const text = type === 'contact' ? textContact : textJoin;

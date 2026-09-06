@@ -259,13 +259,13 @@ export default function PourquoiMenuaPage() {
             <p className="text-[#141824]/80 font-medium text-[1.1rem] leading-relaxed mb-6">
               {t(
                 "Chaque mission est cadrée en amont afin de définir le besoin, les responsabilités, les livrables attendus, les délais, les modalités de suivi et les règles de validation.",
-                "Each mission is framed upstream in order to define the need, responsibilities, expected deliverables, deadlines, monitoring methods and validation rules."
+                "Each engagement is defined at the outset to clearly establish requirements, responsibilities, expected deliverables, timelines, monitoring arrangements and approval workflows."
               )}
             </p>
             <p className="text-[#141824]/80 font-medium text-[1.1rem] leading-relaxed">
               {formatBrand(t(
                 "MENUA CONSULTING privilégie une relation professionnelle claire, structurée et transparente, afin de garantir une collaboration efficace et durable avec ses clients.",
-                "MENUA CONSULTING favors a clear, structured and transparent professional relationship, in order to guarantee an effective and lasting collaboration with its clients."
+                "MENUA CONSULTING fosters a clear, structured and transparent professional relationship to ensure an effective and lasting collaboration with its clients."
               ))}
             </p>
             

@@ -11,6 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       languages: {
         'fr-FR': `https://menuaconsulting.com/actualites/${resolvedParams.id}`,
         'en-US': `https://menuaconsulting.com/en/news/${resolvedParams.id}`,
+      'x-default': `https://menuaconsulting.com/actualites/${resolvedParams.id}`,
       },
     },
     openGraph: {

@@ -151,20 +151,12 @@ export default function ActualitesPage() {
               </div>
               
               <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white group-hover:bg-[#141824] transition-colors duration-300">
-                <p className="text-[#6e7891] group-hover:text-white/70 text-[1.1rem] font-light leading-relaxed mb-8 transition-colors duration-300">
+                <p className="text-[#6e7891] group-hover:text-white/70 text-[1.1rem] font-light leading-relaxed transition-colors duration-300">
                   {formatBrand(t(
                     "Cette rubrique accueillera prochainement les analyses et publications de MENUA CONSULTING consacrées aux évolutions opérationnelles, aux méthodes de travail, à la fiabilisation des processus et à la continuité d’activité.",
                     "This section will soon host MENUA CONSULTING's analyses and publications dedicated to operational developments, working methods, process reliability and business continuity."
                   ))}
                 </p>
-                
-                <div className="flex justify-end mt-auto">
-                  <a href="#articles" className="inline-flex items-center gap-2 text-[#141824] group-hover:text-white font-bold tracking-wider uppercase text-[0.7rem] transition-colors duration-300">
-                    {t("DÉCOUVRIR LA RUBRIQUE", "DISCOVER THE SECTION")} 
-                    <span className="w-6 h-[1px] bg-[#141824] group-hover:bg-white group-hover:w-10 transition-all duration-300"></span>
-                    <ChevronRight size={14} className="-ml-2 group-hover:text-white transition-colors duration-300" />
-                  </a>
-                </div>
               </div>
             </div>
           )}

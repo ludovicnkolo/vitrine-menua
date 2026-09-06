@@ -9,24 +9,7 @@ const router = express.Router();
 
 const { authenticateJWT, requireRoles } = require('../middlewares/auth');
 const { transporter } = require('../utils/mailer');
-
-const logAudit = async (userId, action, targetId, targetType, details, dossierId = null) => {
-  try {
-    const validUserId = (userId && userId !== 'MASTER-ADMIN') ? userId : null;
-    await prisma.auditLog.create({
-      data: {
-        userId: validUserId,
-        action,
-        targetId: targetId ? String(targetId) : null,
-        targetType,
-        details: details || '',
-        dossierId
-      }
-    });
-  } catch (err) {
-    console.error('[AUDIT ERROR]', err.message);
-  }
-};
+const { logAudit } = require('../utils/audit');
 
 const imapConfig = {
   imap: {
@@ -169,8 +152,12 @@ router.get('/dashboard-stats', async (req, res) => {
     const twentyFourHoursFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
     // 1. Radar des Urgences et Engagements (SLAs)
-    const urgentsFormulaires = await prisma.formulaire.count({ where: { status: { not: 'TRAITE' }, priority: 'URGENT' } });
-    const urgentsMessages = await prisma.messagePersonnel.count({ where: { status: { not: 'TRAITE' }, priorite: 'URGENT' } });
+    const urgentsFormulaires = await prisma.formulaire.count({ 
+      where: { status: { not: 'TRAITE' }, priority: { in: ['URGENT', 'Urgent'] } } 
+    });
+    const urgentsMessages = await prisma.messagePersonnel.count({ 
+      where: { status: { not: 'TRAITE' }, priorite: { in: ['URGENT', 'Urgent'] } } 
+    });
     const alertesPrioritaires = urgentsFormulaires + urgentsMessages;
 
     const tachesCritiques = await prisma.tache.count({
@@ -188,12 +175,16 @@ router.get('/dashboard-stats', async (req, res) => {
     const delaisCritiques = tachesCritiques + missionsCritiques;
 
     // 2. Santé des Opérations (Détection des goulots)
-    const dossiersBloques = await prisma.dossier.count({ where: { status: 'EN_ATTENTE_CLIENT' } });
-    const tachesBloquees = await prisma.tache.count({ where: { status: 'BLOQUEE' } });
+    const dossiersBloques = await prisma.dossier.count({ 
+      where: { status: { in: ['BLOQUE', 'WAITING_DOCS', 'EN_ATTENTE_CLIENT'] } } 
+    });
+    const tachesBloquees = await prisma.tache.count({ 
+      where: { status: { in: ['BLOQUEE', 'A_CORRIGER', 'WAITING_DOCS'] } } 
+    });
     const operationsBloquees = dossiersBloques + tachesBloquees;
 
     const verificationsEnAttente = await prisma.tache.count({
-      where: { status: 'A_CONTROLER' }
+      where: { status: { in: ['A_CONTROLER', 'EN_CONTROLE', 'EN_VALIDATION_FINALE', 'A_VERIFIER', 'IN_REVIEW'] } }
     });
 
     // 3. Flux d'Acquisition (Lien Magique)
@@ -742,18 +733,6 @@ router.post('/dossiers', async (req, res) => {
   }
 });
 
-router.get('/dashboard-stats', async (req, res) => {
-  try {
-    const dossiersCount = await prisma.dossier.count();
-    const tasksCount = await prisma.mission.count();
-    const clientsCount = await prisma.client.count();
-    const messagesCount = await prisma.messagePersonnel.count();
-    res.json({ dossiers: dossiersCount, tasks: tasksCount, clients: clientsCount, messages: messagesCount });
-  } catch (error) {
-    console.error(error); res.status(500).json({ error: 'Erreur lors de la récupération des statistiques.' });
-  }
-});
-
 // --- AUDIT LOGS ---
 router.get('/audit', requireRoles('Super-administrateur', 'Administrateur technique'), async (req, res) => {
   try {
@@ -801,26 +780,14 @@ router.patch('/dossiers/:id', async (req, res) => {
       data: updateData
     });
 
-    let validUserId = req.user.id;
-    if (validUserId === 'MASTER-ADMIN') {
-      const masterUser = await prisma.utilisateur.findFirst();
-      validUserId = masterUser ? masterUser.id : null;
-    }
-
-    try {
-      await prisma.auditLog.create({ 
-        data: { 
-          userId: validUserId, 
-          action: 'MODIFICATION_DOSSIER', 
-          targetId: dossier.id, 
-          targetType: 'DOSSIER', 
-          details: `Dossier modifié: ${name || dossier.name}`, 
-          dossierId: dossier.id 
-        }
-      });
-    } catch(auditErr) {
-      console.warn("Audit log creation failed:", auditErr);
-    }
+    await logAudit(
+      req.user?.id,
+      'MODIFICATION_DOSSIER',
+      dossier.id,
+      'DOSSIER',
+      `Dossier modifié: ${name || dossier.name}`,
+      dossier.id
+    );
 
     res.json(dossier);
   } catch (error) {
@@ -841,17 +808,14 @@ router.delete('/dossiers/:id', async (req, res) => {
       where: { id: req.params.id }
     });
 
-    try {
-      await prisma.auditLog.create({ 
-        data: { 
-          userId: req.user.id, 
-          action: 'SUPPRESSION_DOSSIER', 
-          targetId: req.params.id, 
-          targetType: 'DOSSIER', 
-          details: `Dossier supprimé: ${dossier.name}` 
-        }
-      });
-    } catch(e) {}
+    await logAudit(
+      req.user?.id,
+      'SUPPRESSION_DOSSIER',
+      req.params.id,
+      'DOSSIER',
+      `Dossier supprimé: ${dossier.name}`,
+      null
+    );
 
     res.json({ success: true, message: 'Dossier supprimé' });
   } catch (error) {
@@ -987,6 +951,15 @@ router.post('/tasks', async (req, res) => {
       }
     }
 
+    await logAudit(
+      req.user?.id,
+      'CREATION_MISSION',
+      task.id,
+      'MISSION',
+      `Mission créée: ${task.description || task.reference}`,
+      task.dossierId
+    );
+
     res.status(201).json(task);
   } catch (error) {
     console.error(error); res.status(500).json({ error: error.message || 'Erreur lors de la création de la tâche.' });
@@ -1020,6 +993,16 @@ router.patch('/tasks/:id', async (req, res) => {
       where: { id: req.params.id },
       data: dataToUpdate
     });
+
+    await logAudit(
+      req.user?.id,
+      'MODIFICATION_MISSION',
+      task.id,
+      'MISSION',
+      `Mission modifiée (Statut: ${task.status})`,
+      task.dossierId
+    );
+
     res.json(task);
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur de mise à jour.' });
@@ -1036,17 +1019,14 @@ router.delete('/tasks/:id', async (req, res) => {
       where: { id: req.params.id }
     });
 
-    try {
-      await prisma.auditLog.create({ 
-        data: { 
-          userId: req.user.id, 
-          action: 'SUPPRESSION_MISSION', 
-          targetId: req.params.id, 
-          targetType: 'MISSION', 
-          details: `Mission supprimée: ${mission.subject || mission.id}` 
-        }
-      });
-    } catch(e) {}
+    await logAudit(
+      req.user?.id,
+      'SUPPRESSION_MISSION',
+      req.params.id,
+      'MISSION',
+      `Mission supprimée: ${mission.subject || mission.description || mission.id}`,
+      mission.dossierId
+    );
 
     res.json({ success: true, message: 'Mission supprimée' });
   } catch (error) {
@@ -1141,6 +1121,15 @@ router.post('/taches', async (req, res) => {
       data: tacheData
     });
 
+    await logAudit(
+      req.user?.id,
+      'CREATION_TACHE',
+      tache.id,
+      'TACHE',
+      `Tâche créée: ${tache.description || tache.reference}`,
+      tache.dossierTacheId || null
+    );
+
     res.json(tache);
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la création de la tâche.' });
@@ -1225,6 +1214,15 @@ router.patch('/taches/:id', async (req, res) => {
        await checkAndUpdateMissionStatus(tache.missionId, prisma);
     }
 
+    await logAudit(
+      req.user?.id,
+      'MODIFICATION_TACHE',
+      tache.id,
+      'TACHE',
+      `Tâche modifiée (Statut: ${tache.status})`,
+      tache.dossierTacheId || null
+    );
+
     res.json(tache);
   } catch (error) {
     console.error(error);
@@ -1242,17 +1240,14 @@ router.delete('/taches/:id', async (req, res) => {
       where: { id: req.params.id }
     });
 
-    try {
-      await prisma.auditLog.create({ 
-        data: { 
-          userId: req.user.id, 
-          action: 'SUPPRESSION_TACHE', 
-          targetId: req.params.id, 
-          targetType: 'TACHE', 
-          details: `Tâche supprimée: ${tache.subject || tache.id}` 
-        }
-      });
-    } catch(e) {}
+    await logAudit(
+      req.user?.id,
+      'SUPPRESSION_TACHE',
+      req.params.id,
+      'TACHE',
+      `Tâche supprimée: ${tache.description || tache.reference || tache.id}`,
+      tache.dossierTacheId || null
+    );
 
     res.json({ success: true, message: 'Tâche supprimée' });
   } catch (error) {
@@ -1279,6 +1274,16 @@ router.post('/documents', async (req, res) => {
       },
       include: { uploadedBy: true }
     });
+
+    await logAudit(
+      req.user?.id,
+      'AJOUT_DOCUMENT',
+      document.id,
+      'DOCUMENT',
+      `Document rattaché: ${document.name}`,
+      document.dossierId || null
+    );
+
     res.status(201).json(document);
   } catch (error) {
     console.error(error);
@@ -1316,6 +1321,15 @@ router.delete('/documents/:id', async (req, res) => {
     } catch (fsErr) {
       console.error("Erreur de suppression S3 du fichier:", fsErr);
     }
+
+    await logAudit(
+      req.user?.id,
+      'SUPPRESSION_DOCUMENT',
+      doc.id,
+      'DOCUMENT',
+      `Document supprimé: ${doc.name}`,
+      doc.dossierId || null
+    );
     
     res.json({ success: true });
   } catch (error) {
@@ -1527,6 +1541,7 @@ router.post('/messages/:id/assign', async (req, res) => {
     let form = await prisma.formulaire.findUnique({ where: { id } });
     if (form) {
       await prisma.formulaire.update({ where: { id }, data: { assignedToId: assignedToId || null } });
+      await logAudit(req.user?.id, 'ASSIGNATION_FORMULAIRE', id, 'FORMULAIRE', `Formulaire assigné à ${assignedToId || 'non-assigné'}`, null, form.id);
       return res.json({ success: true, message: 'Formulaire assigné' });
     }
     
@@ -1534,6 +1549,7 @@ router.post('/messages/:id/assign', async (req, res) => {
     let msg = await prisma.messagePersonnel.findUnique({ where: { id } });
     if (msg) {
       await prisma.messagePersonnel.update({ where: { id }, data: { assignedToId: assignedToId || null } });
+      await logAudit(req.user?.id, 'ASSIGNATION_MESSAGE', id, 'MESSAGE', `Message personnel assigné à ${assignedToId || 'non-assigné'}`);
       return res.json({ success: true, message: 'Message assigné' });
     }
     
@@ -1541,25 +1557,6 @@ router.post('/messages/:id/assign', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur lors de l\'assignation' });
-  }
-});
-
-router.delete('/messages/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const form = await prisma.formulaire.findUnique({ where: { id } });
-    if (form) {
-      await prisma.formulaire.delete({ where: { id } });
-      return res.json({ success: true, message: 'Message supprimé' });
-    }
-    const msg = await prisma.messagePersonnel.findUnique({ where: { id } });
-    if (msg) {
-      await prisma.messagePersonnel.delete({ where: { id } });
-      return res.json({ success: true, message: 'Message supprimé' });
-    }
-    res.status(404).json({ error: 'Message non trouvé' });
-  } catch (error) {
-    console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression' });
   }
 });
 
@@ -1595,11 +1592,13 @@ router.patch('/messages/:id/status', async (req, res) => {
     const form = await prisma.formulaire.findUnique({ where: { id } });
     if (form) {
       await prisma.formulaire.update({ where: { id }, data: dataToUpdate });
+      await logAudit(req.user?.id, 'STATUT_FORMULAIRE', id, 'FORMULAIRE', `Statut formulaire mis à jour (${status || 'modifié'})`, dataToUpdate.dossierId || null, form.id);
       return res.json({ success: true, message: 'Statut mis à jour' });
     }
     const msg = await prisma.messagePersonnel.findUnique({ where: { id } });
     if (msg) {
       await prisma.messagePersonnel.update({ where: { id }, data: dataToUpdate });
+      await logAudit(req.user?.id, 'STATUT_MESSAGE', id, 'MESSAGE', `Statut message mis à jour (${status || 'modifié'})`, dataToUpdate.dossierId || null);
       return res.json({ success: true, message: 'Statut mis à jour' });
     }
     res.status(404).json({ error: 'Message non trouvé' });
@@ -1608,7 +1607,6 @@ router.patch('/messages/:id/status', async (req, res) => {
   }
 });
 
-// Nouvelle route : Soft Delete d'un message
 router.delete('/messages/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -1616,12 +1614,14 @@ router.delete('/messages/:id', async (req, res) => {
     
     if (msg) {
       await prisma.messagePersonnel.update({ where: { id }, data: { isDeleted: true } });
+      await logAudit(req.user?.id, 'SUPPRESSION_MESSAGE', id, 'MESSAGE', `Message personnel marqué comme supprimé (sujet: ${msg.subject || 'sans sujet'})`);
       return res.json({ success: true, message: 'Message supprimé avec succès (Soft Delete).' });
     }
     
     const form = await prisma.formulaire.findUnique({ where: { id } });
     if (form) {
       await prisma.formulaire.delete({ where: { id } });
+      await logAudit(req.user?.id, 'SUPPRESSION_FORMULAIRE', id, 'FORMULAIRE', `Formulaire supprimé (${form.email || form.id})`);
       return res.json({ success: true, message: 'Formulaire supprimé avec succès.' });
     }
 

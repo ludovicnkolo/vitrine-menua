@@ -348,6 +348,7 @@ model Publication {
   excerpt     String?  // Résumé court
   location    String?  // Localisation pour les offres
   contentHtml String?
+  sections    String?  // JSON : [{ subtitle, text, imageKey }]
   coverImage  String?  // URL S3 de l'image
   status      String   @default("BROUILLON") // BROUILLON, PUBLIE
   authorId    String

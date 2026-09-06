@@ -3,10 +3,18 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 
+interface Section {
+  subtitle?: string;
+  text?: string;
+  imageKey?: string;
+  imageUrl?: string;
+}
+
 interface Publication {
   id: string;
   title: string;
   contentHtml: string;
+  sections?: Section[];
   category?: string;
   coverImageUrl?: string;
   publishedAt?: string;
@@ -63,13 +71,15 @@ export default function ClientPageArticle({ id }: { id: string }) {
     );
   }
 
+  const sections: Section[] = Array.isArray(publication.sections) ? publication.sections : [];
+
   return (
     <main className="flex flex-col w-full bg-[#fafafa]">
       <section className="container mx-auto px-4 md:px-6 pt-32 pb-24 flex flex-col items-center">
         
         <div className="w-full max-w-4xl relative">
           
-          {/* Image Box */}
+          {/* Image couverture */}
           <div className="w-full h-[350px] md:h-[450px] bg-[#1a1f2e] relative overflow-hidden">
             {publication.coverImageUrl ? (
                <img src={publication.coverImageUrl} alt={publication.title} className="w-full h-full object-cover opacity-95" />
@@ -80,7 +90,7 @@ export default function ClientPageArticle({ id }: { id: string }) {
             )}
           </div>
           
-          {/* Overlay Box */}
+          {/* Overlay titre */}
           <div className="relative z-10 bg-white p-8 md:p-12 shadow-xl -mt-20 md:-mt-28 mx-4 md:mx-12">
             <div className="flex flex-wrap items-center justify-between mb-4">
                {publication.category && (
@@ -98,13 +108,51 @@ export default function ClientPageArticle({ id }: { id: string }) {
             </h1>
           </div>
 
-          {/* ARTICLE CONTENT */}
+          {/* Contenu principal */}
           <div className="mt-12 px-4 md:px-12">
-            <div 
-              className="prose prose-lg max-w-none text-[#333] font-light leading-relaxed prose-headings:font-bold prose-headings:text-[#141824] prose-headings:uppercase prose-a:text-[#c1a070] prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl prose-img:shadow-md"
-              dangerouslySetInnerHTML={{ __html: publication.contentHtml || '' }}
-            />
-            
+            {publication.contentHtml && (
+              <div 
+                className="prose prose-lg max-w-none text-[#333] font-light leading-relaxed prose-headings:font-bold prose-headings:text-[#141824] prose-headings:uppercase prose-a:text-[#c1a070] prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl prose-img:shadow-md"
+                dangerouslySetInnerHTML={{ __html: publication.contentHtml }}
+              />
+            )}
+
+            {/* ── SECTIONS ── */}
+            {sections.length > 0 && (
+              <div className="mt-12 space-y-16">
+                {sections.map((sec, idx) => (
+                  <div key={idx} className="border-t border-[#e8e1d7] pt-12">
+                    
+                    {/* Sous-titre */}
+                    {sec.subtitle && (
+                      <h2 className="text-[#141824] text-2xl md:text-3xl font-bold uppercase tracking-wide mb-6">
+                        {sec.subtitle}
+                      </h2>
+                    )}
+
+                    {/* Image de section */}
+                    {(sec.imageUrl || sec.imageKey) && (
+                      <div className="w-full mb-8 overflow-hidden rounded-xl shadow-md">
+                        <img
+                          src={sec.imageUrl || sec.imageKey}
+                          alt={sec.subtitle || `Section ${idx + 1}`}
+                          className="w-full max-h-[420px] object-cover"
+                        />
+                      </div>
+                    )}
+
+                    {/* Texte de section */}
+                    {sec.text && (
+                      <div className="text-[#333] font-light leading-relaxed text-lg whitespace-pre-line">
+                        {sec.text}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Retour */}
             <div className="mt-20 pt-8 border-t border-[#e8e1d7]">
               <a href="/actualites" className="inline-flex items-center gap-3 text-[#141824] font-bold uppercase tracking-wider text-sm hover:text-[#c1a070] transition-colors">
                 <ArrowLeft size={18} /> RETOUR AUX ACTUALITÉS

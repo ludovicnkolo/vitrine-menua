@@ -39,7 +39,7 @@ router.get('/', authenticateJWT, async (req, res) => {
 // Créer une nouvelle publication
 router.post('/', authenticateJWT, async (req, res) => {
   try {
-    const { title, type, category, excerpt, location, contentHtml, coverImage, status } = req.body;
+    const { title, type, category, excerpt, location, contentHtml, sections, coverImage, status } = req.body;
     
     if (!title) {
       return res.status(400).json({ success: false, error: 'Le titre est obligatoire.' });
@@ -58,6 +58,7 @@ router.post('/', authenticateJWT, async (req, res) => {
         excerpt,
         location,
         contentHtml: contentHtml || '',
+        sections: sections ? JSON.stringify(sections) : null,
         coverImage,
         status: status || 'BROUILLON',
         authorId: req.user.id,
@@ -76,7 +77,7 @@ router.post('/', authenticateJWT, async (req, res) => {
 router.put('/:id', authenticateJWT, async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, type, category, excerpt, location, contentHtml, coverImage, status } = req.body;
+    const { title, type, category, excerpt, location, contentHtml, sections, coverImage, status } = req.body;
     
     const existing = await prisma.publication.findUnique({ where: { id } });
     if (!existing) {
@@ -90,6 +91,7 @@ router.put('/:id', authenticateJWT, async (req, res) => {
       excerpt,
       location,
       contentHtml,
+      sections: sections ? JSON.stringify(sections) : null,
       coverImage,
       status
     };
@@ -138,9 +140,23 @@ router.get('/public', async (req, res) => {
     const pubsWithUrl = await Promise.all(publications.map(async (pub) => {
       let imageUrl = pub.coverImage;
       if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
-        imageUrl = await getPresignedUrl(imageUrl, 24 * 3600, true); // 24 hours for public view caching
+        imageUrl = await getPresignedUrl(imageUrl, 24 * 3600, true);
       }
-      return { ...pub, coverImageUrl: imageUrl };
+      // Presign section images
+      let parsedSections = [];
+      if (pub.sections) {
+        try {
+          const secs = JSON.parse(pub.sections);
+          parsedSections = await Promise.all(secs.map(async (s) => {
+            let sImageUrl = s.imageKey;
+            if (sImageUrl && !sImageUrl.startsWith('http') && !sImageUrl.startsWith('/')) {
+              sImageUrl = await getPresignedUrl(sImageUrl, 24 * 3600, true);
+            }
+            return { ...s, imageUrl: sImageUrl };
+          }));
+        } catch (_) {}
+      }
+      return { ...pub, coverImageUrl: imageUrl, sections: parsedSections };
     }));
 
     res.json({ success: true, data: pubsWithUrl });
@@ -167,8 +183,23 @@ router.get('/public/:id', async (req, res) => {
     if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
       imageUrl = await getPresignedUrl(imageUrl, 24 * 3600, true);
     }
+
+    // Presign section images
+    let parsedSections = [];
+    if (pub.sections) {
+      try {
+        const secs = JSON.parse(pub.sections);
+        parsedSections = await Promise.all(secs.map(async (s) => {
+          let sImageUrl = s.imageKey;
+          if (sImageUrl && !sImageUrl.startsWith('http') && !sImageUrl.startsWith('/')) {
+            sImageUrl = await getPresignedUrl(sImageUrl, 24 * 3600, true);
+          }
+          return { ...s, imageUrl: sImageUrl };
+        }));
+      } catch (_) {}
+    }
     
-    res.json({ success: true, data: { ...pub, coverImageUrl: imageUrl } });
+    res.json({ success: true, data: { ...pub, coverImageUrl: imageUrl, sections: parsedSections } });
   } catch (error) {
     console.error("Erreur GET publication publique:", error);
     res.status(500).json({ success: false, error: 'Erreur serveur.' });

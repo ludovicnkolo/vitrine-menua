@@ -1337,6 +1337,112 @@ router.delete('/documents/:id', async (req, res) => {
   }
 });
 
+// ─── P2 : CORBEILLE ─────────────────────────────────────────────────────────
+
+// Lister la corbeille (documents soft-deleted)
+router.get('/documents/trash/list', async (req, res) => {
+  try {
+    const docs = await prisma.document.findMany({
+      where: { isDeleted: true },
+      include: {
+        uploadedBy: true,
+        dossier: { select: { id: true, name: true } },
+        mission: { select: { id: true, description: true } }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json(docs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération de la corbeille.' });
+  }
+});
+
+// Restaurer un document depuis la corbeille
+router.post('/documents/:id/restore', async (req, res) => {
+  try {
+    const doc = await prisma.document.findUnique({ where: { id: req.params.id } });
+    if (!doc) return res.status(404).json({ error: 'Document introuvable.' });
+    if (!doc.isDeleted) return res.status(409).json({ error: 'Ce document n\'est pas en corbeille.' });
+
+    const restored = await prisma.document.update({
+      where: { id: req.params.id },
+      data: { isDeleted: false }
+    });
+
+    await logAudit(
+      req.user?.id,
+      'RESTAURATION_DOCUMENT',
+      doc.id,
+      'DOCUMENT',
+      `Document restauré: ${doc.name}`,
+      doc.dossierId || null
+    );
+
+    res.json({ success: true, document: restored });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la restauration du document.' });
+  }
+});
+
+// Purge définitive d'un document (hard delete BDD + suppression OVH)
+router.delete('/documents/:id/purge', async (req, res) => {
+  try {
+    const doc = await prisma.document.findUnique({ where: { id: req.params.id } });
+    if (!doc) return res.status(404).json({ error: 'Document introuvable.' });
+
+    // Suppression physique en BDD
+    await prisma.document.delete({ where: { id: req.params.id } });
+
+    // Suppression dans OVH S3
+    try {
+      const { deleteFromS3 } = require('../services/s3Service');
+      await deleteFromS3(doc.url);
+    } catch (s3Err) {
+      console.error({ event: 'purge_s3_delete_failed', key: doc.url, error: s3Err.message });
+      // Non bloquant — la suppression BDD est déjà faite
+    }
+
+    await logAudit(
+      req.user?.id,
+      'PURGE_DOCUMENT',
+      doc.id,
+      'DOCUMENT',
+      `Document purgé définitivement: ${doc.name} (S3: ${doc.url})`,
+      doc.dossierId || null
+    );
+
+    res.json({ success: true, message: 'Document supprimé définitivement.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la purge du document.' });
+  }
+});
+
+// ─── P3 : REMPLACEMENT DE DOCUMENT ─────────────────────────────────────────
+// Le remplacement est géré côté /api/files/replace/:id (voir files.js)
+// Route de mise à jour du nom uniquement (sans nouveau fichier)
+router.patch('/documents/:id', async (req, res) => {
+  try {
+    const { name } = req.body;
+    const doc = await prisma.document.findUnique({ where: { id: req.params.id } });
+    if (!doc) return res.status(404).json({ error: 'Document introuvable.' });
+    if (doc.isDeleted) return res.status(409).json({ error: 'Document supprimé, veuillez le restaurer d\'abord.' });
+
+    const updated = await prisma.document.update({
+      where: { id: req.params.id },
+      data: { ...(name && { name }) }
+    });
+
+    await logAudit(req.user?.id, 'RENOMMAGE_DOCUMENT', doc.id, 'DOCUMENT', `Document renommé: ${doc.name} → ${name}`, doc.dossierId || null);
+    res.json(updated);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la mise à jour du document.' });
+  }
+});
+
 // --- MESSAGES (FORMULAIRES) ---
 router.post('/messages/interne', async (req, res) => {
   try {

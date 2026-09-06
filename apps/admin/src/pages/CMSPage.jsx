@@ -321,6 +321,33 @@ const CMSPage = () => {
 
 
 
+              <div style={{marginBottom: '1rem'}}>
+                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-main)'}}>
+                  Extrait <span style={{fontWeight: 400, color: 'var(--text-muted)', fontSize: '0.8rem'}}>(texte affiché sur la carte en page d'accueil)</span>
+                </label>
+                <textarea 
+                  value={excerpt} 
+                  onChange={e => setExcerpt(e.target.value)} 
+                  rows={3}
+                  placeholder="Résumé court affiché sur la carte de la publication..."
+                  style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '0.875rem', outline: 'none', resize: 'vertical'}}
+                />
+                <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '0.25rem'}}>
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      if (contentHtml) {
+                        const plain = contentHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+                        setExcerpt(plain.substring(0, 200) + (plain.length > 200 ? '...' : ''));
+                      }
+                    }}
+                    style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', fontSize: '0.78rem', padding: 0, textDecoration: 'underline'}}
+                  >
+                    ↺ Générer depuis le contenu
+                  </button>
+                </div>
+              </div>
+
               <div style={{marginBottom: '1.5rem'}}>
                 <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-main)'}}>Contenu (Texte / HTML)</label>
                 <textarea 

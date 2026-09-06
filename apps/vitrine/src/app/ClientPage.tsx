@@ -373,7 +373,7 @@ export default function Home() {
                     </p>
                     <h3 className="text-white font-semibold text-[1.1rem] leading-snug mb-3 line-clamp-2">{pub.title}</h3>
                     <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4 line-clamp-3">
-                      {pub.excerpt || "Découvrez notre nouvelle publication et l'analyse détaillée de nos experts métier sur ce sujet."}
+                      {pub.excerpt || (pub.contentHtml ? pub.contentHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().substring(0, 200) : "Découvrez notre nouvelle publication et l'analyse détaillée de nos experts métier sur ce sujet.")}
                     </p>
                     <span className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
                       {t("Lire l'article", "Read article")} <ArrowRight size={14} />

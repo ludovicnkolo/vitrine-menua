@@ -1291,13 +1291,13 @@ router.post('/documents', async (req, res) => {
   }
 });
 
-// Lister les documents d'une entité
+// Lister les documents d'une entité (exclut les documents supprimés)
 router.get('/documents/:type/:id', async (req, res) => {
   try {
     const { type, id } = req.params;
-    const where = type === 'dossier' ? { dossierId: id } : { missionId: id };
+    const entityFilter = type === 'dossier' ? { dossierId: id } : { missionId: id };
     const docs = await prisma.document.findMany({
-      where,
+      where: { ...entityFilter, isDeleted: false },
       include: { uploadedBy: true },
       orderBy: { createdAt: 'desc' }
     });
@@ -1312,26 +1312,25 @@ router.delete('/documents/:id', async (req, res) => {
   try {
     const doc = await prisma.document.findUnique({ where: { id: req.params.id } });
     if (!doc) return res.status(404).json({ error: 'Document introuvable.' });
-    
-    await prisma.document.delete({ where: { id: req.params.id } });
-    
-    try {
-      const { deleteFromS3 } = require('../services/s3Service');
-      await deleteFromS3(doc.url);
-    } catch (fsErr) {
-      console.error("Erreur de suppression S3 du fichier:", fsErr);
-    }
+    if (doc.isDeleted) return res.status(409).json({ error: 'Ce document est déjà supprimé.' });
+
+    // Soft delete : marque comme supprimé en BDD (récupérable)
+    // La suppression physique dans OVH est gérée par le cron de nettoyage (P4)
+    await prisma.document.update({
+      where: { id: req.params.id },
+      data: { isDeleted: true }
+    });
 
     await logAudit(
       req.user?.id,
       'SUPPRESSION_DOCUMENT',
       doc.id,
       'DOCUMENT',
-      `Document supprimé: ${doc.name}`,
+      `Document supprimé (soft): ${doc.name}`,
       doc.dossierId || null
     );
     
-    res.json({ success: true });
+    res.json({ success: true, message: 'Document supprimé. Il pourra être purgé ultérieurement.' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur lors de la suppression du document.' });

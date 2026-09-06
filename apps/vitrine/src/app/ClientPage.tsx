@@ -389,8 +389,8 @@ export default function Home() {
                 <div className="flex flex-col flex-grow p-6">
                   <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4">
                     {formatBrand(t(
-                      "Cette rubrique accueillera prochainement les analyses et publications de MENUA CONSULTING consacrées aux évolutions opérationnelles, aux méthodes de travail, à la fiabilisation des processus et à la continuité d’activité.",
-                      "This section will soon host MENUA CONSULTING's analyses and publications dedicated to operational developments, working methods, process reliability and business continuity."
+                      "Cette rubrique est dédiée au partage d’actualités et d’analyses opérationnelles centrées sur l’évolution des fonctions back et middle office, la conformité réglementaire et la gestion de patrimoine.",
+                      "This section is dedicated to sharing news and operational insights focused on back and middle office developments, regulatory compliance, and wealth management."
                     ))}
                   </p>
                   <span className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">

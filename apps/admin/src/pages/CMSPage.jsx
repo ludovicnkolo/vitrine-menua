@@ -16,6 +16,7 @@ const CMSPage = () => {
   const [coverImage, setCoverImage] = useState('');
   const [status, setStatus] = useState('BROUILLON');
   const [category, setCategory] = useState('');
+  const [excerpt, setExcerpt] = useState('');
   const [sections, setSections] = useState([]);
   const [uploadingImg, setUploadingImg] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
@@ -55,6 +56,7 @@ const CMSPage = () => {
       setCoverImage(pub.coverImage || '');
       setStatus(pub.status || 'BROUILLON');
       setCategory(pub.category || '');
+      setExcerpt(pub.excerpt || '');
       setPreviewImage(pub.coverImageUrl || pub.coverImage || '');
       // Parse sections from JSON string if stored as string
       let parsedSections = [];
@@ -79,6 +81,7 @@ const CMSPage = () => {
       setPreviewImage('');
       setStatus('BROUILLON');
       setCategory('FINANCE ET COMPTABILITÉ');
+      setExcerpt('');
       setSections([]);
     }
     setShowModal(true);
@@ -89,17 +92,17 @@ const CMSPage = () => {
     setEditingPub(null);
   };
 
-  const handleSave = async (e) => {
-    e.preventDefault();
+  const handleSaveAction = async (targetStatus, showPreview = false) => {
     if (!title) { showToast('Le titre est requis', 'error'); return; }
 
     const data = {
       title,
       type: 'ACTUALITE',
       category,
+      excerpt,
       contentHtml,
       coverImage,
-      status,
+      status: targetStatus,
       sections: sections.map(s => ({ subtitle: s.subtitle, text: s.text, imageKey: s.imageKey }))
     };
 
@@ -111,8 +114,18 @@ const CMSPage = () => {
         res = await apiFetch('/api/cms', 'POST', data);
       }
       if (res.ok) {
-        showToast(`Publication ${editingPub ? 'modifiée' : 'créée'} avec succès.`);
-        closeModal();
+        const savedData = await res.json();
+        const savedPub = savedData.data;
+        if (showPreview) {
+          // Si on est en dev (localhost:3001), le site vitrine est sur 3000
+          const vitrineUrl = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://menuaconsulting.com';
+          window.open(`${vitrineUrl}/actualites/${savedPub.id}?preview=true`, '_blank');
+          setEditingPub(savedPub); // Met à jour l'état local pour continuer l'édition
+          showToast('Brouillon enregistré. Ouverture de l\'aperçu...');
+        } else {
+          showToast(`Publication ${targetStatus === 'PUBLIE' ? 'publiée' : 'sauvegardée en brouillon'} avec succès.`);
+          closeModal();
+        }
         fetchPublications();
       } else {
         showToast('Erreur lors de la sauvegarde.', 'error');
@@ -149,8 +162,8 @@ const CMSPage = () => {
       });
       const data = await res.json();
       if (data.success) { setCoverImage(data.url); showToast('Image uploadée avec succès'); }
-      else showToast("Erreur lors de l'upload.", 'error');
-    } catch (err) { console.error(err); showToast("Erreur réseau.", 'error'); }
+      else { showToast("Erreur lors de l'upload.", 'error'); setPreviewImage(coverImage ? (coverImage.startsWith('http') ? coverImage : '') : ''); }
+    } catch (err) { console.error(err); showToast("Erreur réseau.", 'error'); setPreviewImage(coverImage ? (coverImage.startsWith('http') ? coverImage : '') : ''); }
     finally { setUploadingImg(false); }
   };
 
@@ -194,10 +207,12 @@ const CMSPage = () => {
         showToast('Image de section uploadée');
       } else {
         showToast("Erreur upload image de section.", 'error');
+        removeSectionImage(idx);
       }
     } catch (err) {
       console.error(err);
       showToast("Erreur réseau.", 'error');
+      removeSectionImage(idx);
     } finally {
       updateSection(idx, 'uploading', false);
     }
@@ -294,32 +309,23 @@ const CMSPage = () => {
               <h2 style={{marginTop: 0, marginBottom: '1.5rem', color: 'var(--text-main)', fontSize: '1.25rem'}}>
                 {editingPub ? 'Modifier la publication' : 'Créer une publication'}
               </h2>
-              <form onSubmit={handleSave}>
+              <form onSubmit={e => { e.preventDefault(); handleSaveAction(status || 'BROUILLON'); }}>
                 {/* Titre */}
                 <div style={{marginBottom: '1rem'}}>
                   <label style={labelStyle}>Titre *</label>
                   <input type="text" value={title} onChange={e => setTitle(e.target.value)} required style={inputStyle} />
                 </div>
 
-                {/* Image + Statut */}
-                <div style={{display: 'flex', gap: '1rem', marginBottom: '1rem'}}>
-                  <div style={{flex: 1}}>
-                    <label style={labelStyle}>Image de couverture</label>
-                    <div style={{display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
-                      <input type="file" accept="image/*" onChange={handleImageUpload} id="cms-image-upload" style={{display: 'none'}} />
-                      <label htmlFor="cms-image-upload" className="btn btn-outline" style={{cursor: 'pointer', flexShrink: 0}}>
-                        {uploadingImg ? 'Upload en cours...' : 'Parcourir...'}
-                      </label>
-                    </div>
-                    <span style={{fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.5rem'}}>Formats acceptés : JPG, PNG, WEBP.</span>
+                {/* Image */}
+                <div style={{marginBottom: '1rem'}}>
+                  <label style={labelStyle}>Image de couverture</label>
+                  <div style={{display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
+                    <input type="file" accept="image/*" onChange={handleImageUpload} id="cms-image-upload" style={{display: 'none'}} />
+                    <label htmlFor="cms-image-upload" className="btn btn-outline" style={{cursor: 'pointer', flexShrink: 0}}>
+                      {uploadingImg ? 'Upload en cours...' : 'Parcourir...'}
+                    </label>
                   </div>
-                  <div style={{flex: 1}}>
-                    <label style={labelStyle}>Statut</label>
-                    <select value={status} onChange={e => setStatus(e.target.value)} style={inputStyle}>
-                      <option value="BROUILLON">Brouillon</option>
-                      <option value="PUBLIE">Publié</option>
-                    </select>
-                  </div>
+                  <span style={{fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.5rem'}}>Formats acceptés : JPG, PNG, WEBP.</span>
                 </div>
 
                 {/* Catégorie */}
@@ -334,6 +340,18 @@ const CMSPage = () => {
                     <option value="GESTION DE PATRIMOINE">GESTION DE PATRIMOINE</option>
                     <option value="ORGANISATION ET EXTERNALISATION">ORGANISATION ET EXTERNALISATION</option>
                   </select>
+                </div>
+
+                {/* Extrait / Chapô */}
+                <div style={{marginBottom: '1.5rem'}}>
+                  <label style={labelStyle}>Extrait (Résumé de l'article pour la carte)</label>
+                  <textarea
+                    value={excerpt}
+                    onChange={e => setExcerpt(e.target.value)}
+                    rows={3}
+                    placeholder="Phrase d'accroche ou résumé court..."
+                    style={{...inputStyle, resize: 'vertical', fontFamily: 'inherit'}}
+                  />
                 </div>
 
                 {/* Contenu principal */}
@@ -429,12 +447,25 @@ const CMSPage = () => {
                   ))}
                 </div>
 
-                {/* Boutons */}
-                <div style={{display: 'flex', gap: '1rem', justifyContent: 'flex-end', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
-                  <button type="button" onClick={closeModal} className="btn btn-outline" style={{fontWeight: 600}}>Annuler</button>
-                  <button type="submit" className="btn btn-primary" style={{fontWeight: 600}}>
-                    {editingPub ? 'Mettre à jour' : 'Enregistrer'}
+                {/* Boutons d'action clairs */}
+                <div style={{display: 'flex', gap: '1rem', justifyContent: 'flex-end', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', flexWrap: 'wrap'}}>
+                  <button type="button" onClick={closeModal} className="btn btn-outline" style={{fontWeight: 600}}>Fermer</button>
+                  <div style={{flex: 1}}></div>
+                  <button type="button" onClick={() => handleSaveAction('BROUILLON', false)} className="btn btn-outline" style={{fontWeight: 600}}>
+                    Enregistrer comme brouillon
                   </button>
+                  <button type="button" onClick={() => handleSaveAction('BROUILLON', true)} className="btn btn-primary" style={{fontWeight: 600, background: '#3b82f6', borderColor: '#3b82f6'}}>
+                    <Eye size={16} style={{display: 'inline', marginRight: '4px', verticalAlign: 'text-bottom'}}/> Aperçu
+                  </button>
+                  {status === 'PUBLIE' ? (
+                    <button type="button" onClick={() => { if(window.confirm('Voulez-vous vraiment dépublier cet article ?')) handleSaveAction('BROUILLON', false); }} className="btn btn-primary" style={{fontWeight: 600, background: '#f59e0b', borderColor: '#f59e0b'}}>
+                      Dépublier (Brouillon)
+                    </button>
+                  ) : (
+                    <button type="button" onClick={() => { if(window.confirm('Voulez-vous vraiment publier cette actualité sur le site ?')) handleSaveAction('PUBLIE', false); }} className="btn btn-primary" style={{fontWeight: 600, background: '#10B981', borderColor: '#10B981'}}>
+                      Publier sur le site
+                    </button>
+                  )}
                 </div>
               </form>
             </div>

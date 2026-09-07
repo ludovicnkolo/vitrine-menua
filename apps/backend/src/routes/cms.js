@@ -175,7 +175,9 @@ router.get('/public/:id', async (req, res) => {
       include: { author: { select: { name: true } } }
     });
 
-    if (!pub || pub.status !== 'PUBLIE') {
+    const isPreview = req.query.preview === 'true';
+
+    if (!pub || (pub.status !== 'PUBLIE' && !isPreview)) {
       return res.status(404).json({ success: false, error: 'Publication introuvable.' });
     }
 

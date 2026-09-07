@@ -29,7 +29,11 @@ export default function ClientPageArticle({ id }: { id: string }) {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const res = await fetch(`/api/cms/public/${id}`);
+        const params = new URLSearchParams(window.location.search);
+        const preview = params.get('preview');
+        const queryStr = preview === 'true' ? '?preview=true' : '';
+        
+        const res = await fetch(`/api/cms/public/${id}${queryStr}`);
         const data = await res.json();
         if (data.success) {
           setPublication(data.data);

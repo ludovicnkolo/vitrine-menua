@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.919Z",
-      "updatedAt": "2026-09-06T13:57:25.062Z"
+      "updatedAt": "2026-09-07T10:56:40.438Z"
     },
     {
       "id": "9b78a989-65aa-4d4d-903f-63d05b49f39b",
@@ -16,7 +16,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.927Z",
-      "updatedAt": "2026-09-06T13:57:25.082Z"
+      "updatedAt": "2026-09-07T10:56:40.452Z"
     },
     {
       "id": "b059904b-0f2d-488c-8211-f6d7b1ff9326",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-08-11T17:49:06.972Z",
-      "updatedAt": "2026-09-06T13:57:25.091Z"
+      "updatedAt": "2026-09-07T10:56:40.460Z"
     },
     {
       "id": "0ebd584a-a058-448f-a92d-028755745096",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-08-11T17:49:06.978Z",
-      "updatedAt": "2026-09-06T13:57:25.102Z"
+      "updatedAt": "2026-09-07T10:56:40.466Z"
     },
     {
       "id": "9cda2a10-5a4d-4e1c-8992-5a44a911dd83",
@@ -43,7 +43,7 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.988Z",
-      "updatedAt": "2026-09-06T13:57:25.111Z"
+      "updatedAt": "2026-09-07T10:56:40.481Z"
     },
     {
       "id": "352391ed-d4ed-448a-847a-9eefc7b601f4",
@@ -59,7 +59,7 @@
     {
       "id": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$hWmQ1SP/PRJtacdfbKUL.uBADktbWqCg3uLlCnrhTTFYu0bKAjhEW",
+      "password": "$2a$10$TV88AMZKWetJ.ZUEijF3gOJow7A/M6.J79rY58/l.tg4VbQk84yKm",
       "name": "Rosette Fouelefack",
       "roleId": "6b7502fd-dbf0-4cdb-9cfa-749dfb987171",
       "telephone": "+33659207511",
@@ -71,9 +71,9 @@
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
-      "lastLogin": "2026-09-06T13:23:20.174Z",
+      "lastLogin": "2026-09-07T10:45:51.859Z",
       "createdAt": "2026-08-11T17:49:07.301Z",
-      "updatedAt": "2026-09-06T13:57:25.294Z"
+      "updatedAt": "2026-09-07T10:56:40.630Z"
     },
     {
       "id": "9ed4992c-a314-41d3-9eb2-543549312c75",
@@ -504,6 +504,24 @@
       "parentDossierId": null,
       "createdAt": "2026-09-06T11:44:12.897Z",
       "updatedAt": "2026-09-06T11:44:12.897Z"
+    },
+    {
+      "origin": "INTERNE",
+      "createdById": null,
+      "id": "16e62e0c-0475-4d87-99bb-738171f1a352",
+      "reference": null,
+      "name": "Dossier de Test GED",
+      "description": "Dossier temporaire pour les tests de la GED",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "traitantId": null,
+      "parentDossierId": null,
+      "createdAt": "2026-09-06T14:43:27.984Z",
+      "updatedAt": "2026-09-06T14:43:27.984Z"
     }
   ],
   "missions": [
@@ -791,6 +809,56 @@
       "dossierId": "fec14f23-c78f-4677-96ac-9c959bd472fc",
       "missionId": null,
       "createdAt": "2026-09-06T11:44:14.922Z",
+      "isDeleted": false
+    },
+    {
+      "id": "9c4d2f2b-9473-48d7-8891-547b5a5ede92",
+      "name": "Document de Test GED",
+      "url": "ged/1788705808002-test-test-doc.txt",
+      "uploadedById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "dossierId": "16e62e0c-0475-4d87-99bb-738171f1a352",
+      "missionId": null,
+      "createdAt": "2026-09-06T14:43:29.868Z",
+      "isDeleted": false
+    },
+    {
+      "id": "23cb872b-1d1c-4e67-9ccd-d5adf9d0429a",
+      "name": "Document de Test GED",
+      "url": "ged/1788705841326-test-test-doc.txt",
+      "uploadedById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "dossierId": "16e62e0c-0475-4d87-99bb-738171f1a352",
+      "missionId": null,
+      "createdAt": "2026-09-06T14:44:02.600Z",
+      "isDeleted": false
+    },
+    {
+      "id": "77baf395-6f3c-474e-8862-430acb089523",
+      "name": "Document de Test GED",
+      "url": "ged/1788705896496-test-test-doc.txt",
+      "uploadedById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "dossierId": "16e62e0c-0475-4d87-99bb-738171f1a352",
+      "missionId": null,
+      "createdAt": "2026-09-06T14:44:57.554Z",
+      "isDeleted": false
+    },
+    {
+      "id": "eb1b4720-069e-4cae-a329-5204f2862f46",
+      "name": "Document de Test GED",
+      "url": "ged/1788705925238-test-test-doc.txt",
+      "uploadedById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "dossierId": "16e62e0c-0475-4d87-99bb-738171f1a352",
+      "missionId": null,
+      "createdAt": "2026-09-06T14:45:26.184Z",
+      "isDeleted": false
+    },
+    {
+      "id": "06ad7813-2e0d-4aef-bab9-f9eb273b5cbc",
+      "name": "Document de Test GED",
+      "url": "ged/1788706054566-test-test-doc.txt",
+      "uploadedById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "dossierId": "16e62e0c-0475-4d87-99bb-738171f1a352",
+      "missionId": null,
+      "createdAt": "2026-09-06T14:47:35.607Z",
       "isDeleted": false
     }
   ],

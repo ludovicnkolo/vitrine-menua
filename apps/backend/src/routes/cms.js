@@ -26,7 +26,21 @@ router.get('/', authenticateJWT, async (req, res) => {
       if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
         imageUrl = await getPresignedUrl(imageUrl, 3600, true); // 1 hour for admin view
       }
-      return { ...pub, coverImageUrl: imageUrl };
+      // Presign section images
+      let parsedSections = [];
+      if (pub.sections) {
+        try {
+          const secs = JSON.parse(pub.sections);
+          parsedSections = await Promise.all(secs.map(async (s) => {
+            let sImageUrl = s.imageKey;
+            if (sImageUrl && !sImageUrl.startsWith('http') && !sImageUrl.startsWith('/')) {
+              sImageUrl = await getPresignedUrl(sImageUrl, 3600, true);
+            }
+            return { ...s, imageUrl: sImageUrl };
+          }));
+        } catch (_) {}
+      }
+      return { ...pub, coverImageUrl: imageUrl, sections: parsedSections };
     }));
 
     res.json({ success: true, data: pubsWithUrl });

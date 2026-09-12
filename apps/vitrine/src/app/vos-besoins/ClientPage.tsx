@@ -9,7 +9,7 @@ import BulletList from "@/components/BulletList";
 /** Section claire : image à gauche ou droite + card de liste */
 const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items, reversed = false, bgClass = "bg-[#f5f7fa]", cardBg = "bg-white" }: any) => (
   <section id={id} className={`relative w-full ${bgClass} pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20`}>
-    <div className={`laplace-container max-w-6xl mx-auto flex flex-col${reversed ? "-reverse" : ""} lg:flex-row${reversed ? "-reverse" : ""} items-center gap-12 lg:gap-16`}>
+    <div className={`laplace-container landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto flex flex-col${reversed ? "-reverse" : ""} lg:flex-row${reversed ? "-reverse" : ""} items-center gap-12 lg:gap-16`}>
       <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
         <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
       </div>
@@ -17,7 +17,7 @@ const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items,
         <div className="w-16 h-[3px] bg-[#141824] mb-5" />
         <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{title}</h2>
         {/* Mobile Image */}
-        <div className={`block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden`}>
+        <div className={`block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[250px] my-6 landscape:mt-6 landscape:mb-12 rounded-sm shadow-md overflow-hidden`}>
           <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
         </div>
         <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">{intro}</p>
@@ -33,7 +33,7 @@ const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items,
 const DarkNeedSection = ({ id, bgClass, topDecoClass, titleDecoClass, title, intro, disclaimer, listLabel, listItems, borderClass }: any) => (
   <section id={id} className={`relative w-full ${bgClass} pt-28 md:pt-[14.25rem] pb-16 md:pb-24 scroll-mt-20 overflow-hidden`}>
     {topDecoClass && <div className={topDecoClass} />}
-    <div className="laplace-container relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+    <div className="laplace-container landscape:px-16 landscape:lg:px-12 relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
       <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-16 lg:-translate-y-36">
         <div className={`w-16 h-[3px] mb-5 ${titleDecoClass}`} />
         <h2 className={`${bgClass.includes("bg-[#141824]") ? "text-white" : "text-[#141824]"} text-[1.3rem] md:text-[1.5rem] font-bold uppercase mb-8 leading-tight`}>
@@ -70,7 +70,7 @@ export default function VosBesoinsPage() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── 3.1 HERO ── */}
-      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-screen flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="/img/besoins-hero.webp" 
@@ -80,13 +80,13 @@ export default function VosBesoinsPage() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
-          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+        <div className="laplace-container landscape:px-12 relative z-10 pt-56 md:pt-72 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-40 landscape:pb-16 lg:pb-24 landscape:lg:pb-24 mt-16 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12 landscape:ml-0 landscape:lg:-ml-12">
+            <h1 className="text-white text-[1.25rem] md:text-[2.5rem] landscape:text-[1.5rem] landscape:lg:text-[2.5rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               {t("Vos besoins", "Your needs")}
             </h1>
-            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
-            <p className="text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
+            <p className="text-[1.1rem] lg:text-[1.3rem] landscape:text-[1rem] landscape:lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {t(
                 "Un appui opérationnel structuré pour renforcer vos équipes, sécuriser vos traitements et maintenir la continuité de vos activités.",
                 "Structured operational support to strengthen your teams, safeguard your processes and maintain continuity."
@@ -113,13 +113,13 @@ export default function VosBesoinsPage() {
             </p>
           </div>
 
-          <div className="px-6 py-10 lg:px-16 lg:pt-12 lg:pb-14 lg:pr-[38%] relative z-30 lg:z-10 lg:mt-0">
-            <div className="absolute left-0 right-0 bottom-0 top-[220px] lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
+          <div className="px-6 landscape:px-32 landscape:lg:px-16 py-10 lg:px-16 lg:pt-12 lg:pb-14 lg:pr-[38%] landscape:lg:pr-[38%] relative z-30 lg:z-10 lg:mt-0">
+            <div className="absolute left-0 right-0 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("Notre Intervention", "Our intervention")}
             </h2>
-            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[250px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
               <img src="/img/besoins-intro.webp" alt="Vos besoins" className="w-full h-full object-cover object-center" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
             </div>
             <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">

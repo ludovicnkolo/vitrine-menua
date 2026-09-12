@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('node:path');
 const fs = require('node:fs');
+const { Readable } = require('node:stream');
 const crypto = require('node:crypto');
 const { authenticateJWT } = require('../middlewares/auth');
 const prisma = require('../prisma');
@@ -158,7 +159,7 @@ router.post('/upload-and-attach', authenticateJWT, upload.single('file'), async 
 router.get('/download/:bucket/:filename', authenticateJWT, async (req, res) => {
   const { bucket, filename } = req.params;
   
-  if (bucket.includes('..') || filename.includes('..') || bucket.includes('/') || filename.includes('/')) {
+  if (bucket.includes('..') || filename.includes('..') || bucket.includes('/')) {
     return res.status(403).json({ success: false, error: 'Accès interdit.' });
   }
 
@@ -177,7 +178,7 @@ router.get('/download/:bucket/:filename', authenticateJWT, async (req, res) => {
 router.get('/view/:bucket/:filename', authenticateJWT, async (req, res) => {
   const { bucket, filename } = req.params;
   
-  if (bucket.includes('..') || filename.includes('..') || bucket.includes('/') || filename.includes('/')) {
+  if (bucket.includes('..') || filename.includes('..') || bucket.includes('/')) {
     return res.status(403).json({ success: false, error: 'Accès interdit.' });
   }
 
@@ -185,6 +186,24 @@ router.get('/view/:bucket/:filename', authenticateJWT, async (req, res) => {
 
   try {
     const url = await getPresignedUrl(s3Key, 3600, true); // true = inline display
+    
+    if (req.query.stream === 'true') {
+      // Proxy le fichier depuis S3 via le backend pour éviter le blocage CORS
+      // S3 OVH ne retourne pas Access-Control-Allow-Origin, on passe par le backend
+      const fetchResponse = await fetch(url);
+      if (!fetchResponse.ok) {
+        console.error(`[S3] ${fetchResponse.status} pour la clé : ${s3Key}`);
+        return res.status(fetchResponse.status).json({ success: false, error: `Fichier introuvable (S3 ${fetchResponse.status}).` });
+      }
+      const contentType = fetchResponse.headers.get('content-type') || 'application/octet-stream';
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Cache-Control', 'private, max-age=3600');
+      const arrayBuffer = await fetchResponse.arrayBuffer();
+      return res.end(Buffer.from(arrayBuffer));
+    }
+    
+    // Sans stream=true : redirection simple vers S3 (pour téléchargement direct)
     res.redirect(url);
   } catch (error) {
     console.error("Erreur génération URL S3 inline:", error);

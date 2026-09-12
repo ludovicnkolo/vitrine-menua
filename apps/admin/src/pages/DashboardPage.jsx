@@ -8,14 +8,16 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  // Les dates confirmées (ne changent que quand on clique "Appliquer")
+  const [appliedDates, setAppliedDates] = useState({ start: '', end: '' });
 
-  const fetchStats = async () => {
+  const fetchStats = async (start, end) => {
     setLoading(true);
     try {
       const token = sessionStorage.getItem('adminToken');
       const params = new URLSearchParams();
-      if (startDate) params.append('startDate', startDate);
-      if (endDate) params.append('endDate', endDate);
+      if (start) params.append('startDate', start);
+      if (end) params.append('endDate', end);
       
       const res = await fetch(getSafeApiUrl(`/api/crm/dashboard-stats?${params.toString()}`), {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -31,9 +33,22 @@ const DashboardPage = () => {
     }
   };
 
+  const handleApplyFilter = () => {
+    if (startDate && endDate) {
+      if (new Date(endDate) <= new Date(startDate)) {
+        alert("La date de fin doit être postérieure à la date de début.");
+        return;
+      }
+    }
+    setAppliedDates({ start: startDate, end: endDate });
+    fetchStats(startDate, endDate);
+  };
+
+
+  // Chargement initial uniquement (sans les dates)
   useEffect(() => {
-    fetchStats();
-  }, [startDate, endDate]);
+    fetchStats('', '');
+  }, []);
 
   const renderKPI = (title, value, subtitle, icon, colorHex) => (
     <div className="card" style={{ padding: '1rem', borderTop: `4px solid ${colorHex}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
@@ -59,26 +74,47 @@ const DashboardPage = () => {
           <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)'}}>Tour de Contrôle</h1>
           <p style={{color: 'var(--text-muted)'}}>Vue d'ensemble stratégique et opérationnelle</p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: '#FFF', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: '#FFF', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Du</span>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>Du</span>
             <input 
               type="date" 
               value={startDate} 
               onChange={e => setStartDate(e.target.value)}
-              style={{ border: 'none', background: 'transparent', outline: 'none', fontSize: '0.875rem', color: 'var(--text-main)' }}
+              style={{ border: '1px solid var(--border)', background: '#F8FAFC', borderRadius: '6px', padding: '0.35rem 0.5rem', outline: 'none', fontSize: '0.875rem', color: 'var(--text-main)' }}
             />
           </div>
-          <span style={{ color: 'var(--border)' }}>|</span>
+          <span style={{ color: 'var(--border)' }}>→</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Au</span>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>Au</span>
             <input 
               type="date" 
               value={endDate} 
               onChange={e => setEndDate(e.target.value)}
-              style={{ border: 'none', background: 'transparent', outline: 'none', fontSize: '0.875rem', color: 'var(--text-main)' }}
+              style={{ border: '1px solid var(--border)', background: '#F8FAFC', borderRadius: '6px', padding: '0.35rem 0.5rem', outline: 'none', fontSize: '0.875rem', color: 'var(--text-main)' }}
             />
           </div>
+          <button
+            onClick={handleApplyFilter}
+            disabled={loading}
+            style={{
+              padding: '0.35rem 1rem',
+              background: 'var(--primary)',
+              color: '#FFF',
+              border: 'none',
+              borderRadius: '6px',
+              fontWeight: 600,
+              fontSize: '0.875rem',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              opacity: loading ? 0.7 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              transition: 'opacity 0.2s'
+            }}
+          >
+            {loading ? '⏳' : '🔍'} Appliquer
+          </button>
         </div>
       </div>
 

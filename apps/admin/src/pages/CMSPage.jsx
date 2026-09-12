@@ -1,25 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash, Eye, Globe, ArrowRight, Image as ImageIcon, ChevronUp, ChevronDown, X } from 'lucide-react';
 import { getSafeApiUrl, apiFetch, formatDate } from '../utils/helpers';
+import ConfirmModal from '../components/ConfirmModal';
+import TabsNavigation from '../components/TabsNavigation';
 
-const EMPTY_SECTION = () => ({ subtitle: '', text: '', imageKey: '', imagePreview: '', uploading: false });
+const EMPTY_SECTION = () => ({ subtitle: '', subtitle_en: '', text: '', text_en: '', imageKey: '', imagePreview: '', uploading: false });
+
+const CATEGORY_TRANSLATIONS = {
+  "FINANCE ET COMPTABILITÉ": "FINANCE AND ACCOUNTING",
+  "BACK ET MIDDLE OFFICE": "BACK AND MIDDLE OFFICE",
+  "DATA ET REPORTING": "DATA AND REPORTING",
+  "RISQUES, CONFORMITÉ ET KYC": "RISK, COMPLIANCE AND KYC",
+  "GESTION DE PATRIMOINE": "WEALTH MANAGEMENT",
+  "ORGANISATION ET EXTERNALISATION": "ORGANIZATION AND OUTSOURCING",
+};
 
 const CMSPage = () => {
   const [publications, setPublications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingPub, setEditingPub] = useState(null);
+  const [tab, setTab] = useState('publication');
 
   // Form states
+  const [formLang, setFormLang] = useState('FR');
   const [title, setTitle] = useState('');
+  const [title_en, setTitleEn] = useState('');
   const [contentHtml, setContentHtml] = useState('');
+  const [contentHtml_en, setContentHtmlEn] = useState('');
   const [coverImage, setCoverImage] = useState('');
   const [status, setStatus] = useState('BROUILLON');
   const [category, setCategory] = useState('');
-  const [excerpt, setExcerpt] = useState('');
+  const [category_en, setCategoryEn] = useState('');
   const [sections, setSections] = useState([]);
   const [uploadingImg, setUploadingImg] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: null, type: 'warning' });
 
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
   const showToast = (message, type = 'success') => {
@@ -49,39 +65,50 @@ const CMSPage = () => {
   }, []);
 
   const openModal = (pub = null) => {
+    setFormLang('FR');
     if (pub) {
       setEditingPub(pub);
       setTitle(pub.title);
+      setTitleEn(pub.title_en || '');
       setContentHtml(pub.contentHtml || '');
+      setContentHtmlEn(pub.contentHtml_en || '');
       setCoverImage(pub.coverImage || '');
       setStatus(pub.status || 'BROUILLON');
       setCategory(pub.category || '');
-      setExcerpt(pub.excerpt || '');
+      setCategoryEn(pub.category_en || (pub.category ? CATEGORY_TRANSLATIONS[pub.category] : ''));
       setPreviewImage(pub.coverImageUrl || pub.coverImage || '');
       // Parse sections from JSON string if stored as string
       let parsedSections = [];
       if (pub.sections) {
         try {
           const raw = typeof pub.sections === 'string' ? JSON.parse(pub.sections) : pub.sections;
-          parsedSections = Array.isArray(raw) ? raw.map(s => ({
-            subtitle: s.subtitle || '',
-            text: s.text || '',
-            imageKey: s.imageKey || '',
-            imagePreview: s.imageUrl || s.imageKey || '',
-            uploading: false
-          })) : [];
+          const rawEn = typeof pub.sections_en === 'string' ? JSON.parse(pub.sections_en) : (pub.sections_en || []);
+          parsedSections = Array.isArray(raw) ? raw.map((s, idx) => {
+            const enSec = Array.isArray(rawEn) ? rawEn[idx] : null;
+            return {
+              subtitle: s.subtitle || '',
+              subtitle_en: enSec?.subtitle || '',
+              text: s.text || '',
+              text_en: enSec?.text || '',
+              imageKey: s.imageKey || '',
+              imagePreview: s.imageUrl || s.imageKey || '',
+              uploading: false
+            };
+          }) : [];
         } catch (_) {}
       }
       setSections(parsedSections);
     } else {
       setEditingPub(null);
       setTitle('');
+      setTitleEn('');
       setContentHtml('');
+      setContentHtmlEn('');
       setCoverImage('');
       setPreviewImage('');
       setStatus('BROUILLON');
       setCategory('FINANCE ET COMPTABILITÉ');
-      setExcerpt('');
+      setCategoryEn('FINANCE AND ACCOUNTING');
       setSections([]);
     }
     setShowModal(true);
@@ -93,17 +120,20 @@ const CMSPage = () => {
   };
 
   const handleSaveAction = async (targetStatus, showPreview = false) => {
-    if (!title) { showToast('Le titre est requis', 'error'); return; }
+    if (!title) { showToast('Le titre (FR) est requis', 'error'); return; }
 
     const data = {
       title,
+      title_en,
       type: 'ACTUALITE',
       category,
-      excerpt,
+      category_en,
       contentHtml,
+      contentHtml_en,
       coverImage,
       status: targetStatus,
-      sections: sections.map(s => ({ subtitle: s.subtitle, text: s.text, imageKey: s.imageKey }))
+      sections: sections.map(s => ({ subtitle: s.subtitle, text: s.text, imageKey: s.imageKey })),
+      sections_en: sections.map(s => ({ subtitle: s.subtitle_en, text: s.text_en, imageKey: s.imageKey }))
     };
 
     try {
@@ -137,12 +167,20 @@ const CMSPage = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Êtes-vous sûr de vouloir supprimer cette publication ?")) return;
-    try {
-      const res = await apiFetch(`/api/cms/${id}`, 'DELETE');
-      if (res.ok) { showToast('Publication supprimée.'); fetchPublications(); }
-      else showToast('Erreur lors de la suppression.', 'error');
-    } catch (err) { console.error(err); }
+    setConfirmModal({
+      isOpen: true,
+      title: 'Supprimer la publication',
+      message: 'Êtes-vous sûr de vouloir supprimer cette publication ? Cette action est irréversible.',
+      type: 'danger',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        try {
+          const res = await apiFetch(`/api/cms/${id}`, 'DELETE');
+          if (res.ok) { showToast('Publication supprimée.'); fetchPublications(); }
+          else showToast('Erreur lors de la suppression.', 'error');
+        } catch (err) { console.error(err); }
+      }
+    });
   };
 
   // Upload cover image
@@ -242,15 +280,28 @@ const CMSPage = () => {
         </div>
       )}
 
-      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem'}}>
-        <h1 style={{margin: 0, fontSize: '1.5rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.75rem'}}>
-          <Globe size={28} style={{color: 'var(--primary)'}} />
-          Module CMS (Site Web)
-        </h1>
-        <button onClick={() => openModal()} className="btn btn-primary" style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-          <Plus size={18} /> Nouvelle Actualité
-        </button>
+      <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
+        <TabsNavigation 
+          tabs={[
+            { id: 'publication', label: 'Publication' },
+            { id: 'parametrage', label: 'Paramétrage du site' }
+          ]} 
+          activeTab={tab} 
+          onTabChange={setTab} 
+        />
       </div>
+
+      {tab === 'publication' && (
+        <>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem'}}>
+            <h1 style={{margin: 0, fontSize: '1.5rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.75rem'}}>
+              <Globe size={28} style={{color: 'var(--primary)'}} />
+              Espace site web
+            </h1>
+            <button onClick={() => openModal()} className="btn btn-primary" style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+              <Plus size={18} /> Nouvelle Actualité
+            </button>
+          </div>
 
       <div className="table-wrapper" style={{marginTop: '1.5rem'}}>
         <table>
@@ -299,6 +350,17 @@ const CMSPage = () => {
           </tbody>
         </table>
       </div>
+      </>
+      )}
+
+      {tab === 'parametrage' && (
+        <div>
+          <h2 style={{fontSize: '1.25rem', color: 'var(--text-main)', marginBottom: '1rem'}}>Paramètres du site</h2>
+          <div style={{padding: '2rem', background: '#F8FAFC', borderRadius: '8px', border: '1px dashed var(--border)', textAlign: 'center', color: 'var(--text-muted)'}}>
+            Section de paramétrage du site en cours de construction...
+          </div>
+        </div>
+      )}
 
       {showModal && (
         <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', zIndex: 1000, overflowY: 'auto', padding: '2rem 1rem'}}>
@@ -311,9 +373,15 @@ const CMSPage = () => {
               </h2>
               <form onSubmit={e => { e.preventDefault(); handleSaveAction(status || 'BROUILLON'); }}>
                 {/* Titre */}
-                <div style={{marginBottom: '1rem'}}>
-                  <label style={labelStyle}>Titre *</label>
-                  <input type="text" value={title} onChange={e => setTitle(e.target.value)} required style={inputStyle} />
+                <div style={{marginBottom: '1rem', display: 'flex', gap: '1rem'}}>
+                  <div style={{flex: 1}}>
+                    <label style={labelStyle}>Titre (FR) *</label>
+                    <input type="text" value={title} onChange={e => setTitle(e.target.value)} required style={inputStyle} />
+                  </div>
+                  <div style={{flex: 1}}>
+                    <label style={labelStyle}>Titre (EN)</label>
+                    <input type="text" value={title_en} onChange={e => setTitleEn(e.target.value)} placeholder="Titre en anglais..." style={inputStyle} />
+                  </div>
                 </div>
 
                 {/* Image */}
@@ -329,40 +397,39 @@ const CMSPage = () => {
                 </div>
 
                 {/* Catégorie */}
-                <div style={{marginBottom: '1rem'}}>
-                  <label style={labelStyle}>Catégorie *</label>
-                  <select value={category} onChange={e => setCategory(e.target.value)} required style={inputStyle}>
-                    <option value="">Sélectionner</option>
-                    <option value="FINANCE ET COMPTABILITÉ">FINANCE ET COMPTABILITÉ</option>
-                    <option value="BACK ET MIDDLE OFFICE">BACK ET MIDDLE OFFICE</option>
-                    <option value="DATA ET REPORTING">DATA ET REPORTING</option>
-                    <option value="RISQUES, CONFORMITÉ ET KYC">RISQUES, CONFORMITÉ ET KYC</option>
-                    <option value="GESTION DE PATRIMOINE">GESTION DE PATRIMOINE</option>
-                    <option value="ORGANISATION ET EXTERNALISATION">ORGANISATION ET EXTERNALISATION</option>
-                  </select>
-                </div>
-
-                {/* Extrait / Chapô */}
-                <div style={{marginBottom: '1.5rem'}}>
-                  <label style={labelStyle}>Extrait (Résumé de l'article pour la carte)</label>
-                  <textarea
-                    value={excerpt}
-                    onChange={e => setExcerpt(e.target.value)}
-                    rows={3}
-                    placeholder="Phrase d'accroche ou résumé court..."
-                    style={{...inputStyle, resize: 'vertical', fontFamily: 'inherit'}}
-                  />
+                <div style={{marginBottom: '1rem', display: 'flex', gap: '1rem'}}>
+                  <div style={{flex: 1}}>
+                    <label style={labelStyle}>Catégorie (FR) *</label>
+                    <select value={category} onChange={e => {
+                      const val = e.target.value;
+                      setCategory(val);
+                      setCategoryEn(CATEGORY_TRANSLATIONS[val] || '');
+                    }} required style={inputStyle}>
+                      <option value="">Sélectionner</option>
+                      <option value="FINANCE ET COMPTABILITÉ">FINANCE ET COMPTABILITÉ</option>
+                      <option value="BACK ET MIDDLE OFFICE">BACK ET MIDDLE OFFICE</option>
+                      <option value="DATA ET REPORTING">DATA ET REPORTING</option>
+                      <option value="RISQUES, CONFORMITÉ ET KYC">RISQUES, CONFORMITÉ ET KYC</option>
+                      <option value="GESTION DE PATRIMOINE">GESTION DE PATRIMOINE</option>
+                      <option value="ORGANISATION ET EXTERNALISATION">ORGANISATION ET EXTERNALISATION</option>
+                    </select>
+                  </div>
+                  <div style={{flex: 1}}>
+                    <label style={labelStyle}>Catégorie (EN) - <span style={{fontSize:'0.75rem', fontWeight:'normal', color:'var(--text-muted)'}}>Généré automatiquement</span></label>
+                    <input type="text" value={category_en} readOnly disabled style={{...inputStyle, backgroundColor: '#f8fafc', color: '#64748b', cursor: 'not-allowed', borderColor: '#e2e8f0'}} />
+                  </div>
                 </div>
 
                 {/* Contenu principal */}
-                <div style={{marginBottom: '1.5rem'}}>
-                  <label style={labelStyle}>Contenu principal (Texte / HTML)</label>
-                  <textarea
-                    value={contentHtml}
-                    onChange={e => setContentHtml(e.target.value)}
-                    rows={8}
-                    style={{...inputStyle, resize: 'vertical', fontFamily: 'monospace'}}
-                  />
+                <div style={{marginBottom: '1.5rem', display: 'flex', gap: '1rem', flexDirection: 'column'}}>
+                  <div>
+                    <label style={labelStyle}>Contenu principal (FR) - Texte / HTML</label>
+                    <textarea value={contentHtml} onChange={e => setContentHtml(e.target.value)} rows={6} style={{...inputStyle, resize: 'vertical', fontFamily: 'monospace'}} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Contenu principal (EN) - Texte / HTML</label>
+                    <textarea value={contentHtml_en} onChange={e => setContentHtmlEn(e.target.value)} rows={6} placeholder="Contenu en anglais..." style={{...inputStyle, resize: 'vertical', fontFamily: 'monospace'}} />
+                  </div>
                   <small style={{color: 'var(--text-muted)', display: 'block', marginTop: '0.25rem'}}>Vous pouvez utiliser des balises HTML pour enrichir le texte.</small>
                 </div>
 
@@ -405,20 +472,27 @@ const CMSPage = () => {
                       </div>
 
                       {/* Sous-titre */}
-                      <div style={{marginBottom: '0.75rem'}}>
-                        <label style={{...labelStyle, fontSize: '0.8rem'}}>Sous-titre</label>
-                        <input type="text" value={sec.subtitle} placeholder="Sous-titre de la section..."
-                          onChange={e => updateSection(idx, 'subtitle', e.target.value)}
-                          style={{...inputStyle, fontSize: '0.875rem'}} />
+                      <div style={{marginBottom: '0.75rem', display: 'flex', gap: '1rem'}}>
+                        <div style={{flex: 1}}>
+                          <label style={{...labelStyle, fontSize: '0.8rem'}}>Sous-titre (FR)</label>
+                          <input type="text" value={sec.subtitle} placeholder="Sous-titre de la section..." onChange={e => updateSection(idx, 'subtitle', e.target.value)} style={{...inputStyle, fontSize: '0.875rem'}} />
+                        </div>
+                        <div style={{flex: 1}}>
+                          <label style={{...labelStyle, fontSize: '0.8rem'}}>Sous-titre (EN)</label>
+                          <input type="text" value={sec.subtitle_en} placeholder="Sous-titre de la section (EN)..." onChange={e => updateSection(idx, 'subtitle_en', e.target.value)} style={{...inputStyle, fontSize: '0.875rem'}} />
+                        </div>
                       </div>
 
                       {/* Texte */}
-                      <div style={{marginBottom: '0.75rem'}}>
-                        <label style={{...labelStyle, fontSize: '0.8rem'}}>Texte</label>
-                        <textarea value={sec.text} placeholder="Contenu de la section..."
-                          onChange={e => updateSection(idx, 'text', e.target.value)}
-                          rows={4}
-                          style={{...inputStyle, resize: 'vertical', fontSize: '0.875rem'}} />
+                      <div style={{marginBottom: '0.75rem', display: 'flex', gap: '1rem', flexDirection: 'column'}}>
+                        <div>
+                          <label style={{...labelStyle, fontSize: '0.8rem'}}>Texte (FR)</label>
+                          <textarea value={sec.text} placeholder="Contenu de la section..." onChange={e => updateSection(idx, 'text', e.target.value)} rows={3} style={{...inputStyle, resize: 'vertical', fontSize: '0.875rem'}} />
+                        </div>
+                        <div>
+                          <label style={{...labelStyle, fontSize: '0.8rem'}}>Texte (EN)</label>
+                          <textarea value={sec.text_en} placeholder="Contenu de la section (EN)..." onChange={e => updateSection(idx, 'text_en', e.target.value)} rows={3} style={{...inputStyle, resize: 'vertical', fontSize: '0.875rem'}} />
+                        </div>
                       </div>
 
                       {/* Image optionnelle */}
@@ -458,11 +532,19 @@ const CMSPage = () => {
                     <Eye size={16} style={{display: 'inline', marginRight: '4px', verticalAlign: 'text-bottom'}}/> Aperçu
                   </button>
                   {status === 'PUBLIE' ? (
-                    <button type="button" onClick={() => { if(window.confirm('Voulez-vous vraiment dépublier cet article ?')) handleSaveAction('BROUILLON', false); }} className="btn btn-primary" style={{fontWeight: 600, background: '#f59e0b', borderColor: '#f59e0b'}}>
+                    <button type="button" onClick={() => setConfirmModal({
+                      isOpen: true, title: 'Dépublier l\'article', type: 'warning',
+                      message: 'Voulez-vous vraiment dépublier cet article ? Il repassera en brouillon.',
+                      onConfirm: () => { setConfirmModal(prev => ({ ...prev, isOpen: false })); handleSaveAction('BROUILLON', false); }
+                    })} className="btn btn-primary" style={{fontWeight: 600, background: '#f59e0b', borderColor: '#f59e0b'}}>
                       Dépublier (Brouillon)
                     </button>
                   ) : (
-                    <button type="button" onClick={() => { if(window.confirm('Voulez-vous vraiment publier cette actualité sur le site ?')) handleSaveAction('PUBLIE', false); }} className="btn btn-primary" style={{fontWeight: 600, background: '#10B981', borderColor: '#10B981'}}>
+                    <button type="button" onClick={() => setConfirmModal({
+                      isOpen: true, title: 'Publier sur le site', type: 'info',
+                      message: 'Voulez-vous vraiment publier cette actualité ? Elle sera visible immédiatement sur le site public.',
+                      onConfirm: () => { setConfirmModal(prev => ({ ...prev, isOpen: false })); handleSaveAction('PUBLIE', false); }
+                    })} className="btn btn-primary" style={{fontWeight: 600, background: '#10B981', borderColor: '#10B981'}}>
                       Publier sur le site
                     </button>
                   )}
@@ -524,6 +606,17 @@ const CMSPage = () => {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        type={confirmModal.type || 'warning'}
+        confirmText="Confirmer"
+        cancelText="Annuler"
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 };

@@ -53,13 +53,13 @@ export default function NousContacter() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
-          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+        <div className="laplace-container landscape:px-12 relative z-10 pt-56 md:pt-72 landscape:pt-24 landscape:lg:pt-72 pb-20 landscape:pb-10 landscape:lg:pb-20 mt-16 landscape:mt-0 landscape:lg:mt-16">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12 landscape:ml-0 landscape:lg:-ml-12">
+            <h1 className="text-white text-[1.25rem] md:text-[2.5rem] landscape:text-[1.5rem] landscape:lg:text-[2.5rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               {t("Nous contacter", "Contact us")}
             </h1>
-            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
-            <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
+            <p className="text-[1.1rem] lg:text-[1.3rem] landscape:text-[1rem] landscape:lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "Présentez-nous votre besoin opérationnel. Nous reviendrons vers vous afin de préciser le périmètre, les priorités et le dispositif envisageable.",
                 "Present us with your operational need. We will get back to you to specify the scope, priorities and possible setup."
@@ -70,8 +70,8 @@ export default function NousContacter() {
       </section>
 
       {/* ── CONTENT SECTION (Laplace Styling) ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[5.75rem] pb-16 md:pb-24">
-        <div className="laplace-container">
+      <section className="relative w-full bg-white pt-12 md:pt-[5.75rem] landscape:pt-8 landscape:lg:pt-[5.75rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-24">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12">
           {/* BREADCRUMB */}
           <div className="absolute -top-8 md:-top-[4rem] left-6 md:left-12 lg:left-0 z-50">
             <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">

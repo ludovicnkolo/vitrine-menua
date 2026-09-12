@@ -49,8 +49,19 @@ export default function Link({ href, children, ...props }: LinkProps) {
     }
 
     if (lang === "EN") {
+      // 1. Exact match in map
       if (enRouteMap[pathToTranslate]) {
         pathToTranslate = enRouteMap[pathToTranslate];
+      } else {
+        // 2. Dynamic sub-path: find if path STARTS WITH a known FR route
+        // e.g. /actualites/article-id → /news/article-id
+        const matchedFrBase = Object.keys(enRouteMap).find(
+          (frBase) => frBase !== '/' && pathToTranslate.startsWith(frBase + '/')
+        );
+        if (matchedFrBase) {
+          const enBase = enRouteMap[matchedFrBase];
+          pathToTranslate = enBase + pathToTranslate.slice(matchedFrBase.length);
+        }
       }
       const translatedHref = pathToTranslate + suffix;
       finalHref = translatedHref === "/" ? "/en" : `/en${translatedHref}`;

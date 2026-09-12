@@ -7,7 +7,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const router = express.Router();
 
-const { authenticateJWT, requireRoles } = require('../middlewares/auth');
+const { authenticateJWT, requireRoles, isSuperAdmin, isAdmin, isManager } = require('../middlewares/auth');
 const { transporter } = require('../utils/mailer');
 const { logAudit } = require('../utils/audit');
 
@@ -151,70 +151,13 @@ router.get('/dashboard-stats', async (req, res) => {
     const now = new Date();
     const twentyFourHoursFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
-    // 1. Radar des Urgences et Engagements (SLAs)
-    const urgentsFormulaires = await prisma.formulaire.count({ 
-      where: { status: { not: 'TRAITE' }, priority: { in: ['URGENT', 'Urgent'] } } 
-    });
-    const urgentsMessages = await prisma.messagePersonnel.count({ 
-      where: { status: { not: 'TRAITE' }, priorite: { in: ['URGENT', 'Urgent'] } } 
-    });
-    const alertesPrioritaires = urgentsFormulaires + urgentsMessages;
-
-    const tachesCritiques = await prisma.tache.count({
-      where: {
-        status: { notIn: ['TERMINEE', 'ARCHIVE'] },
-        echeance: { lte: twentyFourHoursFromNow }
-      }
-    });
-    const missionsCritiques = await prisma.mission.count({
-      where: {
-        status: { notIn: ['TERMINEE', 'ANNULEE'] },
-        echeance: { lte: twentyFourHoursFromNow }
-      }
-    });
-    const delaisCritiques = tachesCritiques + missionsCritiques;
-
-    // 2. Santé des Opérations (Détection des goulots)
-    const dossiersBloques = await prisma.dossier.count({ 
-      where: { status: { in: ['BLOQUE', 'WAITING_DOCS', 'EN_ATTENTE_CLIENT'] } } 
-    });
-    const tachesBloquees = await prisma.tache.count({ 
-      where: { status: { in: ['BLOQUEE', 'A_CORRIGER', 'WAITING_DOCS'] } } 
-    });
-    const operationsBloquees = dossiersBloques + tachesBloquees;
-
-    const verificationsEnAttente = await prisma.tache.count({
-      where: { status: { in: ['A_CONTROLER', 'EN_CONTROLE', 'EN_VALIDATION_FINALE', 'A_VERIFIER', 'IN_REVIEW'] } }
-    });
-
-    // 3. Flux d'Acquisition (Lien Magique)
-    // On simule par les documents récents créés par des clients
-    const nouveauxDepots = await prisma.document.count({
-      where: { createdAt: { gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } }
-    });
-
-    // 4. Météo de Charge (Gestion RH & Capacité)
-    const activeUsers = await prisma.utilisateur.findMany({
-      where: { isBlocked: false, role: { name: { not: 'Client' } } },
-      select: { id: true, name: true }
-    });
-    const userTaches = await prisma.tache.findMany({
-      where: { assignedToId: { in: activeUsers.map(u => u.id) }, status: 'EN_COURS' },
-      select: { assignedToId: true }
-    });
-    
-    const meteoCharge = activeUsers.map(u => {
-      const count = userTaches.filter(t => t.assignedToId === u.id).length;
-      let etat = 'VERT';
-      if (count > 5) etat = 'ROUGE';
-      else if (count >= 3) etat = 'ORANGE';
-      return { name: u.name, tachesEnCours: count, etat };
-    });
-
-    // 5. Entonnoir de Production (Période)
     const startDateQuery = req.query.startDate;
     const endDateQuery = req.query.endDate;
-    
+
+    if (startDateQuery && endDateQuery && new Date(startDateQuery) >= new Date(endDateQuery)) {
+        return res.status(400).json({ error: "La date de début doit être strictement antérieure à la date de fin." });
+    }
+
     let startPeriod, endPeriod;
     
     if (startDateQuery) {
@@ -233,6 +176,81 @@ router.get('/dashboard-stats', async (req, res) => {
       endPeriod = new Date(now);
     }
 
+    const isFiltered = !!startDateQuery || !!endDateQuery;
+
+    // 1. Radar des Urgences et Engagements (SLAs)
+    const whereUrgentsForm = { status: { not: 'TRAITE' }, priority: { in: ['URGENT', 'Urgent'] } };
+    if (isFiltered) whereUrgentsForm.createdAt = { gte: startPeriod, lte: endPeriod };
+    const urgentsFormulaires = await prisma.formulaire.count({ where: whereUrgentsForm });
+
+    const whereUrgentsMsg = { status: { not: 'TRAITE' }, priorite: { in: ['URGENT', 'Urgent'] } };
+    if (isFiltered) whereUrgentsMsg.createdAt = { gte: startPeriod, lte: endPeriod };
+    const urgentsMessages = await prisma.messagePersonnel.count({ where: whereUrgentsMsg });
+    const alertesPrioritaires = urgentsFormulaires + urgentsMessages;
+
+    const whereTachesCrit = { status: { notIn: ['TERMINEE', 'ARCHIVE'] } };
+    if (isFiltered) {
+        whereTachesCrit.echeance = { gte: startPeriod, lte: endPeriod };
+    } else {
+        whereTachesCrit.echeance = { lte: twentyFourHoursFromNow };
+    }
+    const tachesCritiques = await prisma.tache.count({ where: whereTachesCrit });
+
+    const whereMissionsCrit = { status: { notIn: ['TERMINEE', 'ANNULEE'] } };
+    if (isFiltered) {
+        whereMissionsCrit.echeance = { gte: startPeriod, lte: endPeriod };
+    } else {
+        whereMissionsCrit.echeance = { lte: twentyFourHoursFromNow };
+    }
+    const missionsCritiques = await prisma.mission.count({ where: whereMissionsCrit });
+    const delaisCritiques = tachesCritiques + missionsCritiques;
+
+    // 2. Santé des Opérations (Détection des goulots)
+    const isSuperAdm = req.user.role === 'Super-administrateur';
+    const whereTachesAttente = { status: 'EN_ATTENTE' };
+    if (isFiltered) whereTachesAttente.createdAt = { gte: startPeriod, lte: endPeriod };
+    const tachesEnAttente = await prisma.tache.count({ where: whereTachesAttente });
+
+    const whereTachesBloquees = { status: 'BLOQUE' };
+    if (isFiltered) whereTachesBloquees.createdAt = { gte: startPeriod, lte: endPeriod };
+    const tachesBloqueesAdmin = isSuperAdm ? await prisma.tache.count({ where: whereTachesBloquees }) : 0;
+    const operationsBloquees = tachesEnAttente + tachesBloqueesAdmin;
+
+    // "Vérifications" = tâches en attente de validation
+    const whereVerif = { status: { in: ['A_VERIFIER', 'FINALISER'] } };
+    if (isFiltered) whereVerif.createdAt = { gte: startPeriod, lte: endPeriod };
+    const verificationsEnAttente = await prisma.tache.count({ where: whereVerif });
+
+    // 3. Flux d'Acquisition (Lien Magique)
+    const whereDepots = {};
+    if (isFiltered) {
+        whereDepots.createdAt = { gte: startPeriod, lte: endPeriod };
+    } else {
+        whereDepots.createdAt = { gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) };
+    }
+    const nouveauxDepots = await prisma.document.count({ where: whereDepots });
+
+    // 4. Météo de Charge (Gestion RH & Capacité)
+    // Exclure les rôles non-opérationnels (Super-Admin, Admin Tech) et Clients
+    const rolesExclus = ['Client', 'Super-administrateur', 'Administrateur technique'];
+    const activeUsers = await prisma.utilisateur.findMany({
+      where: { isBlocked: false, role: { name: { notIn: rolesExclus } } },
+      select: { id: true, name: true, role: { select: { name: true } } }
+    });
+    const userTaches = await prisma.tache.findMany({
+      where: { assignedToId: { in: activeUsers.map(u => u.id) }, status: 'EN_COURS' },
+      select: { assignedToId: true }
+    });
+    
+    const meteoCharge = activeUsers.map(u => {
+      const count = userTaches.filter(t => t.assignedToId === u.id).length;
+      let etat = 'VERT';
+      if (count > 5) etat = 'ROUGE';
+      else if (count >= 3) etat = 'ORANGE';
+      return { name: u.name, role: u.role?.name, tachesEnCours: count, etat };
+    });
+
+    // 5. Entonnoir de Production (Période)
     const messagesTraitesPeriode = await prisma.formulaire.count({ where: { status: 'TRAITE', updatedAt: { gte: startPeriod, lte: endPeriod } } }) +
                                    await prisma.messagePersonnel.count({ where: { status: 'TRAITE', createdAt: { gte: startPeriod, lte: endPeriod } } });
     
@@ -492,31 +510,50 @@ router.get('/dossiers', async (req, res) => {
     const { page, limit, skip } = getPaginationParams(req.query);
     const { search, status, role, origin } = req.query;
 
-
+    const userRole = req.user.role;
+    const userId = req.user.id;
+    const canSeeBlocked = isSuperAdmin(userRole);
+    const isAdminUser = isAdmin(userRole);
 
     let inMemoryFilter = false;
     const where = {};
-    if (req.query.rootOnly === 'true') {
-      where.parentDossierId = null;
-      if (req.user.role === 'Responsable opérationnel') {
-        // Only sees dossiers where they are explicitly the traitant, or have a mission
-        where.OR = [
-          { traitantId: req.user.id },
-          { missions: { some: { assignedToId: req.user.id } } }
-        ];
-      } else if (req.user.role === 'Relecteur' || req.user.role === 'Collaborateur') {
-        // Only sees dossiers where they have a task assigned
-        where.OR = [
-          { missions: { some: { taches: { some: { assignedToId: req.user.id } } } } }
-        ];
+
+    // ── Filtrage par rôle : qui voit quels dossiers ──────────────────────────
+    if (userRole === 'Responsable opérationnel') {
+      // Voit uniquement les dossiers où il est Traitant OU a une mission assignée
+      where.AND = [
+        {
+          OR: [
+            { traitantId: userId },
+            { missions: { some: { assignedToId: userId } } }
+          ]
+        }
+      ];
+    } else if (userRole === 'Relecteur' || userRole === 'Collaborateur') {
+      // Voit uniquement les dossiers où il a des tâches actives
+      where.missions = {
+        some: { taches: { some: { assignedToId: userId } } }
+      };
+    }
+    // Super-Admin, Admin Tech, Administrateur : pas de filtre sur le propriétaire
+
+    // ── Filtre BLOQUÉ ─────────────────────────────────────────────────────────
+    if (status && status !== 'all') {
+      if (status === 'BLOQUE' && !canSeeBlocked) {
+        // Retourne vide si non autorisé
+        where.id = 'unauthorized_so_return_empty';
+      } else {
+        where.status = status;
       }
-    } else {
-      if (req.user.role === 'Responsable opérationnel' || req.user.role === 'Relecteur' || req.user.role === 'Collaborateur') {
-        inMemoryFilter = true;
+    } else if (!canSeeBlocked) {
+      // Par défaut, exclure BLOQUÉ pour tous sauf Super-Admin/Admin Tech
+      if (where.AND) {
+        where.AND.push({ status: { not: 'BLOQUE' } });
+      } else {
+        where.status = { not: 'BLOQUE' };
       }
     }
 
-    if (status && status !== 'all') where.status = status;
     if (origin && origin !== 'all') where.origin = origin;
     if (role && role !== 'all') {
       where.createdBy = { role: { name: role } };
@@ -524,12 +561,17 @@ router.get('/dossiers', async (req, res) => {
     
     if (search) {
       const s = search.toLowerCase();
-      where.OR = [
+      const searchOr = [
         { id: { contains: s} },
         { reference: { contains: s} },
         { name: { contains: s} },
         { createdBy: { name: { contains: s} } }
       ];
+      if (where.AND) {
+        where.AND.push({ OR: searchOr });
+      } else {
+        where.OR = searchOr;
+      }
     }
     
     let total = await prisma.dossier.count({ where });
@@ -537,7 +579,7 @@ router.get('/dossiers', async (req, res) => {
       where,
       skip: inMemoryFilter ? undefined : skip,
       take: inMemoryFilter ? undefined : limit,
-      orderBy: { reference: 'desc' },
+      orderBy: { createdAt: 'desc' },
       include: { 
         traitant: { include: { role: true } },
         missions: {
@@ -557,7 +599,7 @@ router.get('/dossiers', async (req, res) => {
         },
         client: true, 
         createdBy: { include: { role: true } },
-        documents: { include: { uploadedBy: true }, orderBy: { createdAt: 'desc' } },
+        documents: { where: { isDeleted: false }, include: { uploadedBy: true }, orderBy: { createdAt: 'desc' } },
         subDossiers: { include: { subDossiers: true } },
         parentDossier: true
       }
@@ -661,8 +703,10 @@ router.get('/dossiers', async (req, res) => {
 // Force nodemon restart to load new Prisma Client
 router.post('/dossiers', async (req, res) => {
   try {
-    if (req.user.role !== 'Super-administrateur' && req.user.role !== 'Administrateur') {
-      return res.status(403).json({ error: "Accès refusé. Seul un administrateur peut créer un dossier." });
+    const userRole = req.user.role;
+    // Super-Admin, Admin Tech, Administrateur, Responsable Op. peuvent créer un dossier
+    if (!isManager(userRole)) {
+      return res.status(403).json({ error: "Accès refusé. Vous n'avez pas les droits pour créer un dossier." });
     }
 
     const { name, description, priority, origin, categorie } = req.body;
@@ -678,9 +722,28 @@ router.post('/dossiers', async (req, res) => {
     let targetUserId = req.body.targetUserId || null;
     if (targetUserId === 'MASTER-ADMIN') targetUserId = creatorId;
 
-    const defaultSubFolders = (categorie === 'Dossiers clients' && !req.body.parentDossierId)
-      ? ['ADMINISTRATION & FINANCES', 'OPÉRATIONS & RÉALISATIONS', 'RELATIONS & DÉVELOPPEMENT']
-      : [];
+    // Le Responsable Op. ne peut créer que dans ses propres dossiers (vérification si sous-dossier)
+    if (userRole === 'Responsable opérationnel' && req.body.parentDossierId) {
+      const parentDossier = await prisma.dossier.findUnique({ where: { id: req.body.parentDossierId }, select: { traitantId: true } });
+      if (!parentDossier || parentDossier.traitantId !== req.user.id) {
+        return res.status(403).json({ error: "Accès refusé. Vous n'êtes pas le responsable de ce dossier parent." });
+      }
+    }
+
+    // ── Vérification d'unicité du nom dans le même parent ─────────────────────
+    const parentId = req.body.parentDossierId || null;
+    const existingName = await prisma.dossier.findFirst({
+      where: {
+        name: { equals: name, mode: 'insensitive' },
+        parentDossierId: parentId
+      }
+    });
+    if (existingName) {
+      return res.status(409).json({ error: `Un dossier nommé "${name}" existe déjà ${parentId ? 'dans ce dossier' : 'à la racine'}.` });
+    }
+
+    // Ne plus créer de sous-dossiers par défaut
+    const defaultSubFolders = [];
 
     // Use a transaction to atomically create the main dossier + all GED sub-folders
     const dossier = await prisma.$transaction(async (tx) => {
@@ -701,27 +764,7 @@ router.post('/dossiers', async (req, res) => {
         }
       });
 
-      // Create default GED sub-folders with deterministic references (index-based, no DB query)
-      for (let i = 0; i < defaultSubFolders.length; i++) {
-        const subRef = `${reference}-${String(i + 1).padStart(2, '0')}`;
-        await tx.dossier.create({
-          data: {
-            reference: subRef,
-            name: defaultSubFolders[i],
-            description: `Sous-dossier par défaut: ${defaultSubFolders[i]}`,
-            priority: priority || 'NORMAL',
-            status: 'OUVERT',
-            origin: origin || 'INTERNE',
-            createdById: creatorId,
-            traitantId: traitantId,
-            clientId: req.body.clientId || null,
-            targetUserId: targetUserId,
-            parentDossierId: created.id,
-            categorie: categorie || null
-          }
-        });
-      }
-
+      // (La boucle de sous-dossiers par défaut a été supprimée à la demande de l'utilisateur)
       return created;
     });
 
@@ -749,19 +792,36 @@ router.get('/audit', requireRoles('Super-administrateur', 'Administrateur techni
 
 router.patch('/dossiers/:id', async (req, res) => {
   try {
-    if (req.user.role !== 'Super-administrateur' && req.user.role !== 'Administrateur') {
-      return res.status(403).json({ error: "Accès refusé. Seul un administrateur peut modifier un dossier." });
+    const userRole = req.user.role;
+    const userId = req.user.id;
+
+    // Le statut BLOQUÉ est réservé aux Super-Admin et Admin Technique
+    if (req.body.status === 'BLOQUE' && !isSuperAdmin(userRole)) {
+      return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur ou Administrateur Technique peut bloquer un dossier." });
+    }
+
+    // Vérification générale d'accès à la modification
+    if (!isAdmin(userRole)) {
+      if (userRole === 'Responsable opérationnel') {
+        // Le Responsable Op. ne peut modifier que ses propres dossiers
+        const dossier = await prisma.dossier.findUnique({ where: { id: req.params.id }, select: { traitantId: true } });
+        if (!dossier || dossier.traitantId !== userId) {
+          return res.status(403).json({ error: "Accès refusé. Vous n'êtes pas le responsable de ce dossier." });
+        }
+      } else {
+        return res.status(403).json({ error: "Accès refusé. Privilèges insuffisants." });
+      }
     }
 
     const { status, name, description, traitantId } = req.body;
     const updateData = {};
     if (status !== undefined) {
-      if (status === 'CLOTURE' || status === 'ARCHIVE') {
+      if (status === 'TERMINE' || status === 'CLOTURE' || status === 'ARCHIVE') {
         const incompleteMissions = await prisma.mission.count({
-          where: { dossierId: req.params.id, status: { notIn: ['TERMINEE', 'ANNULEE'] } }
+          where: { dossierId: req.params.id, status: { notIn: ['TERMINE', 'TERMINEE', 'ANNULE', 'ANNULEE'] } }
         });
         const incompleteTaches = await prisma.tache.count({
-          where: { dossierId: req.params.id, status: { notIn: ['TERMINEE', 'ANNULEE'] } }
+          where: { mission: { dossierId: req.params.id }, status: { notIn: ['TERMINE', 'TERMINEE', 'ANNULE', 'ANNULEE'] } }
         });
         if (incompleteMissions > 0 || incompleteTaches > 0) {
           return res.status(400).json({ error: "Impossible de clôturer ou d'archiver le dossier : des missions ou tâches ne sont pas terminées." });
@@ -797,7 +857,7 @@ router.patch('/dossiers/:id', async (req, res) => {
 
 router.delete('/dossiers/:id', async (req, res) => {
   try {
-    if (req.user.role !== 'Super-administrateur' && req.user.role !== 'Administrateur') {
+    if (!isAdmin(req.user.role)) {
       return res.status(403).json({ error: "Accès refusé. Seul un administrateur peut supprimer un dossier." });
     }
     
@@ -819,7 +879,7 @@ router.delete('/dossiers/:id', async (req, res) => {
 
     res.json({ success: true, message: 'Dossier supprimé' });
   } catch (error) {
-    console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression.' });
+    console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression: ' + error.message });
   }
 });
 
@@ -875,7 +935,17 @@ router.get('/tasks', async (req, res) => {
       ];
     }
 
-    if (status && status !== 'all') where.status = status;
+    const isSuperAdm = req.user.role === 'Super-administrateur';
+    if (status && status !== 'all') {
+      where.status = status;
+    }
+    if (!isSuperAdm) {
+      if (where.status === 'BLOQUE') {
+        where.id = 'unauthorized_so_return_empty';
+      } else if (!where.status) {
+        where.status = { not: 'BLOQUE' };
+      }
+    }
     if (search) {
       const s = search.toLowerCase();
       where.OR = [
@@ -900,7 +970,7 @@ router.get('/tasks', async (req, res) => {
         authorizedDossiers: { include: { subDossiers: true } },
         assignedTo: { include: { role: true } }, 
         createdBy: { include: { role: true } },
-        documents: { include: { uploadedBy: true }, orderBy: { createdAt: 'desc' } },
+        documents: { where: { isDeleted: false }, include: { uploadedBy: true }, orderBy: { createdAt: 'desc' } },
         subMissions: {
           include: { assignedTo: true, createdBy: true }
         },
@@ -917,6 +987,20 @@ router.get('/tasks', async (req, res) => {
 
 router.post('/tasks', async (req, res) => {
   try {
+    const userRole = req.user.role;
+    // Relecteur et Collaborateur ne peuvent pas créer de missions
+    if (userRole === 'Relecteur' || userRole === 'Collaborateur') {
+      return res.status(403).json({ error: "Accès refusé. Vous n'avez pas les droits pour créer une mission." });
+    }
+
+    // Responsable Op. ne peut créer une mission que dans ses propres dossiers
+    if (userRole === 'Responsable opérationnel' && req.body.dossierId) {
+      const targetDossier = await prisma.dossier.findUnique({ where: { id: req.body.dossierId }, select: { traitantId: true } });
+      if (!targetDossier || targetDossier.traitantId !== req.user.id) {
+        return res.status(403).json({ error: "Accès refusé. Vous n'êtes pas le responsable de ce dossier." });
+      }
+    }
+
     const { dossierId, description, assignedToId, parentMissionId, echeance, attachment, messageId, dossierMissionId, authorizedDossierIds } = req.body;
     const creatorId = await resolveCreatorId(req);
     const reference = await generateReference('mission', 'MSN');
@@ -939,6 +1023,15 @@ router.post('/tasks', async (req, res) => {
       }
     });
 
+    const dossierToUpdate = await prisma.dossier.findUnique({ where: { id: dossierId } });
+    if (dossierToUpdate && dossierToUpdate.status === 'NOUVEAU') {
+      await prisma.dossier.update({
+        where: { id: dossierId },
+        data: { status: 'OUVERT' }
+      });
+      await logAudit(req.user?.id, 'MODIFICATION_DOSSIER', dossierId, 'DOSSIER', `Statut automatique -> OUVERT (Mission créée)`);
+    }
+
     if (messageId) {
       const form = await prisma.formulaire.findUnique({ where: { id: messageId } });
       if (form) {
@@ -960,6 +1053,69 @@ router.post('/tasks', async (req, res) => {
       task.dossierId
     );
 
+    // --- Création automatique du sous-dossier GED pour cette mission ---
+    if (dossierId) {
+      const parentDossier = dossierToUpdate || await prisma.dossier.findUnique({ where: { id: dossierId } });
+      const today = new Date();
+      const dateStr = `${String(today.getDate()).padStart(2, '0')}${String(today.getMonth() + 1).padStart(2, '0')}${today.getFullYear()}`;
+
+      // Déterminer le nom du propriétaire (client, collab ou interne)
+      let ownerName = 'INTERNE';
+      if (parentDossier?.clientId) {
+        const client = await prisma.client.findUnique({ where: { id: parentDossier.clientId }, select: { name: true, entreprise: { select: { raisonSociale: true } } } });
+        ownerName = (client?.entreprise?.raisonSociale || client?.name || 'CLIENT').replace(/\s+/g, '_');
+      } else if (parentDossier?.targetUserId) {
+        const user = await prisma.utilisateur.findUnique({ where: { id: parentDossier.targetUserId }, select: { name: true } });
+        ownerName = (user?.name || 'COLLAB').replace(/\s+/g, '_');
+      }
+
+      const missionSubFolderName = `Mission-${ownerName}-${dateStr}`;
+
+      // Vérifier si un dossier du même nom existe déjà dans ce parent
+      const existingGedFolder = await prisma.dossier.findFirst({
+        where: { name: missionSubFolderName, parentDossierId: dossierId }
+      });
+
+      if (existingGedFolder) {
+        // Utiliser un suffixe unique basé sur la référence de la mission
+        const uniqueName = `${missionSubFolderName}-${task.reference}`;
+        const gedRef = await generateReference('dossier', 'DOS');
+        await prisma.dossier.create({
+          data: {
+            reference: gedRef,
+            name: uniqueName,
+            description: `Sous-dossier GED auto-généré pour la mission ${task.reference}`,
+            origin: parentDossier?.origin || 'INTERNE',
+            status: 'OUVERT',
+            parentDossierId: dossierId,
+            isSystem: true,
+            createdById: creatorId,
+            ...(parentDossier?.clientId && { clientId: parentDossier.clientId }),
+            ...(parentDossier?.targetUserId && { targetUserId: parentDossier.targetUserId }),
+            ...(parentDossier?.traitantId && { traitantId: parentDossier.traitantId })
+          }
+        });
+      } else {
+        const gedRef = await generateReference('dossier', 'DOS');
+        await prisma.dossier.create({
+          data: {
+            reference: gedRef,
+            name: missionSubFolderName,
+            description: `Sous-dossier GED auto-généré pour la mission ${task.reference}`,
+            origin: parentDossier?.origin || 'INTERNE',
+            status: 'OUVERT',
+            parentDossierId: dossierId,
+            isSystem: true,
+            createdById: creatorId,
+            ...(parentDossier?.clientId && { clientId: parentDossier.clientId }),
+            ...(parentDossier?.targetUserId && { targetUserId: parentDossier.targetUserId }),
+            ...(parentDossier?.traitantId && { traitantId: parentDossier.traitantId })
+          }
+        });
+      }
+    }
+    // --- Fin création sous-dossier GED ---
+
     res.status(201).json(task);
   } catch (error) {
     console.error(error); res.status(500).json({ error: error.message || 'Erreur lors de la création de la tâche.' });
@@ -968,10 +1124,31 @@ router.post('/tasks', async (req, res) => {
 
 router.patch('/tasks/:id', async (req, res) => {
   try {
+    const userRole = req.user.role;
+    const userId = req.user.id;
     const { status, assignedToId, description, attachment } = req.body;
-    const dataToUpdate = { assignedToId };
+    const dataToUpdate = {};
     if (description !== undefined) dataToUpdate.description = description;
     if (attachment !== undefined) dataToUpdate.attachment = attachment;
+
+    // Ré-attribution : réservée aux Super-Admin, Admin Tech, Admin et Responsable Op.
+    if (assignedToId !== undefined) {
+      if (!isManager(userRole)) {
+        return res.status(403).json({ error: "Accès refusé. Vous ne pouvez pas ré-attribuer une mission." });
+      }
+      if (userRole === 'Responsable opérationnel') {
+        const mission = await prisma.mission.findUnique({ where: { id: req.params.id }, include: { dossier: { select: { traitantId: true } } } });
+        if (!mission?.dossier || mission.dossier.traitantId !== userId) {
+          return res.status(403).json({ error: "Accès refusé. Vous n'êtes pas le responsable de ce dossier." });
+        }
+      }
+      dataToUpdate.assignedToId = assignedToId;
+    }
+
+    // Statut BLOQUÉ réservé aux Super-Admin / Admin Tech
+    if (status === 'BLOQUE' && !isSuperAdmin(userRole)) {
+      return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut bloquer une mission." });
+    }
     
     if (status !== undefined) {
       if (status === 'TERMINEE') {
@@ -982,8 +1159,14 @@ router.patch('/tasks/:id', async (req, res) => {
           return res.status(400).json({ error: "Impossible de terminer la mission : certaines tâches associées ne sont pas terminées." });
         }
       }
-      const currentTask = await prisma.mission.findUnique({ where: { id: req.params.id } });
+      const currentTask = await prisma.mission.findUnique({ where: { id: req.params.id }, include: { dossier: { select: { traitantId: true } } } });
       if (currentTask && currentTask.status !== status) {
+        // Responsable Op. ne peut terminer que les missions de ses dossiers
+        if (userRole === 'Responsable opérationnel' && (status === 'TERMINEE' || status === 'EN_ATTENTE' || status === 'ANNULEE')) {
+          if (!currentTask.dossier || currentTask.dossier.traitantId !== userId) {
+            return res.status(403).json({ error: "Accès refusé. Vous n'êtes pas le responsable de cette mission." });
+          }
+        }
         dataToUpdate.status = status;
         dataToUpdate.previousStatus = currentTask.status;
       }
@@ -1011,7 +1194,7 @@ router.patch('/tasks/:id', async (req, res) => {
 
 router.delete('/tasks/:id', async (req, res) => {
   try {
-    if (req.user.role !== 'Super-administrateur' && req.user.role !== 'Administrateur') {
+    if (!isAdmin(req.user.role)) {
       return res.status(403).json({ error: "Accès refusé. Seul un administrateur peut supprimer une mission." });
     }
 
@@ -1058,7 +1241,17 @@ router.get('/taches', async (req, res) => {
       ];
     }
 
-    if (status && status !== 'all') where.status = status;
+    const isSuperAdm = req.user.role === 'Super-administrateur';
+    if (status && status !== 'all') {
+      where.status = status;
+    }
+    if (!isSuperAdm) {
+      if (where.status === 'BLOQUE') {
+        where.id = 'unauthorized_so_return_empty';
+      } else if (!where.status) {
+        where.status = { not: 'BLOQUE' };
+      }
+    }
     if (search) {
       const s = search.toLowerCase();
       where.OR = [
@@ -1076,11 +1269,11 @@ router.get('/taches', async (req, res) => {
       skip,
       take: limit,
       include: {
-        mission: true,
+        mission: { include: { dossier: { select: { name: true, reference: true } } } },
         dossierTache: { include: { subDossiers: true } },
         authorizedDossiers: { include: { subDossiers: true } },
-        assignedTo: { select: { id: true, name: true, role: true } },
-        createdBy: { select: { id: true, name: true } }
+        assignedTo: { select: { id: true, name: true, role: { select: { name: true } } } },
+        createdBy: { select: { id: true, name: true, role: { select: { name: true } } } }
       },
       orderBy: { reference: 'desc' }
     });
@@ -1092,6 +1285,23 @@ router.get('/taches', async (req, res) => {
 
 router.post('/taches', async (req, res) => {
   try {
+    const userRole = req.user.role;
+    // Relecteur et Collaborateur ne peuvent pas créer de tâches
+    if (userRole === 'Relecteur' || userRole === 'Collaborateur') {
+      return res.status(403).json({ error: "Accès refusé. Vous n'avez pas les droits pour créer une tâche." });
+    }
+
+    // Responsable Op. ne peut créer une tâche que dans ses propres missions (dossiers)
+    if (userRole === 'Responsable opérationnel' && req.body.missionId) {
+      const targetMission = await prisma.mission.findUnique({
+        where: { id: req.body.missionId },
+        include: { dossier: { select: { traitantId: true } } }
+      });
+      if (!targetMission?.dossier || targetMission.dossier.traitantId !== req.user.id) {
+        return res.status(403).json({ error: "Accès refusé. Vous n'êtes pas le responsable du dossier de cette mission." });
+      }
+    }
+
     const { missionId, description, assignedToId, echeance, attachment, dossierTacheId, authorizedDossierIds } = req.body;
     const creatorId = await resolveCreatorId(req);
     const reference = await generateReference('tache', 'TCH');
@@ -1121,6 +1331,15 @@ router.post('/taches', async (req, res) => {
       data: tacheData
     });
 
+    const missionToUpdate = await prisma.mission.findUnique({ where: { id: missionId } });
+    if (missionToUpdate && missionToUpdate.status === 'NOUVEAU') {
+      await prisma.mission.update({
+        where: { id: missionId },
+        data: { status: 'OUVERT' }
+      });
+      await logAudit(req.user?.id, 'MODIFICATION_MISSION', missionId, 'MISSION', `Statut automatique -> OUVERT (Tâche créée)`);
+    }
+
     await logAudit(
       req.user?.id,
       'CREATION_TACHE',
@@ -1144,19 +1363,19 @@ async function checkAndUpdateMissionStatus(missionId, prisma) {
   const allTaches = mission.taches;
   let newStatus = mission.status;
 
-  if (allTaches.length > 0 && allTaches.every(t => t.status === 'TERMINEE')) {
-    newStatus = 'TERMINEE';
-  } else if (mission.status === 'NON_DEMARREE' && allTaches.some(t => t.status !== 'NOUVEAU')) {
-    newStatus = 'EN_COURS';
-  } else if (mission.status === 'TERMINEE' && allTaches.some(t => t.status !== 'TERMINEE')) {
-    newStatus = 'EN_COURS';
+  if (allTaches.length > 0 && allTaches.every(t => t.status === 'TERMINE')) {
+    newStatus = 'TERMINE';
+  } else if (mission.status === 'NOUVEAU' && allTaches.some(t => t.status !== 'NOUVEAU')) {
+    newStatus = 'OUVERT';
+  } else if (mission.status === 'TERMINE' && allTaches.some(t => t.status !== 'TERMINE')) {
+    newStatus = 'OUVERT';
   }
 
   if (newStatus !== mission.status) {
     await prisma.mission.update({ where: { id: mission.id }, data: { status: newStatus, previousStatus: mission.status } });
-    if (newStatus === 'TERMINEE' && mission.dossier) {
+    if (newStatus === 'TERMINE' && mission.dossier) {
        checkAndUpdateDossierStatus(mission.dossier, prisma);
-    } else if (newStatus === 'EN_COURS' && mission.dossier && mission.dossier.status === 'NOUVEAU') {
+    } else if (newStatus === 'OUVERT' && mission.dossier && mission.dossier.status === 'NOUVEAU') {
        await prisma.dossier.update({ where: { id: mission.dossier.id }, data: { status: 'OUVERT' } });
     }
   }
@@ -1166,11 +1385,11 @@ async function checkAndUpdateDossierStatus(dossier, prisma) {
   const freshDossier = await prisma.dossier.findUnique({ where: { id: dossier.id }, include: { missions: true } });
   if (!freshDossier) return;
   const allMissions = freshDossier.missions;
-  if (allMissions.length > 0 && allMissions.every(m => m.status === 'TERMINEE')) {
-    if (freshDossier.status !== 'CLOTURE' && freshDossier.status !== 'ARCHIVE' && freshDossier.status !== 'BLOQUE') {
-       await prisma.dossier.update({ where: { id: freshDossier.id }, data: { status: 'CLOTURE', previousStatus: freshDossier.status } });
+  if (allMissions.length > 0 && allMissions.every(m => m.status === 'TERMINE')) {
+    if (freshDossier.status !== 'TERMINE' && freshDossier.status !== 'ARCHIVE' && freshDossier.status !== 'BLOQUE') {
+       await prisma.dossier.update({ where: { id: freshDossier.id }, data: { status: 'TERMINE', previousStatus: freshDossier.status } });
     }
-  } else if (freshDossier.status === 'CLOTURE' && allMissions.some(m => m.status !== 'TERMINEE')) {
+  } else if (freshDossier.status === 'TERMINE' && allMissions.some(m => m.status !== 'TERMINE')) {
        await prisma.dossier.update({ where: { id: freshDossier.id }, data: { status: 'OUVERT', previousStatus: freshDossier.status } });
   }
 }
@@ -1180,12 +1399,74 @@ router.patch('/taches/:id', async (req, res) => {
     const { id } = req.params;
     const { status, adminFeedback, managerFeedback, ...rest } = req.body;
 
-    const currentTache = await prisma.tache.findUnique({ where: { id } });
+    const currentTache = await prisma.tache.findUnique({
+      where: { id },
+      include: { mission: { include: { dossier: { select: { traitantId: true } } } } }
+    });
     if (!currentTache) return res.status(404).json({ error: 'Tâche introuvable.' });
 
     const userRole = req.user?.role || '';
-    const isSuperAdmin = userRole === 'Super-administrateur' || req.user?.id === 'MASTER-ADMIN';
-    const isController = userRole === 'Relecteur' || userRole === 'Responsable opérationnel' || isSuperAdmin;
+    const userId = req.user?.id;
+    const isSA = isSuperAdmin(userRole);
+    const dossierTraitantId = currentTache.mission?.dossier?.traitantId;
+
+    // ── GARDE-FOUS STRICTS PAR RÔLE ──────────────────────────────────────────
+    if (status !== undefined && status !== currentTache.status) {
+
+      // Statut BLOQUÉ : Super-Admin et Admin Technique seulement
+      if (status === 'BLOQUE' && !isSA) {
+        return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut bloquer une tâche." });
+      }
+
+      // ── Collaborateur : transitions autorisées ──────────────────────────────
+      if (userRole === 'Collaborateur') {
+        const allowedFromCollaborateur = {
+          'NOUVEAU': ['EN_COURS'],
+          'EN_COURS': ['A_VERIFIER', 'EN_ATTENTE'],
+          'EN_ATTENTE': ['EN_COURS'] // reprendre après attente
+        };
+        const allowed = allowedFromCollaborateur[currentTache.status] || [];
+        if (!allowed.includes(status)) {
+          return res.status(403).json({ error: `Accès refusé. Un Collaborateur ne peut pas passer une tâche de '${currentTache.status}' à '${status}'.` });
+        }
+        // Doit être assigné à la tâche
+        if (currentTache.assignedToId !== userId) {
+          return res.status(403).json({ error: "Accès refusé. Vous n'êtes pas assigné à cette tâche." });
+        }
+      }
+
+      // ── Relecteur : transitions autorisées ─────────────────────────────────
+      else if (userRole === 'Relecteur') {
+        const allowedFromRelecteur = {
+          'A_VERIFIER': ['FINALISER', 'A_CORRIGER']
+        };
+        const allowed = allowedFromRelecteur[currentTache.status] || [];
+        if (!allowed.includes(status)) {
+          return res.status(403).json({ error: `Accès refusé. Un Relecteur ne peut pas passer une tâche de '${currentTache.status}' à '${status}'.` });
+        }
+      }
+
+      // ── Responsable Opérationnel : transitions autorisées ───────────────────
+      else if (userRole === 'Responsable opérationnel') {
+        // Doit être responsable du dossier de la mission
+        if (dossierTraitantId && dossierTraitantId !== userId) {
+          return res.status(403).json({ error: "Accès refusé. Vous n'êtes pas le responsable de ce dossier." });
+        }
+        const allowedFromManager = {
+          'NOUVEAU': ['EN_COURS', 'EN_ATTENTE', 'ANNULEE'],
+          'EN_COURS': ['A_VERIFIER', 'EN_ATTENTE', 'ANNULEE'],
+          'EN_ATTENTE': ['EN_COURS', 'ANNULEE'],
+          'A_VERIFIER': ['FINALISER', 'A_CORRIGER'],
+          'FINALISER': ['TERMINE', 'A_CORRIGER'],
+          'A_CORRIGER': ['REATTRIBUEE', 'EN_COURS']
+        };
+        const allowed = allowedFromManager[currentTache.status] || [];
+        if (!allowed.includes(status)) {
+          return res.status(403).json({ error: `Accès refusé. Un Responsable ne peut pas passer une tâche de '${currentTache.status}' à '${status}'.` });
+        }
+      }
+      // Super-Admin et Admin Tech : toutes les transitions autorisées
+    }
 
     // Build the data payload
     const dataToUpdate = { ...rest };
@@ -1197,7 +1478,6 @@ router.patch('/taches/:id', async (req, res) => {
       if (status === 'EN_VALIDATION_FINALE' || status === 'A_CORRIGER') {
          if (adminFeedback) dataToUpdate.adminFeedback = adminFeedback.trim();
       }
-
       dataToUpdate.previousStatus = currentTache.status;
       dataToUpdate.status = status;
     } else if (status !== undefined) {
@@ -1232,7 +1512,7 @@ router.patch('/taches/:id', async (req, res) => {
 
 router.delete('/taches/:id', async (req, res) => {
   try {
-    if (req.user.role !== 'Super-administrateur' && req.user.role !== 'Administrateur') {
+    if (!isAdmin(req.user.role)) {
       return res.status(403).json({ error: "Accès refusé. Seul un administrateur peut supprimer une tâche." });
     }
     
@@ -1292,6 +1572,25 @@ router.post('/documents', async (req, res) => {
 });
 
 // Lister les documents d'une entité (exclut les documents supprimés)
+// Lister la corbeille (documents soft-deleted)
+router.get('/documents/trash/list', async (req, res) => {
+  try {
+    const docs = await prisma.document.findMany({
+      where: { isDeleted: true },
+      include: {
+        uploadedBy: true,
+        dossier: { select: { id: true, name: true } },
+        mission: { select: { id: true, description: true } }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json(docs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération de la corbeille.' });
+  }
+});
+
 router.get('/documents/:type/:id', async (req, res) => {
   try {
     const { type, id } = req.params;
@@ -1339,24 +1638,7 @@ router.delete('/documents/:id', async (req, res) => {
 
 // ─── P2 : CORBEILLE ─────────────────────────────────────────────────────────
 
-// Lister la corbeille (documents soft-deleted)
-router.get('/documents/trash/list', async (req, res) => {
-  try {
-    const docs = await prisma.document.findMany({
-      where: { isDeleted: true },
-      include: {
-        uploadedBy: true,
-        dossier: { select: { id: true, name: true } },
-        mission: { select: { id: true, description: true } }
-      },
-      orderBy: { createdAt: 'desc' }
-    });
-    res.json(docs);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la récupération de la corbeille.' });
-  }
-});
+
 
 // Restaurer un document depuis la corbeille
 router.post('/documents/:id/restore', async (req, res) => {
@@ -1557,7 +1839,8 @@ router.get('/messages', async (req, res) => {
         createdAt: f.createdAt,
         contact: f.contact,
         recrutement: f.recrutement,
-        verifaliaStatus: f.verifaliaStatus
+        verifaliaStatus: f.verifaliaStatus,
+        priorite: f.priority
       }));
     } else {
       let where = { type: tabType, isDeleted: false };
@@ -1634,7 +1917,7 @@ router.get('/messages', async (req, res) => {
 
 // --- SYNC IMAP ---
 const { syncMessages } = require('../controllers/imapController');
-router.post('/messages/sync-imap', syncMessages);
+router.post('/messages/sync-imap', authenticateJWT, syncMessages);
 
 
 router.post('/messages/:id/assign', async (req, res) => {
@@ -1696,8 +1979,13 @@ router.patch('/messages/:id/status', async (req, res) => {
 
     const form = await prisma.formulaire.findUnique({ where: { id } });
     if (form) {
-      await prisma.formulaire.update({ where: { id }, data: dataToUpdate });
-      await logAudit(req.user?.id, 'STATUT_FORMULAIRE', id, 'FORMULAIRE', `Statut formulaire mis à jour (${status || 'modifié'})`, dataToUpdate.dossierId || null, form.id);
+      const formUpdateData = { ...dataToUpdate };
+      if (formUpdateData.priorite !== undefined) {
+        formUpdateData.priority = formUpdateData.priorite;
+        delete formUpdateData.priorite;
+      }
+      await prisma.formulaire.update({ where: { id }, data: formUpdateData });
+      await logAudit(req.user?.id, 'STATUT_FORMULAIRE', id, 'FORMULAIRE', `Statut formulaire mis à jour (${status || 'modifié'})`, formUpdateData.dossierId || null, form.id);
       return res.json({ success: true, message: 'Statut mis à jour' });
     }
     const msg = await prisma.messagePersonnel.findUnique({ where: { id } });

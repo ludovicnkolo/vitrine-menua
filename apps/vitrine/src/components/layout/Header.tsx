@@ -18,21 +18,31 @@ export default function Header() {
 
   const handleLanguageSwitch = (newLang: "FR" | "EN") => {
     if (lang === newLang) return;
-    
+
     let newPath = pathname;
-    
+
     if (newPath.startsWith("/en")) newPath = newPath.replace("/en", "");
     if (newPath.startsWith("/fr")) newPath = newPath.replace("/fr", "");
     if (!newPath.startsWith("/")) newPath = "/" + newPath;
-    
+
     if (newLang === "EN") {
-      if (enRouteMap[newPath]) {
+      const matchedFrBase = Object.keys(enRouteMap).find(
+        (frBase) => frBase !== '/' && newPath.startsWith(frBase + '/')
+      );
+      if (matchedFrBase) {
+        newPath = enRouteMap[matchedFrBase] + newPath.slice(matchedFrBase.length);
+      } else if (enRouteMap[newPath]) {
         newPath = enRouteMap[newPath];
       }
       const finalPath = newPath === "/" ? "/en" : `/en${newPath}`;
       window.location.href = finalPath;
     } else {
-      if (frRouteMap[newPath]) {
+      const matchedEnBase = Object.keys(frRouteMap).find(
+        (enBase) => enBase !== '/' && newPath.startsWith(enBase + '/')
+      );
+      if (matchedEnBase) {
+        newPath = frRouteMap[matchedEnBase] + newPath.slice(matchedEnBase.length);
+      } else if (frRouteMap[newPath]) {
         newPath = frRouteMap[newPath];
       }
       const finalPath = newPath === "/" ? "/fr" : `/fr${newPath}`;
@@ -118,14 +128,14 @@ export default function Header() {
 
   const FlagEN = () => (
     <svg width="16" height="12" viewBox="0 0 60 30" className="rounded-sm overflow-hidden">
-      <clipPath id="hs"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
-      <clipPath id="ht"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
+      <clipPath id="hs"><path d="M0,0 v30 h60 v-30 z" /></clipPath>
+      <clipPath id="ht"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z" /></clipPath>
       <g clipPath="url(#hs)">
-        <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
-        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6"/>
-        <path d="M0,0 L60,30 M60,0 L0,30" clipPath="url(#ht)" stroke="#C8102E" strokeWidth="4"/>
-        <path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10"/>
-        <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6"/>
+        <path d="M0,0 v30 h60 v-30 z" fill="#012169" />
+        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6" />
+        <path d="M0,0 L60,30 M60,0 L0,30" clipPath="url(#ht)" stroke="#C8102E" strokeWidth="4" />
+        <path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10" />
+        <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6" />
       </g>
     </svg>
   );
@@ -136,130 +146,127 @@ export default function Header() {
         className={`fixed top-0 left-0 w-full z-[9998] transition-colors duration-300 border-b ${scrolled ? "bg-[#1a1f2e] border-[#e8e1d7]/10 shadow-2xl" : "bg-[#1a1f2e] border-transparent"}`}
         onMouseLeave={() => setOpenMenu(null)}
       >
-      {/* ── TOP BAR ── */}
-      <div className="flex items-center justify-between px-6 lg:px-10 h-20 lg:h-[80px] max-w-[1440px] mx-auto relative">
+        {/* ── TOP BAR ── */}
+        <div className="flex items-center justify-between px-6 lg:px-10 h-20 lg:h-[80px] max-w-[1440px] mx-auto relative">
 
-        {/* MOBILE TOGGLE */}
-        <button
-          type="button"
-          className="lg:hidden text-white hover:text-[#e8e1d7] transition-colors relative z-[9999] p-4 -ml-4 min-w-[48px] min-h-[48px] flex items-center justify-center"
-          style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
-          onClick={() => setIsMobileMenuOpen(prev => !prev)}
-          onTouchEnd={(e) => { e.preventDefault(); setIsMobileMenuOpen(prev => !prev); }}
-          aria-label="Menu"
-          aria-expanded={isMobileMenuOpen}
-        >
-          {isMobileMenuOpen ? <X size={30} /> : <Menu size={30} />}
-        </button>
+          {/* MOBILE TOGGLE */}
+          <button
+            type="button"
+            className="lg:hidden text-white hover:text-[#e8e1d7] transition-colors relative z-[9999] p-4 -ml-4 min-w-[48px] min-h-[48px] flex items-center justify-center"
+            style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
+            onClick={() => setIsMobileMenuOpen(prev => !prev)}
+            onTouchEnd={(e) => { e.preventDefault(); setIsMobileMenuOpen(prev => !prev); }}
+            aria-label="Menu"
+            aria-expanded={isMobileMenuOpen}
+          >
+            {isMobileMenuOpen ? <X size={30} /> : <Menu size={30} />}
+          </button>
 
-        {/* LOGO */}
-        <Link
-          href="/"
-          className="flex flex-col items-center justify-center z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0 lg:-ml-6"
-          onClick={() => { setOpenMenu(null); setIsMobileMenuOpen(false); }}
-        >
-          {/* Clean extracted logo */}
-          <img 
-            src="/img/logo-clean-light.webp" 
-            alt="Menua Consulting" 
-            className="h-[90px] w-[135px] lg:h-[150px] lg:w-[225px] object-contain" 
-            fetchPriority="high"
-          />
-        </Link>
+          {/* LOGO */}
+          <Link
+            href="/"
+            className="flex flex-col items-center justify-center z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0 lg:-ml-6"
+            onClick={() => { setOpenMenu(null); setIsMobileMenuOpen(false); }}
+          >
+            {/* Clean extracted logo */}
+            <img
+              src="/img/logo-clean-light.webp"
+              alt="Menua Consulting"
+              className="h-[90px] w-[135px] lg:h-[150px] lg:w-[225px] object-contain"
+              fetchPriority="high"
+            />
+          </Link>
 
-        <div className="w-10 lg:hidden" />
+          <div className="w-10 lg:hidden" />
 
-        {/* DESKTOP NAV */}
-        <nav className="hidden lg:flex flex-1 items-center gap-0.5 lg:ml-8">
-          {(Object.keys(menus) as MenuKey[]).map((key) => (
-            <div
-              key={key}
-              className="relative"
-              onMouseEnter={() => setOpenMenu(key)}
-            >
-              <Link
-                href={menus[key].href}
-                className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[15px] leading-[22px] font-bold ${
-                  openMenu === key
-                    ? "text-[#e8e1d7]"
-                    : "text-white/80 hover:text-[#e8e1d7]"
-                }`}
+          {/* DESKTOP NAV */}
+          <nav className="hidden lg:flex flex-1 items-center gap-0.5 lg:ml-8">
+            {(Object.keys(menus) as MenuKey[]).map((key) => (
+              <div
+                key={key}
+                className="relative"
+                onMouseEnter={() => setOpenMenu(key)}
               >
-                {menus[key].label}
-                <ChevronDown
-                  size={13}
-                  className={`transition-transform duration-200 ${openMenu === key ? "rotate-180" : ""}`}
-                />
-              </Link>
+                <Link
+                  href={menus[key].href}
+                  className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[15px] leading-[22px] font-bold ${openMenu === key
+                      ? "text-[#e8e1d7]"
+                      : "text-white/80 hover:text-[#e8e1d7]"
+                    }`}
+                >
+                  {menus[key].label}
+                  <ChevronDown
+                    size={13}
+                    className={`transition-transform duration-200 ${openMenu === key ? "rotate-180" : ""}`}
+                  />
+                </Link>
 
-              {/* DROPDOWN */}
-              {openMenu === key && (
-                <div className="absolute left-0 top-full pt-10">
-                  <div className="bg-[#e8e1d7] border-t-4 border-[#141824] rounded-b-lg shadow-xl min-w-[280px] py-3">
-                    <div className="px-5 py-2 border-b border-[#141824]/10 mb-2">
-                      <span className="text-[#141824] text-[1.1rem] leading-[1.5rem] font-bold">
-                        {menus[key].label}
-                      </span>
+                {/* DROPDOWN */}
+                {openMenu === key && (
+                  <div className="absolute left-0 top-full pt-10">
+                    <div className="bg-[#e8e1d7] border-t-4 border-[#141824] rounded-b-lg shadow-xl min-w-[280px] py-3">
+                      <div className="px-5 py-2 border-b border-[#141824]/10 mb-2">
+                        <span className="text-[#141824] text-[1.1rem] leading-[1.5rem] font-bold">
+                          {menus[key].label}
+                        </span>
+                      </div>
+                      <ul>
+                        {menus[key].links.map((link) => (
+                          <li key={link.href}>
+                            <Link
+                              href={link.href}
+                              onClick={() => setOpenMenu(null)}
+                              className="flex items-center gap-3 px-5 py-2.5 text-[#141824]/80 hover:text-[#141824] hover:bg-white/40 text-[13px] leading-[1rem] transition-colors group"
+                            >
+                              {link.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <ul>
-                      {menus[key].links.map((link) => (
-                        <li key={link.href}>
-                          <Link
-                            href={link.href}
-                            onClick={() => setOpenMenu(null)}
-                            className="flex items-center gap-3 px-5 py-2.5 text-[#141824]/80 hover:text-[#141824] hover:bg-white/40 text-[13px] leading-[1rem] transition-colors group"
-                          >
-                            {link.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
+                )}
+              </div>
+            ))}
 
-          {/* SPACER with LANG SWITCHER CENTERED inside it */}
-          <div className="flex-1 flex justify-center items-center" onMouseEnter={() => setOpenMenu(null)}>
-            <div className="flex items-center gap-2">
-              <button type="button"
-                onClick={() => handleLanguageSwitch("FR")}
-                className={`flex items-center gap-1.5 text-[0.75rem] font-bold transition-all tracking-wider ${
-                  lang === "FR" ? "text-white opacity-100" : "text-white/50 hover:text-white"
-                }`}
-              >
-                <FlagFR /> FR
-              </button>
-              <span className="text-[#D8DCE8] text-xs mx-1">|</span>
-              <button type="button"
-                onClick={() => handleLanguageSwitch("EN")}
-                className={`flex items-center gap-1.5 text-[0.75rem] font-bold transition-all tracking-wider ${
-                  lang === "EN" ? "text-white opacity-100" : "text-white/50 hover:text-white"
-                }`}
-              >
-                <FlagEN /> EN
-              </button>
+            {/* SPACER with LANG SWITCHER CENTERED inside it */}
+            <div className="flex-1 flex justify-center items-center" onMouseEnter={() => setOpenMenu(null)}>
+              <div className="flex items-center gap-2">
+                <button type="button"
+                  onClick={() => handleLanguageSwitch("FR")}
+                  className={`flex items-center gap-1.5 text-[0.75rem] font-bold transition-all tracking-wider ${lang === "FR" ? "text-white opacity-100" : "text-white/50 hover:text-white"
+                    }`}
+                >
+                  <FlagFR /> FR
+                </button>
+                <span className="text-[#D8DCE8] text-xs mx-1">|</span>
+                <button type="button"
+                  onClick={() => handleLanguageSwitch("EN")}
+                  className={`flex items-center gap-1.5 text-[0.75rem] font-bold transition-all tracking-wider ${lang === "EN" ? "text-white opacity-100" : "text-white/50 hover:text-white"
+                    }`}
+                >
+                  <FlagEN /> EN
+                </button>
+              </div>
             </div>
-          </div>
 
-          {/* "Nous rejoindre" & "Nous contacter" as plain nav links */}
-          <Link
-            href="/nous-rejoindre"
-            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#141824] bg-[#e8e1d7] hover:bg-white rounded-full"
-            onMouseEnter={() => setOpenMenu(null)}
-          >
-            {t("Nous rejoindre", "Join Us")}
-          </Link>
-          <Link
-            href="/nous-contacter"
-            className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#141824] bg-[#e8e1d7] hover:bg-white rounded-full ml-1"
-            onMouseEnter={() => setOpenMenu(null)}
-          >
-            {t("Nous contacter", "Contact Us")}
-          </Link>
-        </nav>
-      </div>
+            {/* "Nous rejoindre" & "Nous contacter" as plain nav links */}
+            <Link
+              href="/nous-rejoindre"
+              className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#141824] bg-[#e8e1d7] hover:bg-white rounded-full"
+              onMouseEnter={() => setOpenMenu(null)}
+            >
+              {t("Nous rejoindre", "Join Us")}
+            </Link>
+            <Link
+              href="/nous-contacter"
+              className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#141824] bg-[#e8e1d7] hover:bg-white rounded-full ml-1"
+              onMouseEnter={() => setOpenMenu(null)}
+            >
+              {t("Nous contacter", "Contact Us")}
+            </Link>
+          </nav>
+        </div>
 
       </header>
 
@@ -267,7 +274,7 @@ export default function Header() {
       {isMobileMenuOpen && (
         <>
           {/* Backdrop */}
-          <div 
+          <div
             className="lg:hidden fixed inset-0 bg-black/40 z-[9990] backdrop-blur-sm"
             onClick={() => setIsMobileMenuOpen(false)}
             style={{ touchAction: 'manipulation' }}
@@ -275,83 +282,81 @@ export default function Header() {
           />
           {/* Menu Box */}
           <div className="lg:hidden fixed left-1/2 -translate-x-1/2 top-[85px] w-[92%] max-w-[400px] max-h-[calc(100vh-110px)] bg-white z-[9995] border border-[#e8e1d7] rounded-xl shadow-2xl flex flex-col overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
-          
-          <nav className="flex-1 flex flex-col px-6 py-4 gap-2">
-            {/* Accueil */}
-            <div className="border-b border-[#e8e1d7]/50">
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.2rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors">
-                {t("Accueil", "Home")}
-              </Link>
-            </div>
 
-            {(Object.keys(menus) as MenuKey[]).map((key) => (
-              <div key={key} className="flex flex-col border-b border-[#e8e1d7]/50">
-                <button type="button"
-                  onClick={() => setOpenMobileSubmenu(openMobileSubmenu === key ? null : key)}
-                  className="flex items-center justify-between py-3 text-[1.2rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors text-left"
-                >
-                  <span>{menus[key].label}</span>
-                  <ChevronDown size={18} className={`text-[#141824] transition-transform ${openMobileSubmenu === key ? "rotate-180" : ""}`} />
-                </button>
-                
-                {openMobileSubmenu === key && (
-                  <div className="flex flex-col gap-3 pb-4 pl-4 border-l-2 border-[#141824]/20 mt-1">
-                    <Link
-                      href={menus[key].href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="text-[#141824] text-[0.95rem] font-bold mb-1"
-                    >
-                      {t("Vue d'ensemble", "Overview")}
-                    </Link>
-                    {menus[key].links.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="text-[#6e7891] text-[0.9rem] hover:text-[#141824] transition-colors"
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
+            <nav className="flex-1 flex flex-col px-6 py-4 gap-2">
+              {/* Accueil */}
+              <div className="border-b border-[#e8e1d7]/50">
+                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.2rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors">
+                  {t("Accueil", "Home")}
+                </Link>
               </div>
-            ))}
 
-            <div className="border-b border-[#e8e1d7]/50">
-              <Link href="/nous-rejoindre" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors">
-                {t("Nous rejoindre", "Join Us")}
-              </Link>
-            </div>
-            <div className="border-b border-[#e8e1d7]/50">
-              <Link href="/nous-contacter" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors">
-                {t("Nous contacter", "Contact Us")}
-              </Link>
-            </div>
-          </nav>
+              {(Object.keys(menus) as MenuKey[]).map((key) => (
+                <div key={key} className="flex flex-col border-b border-[#e8e1d7]/50">
+                  <button type="button"
+                    onClick={() => setOpenMobileSubmenu(openMobileSubmenu === key ? null : key)}
+                    className="flex items-center justify-between py-3 text-[1.2rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors text-left"
+                  >
+                    <span>{menus[key].label}</span>
+                    <ChevronDown size={18} className={`text-[#141824] transition-transform ${openMobileSubmenu === key ? "rotate-180" : ""}`} />
+                  </button>
 
-          {/* Bottom: Lang */}
-          <div className="px-6 pb-6 pt-3 border-t border-[#e8e1d7]/50 space-y-3">
-            <div className="flex items-center gap-3">
-              <button type="button"
-                onClick={() => handleLanguageSwitch("FR")}
-                className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
-                  lang === "FR" ? "border-[#141824] text-[#141824]" : "border-[#e8e1d7] text-[#6e7891]"
-                }`}
-              >
-                <FlagFR /> FR
-              </button>
-              <button type="button"
-                onClick={() => handleLanguageSwitch("EN")}
-                className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${
-                  lang === "EN" ? "border-[#141824] text-[#141824]" : "border-[#e8e1d7] text-[#6e7891]"
-                }`}
-              >
-                <FlagEN /> EN
-              </button>
+                  {openMobileSubmenu === key && (
+                    <div className="flex flex-col gap-3 pb-4 pl-4 border-l-2 border-[#141824]/20 mt-1">
+                      <Link
+                        href={menus[key].href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="text-[#141824] text-[0.95rem] font-bold mb-1"
+                      >
+                        {t("Vue d'ensemble", "Overview")}
+                      </Link>
+                      {menus[key].links.map((link) => (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="text-[#6e7891] text-[0.9rem] hover:text-[#141824] transition-colors"
+                        >
+                          {link.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              <div className="border-b border-[#e8e1d7]/50">
+                <Link href="/nous-rejoindre" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors">
+                  {t("Nous rejoindre", "Join Us")}
+                </Link>
+              </div>
+              <div className="border-b border-[#e8e1d7]/50">
+                <Link href="/nous-contacter" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors">
+                  {t("Nous contacter", "Contact Us")}
+                </Link>
+              </div>
+            </nav>
+
+            {/* Bottom: Lang */}
+            <div className="px-6 pb-6 pt-3 border-t border-[#e8e1d7]/50 space-y-3">
+              <div className="flex items-center gap-3">
+                <button type="button"
+                  onClick={() => handleLanguageSwitch("FR")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${lang === "FR" ? "border-[#141824] text-[#141824]" : "border-[#e8e1d7] text-[#6e7891]"
+                    }`}
+                >
+                  <FlagFR /> FR
+                </button>
+                <button type="button"
+                  onClick={() => handleLanguageSwitch("EN")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 border text-xs font-bold transition-all ${lang === "EN" ? "border-[#141824] text-[#141824]" : "border-[#e8e1d7] text-[#6e7891]"
+                    }`}
+                >
+                  <FlagEN /> EN
+                </button>
+              </div>
             </div>
           </div>
-        </div>
         </>
       )}
     </>

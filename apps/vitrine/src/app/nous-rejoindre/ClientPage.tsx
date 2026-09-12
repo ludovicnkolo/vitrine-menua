@@ -31,6 +31,7 @@ export default function NousRejoindre() {
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error", message: string } | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [skillsError, setSkillsError] = useState<string | null>(null);
+  const [isOtherSkillChecked, setIsOtherSkillChecked] = useState(false);
   const skillsRef = useRef<HTMLDivElement>(null);
 
   // ── Languages multi-select state ──────────────────────────────────────────
@@ -111,13 +112,13 @@ export default function NousRejoindre() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
-          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+        <div className="laplace-container landscape:px-12 relative z-10 pt-56 md:pt-72 landscape:pt-24 landscape:lg:pt-72 pb-20 landscape:pb-10 landscape:lg:pb-20 mt-16 landscape:mt-0 landscape:lg:mt-16">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12 landscape:ml-0 landscape:lg:-ml-12">
+            <h1 className="text-white text-[1.25rem] md:text-[2.5rem] landscape:text-[1.5rem] landscape:lg:text-[2.5rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               {t("Nous rejoindre", "Join us")}
             </h1>
-            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
-            <p className="  text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
+            <p className="text-[1.1rem] lg:text-[1.3rem] landscape:text-[1rem] landscape:lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl">
               {t(
                 "Rejoignez une organisation exigeante, orientée vers l'exécution, la qualité des livrables et la continuité opérationnelle.",
                 "Join a demanding organisation focused on delivery, quality and operational continuity."
@@ -128,8 +129,8 @@ export default function NousRejoindre() {
       </section>
 
       {/* ── CONTENT SECTION (Laplace Styling) ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[5.75rem] pb-16 md:pb-24">
-        <div className="laplace-container flex flex-col lg:flex-row gap-12 lg:gap-16">
+      <section className="relative w-full bg-white pt-12 md:pt-[5.75rem] landscape:pt-8 landscape:lg:pt-[5.75rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-24">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 flex flex-col lg:flex-row gap-12 lg:gap-16">
 
           {/* Left Column (Profiles) */}
           <div className="w-full lg:w-[40%] flex flex-col gap-8">
@@ -235,7 +236,7 @@ export default function NousRejoindre() {
                     ].map((opt) => {
                       const isOther = opt === t("Autre", "Other") || opt === "Autre" || opt === "Other";
                       return (
-                      <div key={opt} className={`flex items-start gap-3 text-[1.05rem] text-[#141824] font-light group ${isOther ? 'flex-col sm:flex-row' : ''}`}>
+                      <div key={opt} className={`flex items-start gap-3 text-[1.05rem] text-[#141824] font-light group ${isOther ? 'flex-col w-full' : ''}`}>
                         <label htmlFor={`skill_${opt.replace(/\s+/g, '_')}`} className="flex items-start gap-3 cursor-pointer">
                           <input 
                             type="checkbox" 
@@ -244,15 +245,18 @@ export default function NousRejoindre() {
                             value={opt} 
                             className="accent-[#141824] mt-1 shrink-0 w-5 h-5 border-[#d1d5db] text-[#141824]"
                             onChange={(e) => {
-                              if (isOther && e.target.checked) {
-                                document.getElementById('otherSkillInput')?.focus();
+                              if (isOther) {
+                                setIsOtherSkillChecked(e.target.checked);
+                                if (e.target.checked) {
+                                  setTimeout(() => document.getElementById('otherSkillInput')?.focus(), 0);
+                                }
                               }
                             }}
                           /> 
                           <span className="group-hover:text-[#6e7891] transition-colors whitespace-nowrap">{opt}</span>
                         </label>
-                        {isOther && (
-                          <input id="otherSkillInput" type="text" name="otherSkill" maxLength={30} placeholder={t("Précisez", "Specify")} className="w-full sm:w-auto flex-grow border-b border-[#d1d5db] bg-transparent px-2 py-0.5 text-[0.95rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" />
+                        {isOther && isOtherSkillChecked && (
+                          <input id="otherSkillInput" type="text" name="otherSkill" required={isOtherSkillChecked} maxLength={30} placeholder={t("Précisez *", "Specify *")} className="w-full border-b border-[#d1d5db] bg-transparent px-2 py-0.5 text-[0.95rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf] ml-8" />
                         )}
                       </div>
                     )})}

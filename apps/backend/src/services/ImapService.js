@@ -1,9 +1,8 @@
 const imaps = require('imap-simple');
 const { simpleParser } = require('mailparser');
 const { PrismaClient } = require('@prisma/client');
-const fs = require('node:fs');
-const path = require('node:path');
 const crypto = require('node:crypto');
+const { uploadToS3 } = require('./s3Service');
 const prisma = new PrismaClient();
 
 const IMAP_CONFIG = {
@@ -51,23 +50,20 @@ class ImapService {
         const bodyText = parsedMail.text || '';
         const bodyHtml = parsedMail.html || '';
         
-        // -- EXTRACTION DES PIECES JOINTES --
+        // -- EXTRACTION DES PIECES JOINTES -> UPLOAD S3 --
         let savedAttachmentName = null;
         if (parsedMail.attachments && parsedMail.attachments.length > 0) {
           const att = parsedMail.attachments[0];
-          const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
-          let destPath = path.join(rootPath, 'formulaires');
           try {
-            if (!fs.existsSync(destPath)) {
-              fs.mkdirSync(destPath, { recursive: true });
-            }
-            const safeName = (att.filename || 'piece_jointe.pdf').replace(/[^a-zA-Z0-9.-]/g, '_');
+            const safeName = (att.filename || 'piece_jointe').replace(/[^a-zA-Z0-9.-]/g, '_');
             const randomAttHex = crypto.randomBytes(8).toString('hex');
-            savedAttachmentName = Date.now() + '-' + randomAttHex + '-' + safeName;
-            fs.writeFileSync(path.join(destPath, savedAttachmentName), att.content);
-            console.log(`[+] Pièce jointe extraite : ${savedAttachmentName}`);
+            const filename = `${Date.now()}-${randomAttHex}-${safeName}`;
+            const s3Key = `formulaires/${filename}`;
+            await uploadToS3(att.content, s3Key, att.contentType || 'application/octet-stream');
+            savedAttachmentName = s3Key; // Stocke le chemin complet bucket/filename
+            console.log(`[+] Pièce jointe uploadée sur S3 : ${s3Key}`);
           } catch (err) {
-            console.error("[-] Erreur extraction pièce jointe :", err);
+            console.error("[-] Erreur upload pièce jointe S3 :", err);
           }
         }
 

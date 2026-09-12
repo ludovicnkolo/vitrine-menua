@@ -253,7 +253,12 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         }
         setErrorMsg(`Statut passé à ${newStatus}`);
       } else {
-        setErrorMsg("Erreur lors de la mise à jour du statut.");
+        let errMsg = "Erreur lors de la mise à jour du statut.";
+        try {
+          const errData = await res.json();
+          if (errData.error) errMsg = errData.error;
+        } catch (e) {}
+        setErrorMsg(errMsg);
       }
     } catch (err) {
       console.error("Erreur action workflow:", err);
@@ -674,7 +679,26 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       <div className="fade-in" style={{width: "100%", padding: "0"}}>
         <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
           <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour</button>
-          <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>{mode === 'MISSION' ? 'Consultation mission :' : 'Consultation tâche :'} {consultTask.reference || consultTask.id}</h2>
+          <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600, flex: 1}}>{mode === 'MISSION' ? 'Consultation mission :' : 'Consultation tâche :'} {consultTask.reference || consultTask.id}</h2>
+          {(currentUser?.role === 'Super-administrateur' || currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Responsable opérationnel' || currentUser?.role?.name === 'Responsable opérationnel') && !(
+            (consultTask?.status === 'EN_FINALISATION' || consultTask?.status === 'EN_CONTROLE' || consultTask?.status === 'TERMINEE') &&
+            !(currentUser?.role === 'Relecteur' || currentUser?.role?.name === 'Relecteur' || currentUser?.role === 'Responsable opérationnel' || currentUser?.role?.name === 'Responsable opérationnel' || currentUser?.role === 'Super-administrateur' || currentUser?.role?.name === 'Super-administrateur')
+          ) && (
+            <button
+              type="button"
+              onClick={() => {
+                setEditTask(consultTask);
+                const subj = getSubjectFromTask(consultTask.description);
+                const msg = getMessageFromTask(consultTask.description);
+                setEditFormData({ subject: subj, message: msg, status: consultTask.status, attachment: consultTask.attachment || '' });
+                setConsultTask(null);
+              }}
+              className="btn btn-outline"
+              style={{padding: '0.5rem 1rem', borderColor: '#D97706', color: '#D97706', display: 'flex', alignItems: 'center', gap: '0.4rem'}}
+            >
+              <Pencil size={16} /> Modifier
+            </button>
+          )}
         </div>
         
         <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
@@ -723,50 +747,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             )}
           </div>
 
-          <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-            <strong style={{color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.875rem'}}>Pièces jointes :</strong>
-            <div style={{flex: 1, maxWidth: '300px', background: '#F8FAFC', padding: '0.25rem 0.5rem', borderRadius: '6px', border: '1px solid var(--border)'}}>
-              <AttachmentSelect files={[consultTask.attachment]} onPreview={setPreviewFile} />
-            </div>
-          </div>
 
           <TaskField label={"Objet"} value={getSubjectFromTask(consultTask.description)} />
 
-        <div style={{display: 'flex', gap: '2rem', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', alignItems: 'flex-start'}}>
-          <div style={{flex: '0 0 70%'}}>
-            <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Consignes</h4>
-            <div style={{padding: '1.5rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', whiteSpace: 'pre-wrap', fontSize: '0.875rem', color: 'var(--text-main)', minHeight: '120px'}}>
-              {getMessageFromTask(consultTask.description) || <span style={{color: 'var(--text-muted)'}}>Aucune consigne fournie.</span>}
-            </div>
-          </div>
-          
-          <div style={{flex: '1 1 auto', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column'}}>
-            <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Tâches liées</h4>
-            {consultTask.taches && consultTask.taches.length > 0 ? (
-              <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto', flex: 1}}>
-                {consultTask.taches.map((sub) => (
-                  <button 
-                    type="button"
-                    key={sub.id}
-                    onClick={() => setLocalConsultSubTask(sub)}
-                    onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
-                    onFocus={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
-                    onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
-                    onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
-                    style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s', width: '100%', textAlign: 'left', fontFamily: 'inherit'}}
-                  >
-                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
-                      <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{sub.reference || 'Sans réf'}</strong>
-                      <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(sub.status)}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            ) : (
-               <div style={{padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px dashed var(--border)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem'}}>
-                 Aucune tâche liée pour le moment.
-               </div>
-            )}
+        <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
+          <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Consignes</h4>
+          <div style={{padding: '1.5rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', whiteSpace: 'pre-wrap', fontSize: '0.875rem', color: 'var(--text-main)', minHeight: '120px'}}>
+            {getMessageFromTask(consultTask.description) || <span style={{color: 'var(--text-muted)'}}>Aucune consigne fournie.</span>}
           </div>
         </div>
 
@@ -783,35 +770,77 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'flex-end', flex: 1}}>
             <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Retour</button>
             
-            {/* Nouvelles actions selon le workflow */}
-            {mode === 'TACHE' && consultTask.status === 'NOUVEAU' && (
-              <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-primary" style={{background: 'var(--primary)'}}>Débuter</button>
+            {/* Nouvelles actions selon le workflow STRICT */}
+            {mode === 'TACHE' && (consultTask.status === 'NOUVEAU' || consultTask.status === 'NON_DEMARREE') && (
+              <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-primary" style={{background: 'var(--primary)'}}>▶ Commencer le travail</button>
             )}
             
             {mode === 'TACHE' && consultTask.status === 'EN_COURS' && (
-              <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'A_VERIFIER')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>Finaliser</button>
+              <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'VERIFIER')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>✓ Soumettre pour relecture</button>
             )}
             
-            {mode === 'TACHE' && consultTask.status === 'A_VERIFIER' && isResp && (
+            {mode === 'TACHE' && consultTask.status === 'VERIFIER' && isResp && (
                <>
-                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_CONTROLE')} className="btn btn-primary" style={{background: '#8B5CF6', borderColor: '#8B5CF6'}}>Valider (Au Contrôleur)</button>
-                 <button type="button" onClick={() => setShowManagerFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#EF4444', color: '#EF4444'}}>Renvoyer pour correction</button>
-                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'REATTRIBUEE')} className="btn btn-outline" style={{borderColor: '#F59E0B', color: '#F59E0B'}}>Détacher & Réattribuer</button>
+                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'FINALISER')} className="btn btn-primary" style={{background: '#6366F1', borderColor: '#6366F1'}}>✓ Approuver le travail</button>
+                 <button type="button" onClick={() => setShowManagerFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#EF4444', color: '#EF4444'}}>✖ À Corriger</button>
                </>
             )}
 
-            {mode === 'TACHE' && consultTask.status === 'EN_CONTROLE' && (isSuperAdmin || role === 'Relecteur') && (
+            {mode === 'TACHE' && consultTask.status === 'FINALISER' && isSuperAdmin && (
                <>
-                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_VALIDATION_FINALE')} className="btn btn-primary" style={{background: '#6366F1', borderColor: '#6366F1'}}>Accord (Au Super Admin)</button>
-                 <button type="button" onClick={() => setShowManagerFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#EF4444', color: '#EF4444'}}>Renvoyer pour correction</button>
+                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'TERMINE')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>★ Valider et Clôturer</button>
+                 <button type="button" onClick={() => setShowAdminFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#EF4444', color: '#EF4444'}}>✖ À Corriger</button>
                </>
             )}
 
-            {mode === 'TACHE' && consultTask.status === 'EN_VALIDATION_FINALE' && isSuperAdmin && (
+            {mode === 'TACHE' && consultTask.status === 'A_CORRIGER' && (
+               <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'VERIFIER')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>✓ Soumettre à nouveau</button>
+            )}
+
+            {/* Boutons d'exception (Bloquer, Attente) pour Taches en cours ou non terminées */}
+            {mode === 'TACHE' && !['TERMINE', 'ARCHIVE', 'BLOQUE', 'EN_ATTENTE'].includes(consultTask.status) && (
                <>
-                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'TERMINEE')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>Validation Définitive</button>
-                 <button type="button" onClick={() => setShowAdminFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#EF4444', color: '#EF4444'}}>Renvoyer pour correction</button>
+                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_ATTENTE')} className="btn btn-outline" style={{borderColor: '#F59E0B', color: '#F59E0B'}}>⏳ Mettre en Attente (Docs)</button>
+                 {isSuperAdmin && (
+                   <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'BLOQUE')} className="btn btn-outline" style={{borderColor: '#DC2626', color: '#DC2626'}}>⛔ Bloquer la tâche</button>
+                 )}
                </>
+            )}
+            
+            {mode === 'TACHE' && consultTask.status === 'EN_ATTENTE' && (
+               <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-outline" style={{borderColor: '#10B981', color: '#10B981'}}>▶ Reprendre le travail</button>
+            )}
+            
+            {mode === 'TACHE' && consultTask.status === 'BLOQUE' && isSuperAdmin && (
+               <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-outline" style={{borderColor: '#10B981', color: '#10B981'}}>▶ Débloquer la tâche</button>
+            )}
+
+            {mode === 'MISSION' && (
+              <>
+                {(consultTask.status === 'TO_ASSIGN' || consultTask.status === 'NOUVEAU') && (
+                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'OUVERT')} className="btn btn-primary" style={{background: 'var(--primary)'}}>▶ Démarrer la mission</button>
+                )}
+                {consultTask.status === 'OUVERT' && (
+                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'TERMINE')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>★ Clôturer la mission</button>
+                )}
+                {consultTask.status === 'TERMINE' && isSuperAdmin && (
+                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'ARCHIVE')} className="btn btn-outline" style={{borderColor: '#4B5563', color: '#4B5563'}}>Archiver</button>
+                )}
+                {!['TERMINE', 'ARCHIVE', 'BLOQUE', 'EN_ATTENTE'].includes(consultTask.status) && (
+                  <>
+                    <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_ATTENTE')} className="btn btn-outline" style={{borderColor: '#F59E0B', color: '#F59E0B'}}>⏳ Mettre en Attente</button>
+                    {isSuperAdmin && (
+                      <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'BLOQUE')} className="btn btn-outline" style={{borderColor: '#DC2626', color: '#DC2626'}}>⛔ Bloquer</button>
+                    )}
+                  </>
+                )}
+                {consultTask.status === 'EN_ATTENTE' && (
+                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'OUVERT')} className="btn btn-outline" style={{borderColor: '#10B981', color: '#10B981'}}>▶ Reprendre</button>
+                )}
+                {consultTask.status === 'BLOQUE' && isSuperAdmin && (
+                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'OUVERT')} className="btn btn-outline" style={{borderColor: '#10B981', color: '#10B981'}}>▶ Débloquer</button>
+                )}
+              </>
             )}
 
             {mode === 'MISSION' && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
@@ -891,18 +920,19 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             <>
               <option value="NOUVEAU">Nouveau</option>
               <option value="EN_COURS">En cours</option>
-              <option value="A_VERIFIER">À vérifier</option>
+              <option value="VERIFIER">À vérifier</option>
               <option value="A_CORRIGER">À corriger</option>
-              <option value="REATTRIBUEE">Réattribuée</option>
-              <option value="EN_CONTROLE">En contrôle</option>
-              <option value="EN_VALIDATION_FINALE">En validation finale</option>
-              <option value="TERMINEE">Terminée</option>
+              <option value="REATTRIBUE">Réattribuée</option>
+              <option value="FINALISER">Finalisé (Attente Clôture)</option>
+              <option value="EN_ATTENTE">En attente</option>
+              <option value="TERMINE">Terminée</option>
             </>
           ) : (
             <>
-              <option value="NON_DEMARREE">Non démarrée</option>
-              <option value="EN_COURS">En cours</option>
-              <option value="TERMINEE">Terminée</option>
+              <option value="NOUVEAU">Nouveau</option>
+              <option value="OUVERT">Ouvert</option>
+              <option value="EN_ATTENTE">En attente</option>
+              <option value="TERMINE">Terminée</option>
             </>
           )}
         </select>
@@ -951,13 +981,33 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   {formatDate(t.createdAt)}
                 </td>
                 <td>
-                  <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
-                    <div style={{position: 'relative'}}>
-                      <button type="button" onClick={(e) => toggleMenu(e, t.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
-                        <MoreVertical size={16} />
+                  <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem', alignItems: 'center'}}>
+                    <button
+                      type="button"
+                      onClick={() => setConsultTask(t)}
+                      style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', padding: '4px'}}
+                      title="Consulter la mission"
+                    >
+                      <Eye size={18} />
+                    </button>
+                    {(currentUser?.role === 'Super-administrateur' || currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Responsable opérationnel' || currentUser?.role?.name === 'Responsable opérationnel') && (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          if (await window.customConfirm('Voulez-vous vraiment supprimer cette mission ?', 'Supprimer la mission')) {
+                            try {
+                              const token = sessionStorage.getItem('adminToken');
+                              const res = await fetch(new URL(getSafeApiUrl(`/api/crm/tasks/${encodeURIComponent(t.id)}`)).toString(), { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }});
+                              if (res.ok) fetchData();
+                            } catch(e) { console.error('Erreur suppr mission:', e); }
+                          }
+                        }}
+                        style={{background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444', padding: '4px'}}
+                        title="Supprimer la mission"
+                      >
+                        <Trash size={18} />
                       </button>
-                      <TaskDropdown taskId={t.id} openMenuId={openMenuId} setOpenMenuId={setOpenMenuId} menuRef={menuRef} tasks={tasks} setConsultTask={setConsultTask} setEditTask={setEditTask} setEditFormData={setEditFormData} fetchData={fetchData} currentUser={currentUser} />
-                    </div>
+                    )}
                   </div>
                 </td>
               </tr>

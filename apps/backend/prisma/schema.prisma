@@ -183,6 +183,7 @@ model Dossier {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  isSystem  Boolean  @default(false)
 
   formulaires       Formulaire[]
   missions          Mission[]
@@ -343,12 +344,15 @@ model MessagePersonnel {
 model Publication {
   id          String   @id @default(uuid())
   title       String
+  title_en    String?
   type        String   @default("ACTUALITE") // ACTUALITE, OFFRE_EMPLOI
   category    String?  // Ex: "Blog", "Événement", "CDI", "Stage"
-  excerpt     String?  // Résumé court
+  category_en String?
   location    String?  // Localisation pour les offres
   contentHtml String?
+  contentHtml_en String?
   sections    String?  // JSON : [{ subtitle, text, imageKey }]
+  sections_en String?
   coverImage  String?  // URL S3 de l'image
   status      String   @default("BROUILLON") // BROUILLON, PUBLIE
   authorId    String
@@ -368,6 +372,7 @@ model LienMagique {
   createdBy   String   // id de l'utilisateur qui a généré le lien
   expiresAt   DateTime
   isUsed      Boolean  @default(false)
+  note        String?  // Message/instructions optionnel(les) pour le client
   createdAt   DateTime @default(now())
 }
 

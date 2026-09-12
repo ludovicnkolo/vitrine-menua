@@ -13,7 +13,7 @@ export default function PourquoiMenuaPage() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── 5.1 HERO ── */}
-      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-screen flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="/img/pourquoi-hero.webp" 
@@ -23,13 +23,13 @@ export default function PourquoiMenuaPage() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
-          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+        <div className="laplace-container landscape:px-12 relative z-10 pt-56 md:pt-72 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-40 landscape:pb-16 lg:pb-24 landscape:lg:pb-24 mt-16 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12 landscape:ml-0 landscape:lg:-ml-12">
+            <h1 className="text-white text-[1.25rem] md:text-[2.5rem] landscape:text-[1.5rem] landscape:lg:text-[2.5rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               {t("Pourquoi MENUA CONSULTING ?", "Why choose us?")}
             </h1>
-            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
-            <p className="text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
+            <p className="text-[1.1rem] lg:text-[1.3rem] landscape:text-[1rem] landscape:lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {t(
                 "Un partenaire opérationnel pour renforcer vos équipes, fiabiliser vos traitements et sécuriser la continuité de vos activités.",
                 "An independent, flexible and specialised approach designed to maintain the delivery of your operations."
@@ -57,9 +57,9 @@ export default function PourquoiMenuaPage() {
             </p>
           </div>
           {/* Text block — full width on mobile, leaves room for image on right on desktop */}
-          <div className="px-6 py-10 lg:px-16 lg:pt-12 lg:pb-14 lg:pr-[38%] relative z-30 lg:z-10 lg:mt-0">
+          <div className="px-6 landscape:px-32 landscape:lg:px-16 py-10 lg:px-16 lg:pt-12 lg:pb-14 lg:pr-[38%] landscape:lg:pr-[38%] relative z-30 lg:z-10 lg:mt-0">
             {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
-            <div className="absolute left-0 right-0 bottom-0 top-[220px] lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
+            <div className="absolute left-0 right-0 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
 
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
@@ -67,7 +67,7 @@ export default function PourquoiMenuaPage() {
             </h2>
 
             {/* Mobile Image (Visible only on mobile) */}
-            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[250px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
               <img
                 src="/img/pourquoi_2.webp"
                 alt="Pourquoi Menua"
@@ -107,7 +107,7 @@ export default function PourquoiMenuaPage() {
 
       {/* ── 5.3 BÉNÉFICES (Image Left, Card Right) ── */}
       <section id="nos-benefices" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
              <img src="/img/benefices.webp" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
           </div>
@@ -116,7 +116,7 @@ export default function PourquoiMenuaPage() {
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{t("Bénéfices", "Benefits")}</h2>
             
             {/* Mobile Image */}
-            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[250px] my-6 landscape:mt-6 landscape:mb-12 rounded-sm shadow-md overflow-hidden">
               <img src="/img/benefices.webp" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
             </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
@@ -153,7 +153,7 @@ export default function PourquoiMenuaPage() {
         {/* Subtle geometric accent background on the left */}
         <div className="absolute top-0 left-0 w-1/2 h-full bg-[#1a1f2e] skew-x-[10deg] origin-bottom-left hidden lg:block" />
         
-        <div className="laplace-container relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row-reverse gap-16 lg:gap-24 items-center">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row-reverse gap-16 lg:gap-24 items-center">
           
           {/* Narrative (Right side visually) */}
           <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-4 lg:-translate-y-10">
@@ -206,15 +206,12 @@ export default function PourquoiMenuaPage() {
       <div className="w-full h-8 md:h-[5.25rem] bg-white"></div>
 
       {/* ── 5.5 NOS ENGAGEMENTS (Card Left, Image Right) ── */}
-      <section id="nos-engagements" className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container max-w-6xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
-          <div className="w-full lg:w-7/12 bg-white p-10 lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
+      <section id="nos-engagements" className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.25rem] landscape:pt-8 landscape:lg:pt-[5.25rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-24 scroll-mt-20">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto flex flex-col-reverse lg:flex-row landscape:flex-row landscape:items-center landscape:gap-8 items-center gap-12 lg:gap-16">
+          <div className="w-full lg:w-7/12 landscape:w-7/12 bg-white p-10 landscape:p-8 landscape:lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{t("Nos engagements", "Our commitments")}</h2>
-            {/* Mobile Image */}
-            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] mb-8 rounded-sm shadow-md overflow-hidden">
-              <img src="/img/pourquoi_4.webp" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
-            </div>
+            
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
               {formatBrand(t(
                 "MENUA CONSULTING s’engage sur l’essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
@@ -244,16 +241,16 @@ export default function PourquoiMenuaPage() {
               ]}
             />
           </div>
-          <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
+          <div className="hidden lg:block landscape:block w-full lg:w-5/12 landscape:w-5/12 h-[280px] landscape:h-[280px] lg:h-[550px] shadow-xl">
              <img src="/img/pourquoi_4.webp" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
           </div>
         </div>
       </section>
 
       {/* ── 5.6 UNE RELATION FONDÉE SUR LA CONFIANCE ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container max-w-4xl mx-auto text-center">
-          <div className="bg-[#e8e1d7] p-10 md:p-16 shadow-xl border-t-4 border-[#141824]">
+      <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] landscape:pt-8 landscape:lg:pt-[5.25rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-24 scroll-mt-20">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-4xl mx-auto text-center">
+          <div className="bg-[#e8e1d7] p-10 landscape:p-8 landscape:lg:p-16 md:p-16 shadow-xl border-t-4 border-[#141824]">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{t("Une relation fondée sur la confiance", "A relationship based on trust")}</h2>
             <p className="text-[#141824]/80 font-medium text-[1.1rem] leading-relaxed mb-6">

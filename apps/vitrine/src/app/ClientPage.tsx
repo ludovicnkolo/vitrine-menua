@@ -36,7 +36,7 @@ export default function Home() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── SECTION 1 : HERO ── */}
-      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-screen flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="/img/hero-paris.webp" 
@@ -47,21 +47,25 @@ export default function Home() {
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
         
-        <div className="laplace-container relative z-10 pt-40 md:pt-48 pb-20 mt-8">
-          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
-              {t("Externalisation opérationnelle des fonctions back ", "Operational outsourcing for back ")}
+        <div className="laplace-container landscape:px-12 relative z-10 pt-40 md:pt-48 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-40 landscape:pb-16 lg:pb-24 landscape:lg:pb-24 mt-8 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
+          <div className="max-w-4xl lg:max-w-6xl -ml-1.5 md:-ml-6 lg:-ml-12 landscape:ml-0 landscape:lg:-ml-12">
+            <h1 className="text-white text-[1.25rem] md:text-[2.5rem] landscape:text-[1.5rem] landscape:lg:text-[2.5rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
+              <span className="lg:whitespace-nowrap">
+                {t("Externalisation opérationnelle des fonctions ", "Operational outsourcing for ")}
+              </span>
+              <br className="hidden lg:block" />
+              {t("back ", "back ")}
               <span className="font-sans font-medium">&amp;</span>
               {t(" middle office", " middle-office functions")}
             </h1>
-            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
-            <p className="text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
+            <p className="text-[1.1rem] lg:text-[1.3rem] landscape:text-[1rem] landscape:lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {t(
                 "Nous sécurisons l’exécution de vos opérations afin de permettre à vos équipes de se concentrer sur leurs décisions stratégiques, leurs validations et leur relation client.",
                 "We work alongside your teams to safeguard day-to-day operations, so they can focus on strategic decisions, approvals and client relationships."
               )}
             </p>
-            <div className="flex items-center gap-2 text-white">
+            <div className="flex items-center gap-2 text-white landscape:mt-2 landscape:lg:mt-0">
               <Globe size={16} />
               <p className="text-[0.9rem] lg:text-[0.95rem] text-white font-light italic tracking-wide">
                 {t(
@@ -95,9 +99,9 @@ export default function Home() {
             </div>
             
             {/* Right Overlapping Beige Box */}
-            <div className="w-full lg:w-10/12 px-6 py-10 lg:px-12 lg:pr-20 lg:pl-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-ml-24">
+            <div className="w-full lg:w-10/12 px-6 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pr-20 landscape:lg:pr-20 lg:pl-32 landscape:lg:pl-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-ml-24">
               {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
-              <div className="absolute left-0 right-0 bottom-0 top-[220px] lg:top-0 bg-[#e8e1d7] rounded-sm shadow-xl -z-10" />
+              <div className="absolute left-0 right-0 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#e8e1d7] rounded-sm shadow-xl -z-10" />
 
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <div className="leading-relaxed text-[#141824] text-[1.1rem] md:text-[1.2rem] font-light mb-8 space-y-6">
@@ -109,7 +113,7 @@ export default function Home() {
                 </h2>
 
                 {/* Mobile Image (Visible only on mobile) */}
-                <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[200px] my-6 z-20 relative shadow-md">
+                <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[200px] landscape:h-[250px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
                   <img 
                     src="/img/accueil-intro.webp" 
                     alt="Intro" 
@@ -139,7 +143,7 @@ export default function Home() {
 
       {/* ── SECTION 3 : POURQUOI MENUA (Dark Navy block) ── */}
       <section className="relative w-full bg-[#141824] text-white pt-12 md:pt-[9.25rem] pb-16 md:pb-24">
-        <div className="laplace-container max-w-[1200px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-[1200px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
           
           {/* Left Column: Narrative */}
           <div className="w-full md:w-5/12 md:-translate-y-16">
@@ -213,9 +217,9 @@ export default function Home() {
             </div>
 
             {/* Left Overlapping Grey Box */}
-            <div className="w-full lg:w-10/12 px-6 py-10 lg:px-12 lg:pl-20 lg:pr-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-mr-24">
+            <div className="w-full lg:w-10/12 px-6 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pl-20 landscape:lg:pl-20 lg:pr-32 landscape:lg:pr-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-mr-24">
               {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
-              <div className="absolute left-0 right-0 bottom-0 top-[220px] lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
+              <div className="absolute left-0 right-0 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
 
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
@@ -223,7 +227,7 @@ export default function Home() {
               </h2>
 
               {/* Mobile Image (Visible only on mobile) */}
-              <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[200px] my-6 z-20 relative shadow-md">
+              <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[200px] landscape:h-[250px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
                 <img
                   src="/img/besoins-meeting.webp"
                   alt="Vos besoins"
@@ -239,7 +243,7 @@ export default function Home() {
               </p>
 
               {/* 3 need items */}
-              <div className="flex flex-col md:flex-row gap-0 mb-10 border-t border-[#e8e1d7] pt-8">
+              <div className="flex flex-col md:flex-row gap-6 md:gap-0 mb-10 border-t border-[#e8e1d7] pt-8">
                 {[
                   { title: t("Finance et Reporting", "Finance and reporting"), desc: t("Production, structuration et fiabilisation de reportings financiers...", "Production, structuring and reliability of financial reports..."), href: "/vos-besoins#finance-reporting" },
                   { title: t("Risques et Conformité", "Risk and compliance"), desc: t("Appui opérationnel aux équipes risques et conformité dans le traitement...", "Operational support for risk and compliance teams in processing..."), href: "/vos-besoins#risques-conformite" },
@@ -269,7 +273,7 @@ export default function Home() {
 
       {/* ── SECTION 5 : NOS SOLUTIONS (Beige Minimal Section) ── */}
       <section className="relative w-full bg-[#e8e1d7] pt-12 md:pt-[9.25rem] pb-16 md:pb-24">
-        <div className="laplace-container max-w-[1200px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-[1200px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
           
           {/* Left Column: Narrative */}
           <div className="w-full md:w-5/12 md:-translate-y-16">

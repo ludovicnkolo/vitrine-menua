@@ -10,7 +10,7 @@ const SolutionSection = ({ id, title, intro, desc, isReversed, listTitle, listIt
   return (
     <section id={id} className={`relative w-full py-24 scroll-mt-20 overflow-hidden ${bgClass}`}>
       {topDecoClass && <div className={topDecoClass} />}
-      <div className={`laplace-container relative ${zIndexClass} max-w-7xl mx-auto flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-16 lg:gap-24 items-center`}>
+      <div className={`laplace-container landscape:px-16 landscape:lg:px-12 relative ${zIndexClass} max-w-7xl mx-auto flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-16 lg:gap-24 items-center`}>
         <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-4 lg:-translate-y-10">
           <div className={`w-16 h-[3px] mb-5 ${titleDecoClass}`} />
           <h2 className={`${bgClass.includes('bg-[#141824]') ? 'text-white' : 'text-[#141824]'} text-[1.3rem] md:text-[1.5rem] font-bold uppercase mb-8 leading-tight`}>
@@ -48,7 +48,7 @@ export default function NosSolutionsPage() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── 4.1 HERO ── */}
-      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-screen flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="/img/solutions-hero.webp" 
@@ -58,13 +58,13 @@ export default function NosSolutionsPage() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
-          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+        <div className="laplace-container landscape:px-12 relative z-10 pt-56 md:pt-72 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-40 landscape:pb-16 lg:pb-24 landscape:lg:pb-24 mt-16 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12 landscape:ml-0 landscape:lg:-ml-12">
+            <h1 className="text-white text-[1.25rem] md:text-[2.5rem] landscape:text-[1.5rem] landscape:lg:text-[2.5rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               {t("Nos solutions", "Our solutions")}
             </h1>
-            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
-            <p className="text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
+            <p className="text-[1.1rem] lg:text-[1.3rem] landscape:text-[1rem] landscape:lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {t(
                 "Des dispositifs d’externalisation flexibles, adaptés à vos contraintes d’urgence, de durée, de volume et d’organisation.",
                 "Flexible operational outsourcing arrangements adapted to your requirements for speed, duration, volume and delivery model."
@@ -103,18 +103,16 @@ export default function NosSolutionsPage() {
             </div>
             
             {/* Right Overlapping Box */}
-            <div className="w-full lg:w-10/12 px-6 py-10 lg:px-12 lg:pr-20 lg:pl-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-ml-24">
+            <div className="w-full lg:w-10/12 px-6 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pr-20 landscape:lg:pr-20 lg:pl-32 landscape:lg:pl-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-ml-24">
               {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
-              <div className="absolute left-0 right-0 bottom-0 top-[220px] lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
-
+              <div className="absolute left-0 right-0 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <div className="leading-relaxed text-[#6e7891] text-[1rem] font-light mb-8 space-y-6">
                 <h2 className="text-[#141824] font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
                   {t("Une approche sur mesure", "A tailored approach")}
                 </h2>
-
                 {/* Mobile Image (Visible only on mobile) */}
-                <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
+                <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[250px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
                   <img
                     src="/img/solutions_3.webp"
                     alt="Nos solutions"
@@ -177,11 +175,11 @@ export default function NosSolutionsPage() {
 
       {/* ── 4.4 DURÉE (Notre approche layout) ── */}
       <section id="duree" className="w-full bg-white scroll-mt-20">
-        <div className="laplace-container pb-16 lg:pb-24">
-          <div className="w-full bg-[#f5f7fa] rounded-sm pt-12 lg:pt-16 pb-12 lg:pb-16 px-6 lg:pl-32 lg:pr-20 flex flex-col lg:flex-row gap-12 lg:gap-16 relative z-10">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 pb-16 lg:pb-24">
+          <div className="w-full bg-[#f5f7fa] rounded-sm pt-12 landscape:pt-8 landscape:lg:pt-16 pb-12 landscape:pb-8 landscape:lg:pb-16 px-6 landscape:px-10 landscape:lg:px-6 lg:pl-32 lg:pr-20 flex flex-col lg:flex-row landscape:flex-row gap-12 landscape:gap-8 landscape:lg:gap-16 relative z-10">
           
           {/* Left Col: Title & Intro */}
-          <div className="w-full lg:w-4/12">
+          <div className="w-full lg:w-4/12 landscape:w-5/12 landscape:lg:w-4/12">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
               {t("Durée", "Flexibility")}
@@ -208,7 +206,7 @@ export default function NosSolutionsPage() {
           </div>
 
           {/* Right Col: Pillars */}
-          <div className="w-full lg:w-8/12 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="w-full lg:w-8/12 landscape:w-7/12 landscape:lg:w-8/12 grid grid-cols-1 md:grid-cols-2 landscape:grid-cols-2 gap-8 landscape:gap-4 landscape:lg:gap-8">
             <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
               <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Mission courte", "One-off engagement")}</h4>
               <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
@@ -304,9 +302,9 @@ export default function NosSolutionsPage() {
       />
 
       {/* ── 4.7 LANGUES & 4.8 BON A SAVOIR ── */}
-      <section id="langues" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+      <section id="langues" className="relative w-full bg-white pt-12 md:pt-[5.25rem] landscape:pt-8 landscape:lg:pt-[5.25rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-24 scroll-mt-20">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 landscape:grid-cols-2 gap-12 landscape:gap-8 lg:gap-16">
             
             {/* Langues Card */}
             <div className="bg-[#141824] p-10 lg:p-12 shadow-xl border-t-4 border-t-[#e8e1d7] flex flex-col justify-center">

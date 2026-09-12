@@ -21,7 +21,7 @@ const upload = multer({
 // Create a new Magic Link
 router.post('/generate', authenticateJWT, async (req, res) => {
   try {
-    const { dossierId, type, expiresInDays = 7 } = req.body;
+    const { dossierId, type, expiresInDays = 7, note } = req.body;
     
     if (!dossierId || !type) {
       return res.status(400).json({ success: false, error: 'dossierId et type requis.' });
@@ -32,10 +32,11 @@ router.post('/generate', authenticateJWT, async (req, res) => {
 
     const magicLink = await prisma.lienMagique.create({
       data: {
-        type, // 'ACQUISITION' or 'LIVRAISON'
+        type,
         dossierId,
         createdBy: req.user.id,
-        expiresAt
+        expiresAt,
+        note: note || null
       }
     });
 
@@ -120,6 +121,7 @@ router.get('/verify/:token', async (req, res) => {
     const data = {
       id: magicLink.id,
       type: magicLink.type,
+      note: magicLink.note || null,
       dossierRef: magicLink.dossier.reference,
       clientName: magicLink.dossier.client?.raisonSocial || magicLink.dossier.client?.nom || 'Client',
       documents: []
@@ -179,9 +181,8 @@ router.post('/upload/:token', upload.array('files', 10), async (req, res) => {
         data: {
           dossierId: magicLink.dossierId,
           name: file.originalname,
-          type: "Document Client (Dépôt Magique)",
           url: s3Key,
-          uploadedById: magicLink.createdBy // Fallback to the person who generated the link
+          uploadedById: magicLink.createdBy
         }
       });
       uploadedDocs.push(doc);

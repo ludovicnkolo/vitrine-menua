@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://menuaconsulting.com/en/privacy-policy',
     languages: {
-      'fr-FR': 'https://menuaconsulting.com/politique-de-confidentialite',
+      'fr-FR': 'https://menuaconsulting.com/fr/politique-de-confidentialite',
       'en-US': 'https://menuaconsulting.com/en/privacy-policy',
-      'x-default': 'https://menuaconsulting.com/politique-de-confidentialite',
+      'x-default': 'https://menuaconsulting.com/fr/politique-de-confidentialite',
     },
   },
   openGraph: {

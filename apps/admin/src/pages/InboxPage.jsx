@@ -8,6 +8,7 @@ import ActionDropdown from '../components/ActionDropdown';
 import PaginationControls from '../components/PaginationControls';
 import FilePreviewModal from '../components/FilePreviewModal';
 import AttachmentSelect from '../components/AttachmentSelect';
+import ConfirmModal from '../components/ConfirmModal';
 
 const DetailField = ({ label, value, children }) => (
   <div>
@@ -19,27 +20,27 @@ const DetailField = ({ label, value, children }) => (
 );
 
 const InlineDetailField = ({ label, value, children }) => (
-  <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-    <span style={{fontWeight: 500, color: 'var(--text-muted)'}}>{label} :</span>
-    <div style={{color: 'var(--text-main)', display: 'flex', alignItems: 'center'}}>
+  <div style={{display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem'}}>
+    <span style={{fontWeight: 500, color: 'var(--text-muted)', flexShrink: 0}}>{label} :</span>
+    <div style={{color: 'var(--text-main)', flex: 1, wordBreak: 'break-word'}}>
       {children || value}
     </div>
   </div>
 );
 
 const getDisplayStatus = (status) => {
-  if (!status) return 'EN ATTENTE';
+  if (!status) return 'En attente';
   const s = status.toUpperCase();
-  if (s === 'CLASSE' || s === 'CLASSÉ') return 'CLASSÉ';
-  if (s === 'TRAITE' || s === 'TRAITÉ') return 'TRAITÉ';
-  return 'EN ATTENTE';
+  if (s === 'CLASSE' || s === 'CLASSÉ') return 'Classé';
+  if (s === 'TRAITE' || s === 'TRAITÉ') return 'Traité';
+  return 'En attente';
 };
 
 const getStatusBadge = (status) => {
   const displayStatus = getDisplayStatus(status);
-  if (displayStatus === 'EN ATTENTE') return { bg: '#FEE2E2', color: '#DC2626' }; // Red
-  if (displayStatus === 'TRAITÉ') return { bg: '#DCFCE7', color: '#166534' }; // Green
-  if (displayStatus === 'CLASSÉ') return { bg: '#E0E7FF', color: '#4F46E5' }; // Blue
+  if (displayStatus === 'En attente') return { bg: '#FEE2E2', color: '#DC2626' }; // Red
+  if (displayStatus === 'Traité') return { bg: '#DCFCE7', color: '#166534' }; // Green
+  if (displayStatus === 'Classé') return { bg: '#E0E7FF', color: '#4F46E5' }; // Blue
   return { bg: '#F1F5F9', color: '#475569' };
 };
 
@@ -94,6 +95,7 @@ const InboxPage = ({ userRole }) => {
   const [showTraitePopup, setShowTraitePopup] = useState(false);
   const [lieuTraitement, setLieuTraitement] = useState('');
   const [numeroReference, setNumeroReference] = useState('');
+  const [showConfirmClasse, setShowConfirmClasse] = useState(false);
 
   const [taskDescription, setTaskDescription] = useState('');
   const [taskEcheance, setTaskEcheance] = useState('');
@@ -507,9 +509,7 @@ const InboxPage = ({ userRole }) => {
   const renderDropdown = (m) => {
     return (
       <ActionDropdown isOpen={openMenuId === m.id} menuRef={menuRef} width="150px">
-        <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setProcessMsg(m); }}>
-          <Eye size={14} /> Consulter
-        </button>
+
         {(userRole === 'Administrateur' || userRole === 'Super administrateur') && (
           <button type="button" className="dropdown-item" onClick={() => { setOpenMenuId(null); setAssignMsg(m); }}>
             <Files size={14} /> Assigner à...
@@ -596,19 +596,16 @@ const InboxPage = ({ userRole }) => {
         <table>
           <thead>
             <tr>
-              <th style={{ width: '5%' }}>№</th>
-              {tab === 'personnel' && <th style={{ width: '8%', whiteSpace: 'nowrap' }}>Priorité</th>}
-              <th style={{ width: '10%', whiteSpace: 'nowrap' }}>Statut</th>
-              <th style={{ width: tab === 'interne' ? '15%' : '18%' }}>{tab === 'interne' ? 'Emetteur' : 'Nom'}</th>
-              <th style={{ width: '18%' }}>{tab === 'recrutement' ? 'E-mail' : 'Email'}</th>
+              <th style={{ width: '4%' }}>№</th>
+              {(tab === 'personnel' || tab === 'contact' || tab === 'recrutement') && <th style={{ width: '8%', whiteSpace: 'nowrap' }}>Priorité</th>}
+              <th style={{ width: '11%', whiteSpace: 'nowrap' }}>Statut</th>
+              <th style={{ width: tab === 'interne' ? '20%' : '22%' }}>{tab === 'interne' ? 'Emetteur' : 'Nom'}</th>
+              <th style={{ width: '24%' }}>{tab === 'recrutement' ? 'E-mail' : 'Email'}</th>
               {(tab === 'contact' || tab === 'recrutement') && (
-                <th style={{ width: '10%', whiteSpace: 'nowrap' }}>Vérification</th>
+                <th style={{ width: '12%', whiteSpace: 'nowrap' }}>Vérification</th>
               )}
-              <th style={{ width: '10%' }}>{tab === 'interne' ? 'Source' : (tab === 'personnel' ? 'Étiquette' : 'Type')}</th>
-              <th style={{ width: tab === 'interne' ? '15%' : '17%' }}>
-                {tab === 'contact' ? 'Besoins' : tab === 'recrutement' ? 'Compétences' : tab === 'interne' ? 'ID' : 'Sujet'}
-              </th>
-              <th style={{ width: '12%' }}>Date</th>
+              <th style={{ width: '12%' }}>{tab === 'interne' ? 'Source' : (tab === 'personnel' ? 'Étiquette' : 'Type')}</th>
+              <th style={{ width: '13%' }}>Date</th>
               <th style={{ width: '8%' }}>Actions</th>
             </tr>
           </thead>
@@ -624,13 +621,13 @@ const InboxPage = ({ userRole }) => {
                 return { bg: '#DCFCE7', color: '#166534' }; // Green for Normal
               };
 
-              const renderMessageRow = (m, index, col2, col3, typeBadgeText, typeBadgeBg, typeBadgeColor, col5, col5Style) => (
+              const renderMessageRow = (m, index, col2, col3, typeBadgeText, typeBadgeBg, typeBadgeColor) => (
                 <tr key={m.id}>
                   <td style={{ fontWeight: 500, color: 'var(--text-muted)' }}>{index + 1}</td>
-                  {tab === 'personnel' && (
+                  {(tab === 'personnel' || tab === 'contact' || tab === 'recrutement') && (
                     <td>
                       <span style={{
-                        padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase',
+                        padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 600,
                         background: getPriorityBadge(m.priorite || 'Normal').bg, color: getPriorityBadge(m.priorite || 'Normal').color
                       }}>
                         {m.priorite || 'Normal'}
@@ -639,7 +636,7 @@ const InboxPage = ({ userRole }) => {
                   )}
                   <td>
                     <span style={{
-                      padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
+                      padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 600,
                       background: getStatusBadge(m.status).bg, color: getStatusBadge(m.status).color,
                       whiteSpace: 'nowrap'
                     }}>{getDisplayStatus(m.status)}</span>
@@ -662,20 +659,19 @@ const InboxPage = ({ userRole }) => {
                     </td>
                   )}
                   <td>
-                    <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: typeBadgeBg, color: typeBadgeColor}}>
+                    <span style={{padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 600, background: typeBadgeBg, color: typeBadgeColor}}>
                       {tab === 'personnel' ? (m.etiquette || 'Général') : typeBadgeText}
                     </span>
                   </td>
-                  <td><div className="truncate-text" style={col5Style || {fontSize: "0.875rem"}}>{col5}</div></td>
                   <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{formatDate(m.createdAt)}</td>
                   <td>
-                    <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
-                      <div style={{position: 'relative'}}>
-                        <button type="button" onClick={(e) => toggleMenu(e, m.id)} style={{background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '8px', width: '32px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4A5568'}} title="Options">
-                          <MoreVertical size={16} />
-                        </button>
-                        {renderDropdown(m)}
-                      </div>
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center'}}>
+                      <button type="button" onClick={() => setProcessMsg(m)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)'}} title="Consulter le message">
+                        <Eye size={18} />
+                      </button>
+                      <button type="button" onClick={() => setDeleteMsg(m)} style={{background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444'}} title="Supprimer le message">
+                        <Trash size={18} />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -684,16 +680,14 @@ const InboxPage = ({ userRole }) => {
               if (tab === 'contact') {
                 return messages.map((m, i) => renderMessageRow(
                   m, i, m.nomPrenom, m.email,
-                  m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier', '#E0E7FF', '#4F46E5',
-                  m.contact?.typeBesoin || m.objet
+                  m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier', '#E0E7FF', '#4F46E5'
                 ));
               }
 
               if (tab === 'recrutement') {
                 return messages.map((m, i) => renderMessageRow(
                   m, i, m.nomPrenom, m.email,
-                  m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier', '#FEF3C7', '#D97706',
-                  m.recrutement?.competenceCle || m.objet
+                  m.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier', '#FEF3C7', '#D97706'
                 ));
               }
 
@@ -767,52 +761,62 @@ const InboxPage = ({ userRole }) => {
             
             {/* Fields for Contact */}
             {tab === 'contact' && (
-              <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem'}}>
-                <InlineDetailField label="Type de contact" value={(extractFieldFromHtml(processMsg.bodyHtml, 'Type de client') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier')).replace(' / Organisation', '').replace(' (B2B)', '')} />
-                <InlineDetailField label={processMsg.statusSubmitter === 'SOCIETE' ? "Nom du contact de l'entreprise" : "Nom complet"} value={processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'} />
-                {processMsg.statusSubmitter === 'SOCIETE' && (
-                  <InlineDetailField label="Société" value={processMsg.raisonSocial || extractFieldFromHtml(processMsg.bodyHtml, 'Société') || 'Non renseigné'} />
-                )}
-                <InlineDetailField label="Téléphone" value={processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'} />
-                <InlineDetailField label="Email" value={processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'} />
-                <InlineDetailField label="Statut Vérification Email" value={processMsg.verifaliaStatus ? `${getVerifaliaBadge(processMsg.verifaliaStatus).text} (${processMsg.verifaliaStatus})` : 'Non vérifié'} />
-                <InlineDetailField label="Fichiers joints">
-                  <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
-                    <AttachmentSelect files={[processMsg.cv, processMsg.attachment, processMsg.contact?.pieceJointe]} onPreview={setPreviewFile} />
-                  </div>
-                </InlineDetailField>
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem', background: '#F8FAFC', padding: '1.25rem 1.5rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+                {/* Colonne 1 — Informations du contact */}
+                <div style={{display: 'flex', flexDirection: 'column', gap: '0.85rem', borderRight: '1px solid var(--border)', paddingRight: '1rem'}}>
+                  <div style={{fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--primary)', marginBottom: '0.25rem'}}>Informations du contact</div>
+                  <InlineDetailField label="Type de contact" value={(extractFieldFromHtml(processMsg.bodyHtml, 'Type de client') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise' : 'Particulier')).replace(' / Organisation', '').replace(' (B2B)', '')} />
+                  {processMsg.statusSubmitter === 'SOCIETE' && (
+                    <InlineDetailField label="Société" value={processMsg.raisonSocial || extractFieldFromHtml(processMsg.bodyHtml, 'Société') || 'Non renseigné'} />
+                  )}
+                  <InlineDetailField label={processMsg.statusSubmitter === 'SOCIETE' ? "Nom du contact" : "Nom complet"} value={processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'} />
+                  <InlineDetailField label="Téléphone" value={processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'} />
+                  <InlineDetailField label="Email" value={processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'} />
+                </div>
+
+                {/* Colonne 2 — Qualification de la demande */}
+                <div style={{display: 'flex', flexDirection: 'column', gap: '0.85rem', paddingLeft: '0.5rem'}}>
+                  <div style={{fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--primary)', marginBottom: '0.25rem'}}>Qualification de la demande</div>
+                  <InlineDetailField label="Statut vérification email" value={processMsg.verifaliaStatus ? `${getVerifaliaBadge(processMsg.verifaliaStatus).text} (${processMsg.verifaliaStatus})` : 'Non vérifié'} />
+                  <InlineDetailField label="Type de besoin" value={processMsg.contact?.typeBesoin || extractFieldFromHtml(processMsg.bodyHtml, 'Type de besoin') || extractFieldFromHtml(processMsg.bodyHtml, 'Type de demande') || extractFieldFromHtml(processMsg.bodyHtml, 'Besoin') || processMsg.objet || 'Non renseigné'} />
+                </div>
               </div>
             )}
 
 
             {/* Fields for Recrutement */}
             {tab === 'recrutement' && (
-              <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem'}}>
-                <InlineDetailField label="Type de contact" value={extractFieldFromHtml(processMsg.bodyHtml, 'Type de profil') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise (B2B)' : 'Particulier')} />
-                <InlineDetailField label="Nom complet" value={processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'} />
-                <InlineDetailField label="Email" value={processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'} />
-                <InlineDetailField label="Téléphone" value={processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'} />
-                <InlineDetailField label="Statut Vérification Email" value={processMsg.verifaliaStatus ? `${getVerifaliaBadge(processMsg.verifaliaStatus).text} (${processMsg.verifaliaStatus})` : 'Non vérifié'} />
-                <InlineDetailField label="Années d'expérience" value={processMsg.recrutement?.anneeExperience || 'Non renseigné'} />
-                <InlineDetailField label="Langues" value={processMsg.recrutement?.langue || extractFieldFromHtml(processMsg.bodyHtml, 'Langues') || 'Non renseigné'} />
-                <InlineDetailField label="Lieu de résidence" value={processMsg.recrutement?.lieuResidence || extractFieldFromHtml(processMsg.bodyHtml, 'Localisation') || 'Non renseigné'} />
-                <InlineDetailField label="Disponibilité" value={extractFieldFromHtml(processMsg.bodyHtml, 'Disponibilité') || 'Non renseigné'} />
-                <InlineDetailField label="Profil LinkedIn">
-                  {processMsg.recrutement?.lienLinkedin ? (
-                    <a href={processMsg.recrutement.lienLinkedin} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>
-                      {processMsg.recrutement.lienLinkedin}
-                    </a>
-                  ) : extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio') ? (
-                    <a href={extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio')} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>
-                      {extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio')}
-                    </a>
-                  ) : 'Non renseigné'}
-                </InlineDetailField>
-                <InlineDetailField label="Fichiers joints">
-                  <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
-                    <AttachmentSelect files={[processMsg.cv, processMsg.attachment, processMsg.contact?.pieceJointe]} onPreview={setPreviewFile} />
-                  </div>
-                </InlineDetailField>
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem', background: '#F8FAFC', padding: '1.25rem 1.5rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+                {/* Colonne 1 — Informations du contact */}
+                <div style={{display: 'flex', flexDirection: 'column', gap: '0.85rem', borderRight: '1px solid var(--border)', paddingRight: '1rem'}}>
+                  <div style={{fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--primary)', marginBottom: '0.25rem'}}>Informations du contact</div>
+                  <InlineDetailField label="Type de contact" value={extractFieldFromHtml(processMsg.bodyHtml, 'Type de profil') || (processMsg.statusSubmitter === 'SOCIETE' ? 'Entreprise (B2B)' : 'Particulier')} />
+                  <InlineDetailField label="Nom complet" value={processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, 'Nom complet') || 'Non renseigné'} />
+                  <InlineDetailField label="Email" value={processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, 'Email') || 'Non renseigné'} />
+                  <InlineDetailField label="Téléphone" value={processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, 'Téléphone') || 'Non renseigné'} />
+                  <InlineDetailField label="Lieu de résidence" value={processMsg.recrutement?.lieuResidence || extractFieldFromHtml(processMsg.bodyHtml, 'Localisation') || 'Non renseigné'} />
+                  <InlineDetailField label="Profil LinkedIn">
+                    {processMsg.recrutement?.lienLinkedin ? (
+                      <a href={processMsg.recrutement.lienLinkedin} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>
+                        {processMsg.recrutement.lienLinkedin}
+                      </a>
+                    ) : extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio') ? (
+                      <a href={extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio')} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>
+                        {extractFieldFromHtml(processMsg.bodyHtml, 'LinkedIn / Portfolio')}
+                      </a>
+                    ) : 'Non renseigné'}
+                  </InlineDetailField>
+                </div>
+
+                {/* Colonne 2 — Profil professionnel */}
+                <div style={{display: 'flex', flexDirection: 'column', gap: '0.85rem', paddingLeft: '0.5rem'}}>
+                  <div style={{fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--primary)', marginBottom: '0.25rem'}}>Profil professionnel</div>
+                  <InlineDetailField label="Statut vérification email" value={processMsg.verifaliaStatus ? `${getVerifaliaBadge(processMsg.verifaliaStatus).text} (${processMsg.verifaliaStatus})` : 'Non vérifié'} />
+                  <InlineDetailField label="Années d'expérience" value={processMsg.recrutement?.anneeExperience || 'Non renseigné'} />
+                  <InlineDetailField label="Langues" value={processMsg.recrutement?.langue || extractFieldFromHtml(processMsg.bodyHtml, 'Langues') || 'Non renseigné'} />
+                  <InlineDetailField label="Disponibilité" value={extractFieldFromHtml(processMsg.bodyHtml, 'Disponibilité') || 'Non renseigné'} />
+                  <InlineDetailField label="Compétences clés" value={processMsg.recrutement?.competenceCle || extractFieldFromHtml(processMsg.bodyHtml, 'Compétences') || extractFieldFromHtml(processMsg.bodyHtml, 'Compétences clés') || 'Non renseigné'} />
+                </div>
               </div>
             )}
 
@@ -863,30 +867,18 @@ const InboxPage = ({ userRole }) => {
               {/* Left column: Actions / Pièces jointes */}
               {(tab === 'contact' || tab === 'recrutement') && (
                 <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                  {tab === 'contact' && (
                   <div className="card" style={{padding: '1.25rem'}}>
-                    <span style={{display: 'block', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Besoins</span>
-                    <ul style={{margin: 0, paddingLeft: '1.5rem', color: 'var(--text-main)', fontSize: '0.875rem'}}>
-                      {(processMsg.contact?.typeBesoin || processMsg.objet || 'Non renseigné')
-                        .split(',')
-                        .map((b, idx) => (
-                          <li key={idx} style={{marginBottom: '0.5rem', lineHeight: '1.5'}}>{b.trim()}</li>
-                        ))}
-                    </ul>
+                    <span style={{display: 'block', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Priorité</span>
+                    <select 
+                        value={processMsg.priorite || 'Normal'} 
+                        onChange={(e) => handleUpdateProperty('priorite', e.target.value)}
+                        style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', outline: 'none', background: '#FFF'}}
+                      >
+                        <option value="Normal">Normal</option>
+                        <option value="Prioritaire">Prioritaire</option>
+                        <option value="Urgent">Urgent</option>
+                    </select>
                   </div>
-                  )}
-                  {tab === 'recrutement' && (
-                  <div className="card" style={{padding: '1.25rem'}}>
-                    <span style={{display: 'block', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Compétences clés</span>
-                    <ul style={{margin: 0, paddingLeft: '1.5rem', color: 'var(--text-main)', fontSize: '0.875rem'}}>
-                      {(processMsg.recrutement?.competenceCle || processMsg.objet || 'Non renseigné')
-                        .split(',')
-                        .map((c, idx) => (
-                          <li key={idx} style={{marginBottom: '0.5rem', lineHeight: '1.5'}}>{c.trim()}</li>
-                        ))}
-                    </ul>
-                  </div>
-                  )}
               </div>
               )}
 
@@ -932,7 +924,7 @@ const InboxPage = ({ userRole }) => {
                         })}
                       </div>
 
-                      {getDisplayStatus(processMsg.status) !== 'TRAITÉ' && (
+                      {getDisplayStatus(processMsg.status) !== 'Traité' && (
                         <div style={{display: 'flex', gap: '0.75rem', marginTop: '1.5rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
                           <input 
                             type="text" 
@@ -982,8 +974,11 @@ const InboxPage = ({ userRole }) => {
                       <Files size={16} /> Ouvrir le Dossier Lié
                     </button>
                   )}
-                  {getDisplayStatus(processMsg.status) !== 'TRAITÉ' && (
-                    <button type="button" onClick={() => setShowActionChoiceModal(true)} className="btn btn-outline-primary" style={{fontWeight: 600}}>DÉMARRER LE TRAITEMENT</button>
+                  {getDisplayStatus(processMsg.status) !== 'Traité' && (
+                    <>
+                      <button type="button" onClick={() => setShowConfirmClasse(true)} className="btn btn-outline" style={{fontWeight: 600}}>Classer sans suite</button>
+                      <button type="button" onClick={() => setShowTraitePopup(true)} className="btn btn-primary" style={{fontWeight: 600}}>Marquer comme traité</button>
+                    </>
                   )}
                 </div>
               </div>
@@ -1070,6 +1065,20 @@ const InboxPage = ({ userRole }) => {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={showConfirmClasse}
+        title="Classer sans suite"
+        message="Êtes-vous sûr de vouloir classer ce message sans suite ? Il sera archivé et ne nécessitera plus d'action."
+        confirmText="Oui, classer"
+        cancelText="Annuler"
+        type="warning"
+        onConfirm={() => {
+          handleUpdateStatus('CLASSE');
+          setShowConfirmClasse(false);
+        }}
+        onCancel={() => setShowConfirmClasse(false)}
+      />
 
       {/* Create Task Modal */}
       {createTaskModal && (

@@ -85,22 +85,23 @@ router.post('/contact', upload.none(), async (req, res) => {
     }
 
     const typeText = clientType === 'company' ? 'Entreprise / Organisation' : 'Particulier';
-    const companyHtml = clientType === 'company' ? `Société : ${company}<br/>` : '';
+    const companyHtml = clientType === 'company' ? `<strong>Société</strong> : <span>${company}</span><br/>` : '';
     const needsHtml = parsedNeeds.length > 0 
       ? `<ul>${parsedNeeds.map(n => `<li>${n}</li>`).join('')}</ul>`
       : '<em>Aucun besoin spécifique coché</em>';
 
     const contentHTML = `
       <div style="margin-bottom: 20px;">
-        Type de client : ${typeText}<br/>
+        <strong>Type de client</strong> : <span>${typeText}</span><br/>
         ${companyHtml}
-        Nom complet : ${fullName}<br/>
-        Email : ${senderEmail}<br/>
-        Téléphone : ${phone}
+        <strong>Nom complet</strong> : <span>${fullName}</span><br/>
+        <strong>Email</strong> : <span>${senderEmail}</span><br/>
+        <strong>Téléphone</strong> : <span>${phone || ''}</span>
       </div>
-      Besoins identifiés : ${needsHtml}<br/>
-      Description du besoin : <br/>
+      <strong>Besoins identifiés</strong> : <div>${needsHtml}</div><br/>
+      <strong>Description du besoin</strong> : <div>
       ${description ? description.replaceAll('\n', '<br/>') : ''}
+      </div>
     `;
 
     // --- IMMEDIATE VERIFALIA CHECK ---
@@ -217,30 +218,34 @@ router.post('/join', upload.none(), async (req, res) => {
     } else if (skills) {
       parsedSkills = [skills];
     }
-    parsedSkills = parsedSkills.map(s => s === 'Autre' && otherSkill ? `Autre (${otherSkill})` : s);
+    parsedSkills = parsedSkills.map(s => {
+      const isOther = s.toLowerCase().trim() === 'autre' || s.toLowerCase().trim() === 'other';
+      return (isOther && otherSkill && otherSkill.trim() !== '') ? `${s} (${otherSkill.trim()})` : s;
+    });
 
     const typeText = profileType === 'company' ? 'Entreprise (B2B)' : 'Particulier';
-    const companyHtml = profileType === 'company' ? `Société : ${company}<br/>` : '';
+    const companyHtml = profileType === 'company' ? `<strong>Société</strong> : <span>${company}</span><br/>` : '';
     const skillsHtml = parsedSkills.length > 0 
       ? `<ul>${parsedSkills.map(s => `<li>${s}</li>`).join('')}</ul>`
       : '<em>Aucune compétence spécifique cochée</em>';
 
     const contentHTML = `
       <div style="margin-bottom: 20px;">
-        Type de profil : ${typeText}<br/>
+        <strong>Type de profil</strong> : <span>${typeText}</span><br/>
         ${companyHtml}
-        Nom complet : ${lastName + ' ' + firstName}<br/>
-        Email : ${email}<br/>
-        Téléphone : ${phone}<br/>
-        Expérience : ${experience}<br/>
-        Langues : ${languages}<br/>
-        Localisation : ${location}<br/>
-        Disponibilité : ${availability}<br/>
-        LinkedIn / Portfolio : ${linkedin ? `<a href="${linkedin}" style="color: #141824;">${linkedin}</a>` : ''}
+        <strong>Nom complet</strong> : <span>${lastName + ' ' + firstName}</span><br/>
+        <strong>Email</strong> : <span>${email}</span><br/>
+        <strong>Téléphone</strong> : <span>${phone || ''}</span><br/>
+        <strong>Expérience</strong> : <span>${experience || ''}</span><br/>
+        <strong>Langues</strong> : <span>${languages || ''}</span><br/>
+        <strong>Localisation</strong> : <span>${location || ''}</span><br/>
+        <strong>Disponibilité</strong> : <span>${availability || ''}</span><br/>
+        <strong>LinkedIn / Portfolio</strong> : <span>${linkedin ? `<a href="${linkedin}" style="color: #141824;">${linkedin}</a>` : ''}</span>
       </div>
-      Compétences clés : ${skillsHtml}<br/>
-      Message / Motivations : <br/>
+      <strong>Compétences clés</strong> : <div>${skillsHtml}</div><br/>
+      <strong>Message / Motivations</strong> : <div>
       ${message ? message.replaceAll('\n', '<br/>') : ''}
+      </div>
     `;
 
     // --- IMMMEDIATE VERIFALIA CHECK ---

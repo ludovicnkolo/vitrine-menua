@@ -53,7 +53,7 @@ router.get('/', authenticateJWT, async (req, res) => {
 // Créer une nouvelle publication
 router.post('/', authenticateJWT, async (req, res) => {
   try {
-    const { title, type, category, excerpt, location, contentHtml, sections, coverImage, status } = req.body;
+    const { title, title_en, type, category, category_en, location, contentHtml, contentHtml_en, sections, sections_en, coverImage, status } = req.body;
     
     if (!title) {
       return res.status(400).json({ success: false, error: 'Le titre est obligatoire.' });
@@ -67,12 +67,15 @@ router.post('/', authenticateJWT, async (req, res) => {
     const pub = await prisma.publication.create({
       data: {
         title,
+        title_en: title_en || null,
         type: type || 'ACTUALITE',
         category,
-        excerpt,
+        category_en: category_en || null,
         location,
         contentHtml: contentHtml || '',
+        contentHtml_en: contentHtml_en || null,
         sections: sections ? JSON.stringify(sections) : null,
+        sections_en: sections_en ? JSON.stringify(sections_en) : null,
         coverImage,
         status: status || 'BROUILLON',
         authorId: req.user.id,
@@ -91,7 +94,7 @@ router.post('/', authenticateJWT, async (req, res) => {
 router.put('/:id', authenticateJWT, async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, type, category, excerpt, location, contentHtml, sections, coverImage, status } = req.body;
+    const { title, title_en, type, category, category_en, location, contentHtml, contentHtml_en, sections, sections_en, coverImage, status } = req.body;
     
     const existing = await prisma.publication.findUnique({ where: { id } });
     if (!existing) {
@@ -100,12 +103,15 @@ router.put('/:id', authenticateJWT, async (req, res) => {
 
     const dataToUpdate = {
       title,
+      title_en: title_en || null,
       type,
       category,
-      excerpt,
+      category_en: category_en || null,
       location,
       contentHtml,
+      contentHtml_en: contentHtml_en || null,
       sections: sections ? JSON.stringify(sections) : null,
+      sections_en: sections_en ? JSON.stringify(sections_en) : null,
       coverImage,
       status
     };

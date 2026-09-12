@@ -269,7 +269,7 @@ function App() {
           {canSeeCMS && (
             <Link to="/cms" className={`nav-item ${location.pathname.includes('/cms') ? 'active' : ''}`}>
               <Globe size={20} />
-              Site Web (CMS)
+              Espace site web
             </Link>
           )}
         </nav>

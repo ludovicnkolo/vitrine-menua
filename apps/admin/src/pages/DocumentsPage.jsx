@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getSafeApiUrl } from '../utils/helpers';
-import { Folder, FileText, ChevronRight, Home, Search, X, Plus, Upload, Trash, File, Edit, FileImage, FileArchive, FileVideo, FileAudio, FileSpreadsheet, FileCode } from 'lucide-react';
+import { Folder, FileText, ChevronRight, Home, Search, X, Plus, Upload, Trash, File, Edit, FileImage, FileArchive, FileVideo, FileAudio, FileSpreadsheet, FileCode, Download, RefreshCw, Eye } from 'lucide-react';
 import FilePreviewModal from '../components/FilePreviewModal';
 
 const getFileIconAndColor = (filename) => {
@@ -68,6 +68,12 @@ export default function DocumentsPage() {
   const [renameName, setRenameName] = useState('');
 
   const [previewFile, setPreviewFile] = useState(null);
+  const [contextMenu, setContextMenu] = useState(null);
+  const [showTrashModal, setShowTrashModal] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
+  const [uploadFile, setUploadFile] = useState(null);
+  const [loadingTrash, setLoadingTrash] = useState(false);
+  const [trashItems, setTrashItems] = useState({ dossiers: [], documents: [] });
 
   const currentUserStr = sessionStorage.getItem('adminUser');
   const currentUser = currentUserStr ? JSON.parse(currentUserStr) : {};
@@ -162,9 +168,25 @@ export default function DocumentsPage() {
   // Context Menu Handlers
   const handleContextMenu = (e, item, type) => {
     e.preventDefault();
+    
+    const windowHeight = window.innerHeight;
+    const windowWidth = window.innerWidth;
+    
+    // Adjust Y position if too close to the bottom (menu height is ~250px)
+    let y = e.clientY;
+    if (y + 250 > windowHeight) {
+      y = Math.max(0, windowHeight - 250);
+    }
+    
+    // Adjust X position if too close to the right (menu width is ~180px)
+    let x = e.clientX;
+    if (x + 180 > windowWidth) {
+      x = Math.max(0, windowWidth - 180);
+    }
+
     setContextMenu({
-      mouseX: e.clientX,
-      mouseY: e.clientY,
+      mouseX: x,
+      mouseY: y,
       item,
       type // 'folder', 'file', 'empty'
     });
@@ -180,13 +202,15 @@ export default function DocumentsPage() {
   }, []);
 
   const handleDeleteDossier = async (folder) => {
-    if (!folder.parentDossierId) {
-      window.customAlert("Les dossiers principaux ne peuvent être supprimés que via l'interface principale 'Dossiers'.");
-      return;
-    }
     const protectedNames = ['ADMINISTRATION & FINANCES', 'OPÉRATIONS & RÉALISATIONS', 'RELATIONS & DÉVELOPPEMENT'];
     if (protectedNames.includes(folder.name)) {
       window.customAlert("Ce sous-dossier par défaut ne peut pas être supprimé de la GED.");
+      return;
+    }
+
+    // Bloquer la suppression des sous-dossiers auto-générés par les missions
+    if (folder.isSystem) {
+      window.customAlert("Ce dossier a été créé automatiquement par une mission.\n\nPour le supprimer, supprimez la mission ou le dossier parent correspondant.");
       return;
     }
 
@@ -200,7 +224,10 @@ export default function DocumentsPage() {
       if (res.ok) {
         setDossiers(prev => prev.filter(d => d.id !== folder.id && d.parentDossierId !== folder.id));
         fetchDossiers();
-      } else window.customAlert("Erreur lors de la suppression");
+      } else {
+        const err = await res.json().catch(()=>({}));
+        window.customAlert("Erreur lors de la suppression: " + (err.error || res.status));
+      }
     } catch (e) {
       console.error(e);
     }
@@ -228,6 +255,55 @@ export default function DocumentsPage() {
       console.error(e);
       window.customAlert("Erreur de connexion");
     }
+  };
+
+  const handleDownloadDocument = (url) => {
+    const token = sessionStorage.getItem('adminToken');
+    const parts = url.split('/');
+    let bucket = 'formulaires';
+    let filename = url;
+    if (parts.length > 1) {
+      bucket = parts.shift();
+      filename = parts.join('/');
+    }
+    const downloadUrl = getSafeApiUrl(`/api/files/download/${encodeURIComponent(bucket)}/${encodeURIComponent(filename)}?token=${token}`);
+    window.open(downloadUrl, '_blank');
+  };
+
+  const handleReplaceDocument = (id) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      setIsSubmitting(true);
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      try {
+        const token = sessionStorage.getItem('adminToken');
+        const res = await fetch(getSafeApiUrl(`/api/files/replace/${id}`), {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData
+        });
+        
+        if (res.ok) {
+          fetchDossiers();
+          window.customAlert('Fichier remplacé avec succès', 'success');
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          window.customAlert("Erreur lors du remplacement : " + (errData.error || res.statusText));
+        }
+      } catch (err) {
+        console.error(err);
+        window.customAlert("Erreur de connexion");
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
+    input.click();
   };
 
   const handleRenameFolder = async (e) => {
@@ -289,8 +365,9 @@ export default function DocumentsPage() {
     setLoadingTrash(true);
     try {
       const token = sessionStorage.getItem('adminToken');
-      const res = await fetch(getSafeApiUrl('/api/crm/documents/trash/list'), {
-        headers: { 'Authorization': `Bearer ${token}` }
+      const res = await fetch(getSafeApiUrl(`/api/crm/documents/trash/list?t=${Date.now()}`), {
+        headers: { 'Authorization': `Bearer ${token}` },
+        cache: 'no-store'
       });
       if (res.ok) {
         const data = await res.json();
@@ -413,6 +490,16 @@ export default function DocumentsPage() {
               <Trash size={16} /> Corbeille
             </button>
           )}
+          <button
+            type="button"
+            onClick={() => { setLoading(true); fetchDossiers(); }}
+            className="btn btn-outline"
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#FFF', color: '#475569', border: '1px solid var(--border)', padding: '0.6rem 1rem', borderRadius: '0.5rem', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer' }}
+            title="Rafraîchir"
+          >
+            <RefreshCw size={16} />
+          </button>
+
           <div style={{ position: 'relative', width: '280px' }}>
             <Search size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
             <input 
@@ -624,7 +711,7 @@ export default function DocumentsPage() {
               >
                 <Folder size={16} /> Ouvrir
               </button>
-              {contextMenu.item.canWrite && (
+              {(isSuperAdmin || contextMenu.item.canWrite) && (
                 <>
                   <button 
                     onClick={() => { closeContextMenu(); setRenameItem(contextMenu.item); setRenameName(contextMenu.item.name); setShowRenameModal(true); }}
@@ -661,10 +748,31 @@ export default function DocumentsPage() {
                 onFocus={(e) => e.currentTarget.style.background = '#F1F5F9'}
                 onBlur={(e) => e.currentTarget.style.background = 'transparent'}
               >
-                <FileText size={16} /> Ouvrir le fichier
+                <Eye size={16} /> Ouvrir le fichier
+              </button>
+              <button 
+                onClick={() => { closeContextMenu(); handleDownloadDocument(contextMenu.item.url); }}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--text-main)' }}
+                onMouseOver={(e) => e.currentTarget.style.background = '#F1F5F9'}
+                onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                onFocus={(e) => e.currentTarget.style.background = '#F1F5F9'}
+                onBlur={(e) => e.currentTarget.style.background = 'transparent'}
+              >
+                <Download size={16} /> Télécharger
               </button>
               {canWriteCurrent && (
-                <button 
+                <>
+                  <button 
+                    onClick={() => { closeContextMenu(); handleReplaceDocument(contextMenu.item.id); }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--text-main)' }}
+                    onMouseOver={(e) => e.currentTarget.style.background = '#F1F5F9'}
+                    onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                    onFocus={(e) => e.currentTarget.style.background = '#F1F5F9'}
+                    onBlur={(e) => e.currentTarget.style.background = 'transparent'}
+                  >
+                    <RefreshCw size={16} /> Remplacer
+                  </button>
+                  <button 
                   onClick={() => { closeContextMenu(); handleDeleteDocument(contextMenu.item.id); }}
                   style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.875rem', color: 'var(--danger)' }}
                   onMouseOver={(e) => e.currentTarget.style.background = '#FEF2F2'}
@@ -674,6 +782,7 @@ export default function DocumentsPage() {
                 >
                   <Trash size={16} /> Supprimer
                 </button>
+                </>
               )}
             </>
           )}
@@ -748,7 +857,7 @@ export default function DocumentsPage() {
       {/* Modal Corbeille */}
       {showTrashModal && (
         <div className="fade-in" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100}}>
-          <div style={{background: '#FFF', padding: '2rem', borderRadius: '8px', width: '90%', maxWidth: '800px', maxHeight: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
+          <div style={{background: '#FFF', padding: '2rem', borderRadius: '8px', width: '90%', maxWidth: '1100px', maxHeight: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
               <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
                 <Trash size={24} color="var(--danger)"/> Corbeille
@@ -774,9 +883,9 @@ export default function DocumentsPage() {
                   <tbody>
                     {trashItems.map(item => (
                       <tr key={item.id} style={{borderBottom: '1px solid var(--border)'}}>
-                        <td style={{padding: '1rem', color: 'var(--text-main)', fontWeight: 500}}>{item.name}</td>
-                        <td style={{padding: '1rem', color: 'var(--text-muted)'}}>{item.dossier?.name || '-'}</td>
-                        <td style={{padding: '1rem', color: 'var(--text-muted)'}}>{new Date(item.updatedAt).toLocaleDateString()}</td>
+                        <td style={{padding: '1rem', color: 'var(--text-main)', fontWeight: 500, maxWidth: '300px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}} title={item.name}>{item.name}</td>
+                        <td style={{padding: '1rem', color: 'var(--text-muted)', maxWidth: '250px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}} title={item.dossier?.name}>{item.dossier?.name || '-'}</td>
+                        <td style={{padding: '1rem', color: 'var(--text-muted)'}}>{new Date(item.createdAt).toLocaleDateString()}</td>
                         <td style={{padding: '1rem', textAlign: 'right'}}>
                           <button 
                             onClick={() => handleRestoreTrash(item.id)}

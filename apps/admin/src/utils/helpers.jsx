@@ -3,36 +3,25 @@ import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
 // --- HELPERS (Badges) ---
 function getStatusBadge(status) {
   const map = {
-    // TACHE
+    // ─── DICTIONNAIRE STRICT DES STATUTS ───
+    
+    // STATUTS COMMUNS (Dossier, Mission, Tache)
     'NOUVEAU': { text: 'Nouveau', class: 'badge-new' },
-    'EN_COURS': { text: 'En cours', class: 'badge-progress' },
-    'A_VERIFIER': { text: 'À vérifier', class: 'badge-warning' },
-    'A_CORRIGER': { text: 'À corriger', style: { backgroundColor: '#FEE2E2', color: '#B91C1C', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
-    'REATTRIBUEE': { text: 'Réattribuée', class: 'badge-warning' },
-    'EN_CONTROLE': { text: 'En contrôle', class: 'badge-warning' },
-    'EN_VALIDATION_FINALE': { text: 'En validation finale', style: { backgroundColor: '#EDE9FE', color: '#6D28D9', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
-    'TERMINEE': { text: 'Terminée', class: 'badge-success' },
-    
-    // MISSION
-    'NON_DEMARREE': { text: 'Non démarrée', class: 'badge-new' },
-    
-    // DOSSIER
-    'OUVERT': { text: 'Ouvert', class: 'badge-progress' },
+    'OUVERT': { text: 'Ouvert', class: 'badge-progress' }, // Dossier / Mission
+    'EN_COURS': { text: 'En cours', class: 'badge-progress' }, // Tache
+    'EN_ATTENTE': { text: 'En attente', class: 'badge-warning' },
     'BLOQUE': { text: 'Bloqué', style: { backgroundColor: '#FEE2E2', color: '#B91C1C', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
-    'CLOTURE': { text: 'Clôturé', class: 'badge-success' },
-    'ARCHIVE': { text: 'Archivé', class: 'badge-warning' },
+    'TERMINE': { text: 'Terminé', class: 'badge-success' },
+    'ARCHIVE': { text: 'Archivé', style: { backgroundColor: '#F3F4F6', color: '#4B5563', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
+    'ANNULE': { text: 'Annulé', style: { backgroundColor: '#FEE2E2', color: '#B91C1C', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
 
-    // Fallbacks for legacy/other statuses if needed
-    'EN_ATTENTE': { text: 'En attente', class: 'badge-new' },
-    'EN_FINALISATION': { text: 'En finalisation', class: 'badge-warning' },
-    'A_AMELIORER': { text: 'À améliorer', style: { backgroundColor: '#FEE2E2', color: '#B91C1C', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
-    'EN_REVISION': { text: 'En révision', style: { backgroundColor: '#EDE9FE', color: '#6D28D9', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
-    'TO_ASSIGN': { text: 'À attribuer', class: 'badge-warning' },
-    'IN_PROGRESS': { text: 'En cours', class: 'badge-progress' },
-    'WAITING_DOCS': { text: 'Attente Docs', class: 'badge-warning' },
-    'IN_REVIEW': { text: 'En contrôle', class: 'badge-new' },
-    'VALIDATED': { text: 'Validé', class: 'badge-success' },
-    'FERME': { text: 'Fermé', class: 'badge-success' },
+    // SPECIFIQUES CONTROLE QUALITE (Tache)
+    'VERIFIER': { text: 'À vérifier', class: 'badge-warning' },
+    'A_CORRIGER': { text: 'À corriger', style: { backgroundColor: '#FEF2F2', color: '#DC2626', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
+    'FINALISER': { text: 'Finalisé (Attente Clôture)', style: { backgroundColor: '#EDE9FE', color: '#6D28D9', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
+    'REATTRIBUE': { text: 'Réattribuée', class: 'badge-warning' },
+
+    // STATUTS SYSTEMES OU FALLBACKS
     'Actif': { text: 'Actif', style: { backgroundColor: '#DEF7EC', color: '#03543F' } },
     'Inactif': { text: 'Inactif', style: { backgroundColor: '#FDE8E8', color: '#9B1C1C' } }
   }
@@ -131,7 +120,7 @@ async function uploadFile(file, bucket = 'formulaires') {
     if (data.success) {
       return bucket === 'users_id_cards'
         ? getSafeApiUrl(`/api/files/view/${data.fileData.path}`)
-        : data.fileData.filename;
+        : data.fileData.path;
     }
   } catch(e) { console.error('Upload error', e); }
   return null;

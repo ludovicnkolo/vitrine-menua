@@ -10,30 +10,30 @@ export default function NousConnaitrePage() {
 
   return (
     <main className="flex flex-col w-full min-h-screen">
-      
+
       {/* ── 2.1 INTRODUCTION (Full Bleed Hero) ── */}
-      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-screen flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="/img/connaitre-hero.webp" 
-            alt="Hero Background" 
-            className="w-full h-full object-cover object-[center_65%]" 
-            onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} 
+          <img
+            src="/img/connaitre-hero.webp"
+            alt="Hero Background"
+            className="w-full h-full object-cover object-[center_65%]"
+            onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
-          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+        <div className="laplace-container landscape:px-12 relative z-10 pt-56 md:pt-72 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-40 landscape:pb-16 lg:pb-24 landscape:lg:pb-24 mt-16 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12 landscape:ml-0 landscape:lg:-ml-12">
+            <h1 className="text-white text-[1.25rem] md:text-[2.5rem] landscape:text-[1.5rem] landscape:lg:text-[2.5rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               {t("Nous connaître", "About us")}
             </h1>
-            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
-            <p className="text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
+            <p className="text-[1.1rem] lg:text-[1.3rem] landscape:text-[1rem] landscape:lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {t("Une organisation opérationnelle structurée pour accompagner les entreprises dans l'exécution fiable de leurs fonctions back ", "A trusted operational partner working closely with businesses to deliver reliable back ")}
               <span className="font-sans font-medium">&amp;</span>
               {t(" middle office.", " middle-office support.")}
             </p>
-            <div className="-mt-2">
+            <div className="mt-4">
               <Link href="#notre-approche" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
                 {t("Découvrir notre approche", "Discover our approach")}
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
@@ -55,7 +55,7 @@ export default function NousConnaitrePage() {
             </p>
           </div>
           <div className="flex flex-col lg:flex-row-reverse items-center">
-            
+
             {/* Right Image (Desktop only) */}
             <div className="hidden lg:block w-full lg:w-4/12 lg:h-[420px] z-20 relative shrink-0">
               <img
@@ -66,9 +66,9 @@ export default function NousConnaitrePage() {
             </div>
 
             {/* Left Overlapping Grey Box */}
-            <div className="w-full lg:w-10/12 px-6 py-10 lg:px-12 lg:pl-20 lg:pr-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-mr-24">
+            <div className="w-full lg:w-10/12 px-6 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pl-20 landscape:lg:pl-20 lg:pr-32 landscape:lg:pr-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-mr-24">
               {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
-              <div className="absolute left-0 right-0 bottom-0 top-[220px] lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
+              <div className="absolute left-0 right-0 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
 
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
@@ -76,7 +76,7 @@ export default function NousConnaitrePage() {
               </h2>
 
               {/* Mobile Image (Visible only on mobile) */}
-              <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 z-20 relative shadow-md">
+              <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[250px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
                 <img
                   src="/img/connaitre_2.webp"
                   alt="Cabinet"
@@ -111,7 +111,7 @@ export default function NousConnaitrePage() {
               </div>
               <div className="flex justify-end mt-8">
                 <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                  {t("Présenter votre besoin", "Tell us about your requirements")} 
+                  {t("Présenter votre besoin", "Tell us about your requirements")}
                   <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                   <ArrowRight size={18} className="-ml-2" />
                 </Link>
@@ -120,41 +120,41 @@ export default function NousConnaitrePage() {
           </div>
         </div>
 
-      {/* 2.3 Notre Expertise */}
-      <div id="notre-expertise" className="laplace-container mt-20 lg:mt-32 scroll-mt-20">
-        <div className="w-full flex flex-col lg:flex-row gap-12 lg:gap-16">
-          {/* Left Col: Spacer */}
-          <div className="hidden lg:block lg:w-4/12"></div>
+        {/* 2.3 Notre Expertise */}
+        <div id="notre-expertise" className="laplace-container landscape:px-16 landscape:lg:px-12 mt-20 lg:mt-32 scroll-mt-20">
+          <div className="w-full flex flex-col lg:flex-row gap-12 lg:gap-16">
+            {/* Left Col: Spacer */}
+            <div className="hidden lg:block lg:w-4/12"></div>
 
-          {/* Right Col: Title & Content on the same vertical */}
-          <div className="w-full lg:w-8/12">
-            <div className="w-16 h-[3px] bg-[#141824] mb-6" />
-            <h2 className="text-[#141824] text-[1.5rem] md:text-[1.8rem] font-bold uppercase tracking-widest mb-8">
-              {t("Notre Expertise", "Our Expertise")}
-            </h2>
-            
-            <div className="space-y-6 text-[#6e7891] text-[1.05rem] md:text-[1.1rem] font-light leading-relaxed">
-              <p>
-                {formatBrand(t(
-                  "MENUA CONSULTING accompagne les entreprises, cabinets et organisations dans l’externalisation de leurs fonctions back et middle office en français et en anglais, afin de renforcer la fiabilité de leurs opérations, d’optimiser leurs ressources et de garantir la continuité de leurs activités.",
-                  "MENUA CONSULTING supports its clients in both French and English through a responsive, collaborative working relationship. We help improve operational reliability, make better use of internal resources and maintain business continuity."
-                ))}
-              </p>
-              <p>
-                {t(
-                  "Cette approche permet aux équipes internes de se concentrer sur les décisions stratégiques, les validations réglementaires et la relation client, tout en sécurisant le traitement opérationnel des activités back et middle office.",
-                  "This enables internal teams to focus on strategic decisions, regulatory approvals and client relationships while ensuring dependable delivery across back and middle-office activities."
-                )}
-              </p>
+            {/* Right Col: Title & Content on the same vertical */}
+            <div className="w-full lg:w-8/12">
+              <div className="w-16 h-[3px] bg-[#141824] mb-6" />
+              <h2 className="text-[#141824] text-[1.5rem] md:text-[1.8rem] font-bold uppercase tracking-widest mb-8">
+                {t("Notre Expertise", "Our Expertise")}
+              </h2>
+
+              <div className="space-y-6 text-[#6e7891] text-[1.05rem] md:text-[1.1rem] font-light leading-relaxed">
+                <p>
+                  {formatBrand(t(
+                    "MENUA CONSULTING accompagne les entreprises, cabinets et organisations dans l’externalisation de leurs fonctions back et middle office en français et en anglais, afin de renforcer la fiabilité de leurs opérations, d’optimiser leurs ressources et de garantir la continuité de leurs activités.",
+                    "MENUA CONSULTING supports its clients in both French and English through a responsive, collaborative working relationship. We help improve operational reliability, make better use of internal resources and maintain business continuity."
+                  ))}
+                </p>
+                <p>
+                  {t(
+                    "Cette approche permet aux équipes internes de se concentrer sur les décisions stratégiques, les validations réglementaires et la relation client, tout en sécurisant le traitement opérationnel des activités back et middle office.",
+                    "This enables internal teams to focus on strategic decisions, regulatory approvals and client relationships while ensuring dependable delivery across back and middle-office activities."
+                  )}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
         {/* 2.4 Notre approche */}
-        <div id="notre-approche" className="laplace-container mt-16 lg:mt-32 scroll-mt-20">
+        <div id="notre-approche" className="laplace-container landscape:px-16 landscape:lg:px-12 mt-16 lg:mt-32 scroll-mt-20">
           <div className="w-full border-t border-[#141824]/10 pt-16 lg:pt-24 flex flex-col lg:flex-row gap-12 lg:gap-16">
-            
+
             {/* Left Col: Title & Intro */}
             <div className="w-full lg:w-4/12">
               <div className="w-16 h-[3px] bg-[#141824] mb-6" />
@@ -166,21 +166,21 @@ export default function NousConnaitrePage() {
               </p>
 
               {/* Mobile Image */}
-              <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
-                <img 
-                  src="/img/connaitre-approche.webp" 
-                  alt="Notre approche" 
-                  className="w-full h-full object-cover object-center" 
-                  onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} 
+              <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
+                <img
+                  src="/img/connaitre-approche.webp"
+                  alt="Notre approche"
+                  className="w-full h-full object-cover object-center"
+                  onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
                 />
               </div>
 
               <div className="w-[85%] aspect-[4/5] rounded-sm overflow-hidden shadow-lg hidden lg:block">
-                <img 
-                  src="/img/connaitre-approche.webp" 
-                  alt="Notre approche" 
-                  className="w-full h-full object-cover object-left" 
-                  onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} 
+                <img
+                  src="/img/connaitre-approche.webp"
+                  alt="Notre approche"
+                  className="w-full h-full object-cover object-left"
+                  onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
                 />
               </div>
             </div>
@@ -240,7 +240,7 @@ export default function NousConnaitrePage() {
 
       {/* ── 2.5 NOTRE MÉTHODOLOGIE (Beige Section) ── */}
       <section id="notre-methodologie" className="relative w-full bg-[#e8e1d7] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12">
           <div className="text-center mb-20 ">
             <div className="inline-block text-left">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
@@ -282,7 +282,7 @@ export default function NousConnaitrePage() {
               </div>
             ))}
           </div>
-          
+
           <div className="mt-8 text-right">
             <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
               {t("Présenter votre besoin", "Tell us about your requirements")}
@@ -295,7 +295,7 @@ export default function NousConnaitrePage() {
 
       {/* ── 2.6 NOTRE ÉQUIPE ── */}
       <section id="notre-equipe" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container max-w-4xl mx-auto text-center">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-4xl mx-auto text-center">
           <div className="inline-block text-left mb-10">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="mb-4 text-[#141824] text-[1.3rem] md:text-[1.5rem] font-bold uppercase tracking-wider">{t("Notre équipe", "Our team")}</h2>
@@ -303,19 +303,19 @@ export default function NousConnaitrePage() {
               {t("Une direction impliquée au plus près des opérations.", "Leadership closely involved in operational delivery.")}
             </p>
           </div>
-          
+
           <div className="bg-[#141824] text-[#e8e1d7] p-10 md:p-14 shadow-xl text-left">
             <h3 className="text-[1.6rem] font-semibold mb-8 text-white">{t("La dirigeante", "Founder and President")}</h3>
-            
+
             <div className="flex flex-col md:flex-row gap-10 items-start">
               {/* Discreet Photo */}
               <div className="shrink-0 flex flex-col items-center mx-auto md:mx-0">
                 <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-[3px] border-[#e8e1d7]/40 bg-[#141824] mb-4">
-                  <img 
-                    src="/img/rosette.webp" 
-                    alt="Rosette Fouelefack" 
+                  <img
+                    src="/img/rosette.webp"
+                    alt="Rosette Fouelefack"
                     className="w-full h-full object-cover object-[center_15%]"
-                    onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} 
+                    onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                   />
                 </div>
                 <span className="text-[#e8e1d7] text-[1rem] font-bold uppercase tracking-wider text-center leading-tight">
@@ -351,42 +351,42 @@ export default function NousConnaitrePage() {
 
       {/* ── 2.7 ACCRÉDITATIONS ET NOTRE ÉQUIPE ── */}
       <section id="certifications" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container max-w-[1200px] mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-[1200px] mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
           {/* Beige block with list (Left) */}
           <div className="w-full lg:w-7/12 bg-[#e8e1d7] px-6 py-10 lg:pt-16 lg:pb-16 lg:pl-20 lg:pr-32 flex flex-col justify-center shadow-xl">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
               {t("Formations, certifications et expertises", "Training, certifications and expertise")}
             </h2>
-            
+
             {/* Mobile Image */}
-            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[250px] my-6 landscape:mt-6 landscape:mb-12 rounded-sm shadow-md overflow-hidden">
               <img src="/img/connaitre-certifications.webp" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
             </div>
-            
+
             <div className="space-y-4 text-[#141824] text-[1.05rem] font-light leading-relaxed">
               <p>
                 {formatBrand(t(
-                  "MENUA CONSULTING intervient dans des environnements soumis à des exigences élevées en matière de conformité, de qualité et de traçabilité.", 
+                  "MENUA CONSULTING intervient dans des environnements soumis à des exigences élevées en matière de conformité, de qualité et de traçabilité.",
                   "MENUA CONSULTING works in environments with demanding compliance, quality and traceability requirements."
                 ))}
               </p>
               <p>
                 {t(
-                  "Pour répondre à des besoins spécifiques, le cabinet peut également s’appuyer sur un réseau de partenaires qualifiés, notamment sur des sujets liés aux métiers de la comptabilité, de la data, du reporting et du pilotage de gestion.", 
+                  "Pour répondre à des besoins spécifiques, le cabinet peut également s’appuyer sur un réseau de partenaires qualifiés, notamment sur des sujets liés aux métiers de la comptabilité, de la data, du reporting et du pilotage de gestion.",
                   "Depending on the scope, the firm can draw on relevant capabilities in accounting, data, reporting and performance management."
                 )}
               </p>
               <p>
                 {t(
-                  "Cette organisation permet de proposer une réponse flexible et adaptée, tout en conservant un cadre de suivi clair, une exigence de confidentialité et une qualité d’exécution conforme aux attentes du client.", 
+                  "Cette organisation permet de proposer une réponse flexible et adaptée, tout en conservant un cadre de suivi clair, une exigence de confidentialité et une qualité d’exécution conforme aux attentes du client.",
                   "This structure ensures a flexible and tailored response while maintaining clear oversight, strict confidentiality and execution quality that meets client expectations."
                 )}
               </p>
               <div className="bg-white/40 border-l-4 border-[#141824] p-5 my-2 shadow-sm">
                 <p className="font-bold text-[#141824] text-[1rem]">
                   {formatBrand(t(
-                    "MENUA CONSULTING n’exerce pas d’activité réglementée en son nom propre. Le cabinet intervient en support opérationnel, dans le cadre des procédures, agréments et validations propres à ses clients.", 
+                    "MENUA CONSULTING n’exerce pas d’activité réglementée en son nom propre. Le cabinet intervient en support opérationnel, dans le cadre des procédures, agréments et validations propres à ses clients.",
                     "MENUA CONSULTING does not carry out regulated activities in its own name. It provides operational support within the procedures, permissions, regulatory approvals, controls and validation frameworks of its clients."
                   ))}
                 </p>
@@ -404,7 +404,7 @@ export default function NousConnaitrePage() {
 
                 </div>
               </div>
-              
+
               <div className="mt-12 text-right">
                 <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
                   {t("Présenter votre besoin", "Tell us about your requirements")}
@@ -414,10 +414,10 @@ export default function NousConnaitrePage() {
               </div>
             </div>
           </div>
-          
+
           {/* Image (Right Desktop only) */}
           <div className="hidden lg:block w-full lg:w-5/12 h-[300px] lg:h-[450px] shadow-xl">
-             <img src="/img/connaitre-certifications.webp" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
+            <img src="/img/connaitre-certifications.webp" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
           </div>
         </div>
       </section>

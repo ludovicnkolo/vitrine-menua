@@ -6,19 +6,26 @@ async function verifyTurnstile(token, ip) {
   }
 
   try {
-    const formData = new FormData();
-    formData.append('secret', process.env.TURNSTILE_SECRET_KEY);
-    formData.append('response', token);
+    const body = {
+      secret: process.env.TURNSTILE_SECRET_KEY,
+      response: token
+    };
     if (ip) {
-      formData.append('remoteip', ip);
+      body.remoteip = ip;
     }
 
     const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
-      body: formData
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
     });
 
     const data = await res.json();
+    if (!data.success) {
+      console.error('Turnstile verification failed:', data);
+    }
     return data.success;
   } catch (error) {
     console.error('Turnstile verification error:', error);

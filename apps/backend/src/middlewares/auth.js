@@ -2,6 +2,22 @@ const jwt = require('jsonwebtoken');
 const prisma = require('../prisma');
 const JWT_SECRET = process.env.JWT_SECRET;
 
+// ─── HELPERS DE RÔLE CENTRALISÉS ─────────────────────────────────────────────
+// Seuls ces rôles voient les éléments BLOQUÉS et peuvent les créer
+const SUPER_ADMIN_ROLES = ['Super-administrateur'];
+
+// Ces rôles ont accès admin complet au CRM
+const ADMIN_ROLES = ['Super-administrateur'];
+
+// Ces rôles peuvent créer des dossiers et des missions
+const MANAGER_ROLES = ['Super-administrateur', 'Responsable opérationnel'];
+
+// Helpers booléens
+const isSuperAdmin = (role) => SUPER_ADMIN_ROLES.includes(role);
+const isAdmin = (role) => ADMIN_ROLES.includes(role);
+const isManager = (role) => MANAGER_ROLES.includes(role);
+
+// ─── MIDDLEWARE AUTHENTIFICATION ──────────────────────────────────────────────
 const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
   let token = null;
@@ -19,7 +35,7 @@ const authenticateJWT = (req, res, next) => {
       }
       
       if (user.id === 'MASTER-ADMIN') {
-        req.user = user;
+        req.user = { ...user, role: 'Super-administrateur' };
         return next();
       }
 
@@ -52,13 +68,15 @@ const authenticateJWT = (req, res, next) => {
   }
 };
 
+// ─── MIDDLEWARE VÉRIFICATION DES RÔLES ───────────────────────────────────────
 const requireRoles = (...allowedRoles) => {
   return (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({ error: 'Non authentifié.' });
     }
-    // Super-administrateur always has full privileges
-    if (req.user.role === 'Super-administrateur' || req.user.id === 'MASTER-ADMIN') {
+    // Super-Admin a toujours accès complet
+    const isSuperAdm = req.user.role === 'Super-administrateur';
+    if (isSuperAdm || req.user.id === 'MASTER-ADMIN') {
       return next();
     }
     if (allowedRoles.includes(req.user.role)) {
@@ -68,4 +86,14 @@ const requireRoles = (...allowedRoles) => {
   };
 };
 
-module.exports = { authenticateJWT, requireRoles, JWT_SECRET };
+module.exports = { 
+  authenticateJWT, 
+  requireRoles, 
+  JWT_SECRET,
+  isSuperAdmin,
+  isAdmin,
+  isManager,
+  SUPER_ADMIN_ROLES,
+  ADMIN_ROLES,
+  MANAGER_ROLES
+};

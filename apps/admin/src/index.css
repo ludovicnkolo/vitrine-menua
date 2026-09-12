@@ -50,11 +50,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Hides the alt text visually if an image is broken or loading */
-img {
-  color: transparent;
-}
-
 /* Base UI Components */
 .btn {
   display: inline-flex;

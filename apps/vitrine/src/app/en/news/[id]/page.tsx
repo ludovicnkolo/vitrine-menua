@@ -9,9 +9,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     alternates: {
       canonical: `https://menuaconsulting.com/en/news/${resolvedParams.id}`,
       languages: {
-        'fr-FR': `https://menuaconsulting.com/actualites/${resolvedParams.id}`,
+        'fr-FR': `https://menuaconsulting.com/fr/actualites/${resolvedParams.id}`,
         'en-US': `https://menuaconsulting.com/en/news/${resolvedParams.id}`,
-      'x-default': `https://menuaconsulting.com/actualites/${resolvedParams.id}`,
+      'x-default': `https://menuaconsulting.com/fr/actualites/${resolvedParams.id}`,
       },
     },
     openGraph: {

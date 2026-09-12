@@ -95,11 +95,24 @@ const MagicLinkDropPage = () => {
         <div className="card" style={{width: '100%', maxWidth: '600px', padding: '2.5rem', boxShadow: '0 10px 25px rgba(0,0,0,0.05)'}}>
           
           <h1 style={{marginTop: 0, marginBottom: '0.5rem', fontSize: '1.5rem', textAlign: 'center', color: 'var(--text-main)'}}>
-            Dossier : {linkData?.dossierRef || 'N/A'}
+            {linkData?.type === 'ACQUISITION' ? '📤 Lien de dépôt de documents' : '📦 Documents partagés avec vous'}
           </h1>
+          <p style={{textAlign: 'center', color: 'var(--text-muted)', marginBottom: '0.5rem'}}>
+            Dossier : <strong>{linkData?.dossierRef || 'N/A'}</strong>
+          </p>
           <p style={{textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2.5rem'}}>
             Client : <strong>{linkData?.clientName}</strong>
           </p>
+
+          {/* Note / Instructions */}
+          {linkData?.note && (
+            <div style={{marginBottom: '2rem', padding: '1rem 1.25rem', background: linkData.type === 'ACQUISITION' ? '#FFF7ED' : '#F0F9FF', border: `1px solid ${linkData.type === 'ACQUISITION' ? '#FED7AA' : '#BAE6FD'}`, borderRadius: '8px', borderLeft: `4px solid ${linkData.type === 'ACQUISITION' ? '#F97316' : '#0EA5E9'}`}}>
+              <p style={{margin: 0, fontWeight: 600, fontSize: '0.875rem', color: linkData.type === 'ACQUISITION' ? '#9A3412' : '#0369A1', marginBottom: '0.4rem'}}>
+                {linkData.type === 'ACQUISITION' ? '📋 Documents demandés :' : '📄 Message de votre conseiller :'}
+              </p>
+              <p style={{margin: 0, color: linkData.type === 'ACQUISITION' ? '#7C2D12' : '#075985', fontSize: '0.9rem', lineHeight: 1.6, whiteSpace: 'pre-wrap'}}>{linkData.note}</p>
+            </div>
+          )}
 
           {linkData?.type === 'ACQUISITION' && (
             <>
@@ -113,8 +126,9 @@ const MagicLinkDropPage = () => {
                 <form onSubmit={handleUpload}>
                   <div style={{border: '2px dashed var(--border)', borderRadius: '12px', padding: '3rem 2rem', textAlign: 'center', marginBottom: '2rem', background: '#F1F5F9'}}>
                     <UploadCloud size={48} style={{color: 'var(--primary)', margin: '0 auto 1rem auto'}} />
-                    <h3 style={{marginTop: 0, marginBottom: '1rem', color: 'var(--text-main)'}}>Déposez vos documents ici</h3>
-                    <p style={{color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.875rem'}}>Formats acceptés : PDF, JPG, PNG, DOCX (Max 50Mo/fichier)</p>
+                    <h3 style={{marginTop: 0, marginBottom: '0.75rem', color: 'var(--text-main)'}}>Déposez vos documents ici</h3>
+                    <p style={{color: 'var(--text-muted)', marginBottom: '0.5rem', fontSize: '0.875rem'}}>Votre conseiller MENUA attend vos fichiers dans le cadre de votre dossier.</p>
+                    <p style={{color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.8rem'}}>Formats acceptés : PDF, JPG, PNG, DOCX (Max 50Mo/fichier)</p>
                     
                     <input 
                       type="file" 
@@ -150,7 +164,7 @@ const MagicLinkDropPage = () => {
           {linkData?.type === 'LIVRAISON' && (
             <div>
               <div style={{background: '#F0F9FF', border: '1px solid #BAE6FD', padding: '1.5rem', borderRadius: '8px', marginBottom: '2rem', textAlign: 'center'}}>
-                <p style={{margin: 0, color: '#0369A1', fontWeight: 500}}>Voici les documents que nous mettons à votre disposition.</p>
+                <p style={{margin: 0, color: '#0369A1', fontWeight: 500}}>Votre conseiller MENUA met ces documents à votre disposition. Vous pouvez les télécharger librement.</p>
               </div>
 
               {linkData.documents?.length > 0 ? (

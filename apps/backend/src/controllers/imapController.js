@@ -2,8 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const crypto = require('node:crypto');
 const imaps = require('imap-simple');
 const simpleParser = require('mailparser').simpleParser;
-const fs = require('node:fs');
-const path = require('node:path');
+const { uploadToS3 } = require('../services/s3Service');
 const prisma = new PrismaClient();
 
 const imapConfig = {
@@ -41,33 +40,28 @@ const extractEmailData = (parsed) => {
   };
 };
 
-const saveAttachments = (attachments) => {
-  let attachmentNames = [];
-  if (!attachments || attachments.length === 0) return attachmentNames;
+/**
+ * Upload les pièces jointes sur S3 et retourne leurs clés S3 (bucket/filename).
+ */
+const saveAttachments = async (attachments) => {
+  const s3Keys = [];
+  if (!attachments || attachments.length === 0) return s3Keys;
 
-  let destPath;
-  const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
-  try {
-    destPath = path.join(rootPath, 'formulaires');
-    fs.mkdirSync(destPath, { recursive: true });
-  } catch (dirErr) {
-    console.warn("Dossier principal inaccessible, utilisation du fallback local:", dirErr.message);
-    destPath = path.join(__dirname, '../../../../storage/formulaires');
-    fs.mkdirSync(destPath, { recursive: true });
-  }
   for (const att of attachments) {
-    const randomHex = crypto.randomBytes(8).toString('hex');
-    const uniqueSuffix = Date.now() + '-' + randomHex;
-    const safeName = att.filename ? att.filename.replace(/[^a-zA-Z0-9.-]/g, '_') : 'piece_jointe';
-    const savedFilename = uniqueSuffix + '-' + safeName;
     try {
-      fs.writeFileSync(path.join(destPath, savedFilename), att.content);
-      attachmentNames.push(savedFilename);
-    } catch (fsErr) {
-      console.error("Erreur de sauvegarde de la pièce jointe IMAP:", fsErr);
+      const randomHex = crypto.randomBytes(8).toString('hex');
+      const uniqueSuffix = `${Date.now()}-${randomHex}`;
+      const safeName = att.filename ? att.filename.replace(/[^a-zA-Z0-9.-]/g, '_') : 'piece_jointe';
+      const filename = `${uniqueSuffix}-${safeName}`;
+      const s3Key = `formulaires/${filename}`;
+      await uploadToS3(att.content, s3Key, att.contentType || 'application/octet-stream');
+      s3Keys.push(s3Key);
+      console.log(`[+] Pièce jointe email uploadée sur S3 : ${s3Key}`);
+    } catch (err) {
+      console.error("[-] Erreur upload pièce jointe S3 :", err);
     }
   }
-  return attachmentNames;
+  return s3Keys;
 };
 
 const syncMessages = async (req, res) => {
@@ -100,7 +94,8 @@ const syncMessages = async (req, res) => {
       const existing = await prisma.messagePersonnel.findUnique({ where: { messageId } });
       if (!existing) {
         const { subject, nomPrenom, email, bodyText, date } = extractEmailData(parsed);
-        const attachmentNames = saveAttachments(parsed.attachments);
+        // Upload asynchrone sur S3
+        const attachmentKeys = await saveAttachments(parsed.attachments);
 
         await prisma.messagePersonnel.create({
           data: {
@@ -112,7 +107,7 @@ const syncMessages = async (req, res) => {
             email,
             objet: subject,
             bodyText,
-            attachment: attachmentNames.length > 0 ? attachmentNames.join(',') : null,
+            attachment: attachmentKeys.length > 0 ? attachmentKeys.join(',') : null,
             createdAt: date,
             receivedAt: date
           }

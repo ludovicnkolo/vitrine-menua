@@ -52,7 +52,7 @@ export default function ActualitesPage() {
     <main className="flex flex-col w-full min-h-screen bg-white">
       
       {/* ── 6.1 INTRODUCTION (Full BleedHero) ─*/}
-      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-screen flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="/img/accueil-actus.webp" 
@@ -61,13 +61,13 @@ export default function ActualitesPage() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container relative z-10 pt-56 md:pt-72 pb-20 mt-16">
-          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12">
-            <h1 className="  text-white text-[1.25rem] md:text-[2.5rem] leading-[1.1] mb-6 font-bold uppercase tracking-widest">
+        <div className="laplace-container landscape:px-12 relative z-10 pt-56 md:pt-72 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-40 landscape:pb-16 lg:pb-24 landscape:lg:pb-24 mt-16 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
+          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12 landscape:ml-0 landscape:lg:-ml-12">
+            <h1 className="text-white text-[1.25rem] md:text-[2.5rem] landscape:text-[1.5rem] landscape:lg:text-[2.5rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               {t("Actualités", "News")}
             </h1>
-            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6  "></div>
-            <p className="text-[1.1rem] lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
+            <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
+            <p className="text-[1.1rem] lg:text-[1.3rem] landscape:text-[1rem] landscape:lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {formatBrand(t(
                 "Analyses, repères et publications consacrés aux enjeux opérationnels des entreprises, cabinets et organisations.",
                 "Analyses, benchmarks and publications dedicated to the operational challenges of companies, firms and organizations."
@@ -98,7 +98,7 @@ export default function ActualitesPage() {
 
       {/* ── 6.2 À LA UNE (Dark Section) ── */}
       <section id="articles" className="relative w-full bg-[#141824] pt-12 md:pt-[5.75rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container max-w-6xl mx-auto">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="mb-12">
             <div className="w-16 h-[3px] bg-white mb-5"></div>
@@ -113,7 +113,7 @@ export default function ActualitesPage() {
             <div className="bg-white border border-[#e8e1d7] flex flex-col md:flex-row w-full group hover:border-[#141824] transition-all duration-300">
               <div className="w-full md:w-1/2 h-[250px] md:h-[400px] overflow-hidden bg-[#f5f7fa] flex items-center justify-center relative">
                 {featuredPub.coverImageUrl ? (
-                  <img src={featuredPub.coverImageUrl} alt={featuredPub.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img src={featuredPub.coverImageUrl} alt={featuredPub.title} className="block w-full h-full min-w-full max-w-none object-cover transition-transform duration-700 group-hover:scale-105" />
                 ) : (
                   <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-xl">MENUA CONSULTING</span>
                 )}
@@ -132,7 +132,7 @@ export default function ActualitesPage() {
                   {featuredPub.title}
                 </h3>
                 <p className="text-[#6e7891] group-hover:text-white/70 text-[1.1rem] font-light leading-relaxed mb-8 transition-colors duration-300 line-clamp-4">
-                  {featuredPub.excerpt || "Découvrez notre nouvelle publication et l'analyse détaillée de nos experts métier sur ce sujet."}
+                  {featuredPub.contentHtml ? featuredPub.contentHtml.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : "Découvrez notre nouvelle publication et l'analyse détaillée de nos experts métier sur ce sujet."}
                 </p>
                 
                 <div className="flex justify-end mt-auto">
@@ -165,7 +165,7 @@ export default function ActualitesPage() {
 
       {/* ── 6.3 ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES ── */}
       <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24">
-        <div className="laplace-container max-w-6xl mx-auto">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
           <div>
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
               <h3 className="text-[#141824] text-[1.4rem] font-semibold uppercase tracking-wider flex items-center gap-4">
@@ -202,7 +202,7 @@ export default function ActualitesPage() {
                         <img 
                           src={pub.coverImageUrl} 
                           alt={pub.title} 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#f5f7fa]" 
+                          className="block w-full h-full min-w-full max-w-none object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#f5f7fa]" 
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                         <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-sm z-0">MENUA CONSULTING</span>
@@ -222,7 +222,7 @@ export default function ActualitesPage() {
                     </p>
                     <h4 className="text-[#141824] font-semibold text-[1.1rem] leading-snug mb-3 line-clamp-2">{pub.title}</h4>
                     <p className="text-[#6e7891] text-[0.85rem] font-light leading-relaxed flex-grow mb-4 line-clamp-3">
-                      {pub.excerpt || "Analyse détaillée de nos experts métier sur ce sujet."}
+                      {pub.contentHtml ? pub.contentHtml.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : "Analyse détaillée de nos experts métier sur ce sujet."}
                     </p>
                     <a href={`/actualites/${pub.id}`} className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.7rem] group-hover:gap-3 transition-all">
                       {t("LIRE L'ARTICLE", "READ ARTICLE")} <ArrowRight size={14} />
@@ -244,7 +244,7 @@ export default function ActualitesPage() {
 
       {/* ── LINKEDIN BANNER ── */}
       <section id="linkedin" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container max-w-5xl mx-auto bg-[#141824] p-8 md:p-12 shadow-2xl border-t-4 border-t-[#e8e1d7] flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-5xl mx-auto bg-[#141824] p-8 md:p-12 shadow-2xl border-t-4 border-t-[#e8e1d7] flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-6">
             <div className="w-16 h-16 rounded-md border border-[#e8e1d7]/30 flex items-center justify-center shrink-0">
               <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">

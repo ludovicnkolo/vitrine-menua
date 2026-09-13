@@ -665,11 +665,11 @@ const InboxPage = ({ userRole }) => {
                   </td>
                   <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{formatDate(m.createdAt)}</td>
                   <td>
-                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center'}}>
-                      <button type="button" onClick={() => setProcessMsg(m)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)'}} title="Consulter le message">
+                    <div style={{display: 'flex', flexDirection: 'row', gap: '1rem', justifyContent: 'center', alignItems: 'center'}}>
+                      <button type="button" onClick={() => setProcessMsg(m)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', padding: 0}} title="Consulter le message">
                         <Eye size={18} />
                       </button>
-                      <button type="button" onClick={() => setDeleteMsg(m)} style={{background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444'}} title="Supprimer le message">
+                      <button type="button" onClick={() => setDeleteMsg(m)} style={{background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444', padding: 0}} title="Supprimer le message">
                         <Trash size={18} />
                       </button>
                     </div>

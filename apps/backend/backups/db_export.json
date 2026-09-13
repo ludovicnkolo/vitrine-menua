@@ -437,14 +437,14 @@
       "dossierId": "aa1ceae2-c587-4cff-9348-ca9bd4dd23b6",
       "assignedToId": "f55e6633-1c91-4e47-b9cd-4734f02a7fe8",
       "createdById": "f55e6633-1c91-4e47-b9cd-4734f02a7fe8",
-      "description": "agm ggl\n\nwfnkfnk",
+      "description": "Objet: ludo bombbbb\nConsignes: wfnkfnk",
       "echeance": "2026-09-16T00:00:00.000Z",
       "status": "NON_DEMARREE",
       "previousStatus": null,
-      "attachment": null,
+      "attachment": "",
       "dossierMissionId": "aa1ceae2-c587-4cff-9348-ca9bd4dd23b6",
       "createdAt": "2026-09-13T17:02:37.781Z",
-      "updatedAt": "2026-09-13T17:02:37.781Z",
+      "updatedAt": "2026-09-13T21:04:00.440Z",
       "parentMissionId": null
     }
   ],
@@ -959,6 +959,39 @@
       "dossierId": "aa1ceae2-c587-4cff-9348-ca9bd4dd23b6",
       "formulaireId": null,
       "createdAt": "2026-09-13T20:52:51.258Z"
+    },
+    {
+      "id": "b3f6b2f1-9c42-4a2b-83ab-ddab6a63b947",
+      "userId": "f55e6633-1c91-4e47-b9cd-4734f02a7fe8",
+      "action": "MODIFICATION_MISSION",
+      "targetId": "5ac3202a-0a51-4df6-bb0e-68f18e7c09f2",
+      "targetType": "MISSION",
+      "details": "Mission modifiée (Statut: NON_DEMARREE)",
+      "dossierId": "aa1ceae2-c587-4cff-9348-ca9bd4dd23b6",
+      "formulaireId": null,
+      "createdAt": "2026-09-13T21:03:41.503Z"
+    },
+    {
+      "id": "b60a0a20-62ec-491d-ac04-a9cffda4c9db",
+      "userId": "f55e6633-1c91-4e47-b9cd-4734f02a7fe8",
+      "action": "MODIFICATION_MISSION",
+      "targetId": "5ac3202a-0a51-4df6-bb0e-68f18e7c09f2",
+      "targetType": "MISSION",
+      "details": "Mission modifiée (Statut: NON_DEMARREE)",
+      "dossierId": "aa1ceae2-c587-4cff-9348-ca9bd4dd23b6",
+      "formulaireId": null,
+      "createdAt": "2026-09-13T21:04:00.455Z"
+    },
+    {
+      "id": "02b737c0-879f-4761-8c0d-18b3db544dce",
+      "userId": "9982ea43-d84c-4f56-bbe8-7a348e6a5d6e",
+      "action": "DECONNEXION",
+      "targetId": "9982ea43-d84c-4f56-bbe8-7a348e6a5d6e",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-13T21:51:03.485Z"
     }
   ],
   "messagePersonnels": [

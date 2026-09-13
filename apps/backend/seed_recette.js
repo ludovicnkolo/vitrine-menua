@@ -99,34 +99,15 @@ async function main() {
   const hashedPassword = await bcrypt.hash(testPasswordPlain, 10);
 
   const testUsersData = [
-    {
-      name: 'Collaborateur Test',
-      email: 'collab-test@menuaconsulting.com',
-      role: 'Collaborateur',
-      telephone: '0601020304',
-      profile: 'Opérations Back & Middle Office'
-    },
-    {
-      name: 'Relecteur Test',
-      email: 'relecteur-test@menuaconsulting.com',
-      role: 'Relecteur',
-      telephone: '0602030405',
-      profile: 'Contrôle Qualité & Conformité'
-    },
-    {
-      name: 'Responsable Test',
-      email: 'responsable-test@menuaconsulting.com',
-      role: 'Responsable opérationnel',
-      telephone: '0603040506',
-      profile: 'Management Opérationnel'
-    },
-    {
-      name: 'AdminTech Test',
-      email: 'admintech-test@menuaconsulting.com',
-      role: 'Administrateur technique',
-      telephone: '0604050607',
-      profile: 'Administration Système & Sécurité'
-    }
+    { name: 'Super Admin Test', email: 'superadmin-test@menuaconsulting.com', role: 'Super-administrateur', telephone: '0600000001', profile: 'Direction' },
+    { name: 'Collaborateur 1', email: 'collab1-test@menuaconsulting.com', role: 'Collaborateur', telephone: '0601020301', profile: 'Opérations Back & Middle Office' },
+    { name: 'Collaborateur 2', email: 'collab2-test@menuaconsulting.com', role: 'Collaborateur', telephone: '0601020302', profile: 'Opérations Back & Middle Office' },
+    { name: 'Collaborateur 3', email: 'collab3-test@menuaconsulting.com', role: 'Collaborateur', telephone: '0601020303', profile: 'Opérations Back & Middle Office' },
+    { name: 'Responsable 1', email: 'resp1-test@menuaconsulting.com', role: 'Responsable opérationnel', telephone: '0603040501', profile: 'Management Opérationnel' },
+    { name: 'Responsable 2', email: 'resp2-test@menuaconsulting.com', role: 'Responsable opérationnel', telephone: '0603040502', profile: 'Management Opérationnel' },
+    { name: 'Relecteur 1', email: 'relecteur1-test@menuaconsulting.com', role: 'Relecteur', telephone: '0602030401', profile: 'Contrôle Qualité & Conformité' },
+    { name: 'Relecteur 2', email: 'relecteur2-test@menuaconsulting.com', role: 'Relecteur', telephone: '0602030402', profile: 'Contrôle Qualité & Conformité' },
+    { name: 'AdminTech Test', email: 'admintech-test@menuaconsulting.com', role: 'Administrateur technique', telephone: '0604050607', profile: 'Administration Système & Sécurité' }
   ];
 
   const userMap = {};

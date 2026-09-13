@@ -56,6 +56,7 @@ model Utilisateur {
   auditLogs                 AuditLog[]
   assignedMessagePersonnels MessagePersonnel[] @relation("AssignedMessagePersonnels")
   publications              Publication[]
+  notifications             Notification[]
 }
 
 // ─── CLIENTS (Personnes externes au CRM) ──────────────────────────────────────
@@ -376,3 +377,20 @@ model LienMagique {
   createdAt   DateTime @default(now())
 }
 
+
+// ─── NOTIFICATIONS ────────────────────────────────────────────────────────────
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      Utilisateur @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type      String   // TACHE_ASSIGNEE, TACHE_A_CORRIGER, TACHE_ECHEANCE, TACHE_CLOTUREE, TACHE_A_VERIFIER, TACHE_FINALISER, MISSION_TERMINEE, DOSSIER_CLOTURE, NOUVEAU_MESSAGE
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+
+  targetId   String?  // ID de la tâche, mission, dossier, etc.
+  targetType String?  // TACHE, MISSION, DOSSIER, MESSAGE
+
+  createdAt DateTime @default(now())
+}

@@ -35,7 +35,7 @@ export default function Header() {
         newPath = enRouteMap[newPath];
       }
       const finalPath = newPath === "/" ? "/en" : `/en${newPath}`;
-      window.location.href = finalPath;
+      window.location.href = finalPath + window.location.search;
     } else {
       const matchedEnBase = Object.keys(frRouteMap).find(
         (enBase) => enBase !== '/' && newPath.startsWith(enBase + '/')
@@ -46,7 +46,7 @@ export default function Header() {
         newPath = frRouteMap[newPath];
       }
       const finalPath = newPath === "/" ? "/fr" : `/fr${newPath}`;
-      window.location.href = finalPath;
+      window.location.href = finalPath + window.location.search;
     }
   };
 

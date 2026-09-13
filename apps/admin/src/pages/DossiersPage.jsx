@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, MoreVertical, Pencil, Eye, Trash, MessageSquare, Paperclip, FileText, Download, Plus, X, Folder, ChevronRight, ChevronDown, CheckSquare, Square, Link as LinkIcon } from 'lucide-react';
 import { getSafeApiUrl, uploadFile, formatDate } from '../utils/helpers';
+import ConfirmModal from '../components/ConfirmModal';
 import ActionDropdown from '../components/ActionDropdown';
 import { getStatusBadge } from '../utils/helpers';
 import PaginationControls from '../components/PaginationControls';
@@ -83,6 +84,7 @@ const SearchableDropdown = ({ options, value, onChange, placeholder }) => {
 const DossiersPage = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [consultDossier, setConsultDossier] = useState(null);
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: null, type: 'warning' });
   const [editDossier, setEditDossier] = useState(null);
   const [localConsultTask, setLocalConsultTask] = useState(null);
   const [previewFile, setPreviewFile] = useState(null);
@@ -1260,6 +1262,16 @@ const DossiersPage = () => {
           </div>
         </div>
       )}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        type={confirmModal.type || 'warning'}
+        confirmText="Confirmer"
+        cancelText="Annuler"
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+      />
     </div>
   )
 }

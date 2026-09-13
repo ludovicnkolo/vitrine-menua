@@ -19,6 +19,7 @@ import SystemSpacePage from './pages/SystemSpacePage';
 import CMSPage from './pages/CMSPage';
 import MagicLinkDropPage from './pages/MagicLinkDropPage';
 import GlobalAlerts from './components/GlobalAlerts';
+import NotificationBell from './components/NotificationBell';
 import './utils/AlertService'; // initialize overrides
 
 const MOCK_USER = {
@@ -207,7 +208,7 @@ function App() {
   const canSeeWorkspace  = isSuperAdmin || isRespOp || isRelecteur || isCollaborateur;
   const canSeeUsers      = isSuperAdmin;
   const canSeeSystem     = isSuperAdmin || isAdminTech || isRespOp || isRelecteur || isCollaborateur;
-  const canSeeCMS        = isSuperAdmin || isRespOp || isCollaborateur;
+  const canSeeCMS        = isSuperAdmin; // Espace site web: Super-Admin uniquement
 
   // Passer le rôle en prop pour filtrer le contenu à l'intérieur des pages
   const userRoleForPages = role;
@@ -292,6 +293,16 @@ function App() {
 
       {/* Main Content */}
       <main className="main-content">
+        {/* Top bar with notification bell */}
+        <div style={{
+          display: 'flex', justifyContent: 'flex-end', alignItems: 'center',
+          padding: '0.75rem 1.5rem 0',
+          position: 'sticky', top: 0, zIndex: 100,
+          background: 'var(--bg-main, #f8fafc)',
+          borderBottom: '1px solid transparent',
+        }}>
+          <NotificationBell />
+        </div>
         <div className="page-content">
           <Routes>
             {/* Routes conditionnelles selon rôle */}

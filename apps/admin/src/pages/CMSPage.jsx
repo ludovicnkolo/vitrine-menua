@@ -17,6 +17,10 @@ const CATEGORY_TRANSLATIONS = {
 
 const CMSPage = () => {
   const [publications, setPublications] = useState([]);
+  // ── Zero-Trust UI: Détection du rôle depuis sessionStorage ──────────────
+  const _adminUser = (() => { try { return JSON.parse(sessionStorage.getItem('adminUser') || '{}'); } catch { return {}; } })();
+  const _role = _adminUser?.role || '';
+  const isSuperAdmin = _role === 'Super-administrateur' || _role === 'ADMIN';
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingPub, setEditingPub] = useState(null);
@@ -24,6 +28,7 @@ const CMSPage = () => {
 
   // Form states
   const [formLang, setFormLang] = useState('FR');
+  const [previewLang, setPreviewLang] = useState('FR');
   const [title, setTitle] = useState('');
   const [title_en, setTitleEn] = useState('');
   const [contentHtml, setContentHtml] = useState('');
@@ -298,9 +303,11 @@ const CMSPage = () => {
               <Globe size={28} style={{color: 'var(--primary)'}} />
               Espace site web
             </h1>
-            <button onClick={() => openModal()} className="btn btn-primary" style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-              <Plus size={18} /> Nouvelle Actualité
-            </button>
+            {isSuperAdmin && (
+              <button onClick={() => openModal()} className="btn btn-primary" style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                <Plus size={18} /> Nouvelle Actualité
+              </button>
+            )}
           </div>
 
       <div className="table-wrapper" style={{marginTop: '1.5rem'}}>
@@ -336,12 +343,16 @@ const CMSPage = () => {
                   <td>{formatDate(pub.createdAt)}</td>
                   <td>
                     <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
-                      <button onClick={() => openModal(pub)} className="btn btn-outline" style={{padding: '0.35rem 0.5rem'}} title="Modifier">
-                        <Edit size={16} />
-                      </button>
-                      <button onClick={() => handleDelete(pub.id)} className="btn btn-outline" style={{padding: '0.35rem 0.5rem', color: 'var(--danger)', borderColor: 'var(--danger)'}} title="Supprimer">
-                        <Trash size={16} />
-                      </button>
+                      {isSuperAdmin && (
+                        <>
+                          <button onClick={() => openModal(pub)} className="btn btn-outline" style={{padding: '0.35rem 0.5rem'}} title="Modifier">
+                            <Edit size={16} />
+                          </button>
+                          <button onClick={() => handleDelete(pub.id)} className="btn btn-outline" style={{padding: '0.35rem 0.5rem', color: 'var(--danger)', borderColor: 'var(--danger)'}} title="Supprimer">
+                            <Trash size={16} />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -554,9 +565,15 @@ const CMSPage = () => {
 
             {/* ── APERÇU ── */}
             <div style={{width: '360px', flexShrink: 0, borderLeft: '1px solid var(--border)', padding: '2rem', background: '#F8FAFC', borderTopRightRadius: '12px', borderBottomRightRadius: '12px', display: 'flex', flexDirection: 'column', overflowY: 'auto', maxHeight: '90vh'}}>
-              <h3 style={{marginTop: 0, marginBottom: '1.5rem', fontSize: '1.1rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-                <Eye size={18} /> Aperçu (Carte)
-              </h3>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
+                <h3 style={{margin: 0, fontSize: '1.1rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                  <Eye size={18} /> Aperçu
+                </h3>
+                <div style={{display: 'flex', background: '#e2e8f0', borderRadius: '6px', padding: '2px'}}>
+                  <button type="button" onClick={() => setPreviewLang('FR')} style={{border: 'none', background: previewLang === 'FR' ? '#fff' : 'transparent', padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: previewLang === 'FR' ? 'bold' : 'normal', cursor: 'pointer', boxShadow: previewLang === 'FR' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'}}>FR</button>
+                  <button type="button" onClick={() => setPreviewLang('EN')} style={{border: 'none', background: previewLang === 'EN' ? '#fff' : 'transparent', padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: previewLang === 'EN' ? 'bold' : 'normal', cursor: 'pointer', boxShadow: previewLang === 'EN' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'}}>EN</button>
+                </div>
+              </div>
 
               <div style={{display: 'flex', flexDirection: 'column', background: '#FFF', border: '1px solid var(--border)', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', marginBottom: '1.5rem'}}>
                 <div style={{height: '150px', overflow: 'hidden', background: '#1a1f2e', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative'}}>
@@ -564,18 +581,18 @@ const CMSPage = () => {
                     ? <img src={previewImage} alt="Cover" style={{width: '100%', height: '100%', objectFit: 'cover'}} />
                     : <span style={{color: 'rgba(232,225,215,0.2)', fontWeight: 'bold', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '0.9rem'}}>MENUA CONSULTING</span>
                   }
-                  {category && <div style={{position: 'absolute', top: '0.75rem', left: '0.75rem', background: '#e8e1d7', color: '#141824', padding: '0.2rem 0.6rem', fontSize: '0.65rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em'}}>{category}</div>}
+                  {(previewLang === 'EN' ? category_en : category) && <div style={{position: 'absolute', top: '0.75rem', left: '0.75rem', background: '#e8e1d7', color: '#141824', padding: '0.2rem 0.6rem', fontSize: '0.65rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em'}}>{previewLang === 'EN' ? category_en : category}</div>}
                 </div>
                 <div style={{padding: '1.25rem'}}>
                   <p style={{color: '#6e7891', fontSize: '0.7rem', fontWeight: 500, letterSpacing: '0.05em', marginBottom: '0.5rem', textTransform: 'uppercase', margin: '0 0 0.4rem'}}>
                     {new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
                   </p>
                   <h3 style={{color: '#141824', fontWeight: 600, fontSize: '1rem', lineHeight: 1.3, margin: '0 0 0.6rem', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical'}}>
-                    {title || 'Titre de la publication...'}
+                    {(previewLang === 'EN' ? title_en : title) || 'Titre de la publication...'}
                   </h3>
                   <p style={{color: '#a0aec0', fontSize: '0.75rem', fontWeight: 300, lineHeight: 1.5, margin: '0 0 0.75rem', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical'}}>
                     {(() => {
-                      const plain = (contentHtml || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+                      const plain = ((previewLang === 'EN' ? contentHtml_en : contentHtml) || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
                       const words = plain.split(' ').filter(Boolean);
                       return words.length > 25 ? words.slice(0, 25).join(' ') + '...' : (plain || 'Extrait du contenu...');
                     })()}
@@ -594,9 +611,9 @@ const CMSPage = () => {
                   </p>
                   {sections.map((s, i) => (
                     <div key={i} style={{borderLeft: '3px solid #e8e1d7', paddingLeft: '0.75rem', marginBottom: '0.75rem'}}>
-                      {s.subtitle && <p style={{fontWeight: 600, fontSize: '0.8rem', color: '#141824', margin: '0 0 0.2rem'}}>{s.subtitle}</p>}
+                      {(previewLang === 'EN' ? s.subtitle_en : s.subtitle) && <p style={{fontWeight: 600, fontSize: '0.8rem', color: '#141824', margin: '0 0 0.2rem'}}>{previewLang === 'EN' ? s.subtitle_en : s.subtitle}</p>}
                       {s.imagePreview && <img src={s.imagePreview} alt="" style={{height: '50px', borderRadius: '4px', objectFit: 'cover', marginBottom: '0.2rem', display: 'block'}} />}
-                      {s.text && <p style={{fontSize: '0.75rem', color: '#6e7891', margin: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>{s.text.substring(0, 60)}{s.text.length > 60 ? '...' : ''}</p>}
+                      {(previewLang === 'EN' ? s.text_en : s.text) && <p style={{fontSize: '0.75rem', color: '#6e7891', margin: 0, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>{(previewLang === 'EN' ? s.text_en : s.text).substring(0, 60)}{(previewLang === 'EN' ? s.text_en : s.text).length > 60 ? '...' : ''}</p>}
                     </div>
                   ))}
                 </div>

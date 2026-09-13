@@ -6,13 +6,19 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
+  const isEN = lang === 'EN';
+  
+  const displayTitle = (pub: any) => (isEN && pub.title_en) ? pub.title_en : pub.title;
+  const displayContent = (pub: any) => (isEN && pub.contentHtml_en) ? pub.contentHtml_en : pub.contentHtml;
+  const displayCategory = (pub: any) => (isEN && pub.category_en) ? pub.category_en : pub.category;
   const [publications, setPublications] = useState<any[]>([]);
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return "";
+    const locale = lang === 'EN' ? 'en-GB' : 'fr-FR';
     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
-    return new Date(dateString).toLocaleDateString('fr-FR', options);
+    return new Date(dateString).toLocaleDateString(locale, options);
   };
 
   useEffect(() => {
@@ -364,7 +370,7 @@ export default function Home() {
                       <>
                         <img 
                           src={pub.coverImageUrl} 
-                          alt={pub.title} 
+                          alt={displayTitle(pub)} 
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#1a1f2e]" 
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
@@ -375,7 +381,7 @@ export default function Home() {
                     )}
                     {pub.category && (
                       <div className="absolute top-4 left-4 bg-[#e8e1d7] text-[#141824] px-3 py-1 text-[0.7rem] font-bold uppercase tracking-wider">
-                        {pub.category}
+                        {displayCategory(pub)}
                       </div>
                     )}
                   </div>
@@ -383,10 +389,10 @@ export default function Home() {
                     <p className="text-white/50 text-[0.7rem] font-medium tracking-wide mb-2 uppercase">
                       {formatDate(pub.publishedAt || pub.createdAt)}
                     </p>
-                    <h3 className="text-white font-semibold text-[1.1rem] leading-snug mb-3 line-clamp-2">{pub.title}</h3>
+                    <h3 className="text-white font-semibold text-[1.1rem] leading-snug mb-3 line-clamp-2">{displayTitle(pub)}</h3>
                     <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4 line-clamp-3">
                       {(() => {
-                        const plain = (pub.contentHtml || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+                        const plain = (displayContent(pub) || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
                         const words = plain.split(' ').filter(Boolean);
                         return words.length > 25 ? words.slice(0, 25).join(' ') + '...' : plain;
                       })()}

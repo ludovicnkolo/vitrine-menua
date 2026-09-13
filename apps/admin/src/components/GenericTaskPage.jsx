@@ -731,6 +731,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   : (consultTask.mission?.reference || consultTask.missionId)}
               </span>
             </div>
+            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Échéance :</strong>
+              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.echeance ? new Date(consultTask.echeance).toLocaleDateString('fr-FR') : 'Non définie'}</span>
+            </div>
             {mode !== 'MISSION' && consultTask.dossierTache && (
               <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
                 <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Dossier tâche :</strong>
@@ -770,44 +774,46 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'flex-end', flex: 1}}>
             <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Retour</button>
             
-            {/* Nouvelles actions selon le workflow STRICT */}
-            {mode === 'TACHE' && (consultTask.status === 'NOUVEAU' || consultTask.status === 'NON_DEMARREE') && (
+            {/* Nouvelles actions selon le workflow STRICT avec filtrage Zero-Trust UI */}
+            {mode === 'TACHE' && (consultTask.status === 'NOUVEAU' || consultTask.status === 'NON_DEMARREE') && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
               <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-primary" style={{background: 'var(--primary)'}}>▶ Commencer le travail</button>
             )}
             
-            {mode === 'TACHE' && consultTask.status === 'EN_COURS' && (
+            {mode === 'TACHE' && consultTask.status === 'EN_COURS' && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
               <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'VERIFIER')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>✓ Soumettre pour relecture</button>
             )}
             
-            {mode === 'TACHE' && consultTask.status === 'VERIFIER' && isResp && (
+            {mode === 'TACHE' && consultTask.status === 'VERIFIER' && isController && (
                <>
                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'FINALISER')} className="btn btn-primary" style={{background: '#6366F1', borderColor: '#6366F1'}}>✓ Approuver le travail</button>
                  <button type="button" onClick={() => setShowManagerFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#EF4444', color: '#EF4444'}}>✖ À Corriger</button>
                </>
             )}
 
-            {mode === 'TACHE' && consultTask.status === 'FINALISER' && isSuperAdmin && (
+            {mode === 'TACHE' && consultTask.status === 'FINALISER' && isResp && (
                <>
                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'TERMINE')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>★ Valider et Clôturer</button>
                  <button type="button" onClick={() => setShowAdminFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#EF4444', color: '#EF4444'}}>✖ À Corriger</button>
                </>
             )}
 
-            {mode === 'TACHE' && consultTask.status === 'A_CORRIGER' && (
-               <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'VERIFIER')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>✓ Soumettre à nouveau</button>
+            {mode === 'TACHE' && consultTask.status === 'A_CORRIGER' && isResp && (
+               <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>✓ Renvoyer en travail (En Cours)</button>
             )}
 
             {/* Boutons d'exception (Bloquer, Attente) pour Taches en cours ou non terminées */}
             {mode === 'TACHE' && !['TERMINE', 'ARCHIVE', 'BLOQUE', 'EN_ATTENTE'].includes(consultTask.status) && (
                <>
-                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_ATTENTE')} className="btn btn-outline" style={{borderColor: '#F59E0B', color: '#F59E0B'}}>⏳ Mettre en Attente (Docs)</button>
+                 {(isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
+                   <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_ATTENTE')} className="btn btn-outline" style={{borderColor: '#F59E0B', color: '#F59E0B'}}>⏳ Mettre en Attente (Docs)</button>
+                 )}
                  {isSuperAdmin && (
                    <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'BLOQUE')} className="btn btn-outline" style={{borderColor: '#DC2626', color: '#DC2626'}}>⛔ Bloquer la tâche</button>
                  )}
                </>
             )}
             
-            {mode === 'TACHE' && consultTask.status === 'EN_ATTENTE' && (
+            {mode === 'TACHE' && consultTask.status === 'EN_ATTENTE' && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
                <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-outline" style={{borderColor: '#10B981', color: '#10B981'}}>▶ Reprendre le travail</button>
             )}
             
@@ -817,10 +823,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
             {mode === 'MISSION' && (
               <>
-                {(consultTask.status === 'TO_ASSIGN' || consultTask.status === 'NOUVEAU') && (
+                {(consultTask.status === 'TO_ASSIGN' || consultTask.status === 'NOUVEAU') && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
                   <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'OUVERT')} className="btn btn-primary" style={{background: 'var(--primary)'}}>▶ Démarrer la mission</button>
                 )}
-                {consultTask.status === 'OUVERT' && (
+                {consultTask.status === 'OUVERT' && isResp && (
                   <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'TERMINE')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>★ Clôturer la mission</button>
                 )}
                 {consultTask.status === 'TERMINE' && isSuperAdmin && (
@@ -828,13 +834,15 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 )}
                 {!['TERMINE', 'ARCHIVE', 'BLOQUE', 'EN_ATTENTE'].includes(consultTask.status) && (
                   <>
-                    <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_ATTENTE')} className="btn btn-outline" style={{borderColor: '#F59E0B', color: '#F59E0B'}}>⏳ Mettre en Attente</button>
+                    {(isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
+                      <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_ATTENTE')} className="btn btn-outline" style={{borderColor: '#F59E0B', color: '#F59E0B'}}>⏳ Mettre en Attente</button>
+                    )}
                     {isSuperAdmin && (
                       <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'BLOQUE')} className="btn btn-outline" style={{borderColor: '#DC2626', color: '#DC2626'}}>⛔ Bloquer</button>
                     )}
                   </>
                 )}
-                {consultTask.status === 'EN_ATTENTE' && (
+                {consultTask.status === 'EN_ATTENTE' && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
                   <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'OUVERT')} className="btn btn-outline" style={{borderColor: '#10B981', color: '#10B981'}}>▶ Reprendre</button>
                 )}
                 {consultTask.status === 'BLOQUE' && isSuperAdmin && (

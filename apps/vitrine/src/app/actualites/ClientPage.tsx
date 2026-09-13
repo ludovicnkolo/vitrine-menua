@@ -6,7 +6,12 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 
 export default function ActualitesPage() {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
+  const isEN = lang === 'EN';
+  
+  const displayTitle = (pub: any) => (isEN && pub.title_en) ? pub.title_en : pub.title;
+  const displayContent = (pub: any) => (isEN && pub.contentHtml_en) ? pub.contentHtml_en : pub.contentHtml;
+  const displayCategory = (pub: any) => (isEN && pub.category_en) ? pub.category_en : pub.category;
   const [activeFilter, setActiveFilter] = useState("TOUTES LES ACTUALITÉS");
   const [publications, setPublications] = useState<any[]>([]);
 
@@ -113,13 +118,13 @@ export default function ActualitesPage() {
             <div className="bg-white border border-[#e8e1d7] flex flex-col md:flex-row w-full group hover:border-[#141824] transition-all duration-300">
               <div className="w-full md:w-1/2 h-[250px] md:h-[400px] overflow-hidden bg-[#f5f7fa] flex items-center justify-center relative">
                 {featuredPub.coverImageUrl ? (
-                  <img src={featuredPub.coverImageUrl} alt={featuredPub.title} className="block w-full h-full min-w-full max-w-none object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img src={featuredPub.coverImageUrl} alt={displayTitle(featuredPub)} className="block w-full h-full min-w-full max-w-none object-cover transition-transform duration-700 group-hover:scale-105" />
                 ) : (
                   <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-xl">MENUA CONSULTING</span>
                 )}
                 {featuredPub.category && (
                   <div className="absolute top-4 left-4 bg-[#e8e1d7] text-[#141824] px-4 py-2 text-[0.8rem] font-bold uppercase tracking-wider">
-                    {featuredPub.category}
+                    {displayCategory(featuredPub)}
                   </div>
                 )}
               </div>
@@ -129,10 +134,10 @@ export default function ActualitesPage() {
                   {featuredPub.publishedAt ? formatDate(featuredPub.publishedAt) : formatDate(featuredPub.createdAt)}
                 </p>
                 <h3 className="text-[#141824] group-hover:text-white text-[1.4rem] font-bold leading-tight mb-4 transition-colors duration-300">
-                  {featuredPub.title}
+                  {displayTitle(featuredPub)}
                 </h3>
                 <p className="text-[#6e7891] group-hover:text-white/70 text-[1.1rem] font-light leading-relaxed mb-8 transition-colors duration-300 line-clamp-4">
-                  {featuredPub.contentHtml ? featuredPub.contentHtml.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : "Découvrez notre nouvelle publication et l'analyse détaillée de nos experts métier sur ce sujet."}
+                  {displayContent(featuredPub) ? displayContent(featuredPub).replace(/<[^>]+>/g, "").substring(0, 150) + "..." : "Découvrez notre nouvelle publication et l'analyse détaillée de nos experts métier sur ce sujet."}
                 </p>
                 
                 <div className="flex justify-end mt-auto">
@@ -201,7 +206,7 @@ export default function ActualitesPage() {
                       <>
                         <img 
                           src={pub.coverImageUrl} 
-                          alt={pub.title} 
+                          alt={displayTitle(pub)} 
                           className="block w-full h-full min-w-full max-w-none object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#f5f7fa]" 
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
@@ -212,7 +217,7 @@ export default function ActualitesPage() {
                     )}
                     {pub.category && (
                       <div className="absolute top-3 left-3 bg-[#e8e1d7] text-[#141824] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wider">
-                        {pub.category}
+                        {displayCategory(pub)}
                       </div>
                     )}
                   </div>
@@ -220,9 +225,9 @@ export default function ActualitesPage() {
                     <p className="text-[#6e7891] text-[0.75rem] font-medium tracking-wide mb-2">
                       {pub.publishedAt ? formatDate(pub.publishedAt) : formatDate(pub.createdAt)}
                     </p>
-                    <h4 className="text-[#141824] font-semibold text-[1.1rem] leading-snug mb-3 line-clamp-2">{pub.title}</h4>
+                    <h4 className="text-[#141824] font-semibold text-[1.1rem] leading-snug mb-3 line-clamp-2">{displayTitle(pub)}</h4>
                     <p className="text-[#6e7891] text-[0.85rem] font-light leading-relaxed flex-grow mb-4 line-clamp-3">
-                      {pub.contentHtml ? pub.contentHtml.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : "Analyse détaillée de nos experts métier sur ce sujet."}
+                      {displayContent(pub) ? displayContent(pub).replace(/<[^>]+>/g, "").substring(0, 150) + "..." : "Analyse détaillée de nos experts métier sur ce sujet."}
                     </p>
                     <a href={`/actualites/${pub.id}`} className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.7rem] group-hover:gap-3 transition-all">
                       {t("LIRE L'ARTICLE", "READ ARTICLE")} <ArrowRight size={14} />

@@ -105,9 +105,17 @@ app.use('/api/auth', authRouter);
 const filesRouter = require('./routes/files');
 app.use('/api/files', filesRouter);
 
-// CRM routes (Dossiers, Tasks, Users)
-const crmRouter = require('./routes/crm');
-app.use('/api/crm', crmRouter);
+// CRM routes (Modularized)
+app.use('/api/crm', require('./routes/crm/users'));
+app.use('/api/crm', require('./routes/crm/clients'));
+app.use('/api/crm', require('./routes/crm/dossiers'));
+app.use('/api/crm', require('./routes/crm/audit'));
+app.use('/api/crm', require('./routes/crm/missions'));
+app.use('/api/crm', require('./routes/crm/taches'));
+app.use('/api/crm', require('./routes/crm/documents'));
+app.use('/api/crm', require('./routes/crm/messages'));
+app.use('/api/crm', require('./routes/crm/dashboard'));
+app.use('/api/crm', require('./routes/crm/notifications'));
 
 // CMS routes (Publications, Offres)
 const cmsRouter = require('./routes/cms');

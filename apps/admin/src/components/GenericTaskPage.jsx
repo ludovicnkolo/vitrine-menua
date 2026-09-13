@@ -506,68 +506,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               </div>
             )}
 
-            <div>
-              <label htmlFor="new-task-attachment" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
-              <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
-                {consultTask?.attachment && (
-                  <div style={{marginBottom: '1rem'}}>
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
-                      Inclure la pièce jointe (héritée) :
-                    </label>
-                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '0.5rem', background: '#FFF', borderRadius: '4px', border: '1px solid var(--border)'}}>
-                      {consultTask.attachment.split(',').map(att => {
-                        const fileName = att.split('/').pop();
-                        return (
-                          <div key={att} style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                            <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', margin: 0, fontWeight: 500, color: 'var(--text-main)'}}>
-                              <input 
-                                type="checkbox" 
-                                checked={selectedParentDocs.includes(att)} 
-                                onChange={(e) => {
-                                  if (e.target.checked) setSelectedParentDocs([...selectedParentDocs, att]);
-                                  else setSelectedParentDocs(selectedParentDocs.filter(a => a !== att));
-                                }} 
-                              />
-                              <Files size={14} style={{color: 'var(--text-muted)'}}/> {fileName}
-                            </label>
-                            <button type="button" onClick={(e) => { e.preventDefault(); setPreviewFile(att); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', display: 'flex', alignItems: 'center'}} title="Prévisualiser">
-                              <Eye size={16} />
-                            </button>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-                {consultTask?.documents?.length > 0 && (
-                  <div style={{marginBottom: '1rem'}}>
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
-                      Inclure des documents de la mission :
-                    </label>
-                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '0.5rem', background: '#FFF', borderRadius: '4px', border: '1px solid var(--border)'}}>
-                      {consultTask.documents.map(doc => (
-                        <div key={doc.id} style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                          <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', margin: 0}}>
-                            <input 
-                              type="checkbox" 
-                              checked={selectedMissionDocs.includes(doc.id)} 
-                              onChange={(e) => {
-                                if (e.target.checked) setSelectedMissionDocs([...selectedMissionDocs, doc.id]);
-                                else setSelectedMissionDocs(selectedMissionDocs.filter(id => id !== doc.id));
-                              }} 
-                            />
-                            <FileText size={14} style={{color: 'var(--primary)'}}/> {doc.name}
-                          </label>
-                          <button type="button" onClick={(e) => { e.preventDefault(); setPreviewFile(doc.url); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', display: 'flex', alignItems: 'center'}} title="Prévisualiser">
-                            <Eye size={16} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+            
 
             <div>
               <label htmlFor="new-task-message" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes</label>

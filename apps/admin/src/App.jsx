@@ -50,7 +50,19 @@ function App() {
     }
   }, []);
 
-  const handleLogout = (reason = '') => {
+  const handleLogout = async (reason = '') => {
+    // Journaliser la déconnexion dans l'audit avant de vider la session
+    const currentToken = sessionStorage.getItem('adminToken');
+    if (currentToken) {
+      try {
+        await fetch(getSafeApiUrl('/api/auth/logout'), {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+      } catch (e) {
+        // Ignorer l'erreur réseau — on se déconnecte quand même
+      }
+    }
     sessionStorage.removeItem('adminToken');
     sessionStorage.removeItem('adminUser');
     setToken(null);

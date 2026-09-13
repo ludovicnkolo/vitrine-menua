@@ -107,6 +107,28 @@ router.post('/login', async (req, res) => {
 });
 
 // Route de vérification de session (Ping sécurité — retourne le rôle réel depuis la BD)
+
+// Route de déconnexion (Logout)
+router.post('/logout', authenticateJWT, async (req, res) => {
+  try {
+    if (req.user.id && req.user.id !== 'MASTER-ADMIN') {
+      await prisma.auditLog.create({ 
+        data: { 
+          userId: req.user.id, 
+          action: 'DECONNEXION', 
+          targetId: req.user.id, 
+          targetType: 'USER', 
+          details: 'Déconnexion manuelle du CRM' 
+        }
+      });
+    }
+    res.json({ success: true });
+  } catch (e) {
+    console.error('Erreur logout:', e);
+    res.status(500).json({ error: 'Erreur serveur.' });
+  }
+});
+
 router.get('/verify', authenticateJWT, async (req, res) => {
   try {
     // Master-Admin n'est pas en BD

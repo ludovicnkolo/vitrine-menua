@@ -79,7 +79,14 @@ export default function NotificationBell() {
     <div ref={dropdownRef} style={{ position: 'relative' }}>
       {/* Bell Button */}
       <button
-        onClick={() => setOpen(o => !o)}
+        onClick={() => {
+          const wasOpen = open;
+          setOpen(o => !o);
+          // Marquer toutes comme lues à l'ouverture du panneau
+          if (!wasOpen && unreadCount > 0) {
+            markAllRead();
+          }
+        }}
         title="Notifications"
         style={{
           position: 'relative',

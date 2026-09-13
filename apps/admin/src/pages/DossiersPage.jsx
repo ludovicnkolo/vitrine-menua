@@ -516,9 +516,7 @@ const DossiersPage = () => {
     
     return (
       <>
-        {dossier.status === 'NOUVEAU' && (
-          <button type="button" onClick={() => handleStatusAction(dossier.id, 'OUVERT')} className="btn btn-primary" style={{background: 'var(--primary)'}}>▶ Lancer le dossier</button>
-        )}
+        {/* Pas de bouton "Lancer" - un dossier s'ouvre automatiquement lors de la création d'une mission */}
         {dossier.status === 'OUVERT' && (
           <button type="button" onClick={() => handleStatusAction(dossier.id, 'TERMINE')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>★ Clôturer</button>
         )}

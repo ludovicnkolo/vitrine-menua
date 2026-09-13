@@ -342,13 +342,13 @@ const CMSPage = () => {
                   </td>
                   <td>{formatDate(pub.createdAt)}</td>
                   <td>
-                    <div style={{display: 'flex', gap: '0.5rem', justifyContent: 'center'}}>
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.4rem', alignItems: 'center'}}>
                       {isSuperAdmin && (
                         <>
-                          <button onClick={() => openModal(pub)} className="btn btn-outline" style={{padding: '0.35rem 0.5rem'}} title="Modifier">
+                          <button onClick={() => openModal(pub)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', padding: '0.35rem'}} title="Modifier">
                             <Edit size={16} />
                           </button>
-                          <button onClick={() => handleDelete(pub.id)} className="btn btn-outline" style={{padding: '0.35rem 0.5rem', color: 'var(--danger)', borderColor: 'var(--danger)'}} title="Supprimer">
+                          <button onClick={() => handleDelete(pub.id)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)', padding: '0.35rem'}} title="Supprimer">
                             <Trash size={16} />
                           </button>
                         </>

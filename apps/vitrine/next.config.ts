@@ -52,6 +52,12 @@ const nextConfig: NextConfig = {
       { source: '/nous-connaitre/notre-methodologie', destination: '/fr/nous-connaitre', permanent: true },
       { source: '/nous-connaitre/presentation-du-cabinet', destination: '/fr/nous-connaitre', permanent: true },
       { source: '/pourquoi-menua/nos-benefices', destination: '/fr/pourquoi-menua', permanent: true },
+      // Redirections ajoutées suite aux erreurs 404 de la Search Console
+      { source: '/nous-connaitre/accreditations', destination: '/fr/nous-connaitre', permanent: true },
+      { source: '/nous-connaitre/notre-equipe', destination: '/fr/nous-connaitre', permanent: true },
+      { source: '/nos-solutions/volume', destination: '/fr/nos-solutions', permanent: true },
+      { source: '/nos-solutions/duree', destination: '/fr/nos-solutions', permanent: true },
+      { source: '/actualites/a-la-une', destination: '/fr/actualites', permanent: true },
     ];
   },
   // Proxy les requêtes /api vers le backend pour éviter les 404 quand on accède via le port 3000

@@ -771,6 +771,9 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 {consultTask.status === 'TERMINE' && isSuperAdmin && (
                   <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'ARCHIVE')} className="btn btn-outline" style={{borderColor: '#4B5563', color: '#4B5563'}}>Archiver</button>
                 )}
+                {['TERMINE', 'ARCHIVE'].includes(consultTask.status) && isSuperAdmin && (
+                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'OUVERT')} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Déclôturer</button>
+                )}
                 {!['TERMINE', 'ARCHIVE', 'BLOQUE', 'EN_ATTENTE'].includes(consultTask.status) && (
                   <>
                     {(isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
@@ -790,7 +793,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               </>
             )}
 
-            {mode === 'MISSION' && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
+            {mode === 'MISSION' && !['TERMINE', 'ARCHIVE'].includes(consultTask.status) && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
               <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une tâche</button>
             )}
           </div>

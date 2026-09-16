@@ -406,6 +406,13 @@ router.patch('/dossiers/:id', async (req, res) => {
     const userRole = req.user.role;
     const userId = req.user.id;
 
+    // Prévention des actions concurrentes sur le statut
+    const currentDossier = await prisma.dossier.findUnique({ where: { id: req.params.id } });
+    if (!currentDossier) return res.status(404).json({ error: 'Dossier introuvable.' });
+    if (req.body.status && currentDossier.status === req.body.status) {
+      return res.status(400).json({ error: "Action impossible : le dossier est déjà dans ce statut (peut-être modifié par un autre utilisateur)." });
+    }
+
     // Le statut BLOQUÉ est réservé aux Super-Admin et Admin Technique
     if (req.body.status === 'BLOQUE' && !isSuperAdmin(userRole)) {
       return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur ou Administrateur Technique peut bloquer un dossier." });

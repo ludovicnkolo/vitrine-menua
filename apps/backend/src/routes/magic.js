@@ -9,6 +9,7 @@ const path = require('path');
 const router = express.Router();
 const prisma = new PrismaClient();
 const { logAudit } = require('../utils/audit');
+const { notify } = require('../utils/notify');
 
 // Multer in memory for S3 upload
 const upload = multer({
@@ -197,6 +198,34 @@ router.post('/upload/:token', upload.array('files', 10), async (req, res) => {
         `${uploadedDocs.length} document(s) déposé(s) via Lien Magique (${uploadedDocs.map(d => d.name).join(', ')})`,
         magicLink.dossierId
       );
+
+      // ── Notification Super-Admin & Traitant ──
+      try {
+        const superAdmins = await prisma.utilisateur.findMany({
+          where: { role: { name: 'Super-administrateur' } },
+          select: { id: true }
+        });
+        const dossier = await prisma.dossier.findUnique({
+          where: { id: magicLink.dossierId },
+          select: { traitantId: true }
+        });
+
+        const notifyIds = new Set();
+        superAdmins.forEach(sa => notifyIds.add(sa.id));
+        if (dossier && dossier.traitantId) notifyIds.add(dossier.traitantId);
+
+        if (notifyIds.size > 0) {
+          await notify(Array.from(notifyIds), {
+            type: 'DOCUMENT_AJOUTE',
+            title: 'Nouveau dépôt client',
+            message: `Le client a déposé ${uploadedDocs.length} document(s) via son lien sécurisé.`,
+            targetId: magicLink.dossierId,
+            targetType: 'DOSSIER'
+          });
+        }
+      } catch (notifErr) {
+        console.error('Erreur notification dépôt magique:', notifErr);
+      }
     }
 
     res.json({ success: true, message: `${uploadedDocs.length} fichier(s) uploadé(s) avec succès.`, count: uploadedDocs.length });

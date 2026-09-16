@@ -160,6 +160,11 @@ router.get('/taches', async (req, res) => {
       } else if (!where.status) {
         where.status = { not: 'BLOQUE' };
       }
+      where.mission = {
+        ...where.mission,
+        status: { not: 'BLOQUE' },
+        dossier: { status: { not: 'BLOQUE' } }
+      };
     }
     if (search) {
       const s = search.toLowerCase();
@@ -200,13 +205,16 @@ router.post('/taches', async (req, res) => {
       return res.status(403).json({ error: "Accès refusé. Vous n'avez pas les droits pour créer une tâche." });
     }
 
-    // Responsable Op. ne peut créer une tâche que dans ses propres missions (dossiers)
-    if (userRole === 'Responsable opérationnel' && req.body.missionId) {
+    if (req.body.missionId) {
       const targetMission = await prisma.mission.findUnique({
         where: { id: req.body.missionId },
-        include: { dossier: { select: { traitantId: true } } }
+        include: { dossier: { select: { traitantId: true, status: true } } }
       });
-      if (!targetMission?.dossier || targetMission.dossier.traitantId !== req.user.id) {
+      if (!targetMission) return res.status(404).json({ error: "Mission introuvable." });
+      if (['TERMINE', 'ARCHIVE'].includes(targetMission.status) || ['TERMINE', 'ARCHIVE'].includes(targetMission.dossier?.status)) {
+        return res.status(403).json({ error: "Action impossible : le parent (mission ou dossier) est clôturé." });
+      }
+      if (userRole === 'Responsable opérationnel' && (!targetMission.dossier || targetMission.dossier.traitantId !== req.user.id)) {
         return res.status(403).json({ error: "Accès refusé. Vous n'êtes pas le responsable du dossier de cette mission." });
       }
     }
@@ -282,9 +290,18 @@ router.patch('/taches/:id', async (req, res) => {
 
     const currentTache = await prisma.tache.findUnique({
       where: { id },
-      include: { mission: { include: { dossier: { select: { traitantId: true } } } } }
+      include: { mission: { include: { dossier: { select: { traitantId: true, status: true } } } } }
     });
     if (!currentTache) return res.status(404).json({ error: 'Tâche introuvable.' });
+
+    if (['TERMINE', 'ARCHIVE'].includes(currentTache.mission?.status) || ['TERMINE', 'ARCHIVE'].includes(currentTache.mission?.dossier?.status)) {
+        return res.status(403).json({ error: "Action impossible : le parent (mission ou dossier) est clôturé." });
+    }
+
+    // Prévention des actions concurrentes (race conditions) sur le statut
+    if (status && currentTache.status === status) {
+      return res.status(400).json({ error: "Action impossible : la tâche est déjà dans ce statut (peut-être modifiée par un autre utilisateur)." });
+    }
 
     const userRole = req.user?.role || '';
     const userId = req.user?.id;

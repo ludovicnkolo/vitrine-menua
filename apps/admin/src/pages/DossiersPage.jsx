@@ -523,6 +523,9 @@ const DossiersPage = () => {
         {dossier.status === 'TERMINE' && (currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Super-administrateur') && (
           <button type="button" onClick={() => handleStatusAction(dossier.id, 'ARCHIVE')} className="btn btn-outline" style={{borderColor: '#4B5563', color: '#4B5563'}}>Archiver</button>
         )}
+        {['TERMINE', 'ARCHIVE'].includes(dossier.status) && (currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Super-administrateur') && (
+          <button type="button" onClick={() => handleStatusAction(dossier.id, 'OUVERT')} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Déclôturer</button>
+        )}
         {!['TERMINE', 'ARCHIVE', 'BLOQUE', 'EN_ATTENTE'].includes(dossier.status) && (
           <>
             <button type="button" onClick={() => handleStatusAction(dossier.id, 'EN_ATTENTE')} className="btn btn-outline" style={{borderColor: '#F59E0B', color: '#F59E0B'}}>⏳ Mettre en Attente</button>
@@ -713,7 +716,7 @@ const DossiersPage = () => {
 
         <div style={{marginTop: '2rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem'}}>
           <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
-            {(currentUser?.role === 'Super-administrateur' || currentUser?.role?.name === 'Super-administrateur' || consultDossier.traitantId === currentUser?.id) && (
+            {!['TERMINE', 'ARCHIVE'].includes(consultDossier.status) && (currentUser?.role === 'Super-administrateur' || currentUser?.role?.name === 'Super-administrateur' || consultDossier.traitantId === currentUser?.id) && (
               <button type="button" onClick={() => { setCreateMissionModal(true); setMissionDossierId(consultDossier.id); }} className="btn btn-primary" style={{display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
                 Créer une mission
               </button>

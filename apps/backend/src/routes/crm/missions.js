@@ -163,6 +163,10 @@ router.get('/tasks', async (req, res) => {
       } else if (!where.status) {
         where.status = { not: 'BLOQUE' };
       }
+      where.dossier = {
+        ...where.dossier,
+        status: { not: 'BLOQUE' }
+      };
     }
     if (search) {
       const s = search.toLowerCase();
@@ -211,10 +215,13 @@ router.post('/tasks', async (req, res) => {
       return res.status(403).json({ error: "Accès refusé. Vous n'avez pas les droits pour créer une mission." });
     }
 
-    // Responsable Op. ne peut créer une mission que dans ses propres dossiers
-    if (userRole === 'Responsable opérationnel' && req.body.dossierId) {
-      const targetDossier = await prisma.dossier.findUnique({ where: { id: req.body.dossierId }, select: { traitantId: true } });
-      if (!targetDossier || targetDossier.traitantId !== req.user.id) {
+    if (req.body.dossierId) {
+      const targetDossier = await prisma.dossier.findUnique({ where: { id: req.body.dossierId }, select: { traitantId: true, status: true } });
+      if (!targetDossier) return res.status(404).json({ error: "Dossier introuvable." });
+      if (['TERMINE', 'ARCHIVE'].includes(targetDossier.status)) {
+        return res.status(403).json({ error: "Action impossible : le dossier parent est clôturé." });
+      }
+      if (userRole === 'Responsable opérationnel' && targetDossier.traitantId !== req.user.id) {
         return res.status(403).json({ error: "Accès refusé. Vous n'êtes pas le responsable de ce dossier." });
       }
     }
@@ -348,10 +355,19 @@ router.patch('/tasks/:id', async (req, res) => {
     // ── Vérification Zero-Trust (Accès en Modification) ──────────────────────
     const currentMissionForAuth = await prisma.mission.findUnique({
       where: { id: req.params.id },
-      include: { dossier: { select: { traitantId: true } } }
+      include: { dossier: { select: { traitantId: true, status: true } } }
     });
     if (!currentMissionForAuth) return res.status(404).json({ error: 'Mission introuvable.' });
     
+    // Empêcher la modification si le parent est clôturé (sauf pour déclôturer par admin)
+    if (req.body.status !== 'OUVERT' && (['TERMINE', 'ARCHIVE'].includes(currentMissionForAuth.dossier?.status))) {
+        return res.status(403).json({ error: "Action impossible : le dossier parent est clôturé." });
+    }
+    
+    if (req.body.status && currentMissionForAuth.status === req.body.status) {
+      return res.status(400).json({ error: "Action impossible : la mission est déjà dans ce statut (peut-être modifiée par un autre utilisateur)." });
+    }
+
     const isAuthorized = 
       isSuperAdmin(userRole) || isAdmin(userRole) ||
       currentMissionForAuth.assignedToId === userId || 

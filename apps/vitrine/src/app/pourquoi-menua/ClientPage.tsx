@@ -13,7 +13,7 @@ export default function PourquoiMenuaPage() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── 5.1 HERO ── */}
-      <section className="relative w-full min-h-screen flex flex-col justify-end overflow-hidden">
+      <section className="relative w-full min-h-screen portrait:sm:min-h-0 portrait:sm:h-[70svh] flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="/img/pourquoi-hero.webp" 
@@ -23,9 +23,9 @@ export default function PourquoiMenuaPage() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container landscape:px-12 relative z-10 pt-56 md:pt-72 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-40 landscape:pb-16 lg:pb-24 landscape:lg:pb-24 mt-16 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
-          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12 landscape:ml-0 landscape:lg:-ml-12">
-            <h1 className="text-white text-[1.25rem] md:text-[2.5rem] landscape:text-[1.5rem] landscape:lg:text-[2.5rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 relative z-10 pt-56 md:pt-72 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-28 portrait:sm:pb-20 landscape:pb-24 lg:pb-10 landscape:lg:pb-40 xl:pb-16 mt-16 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
+          <div className="max-w-4xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-4 landscape:ml-6 landscape:lg:-ml-4">
+            <h1 className="text-white text-[1.25rem] portrait:sm:text-[1.5rem] md:text-[2.5rem] portrait:md:text-[1.8rem] landscape:text-[1.25rem] landscape:lg:text-[1.88rem] xl:text-[2.75rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               {t("Pourquoi MENUA CONSULTING ?", "Why choose us?")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
@@ -46,68 +46,68 @@ export default function PourquoiMenuaPage() {
       </section>
 
       {/* ── 5.2 INTRODUCTION ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[11.75rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container relative z-10">
+      <section className="relative w-full bg-white pt-8 md:pt-[2.75rem] pb-16 md:pb-24 scroll-mt-20">
+        <div className="laplace-container portrait:sm:px-10 relative z-10 landscape:px-16 landscape:lg:px-16">
           {/* BREADCRUMB */}
-          <div className="absolute -top-8 md:-top-[8rem] left-6 md:left-12 lg:left-0 z-50">
+          <div className="w-full mb-8 md:mb-4">
             <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
               <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
               <span className="mx-2">/</span>
               <span>{t("Pourquoi MENUA CONSULTING ?", "Why choose us?")}</span>
             </p>
           </div>
-          {/* Text block — full width on mobile, leaves room for image on right on desktop */}
-          <div className="px-6 landscape:px-32 landscape:lg:px-16 py-10 lg:px-16 lg:pt-12 lg:pb-14 lg:pr-[38%] landscape:lg:pr-[38%] relative z-30 lg:z-10 lg:mt-0">
-            {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
-            <div className="absolute left-0 right-0 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
 
-            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
-              {t("Notre Vision", "Our vision")}
-            </h2>
-
-            {/* Mobile Image (Visible only on mobile) */}
-            <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[250px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
+          <div className="flex flex-col lg:flex-row-reverse items-center">
+            {/* Right Image (Desktop only) */}
+            <div className="hidden lg:block w-full lg:w-6/12 lg:h-[420px] z-20 relative shrink-0">
               <img
                 src="/img/pourquoi_2.webp"
                 alt="Pourquoi Menua"
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-cover object-center shadow-xl"
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
               />
             </div>
-            
-            <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">
-              {formatBrand(t(
-                "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants.",
-                "MENUA CONSULTING supports organisations facing demanding operational delivery challenges."
-              ))}
-            </p>
-            <p className="text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
-              {formatBrand(t(
-                "Dans des environnements où les délais, la qualité des données, la conformité documentaire et la continuité de service sont essentiels, MENUA CONSULTING apporte un appui structuré aux équipes internes afin de sécuriser le traitement des fonctions back et middle office.",
-                "In environments where deadlines, data quality, documentary compliance and service continuity are critical, MENUA CONSULTING provides structured support to internal teams to safeguard the processing of back and middle-office functions."
-              ))}
-            </p>
 
+            {/* Left Overlapping Grey Box */}
+            <div className="w-full lg:w-7/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pl-20 landscape:lg:pl-20 lg:pr-32 landscape:lg:pr-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-mr-24">
+              {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
+              <div className="absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
 
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+              <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
+                {t("Notre Vision", "Our vision")}
+              </h2>
+
+              {/* Mobile Image (Visible only on mobile) */}
+              <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
+                <img
+                  src="/img/pourquoi_2.webp"
+                  alt="Pourquoi Menua"
+                  className="w-full h-full object-cover object-center"
+                  onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
+                />
+              </div>
+              
+              <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">
+                {formatBrand(t(
+                  "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants.",
+                  "MENUA CONSULTING supports organisations facing demanding operational delivery challenges."
+                ))}
+              </p>
+              <p className="text-[#6e7891] text-[1rem] font-light leading-relaxed mb-4">
+                {formatBrand(t(
+                  "Dans des environnements où les délais, la qualité des données, la conformité documentaire et la continuité de service sont essentiels, MENUA CONSULTING apporte un appui structuré aux équipes internes afin de sécuriser le traitement des fonctions back et middle office.",
+                  "In environments where deadlines, data quality, documentary compliance and service continuity are critical, MENUA CONSULTING provides structured support to internal teams to safeguard the processing of back and middle-office functions."
+                ))}
+              </p>
+            </div>
           </div>
-
-          {/* Image — absolutely overlapping the right side of the white box */}
-          <div className="hidden lg:block absolute -top-24 right-0 w-[36%] h-[75%] z-20">
-            <img
-              src="/img/pourquoi_2.webp"
-              alt="Pourquoi Menua"
-              className="w-full h-full object-cover shadow-xl"
-              onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
-            />
-          </div>
-
         </div>
       </section>
 
       {/* ── 5.3 BÉNÉFICES (Image Left, Card Right) ── */}
       <section id="nos-benefices" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <div className="laplace-container portrait:sm:px-10 max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16 landscape:px-16 landscape:lg:px-16">
           <div className="hidden lg:block w-full lg:w-5/12 h-[400px] lg:h-[550px] shadow-xl">
              <img src="/img/benefices.webp" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
           </div>
@@ -116,7 +116,7 @@ export default function PourquoiMenuaPage() {
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{t("Bénéfices", "Benefits")}</h2>
             
             {/* Mobile Image */}
-            <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[250px] my-6 landscape:mt-6 landscape:mb-12 rounded-sm shadow-md overflow-hidden">
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-12 rounded-sm shadow-md overflow-hidden">
               <img src="/img/benefices.webp" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
             </div>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
@@ -153,7 +153,7 @@ export default function PourquoiMenuaPage() {
         {/* Subtle geometric accent background on the left */}
         <div className="absolute top-0 left-0 w-1/2 h-full bg-[#1a1f2e] skew-x-[10deg] origin-bottom-left hidden lg:block" />
         
-        <div className="laplace-container landscape:px-16 landscape:lg:px-12 relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row-reverse gap-16 lg:gap-24 items-center">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row-reverse gap-16 lg:gap-24 items-center">
           
           {/* Narrative (Right side visually) */}
           <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-4 lg:-translate-y-10">
@@ -205,51 +205,77 @@ export default function PourquoiMenuaPage() {
       {/* ── SEPARATION BLANC ── */}
       <div className="w-full h-8 md:h-[5.25rem] bg-white"></div>
 
-      {/* ── 5.5 NOS ENGAGEMENTS (Card Left, Image Right) ── */}
-      <section id="nos-engagements" className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.25rem] landscape:pt-8 landscape:lg:pt-[5.25rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-24 scroll-mt-20">
-        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto flex flex-col-reverse lg:flex-row landscape:flex-row landscape:items-center landscape:gap-8 items-center gap-12 lg:gap-16">
-          <div className="w-full lg:w-7/12 landscape:w-7/12 bg-white p-10 landscape:p-8 landscape:lg:p-14 shadow-sm border border-[#e8e1d7] border-t-4 border-t-[#141824]">
-            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{t("Nos engagements", "Our commitments")}</h2>
+      {/* ── 5.5 NOS ENGAGEMENTS (Overlapping layout) ── */}
+      <section id="nos-engagements" className="relative w-full bg-[#f5f7fa] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
+        <div className="laplace-container portrait:sm:px-10 relative z-10 landscape:px-16 landscape:lg:px-16">
+          <div className="flex flex-col lg:flex-row-reverse items-center">
             
-            <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
-              {formatBrand(t(
-                "MENUA CONSULTING s’engage sur l’essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
-                "At MENUA CONSULTING, we recognise that the processing we handle is vital to the proper functioning of your organisation. That is why our engagements are governed by strict commitments to rigour, reliability and transparency."
-              ))}
-            </p>
-            <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
-              {t(
-                "Nos interventions s’appuient sur un contrôle à quatre yeux, des méthodes de travail structurées, la formation des ressources mobilisées et le respect de vos exigences opérationnelles, qualité et réglementaires.",
-                "Our services rely on four-eyes review, structured workflows, appropriately trained resources, and strict adherence to your operational, quality and regulatory requirements."
-              )}
-            </p>
-            
-            <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Nos engagements :", "Our commitments:")}</h4>
-            <BulletList 
-              gridCols="grid-cols-1"
-              gapY="space-y-3"
-              items={[
-                t("qualité des livrables", "Quality of deliverables"),
-                t("respect des délais", "Strict adherence to deadlines"),
-                t("traçabilité des opérations réalisées", "Traceability of actions and decisions"),
-                t("contrôle à quatre yeux lorsque le périmètre le nécessite", "Four-eyes review where required"),
-                t("communication claire et régulière", "Clear and regular communication"),
-                t("confidentialité des informations confiées", "Data and operational confidentiality"),
-                t("respect des procédures internes du client", "Strict adherence to your procedures and tools"),
-                t("intervention sous supervision des équipes ou professionnels habilités lorsque cela est requis", "Delivery supervised by authorised professionals where required")
-              ]}
-            />
-          </div>
-          <div className="hidden lg:block landscape:block w-full lg:w-5/12 landscape:w-5/12 h-[280px] landscape:h-[280px] lg:h-[550px] shadow-xl">
-             <img src="/img/pourquoi_4.webp" alt="Engagements" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
+            {/* Right Image (Desktop only) */}
+            <div className="hidden lg:block w-full lg:w-6/12 lg:h-[400px] z-20 relative shrink-0">
+              <img
+                src="/img/pourquoi_4.webp"
+                alt="Engagements"
+                className="w-full h-full object-cover object-center shadow-xl"
+                onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
+              />
+            </div>
+
+            {/* Left Overlapping White Box */}
+            <div className="w-full lg:w-7/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pl-20 landscape:lg:pl-20 lg:pr-32 landscape:lg:pr-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-mr-24">
+              {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
+              <div className="absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-white rounded-sm shadow-xl border border-[#e8e1d7] border-t-4 border-t-[#141824] -z-10" />
+
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+              <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
+                {t("Nos engagements", "Our commitments")}
+              </h2>
+
+              {/* Mobile Image (Visible only on mobile) */}
+              <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
+                <img
+                  src="/img/pourquoi_4.webp"
+                  alt="Engagements"
+                  className="w-full h-full object-cover object-center"
+                  onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
+                />
+              </div>
+              
+              <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
+                {formatBrand(t(
+                  "MENUA CONSULTING s’engage sur l’essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
+                  "At MENUA CONSULTING, we recognise that the processing we handle is vital to the proper functioning of your organisation. That is why our engagements are governed by strict commitments to rigour, reliability and transparency."
+                ))}
+              </p>
+              <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
+                {t(
+                  "Nos interventions s’appuient sur un contrôle à quatre yeux, des méthodes de travail structurées, la formation des ressources mobilisées et le respect de vos exigences opérationnelles, qualité et réglementaires.",
+                  "Our services rely on four-eyes review, structured workflows, appropriately trained resources, and strict adherence to your operational, quality and regulatory requirements."
+                )}
+              </p>
+              
+              <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Nos engagements :", "Our commitments:")}</h4>
+              <BulletList 
+                gridCols="grid-cols-1"
+                gapY="space-y-3"
+                items={[
+                  t("qualité des livrables", "Quality of deliverables"),
+                  t("respect des délais", "Strict adherence to deadlines"),
+                  t("traçabilité des opérations réalisées", "Traceability of actions and decisions"),
+                  t("contrôle à quatre yeux lorsque le périmètre le nécessite", "Four-eyes review where required"),
+                  t("communication claire et régulière", "Clear and regular communication"),
+                  t("confidentialité des informations confiées", "Data and operational confidentiality"),
+                  t("respect des procédures internes du client", "Strict adherence to your procedures and tools"),
+                  t("intervention sous supervision des équipes ou professionnels habilités lorsque cela est requis", "Delivery supervised by authorised professionals where required")
+                ]}
+              />
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── 5.6 UNE RELATION FONDÉE SUR LA CONFIANCE ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] landscape:pt-8 landscape:lg:pt-[5.25rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-24 scroll-mt-20">
-        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-4xl mx-auto text-center">
+      <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] landscape:pt-8 landscape:lg:pt-[5.25rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-48 scroll-mt-20">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-4xl mx-auto text-center">
           <div className="bg-[#e8e1d7] p-10 landscape:p-8 landscape:lg:p-16 md:p-16 shadow-xl border-t-4 border-[#141824]">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{t("Une relation fondée sur la confiance", "A relationship based on trust")}</h2>

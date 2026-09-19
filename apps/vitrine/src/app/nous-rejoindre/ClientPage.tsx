@@ -102,7 +102,7 @@ export default function NousRejoindre() {
     <main className="flex flex-col w-full min-h-screen">
       
       {/* ── 7.1 INTRODUCTION (Full Bleed Hero) ── */}
-      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-screen portrait:sm:min-h-0 portrait:sm:h-[70svh] flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="/img/nous-rejoindre-hero-new.webp" 
@@ -112,9 +112,9 @@ export default function NousRejoindre() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container landscape:px-12 relative z-10 pt-56 md:pt-72 landscape:pt-24 landscape:lg:pt-72 pb-20 landscape:pb-10 landscape:lg:pb-20 mt-16 landscape:mt-0 landscape:lg:mt-16">
-          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12 landscape:ml-0 landscape:lg:-ml-12">
-            <h1 className="text-white text-[1.25rem] md:text-[2.5rem] landscape:text-[1.5rem] landscape:lg:text-[2.5rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 relative z-10 pt-56 md:pt-72 landscape:pt-24 landscape:lg:pt-72 pb-20 portrait:sm:pb-16 landscape:pb-10 landscape:lg:pb-44 xl:pb-20 mt-16 landscape:mt-0 landscape:lg:mt-16">
+          <div className="max-w-4xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-4 landscape:ml-6 landscape:lg:-ml-4">
+            <h1 className="text-white text-[1.25rem] portrait:sm:text-[1.5rem] md:text-[2.5rem] portrait:md:text-[1.8rem] landscape:text-[1.25rem] landscape:lg:text-[1.88rem] xl:text-[2.75rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               {t("Nous rejoindre", "Join us")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
@@ -129,8 +129,8 @@ export default function NousRejoindre() {
       </section>
 
       {/* ── CONTENT SECTION (Laplace Styling) ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[5.75rem] landscape:pt-8 landscape:lg:pt-[5.75rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-24">
-        <div className="laplace-container landscape:px-16 landscape:lg:px-12 flex flex-col lg:flex-row gap-12 lg:gap-16">
+      <section className="relative w-full bg-white pt-12 md:pt-[5.75rem] landscape:pt-8 landscape:lg:pt-[5.75rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-48">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 flex flex-col lg:flex-row gap-12 lg:gap-16">
 
           {/* Left Column (Profiles) */}
           <div className="w-full lg:w-[40%] flex flex-col gap-8">

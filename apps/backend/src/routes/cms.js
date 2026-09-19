@@ -238,9 +238,28 @@ router.post('/upload', authenticateJWT, upload.single('image'), async (req, res)
     const safeName = req.file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
     const s3Key = `cms/images/${randomUUID()}-${safeName}`;
     
-    await uploadToS3(req.file.buffer, s3Key, req.file.mimetype);
-    
-    res.json({ success: true, url: s3Key });
+    try {
+      await uploadToS3(req.file.buffer, s3Key, req.file.mimetype);
+      res.json({ success: true, url: s3Key });
+    } catch (s3Error) {
+      console.warn("S3 upload failed, falling back to local storage:", s3Error.message);
+      
+      const fs = require('fs');
+      const path = require('path');
+      
+      const vitrinePath = path.join(__dirname, '../../../vitrine/public/uploads/cms/images');
+      const adminPath = path.join(__dirname, '../../../admin/public/uploads/cms/images');
+      
+      const fileName = s3Key.split('/').pop();
+      
+      fs.mkdirSync(vitrinePath, { recursive: true });
+      fs.mkdirSync(adminPath, { recursive: true });
+      
+      fs.writeFileSync(path.join(vitrinePath, fileName), req.file.buffer);
+      fs.writeFileSync(path.join(adminPath, fileName), req.file.buffer);
+      
+      res.json({ success: true, url: `/uploads/cms/images/${fileName}` });
+    }
   } catch (error) {
     console.error("Erreur upload image CMS:", error);
     res.status(500).json({ success: false, error: "Erreur lors de l'upload de l'image." });

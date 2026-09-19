@@ -57,7 +57,7 @@ export default function ActualitesPage() {
     <main className="flex flex-col w-full min-h-screen bg-white">
       
       {/* ── 6.1 INTRODUCTION (Full BleedHero) ─*/}
-      <section className="relative w-full min-h-screen flex flex-col justify-end overflow-hidden">
+      <section className="relative w-full min-h-screen portrait:sm:min-h-0 portrait:sm:h-[70svh] flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="/img/accueil-actus.webp" 
@@ -66,9 +66,9 @@ export default function ActualitesPage() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container landscape:px-12 relative z-10 pt-56 md:pt-72 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-40 landscape:pb-16 lg:pb-24 landscape:lg:pb-24 mt-16 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
-          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12 landscape:ml-0 landscape:lg:-ml-12">
-            <h1 className="text-white text-[1.25rem] md:text-[2.5rem] landscape:text-[1.5rem] landscape:lg:text-[2.5rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 relative z-10 pt-56 md:pt-72 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-28 portrait:sm:pb-20 landscape:pb-24 lg:pb-10 landscape:lg:pb-40 xl:pb-16 mt-16 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
+          <div className="max-w-4xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-4 landscape:ml-6 landscape:lg:-ml-4">
+            <h1 className="text-white text-[1.25rem] portrait:sm:text-[1.5rem] md:text-[2.5rem] portrait:md:text-[1.8rem] landscape:text-[1.25rem] landscape:lg:text-[1.88rem] xl:text-[2.75rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               {t("Actualités", "News")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
@@ -90,7 +90,7 @@ export default function ActualitesPage() {
 
       {/* ── SEPARATION BLANC AVEC BREADCRUMB ── */}
       <div className="w-full h-8 md:h-[5.75rem] bg-white relative">
-        <div className="laplace-container max-w-6xl mx-auto relative h-full">
+        <div className="laplace-container portrait:sm:px-10 max-w-6xl mx-auto relative h-full">
           <div className="absolute top-2 md:top-4 left-6 md:left-12 lg:left-0 z-50">
             <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
               <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
@@ -103,7 +103,7 @@ export default function ActualitesPage() {
 
       {/* ── 6.2 À LA UNE (Dark Section) ── */}
       <section id="articles" className="relative w-full bg-[#141824] pt-12 md:pt-[5.75rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="mb-12">
             <div className="w-16 h-[3px] bg-white mb-5"></div>
@@ -170,7 +170,7 @@ export default function ActualitesPage() {
 
       {/* ── 6.3 ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES ── */}
       <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24">
-        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
           <div>
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
               <h3 className="text-[#141824] text-[1.4rem] font-semibold uppercase tracking-wider flex items-center gap-4">
@@ -249,7 +249,7 @@ export default function ActualitesPage() {
 
       {/* ── LINKEDIN BANNER ── */}
       <section id="linkedin" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-5xl mx-auto bg-[#141824] p-8 md:p-12 shadow-2xl border-t-4 border-t-[#e8e1d7] flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-5xl mx-auto bg-[#141824] p-8 md:p-12 shadow-2xl border-t-4 border-t-[#e8e1d7] flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-6">
             <div className="w-16 h-16 rounded-md border border-[#e8e1d7]/30 flex items-center justify-center shrink-0">
               <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">

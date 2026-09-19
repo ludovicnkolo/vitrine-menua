@@ -641,64 +641,85 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         </div>
         
         <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
-          <div style={{display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.8fr', gap: '1.5rem', alignItems: 'center', marginBottom: '1.5rem', background: '#F8FAFC', padding: '1rem 1.5rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
-            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Créé par :</strong>
-              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.createdBy?.name || 'Système'}</span>
-            </div>
-            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Rôle :</strong>
-              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.createdBy?.role?.name || '-'}</span>
-            </div>
-            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Date de création :</strong>
-              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{new Date(consultTask.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</span>
-            </div>
-            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Assigné à :</strong>
-              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.assignedTo?.name || 'Non assigné'}</span>
-            </div>
-            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Rôle :</strong>
-              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.assignedTo?.role?.name || '-'}</span>
-            </div>
-            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>{mode === 'MISSION' ? 'Dossier associé :' : 'Mission Liée :'}</strong>
-              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>
-                {mode === 'MISSION' 
-                  ? ((consultTask.dossier?.name ? `${consultTask.dossier.name} (${consultTask.dossier.reference || 'DOS-' + consultTask.dossier.id})` : consultTask.dossierId)) 
-                  : (consultTask.mission?.reference || consultTask.missionId)}
-              </span>
-            </div>
-            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-              <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Échéance :</strong>
-              <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.echeance ? new Date(consultTask.echeance).toLocaleDateString('fr-FR') : 'Non définie'}</span>
-            </div>
-            {mode !== 'MISSION' && consultTask.dossierTache && (
-              <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-                <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Dossier tâche :</strong>
-                <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.dossierTache.name}</span>
+          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem', background: '#F8FAFC', padding: '1.25rem 1.5rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+            
+            {/* Colonne 1 — Identification */}
+            <div style={{display: 'flex', flexDirection: 'column', gap: '0.85rem', borderRight: '1px solid var(--border)', paddingRight: '1rem'}}>
+              <div style={{fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--primary)', marginBottom: '0.25rem'}}>
+                Identification {mode === 'MISSION' ? 'de la mission' : 'de la tâche'}
               </div>
-            )}
-            {mode !== 'MISSION' && consultTask.authorizedDossiers && consultTask.authorizedDossiers.length > 0 && (
+              
               <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-                <strong style={{color: 'var(--text-muted)', fontWeight: 600}}>Dossiers autorisés :</strong>
+                <strong style={{color: 'var(--text-muted)', fontWeight: 600, minWidth: '130px'}}>Nom :</strong>
+                <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.reference || consultTask.id}</span>
+              </div>
+              <div style={{display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem'}}>
+                <strong style={{color: 'var(--text-muted)', fontWeight: 600, minWidth: '130px'}}>Objet :</strong>
+                <span style={{fontWeight: 500, color: 'var(--text-main)', flex: 1}}>{getSubjectFromTask(consultTask.description)}</span>
+              </div>
+              <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+                <strong style={{color: 'var(--text-muted)', fontWeight: 600, minWidth: '130px'}}>{mode === 'MISSION' ? 'Dossier associé :' : 'Mission Liée :'}</strong>
                 <span style={{fontWeight: 500, color: 'var(--text-main)'}}>
-                  {consultTask.authorizedDossiers.map(d => d.name).join(', ')}
+                  {mode === 'MISSION' 
+                    ? ((consultTask.dossier?.name ? `${consultTask.dossier.name} (${consultTask.dossier.reference || 'DOS-' + consultTask.dossier.id})` : consultTask.dossierId)) 
+                    : (consultTask.mission?.reference || consultTask.missionId)}
                 </span>
               </div>
-            )}
+              {mode !== 'MISSION' && consultTask.dossierTache && (
+                <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+                  <strong style={{color: 'var(--text-muted)', fontWeight: 600, minWidth: '130px'}}>Dossier tâche :</strong>
+                  <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.dossierTache.name}</span>
+                </div>
+              )}
+              {mode !== 'MISSION' && consultTask.authorizedDossiers && consultTask.authorizedDossiers.length > 0 && (
+                <div style={{display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem'}}>
+                  <strong style={{color: 'var(--text-muted)', fontWeight: 600, minWidth: '130px'}}>Dossiers autorisés :</strong>
+                  <span style={{fontWeight: 500, color: 'var(--text-main)'}}>
+                    {consultTask.authorizedDossiers.map(d => d.name).join(', ')}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Colonne 2 — Gestion */}
+            <div style={{display: 'flex', flexDirection: 'column', gap: '0.85rem', paddingLeft: '0.5rem'}}>
+              <div style={{fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--secondary-dark)', marginBottom: '0.25rem'}}>
+                Gestion {mode === 'MISSION' ? 'de la mission' : 'de la tâche'}
+              </div>
+              
+              <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+                <strong style={{color: 'var(--text-muted)', fontWeight: 600, minWidth: '130px'}}>Créé par :</strong>
+                <span style={{fontWeight: 500, color: 'var(--text-main)'}}>
+                  {consultTask.createdBy?.name || 'Système'} <span style={{color: 'var(--text-muted)', fontWeight: 400}}>({consultTask.createdBy?.role?.name || '-'})</span>
+                </span>
+              </div>
+              <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+                <strong style={{color: 'var(--text-muted)', fontWeight: 600, minWidth: '130px'}}>Assigné à :</strong>
+                <span style={{fontWeight: 500, color: 'var(--text-main)'}}>
+                  {consultTask.assignedTo?.name || 'Non assigné'} <span style={{color: 'var(--text-muted)', fontWeight: 400}}>({consultTask.assignedTo?.role?.name || '-'})</span>
+                </span>
+              </div>
+              <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+                <strong style={{color: 'var(--text-muted)', fontWeight: 600, minWidth: '130px'}}>Date de création :</strong>
+                <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{new Date(consultTask.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</span>
+              </div>
+              <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+                <strong style={{color: 'var(--text-muted)', fontWeight: 600, minWidth: '130px'}}>Échéance :</strong>
+                <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{consultTask.echeance ? new Date(consultTask.echeance).toLocaleDateString('fr-FR') : 'Non définie'}</span>
+              </div>
+              <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+                <strong style={{color: 'var(--text-muted)', fontWeight: 600, minWidth: '130px'}}>Statut :</strong>
+                <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{getStatusBadge(consultTask.status)}</span>
+              </div>
+            </div>
           </div>
 
-
-          <TaskField label={"Objet"} value={getSubjectFromTask(consultTask.description)} />
-
-        <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
-          <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Consignes</h4>
-          <div style={{padding: '1.5rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', whiteSpace: 'pre-wrap', fontSize: '0.875rem', color: 'var(--text-main)', minHeight: '120px'}}>
-            {getMessageFromTask(consultTask.description) || <span style={{color: 'var(--text-muted)'}}>Aucune consigne fournie.</span>}
+          <div style={{borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
+            <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Consignes / Description</h4>
+            <div style={{padding: '1.5rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', whiteSpace: 'pre-wrap', fontSize: '0.875rem', color: 'var(--text-main)', minHeight: '120px'}}>
+              {getMessageFromTask(consultTask.description) || <span style={{color: 'var(--text-muted)'}}>Aucune consigne fournie.</span>}
+            </div>
           </div>
-        </div>
 
           {/* Fil de corrections — visible selon le rôle et le statut */}
           <FeedbackThread

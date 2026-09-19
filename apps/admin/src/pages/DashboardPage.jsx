@@ -34,11 +34,15 @@ const DashboardPage = () => {
   };
 
   const handleApplyFilter = () => {
-    if (startDate && endDate) {
-      if (new Date(endDate) <= new Date(startDate)) {
-        alert("La date de fin doit être postérieure à la date de début.");
-        return;
-      }
+    if (!startDate || !endDate) {
+      if (window.customAlert) window.customAlert("Veuillez sélectionner une date de début et une date de fin.");
+      else alert("Veuillez sélectionner une date de début et une date de fin.");
+      return;
+    }
+    if (new Date(endDate) <= new Date(startDate)) {
+      if (window.customAlert) window.customAlert("La date de fin doit être strictement supérieure à la date de début.");
+      else alert("La date de fin doit être strictement supérieure à la date de début.");
+      return;
     }
     setAppliedDates({ start: startDate, end: endDate });
     fetchStats(startDate, endDate);
@@ -67,6 +71,13 @@ const DashboardPage = () => {
     </div>
   );
 
+  const getMinEndDate = () => {
+    if (!startDate) return undefined;
+    const date = new Date(startDate);
+    date.setDate(date.getDate() + 1);
+    return date.toISOString().split('T')[0];
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem'}}>
@@ -80,7 +91,12 @@ const DashboardPage = () => {
             <input 
               type="date" 
               value={startDate} 
-              onChange={e => setStartDate(e.target.value)}
+              onChange={e => {
+                setStartDate(e.target.value);
+                if (endDate && new Date(endDate) <= new Date(e.target.value)) {
+                  setEndDate('');
+                }
+              }}
               style={{ border: '1px solid var(--border)', background: '#F8FAFC', borderRadius: '6px', padding: '0.35rem 0.5rem', outline: 'none', fontSize: '0.875rem', color: 'var(--text-main)' }}
             />
           </div>
@@ -90,6 +106,7 @@ const DashboardPage = () => {
             <input 
               type="date" 
               value={endDate} 
+              min={getMinEndDate()}
               onChange={e => setEndDate(e.target.value)}
               style={{ border: '1px solid var(--border)', background: '#F8FAFC', borderRadius: '6px', padding: '0.35rem 0.5rem', outline: 'none', fontSize: '0.875rem', color: 'var(--text-main)' }}
             />

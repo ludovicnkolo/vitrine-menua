@@ -152,7 +152,7 @@ export default function Header() {
           {/* MOBILE TOGGLE */}
           <button
             type="button"
-            className="lg:hidden text-white hover:text-[#e8e1d7] transition-colors relative z-[9999] p-4 -ml-4 min-w-[48px] min-h-[48px] flex items-center justify-center"
+            className="xl:hidden text-white hover:text-[#e8e1d7] transition-colors relative z-[9999] p-4 -ml-4 min-w-[48px] min-h-[48px] flex items-center justify-center"
             style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
             onClick={() => setIsMobileMenuOpen(prev => !prev)}
             onTouchEnd={(e) => { e.preventDefault(); setIsMobileMenuOpen(prev => !prev); }}
@@ -165,22 +165,22 @@ export default function Header() {
           {/* LOGO */}
           <Link
             href="/"
-            className="flex flex-col items-center justify-center z-50 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0 lg:-ml-6"
+            className="flex flex-col items-center justify-center z-50 absolute left-1/2 -translate-x-1/2 xl:static xl:translate-x-0 shrink-0 xl:-ml-6"
             onClick={() => { setOpenMenu(null); setIsMobileMenuOpen(false); }}
           >
             {/* Clean extracted logo */}
             <img
               src="/img/logo-clean-light.webp"
               alt="Menua Consulting"
-              className="h-[90px] w-[135px] lg:h-[150px] lg:w-[225px] object-contain"
+              className="h-[90px] w-[135px] lg:h-[110px] lg:w-[165px] xl:h-[150px] xl:w-[225px] object-contain"
               fetchPriority="high"
             />
           </Link>
 
-          <div className="w-10 lg:hidden" />
+          <div className="w-10 xl:hidden" />
 
           {/* DESKTOP NAV */}
-          <nav className="hidden lg:flex flex-1 items-center gap-0.5 lg:ml-8">
+          <nav className="hidden xl:flex flex-1 items-center gap-0.5 xl:ml-8">
             {(Object.keys(menus) as MenuKey[]).map((key) => (
               <div
                 key={key}
@@ -189,7 +189,7 @@ export default function Header() {
               >
                 <Link
                   href={menus[key].href}
-                  className={`flex items-center gap-1 px-2 py-2 transition-colors whitespace-nowrap text-[15px] leading-[22px] font-bold ${openMenu === key
+                  className={`flex items-center gap-1 lg:px-1 xl:px-2 py-2 transition-colors whitespace-nowrap lg:text-[13px] xl:text-[15px] leading-[22px] font-bold ${openMenu === key
                       ? "text-[#e8e1d7]"
                       : "text-white/80 hover:text-[#e8e1d7]"
                     }`}
@@ -250,22 +250,25 @@ export default function Header() {
               </div>
             </div>
 
-            {/* "Nous rejoindre" & "Nous contacter" as plain nav links */}
+          </nav>
+          
+          {/* ACTION BUTTONS: Visible on lg and xl */}
+          <div className="hidden lg:flex items-center gap-1 lg:ml-auto">
             <Link
               href="/nous-rejoindre"
-              className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#141824] bg-[#e8e1d7] hover:bg-white rounded-full"
+              className="flex items-center gap-1 px-3 py-1.5 lg:px-4 lg:py-2 transition-all whitespace-nowrap text-[10px] lg:text-[11px] font-bold tracking-wide uppercase text-[#141824] bg-[#e8e1d7] hover:bg-white rounded-full"
               onMouseEnter={() => setOpenMenu(null)}
             >
               {t("Nous rejoindre", "Join Us")}
             </Link>
             <Link
               href="/nous-contacter"
-              className="flex items-center gap-1 px-3 py-1 transition-all whitespace-nowrap text-[10px] font-bold tracking-wide uppercase text-[#141824] bg-[#e8e1d7] hover:bg-white rounded-full ml-1"
+              className="flex items-center gap-1 px-3 py-1.5 lg:px-4 lg:py-2 transition-all whitespace-nowrap text-[10px] lg:text-[11px] font-bold tracking-wide uppercase text-[#141824] bg-[#e8e1d7] hover:bg-white rounded-full lg:ml-2"
               onMouseEnter={() => setOpenMenu(null)}
             >
               {t("Nous contacter", "Contact Us")}
             </Link>
-          </nav>
+          </div>
         </div>
 
       </header>
@@ -275,13 +278,13 @@ export default function Header() {
         <>
           {/* Backdrop */}
           <div
-            className="lg:hidden fixed inset-0 bg-black/40 z-[9990] backdrop-blur-sm"
+            className="xl:hidden fixed inset-0 bg-black/40 z-[9990] backdrop-blur-sm"
             onClick={() => setIsMobileMenuOpen(false)}
             style={{ touchAction: 'manipulation' }}
             aria-hidden="true"
           />
           {/* Menu Box */}
-          <div className="lg:hidden fixed left-1/2 -translate-x-1/2 top-[85px] w-[92%] max-w-[400px] max-h-[calc(100vh-110px)] bg-white z-[9995] border border-[#e8e1d7] rounded-xl shadow-2xl flex flex-col overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <div className="xl:hidden fixed left-1/2 -translate-x-1/2 top-[85px] w-[92%] max-w-[400px] max-h-[calc(100vh-110px)] bg-white z-[9995] border border-[#e8e1d7] rounded-xl shadow-2xl flex flex-col overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
 
             <nav className="flex-1 flex flex-col px-6 py-4 gap-2">
               {/* Accueil */}

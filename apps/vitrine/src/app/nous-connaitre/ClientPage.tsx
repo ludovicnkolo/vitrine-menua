@@ -12,7 +12,7 @@ export default function NousConnaitrePage() {
     <main className="flex flex-col w-full min-h-screen">
 
       {/* ── 2.1 INTRODUCTION (Full Bleed Hero) ── */}
-      <section className="relative w-full min-h-screen flex flex-col justify-end overflow-hidden">
+      <section className="relative w-full min-h-screen portrait:sm:min-h-0 portrait:sm:h-[70svh] flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
             src="/img/connaitre-hero.webp"
@@ -22,9 +22,9 @@ export default function NousConnaitrePage() {
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        <div className="laplace-container landscape:px-12 relative z-10 pt-56 md:pt-72 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-40 landscape:pb-16 lg:pb-24 landscape:lg:pb-24 mt-16 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
-          <div className="max-w-4xl -ml-1.5 md:-ml-6 lg:-ml-12 landscape:ml-0 landscape:lg:-ml-12">
-            <h1 className="text-white text-[1.25rem] md:text-[2.5rem] landscape:text-[1.5rem] landscape:lg:text-[2.5rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
+        <div className="laplace-container portrait:sm:px-10  landscape:px-16 relative z-10 pt-56 md:pt-72 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-28 portrait:sm:pb-20 landscape:pb-24 lg:pb-10 landscape:lg:pb-40 xl:pb-16 mt-16 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
+          <div className="max-w-4xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-4 landscape:ml-6 landscape:lg:-ml-4">
+            <h1 className="text-white text-[1.25rem] portrait:sm:text-[1.5rem] md:text-[2.5rem] portrait:md:text-[1.8rem] landscape:text-[1.25rem] landscape:lg:text-[1.88rem] xl:text-[2.75rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               {t("Nous connaître", "About us")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
@@ -45,9 +45,9 @@ export default function NousConnaitrePage() {
 
       {/* ── 2.2 MENUA CONSULTING (Overlapping style, image left) ── */}
       <section id="presentation-du-cabinet" className="relative w-full bg-white pt-12 md:pt-[5.75rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container relative z-10">
+        <div className="laplace-container portrait:sm:px-10  landscape:px-16 relative z-10">
           {/* BREADCRUMB */}
-          <div className="absolute -top-8 md:-top-[4rem] left-0 z-50">
+          <div className="w-full mb-8 md:mb-4">
             <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
               <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
               <span className="mx-2">/</span>
@@ -61,14 +61,14 @@ export default function NousConnaitrePage() {
               <img
                 src="/img/connaitre_2.webp"
                 alt="Cabinet"
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-cover object-center shadow-xl"
               />
             </div>
 
             {/* Left Overlapping Grey Box */}
-            <div className="w-full lg:w-10/12 px-6 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pl-20 landscape:lg:pl-20 lg:pr-32 landscape:lg:pr-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-mr-24">
+            <div className="w-full lg:w-10/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pl-20 landscape:lg:pl-20 lg:pr-32 landscape:lg:pr-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-mr-24">
               {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
-              <div className="absolute left-0 right-0 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
+              <div className="absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
 
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
@@ -76,7 +76,7 @@ export default function NousConnaitrePage() {
               </h2>
 
               {/* Mobile Image (Visible only on mobile) */}
-              <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[250px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
+              <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
                 <img
                   src="/img/connaitre_2.webp"
                   alt="Cabinet"
@@ -110,10 +110,9 @@ export default function NousConnaitrePage() {
                 </p>
               </div>
               <div className="flex justify-end mt-8">
-                <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
+                <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-4 py-2 border border-[#141824] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-[#141824] hover:text-white transition-colors group">
                   {t("Présenter votre besoin", "Tell us about your requirements")}
-                  <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
-                  <ArrowRight size={18} className="-ml-2" />
+                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
             </div>
@@ -121,7 +120,7 @@ export default function NousConnaitrePage() {
         </div>
 
         {/* 2.3 Notre Expertise */}
-        <div id="notre-expertise" className="laplace-container landscape:px-16 landscape:lg:px-12 mt-20 lg:mt-32 scroll-mt-20">
+        <div id="notre-expertise" className="laplace-container portrait:sm:px-10  landscape:px-16 landscape:lg:px-16 mt-20 lg:mt-32 scroll-mt-20">
           <div className="w-full flex flex-col lg:flex-row gap-12 lg:gap-16">
             {/* Left Col: Spacer */}
             <div className="hidden lg:block lg:w-4/12"></div>
@@ -152,7 +151,7 @@ export default function NousConnaitrePage() {
         </div>
 
         {/* 2.4 Notre approche */}
-        <div id="notre-approche" className="laplace-container landscape:px-16 landscape:lg:px-12 mt-16 lg:mt-32 scroll-mt-20">
+        <div id="notre-approche" className="laplace-container portrait:sm:px-10  landscape:px-16 landscape:lg:px-16 mt-16 lg:mt-32 scroll-mt-20">
           <div className="w-full border-t border-[#141824]/10 pt-16 lg:pt-24 flex flex-col lg:flex-row gap-12 lg:gap-16">
 
             {/* Left Col: Title & Intro */}
@@ -166,7 +165,7 @@ export default function NousConnaitrePage() {
               </p>
 
               {/* Mobile Image */}
-              <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[250px] my-6 rounded-sm shadow-md overflow-hidden">
+              <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 rounded-sm shadow-md overflow-hidden">
                 <img
                   src="/img/connaitre-approche.webp"
                   alt="Notre approche"
@@ -240,7 +239,7 @@ export default function NousConnaitrePage() {
 
       {/* ── 2.5 NOTRE MÉTHODOLOGIE (Beige Section) ── */}
       <section id="notre-methodologie" className="relative w-full bg-[#e8e1d7] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container landscape:px-16 landscape:lg:px-12">
+        <div className="laplace-container portrait:sm:px-10  landscape:px-16 landscape:lg:px-16">
           <div className="text-center mb-20 ">
             <div className="inline-block text-left">
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
@@ -295,7 +294,7 @@ export default function NousConnaitrePage() {
 
       {/* ── 2.6 NOTRE ÉQUIPE ── */}
       <section id="notre-equipe" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-4xl mx-auto text-center">
+        <div className="laplace-container portrait:sm:px-10  landscape:px-16 landscape:lg:px-16 max-w-4xl mx-auto text-center">
           <div className="inline-block text-left mb-10">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="mb-4 text-[#141824] text-[1.3rem] md:text-[1.5rem] font-bold uppercase tracking-wider">{t("Notre équipe", "Our team")}</h2>
@@ -351,7 +350,7 @@ export default function NousConnaitrePage() {
 
       {/* ── 2.7 ACCRÉDITATIONS ET NOTRE ÉQUIPE ── */}
       <section id="certifications" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container landscape:px-16 landscape:lg:px-12 max-w-[1200px] mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
+        <div className="laplace-container portrait:sm:px-10  landscape:px-16 landscape:lg:px-16 flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
           {/* Beige block with list (Left) */}
           <div className="w-full lg:w-7/12 bg-[#e8e1d7] px-6 py-10 lg:pt-16 lg:pb-16 lg:pl-20 lg:pr-32 flex flex-col justify-center shadow-xl">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
@@ -360,7 +359,7 @@ export default function NousConnaitrePage() {
             </h2>
 
             {/* Mobile Image */}
-            <div className="block lg:hidden w-[105%] -ml-[2.5%] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[250px] my-6 landscape:mt-6 landscape:mb-12 rounded-sm shadow-md overflow-hidden">
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-12 rounded-sm shadow-md overflow-hidden">
               <img src="/img/connaitre-certifications.webp" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
             </div>
 

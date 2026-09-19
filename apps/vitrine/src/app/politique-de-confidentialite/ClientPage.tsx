@@ -12,7 +12,7 @@ export default function PolitiqueConfidentialite() {
   return (
     <main className="flex flex-col w-full min-h-screen bg-white pt-32 pb-16">
       <section className="relative w-full mb-20">
-        <div className="laplace-container max-w-5xl">
+        <div className="laplace-container portrait:sm:px-10 max-w-5xl">
           <LegalPageHeader 
             title={t("Politique de confidentialité", "Privacy Policy")} 
             lastUpdate={t("Dernière mise à jour : juillet 2026.", "Last update: July 2026.")} 

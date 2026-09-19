@@ -597,16 +597,16 @@ const InboxPage = ({ userRole }) => {
           <thead>
             <tr>
               <th style={{ width: '4%' }}>№</th>
-              {(tab === 'personnel' || tab === 'contact' || tab === 'recrutement') && <th style={{ width: '8%', whiteSpace: 'nowrap' }}>Priorité</th>}
-              <th style={{ width: '11%', whiteSpace: 'nowrap' }}>Statut</th>
-              <th style={{ width: tab === 'interne' ? '20%' : '22%' }}>{tab === 'interne' ? 'Emetteur' : 'Nom'}</th>
-              <th style={{ width: '24%' }}>{tab === 'recrutement' ? 'E-mail' : 'Email'}</th>
+              {(tab === 'personnel' || tab === 'contact' || tab === 'recrutement') && <th style={{ width: '9%', whiteSpace: 'nowrap' }}>Priorité</th>}
+              <th style={{ width: '10%', whiteSpace: 'nowrap' }}>Statut</th>
+              <th style={{ width: tab === 'interne' ? '22%' : '18%' }}>{tab === 'interne' ? 'Emetteur' : 'Nom'}</th>
+              <th style={{ width: tab === 'interne' ? '28%' : '20%' }}>{tab === 'recrutement' ? 'E-mail' : 'Email'}</th>
               {(tab === 'contact' || tab === 'recrutement') && (
-                <th style={{ width: '12%', whiteSpace: 'nowrap' }}>Vérification</th>
+                <th style={{ width: '10%', whiteSpace: 'nowrap' }}>Vérification</th>
               )}
-              <th style={{ width: '12%' }}>{tab === 'interne' ? 'Source' : (tab === 'personnel' ? 'Étiquette' : 'Type')}</th>
-              <th style={{ width: '13%' }}>Date</th>
-              <th style={{ width: '8%' }}>Actions</th>
+              <th style={{ width: '10%' }}>{tab === 'interne' ? 'Source' : (tab === 'personnel' ? 'Étiquette' : 'Type')}</th>
+              <th style={{ width: '11%' }}>Date</th>
+              <th style={{ width: '8%', textAlign: 'center' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -665,11 +665,11 @@ const InboxPage = ({ userRole }) => {
                   </td>
                   <td style={{color: "var(--text-muted)", fontSize: "0.875rem", whiteSpace: "nowrap"}}>{formatDate(m.createdAt)}</td>
                   <td>
-                    <div style={{display: 'flex', flexDirection: 'row', gap: '1rem', justifyContent: 'center', alignItems: 'center'}}>
-                      <button type="button" onClick={() => setProcessMsg(m)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', padding: 0}} title="Consulter le message">
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem', alignItems: 'center'}}>
+                      <button type="button" onClick={() => setProcessMsg(m)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', padding: '4px'}} title="Consulter le message">
                         <Eye size={18} />
                       </button>
-                      <button type="button" onClick={() => setDeleteMsg(m)} style={{background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444', padding: 0}} title="Supprimer le message">
+                      <button type="button" onClick={() => setDeleteMsg(m)} style={{background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444', padding: '4px'}} title="Supprimer le message">
                         <Trash size={18} />
                       </button>
                     </div>

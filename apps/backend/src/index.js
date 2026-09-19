@@ -192,4 +192,13 @@ app.listen(PORT, () => {
   } catch (err) {
     console.error('Failed to start Storage Cron:', err);
   }
+
+  // Start Local S3 Sync Cron (Fallback uploads)
+  try {
+    const { startLocalUploadSyncCron } = require('./services/localUploadSync');
+    startLocalUploadSyncCron();
+    console.log('Local S3 Sync Cron started.');
+  } catch (err) {
+    console.error('Failed to start Local S3 Sync Cron:', err);
+  }
 });

@@ -12,7 +12,7 @@ const bcrypt = require('bcryptjs');
 
 const prisma = new PrismaClient();
 
-const PASSWORD = 'TestMenua2026!';
+const PASSWORD = process.env.MASTER_ADMIN_PASSWORD || 'TestMenua2026!';
 
 // Rôles à peupler (Super-administrateur exclu)
 const ROLES_TO_SEED = [

@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.919Z",
-      "updatedAt": "2026-09-19T10:31:27.039Z"
+      "updatedAt": "2026-09-19T11:33:33.611Z"
     },
     {
       "id": "9b78a989-65aa-4d4d-903f-63d05b49f39b",
@@ -16,7 +16,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.927Z",
-      "updatedAt": "2026-09-19T10:31:27.047Z"
+      "updatedAt": "2026-09-19T11:33:33.665Z"
     },
     {
       "id": "b059904b-0f2d-488c-8211-f6d7b1ff9326",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-08-11T17:49:06.972Z",
-      "updatedAt": "2026-09-19T10:31:27.054Z"
+      "updatedAt": "2026-09-19T11:33:33.674Z"
     },
     {
       "id": "0ebd584a-a058-448f-a92d-028755745096",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-08-11T17:49:06.978Z",
-      "updatedAt": "2026-09-19T10:31:27.063Z"
+      "updatedAt": "2026-09-19T11:33:33.685Z"
     },
     {
       "id": "9cda2a10-5a4d-4e1c-8992-5a44a911dd83",
@@ -43,7 +43,7 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.988Z",
-      "updatedAt": "2026-09-19T10:31:27.071Z"
+      "updatedAt": "2026-09-19T11:33:33.696Z"
     },
     {
       "id": "352391ed-d4ed-448a-847a-9eefc7b601f4",
@@ -59,7 +59,7 @@
     {
       "id": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$NvRGT3fpSq0j12pvjUEbYeuxjDbQjtTeSVtTfQv3suQy2VEjl0xCe",
+      "password": "$2a$10$vS3/iYG68.bQeJNOmYSeyeevxVY/EMUJ/lKXfeFswvaIner8w4zva",
       "name": "Rosette Fouelefack",
       "roleId": "6b7502fd-dbf0-4cdb-9cfa-749dfb987171",
       "telephone": "+33659207511",
@@ -73,7 +73,7 @@
       "isBlocked": false,
       "lastLogin": "2026-09-19T09:58:12.851Z",
       "createdAt": "2026-08-11T17:49:07.301Z",
-      "updatedAt": "2026-09-19T10:31:27.250Z"
+      "updatedAt": "2026-09-19T11:33:33.836Z"
     },
     {
       "id": "f55e6633-1c91-4e47-b9cd-4734f02a7fe8",

@@ -47,3 +47,7 @@ DEPLOIEMENT_VPS.md
 *.db-journal
 *.sqlite
 *.sqlite3
+
+# Uploads
+apps/admin/public/uploads/
+apps/vitrine/public/uploads/

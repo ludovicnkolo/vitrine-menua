@@ -207,6 +207,13 @@ router.post('/users', requireRoles('Super-administrateur', 'Responsable opérati
       return res.status(400).json({ error: 'Le nom et l\'email sont obligatoires.' });
     }
 
+    if (roleId) {
+      const roleCheck = await prisma.role.findUnique({ where: { id: roleId } });
+      if (roleCheck && roleCheck.name === 'Super-administrateur') {
+        return res.status(403).json({ error: "Action non autorisée : Impossible de créer un autre Super-administrateur." });
+      }
+    }
+
     // --- Validation unicité email et téléphone ---
     const existingEmail = await prisma.utilisateur.findUnique({ where: { email } });
     if (existingEmail) {
@@ -284,6 +291,17 @@ router.post('/users', requireRoles('Super-administrateur', 'Responsable opérati
 router.patch('/users/:id', requireRoles('Super-administrateur', 'Responsable opérationnel'), async (req, res) => {
   try {
     const { name, email, roleId, profile, status, idCardUrl, telephone, lieuResidence, experienceCle, langues } = req.body;
+
+    if (roleId !== undefined) {
+      const roleCheck = await prisma.role.findUnique({ where: { id: roleId } });
+      if (roleCheck && roleCheck.name === 'Super-administrateur') {
+        const targetUser = await prisma.utilisateur.findUnique({ where: { id: req.params.id }, include: { role: true } });
+        if (targetUser?.role?.name !== 'Super-administrateur') {
+          return res.status(403).json({ error: "Action non autorisée : Impossible d'attribuer le rôle Super-administrateur." });
+        }
+      }
+    }
+
     const user = await prisma.utilisateur.update({
       where: { id: req.params.id },
       data: {

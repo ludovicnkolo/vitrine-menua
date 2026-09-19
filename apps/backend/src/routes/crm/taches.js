@@ -286,7 +286,7 @@ router.post('/taches', async (req, res) => {
 router.patch('/taches/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { status, adminFeedback, managerFeedback, ...rest } = req.body;
+    const { status, adminFeedback, managerFeedback, echeance, assignedToId, ...rest } = req.body;
 
     const currentTache = await prisma.tache.findUnique({
       where: { id },
@@ -380,6 +380,15 @@ router.patch('/taches/:id', async (req, res) => {
 
     // Build the data payload
     const dataToUpdate = { ...rest };
+    if (echeance !== undefined) {
+      dataToUpdate.echeance = echeance ? new Date(echeance) : null;
+    }
+    if (assignedToId !== undefined && assignedToId !== currentTache.assignedToId) {
+      if (!isManager(userRole)) {
+        return res.status(403).json({ error: "Accès refusé. Vous ne pouvez pas ré-attribuer une tâche." });
+      }
+      dataToUpdate.assignedToId = assignedToId;
+    }
 
     if (status !== undefined && status !== currentTache.status) {
       if (status === 'A_CORRIGER' || status === 'REATTRIBUEE') {

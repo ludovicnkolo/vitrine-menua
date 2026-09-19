@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.919Z",
-      "updatedAt": "2026-09-19T11:33:33.611Z"
+      "updatedAt": "2026-09-19T13:08:50.642Z"
     },
     {
       "id": "9b78a989-65aa-4d4d-903f-63d05b49f39b",
@@ -16,7 +16,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.927Z",
-      "updatedAt": "2026-09-19T11:33:33.665Z"
+      "updatedAt": "2026-09-19T13:08:50.651Z"
     },
     {
       "id": "b059904b-0f2d-488c-8211-f6d7b1ff9326",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-08-11T17:49:06.972Z",
-      "updatedAt": "2026-09-19T11:33:33.674Z"
+      "updatedAt": "2026-09-19T13:08:50.657Z"
     },
     {
       "id": "0ebd584a-a058-448f-a92d-028755745096",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-08-11T17:49:06.978Z",
-      "updatedAt": "2026-09-19T11:33:33.685Z"
+      "updatedAt": "2026-09-19T13:08:50.672Z"
     },
     {
       "id": "9cda2a10-5a4d-4e1c-8992-5a44a911dd83",
@@ -43,23 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.988Z",
-      "updatedAt": "2026-09-19T11:33:33.696Z"
-    },
-    {
-      "id": "352391ed-d4ed-448a-847a-9eefc7b601f4",
-      "name": "RoleTest_1788576561462",
-      "description": null,
-      "status": "Actif",
-      "permissions": "{\"dashboard\": true}",
-      "createdAt": "2026-09-05T02:49:21.493Z",
-      "updatedAt": "2026-09-05T02:49:21.493Z"
+      "updatedAt": "2026-09-19T13:08:50.680Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$vS3/iYG68.bQeJNOmYSeyeevxVY/EMUJ/lKXfeFswvaIner8w4zva",
+      "password": "$2a$10$PzLS34Hh8nsAjK3jii9ZAeZ.0LnmcAlY5uoA/u4sf4iWHcHRHvk76",
       "name": "Rosette Fouelefack",
       "roleId": "6b7502fd-dbf0-4cdb-9cfa-749dfb987171",
       "telephone": "+33659207511",
@@ -71,9 +62,9 @@
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
-      "lastLogin": "2026-09-19T09:58:12.851Z",
+      "lastLogin": "2026-09-19T12:18:06.251Z",
       "createdAt": "2026-08-11T17:49:07.301Z",
-      "updatedAt": "2026-09-19T11:33:33.836Z"
+      "updatedAt": "2026-09-19T13:08:50.838Z"
     },
     {
       "id": "f55e6633-1c91-4e47-b9cd-4734f02a7fe8",
@@ -261,6 +252,90 @@
       "receivedAt": "2026-09-13T10:19:08.324Z",
       "createdAt": "2026-09-13T10:19:08.324Z",
       "updatedAt": "2026-09-18T11:33:23.540Z"
+    },
+    {
+      "id": "ee1bb065-a785-456d-8674-0c9ebe4f5d53",
+      "formulaireId": "dd5ceeab-1a50-4724-a2dc-dc1e4c2f64ab",
+      "type": "CONTACT",
+      "statusSubmitter": "PARTICULIER",
+      "nomPrenom": "Jessamine Neuw",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "+1 (869) 187-7013",
+      "priority": "NORMAL",
+      "description": "Blanditiis dolores e",
+      "raisonSocial": null,
+      "objet": "Demande de contact",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de client</strong> : <span>Particulier</span><br/>\n        \n        <strong>Nom complet</strong> : <span>Jessamine Neuw</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (869) 187-7013</span>\n      </div>\n      <strong>Besoins identifiés</strong> : <div><ul><li>Externalisation middle office</li><li>Finance et reporting</li></ul></div><br/>\n      <strong>Description du besoin</strong> : <div>\n      Blanditiis dolores e\n      </div>\n    ",
+      "status": "NOUVEAU",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-09-19T12:15:49.474Z",
+      "createdAt": "2026-09-19T12:15:49.474Z",
+      "updatedAt": "2026-09-19T12:15:49.474Z"
+    },
+    {
+      "id": "caf0adb3-5b8a-49d0-930a-11954aee49a9",
+      "formulaireId": "4ca7a206-9871-4db2-be4e-1a413c1c247e",
+      "type": "RECRUTEMENT",
+      "statusSubmitter": "SOCIETE",
+      "nomPrenom": "Jin Valentine",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "+1 (234) 222-2655",
+      "priority": "NORMAL",
+      "description": "Excepturi sequi volu",
+      "raisonSocial": "zvf",
+      "objet": "Demande de collaboration",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de profil</strong> : <span>Entreprise (B2B)</span><br/>\n        <strong>Société</strong> : <span>zvf</span><br/>\n        <strong>Nom complet</strong> : <span>Valentine Jin</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (234) 222-2655</span><br/>\n        <strong>Expérience</strong> : <span>5 à 10 ans</span><br/>\n        <strong>Langues</strong> : <span>Anglais</span><br/>\n        <strong>Localisation</strong> : <span>Consequatur quae un</span><br/>\n        <strong>Disponibilité</strong> : <span>Sous 15 jours</span><br/>\n        <strong>LinkedIn / Portfolio</strong> : <span><a href=\"https://www.licalecysux.com\" style=\"color: #141824;\">https://www.licalecysux.com</a></span>\n      </div>\n      <strong>Compétences clés</strong> : <div><ul><li>Back et middle office</li><li>Risques et Conformité</li><li>Support opérationnel CGP</li></ul></div><br/>\n      <strong>Message / Motivations</strong> : <div>\n      Excepturi sequi volu\n      </div>\n    ",
+      "status": "NOUVEAU",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-09-19T12:16:32.977Z",
+      "createdAt": "2026-09-19T12:16:32.977Z",
+      "updatedAt": "2026-09-19T12:16:32.977Z"
+    },
+    {
+      "id": "65d9a5e9-a3fd-4e3a-9303-a99e537a3c40",
+      "formulaireId": "8549b253-9145-4974-a601-297077006a37",
+      "type": "CONTACT",
+      "statusSubmitter": "SOCIETE",
+      "nomPrenom": "Nissim Vargas",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "+1 (805) 523-3548",
+      "priority": "NORMAL",
+      "description": "Sed aliqua Nulla co",
+      "raisonSocial": "fagbgbgb",
+      "objet": "Demande de contact",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de client</strong> : <span>Entreprise / Organisation</span><br/>\n        <strong>Société</strong> : <span>fagbgbgb</span><br/>\n        <strong>Nom complet</strong> : <span>Nissim Vargas</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (805) 523-3548</span>\n      </div>\n      <strong>Besoins identifiés</strong> : <div><ul><li>Renfort opérationnel</li><li>Externalisation middle office</li><li>Support opérationnel CGP / gestion de patrimoine</li><li>Autre besoin opérationnel</li></ul></div><br/>\n      <strong>Description du besoin</strong> : <div>\n      Sed aliqua Nulla co\n      </div>\n    ",
+      "status": "NOUVEAU",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-09-19T12:20:02.944Z",
+      "createdAt": "2026-09-19T12:20:02.944Z",
+      "updatedAt": "2026-09-19T12:20:02.944Z"
     }
   ],
   "formulaireRecrutements": [
@@ -272,6 +347,15 @@
       "lieuResidence": "Repudiandae nostrud ",
       "langue": "Néerlandais",
       "lienLinkedin": "https://www.huzucoqyfoqi.me"
+    },
+    {
+      "id": "9cb8038a-4ccb-45e2-a503-e18302c5288d",
+      "formulaireId": "caf0adb3-5b8a-49d0-930a-11954aee49a9",
+      "competenceCle": "Back et middle office, Risques et Conformité, Support opérationnel CGP",
+      "anneeExperience": "5 à 10 ans",
+      "lieuResidence": "Consequatur quae un",
+      "langue": "Anglais",
+      "lienLinkedin": "https://www.licalecysux.com"
     }
   ],
   "formulaireContacts": [
@@ -279,6 +363,18 @@
       "id": "b5ab34ba-a5a4-4b01-953f-0163fbb7ef95",
       "formulaireId": "c57f8600-a853-4113-b63e-1bb1d5a551b9",
       "typeBesoin": "Renfort opérationnel, Externalisation back office, Externalisation middle office, Contrôle de gestion, Support comptable et data",
+      "pieceJointe": null
+    },
+    {
+      "id": "c5fe515c-26d0-48e5-b026-a424d252ed8e",
+      "formulaireId": "ee1bb065-a785-456d-8674-0c9ebe4f5d53",
+      "typeBesoin": "Externalisation middle office, Finance et reporting",
+      "pieceJointe": null
+    },
+    {
+      "id": "a15f3c8a-b89e-4946-9a82-d72adf5e55e7",
+      "formulaireId": "65d9a5e9-a3fd-4e3a-9303-a99e537a3c40",
+      "typeBesoin": "Renfort opérationnel, Externalisation middle office, Support opérationnel CGP / gestion de patrimoine, Autre besoin opérationnel",
       "pieceJointe": null
     }
   ],
@@ -381,16 +477,16 @@
       "id": "0a3652f8-34b4-4cab-b140-1488fb3a8fbc",
       "reference": "MSN-02",
       "dossierId": "c946666a-8d15-4c59-95f6-4f01dd03e063",
-      "assignedToId": "f55e6633-1c91-4e47-b9cd-4734f02a7fe8",
+      "assignedToId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
       "createdById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
-      "description": "Enim optio facere o\n\nAut error quidem sit",
-      "echeance": "2026-09-17T00:00:00.000Z",
+      "description": "Objet: Quia nobis quo in qu ch \nConsignes: Ut dolores voluptati ch ",
+      "echeance": "1985-09-10T00:00:00.000Z",
       "status": "NON_DEMARREE",
       "previousStatus": null,
       "attachment": null,
       "dossierMissionId": "c946666a-8d15-4c59-95f6-4f01dd03e063",
       "createdAt": "2026-09-17T15:05:38.320Z",
-      "updatedAt": "2026-09-17T15:05:38.320Z",
+      "updatedAt": "2026-09-19T12:05:38.453Z",
       "parentMissionId": null
     }
   ],
@@ -1019,6 +1115,28 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-09-18T12:33:57.594Z"
+    },
+    {
+      "id": "0963a934-500f-425f-a3da-c20413b10370",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "MODIFICATION_MISSION",
+      "targetId": "0a3652f8-34b4-4cab-b140-1488fb3a8fbc",
+      "targetType": "MISSION",
+      "details": "Mission modifiée (Statut: NON_DEMARREE)",
+      "dossierId": "c946666a-8d15-4c59-95f6-4f01dd03e063",
+      "formulaireId": null,
+      "createdAt": "2026-09-19T12:05:38.467Z"
+    },
+    {
+      "id": "a59ffb87-989b-441a-9d0f-ab4af88ce912",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "DECONNEXION",
+      "targetId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-19T13:07:50.750Z"
     }
   ],
   "messagePersonnels": [

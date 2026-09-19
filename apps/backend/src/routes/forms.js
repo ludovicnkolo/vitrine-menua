@@ -150,20 +150,20 @@ router.post('/contact', upload.none(), async (req, res) => {
 
     // Si on a pu valider l'email immédiatement, on envoie les notifications tout de suite
     if (!isDeferred && formulaireRecord) {
-      await Promise.all([
-        sendAutoReply(senderEmail, lang),
-        sendAdminNotification(formulaireRecord)
+      Promise.all([
+        sendAutoReply(senderEmail, lang).catch(e => console.error({ event: 'contact_autoreply_error', error: e.message })),
+        sendAdminNotification(formulaireRecord).catch(e => console.error({ event: 'contact_adminnotif_error', error: e.message }))
       ]);
     } else if (formulaireRecord) {
       // Pour les cas différés / à vérifier : notifier l'administrateur interne, mais PAS d'envoi externe
-      await sendAdminNotification(formulaireRecord);
+      sendAdminNotification(formulaireRecord).catch(e => console.error({ event: 'contact_adminnotif_error', error: e.message }));
     }
 
     return sendResponse(res, 200, 'SUCCESS_CONTACT', lang);
   } catch (error) {
     const lang = req.query.lang || req.body.lang || 'fr';
-    console.error({ event: "contact_email_error", error: error.message || error });
-    return sendResponse(res, 500, 'ERROR_SENDING_EMAIL', lang);
+    console.error({ event: "contact_form_error", error: error.message || error });
+    return sendResponse(res, 500, 'ERROR_INTERNAL_SERVER', lang);
   }
 });
 

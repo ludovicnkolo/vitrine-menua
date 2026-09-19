@@ -7,6 +7,9 @@ import { useLanguage } from "@/components/LanguageProvider";
 
 type MenuKey = "nous-connaitre" | "vos-besoins" | "nos-solutions" | "pourquoi-menua" | "actualites";
 
+type MenuLink = { label: string; href: string };
+type MenuItem = { label: string; href: string; links: MenuLink[] };
+
 export default function Header() {
   const [openMenu, setOpenMenu] = useState<MenuKey | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -50,6 +53,8 @@ export default function Header() {
     }
   };
 
+  const [hasPublications, setHasPublications] = useState(true); // Default true to avoid flash of missing menu
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -61,7 +66,25 @@ export default function Header() {
     return () => { document.body.style.overflow = "unset"; };
   }, [isMobileMenuOpen]);
 
-  const getMenus = () => ({
+  useEffect(() => {
+    const fetchPubs = async () => {
+      try {
+        const res = await fetch('/api/cms/public?type=ACTUALITE');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.data)) {
+            setHasPublications(data.data.length > 0);
+          }
+        }
+      } catch (err) {
+        console.error("Erreur check publications:", err);
+      }
+    };
+    fetchPubs();
+  }, []);
+
+  const getMenus = (): Partial<Record<MenuKey, MenuItem>> => {
+    const baseMenus: Record<MenuKey, MenuItem> = {
     "nous-connaitre": {
       label: t("Nous connaître", "About Us"),
       href: "/nous-connaitre",
@@ -114,7 +137,15 @@ export default function Header() {
         { label: t("Nos publications LinkedIn", "Our LinkedIn publications"), href: "/actualites#linkedin" },
       ],
     },
-  });
+    };
+
+    if (!hasPublications) {
+      const { actualites: _omit, ...rest } = baseMenus;
+      return rest;
+    }
+
+    return baseMenus;
+  };
 
   const menus = getMenus();
 
@@ -188,13 +219,13 @@ export default function Header() {
                 onMouseEnter={() => setOpenMenu(key)}
               >
                 <Link
-                  href={menus[key].href}
+                  href={menus[key]!.href}
                   className={`flex items-center gap-1 lg:px-1 xl:px-2 py-2 transition-colors whitespace-nowrap lg:text-[13px] xl:text-[15px] leading-[22px] font-bold ${openMenu === key
                       ? "text-[#e8e1d7]"
                       : "text-white/80 hover:text-[#e8e1d7]"
                     }`}
                 >
-                  {menus[key].label}
+                  {menus[key]!.label}
                   <ChevronDown
                     size={13}
                     className={`transition-transform duration-200 ${openMenu === key ? "rotate-180" : ""}`}
@@ -207,11 +238,11 @@ export default function Header() {
                     <div className="bg-[#e8e1d7] border-t-4 border-[#141824] rounded-b-lg shadow-xl min-w-[280px] py-3">
                       <div className="px-5 py-2 border-b border-[#141824]/10 mb-2">
                         <span className="text-[#141824] text-[1.1rem] leading-[1.5rem] font-bold">
-                          {menus[key].label}
+                          {menus[key]!.label}
                         </span>
                       </div>
                       <ul>
-                        {menus[key].links.map((link) => (
+                        {menus[key]!.links.map((link) => (
                           <li key={link.href}>
                             <Link
                               href={link.href}
@@ -300,20 +331,20 @@ export default function Header() {
                     onClick={() => setOpenMobileSubmenu(openMobileSubmenu === key ? null : key)}
                     className="flex items-center justify-between py-3 text-[1.2rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors text-left"
                   >
-                    <span>{menus[key].label}</span>
+                    <span>{menus[key]!.label}</span>
                     <ChevronDown size={18} className={`text-[#141824] transition-transform ${openMobileSubmenu === key ? "rotate-180" : ""}`} />
                   </button>
 
                   {openMobileSubmenu === key && (
                     <div className="flex flex-col gap-3 pb-4 pl-4 border-l-2 border-[#141824]/20 mt-1">
                       <Link
-                        href={menus[key].href}
+                        href={menus[key]!.href}
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="text-[#141824] text-[0.95rem] font-bold mb-1"
                       >
                         {t("Vue d'ensemble", "Overview")}
                       </Link>
-                      {menus[key].links.map((link) => (
+                      {menus[key]!.links.map((link) => (
                         <Link
                           key={link.href}
                           href={link.href}

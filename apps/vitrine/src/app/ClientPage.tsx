@@ -345,6 +345,7 @@ export default function Home() {
       <div className="w-full h-8 md:h-[5.25rem] bg-white"></div>
 
       {/* ── SECTION 6 : ACTUALITÉS (3 article cards) ── */}
+      {publications.length > 0 && (
       <section className="relative w-full bg-[#141824] pt-12 md:pt-[5.25rem] pb-16 md:pb-24">
         <div className="laplace-container portrait:sm:px-10">
           
@@ -366,80 +367,59 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {publications.length > 0 ? (
-              publications.map((pub) => (
-                <Link key={pub.id} href={`/actualites/${pub.id}`} className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300">
-                  <div className="h-[180px] overflow-hidden bg-[#1a1f2e] flex items-center justify-center relative">
-                    {pub.coverImageUrl ? (
-                      <>
-                        <img 
-                          src={pub.coverImageUrl} 
-                          alt={displayTitle(pub)} 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#1a1f2e]" 
-                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                        />
-                        <span className="text-[#e8e1d7]/20 font-bold tracking-widest uppercase text-lg z-0">MENUA CONSULTING</span>
-                      </>
-                    ) : (
-                      <span className="text-[#e8e1d7]/20 font-bold tracking-widest uppercase text-lg">MENUA CONSULTING</span>
-                    )}
-                    {pub.category && (
-                      <div className="absolute top-4 left-4 bg-[#e8e1d7] text-[#141824] px-3 py-1 text-[0.7rem] font-bold uppercase tracking-wider">
-                        {displayCategory(pub)}
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex flex-col flex-grow p-6">
-                    <p className="text-white/50 text-[0.7rem] font-medium tracking-wide mb-2 uppercase">
-                      {formatDate(pub.publishedAt || pub.createdAt)}
-                    </p>
-                    <h3 className="text-white font-semibold text-[1.1rem] leading-snug mb-3 line-clamp-2">{displayTitle(pub)}</h3>
-                    <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4 line-clamp-3">
-                      {(() => {
-                        const plain = (displayContent(pub) || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-                        const words = plain.split(' ').filter(Boolean);
-                        return words.length > 25 ? words.slice(0, 25).join(' ') + '...' : plain;
-                      })()}
-                    </p>
-                    <span className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
-                      {t("Lire l'article", "Read article")} <ArrowRight size={14} />
-                    </span>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <Link href="/actualites" className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300 md:col-span-3 lg:col-span-1 lg:col-start-2 max-w-md lg:max-w-none mx-auto w-full">
-                <div className="h-[180px] overflow-hidden bg-[#1a1f2e] flex items-center justify-center">
-                  <span className="text-[#e8e1d7]/20 font-bold tracking-widest uppercase text-lg">MENUA CONSULTING</span>
+            {publications.map((pub) => (
+              <Link key={pub.id} href={`/actualites/${pub.id}`} className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300">
+                <div className="h-[180px] overflow-hidden bg-[#1a1f2e] flex items-center justify-center relative">
+                  {pub.coverImageUrl ? (
+                    <>
+                      <img 
+                        src={pub.coverImageUrl} 
+                        alt={displayTitle(pub)} 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#1a1f2e]" 
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      />
+                      <span className="text-[#e8e1d7]/20 font-bold tracking-widest uppercase text-lg z-0">MENUA CONSULTING</span>
+                    </>
+                  ) : (
+                    <span className="text-[#e8e1d7]/20 font-bold tracking-widest uppercase text-lg">MENUA CONSULTING</span>
+                  )}
+                  {pub.category && (
+                    <div className="absolute top-4 left-4 bg-[#e8e1d7] text-[#141824] px-3 py-1 text-[0.7rem] font-bold uppercase tracking-wider">
+                      {displayCategory(pub)}
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col flex-grow p-6">
-                  <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4">
-                    {formatBrand(t(
-                      "Cette rubrique est dédiée au partage d’actualités et d’analyses opérationnelles centrées sur l’évolution des fonctions back et middle office, la conformité réglementaire et la gestion de patrimoine.",
-                      "This section is dedicated to sharing news and operational insights focused on back and middle office developments, regulatory compliance, and wealth management."
-                    ))}
+                  <p className="text-white/50 text-[0.7rem] font-medium tracking-wide mb-2 uppercase">
+                    {formatDate(pub.publishedAt || pub.createdAt)}
                   </p>
-                  <span className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
-                    {t("Découvrir la rubrique", "Browse our publications")} <ArrowRight size={14} />
+                  <h3 className="text-white font-semibold text-[1.1rem] leading-snug mb-3 line-clamp-2">{displayTitle(pub)}</h3>
+                  <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-4 line-clamp-3">
+                    {(() => {
+                      const plain = (displayContent(pub) || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+                      const words = plain.split(' ').filter(Boolean);
+                      return words.length > 25 ? words.slice(0, 25).join(' ') + '...' : plain;
+                    })()}
+                  </p>
+                  <span className="inline-flex items-center gap-2 text-[#e8e1d7] font-bold uppercase tracking-wider text-[0.75rem] group-hover:gap-3 transition-all">
+                    {t("Lire l'article", "Read article")} <ArrowRight size={14} />
                   </span>
                 </div>
               </Link>
-            )}
+            ))}
           </div>
 
-          {/* CTA — visible uniquement si des publications existent */}
-          {publications.length > 0 && (
-            <div className="flex justify-end mt-4">
-              <Link href="/actualites" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                {t("Voir toutes nos actualités", "Browse all publications")} 
-                <span className="w-8 h-[1px] bg-white group-hover:w-12 transition-all duration-300"></span>
-                <ChevronRight size={18} className="-ml-2" />
-              </Link>
-            </div>
-          )}
+          <div className="flex justify-end mt-4">
+            <Link href="/actualites" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
+              {t("Voir toutes nos actualités", "Browse all publications")} 
+              <span className="w-8 h-[1px] bg-white group-hover:w-12 transition-all duration-300"></span>
+              <ChevronRight size={18} className="-ml-2" />
+            </Link>
+          </div>
 
         </div>
       </section>
+      )}
 
 
 

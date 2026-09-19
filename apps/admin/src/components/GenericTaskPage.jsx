@@ -75,7 +75,7 @@ const TaskDropdown = ({ taskId, openMenuId, setOpenMenuId, menuRef, tasks, setCo
           setEditTask(task);
           const subj = getSubjectFromTask(task.description);
           const msg = getMessageFromTask(task.description);
-          setEditFormData({ subject: subj, message: msg, status: task.status, attachment: task.attachment || '' });
+          setEditFormData({ subject: subj, message: msg, status: task.status, attachment: task.attachment || '', assignedToId: task.assignedToId || '', echeance: task.echeance ? task.echeance.substring(0, 10) : '' });
         }}>
           <Pencil size={14} color="#D97706" /> Modifier
         </button>
@@ -197,14 +197,6 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const handleUpdateMission = async () => {
     if (!editTask) return;
     try {
-      let finalAttachment = editFormData.attachment;
-      if (taskFile) {
-        const uploadedName = await uploadFile(taskFile);
-        if (uploadedName) {
-          finalAttachment = finalAttachment ? `${finalAttachment},${uploadedName}` : uploadedName;
-        }
-      }
-      
       const token = sessionStorage.getItem('adminToken');
       const description = `Objet: ${editFormData.subject}\nConsignes: ${editFormData.message}`;
       const res = await fetch(new URL(getSafeApiUrl(mode === "MISSION" ? `/api/crm/tasks/${encodeURIComponent(editTask.id)}` : `/api/crm/taches/${encodeURIComponent(editTask.id)}`)).toString(), {
@@ -214,9 +206,9 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          status: editFormData.status,
           description,
-          attachment: finalAttachment
+          assignedToId: editFormData.assignedToId || null,
+          echeance: editFormData.echeance || null
         })
       });
       if (res.ok) {
@@ -224,7 +216,12 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         fetchData();
         setErrorMsg('Mission mise à jour avec succès !');
       } else {
-        setErrorMsg("Erreur lors de la mise à jour.");
+        let errMsg = "Erreur lors de la mise à jour.";
+        try {
+          const errData = await res.json();
+          if (errData.error) errMsg = errData.error;
+        } catch (e) {}
+        setErrorMsg(errMsg);
       }
     } catch (err) {
       console.error("Erreur mise à jour mission:", err);
@@ -534,29 +531,26 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem'}}>
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
             <TaskField label={"Créé par"} value={editTask.createdBy?.name || 'Système'} />
-            <TaskField label={"Assigné à"} value={editTask.assignedTo?.name || 'Non assigné'} />
-          </div>
-
-          <TaskField label="Objet" value={editFormData.subject} readOnly={false} onChange={(e) => setEditFormData({...editFormData, subject: e.target.value})} />
-          
-          <TaskField label={mode === 'MISSION' ? 'Dossier associé' : 'Mission Liée'} value={mode === 'MISSION' ? (editTask.dossier?.reference || editTask.dossier?.name || editTask.dossierId) : (editTask.mission?.reference || editTask.missionId)} />
-
-          <div>
-            <label htmlFor="task-attachment" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Pièces jointes</label>
-            <div style={{background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-              <AttachmentChips 
-                attachment={editFormData.attachment} 
-                onRemove={(attToRemove) => {
-                  const newAtts = editFormData.attachment.split(',').map(a => a.trim()).filter(a => a !== attToRemove).join(',');
-                  setEditFormData({...editFormData, attachment: newAtts});
-                }} 
-              />
-              <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                <input id="task-attachment" type="file" onChange={(e) => setTaskFile(e.target.files?.[0])} className="input-field" style={{flex: 1, padding: '0.5rem', fontSize: '0.875rem'}} />
-                {taskFile && <span style={{fontSize: '0.875rem', color: 'var(--primary)'}}>Nouveau fichier à ajouter</span>}
-              </div>
+            <div>
+              <label htmlFor="edit-task-assigned-to" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigné à</label>
+              <select id="edit-task-assigned-to" className="input-field" value={editFormData.assignedToId} onChange={(e) => setEditFormData({...editFormData, assignedToId: e.target.value})} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', background: '#FFF'}}>
+                <option value="">-- Sélectionner un membre --</option>
+                {users.filter(u => u.role?.name === 'Collaborateur' || u.role?.name === 'Responsable opérationnel' || u.role?.name === 'Super-administrateur' || u.role?.name === 'Administrateur').map(u => (
+                  <option key={u.id} value={u.id}>{u.name} ({u.role?.name || 'Sans rôle'})</option>
+                ))}
+              </select>
             </div>
           </div>
+
+          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+            <TaskField label="Objet" value={editFormData.subject} readOnly={false} onChange={(e) => setEditFormData({...editFormData, subject: e.target.value})} />
+            <div>
+              <label htmlFor="edit-task-echeance" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance</label>
+              <input id="edit-task-echeance" type="date" value={editFormData.echeance} onChange={(e) => setEditFormData({...editFormData, echeance: e.target.value})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)'}} />
+            </div>
+          </div>
+          
+          <TaskField label={mode === 'MISSION' ? 'Dossier associé' : 'Mission Liée'} value={mode === 'MISSION' ? (editTask.dossier?.reference || editTask.dossier?.name || editTask.dossierId) : (editTask.mission?.reference || editTask.missionId)} />
 
           <TaskField label="Message / Consignes" value={editFormData.message} readOnly={false} onChange={(e) => setEditFormData({...editFormData, message: e.target.value})} isTextarea={true} />
 
@@ -629,7 +623,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 setEditTask(consultTask);
                 const subj = getSubjectFromTask(consultTask.description);
                 const msg = getMessageFromTask(consultTask.description);
-                setEditFormData({ subject: subj, message: msg, status: consultTask.status, attachment: consultTask.attachment || '' });
+                setEditFormData({ subject: subj, message: msg, status: consultTask.status, attachment: consultTask.attachment || '', assignedToId: consultTask.assignedToId || '', echeance: consultTask.echeance ? consultTask.echeance.substring(0, 10) : '' });
                 setConsultTask(null);
               }}
               className="btn btn-outline"

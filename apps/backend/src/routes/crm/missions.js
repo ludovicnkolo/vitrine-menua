@@ -378,13 +378,14 @@ router.patch('/tasks/:id', async (req, res) => {
       return res.status(403).json({ error: "Accès refusé. Vous n'avez pas l'autorisation de modifier cette mission." });
     }
 
-    const { status, assignedToId, description, attachment } = req.body;
+    const { status, assignedToId, description, attachment, echeance } = req.body;
     const dataToUpdate = {};
     if (description !== undefined) dataToUpdate.description = description;
     if (attachment !== undefined) dataToUpdate.attachment = attachment;
+    if (echeance !== undefined) dataToUpdate.echeance = echeance ? new Date(echeance) : null;
 
     // Ré-attribution : réservée aux Super-Admin, Admin Tech, Admin et Responsable Op.
-    if (assignedToId !== undefined) {
+    if (assignedToId !== undefined && assignedToId !== currentMissionForAuth.assignedToId) {
       if (!isManager(userRole)) {
         return res.status(403).json({ error: "Accès refusé. Vous ne pouvez pas ré-attribuer une mission." });
       }

@@ -184,8 +184,8 @@ class VerifaliaService {
         const result = entriesData.data[0];
         
         // Verifalia Classifications: Deliverable, Undeliverable, Risky, Unknown
-        if (result.classification === 'Undeliverable' || result.isDisposableEmailAddress) {
-          return { status: 'INVALID', reason: 'Email invalide, inexistant ou jetable' };
+        if (result.classification === 'Undeliverable' || result.classification === 'Risky' || result.isDisposableEmailAddress) {
+          return { status: 'INVALID', reason: 'Email invalide, risqué (catch-all) ou jetable' };
         }
         
         if (result.classification === 'Deliverable' && !result.isDisposableEmailAddress) {

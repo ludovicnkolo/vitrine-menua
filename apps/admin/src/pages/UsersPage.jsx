@@ -55,7 +55,7 @@ const UsersPage = ({ forceTab }) => {
       ]);
       setUsers(Array.isArray(rUsers) ? rUsers : []);
       setClients(Array.isArray(rClients) ? rClients : []);
-      setRolesList(Array.isArray(rRoles) ? rRoles : []);
+      setRolesList(Array.isArray(rRoles) ? rRoles.filter(r => r.name !== 'Super-administrateur') : []);
     } catch(e) {}
   };
 

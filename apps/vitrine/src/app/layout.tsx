@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | Menua Consulting",
   },
   description:
-    "Menua Consulting sécurise l'exécution de vos opérations back et middle office pour banques, cabinets de gestion de patrimoine, sociétés financières et experts-comptables en France.",
+    "Menua Consulting sécurise l'exécution de vos opérations back et middle office. Notre expertise couvre les métiers financiers, comptables, patrimoniaux, réglementés, IT et data.",
   keywords: [
     "externalisation back office",
     "middle office",

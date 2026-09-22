@@ -160,7 +160,12 @@ router.get('/public', async (req, res) => {
     const pubsWithUrl = await Promise.all(publications.map(async (pub) => {
       let imageUrl = pub.coverImage;
       if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
-        imageUrl = await getPresignedUrl(imageUrl, 24 * 3600, true);
+        try {
+          imageUrl = await getPresignedUrl(imageUrl, 24 * 3600, true);
+        } catch (presignErr) {
+          console.warn(`[CMS] Impossible de générer l'URL présignée pour ${imageUrl}:`, presignErr.message);
+          imageUrl = null; // graceful fallback
+        }
       }
       // Presign section images
       let parsedSections = [];
@@ -170,7 +175,11 @@ router.get('/public', async (req, res) => {
           parsedSections = await Promise.all(secs.map(async (s) => {
             let sImageUrl = s.imageKey;
             if (sImageUrl && !sImageUrl.startsWith('http') && !sImageUrl.startsWith('/')) {
-              sImageUrl = await getPresignedUrl(sImageUrl, 24 * 3600, true);
+              try {
+                sImageUrl = await getPresignedUrl(sImageUrl, 24 * 3600, true);
+              } catch (_) {
+                sImageUrl = null;
+              }
             }
             return { ...s, imageUrl: sImageUrl };
           }));
@@ -203,7 +212,12 @@ router.get('/public/:id', async (req, res) => {
 
     let imageUrl = pub.coverImage;
     if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
-      imageUrl = await getPresignedUrl(imageUrl, 24 * 3600, true);
+      try {
+        imageUrl = await getPresignedUrl(imageUrl, 24 * 3600, true);
+      } catch (presignErr) {
+        console.warn(`[CMS] Impossible de générer l'URL présignée pour ${imageUrl}:`, presignErr.message);
+        imageUrl = null;
+      }
     }
 
     // Presign section images
@@ -214,7 +228,11 @@ router.get('/public/:id', async (req, res) => {
         parsedSections = await Promise.all(secs.map(async (s) => {
           let sImageUrl = s.imageKey;
           if (sImageUrl && !sImageUrl.startsWith('http') && !sImageUrl.startsWith('/')) {
-            sImageUrl = await getPresignedUrl(sImageUrl, 24 * 3600, true);
+            try {
+              sImageUrl = await getPresignedUrl(sImageUrl, 24 * 3600, true);
+            } catch (_) {
+              sImageUrl = null;
+            }
           }
           return { ...s, imageUrl: sImageUrl };
         }));
@@ -242,7 +260,7 @@ router.post('/upload', authenticateJWT, upload.single('image'), async (req, res)
       await uploadToS3(req.file.buffer, s3Key, req.file.mimetype);
       res.json({ success: true, url: s3Key });
     } catch (s3Error) {
-      console.warn("S3 upload failed, falling back to local storage:", s3Error.message);
+      console.warn('[CMS] OVH S3 indisponible, fallback stockage local:', s3Error.message);
       
       const fs = require('fs');
       const path = require('path');
@@ -251,14 +269,40 @@ router.post('/upload', authenticateJWT, upload.single('image'), async (req, res)
       const adminPath = path.join(__dirname, '../../../admin/public/uploads/cms/images');
       
       const fileName = s3Key.split('/').pop();
+      const fileBuffer = req.file.buffer;
+      const fileMime = req.file.mimetype;
       
       fs.mkdirSync(vitrinePath, { recursive: true });
       fs.mkdirSync(adminPath, { recursive: true });
       
-      fs.writeFileSync(path.join(vitrinePath, fileName), req.file.buffer);
-      fs.writeFileSync(path.join(adminPath, fileName), req.file.buffer);
+      fs.writeFileSync(path.join(vitrinePath, fileName), fileBuffer);
+      fs.writeFileSync(path.join(adminPath, fileName), fileBuffer);
       
-      res.json({ success: true, url: `/uploads/cms/images/${fileName}` });
+      const localUrl = `/uploads/cms/images/${fileName}`;
+      
+      // Retry S3 upload in background (every 30s, up to 10 attempts)
+      let retries = 0;
+      const maxRetries = 10;
+      const retryInterval = setInterval(async () => {
+        retries++;
+        try {
+          await uploadToS3(fileBuffer, s3Key, fileMime);
+          console.log(`[CMS] Retry S3 réussi (tentative ${retries}) pour ${s3Key}`);
+          clearInterval(retryInterval);
+          // Cleanup local files after successful S3 upload
+          try { fs.unlinkSync(path.join(vitrinePath, fileName)); } catch (_) {}
+          try { fs.unlinkSync(path.join(adminPath, fileName)); } catch (_) {}
+        } catch (retryErr) {
+          if (retries >= maxRetries) {
+            console.error(`[CMS] Abandon du retry S3 après ${maxRetries} tentatives pour ${s3Key}`);
+            clearInterval(retryInterval);
+          } else {
+            console.warn(`[CMS] Retry S3 échoué (tentative ${retries}/${maxRetries}) :`, retryErr.message);
+          }
+        }
+      }, 30 * 1000); // retry every 30 seconds
+      
+      res.json({ success: true, url: localUrl, fallback: true });
     }
   } catch (error) {
     console.error("Erreur upload image CMS:", error);

@@ -143,9 +143,9 @@ function deleteLocalFiles(fileName) {
 }
 
 function startLocalUploadSyncCron() {
-  // Exécuter toutes les 24 heures
-  const INTERVAL_24H = 24 * 60 * 60 * 1000;
-  setInterval(syncLocalUploadsToS3, INTERVAL_24H);
+  // Exécuter toutes les 5 minutes (au lieu de 24h) pour récupérer les images en fallback local rapidement
+  const INTERVAL_5MIN = 5 * 60 * 1000;
+  setInterval(syncLocalUploadsToS3, INTERVAL_5MIN);
   
   // Exécuter une fois au démarrage après 30 secondes
   setTimeout(syncLocalUploadsToS3, 30000);

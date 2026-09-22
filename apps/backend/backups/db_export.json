@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.919Z",
-      "updatedAt": "2026-09-22T10:59:52.757Z"
+      "updatedAt": "2026-09-22T16:31:31.644Z"
     },
     {
       "id": "9b78a989-65aa-4d4d-903f-63d05b49f39b",
@@ -16,7 +16,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.927Z",
-      "updatedAt": "2026-09-22T10:59:52.818Z"
+      "updatedAt": "2026-09-22T16:31:31.684Z"
     },
     {
       "id": "b059904b-0f2d-488c-8211-f6d7b1ff9326",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-08-11T17:49:06.972Z",
-      "updatedAt": "2026-09-22T10:59:52.836Z"
+      "updatedAt": "2026-09-22T16:31:31.703Z"
     },
     {
       "id": "0ebd584a-a058-448f-a92d-028755745096",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-08-11T17:49:06.978Z",
-      "updatedAt": "2026-09-22T10:59:52.856Z"
+      "updatedAt": "2026-09-22T16:31:31.711Z"
     },
     {
       "id": "9cda2a10-5a4d-4e1c-8992-5a44a911dd83",
@@ -43,7 +43,7 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.988Z",
-      "updatedAt": "2026-09-22T10:59:52.875Z"
+      "updatedAt": "2026-09-22T16:31:31.724Z"
     },
     {
       "id": "d55ced4b-231c-4f79-a452-fc5a5b4d1e4d",
@@ -86,7 +86,7 @@
     {
       "id": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$EcrmQOqTQNnQvOnq39dAh.RnZEb1l2nL.Oxa8pX8kZtsKOg7VENEC",
+      "password": "$2a$10$Sui3RG1kjq/B.vEPUl3uxehtR7c6.6f1QbBiMqhqDBll09eRn1O9G",
       "name": "Rosette Fouelefack",
       "roleId": "6b7502fd-dbf0-4cdb-9cfa-749dfb987171",
       "telephone": "+33659207511",
@@ -98,9 +98,9 @@
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
-      "lastLogin": "2026-09-22T10:27:17.244Z",
+      "lastLogin": "2026-09-22T16:25:19.205Z",
       "createdAt": "2026-08-11T17:49:07.301Z",
-      "updatedAt": "2026-09-22T10:59:53.169Z"
+      "updatedAt": "2026-09-22T16:31:31.953Z"
     },
     {
       "id": "f55e6633-1c91-4e47-b9cd-4734f02a7fe8",
@@ -502,7 +502,7 @@
       "raisonSocial": "erwfecr",
       "objet": "Demande de contact",
       "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de client</strong> : <span>Entreprise / Organisation</span><br/>\n        <strong>Société</strong> : <span>erwfecr</span><br/>\n        <strong>Nom complet</strong> : <span>Beau Jimenez</span><br/>\n        <strong>Email</strong> : <span>ledurmarc045@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (785) 213-7877</span>\n      </div>\n      <strong>Besoins identifiés</strong> : <div><ul><li>Renfort opérationnel</li><li>Externalisation back office</li><li>Externalisation middle office</li><li>Contrôle de gestion</li><li>Support comptable et data</li></ul></div><br/>\n      <strong>Description du besoin</strong> : <div>\n      Soluta perferendis v\n      </div>\n    ",
-      "status": "GAGNE",
+      "status": "A_RAPPELER",
       "isAnonyme": true,
       "verifaliaJobId": null,
       "verifaliaStatus": "COMPLETED_VALID",
@@ -515,7 +515,7 @@
       "assignedToId": null,
       "receivedAt": "2026-09-13T10:19:08.324Z",
       "createdAt": "2026-09-13T10:19:08.324Z",
-      "updatedAt": "2026-09-22T08:58:04.324Z"
+      "updatedAt": "2026-09-22T12:42:51.643Z"
     },
     {
       "id": "ee1bb065-a785-456d-8674-0c9ebe4f5d53",
@@ -600,6 +600,90 @@
       "receivedAt": "2026-09-19T12:20:02.944Z",
       "createdAt": "2026-09-19T12:20:02.944Z",
       "updatedAt": "2026-09-22T08:00:00.511Z"
+    },
+    {
+      "id": "bb766edf-6eb2-4ac8-976e-63355ffb1f92",
+      "formulaireId": "9988b4aa-927a-4377-9449-c344b02f90db",
+      "type": "RECRUTEMENT",
+      "statusSubmitter": "PARTICULIER",
+      "nomPrenom": "Ross Ludovic",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "+1 (807) 255-3588",
+      "priority": "NORMAL",
+      "description": "Dolores doloremque v motiv",
+      "raisonSocial": null,
+      "objet": "Demande de collaboration",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de profil</strong> : <span>Particulier</span><br/>\n        \n        <strong>Nom complet</strong> : <span>Ludovic Ross</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (807) 255-3588</span><br/>\n        <strong>Expérience</strong> : <span>Moins de 2 ans</span><br/>\n        <strong>Langues</strong> : <span>Anglais, Arabe</span><br/>\n        <strong>Localisation</strong> : <span>Eum sint assumenda i</span><br/>\n        <strong>Disponibilité</strong> : <span>Immédiate</span><br/>\n        <strong>LinkedIn / Portfolio</strong> : <span><a href=\"https://www.bukulusofumopiw.mobi\" style=\"color: #141824;\">https://www.bukulusofumopiw.mobi</a></span>\n      </div>\n      <strong>Compétences clés</strong> : <div><ul><li>Back et middle office</li><li>Reporting et Data</li><li>Risques et Conformité</li><li>Support opérationnel CGP</li></ul></div><br/>\n      <strong>Message / Motivations</strong> : <div>\n      Dolores doloremque v motiv\n      </div>\n    ",
+      "status": "NOUVEAU",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-09-22T12:16:03.923Z",
+      "createdAt": "2026-09-22T12:16:03.923Z",
+      "updatedAt": "2026-09-22T12:16:03.923Z"
+    },
+    {
+      "id": "e4dd8b9f-acd3-477b-b066-0d7798f581e0",
+      "formulaireId": "4e0edc30-e378-452d-9f71-8c1d6f6e8340",
+      "type": "RECRUTEMENT",
+      "statusSubmitter": "SOCIETE",
+      "nomPrenom": "Liberty Fleming",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "+1 (182) 207-7996",
+      "priority": "NORMAL",
+      "description": "Fugit et porro qui ",
+      "raisonSocial": "vdv",
+      "objet": "Demande de collaboration",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de profil</strong> : <span>Entreprise (B2B)</span><br/>\n        <strong>Société</strong> : <span>vdv</span><br/>\n        <strong>Nom complet</strong> : <span>Fleming Liberty</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (182) 207-7996</span><br/>\n        <strong>Expérience</strong> : <span>5 à 10 ans</span><br/>\n        <strong>Langues</strong> : <span>Anglais, Coréen</span><br/>\n        <strong>Localisation</strong> : <span>Sit optio vel et in</span><br/>\n        <strong>Disponibilité</strong> : <span>À définir</span><br/>\n        <strong>LinkedIn / Portfolio</strong> : <span><a href=\"https://www.sesi.org.au\" style=\"color: #141824;\">https://www.sesi.org.au</a></span>\n      </div>\n      <strong>Compétences clés</strong> : <div><ul><li>Reporting et Data</li><li>Risques et Conformité</li></ul></div><br/>\n      <strong>Message / Motivations</strong> : <div>\n      Fugit et porro qui \n      </div>\n    ",
+      "status": "NOUVEAU",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-09-22T12:21:58.191Z",
+      "createdAt": "2026-09-22T12:21:58.191Z",
+      "updatedAt": "2026-09-22T12:21:58.191Z"
+    },
+    {
+      "id": "f6b24121-e8be-4964-b617-5f82a4f818e9",
+      "formulaireId": "c2721100-ea1c-4cd7-94fa-c9171f8ccc85",
+      "type": "RECRUTEMENT",
+      "statusSubmitter": "PARTICULIER",
+      "nomPrenom": "Abbot Kane",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "+1 (817) 985-8234",
+      "priority": "NORMAL",
+      "description": "Quia nihil minima ul",
+      "raisonSocial": null,
+      "objet": "Demande de collaboration",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de profil</strong> : <span>Particulier</span><br/>\n        \n        <strong>Nom complet</strong> : <span>Kane Abbot</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (817) 985-8234</span><br/>\n        <strong>Expérience</strong> : <span>2 à 5 ans</span><br/>\n        <strong>Langues</strong> : <span>Anglais</span><br/>\n        <strong>Localisation</strong> : <span>Reprehenderit quod s</span><br/>\n        <strong>Disponibilité</strong> : <span>Sous 1 mois</span><br/>\n        <strong>LinkedIn / Portfolio</strong> : <span><a href=\"https://www.cemagodag.cm\" style=\"color: #141824;\">https://www.cemagodag.cm</a></span>\n      </div>\n      <strong>Compétences clés</strong> : <div><ul><li>Back et middle office</li><li>Comptabilité</li><li>Reporting et Data</li><li>Risques et Conformité</li><li>Autre (ddjfb)</li></ul></div><br/>\n      <strong>Message / Motivations</strong> : <div>\n      Quia nihil minima ul\n      </div>\n    ",
+      "status": "NOUVEAU",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-09-22T16:23:03.762Z",
+      "createdAt": "2026-09-22T16:23:03.762Z",
+      "updatedAt": "2026-09-22T16:23:03.762Z"
     }
   ],
   "formulaireRecrutements": [
@@ -620,6 +704,33 @@
       "lieuResidence": "Consequatur quae un",
       "langue": "Anglais",
       "lienLinkedin": "https://www.licalecysux.com"
+    },
+    {
+      "id": "0b41269a-b7e1-482a-9b79-a15d28bde614",
+      "formulaireId": "bb766edf-6eb2-4ac8-976e-63355ffb1f92",
+      "competenceCle": "Back et middle office, Reporting et Data, Risques et Conformité, Support opérationnel CGP",
+      "anneeExperience": "Moins de 2 ans",
+      "lieuResidence": "Eum sint assumenda i",
+      "langue": "Anglais, Arabe",
+      "lienLinkedin": "https://www.bukulusofumopiw.mobi"
+    },
+    {
+      "id": "cdc596ba-57ba-44ea-a204-595bdb67810e",
+      "formulaireId": "e4dd8b9f-acd3-477b-b066-0d7798f581e0",
+      "competenceCle": "Reporting et Data, Risques et Conformité",
+      "anneeExperience": "5 à 10 ans",
+      "lieuResidence": "Sit optio vel et in",
+      "langue": "Anglais, Coréen",
+      "lienLinkedin": "https://www.sesi.org.au"
+    },
+    {
+      "id": "908a3ba2-16c6-4fbd-9b78-db7f0998f426",
+      "formulaireId": "f6b24121-e8be-4964-b617-5f82a4f818e9",
+      "competenceCle": "Back et middle office, Comptabilité, Reporting et Data, Risques et Conformité, Autre (ddjfb)",
+      "anneeExperience": "2 à 5 ans",
+      "lieuResidence": "Reprehenderit quod s",
+      "langue": "Anglais",
+      "lienLinkedin": "https://www.cemagodag.cm"
     }
   ],
   "formulaireContacts": [
@@ -2586,6 +2697,17 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-09-22T11:43:48.661Z"
+    },
+    {
+      "id": "daeb0953-f72b-4b65-b18d-95ba379c30de",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "STATUT_FORMULAIRE",
+      "targetId": "c57f8600-a853-4113-b63e-1bb1d5a551b9",
+      "targetType": "FORMULAIRE",
+      "details": "Statut formulaire mis à jour (A_RAPPELER)",
+      "dossierId": null,
+      "formulaireId": "c57f8600-a853-4113-b63e-1bb1d5a551b9",
+      "createdAt": "2026-09-22T12:42:51.671Z"
     }
   ],
   "messagePersonnels": [

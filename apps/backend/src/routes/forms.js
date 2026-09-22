@@ -296,10 +296,10 @@ router.post('/join', upload.none(), async (req, res) => {
 
     // Si on a pu valider l'email immédiatement, on envoie les notifications tout de suite
     if (!isDeferred && formulaireRecord) {
-      sendAutoReply(email, lang);
-      sendAdminNotification(formulaireRecord);
+      sendAutoReply(email, lang).catch(e => console.error({ event: 'join_autoreply_error', error: e.message }));
+      sendAdminNotification(formulaireRecord).catch(e => console.error({ event: 'join_adminnotif_error', error: e.message }));
     } else if (formulaireRecord) {
-      sendAdminNotification(formulaireRecord);
+      sendAdminNotification(formulaireRecord).catch(e => console.error({ event: 'join_adminnotif_error', error: e.message }));
     }
 
     return sendResponse(res, 200, 'SUCCESS_JOIN', lang);

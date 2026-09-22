@@ -53,8 +53,6 @@ export default function Header() {
     }
   };
 
-  const [hasPublications, setHasPublications] = useState(true); // Default true to avoid flash of missing menu
-
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -65,23 +63,6 @@ export default function Header() {
     document.body.style.overflow = isMobileMenuOpen ? "hidden" : "unset";
     return () => { document.body.style.overflow = "unset"; };
   }, [isMobileMenuOpen]);
-
-  useEffect(() => {
-    const fetchPubs = async () => {
-      try {
-        const res = await fetch('/api/cms/public?type=ACTUALITE');
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success && Array.isArray(data.data)) {
-            setHasPublications(data.data.length > 0);
-          }
-        }
-      } catch (err) {
-        console.error("Erreur check publications:", err);
-      }
-    };
-    fetchPubs();
-  }, []);
 
   const getMenus = (): Partial<Record<MenuKey, MenuItem>> => {
     const baseMenus: Record<MenuKey, MenuItem> = {
@@ -138,11 +119,6 @@ export default function Header() {
       ],
     },
     };
-
-    if (!hasPublications) {
-      const { actualites: _omit, ...rest } = baseMenus;
-      return rest;
-    }
 
     return baseMenus;
   };

@@ -29,18 +29,30 @@ const InlineDetailField = ({ label, value, children }) => (
 );
 
 const getDisplayStatus = (status) => {
-  if (!status) return 'En attente';
+  if (!status) return 'Nouveau';
   const s = status.toUpperCase();
   if (s === 'CLASSE' || s === 'CLASSÉ') return 'Classé';
   if (s === 'TRAITE' || s === 'TRAITÉ') return 'Traité';
-  return 'En attente';
+  if (s === 'NOUVEAU') return 'Nouveau';
+  if (s === 'A_RAPPELER') return 'À rappeler';
+  if (s === 'DISCUSSION') return 'Discussion';
+  if (s === 'SANS_SUITE') return 'Sans suite';
+  if (s === 'GAGNE') return 'Gagné';
+  if (s === 'ENTRETIEN') return 'Entretien';
+  if (s === 'RETENU') return 'Retenu';
+  if (s === 'REFUSE') return 'Refusé';
+  if (s === 'EN_ATTENTE') return 'En attente';
+  return s;
 };
 
 const getStatusBadge = (status) => {
   const displayStatus = getDisplayStatus(status);
-  if (displayStatus === 'En attente') return { bg: '#FEE2E2', color: '#DC2626' }; // Red
-  if (displayStatus === 'Traité') return { bg: '#DCFCE7', color: '#166534' }; // Green
-  if (displayStatus === 'Classé') return { bg: '#E0E7FF', color: '#4F46E5' }; // Blue
+  if (displayStatus === 'En attente' || displayStatus === 'Nouveau') return { bg: '#DBEAFE', color: '#1E3A8A' }; // Blue
+  if (displayStatus === 'À rappeler') return { bg: '#FEF3C7', color: '#D97706' }; // Orange
+  if (displayStatus === 'Discussion' || displayStatus === 'Entretien') return { bg: '#E0E7FF', color: '#4F46E5' }; // Indigo
+  if (displayStatus === 'Sans suite' || displayStatus === 'Refusé') return { bg: '#FEE2E2', color: '#DC2626' }; // Red
+  if (displayStatus === 'Gagné' || displayStatus === 'Retenu' || displayStatus === 'Traité') return { bg: '#DCFCE7', color: '#166534' }; // Green
+  if (displayStatus === 'Classé') return { bg: '#F1F5F9', color: '#475569' }; // Gray
   return { bg: '#F1F5F9', color: '#475569' };
 };
 
@@ -59,6 +71,7 @@ const getVerifaliaBadge = (vStatus) => {
 const InboxPage = ({ userRole }) => {
   const [tab, setTab] = useState((userRole === 'Collaborateur' || userRole === 'Relecteur') ? 'interne' : 'contact');
   const [filterTraite, setFilterTraite] = useState('all');
+  const [filterDate, setFilterDate] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [openMenuId, setOpenMenuId] = useState(null);
   const [processMsg, setProcessMsg] = useState(null);
@@ -97,6 +110,19 @@ const InboxPage = ({ userRole }) => {
   const [numeroReference, setNumeroReference] = useState('');
   const [showConfirmClasse, setShowConfirmClasse] = useState(false);
 
+  // Modale "À rappeler" / "Entretien" — saisie date + note
+  const [rappelModal, setRappelModal] = useState(null);
+  const [rappelDate, setRappelDate] = useState('');
+  const [rappelNote, setRappelNote] = useState('');
+  const [entretienLien, setEntretienLien] = useState('');
+  // Bannière d'info (lecture) pour messages déjà en rappel/entretien
+  const [showRappelBanner, setShowRappelBanner] = useState(false);
+
+  // Système de brouillon local — les modifications ne sont envoyées qu'à l'appui sur "Enregistrer"
+  const [pendingChanges, setPendingChanges] = useState({});
+  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
+  const hasPendingChanges = Object.keys(pendingChanges).length > 0;
+
   const [taskDescription, setTaskDescription] = useState('');
   const [taskEcheance, setTaskEcheance] = useState('');
   const menuRef = useRef(null);
@@ -124,6 +150,9 @@ const InboxPage = ({ userRole }) => {
       urlMessages.searchParams.append('limit', limit.toString());
       urlMessages.searchParams.append('status', filterTraite);
       urlMessages.searchParams.append('search', searchQuery);
+      if (filterDate) {
+        urlMessages.searchParams.append('date', filterDate);
+      }
 
       const [resMsgs, resUsers, resDossiers, resClients] = await Promise.all([
         fetch(urlMessages.toString(), { headers: { 'Authorization': `Bearer ${token}` } }),
@@ -166,11 +195,11 @@ const InboxPage = ({ userRole }) => {
 
   useEffect(() => {
     setPage(1);
-  }, [tab, filterTraite, searchQuery, limit]);
+  }, [tab, filterTraite, filterDate, searchQuery, limit]);
 
   useEffect(() => {
     fetchMessages();
-  }, [tab, filterTraite, page, searchQuery, limit]);
+  }, [tab, filterTraite, filterDate, page, searchQuery, limit]);
 
   useEffect(() => {
     try {
@@ -178,6 +207,19 @@ const InboxPage = ({ userRole }) => {
       if (userStr) setCurrentUser(JSON.parse(userStr));
     } catch(e) {}
   }, []);
+
+  // Auto-afficher la bannière de rappel/entretien à l'ouverture d'un message
+  useEffect(() => {
+    if (processMsg && (processMsg.status === 'A_RAPPELER' || processMsg.status === 'ENTRETIEN')) {
+      setShowRappelBanner(true);
+    } else {
+      setShowRappelBanner(false);
+    }
+  }, [processMsg?.id, processMsg?.status]);
+  // Réinitialiser le brouillon à chaque ouverture de message
+  useEffect(() => {
+    setPendingChanges({});
+  }, [processMsg?.id]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -476,12 +518,37 @@ const InboxPage = ({ userRole }) => {
     }
   };
 
+  // Buffere une modification sans l'envoyer au serveur
+  const setPendingChange = (field, value) => {
+    setPendingChanges(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Envoie toutes les modifications en attente
+  const handleSaveAll = async () => {
+    if (!processMsg || !hasPendingChanges) return;
+    try {
+      const res = await apiFetch(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`, 'PATCH', pendingChanges);
+      if (!res.ok) throw new Error("Erreur de mise à jour");
+      showToast('Modifications enregistrées avec succès.', 'success');
+      const updated = { ...processMsg, ...pendingChanges };
+      setProcessMsg(updated);
+      setMessages(messages.map(m => m.id === processMsg.id ? updated : m));
+      setPendingChanges({});
+      setShowSaveConfirm(false);
+    } catch (err) {
+      console.error(err);
+      showToast('Impossible de sauvegarder les modifications.', 'error');
+      setShowSaveConfirm(false);
+    }
+  };
+
   const handleUpdateProperty = async (property, value) => {
+    // Conservé pour la compatibilité interne (actions directes hors formulaire)
     if (!processMsg) return;
     try {
       const res = await apiFetch(`/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`, 'PATCH', { [property]: value });
       if (!res.ok) throw new Error("Erreur de mise à jour");
-      showToast(`${property === 'priorite' ? 'Priorité' : 'Étiquette'} mise à jour.`, "success");
+      showToast(`Mis à jour.`, "success");
       setProcessMsg({ ...processMsg, [property]: value });
       setMessages(messages.map(m => m.id === processMsg.id ? { ...m, [property]: value } : m));
     } catch (err) {
@@ -489,6 +556,27 @@ const InboxPage = ({ userRole }) => {
       showToast("Impossible de mettre à jour le message.", "error");
     }
   };
+
+  const handleUpdateMultiple = async (fields) => {
+    // Pour la modale de rappel : buffer les champs, ne pas envoyer immédiatement
+    setPendingChanges(prev => ({ ...prev, ...fields }));
+    showToast('Rappel planifié — cliquez sur « Enregistrer » pour confirmer.', 'success');
+  };
+
+  const handleStatusWithModal = (newStatus) => {
+    if (newStatus === 'A_RAPPELER') {
+      setRappelDate('');
+      setRappelNote('');
+      setRappelModal({ type: 'RAPPEL', status: newStatus });
+    } else if (newStatus === 'ENTRETIEN') {
+      setRappelDate('');
+      setEntretienLien('');
+      setRappelModal({ type: 'ENTRETIEN', status: newStatus });
+    } else {
+      setPendingChange('status', newStatus);
+    }
+  };
+
 
   const confirmDelete = async () => {
     if (!deleteMsg) return;
@@ -530,6 +618,66 @@ const InboxPage = ({ userRole }) => {
       ).sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
     : (processMsg ? [processMsg] : []);
 
+  const renderStatusDropdown = (msg, currentTab, isInline = false) => {
+    // Valeur affichée : modification en attente > valeur serveur
+    const currentStatus = pendingChanges.status !== undefined ? pendingChanges.status : (msg.status || 'NOUVEAU');
+    // Etiquette potentiellement en attente aussi
+    const currentEtiquette = pendingChanges.etiquette !== undefined ? pendingChanges.etiquette : (msg.etiquette || '');
+
+    let options = [];
+    let isDisabled = false;
+
+    if (currentTab === 'contact' || (currentTab === 'personnel' && currentEtiquette === 'Contact')) {
+      options = [
+        { value: 'NOUVEAU', label: 'Nouveau' },
+        { value: 'A_RAPPELER', label: 'À rappeler' },
+        { value: 'DISCUSSION', label: 'Discussion' },
+        { value: 'SANS_SUITE', label: 'Sans suite' },
+        { value: 'GAGNE', label: 'Gagné' }
+      ];
+    } else if (currentTab === 'recrutement' || (currentTab === 'personnel' && currentEtiquette === 'Recrutement')) {
+      options = [
+        { value: 'NOUVEAU', label: 'Nouveau' },
+        { value: 'A_RAPPELER', label: 'À rappeler' },
+        { value: 'ENTRETIEN', label: 'Entretien' },
+        { value: 'RETENU', label: 'Retenu' },
+        { value: 'REFUSE', label: 'Refusé' }
+      ];
+    } else if (currentTab === 'personnel' && (!currentEtiquette || currentEtiquette === 'Général')) {
+      isDisabled = true;
+      options = [{ value: 'NOUVEAU', label: 'Nouveau' }];
+    } else {
+      options = [
+        { value: 'NOUVEAU', label: 'Nouveau' },
+        { value: 'A_RAPPELER', label: 'À rappeler' },
+        { value: 'TRAITE', label: 'Traité' },
+        { value: 'CLASSE', label: 'Classé sans suite' }
+      ];
+    }
+
+    const selectElement = (
+      <select
+        value={currentStatus}
+        onChange={(e) => handleStatusWithModal(e.target.value, currentTab)}
+        disabled={isDisabled}
+        style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: `1px solid ${pendingChanges.status !== undefined ? '#D97706' : 'var(--border)'}`, outline: 'none', background: isDisabled ? '#F3F4F6' : '#FFF', cursor: isDisabled ? 'not-allowed' : 'pointer' }}
+      >
+        {options.map(opt => (
+          <option key={opt.value} value={opt.value}>{opt.label}</option>
+        ))}
+      </select>
+    );
+
+    if (isInline) return selectElement;
+
+    return (
+      <div>
+        <span style={{display: 'block', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Statut</span>
+        {selectElement}
+      </div>
+    );
+  };
+
   return (
     <div style={{padding: '0 1rem'}}>
       {!isAnyModalOpen && (
@@ -559,14 +707,48 @@ const InboxPage = ({ userRole }) => {
               style={{width: '100%', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '0.875rem', outline: 'none', background: '#F8FAFC'}}
             />
           </div>
+          <input 
+            type="date"
+            value={filterDate}
+            onChange={(e) => setFilterDate(e.target.value)}
+            style={{padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', fontSize: '0.875rem', color: 'var(--text-main)', outline: 'none', cursor: 'pointer'}}
+          />
           <select 
             value={filterTraite}
             onChange={(e) => setFilterTraite(e.target.value)}
             style={{padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', fontSize: '0.875rem', color: 'var(--text-main)', outline: 'none', cursor: 'pointer', minWidth: '150px'}}
           >
-            <option value="all">Tous (Traitement)</option>
-            <option value="non_traite">Non Traités</option>
-            <option value="traite">Traités</option>
+            <option value="all">Tous les statuts</option>
+            {tab === 'contact' && <>
+              <option value="NOUVEAU">Nouveau</option>
+              <option value="A_RAPPELER">&Agrave; rappeler</option>
+              <option value="DISCUSSION">Discussion</option>
+              <option value="SANS_SUITE">Sans suite</option>
+              <option value="GAGNE">Gagn&eacute;</option>
+            </>}
+            {tab === 'recrutement' && <>
+              <option value="NOUVEAU">Nouveau</option>
+              <option value="A_RAPPELER">&Agrave; rappeler</option>
+              <option value="ENTRETIEN">Entretien</option>
+              <option value="RETENU">Retenu</option>
+              <option value="REFUSE">Refus&eacute;</option>
+            </>}
+            {tab === 'personnel' && <>
+              <option value="NOUVEAU">Nouveau</option>
+              <option value="A_RAPPELER">&Agrave; rappeler</option>
+              <option value="ENTRETIEN">Entretien</option>
+              <option value="DISCUSSION">Discussion</option>
+              <option value="GAGNE">Gagn&eacute;</option>
+              <option value="RETENU">Retenu</option>
+              <option value="REFUSE">Refus&eacute;</option>
+              <option value="SANS_SUITE">Sans suite</option>
+            </>}
+            {tab === 'interne' && <>
+              <option value="NOUVEAU">Nouveau</option>
+              <option value="A_RAPPELER">&Agrave; rappeler</option>
+              <option value="TRAITE">Trait&eacute;</option>
+              <option value="CLASSE">Class&eacute; sans suite</option>
+            </>}
           </select>
           
           <select 
@@ -621,8 +803,19 @@ const InboxPage = ({ userRole }) => {
                 return { bg: '#DCFCE7', color: '#166534' }; // Green for Normal
               };
 
-              const renderMessageRow = (m, index, col2, col3, typeBadgeText, typeBadgeBg, typeBadgeColor) => (
-                <tr key={m.id}>
+              const renderMessageRow = (m, index, col2, col3, typeBadgeText, typeBadgeBg, typeBadgeColor) => {
+                const isExpired = (msg) => {
+                  const d = msg.dateRappel || msg.dateEntretien;
+                  if (!d) return false;
+                  if (['TERMINE', 'ARCHIVE', 'CLASSE', 'GAGNE', 'RETENU', 'REFUSE', 'SANS_SUITE'].includes(msg.status)) return false;
+                  const today = new Date();
+                  today.setHours(0,0,0,0);
+                  const date = new Date(d);
+                  date.setHours(0,0,0,0);
+                  return date <= today;
+                };
+                return (
+                <tr key={m.id} className={isExpired(m) ? 'row-expired' : ''}>
                   <td style={{ fontWeight: 500, color: 'var(--text-muted)' }}>{index + 1}</td>
                   {(tab === 'personnel' || tab === 'contact' || tab === 'recrutement') && (
                     <td>
@@ -675,7 +868,8 @@ const InboxPage = ({ userRole }) => {
                     </div>
                   </td>
                 </tr>
-              );
+                );
+              };
               
               if (tab === 'contact') {
                 return messages.map((m, i) => renderMessageRow(
@@ -759,6 +953,58 @@ const InboxPage = ({ userRole }) => {
               </h2>
             </div>
             
+            {/* Bannière d'info "À rappeler" ou "Entretien" */}
+            {(processMsg.status === 'A_RAPPELER' || processMsg.status === 'ENTRETIEN') && showRappelBanner && (
+              <div style={{
+                display: 'flex', alignItems: 'flex-start', gap: '1rem',
+                background: processMsg.status === 'ENTRETIEN' ? '#EEF2FF' : '#FFFBEB',
+                border: `1px solid ${processMsg.status === 'ENTRETIEN' ? '#C7D2FE' : '#FDE68A'}`,
+                borderRadius: '10px', padding: '1rem 1.25rem', marginBottom: '1.5rem'
+              }}>
+                <div style={{flex: 1}}>
+                  <div style={{fontWeight: 700, fontSize: '0.9rem', color: processMsg.status === 'ENTRETIEN' ? '#4338CA' : '#92400E', marginBottom: '0.35rem'}}>
+                    {processMsg.status === 'ENTRETIEN' ? 'Entretien planifié' : 'Rappel prévu'}
+                  </div>
+                  {(processMsg.dateRappel || processMsg.dateEntretien) && (
+                    <div style={{fontSize: '0.875rem', color: 'var(--text-main)', marginBottom: '0.25rem'}}>
+                      <strong>Date :</strong> {new Date(processMsg.dateRappel || processMsg.dateEntretien).toLocaleString('fr-FR', { dateStyle: 'full', timeStyle: 'short' })}
+                    </div>
+                  )}
+                  {processMsg.noteRappel && (
+                    <div style={{fontSize: '0.875rem', color: 'var(--text-muted)'}}>
+                      <strong>Note :</strong> {processMsg.noteRappel}
+                    </div>
+                  )}
+                  {processMsg.lienVisio && (
+                    <div style={{fontSize: '0.875rem'}}>
+                      <strong>Lien visio :</strong>{' '}
+                      <a href={processMsg.lienVisio} target="_blank" rel="noopener noreferrer" style={{color: '#4F46E5'}}>{processMsg.lienVisio}</a>
+                    </div>
+                  )}
+                  {!processMsg.dateRappel && !processMsg.dateEntretien && !processMsg.noteRappel && !processMsg.lienVisio && (
+                    <div style={{fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic'}}>Aucune information enregistrée pour ce rappel.</div>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowRappelBanner(false)}
+                  style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: '1.1rem', padding: '0', flexShrink: 0, lineHeight: 1}}
+                  title="Fermer"
+                >&#x2715;</button>
+              </div>
+            )}
+            {(processMsg.status === 'A_RAPPELER' || processMsg.status === 'ENTRETIEN') && !showRappelBanner && (
+              <div style={{textAlign: 'right', marginBottom: '0.5rem'}}>
+                <button
+                  type="button"
+                  onClick={() => setShowRappelBanner(true)}
+                  style={{fontSize: '0.8rem', color: processMsg.status === 'ENTRETIEN' ? '#4338CA' : '#92400E', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline'}}
+                >
+                  {processMsg.status === 'ENTRETIEN' ? 'Voir les infos entretien' : 'Voir les infos rappel'}
+                </button>
+              </div>
+            )}
+
             {/* Fields for Contact */}
             {tab === 'contact' && (
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem', background: '#F8FAFC', padding: '1.25rem 1.5rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
@@ -830,9 +1076,9 @@ const InboxPage = ({ userRole }) => {
                   <>
                     <InlineDetailField label="Priorité">
                       <select 
-                        value={processMsg.priorite || 'Normal'} 
-                        onChange={(e) => handleUpdateProperty('priorite', e.target.value)}
-                        style={{padding: '0.25rem 0.5rem', borderRadius: '4px', border: '1px solid var(--border)', outline: 'none', background: '#FFF'}}
+                        value={pendingChanges.priorite !== undefined ? pendingChanges.priorite : (processMsg.priorite || 'Normal')} 
+                        onChange={(e) => setPendingChange('priorite', e.target.value)}
+                        style={{padding: '0.25rem 0.5rem', borderRadius: '4px', border: `1px solid ${pendingChanges.priorite !== undefined ? '#D97706' : 'var(--border)'}`, outline: 'none', background: '#FFF', width: '100%'}}
                       >
                         <option value="Normal">Normal</option>
                         <option value="Prioritaire">Prioritaire</option>
@@ -841,16 +1087,17 @@ const InboxPage = ({ userRole }) => {
                     </InlineDetailField>
                     <InlineDetailField label="Étiquette">
                       <select 
-                        value={processMsg.etiquette || ''} 
-                        onChange={(e) => handleUpdateProperty('etiquette', e.target.value)}
-                        style={{padding: '0.25rem 0.5rem', borderRadius: '4px', border: '1px solid var(--border)', outline: 'none', background: '#FFF'}}
+                        value={pendingChanges.etiquette !== undefined ? pendingChanges.etiquette : (processMsg.etiquette || '')} 
+                        onChange={(e) => setPendingChange('etiquette', e.target.value)}
+                        style={{padding: '0.25rem 0.5rem', borderRadius: '4px', border: `1px solid ${pendingChanges.etiquette !== undefined ? '#D97706' : 'var(--border)'}`, outline: 'none', background: '#FFF', width: '100%'}}
                       >
                         <option value="">Général</option>
-                        <option value="Prospect">Prospect</option>
-                        <option value="Candidature">Candidature</option>
-                        <option value="Partenaire">Partenaire</option>
-                        <option value="Spam">Spam</option>
+                        <option value="Contact">Contact</option>
+                        <option value="Recrutement">Recrutement</option>
                       </select>
+                    </InlineDetailField>
+                    <InlineDetailField label="Statut">
+                      {renderStatusDropdown(processMsg, tab, true)}
                     </InlineDetailField>
                   </>
                 )}
@@ -867,17 +1114,22 @@ const InboxPage = ({ userRole }) => {
               {/* Left column: Actions / Pièces jointes */}
               {(tab === 'contact' || tab === 'recrutement') && (
                 <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                  <div className="card" style={{padding: '1.25rem'}}>
-                    <span style={{display: 'block', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Priorité</span>
-                    <select 
-                        value={processMsg.priorite || 'Normal'} 
-                        onChange={(e) => handleUpdateProperty('priorite', e.target.value)}
-                        style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', outline: 'none', background: '#FFF'}}
-                      >
-                        <option value="Normal">Normal</option>
-                        <option value="Prioritaire">Prioritaire</option>
-                        <option value="Urgent">Urgent</option>
-                    </select>
+                  <div className="card" style={{padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
+                    <div>
+                      <span style={{display: 'block', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)'}}>Priorité</span>
+                      <select 
+                          value={pendingChanges.priorite !== undefined ? pendingChanges.priorite : (processMsg.priorite || 'Normal')} 
+                          onChange={(e) => setPendingChange('priorite', e.target.value)}
+                          style={{width: '100%', padding: '0.5rem', borderRadius: '4px', border: `1px solid ${pendingChanges.priorite !== undefined ? '#D97706' : 'var(--border)'}`, outline: 'none', background: '#FFF'}}
+                        >
+                          <option value="Normal">Normal</option>
+                          <option value="Prioritaire">Prioritaire</option>
+                          <option value="Urgent">Urgent</option>
+                      </select>
+                    </div>
+                    <div>
+                      {renderStatusDropdown(processMsg, tab)}
+                    </div>
                   </div>
               </div>
               )}
@@ -968,21 +1220,65 @@ const InboxPage = ({ userRole }) => {
             {tab !== 'interne' && (
               <div style={{display: 'grid', gridTemplateColumns: '1fr 4fr', gap: '1.5rem', marginTop: '2rem'}}>
                 <div></div>
-                <div style={{display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap'}}>
+                <div style={{display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap', alignItems: 'center'}}>
                   {processMsg.dossierId && (
                     <button type="button" onClick={() => window.location.href = `/dossiers?open=${processMsg.dossierId}`} className="btn btn-outline-success" style={{fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
                       <Files size={16} /> Ouvrir le Dossier Lié
                     </button>
                   )}
-                  {getDisplayStatus(processMsg.status) !== 'Traité' && (
-                    <>
-                      <button type="button" onClick={() => setShowConfirmClasse(true)} className="btn btn-outline" style={{fontWeight: 600}}>Classer sans suite</button>
-                      <button type="button" onClick={() => setShowTraitePopup(true)} className="btn btn-primary" style={{fontWeight: 600}}>Marquer comme traité</button>
-                    </>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowSaveConfirm(true)}
+                    disabled={!hasPendingChanges}
+                    style={{
+                      padding: '0.7rem 2.5rem', borderRadius: '8px', fontWeight: 700, fontSize: '0.95rem',
+                      background: hasPendingChanges ? 'var(--primary)' : '#E5E7EB',
+                      color: hasPendingChanges ? '#FFF' : '#9CA3AF',
+                      border: 'none', cursor: hasPendingChanges ? 'pointer' : 'not-allowed',
+                      transition: 'all 0.2s',
+                    }}
+                    title={hasPendingChanges ? 'Enregistrer les modifications' : 'Aucune modification en attente'}
+                  >
+                    Enregistrer
+                    {hasPendingChanges && (
+                      <span style={{marginLeft: '0.5rem', background: '#FFF3', borderRadius: '12px', padding: '0 0.5rem', fontSize: '0.75rem'}}>
+                        {Object.keys(pendingChanges).length} modif.
+                      </span>
+                    )}
+                  </button>
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Modale de confirmation d'enregistrement */}
+      {showSaveConfirm && (
+        <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2100}}>
+          <div style={{background: '#FFF', borderRadius: '16px', padding: '2rem', width: '90%', maxWidth: '400px', boxShadow: '0 20px 60px rgba(0,0,0,0.2)'}}>
+            <div style={{textAlign: 'center', marginBottom: '1.5rem'}}>
+              <h3 style={{margin: 0, fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)'}}>Confirmer l'enregistrement</h3>
+              <p style={{margin: '0.5rem 0 0', fontSize: '0.875rem', color: 'var(--text-muted)'}}>
+                Vous allez enregistrer <strong>{Object.keys(pendingChanges).length} modification(s)</strong> sur ce message.
+              </p>
+            </div>
+            <div style={{background: '#F8FAFC', borderRadius: '8px', padding: '0.75rem 1rem', marginBottom: '1.5rem', fontSize: '0.85rem', color: 'var(--text-main)'}}>
+              {Object.entries(pendingChanges).map(([k, v]) => (
+                <div key={k} style={{display: 'flex', justifyContent: 'space-between', padding: '0.25rem 0', borderBottom: '1px solid var(--border)'}}>
+                  <span style={{color: 'var(--text-muted)', fontWeight: 500}}>
+                    {k === 'status' ? 'Statut' : k === 'priorite' ? 'Priorité' : k === 'etiquette' ? 'Étiquette' : k === 'dateRappel' ? 'Date rappel' : k === 'noteRappel' ? 'Note rappel' : k === 'dateEntretien' ? 'Date entretien' : k === 'lienVisio' ? 'Lien visio' : k}
+                  </span>
+                  <span style={{fontWeight: 600}}>{String(v)}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{display: 'flex', gap: '0.75rem', justifyContent: 'center'}}>
+              <button type="button" onClick={() => setShowSaveConfirm(false)} className="btn btn-outline">Annuler</button>
+              <button type="button" onClick={handleSaveAll} className="btn btn-primary" style={{fontWeight: 700}}>
+                Confirmer
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -1285,6 +1581,85 @@ const InboxPage = ({ userRole }) => {
           >
             ✕
           </button>
+        </div>
+      )}
+      {/* ─── Modale saisie "À rappeler" / "Entretien" ─── */}
+      {rappelModal && (
+        <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000}}>
+          <div style={{background: '#FFF', borderRadius: '16px', padding: '2rem', width: '90%', maxWidth: '440px', boxShadow: '0 20px 60px rgba(0,0,0,0.2)'}}>
+            <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem'}}>
+              <div>
+                <h3 style={{margin: 0, fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)'}}>
+                  {rappelModal.type === 'ENTRETIEN' ? 'Planifier un entretien' : 'Planifier un rappel'}
+                </h3>
+                <p style={{margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)'}}>
+                  {rappelModal.type === 'ENTRETIEN' ? 'Date, heure et lien de la visio' : 'Date, heure et note courte'}
+                </p>
+              </div>
+            </div>
+
+            <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem'}}>
+                  {rappelModal.type === 'ENTRETIEN' ? "Date et heure de l'entretien" : 'Date et heure du rappel'}{' '}
+                  <span style={{color: '#EF4444'}}>*</span>
+                </label>
+                <input
+                  type="datetime-local"
+                  value={rappelDate}
+                  onChange={(e) => setRappelDate(e.target.value)}
+                  style={{width: '100%', padding: '0.7rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', outline: 'none', background: '#FFF', fontSize: '0.875rem', boxSizing: 'border-box'}}
+                />
+              </div>
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem'}}>
+                  {rappelModal.type === 'ENTRETIEN' ? 'Lien visio (optionnel)' : 'Note courte (optionnelle)'}
+                </label>
+                {rappelModal.type === 'ENTRETIEN' ? (
+                  <input
+                    type="url"
+                    value={entretienLien}
+                    onChange={(e) => setEntretienLien(e.target.value)}
+                    placeholder="https://teams.microsoft.com/..."
+                    style={{width: '100%', padding: '0.7rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', outline: 'none', background: '#FFF', fontSize: '0.875rem', boxSizing: 'border-box'}}
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    value={rappelNote}
+                    onChange={(e) => setRappelNote(e.target.value)}
+                    placeholder="Ex : En attente de validation interne..."
+                    maxLength={120}
+                    style={{width: '100%', padding: '0.7rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', outline: 'none', background: '#FFF', fontSize: '0.875rem', boxSizing: 'border-box'}}
+                  />
+                )}
+              </div>
+            </div>
+
+            <div style={{display: 'flex', gap: '0.75rem', marginTop: '1.75rem', justifyContent: 'flex-end'}}>
+              <button type="button" onClick={() => setRappelModal(null)} className="btn btn-outline">Annuler</button>
+              <button
+                type="button"
+                disabled={!rappelDate}
+                onClick={async () => {
+                  const fields = { status: rappelModal.status };
+                  if (rappelModal.type === 'RAPPEL') {
+                    fields.dateRappel = rappelDate;
+                    if (rappelNote) fields.noteRappel = rappelNote;
+                  } else {
+                    fields.dateEntretien = rappelDate;
+                    if (entretienLien) fields.lienVisio = entretienLien;
+                  }
+                  await handleUpdateMultiple(fields);
+                  setRappelModal(null);
+                }}
+                className="btn btn-primary"
+                style={{opacity: rappelDate ? 1 : 0.5, cursor: rappelDate ? 'pointer' : 'not-allowed'}}
+              >
+                Confirmer
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

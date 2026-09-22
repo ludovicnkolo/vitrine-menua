@@ -1,0 +1,327 @@
+{
+  "summary": {
+    "total": 78,
+    "passed": 73,
+    "failed": 3,
+    "skipped": 2
+  },
+  "results": [
+    {
+      "status": "PASS",
+      "name": "GET /api/health → 200 ok"
+    },
+    {
+      "status": "PASS",
+      "name": "Login [Super-administrateur] → token valide"
+    },
+    {
+      "status": "PASS",
+      "name": "Login [Responsable opérationnel] → token valide"
+    },
+    {
+      "status": "PASS",
+      "name": "Login [Relecteur] → token valide"
+    },
+    {
+      "status": "PASS",
+      "name": "Login [Collaborateur] → token valide"
+    },
+    {
+      "status": "PASS",
+      "name": "Login [Administrateur technique] → token valide"
+    },
+    {
+      "status": "PASS",
+      "name": "Login → mauvais mot de passe → 401"
+    },
+    {
+      "status": "PASS",
+      "name": "Login → email inexistant → 401"
+    },
+    {
+      "status": "PASS",
+      "name": "Login → corps vide → 400"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/auth/verify avec token valide → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/auth/verify sans token → 401"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/auth/verify avec token invalide → 401"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/auth/logout avec token valide → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/users sans token → 401"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/dossiers sans token → 401"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/tasks sans token → 401"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/taches sans token → 401"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/messages sans token → 401"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/roles sans token → 401"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/roles → SuperAdmin peut voir les rôles"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/crm/users → Collaborateur interdit → 403"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/crm/users → Relecteur interdit → 403"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/crm/roles → AdminTech autorisé → 201 ou 200"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/crm/roles → Collaborateur interdit → 403"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/messages (type CONTACT) → Collaborateur interdit → 403"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/messages (type CONTACT) → Relecteur interdit → 403"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/messages (type CONTACT) → Manager autorisé → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/messages (type INTERNE) → Collaborateur autorisé → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/forms/contact → sans CAPTCHA → 400 ou 200"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/forms/contact → sans email → 400"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/forms/join → sans champs obligatoires → 400"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/dossiers → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/dossiers → Collaborateur → 200 (vue filtrée)"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/crm/dossiers → Manager crée un dossier → 200/201"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/crm/dossiers → Collaborateur interdit → 403"
+    },
+    {
+      "status": "FAIL",
+      "name": "PATCH /api/crm/dossiers/:id → Manager → EN_COURS",
+      "error": "Statut attendu 200, reçu 403: {\"error\":\"Accès refusé. Vous n'êtes pas le responsable de ce dossier.\"}"
+    },
+    {
+      "status": "PASS",
+      "name": "PATCH /api/crm/dossiers/:id → Collaborateur interdit (BLOQUE) → 403"
+    },
+    {
+      "status": "PASS",
+      "name": "PATCH /api/crm/dossiers/:id → SuperAdmin → CLOTURE"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/dossiers/:id/tree → structure arborescente"
+    },
+    {
+      "status": "PASS",
+      "name": "DELETE /api/crm/dossiers/:id → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/tasks → SuperAdmin → 200"
+    },
+    {
+      "status": "FAIL",
+      "name": "POST /api/crm/tasks → Manager crée une mission → 200/201",
+      "error": "Statut attendu 200/201, reçu 403: {\"error\":\"Accès refusé. Vous n'êtes pas le responsable de ce dossier.\"}"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/crm/tasks → Collaborateur interdit → 403"
+    },
+    {
+      "status": "SKIP",
+      "name": "Transitions missions",
+      "reason": "ID mission non créé (test création échoué)"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/taches → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/taches → Collaborateur → 200 (filtrée)"
+    },
+    {
+      "status": "FAIL",
+      "name": "POST /api/crm/taches → Manager crée une tâche → 200/201",
+      "error": "Statut attendu 200/201, reçu 500: {\"error\":\"Erreur lors de la création de la tâche.\"}"
+    },
+    {
+      "status": "SKIP",
+      "name": "Transitions tâches",
+      "reason": "ID tâche non créé"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/messages?type=INTERNE → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/messages?type=PERSONNEL → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/messages?type=RECRUTEMENT → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/messages?type=CONTACT → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/crm/messages/interne → création message interne → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "PATCH /api/crm/messages/:id/status → EN_ATTENTE → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "PATCH /api/crm/messages/:id/status → EN_COURS → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "PATCH /api/crm/messages/:id/status → A_RAPPELER → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "PATCH /api/crm/messages/:id/status → ENTRETIEN → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "PATCH /api/crm/messages/:id/status → TERMINE → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/crm/messages/:id/assign → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "PATCH /api/crm/messages/:id/status → etiquette + priorite → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/roles → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/users → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/users → Collaborateur → 200 (liste réduite)"
+    },
+    {
+      "status": "PASS",
+      "name": "POST /api/crm/users → SuperAdmin crée un utilisateur → 200/201"
+    },
+    {
+      "status": "PASS",
+      "name": "PATCH /api/crm/users/:id → SuperAdmin bloque l'utilisateur → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "DELETE /api/crm/users/:id → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "DELETE /api/crm/users/:id → Collaborateur interdit → 403"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/audit → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/audit → Collaborateur → 403 ou 200 (selon implémentation)"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/notifications → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/notifications → Collaborateur → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/dashboard → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/dashboard → Collaborateur → 200 ou 403"
+    },
+    {
+      "status": "PASS",
+      "name": "GET /api/crm/clients → SuperAdmin → 200"
+    },
+    {
+      "status": "PASS",
+      "name": "Scénario : Un collaborateur reçoit un SMS → le voit dans INTERNE → change statut EN_COURS"
+    },
+    {
+      "status": "PASS",
+      "name": "Scénario : SuperAdmin créé un dossier → Manager l'assigne → Collaborateur le voit"
+    },
+    {
+      "status": "PASS",
+      "name": "Scénario : Relecteur ne peut pas créer de dossier, mission ni supprimer un utilisateur"
+    },
+    {
+      "status": "PASS",
+      "name": "Scénario : AdminTech gère les rôles mais ne peut pas créer dossier"
+    }
+  ]
+}

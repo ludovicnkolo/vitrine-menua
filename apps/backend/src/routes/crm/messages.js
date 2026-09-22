@@ -185,6 +185,7 @@ router.get('/messages', async (req, res) => {
     const tabType = (req.query.type || 'CONTACT').toUpperCase(); 
     const statusFilter = req.query.status || 'all'; 
     const search = req.query.search || '';
+    const dateFilter = req.query.date || '';
 
     let messages = [];
     let total = 0;
@@ -209,7 +210,23 @@ router.get('/messages', async (req, res) => {
          where.status = { in: ['TERMINE', 'ARCHIVE'] };
       } else if (statusFilter === 'nontraite') {
          where.status = { notIn: ['TERMINE', 'ARCHIVE'] };
+      } else if (statusFilter !== 'all') {
+         where.status = statusFilter;
       }
+      
+      if (dateFilter) {
+         const filterDate = new Date(dateFilter);
+         filterDate.setHours(0, 0, 0, 0);
+         const nextDate = new Date(filterDate);
+         nextDate.setDate(nextDate.getDate() + 1);
+         andConditions.push({
+           createdAt: {
+             gte: filterDate,
+             lt: nextDate
+           }
+         });
+      }
+
       if (search) {
          andConditions.push({
            OR: [
@@ -268,8 +285,24 @@ router.get('/messages', async (req, res) => {
          where.status = { in: ['TERMINE', 'ARCHIVE'] };
       } else if (statusFilter === 'nontraite') {
          where.status = { notIn: ['TERMINE', 'ARCHIVE'] };
+      } else if (statusFilter !== 'all') {
+         where.status = statusFilter;
       }
       
+      const andConditions = [];
+      if (dateFilter) {
+         const filterDate = new Date(dateFilter);
+         filterDate.setHours(0, 0, 0, 0);
+         const nextDate = new Date(filterDate);
+         nextDate.setDate(nextDate.getDate() + 1);
+         andConditions.push({
+           createdAt: {
+             gte: filterDate,
+             lt: nextDate
+           }
+         });
+      }
+
       if (search) {
          const searchFilter = {
            OR: [
@@ -277,12 +310,16 @@ router.get('/messages', async (req, res) => {
              { email: { contains: search } }
            ]
          };
-         if (where.OR) {
-           where.AND = [ { OR: where.OR }, searchFilter ];
-           delete where.OR;
-         } else {
-           where.OR = searchFilter.OR;
-         }
+         andConditions.push(searchFilter);
+      }
+      
+      if (andConditions.length > 0) {
+        if (where.OR) {
+          where.AND = [ { OR: where.OR }, ...andConditions ];
+          delete where.OR;
+        } else {
+          where.AND = andConditions;
+        }
       }
 
       total = await prisma.messagePersonnel.count({ where });

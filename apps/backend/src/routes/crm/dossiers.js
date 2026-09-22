@@ -147,7 +147,7 @@ router.get('/dossiers', async (req, res) => {
     const where = {};
 
     // ── Filtrage par rôle (Zero-Trust Interne) ──────────────────────────
-    if (userRole === 'Responsable opérationnel' || userRole === 'Collaborateur' || userRole === 'Relecteur') {
+    if (userRole === 'Responsable opérationnel' || userRole === 'Collaborateur') {
       where.AND = [
         {
           OR: [
@@ -155,6 +155,15 @@ router.get('/dossiers', async (req, res) => {
             { createdById: userId },
             { missions: { some: { assignedToId: userId } } },
             { missions: { some: { taches: { some: { assignedToId: userId } } } } }
+          ]
+        }
+      ];
+    } else if (userRole === 'Relecteur') {
+      where.AND = [
+        {
+          OR: [
+            { missions: { some: { relecteurId: userId } } },
+            { missions: { some: { taches: { some: { relecteurId: userId } } } } }
           ]
         }
       ];

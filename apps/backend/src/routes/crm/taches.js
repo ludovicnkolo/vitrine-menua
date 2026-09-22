@@ -141,13 +141,15 @@ router.get('/taches', async (req, res) => {
 
     const where = {};
     // ── Filtrage par rôle (Zero-Trust Interne) ──────────────────────────
-    if (req.user.role === 'Responsable opérationnel' || req.user.role === 'Collaborateur' || req.user.role === 'Relecteur') {
+    if (req.user.role === 'Responsable opérationnel' || req.user.role === 'Collaborateur') {
       where.OR = [
         { assignedToId: req.user.id },
         { createdById: req.user.id },
         { mission: { assignedToId: req.user.id } },
         { mission: { dossier: { traitantId: req.user.id } } }
       ];
+    } else if (req.user.role === 'Relecteur') {
+      where.relecteurId = req.user.id;
     }
 
     const isSuperAdm = req.user.role === 'Super-administrateur';
@@ -187,6 +189,7 @@ router.get('/taches', async (req, res) => {
         dossierTache: { include: { subDossiers: true } },
         authorizedDossiers: { include: { subDossiers: true } },
         assignedTo: { select: { id: true, name: true, role: { select: { name: true } } } },
+        relecteur: { select: { id: true, name: true, role: { select: { name: true } } } },
         createdBy: { select: { id: true, name: true, role: { select: { name: true } } } }
       },
       orderBy: { reference: 'desc' }
@@ -219,7 +222,7 @@ router.post('/taches', async (req, res) => {
       }
     }
 
-    const { missionId, description, assignedToId, echeance, attachment, dossierTacheId, authorizedDossierIds } = req.body;
+    const { missionId, description, assignedToId, relecteurId, echeance, attachment, dossierTacheId, authorizedDossierIds } = req.body;
     const creatorId = await resolveCreatorId(req);
     const reference = await generateReference('tache', 'TCH');
 
@@ -228,6 +231,7 @@ router.post('/taches', async (req, res) => {
       description,
       missionId,
       assignedToId,
+      relecteurId,
       createdById: creatorId,
       status: 'NOUVEAU',
       echeance: echeance ? new Date(echeance) : null,
@@ -286,7 +290,7 @@ router.post('/taches', async (req, res) => {
 router.patch('/taches/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { status, adminFeedback, managerFeedback, echeance, assignedToId, ...rest } = req.body;
+    const { status, adminFeedback, managerFeedback, echeance, assignedToId, relecteurId, ...rest } = req.body;
 
     const currentTache = await prisma.tache.findUnique({
       where: { id },
@@ -388,6 +392,12 @@ router.patch('/taches/:id', async (req, res) => {
         return res.status(403).json({ error: "Accès refusé. Vous ne pouvez pas ré-attribuer une tâche." });
       }
       dataToUpdate.assignedToId = assignedToId;
+    }
+    if (relecteurId !== undefined && relecteurId !== currentTache.relecteurId) {
+      if (!isManager(userRole)) {
+        return res.status(403).json({ error: "Accès refusé. Vous ne pouvez pas assigner un relecteur." });
+      }
+      dataToUpdate.relecteurId = relecteurId;
     }
 
     if (status !== undefined && status !== currentTache.status) {

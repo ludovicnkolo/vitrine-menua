@@ -510,37 +510,74 @@ const DossiersPage = () => {
       window.customAlert('Erreur réseau.');
     }
   };
+  /**
+   * getAllowedDossierStatuses — Matrice de transition dossier par rôle
+   */
+  const getAllowedDossierStatuses = (currentStatus, userRole) => {
+    const role = typeof userRole === 'object' ? (userRole?.name || '') : (userRole || '');
+    const isSuperAdmin = role === 'Super-administrateur';
+    const isResp = role === 'Responsable opérationnel';
+    const isRespOrAdmin = isResp || isSuperAdmin;
+
+    const ALL_LABELS = {
+      NOUVEAU: 'Nouveau', EN_COURS: 'En cours', CLOTURE: 'Clôturé',
+      ARCHIVE: 'Archivé', BLOQUE: 'Bloqué'
+    };
+    const make = (vals) => vals.map(v => ({ value: v, label: ALL_LABELS[v] || v }));
+    const withCurrent = (vals) => {
+      const targets = vals.filter(v => v !== currentStatus);
+      return make([currentStatus, ...targets]);
+    };
+    const lockedOnCurrent = () => make([currentStatus]);
+
+    switch (currentStatus) {
+      case 'NOUVEAU':
+        if (isRespOrAdmin) return withCurrent(['EN_COURS', 'BLOQUE']);
+        return lockedOnCurrent();
+      case 'EN_COURS':
+        if (isRespOrAdmin) return withCurrent(['CLOTURE', 'BLOQUE']);
+        return lockedOnCurrent();
+      case 'BLOQUE':
+        if (isRespOrAdmin) return withCurrent(['EN_COURS']);
+        return lockedOnCurrent();
+      case 'CLOTURE':
+        if (isSuperAdmin) return withCurrent(['ARCHIVE', 'EN_COURS']);
+        return lockedOnCurrent();
+      case 'ARCHIVE':
+        return lockedOnCurrent(); // État terminal irréversible
+      default:
+        return lockedOnCurrent();
+    }
+  };
+
   const renderWorkflowButtons = (dossier) => {
     if (!dossier) return null;
-    if (!(currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Super-administrateur' || currentUser?.id === dossier.traitantId)) return null;
-    
+    const role = currentUser?.role?.name || currentUser?.role || '';
+    const isSuperAdmin = role === 'Super-administrateur';
+    const isResp = role === 'Responsable opérationnel';
+    const isRespOrAdmin = isResp || isSuperAdmin;
+
+    // Seuls Super-admin et Resp.Op. assigné peuvent agir
+    if (!isSuperAdmin && !isResp && currentUser?.id !== dossier.traitantId) return null;
+
+    const options = getAllowedDossierStatuses(dossier.status || 'NOUVEAU', role);
+    const isLocked = options.length === 1;
+
     return (
-      <>
-        {/* Pas de bouton "Lancer" - un dossier s'ouvre automatiquement lors de la création d'une mission */}
-        {dossier.status === 'OUVERT' && (
-          <button type="button" onClick={() => handleStatusAction(dossier.id, 'TERMINE')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>★ Clôturer</button>
-        )}
-        {dossier.status === 'TERMINE' && (currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Super-administrateur') && (
-          <button type="button" onClick={() => handleStatusAction(dossier.id, 'ARCHIVE')} className="btn btn-outline" style={{borderColor: '#4B5563', color: '#4B5563'}}>Archiver</button>
-        )}
-        {['TERMINE', 'ARCHIVE'].includes(dossier.status) && (currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Super-administrateur') && (
-          <button type="button" onClick={() => handleStatusAction(dossier.id, 'OUVERT')} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Déclôturer</button>
-        )}
-        {!['TERMINE', 'ARCHIVE', 'BLOQUE', 'EN_ATTENTE'].includes(dossier.status) && (
-          <>
-            <button type="button" onClick={() => handleStatusAction(dossier.id, 'EN_ATTENTE')} className="btn btn-outline" style={{borderColor: '#F59E0B', color: '#F59E0B'}}>⏳ Mettre en Attente</button>
-            {(currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Super-administrateur') && (
-              <button type="button" onClick={() => handleStatusAction(dossier.id, 'BLOQUE')} className="btn btn-outline" style={{borderColor: '#DC2626', color: '#DC2626'}}>⛔ Bloquer</button>
-            )}
-          </>
-        )}
-        {dossier.status === 'EN_ATTENTE' && (
-          <button type="button" onClick={() => handleStatusAction(dossier.id, 'OUVERT')} className="btn btn-outline" style={{borderColor: '#10B981', color: '#10B981'}}>▶ Reprendre</button>
-        )}
-        {dossier.status === 'BLOQUE' && (currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Super-administrateur') && (
-          <button type="button" onClick={() => handleStatusAction(dossier.id, 'OUVERT')} className="btn btn-outline" style={{borderColor: '#10B981', color: '#10B981'}}>▶ Débloquer</button>
-        )}
-      </>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: isLocked ? '#F3F4F6' : '#F8FAFC', padding: '0.5rem 1rem', borderRadius: '8px', border: `1px solid ${isLocked ? '#E5E7EB' : 'var(--border)'}` }}>
+        <span style={{ fontWeight: 600, color: isLocked ? '#9CA3AF' : 'var(--text-main)', fontSize: '0.875rem' }}>Statut :</span>
+        <select
+          value={dossier.status || 'NOUVEAU'}
+          onChange={(e) => handleStatusAction(dossier.id, e.target.value)}
+          disabled={isLocked}
+          title={isLocked ? (dossier.status === 'ARCHIVE' ? 'Dossier archivé — état terminal' : 'Aucune transition disponible pour votre rôle') : ''}
+          style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: isLocked ? '#F3F4F6' : '#FFF', fontSize: '0.875rem', outline: 'none', cursor: isLocked ? 'not-allowed' : 'pointer', minWidth: '150px' }}
+        >
+          {options.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
     );
   };
 
@@ -693,23 +730,91 @@ const DossiersPage = () => {
 
   if (consultDossier) {
     const associatedTasks = dbTasks.filter(t => t.dossierId === consultDossier.id);
+    const isSuperAdmin = currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Super-administrateur';
+    const canEdit = isSuperAdmin || currentUser?.id === consultDossier.traitantId;
+    
+    // isEditingConsult est géré via un objet temporaire dans consultDossier._editing
+    const isEditMode = consultDossier._editing === true;
+
+    const startEdit = () => setConsultDossier({ ...consultDossier, _editing: true, _draft: { description: consultDossier.description || '', traitantId: consultDossier.traitantId || '' } });
+    const cancelEdit = () => setConsultDossier({ ...consultDossier, _editing: false, description: consultDossier._origDesc ?? consultDossier.description, traitantId: consultDossier._origTraitant ?? consultDossier.traitantId });
+    const saveEdit = async () => {
+      try {
+        const token = sessionStorage.getItem('adminToken');
+        const res = await fetch(getSafeApiUrl(`/api/crm/dossiers/${consultDossier.id}`), {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ description: consultDossier.description, traitantId: consultDossier.traitantId || null })
+        });
+        if (res.ok) {
+          setConsultDossier({ ...consultDossier, _editing: false });
+          fetchDossiers();
+          window.customAlert('Dossier mis à jour !');
+        } else {
+          const err = await res.json().catch(() => ({}));
+          window.customAlert('Erreur : ' + (err.error || 'Impossible de sauvegarder'));
+        }
+      } catch(e) { window.customAlert('Erreur réseau'); }
+    };
     
     return (
       <div className="fade-in" style={{width: "100%", padding: "0"}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem', flexWrap: 'wrap'}}>
           <button type="button" onClick={() => setConsultDossier(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour</button>
-          <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>consultation du dossier : {consultDossier.reference || consultDossier.id}</h2>
+          <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600, flex: 1}}>consultation du dossier : {consultDossier.reference || consultDossier.id}</h2>
+          {canEdit && renderWorkflowButtons(consultDossier)}
+          {canEdit && !isEditMode && (
+            <button
+              type="button"
+              onClick={startEdit}
+              className="btn btn-outline"
+              style={{padding: '0.5rem 1rem', borderColor: '#D97706', color: '#D97706', display: 'flex', alignItems: 'center', gap: '0.4rem'}}
+            >
+              <Pencil size={16} /> Modifier
+            </button>
+          )}
         </div>
 
         {renderDossierFields(consultDossier, false)}
         <div style={{display: 'flex', gap: '2rem', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', alignItems: 'flex-start'}}>
           <div style={{flex: '0 0 70%'}}>
             <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Description du dossier</h4>
-            <div style={{padding: '1.5rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', whiteSpace: 'pre-wrap', fontSize: '0.875rem', color: 'var(--text-main)', minHeight: '120px'}}>
-              {consultDossier.description || <span style={{color: 'var(--text-muted)'}}>Aucune description fournie.</span>}
-            </div>
+            {isEditMode ? (
+              <textarea
+                value={consultDossier.description || ''}
+                onChange={(e) => setConsultDossier({...consultDossier, description: e.target.value})}
+                style={{width: '100%', padding: '1rem', background: '#FFF', borderRadius: '8px', border: '1px solid var(--primary)', fontSize: '0.875rem', color: 'var(--text-main)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box'}}
+                placeholder="Description du dossier..."
+              />
+            ) : (
+              <div style={{padding: '1.5rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', whiteSpace: 'pre-wrap', fontSize: '0.875rem', color: 'var(--text-main)', minHeight: '120px'}}>
+                {consultDossier.description || <span style={{color: 'var(--text-muted)'}}>Aucune description fournie.</span>}
+              </div>
+            )}
           </div>
           <div style={{flex: '1 1 auto', minWidth: 0}}>
+            {isSuperAdmin && isEditMode && (
+              <div style={{marginBottom: '1.5rem'}}>
+                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--secondary-dark)'}}>Traitant</label>
+                <select
+                  value={consultDossier.traitantId || ''}
+                  onChange={(e) => setConsultDossier({...consultDossier, traitantId: e.target.value})}
+                  className="input-field"
+                  style={{width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid var(--primary)', background: '#FFF'}}
+                >
+                  <option value="">-- Aucun traitant --</option>
+                  {dbUsers.filter(u => u.role?.name === 'Responsable opérationnel' || u.role?.name === 'Super-administrateur').map(u => (
+                    <option key={u.id} value={u.id}>{u.name} ({u.role?.name})</option>
+                  ))}
+                </select>
+              </div>
+            )}
+            {isSuperAdmin && !isEditMode && consultDossier.traitantId && (
+              <div style={{marginBottom: '1.5rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '0.875rem'}}>
+                <strong style={{color: 'var(--text-muted)'}}>Traitant :</strong>{' '}
+                <span style={{fontWeight: 500}}>{dbUsers.find(u => u.id === consultDossier.traitantId)?.name || consultDossier.traitant?.name || 'Inconnu'}</span>
+              </div>
+            )}
             {renderAssociatedTasks(associatedTasks, false)}
           </div>
         </div>
@@ -724,9 +829,17 @@ const DossiersPage = () => {
             <button type="button" onClick={() => { setShowMagicModal(true); setGeneratedMagicUrl(''); }} className="btn btn-outline" style={{borderColor: 'var(--secondary)', color: 'var(--secondary-dark)', display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
               <LinkIcon size={16} /> Générer Lien Magique
             </button>
-            {renderWorkflowButtons(consultDossier)}
           </div>
-          <button type="button" onClick={() => setConsultDossier(null)} className="btn btn-outline">Fermer</button>
+          <div style={{display: 'flex', gap: '1rem'}}>
+            {isEditMode ? (
+              <>
+                <button type="button" onClick={cancelEdit} className="btn btn-outline">Annuler</button>
+                <button type="button" onClick={saveEdit} className="btn btn-primary">Enregistrer</button>
+              </>
+            ) : (
+              <button type="button" onClick={() => setConsultDossier(null)} className="btn btn-outline">Fermer</button>
+            )}
+          </div>
         </div>
 
         {/* Modal Magic Link */}
@@ -1031,10 +1144,10 @@ const DossiersPage = () => {
         >
           <option value="all">Statut: Tous</option>
           <option value="NOUVEAU">Nouveau</option>
-          <option value="OUVERT">Ouvert</option>
-          <option value="BLOQUE">Bloqué</option>
+          <option value="EN_COURS">En cours</option>
           <option value="CLOTURE">Clôturé</option>
           <option value="ARCHIVE">Archivé</option>
+          <option value="BLOQUE">Bloqué</option>
         </select>
         <select 
           className="input-field" 
@@ -1083,8 +1196,18 @@ const DossiersPage = () => {
                 ? (d.targetUser?.name || dbUsers.find(u => u.id === d.targetUserId)?.name || 'Collaborateur inconnu')
                 : 'MENUA CONSULTING (Interne)';
               const dCreatorRole = d.createdBy?.role?.name || '-';
+              const isExpired = (dossier) => {
+                const d = dossier.echeance;
+                if (!d) return false;
+                if (['TERMINE', 'TERMINEE', 'ARCHIVE', 'ANNULEE', 'BLOQUE'].includes(dossier.status)) return false;
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                const date = new Date(d);
+                date.setHours(0,0,0,0);
+                return date <= today;
+              };
               return (
-              <tr key={d.id}>
+              <tr key={d.id} className={isExpired(d) ? 'row-expired' : ''}>
                 <td><div style={{whiteSpace: 'nowrap', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '90px'}} title={d.reference || d.id}>{d.reference || d.id}</div></td>
                 <td><strong className="truncate-name" style={{color: 'var(--text-main)'}}>{d.name}</strong></td>
                 <td><div style={{color: 'var(--text-muted)', fontSize: '0.875rem', textTransform: 'capitalize', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px'}} title={dOrigin}>{dOrigin}</div></td>

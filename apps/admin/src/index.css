@@ -300,3 +300,14 @@ tr:hover td {
   display: inline-block;
   vertical-align: bottom;
 }
+
+@keyframes blink-expired {
+  0% { background-color: transparent; }
+  50% { background-color: rgba(239, 68, 68, 0.2); }
+  100% { background-color: transparent; }
+}
+
+.row-expired {
+  animation: blink-expired 2s infinite ease-in-out !important;
+}
+

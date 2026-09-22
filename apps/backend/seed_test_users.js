@@ -12,7 +12,7 @@ const bcrypt = require('bcryptjs');
 
 const prisma = new PrismaClient();
 
-const PASSWORD = '1234';
+const PASSWORD = '1234567t';
 
 // Rôles à peupler (Super-administrateur exclu)
 const ROLES_TO_SEED = [
@@ -50,7 +50,7 @@ async function main() {
       .replace(/[éèê]/g, 'e')
       .replace(/[^a-z0-9-]/g, '');
 
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= 2; i++) {
       usersToCreate.push({
         email: `${slug}-${i}@menua.local`,
         name: `${roleName} ${i}`,

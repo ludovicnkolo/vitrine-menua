@@ -20,6 +20,13 @@ function getStatusBadge(status) {
     'A_CORRIGER': { text: 'À corriger', style: { backgroundColor: '#FEF2F2', color: '#DC2626', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
     'FINALISER': { text: 'Finalisé (Attente Clôture)', style: { backgroundColor: '#EDE9FE', color: '#6D28D9', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
     'REATTRIBUE': { text: 'Réattribuée', class: 'badge-warning' },
+    
+    // NOUVEAUX STATUTS TACHE / MISSION / DOSSIER
+    'EN_RELECTURE': { text: 'En relecture', style: { backgroundColor: '#FEF3C7', color: '#D97706', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
+    'EN_APPROBATION': { text: 'En approbation', style: { backgroundColor: '#FEF3C7', color: '#D97706', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
+    'APPROUVEE': { text: 'Approuvée', class: 'badge-success' },
+    'EN_REVUE': { text: 'En revue', style: { backgroundColor: '#FEF3C7', color: '#D97706', padding: '0.25rem 0.6rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600 } },
+    'CLOTURE': { text: 'Clôturé', class: 'badge-success' },
 
     // STATUTS SYSTEMES OU FALLBACKS
     'Actif': { text: 'Actif', style: { backgroundColor: '#DEF7EC', color: '#03543F' } },

@@ -143,14 +143,15 @@ router.get('/tasks', async (req, res) => {
 
     const where = { parentMissionId: null }; // Only parent tasks
 
-    // ── Filtrage par rôle (Zero-Trust Interne) ──────────────────────────
-    if (req.user.role === 'Responsable opérationnel' || req.user.role === 'Collaborateur' || req.user.role === 'Relecteur') {
+    if (req.user.role === 'Responsable opérationnel' || req.user.role === 'Collaborateur') {
       where.OR = [
         { assignedToId: req.user.id },
         { createdById: req.user.id },
         { dossier: { traitantId: req.user.id } },
         { taches: { some: { assignedToId: req.user.id } } }
       ];
+    } else if (req.user.role === 'Relecteur') {
+      where.relecteurId = req.user.id;
     }
 
     const isSuperAdm = req.user.role === 'Super-administrateur';
@@ -190,7 +191,8 @@ router.get('/tasks', async (req, res) => {
         dossier: { include: { subDossiers: true } }, 
         dossierMission: { include: { subDossiers: true } },
         authorizedDossiers: { include: { subDossiers: true } },
-        assignedTo: { include: { role: true } }, 
+        assignedTo: { include: { role: true } },
+        relecteur: { include: { role: true } },
         createdBy: { include: { role: true } },
         documents: { where: { isDeleted: false }, include: { uploadedBy: true }, orderBy: { createdAt: 'desc' } },
         subMissions: {
@@ -226,7 +228,7 @@ router.post('/tasks', async (req, res) => {
       }
     }
 
-    const { dossierId, description, assignedToId, parentMissionId, echeance, attachment, messageId, dossierMissionId, authorizedDossierIds } = req.body;
+    const { dossierId, description, assignedToId, relecteurId, parentMissionId, echeance, attachment, messageId, dossierMissionId, authorizedDossierIds } = req.body;
     const creatorId = await resolveCreatorId(req);
     const reference = await generateReference('mission', 'MSN');
 
@@ -236,6 +238,7 @@ router.post('/tasks', async (req, res) => {
         description,
         dossierId,
         assignedToId,
+        relecteurId,
         createdById: creatorId,
         status: 'NON_DEMARREE',
         echeance: echeance ? new Date(echeance) : null,
@@ -378,7 +381,7 @@ router.patch('/tasks/:id', async (req, res) => {
       return res.status(403).json({ error: "Accès refusé. Vous n'avez pas l'autorisation de modifier cette mission." });
     }
 
-    const { status, assignedToId, description, attachment, echeance } = req.body;
+    const { status, assignedToId, relecteurId, description, attachment, echeance } = req.body;
     const dataToUpdate = {};
     if (description !== undefined) dataToUpdate.description = description;
     if (attachment !== undefined) dataToUpdate.attachment = attachment;
@@ -396,6 +399,13 @@ router.patch('/tasks/:id', async (req, res) => {
         }
       }
       dataToUpdate.assignedToId = assignedToId;
+    }
+    
+    if (relecteurId !== undefined && relecteurId !== currentMissionForAuth.relecteurId) {
+      if (!isManager(userRole)) {
+        return res.status(403).json({ error: "Accès refusé. Vous ne pouvez pas assigner un relecteur." });
+      }
+      dataToUpdate.relecteurId = relecteurId;
     }
 
     // Statut BLOQUÉ réservé aux Super-Admin / Admin Tech

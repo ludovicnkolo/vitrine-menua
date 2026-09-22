@@ -75,7 +75,7 @@ const TaskDropdown = ({ taskId, openMenuId, setOpenMenuId, menuRef, tasks, setCo
           setEditTask(task);
           const subj = getSubjectFromTask(task.description);
           const msg = getMessageFromTask(task.description);
-          setEditFormData({ subject: subj, message: msg, status: task.status, attachment: task.attachment || '', assignedToId: task.assignedToId || '', echeance: task.echeance ? task.echeance.substring(0, 10) : '' });
+          setEditFormData({ subject: subj, message: msg, status: task.status, attachment: task.attachment || '', assignedToId: task.assignedToId || '', relecteurId: task.relecteurId || '', echeance: task.echeance ? task.echeance.substring(0, 10) : '' });
         }}>
           <Pencil size={14} color="#D97706" /> Modifier
         </button>
@@ -100,7 +100,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const [consultTask, setConsultTask] = useState(null);
   const [editTask, setEditTask] = useState(null);
   const [localConsultSubTask, setLocalConsultSubTask] = useState(null);
-  const [editFormData, setEditFormData] = useState({ subject: '', message: '', status: '', attachment: '' });
+  const [editFormData, setEditFormData] = useState({ subject: '', message: '', status: '', attachment: '', assignedToId: '', relecteurId: '', echeance: '' });
   const [taskFile, setTaskFile] = useState(null);
   const [createTaskModal, setCreateTaskModal] = useState(false);
   const [newTaskFile, setNewTaskFile] = useState(null);
@@ -147,6 +147,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const [newTaskSubject, setNewTaskSubject] = useState('');
   const [newTaskMessage, setNewTaskMessage] = useState('');
   const [newTaskAssignedTo, setNewTaskAssignedTo] = useState('');
+  const [newTaskRelecteur, setNewTaskRelecteur] = useState('');
   const [newTaskEcheance, setNewTaskEcheance] = useState('');
   const [selectedDossierTacheId, setSelectedDossierTacheId] = useState('');
   const [selectedAuthorizedTacheIds, setSelectedAuthorizedTacheIds] = useState([]);
@@ -208,6 +209,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         body: JSON.stringify({
           description,
           assignedToId: editFormData.assignedToId || null,
+          relecteurId: editFormData.relecteurId || null,
           echeance: editFormData.echeance || null
         })
       });
@@ -260,6 +262,91 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     } catch (err) {
       console.error("Erreur action workflow:", err);
       setErrorMsg("Erreur de connexion.");
+    }
+  };
+
+  /**
+   * getAllowedStatuses — Matrice de transition par rôle
+   * Retourne uniquement les transitions autorisées pour le rôle et le statut courant.
+   * Inclut toujours le statut courant en premier (pour que le select ne soit jamais vide).
+   */
+  const getAllowedStatuses = (currentStatus, userRole, entityMode) => {
+    const role = typeof userRole === 'object' ? (userRole?.name || '') : (userRole || '');
+    const isSuperAdmin = role === 'Super-administrateur';
+    const isResp = role === 'Responsable opérationnel';
+    const isRelecteur = role === 'Relecteur';
+    const isCollab = role === 'Collaborateur';
+    const isRespOrAdmin = isResp || isSuperAdmin;
+
+    const ALL_LABELS = {
+      NOUVEAU: 'Nouveau', EN_COURS: 'En cours', EN_RELECTURE: 'En relecture',
+      EN_APPROBATION: 'En approbation', APPROUVEE: 'Approuvée', A_CORRIGER: 'À corriger',
+      BLOQUE: 'Bloqué', EN_ATTENTE: 'En attente', EN_REVUE: 'En revue', TERMINE: 'Terminé'
+    };
+    const make = (vals) => vals.map(v => ({ value: v, label: ALL_LABELS[v] || v }));
+    const withCurrent = (vals) => {
+      const targets = vals.filter(v => v !== currentStatus);
+      return make([currentStatus, ...targets]);
+    };
+    const lockedOnCurrent = () => make([currentStatus]);
+
+    if (entityMode === 'TACHE') {
+      switch (currentStatus) {
+        case 'NOUVEAU':
+          if (isSuperAdmin) return withCurrent(['EN_COURS', 'EN_ATTENTE', 'BLOQUE']);
+          if (isResp)       return withCurrent(['EN_COURS', 'EN_ATTENTE', 'BLOQUE']);
+          if (isCollab)     return withCurrent(['EN_COURS', 'EN_ATTENTE']);
+          return lockedOnCurrent();
+        case 'EN_COURS':
+          if (isSuperAdmin) return withCurrent(['EN_RELECTURE', 'BLOQUE', 'EN_ATTENTE']);
+          if (isResp)       return withCurrent(['EN_RELECTURE', 'BLOQUE', 'EN_ATTENTE']);
+          if (isCollab)     return withCurrent(['EN_RELECTURE', 'EN_ATTENTE']); // Collab ne peut pas bloquer
+          return lockedOnCurrent();
+        case 'EN_RELECTURE':
+          if (isSuperAdmin || isRelecteur) return withCurrent(['EN_APPROBATION', 'A_CORRIGER', 'EN_ATTENTE']);
+          return lockedOnCurrent();
+        case 'EN_APPROBATION':
+          if (isSuperAdmin) return withCurrent(['APPROUVEE', 'A_CORRIGER', 'EN_COURS']);
+          return lockedOnCurrent();
+        case 'APPROUVEE':
+          if (isSuperAdmin) return withCurrent(['EN_COURS']); // déverrouillage d’urgence
+          return lockedOnCurrent();
+        case 'A_CORRIGER':
+          if (isCollab)     return withCurrent(['EN_COURS', 'BLOQUE']);
+          if (isRespOrAdmin) return withCurrent(['EN_COURS', 'BLOQUE']);
+          return lockedOnCurrent();
+        case 'BLOQUE':
+          if (isCollab || isRespOrAdmin) return withCurrent(['EN_COURS']);
+          return lockedOnCurrent();
+        case 'EN_ATTENTE':
+          if (isCollab || isRespOrAdmin) return withCurrent(['EN_COURS']);
+          return lockedOnCurrent();
+        default:
+          return lockedOnCurrent();
+      }
+    } else { // MISSION
+      switch (currentStatus) {
+        case 'NOUVEAU':
+          if (isRespOrAdmin) return withCurrent(['EN_COURS', 'EN_ATTENTE', 'BLOQUE']);
+          return lockedOnCurrent();
+        case 'EN_COURS':
+          if (isRespOrAdmin) return withCurrent(['EN_REVUE', 'BLOQUE', 'EN_ATTENTE']);
+          return lockedOnCurrent();
+        case 'EN_REVUE':
+          if (isRespOrAdmin) return withCurrent(['TERMINE', 'EN_COURS']);
+          return lockedOnCurrent();
+        case 'BLOQUE':
+          if (isRespOrAdmin) return withCurrent(['EN_COURS']);
+          return lockedOnCurrent();
+        case 'EN_ATTENTE':
+          if (isRespOrAdmin) return withCurrent(['EN_COURS']);
+          return lockedOnCurrent();
+        case 'TERMINE':
+          if (isSuperAdmin) return withCurrent(['EN_COURS']); // réouverture exceptionnelle
+          return lockedOnCurrent();
+        default:
+          return lockedOnCurrent();
+      }
     }
   };
 
@@ -344,6 +431,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           missionId: consultTask.id,
           description: `Objet: ${newTaskSubject}\n\nConsignes: ${newTaskMessage}`,
           assignedToId: newTaskAssignedTo,
+          relecteurId: newTaskRelecteur || null,
           echeance: newTaskEcheance,
           attachment: attachmentName,
           dossierTacheId: selectedDossierTacheId,
@@ -359,6 +447,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         setConsultTask(null);
         setNewTaskSubject('');
         setNewTaskMessage('');
+        setNewTaskAssignedTo('');
+        setNewTaskRelecteur('');
         setNewTaskEcheance('');
         setSelectedDossierTacheId('');
         setSelectedAuthorizedTacheIds([]);
@@ -408,7 +498,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
             <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
               <div>
-                <label htmlFor="new-task-assigned-to" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigner à</label>
+                <label htmlFor="new-task-assigned-to" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigné à</label>
                 <select id="new-task-assigned-to" className="input-field" value={newTaskAssignedTo} onChange={(e) => setNewTaskAssignedTo(e.target.value)} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
                   <option value="">-- Sélectionner un membre --</option>
                   {users.filter(u => u.role?.name === 'Collaborateur' || u.role?.name === 'Responsable opérationnel' || u.role?.name === 'Super-administrateur' || u.role?.name === 'Administrateur').map(u => (
@@ -418,14 +508,26 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               </div>
 
               <div>
-                <label htmlFor="new-task-echeance" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance</label>
-                <input id="new-task-echeance" type="date" min={new Date().toISOString().split('T')[0]} value={newTaskEcheance} onChange={(e) => setNewTaskEcheance(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+                <label htmlFor="new-task-relecteur" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Relecteur (Contrôleur)</label>
+                <select id="new-task-relecteur" className="input-field" value={newTaskRelecteur} onChange={(e) => setNewTaskRelecteur(e.target.value)} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
+                  <option value="">-- Aucun relecteur --</option>
+                  {users.filter(u => u.role?.name === 'Relecteur' || u.role?.name === 'Responsable opérationnel').map(u => (
+                    <option key={u.id} value={u.id}>{u.name} ({u.role?.name || 'Sans rôle'})</option>
+                  ))}
+                </select>
               </div>
             </div>
 
-            <div>
-              <label htmlFor="new-task-mission-associee" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Mission associée</label>
-              <input id="new-task-mission-associee" type="text" value={consultTask?.reference || consultTask?.id || ''} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-muted)'}} />
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+              <div>
+                <label htmlFor="new-task-echeance" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance</label>
+                <input id="new-task-echeance" type="date" min={new Date().toISOString().split('T')[0]} value={newTaskEcheance} onChange={(e) => setNewTaskEcheance(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
+              </div>
+
+              <div>
+                <label htmlFor="new-task-mission-associee" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Mission associée</label>
+                <input id="new-task-mission-associee" type="text" value={consultTask?.reference || consultTask?.id || ''} readOnly className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#F8FAFC', color: 'var(--text-muted)'}} />
+              </div>
             </div>
 
             {/* Dossiers liés à la tâche (GED) */}
@@ -541,13 +643,23 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               </select>
             </div>
           </div>
-
+          
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-            <TaskField label="Objet" value={editFormData.subject} readOnly={false} onChange={(e) => setEditFormData({...editFormData, subject: e.target.value})} />
             <div>
-              <label htmlFor="edit-task-echeance" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance</label>
-              <input id="edit-task-echeance" type="date" value={editFormData.echeance} onChange={(e) => setEditFormData({...editFormData, echeance: e.target.value})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)'}} />
+              <label htmlFor="edit-task-relecteur" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Relecteur</label>
+              <select id="edit-task-relecteur" className="input-field" value={editFormData.relecteurId || ''} onChange={(e) => setEditFormData({...editFormData, relecteurId: e.target.value})} style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)', background: '#FFF'}}>
+                <option value="">-- Aucun relecteur --</option>
+                {users.filter(u => u.role?.name === 'Relecteur' || u.role?.name === 'Responsable opérationnel').map(u => (
+                  <option key={u.id} value={u.id}>{u.name} ({u.role?.name || 'Sans rôle'})</option>
+                ))}
+              </select>
             </div>
+            <TaskField label="Objet" value={editFormData.subject} readOnly={false} onChange={(e) => setEditFormData({...editFormData, subject: e.target.value})} />
+          </div>
+
+          <div>
+            <label htmlFor="edit-task-echeance" style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance</label>
+            <input id="edit-task-echeance" type="date" value={editFormData.echeance} onChange={(e) => setEditFormData({...editFormData, echeance: e.target.value})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--primary)'}} />
           </div>
           
           <TaskField label={mode === 'MISSION' ? 'Dossier associé' : 'Mission Liée'} value={mode === 'MISSION' ? (editTask.dossier?.reference || editTask.dossier?.name || editTask.dossierId) : (editTask.mission?.reference || editTask.missionId)} />
@@ -610,9 +722,33 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   if (consultTask) {
     return (
       <div className="fade-in" style={{width: "100%", padding: "0"}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem', flexWrap: 'wrap'}}>
           <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour</button>
           <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600, flex: 1}}>{mode === 'MISSION' ? 'Consultation mission :' : 'Consultation tâche :'} {consultTask.reference || consultTask.id}</h2>
+
+          {/* Déroulant statut — filtré selon rôle + matrice de transition */}
+          {(() => {
+            const role = currentUser?.role?.name || currentUser?.role || '';
+            const options = getAllowedStatuses(consultTask.status || 'NOUVEAU', role, mode);
+            const isLocked = options.length === 1; // Seul le statut courant est disponible
+            return (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: isLocked ? '#F3F4F6' : '#F8FAFC', padding: '0.4rem 0.9rem', borderRadius: '8px', border: `1px solid ${isLocked ? '#E5E7EB' : 'var(--border)'}` }}>
+                <span style={{ fontWeight: 600, color: isLocked ? '#9CA3AF' : 'var(--text-main)', fontSize: '0.85rem' }}>Statut :</span>
+                <select
+                  value={consultTask.status || 'NOUVEAU'}
+                  onChange={(e) => handleWorkflowAction(consultTask.id, e.target.value)}
+                  disabled={isLocked}
+                  title={isLocked ? 'Aucune transition disponible pour votre rôle' : ''}
+                  style={{ padding: '0.4rem 0.6rem', borderRadius: '4px', border: '1px solid var(--border)', background: isLocked ? '#F3F4F6' : '#FFF', fontSize: '0.875rem', outline: 'none', cursor: isLocked ? 'not-allowed' : 'pointer', minWidth: '140px' }}
+                >
+                  {options.map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+            );
+          })()}
+
           {(currentUser?.role === 'Super-administrateur' || currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Responsable opérationnel' || currentUser?.role?.name === 'Responsable opérationnel') && !(
             (consultTask?.status === 'EN_FINALISATION' || consultTask?.status === 'EN_CONTROLE' || consultTask?.status === 'TERMINEE') &&
             !(currentUser?.role === 'Relecteur' || currentUser?.role?.name === 'Relecteur' || currentUser?.role === 'Responsable opérationnel' || currentUser?.role?.name === 'Responsable opérationnel' || currentUser?.role === 'Super-administrateur' || currentUser?.role?.name === 'Super-administrateur')
@@ -623,7 +759,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 setEditTask(consultTask);
                 const subj = getSubjectFromTask(consultTask.description);
                 const msg = getMessageFromTask(consultTask.description);
-                setEditFormData({ subject: subj, message: msg, status: consultTask.status, attachment: consultTask.attachment || '', assignedToId: consultTask.assignedToId || '', echeance: consultTask.echeance ? consultTask.echeance.substring(0, 10) : '' });
+                setEditFormData({ subject: subj, message: msg, status: consultTask.status, attachment: consultTask.attachment || '', assignedToId: consultTask.assignedToId || '', relecteurId: consultTask.relecteurId || '', echeance: consultTask.echeance ? consultTask.echeance.substring(0, 10) : '' });
                 setConsultTask(null);
               }}
               className="btn btn-outline"
@@ -694,6 +830,12 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 </span>
               </div>
               <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
+                <strong style={{color: 'var(--text-muted)', fontWeight: 600, minWidth: '130px'}}>Relecteur :</strong>
+                <span style={{fontWeight: 500, color: 'var(--text-main)'}}>
+                  {consultTask.relecteur?.name || 'Non assigné'} <span style={{color: 'var(--text-muted)', fontWeight: 400}}>({consultTask.relecteur?.role?.name || '-'})</span>
+                </span>
+              </div>
+              <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
                 <strong style={{color: 'var(--text-muted)', fontWeight: 600, minWidth: '130px'}}>Date de création :</strong>
                 <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{new Date(consultTask.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</span>
               </div>
@@ -724,89 +866,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         </div>
 
         <div style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: '1.5rem', marginBottom: '1.5rem'}}>
-
           <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'flex-end', flex: 1}}>
             <button type="button" onClick={() => { setConsultTask(null); setTaskFile(null); }} className="btn btn-outline">Retour</button>
-            
-            {/* Nouvelles actions selon le workflow STRICT avec filtrage Zero-Trust UI */}
-            {mode === 'TACHE' && (consultTask.status === 'NOUVEAU' || consultTask.status === 'NON_DEMARREE') && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
-              <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-primary" style={{background: 'var(--primary)'}}>▶ Commencer le travail</button>
-            )}
-            
-            {mode === 'TACHE' && consultTask.status === 'EN_COURS' && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
-              <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'VERIFIER')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>✓ Soumettre pour relecture</button>
-            )}
-            
-            {mode === 'TACHE' && consultTask.status === 'VERIFIER' && isController && (
-               <>
-                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'FINALISER')} className="btn btn-primary" style={{background: '#6366F1', borderColor: '#6366F1'}}>✓ Approuver le travail</button>
-                 <button type="button" onClick={() => setShowManagerFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#EF4444', color: '#EF4444'}}>✖ À Corriger</button>
-               </>
-            )}
-
-            {mode === 'TACHE' && consultTask.status === 'FINALISER' && isResp && (
-               <>
-                 <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'TERMINE')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>★ Valider et Clôturer</button>
-                 <button type="button" onClick={() => setShowAdminFeedbackModal(true)} className="btn btn-outline" style={{borderColor: '#EF4444', color: '#EF4444'}}>✖ À Corriger</button>
-               </>
-            )}
-
-            {mode === 'TACHE' && consultTask.status === 'A_CORRIGER' && isResp && (
-               <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>✓ Renvoyer en travail (En Cours)</button>
-            )}
-
-            {/* Boutons d'exception (Bloquer, Attente) pour Taches en cours ou non terminées */}
-            {mode === 'TACHE' && !['TERMINE', 'ARCHIVE', 'BLOQUE', 'EN_ATTENTE'].includes(consultTask.status) && (
-               <>
-                 {(isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
-                   <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_ATTENTE')} className="btn btn-outline" style={{borderColor: '#F59E0B', color: '#F59E0B'}}>⏳ Mettre en Attente (Docs)</button>
-                 )}
-                 {isSuperAdmin && (
-                   <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'BLOQUE')} className="btn btn-outline" style={{borderColor: '#DC2626', color: '#DC2626'}}>⛔ Bloquer la tâche</button>
-                 )}
-               </>
-            )}
-            
-            {mode === 'TACHE' && consultTask.status === 'EN_ATTENTE' && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
-               <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-outline" style={{borderColor: '#10B981', color: '#10B981'}}>▶ Reprendre le travail</button>
-            )}
-            
-            {mode === 'TACHE' && consultTask.status === 'BLOQUE' && isSuperAdmin && (
-               <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_COURS')} className="btn btn-outline" style={{borderColor: '#10B981', color: '#10B981'}}>▶ Débloquer la tâche</button>
-            )}
-
-            {mode === 'MISSION' && (
-              <>
-                {(consultTask.status === 'TO_ASSIGN' || consultTask.status === 'NOUVEAU') && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
-                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'OUVERT')} className="btn btn-primary" style={{background: 'var(--primary)'}}>▶ Démarrer la mission</button>
-                )}
-                {consultTask.status === 'OUVERT' && isResp && (
-                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'TERMINE')} className="btn btn-primary" style={{background: '#10B981', borderColor: '#10B981'}}>★ Clôturer la mission</button>
-                )}
-                {consultTask.status === 'TERMINE' && isSuperAdmin && (
-                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'ARCHIVE')} className="btn btn-outline" style={{borderColor: '#4B5563', color: '#4B5563'}}>Archiver</button>
-                )}
-                {['TERMINE', 'ARCHIVE'].includes(consultTask.status) && isSuperAdmin && (
-                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'OUVERT')} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Déclôturer</button>
-                )}
-                {!['TERMINE', 'ARCHIVE', 'BLOQUE', 'EN_ATTENTE'].includes(consultTask.status) && (
-                  <>
-                    {(isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
-                      <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'EN_ATTENTE')} className="btn btn-outline" style={{borderColor: '#F59E0B', color: '#F59E0B'}}>⏳ Mettre en Attente</button>
-                    )}
-                    {isSuperAdmin && (
-                      <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'BLOQUE')} className="btn btn-outline" style={{borderColor: '#DC2626', color: '#DC2626'}}>⛔ Bloquer</button>
-                    )}
-                  </>
-                )}
-                {consultTask.status === 'EN_ATTENTE' && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
-                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'OUVERT')} className="btn btn-outline" style={{borderColor: '#10B981', color: '#10B981'}}>▶ Reprendre</button>
-                )}
-                {consultTask.status === 'BLOQUE' && isSuperAdmin && (
-                  <button type="button" onClick={() => handleWorkflowAction(consultTask.id, 'OUVERT')} className="btn btn-outline" style={{borderColor: '#10B981', color: '#10B981'}}>▶ Débloquer</button>
-                )}
-              </>
-            )}
 
             {mode === 'MISSION' && !['TERMINE', 'ARCHIVE'].includes(consultTask.status) && (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
               <button type="button" onClick={() => setCreateTaskModal(true)} className="btn btn-outline" style={{borderColor: 'var(--primary)', color: 'var(--primary)'}}>Créer une tâche</button>
@@ -885,19 +946,21 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             <>
               <option value="NOUVEAU">Nouveau</option>
               <option value="EN_COURS">En cours</option>
-              <option value="VERIFIER">À vérifier</option>
+              <option value="EN_RELECTURE">En relecture</option>
+              <option value="EN_APPROBATION">En approbation</option>
+              <option value="APPROUVEE">Approuvée</option>
               <option value="A_CORRIGER">À corriger</option>
-              <option value="REATTRIBUE">Réattribuée</option>
-              <option value="FINALISER">Finalisé (Attente Clôture)</option>
+              <option value="BLOQUE">Bloqué</option>
               <option value="EN_ATTENTE">En attente</option>
-              <option value="TERMINE">Terminée</option>
             </>
           ) : (
             <>
               <option value="NOUVEAU">Nouveau</option>
-              <option value="OUVERT">Ouvert</option>
+              <option value="EN_COURS">En cours</option>
+              <option value="EN_REVUE">En revue</option>
+              <option value="TERMINE">Terminé</option>
+              <option value="BLOQUE">Bloqué</option>
               <option value="EN_ATTENTE">En attente</option>
-              <option value="TERMINE">Terminée</option>
             </>
           )}
         </select>
@@ -916,8 +979,19 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             </tr>
           </thead>
           <tbody>
-            {tasks.map(t => (
-              <tr key={t.id}>
+            {tasks.map(t => {
+              const isExpired = (task) => {
+                const d = task.echeance;
+                if (!d) return false;
+                if (['TERMINE', 'TERMINEE', 'ARCHIVE', 'ANNULEE'].includes(task.status)) return false;
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                const date = new Date(d);
+                date.setHours(0,0,0,0);
+                return date <= today;
+              };
+              return (
+              <tr key={t.id} className={isExpired(t) ? 'row-expired' : ''}>
                 <td style={{ textAlign: 'left' }}>
                   <strong className="truncate-text" style={{fontSize: "0.875rem", color: 'var(--text-main)', margin: 0}}>
                     {t.reference || t.id.slice(0,8)}
@@ -976,7 +1050,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   </div>
                 </td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>

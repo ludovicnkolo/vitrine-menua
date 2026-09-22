@@ -45,9 +45,11 @@ model Utilisateur {
   updatedAt        DateTime  @updatedAt
 
   assignedMissions          Mission[]          @relation("AssignedMissions")
+  relectureMissions         Mission[]          @relation("RelecteurMissions")
   createdMissions           Mission[]          @relation("CreatedMissions")
   dossiersTraites           Dossier[]          @relation("DossierTraitant")
   assignedTaches            Tache[]            @relation("AssignedTaches")
+  relectureTaches           Tache[]            @relation("RelecteurTaches")
   createdTaches             Tache[]            @relation("CreatedTaches")
   assignedFormulaires       Formulaire[]       @relation("AssignedFormulaires")
   createdDossiers           Dossier[]
@@ -211,6 +213,9 @@ model Mission {
   assignedToId String?
   assignedTo   Utilisateur? @relation("AssignedMissions", fields: [assignedToId], references: [id])
 
+  relecteurId  String?
+  relecteur    Utilisateur? @relation("RelecteurMissions", fields: [relecteurId], references: [id])
+
   createdById String
   createdBy   Utilisateur @relation("CreatedMissions", fields: [createdById], references: [id])
 
@@ -247,6 +252,9 @@ model Tache {
 
   assignedToId String?
   assignedTo   Utilisateur? @relation("AssignedTaches", fields: [assignedToId], references: [id])
+
+  relecteurId  String?
+  relecteur    Utilisateur? @relation("RelecteurTaches", fields: [relecteurId], references: [id])
 
   createdById String
   createdBy   Utilisateur @relation("CreatedTaches", fields: [createdById], references: [id])

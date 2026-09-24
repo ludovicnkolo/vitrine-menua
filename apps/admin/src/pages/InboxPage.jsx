@@ -9,6 +9,7 @@ import PaginationControls from '../components/PaginationControls';
 import FilePreviewModal from '../components/FilePreviewModal';
 import AttachmentSelect from '../components/AttachmentSelect';
 import ConfirmModal from '../components/ConfirmModal';
+import InternalChatTab from '../components/InternalChatTab';
 
 const DetailField = ({ label, value, children }) => (
   <div>
@@ -650,8 +651,7 @@ const InboxPage = ({ userRole }) => {
       options = [
         { value: 'NOUVEAU', label: 'Nouveau' },
         { value: 'A_RAPPELER', label: 'À rappeler' },
-        { value: 'TRAITE', label: 'Traité' },
-        { value: 'CLASSE', label: 'Classé sans suite' }
+        { value: 'TRAITE', label: 'Traité' }
       ];
     }
 
@@ -697,6 +697,7 @@ const InboxPage = ({ userRole }) => {
           activeTab={tab} 
           onTabChange={setTab} 
         />
+        {tab !== 'interne' && (
         <div style={{display: 'flex', gap: '1rem', width: '100%', alignItems: 'center'}}>
           <div style={{flex: 1, position: 'relative'}}>
             <input 
@@ -773,7 +774,12 @@ const InboxPage = ({ userRole }) => {
             </button>
           )}
         </div>
+        )}
       </div>
+      {tab === 'interne' ? (
+        <InternalChatTab currentUser={currentUser} users={users} showToast={showToast} />
+      ) : (
+      <>
       <div className="table-wrapper">
         <table>
           <thead>
@@ -933,6 +939,8 @@ const InboxPage = ({ userRole }) => {
       </div>
 
       <PaginationControls page={page} totalPages={totalPages} setPage={setPage} />
+      </>
+      )}
       </>
       )}
 
@@ -1283,98 +1291,7 @@ const InboxPage = ({ userRole }) => {
         </div>
       )}
 
-      {/* Action Choice Modal */}
-      {showActionChoiceModal && (
-        <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
-          <div style={{background: '#FFF', padding: '2.5rem', borderRadius: '12px', width: '90%', maxWidth: '450px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)'}}>
-            <h3 style={{marginTop: 0, marginBottom: '1.5rem', color: 'var(--text-main)', fontSize: '1.25rem', textAlign: 'center'}}>Option de traitement</h3>
-            <p style={{color: 'var(--text-muted)', marginBottom: '2rem', textAlign: 'center', lineHeight: 1.5}}>
-              Veuillez choisir l'action à effectuer pour ce message :
-            </p>
-            <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-              <button 
-                type="button" 
-                className="btn btn-outline-primary" 
-                style={{padding: '1rem', fontWeight: 600, fontSize: '1rem', width: '100%'}}
-                onClick={() => handleUpdateStatus('CLASSE')}
-              >
-                LU & CLASSÉ
-              </button>
-              <button 
-                type="button" 
-                className="btn btn-primary" 
-                style={{padding: '1rem', fontWeight: 600, fontSize: '1rem', width: '100%'}}
-                onClick={() => { setShowActionChoiceModal(false); setShowTraitePopup(true); }}
-              >
-                LU & TRAITÉ
-              </button>
-            </div>
-            <div style={{marginTop: '2rem', textAlign: 'center'}}>
-              <button type="button" className="btn btn-outline" style={{border: 'none'}} onClick={() => setShowActionChoiceModal(false)}>Annuler</button>
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* Traite Popup */}
-      {showTraitePopup && (
-        <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
-          <div style={{background: '#FFF', padding: '2.5rem', borderRadius: '12px', width: '90%', maxWidth: '450px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)'}}>
-            <h3 style={{marginTop: 0, marginBottom: '1.5rem', color: 'var(--text-main)', fontSize: '1.25rem', textAlign: 'center'}}>Traitement du Message</h3>
-            <p style={{color: 'var(--text-muted)', marginBottom: '2rem', textAlign: 'center', lineHeight: 1.5}}>
-              Veuillez renseigner le lieu du traitement et la référence de l'entité créée :
-            </p>
-            
-            <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-              <div>
-                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500}}>Lieu du traitement</label>
-                <select 
-                  value={lieuTraitement} 
-                  onChange={(e) => setLieuTraitement(e.target.value)}
-                  style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}
-                >
-                  <option value="">-- Choisir --</option>
-                  <option value="Dossier">Dossier</option>
-                  <option value="Mission">Mission</option>
-                  <option value="Tâche">Tâche</option>
-                </select>
-              </div>
-              
-              <div>
-                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500}}>Numéro / Référence de l'entité</label>
-                <input 
-                  type="text" 
-                  value={numeroReference} 
-                  onChange={(e) => setNumeroReference(e.target.value)}
-                  placeholder="Ex: MSN-04"
-                  style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}
-                />
-              </div>
-            </div>
-
-            <div style={{display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '2rem'}}>
-              <button type="button" className="btn btn-outline" disabled={isSubmitting} onClick={() => { setShowTraitePopup(false); setLieuTraitement(''); setNumeroReference(''); }}>Annuler</button>
-              <button type="button" className="btn btn-primary" disabled={isSubmitting} onClick={handleTraiteSubmit}>
-                {isSubmitting ? 'Traitement...' : 'Terminer'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <ConfirmModal
-        isOpen={showConfirmClasse}
-        title="Classer sans suite"
-        message="Êtes-vous sûr de vouloir classer ce message sans suite ? Il sera archivé et ne nécessitera plus d'action."
-        confirmText="Oui, classer"
-        cancelText="Annuler"
-        type="warning"
-        onConfirm={() => {
-          handleUpdateStatus('CLASSE');
-          setShowConfirmClasse(false);
-        }}
-        onCancel={() => setShowConfirmClasse(false)}
-      />
 
       {/* Create Task Modal */}
       {createTaskModal && (

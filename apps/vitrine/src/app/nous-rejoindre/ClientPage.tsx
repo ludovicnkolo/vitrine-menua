@@ -9,6 +9,8 @@ import ContactInfoFields from "@/components/ContactInfoFields";
 import FormPrivacyAndSubmit from "@/components/FormPrivacyAndSubmit";
 import { handleFormSubmit } from "@/utils/formSubmitHandler";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
 const LANGUAGES = [
   { value: "Allemand",    label_fr: "Allemand",           label_en: "German" },
   { value: "Anglais",     label_fr: "Anglais",            label_en: "English" },
@@ -33,6 +35,14 @@ export default function NousRejoindre() {
   const [skillsError, setSkillsError] = useState<string | null>(null);
   const [isOtherSkillChecked, setIsOtherSkillChecked] = useState(false);
   const skillsRef = useRef<HTMLDivElement>(null);
+  const [formEnabled, setFormEnabled] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    fetch(`/api/forms/status`)
+      .then(r => r.json())
+      .then(data => setFormEnabled(data?.data?.recrutementFormEnabled !== false))
+      .catch(() => setFormEnabled(true));
+  }, []);
 
   // ── Languages multi-select state ──────────────────────────────────────────
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
@@ -427,13 +437,24 @@ export default function NousRejoindre() {
                 <textarea id="message" name="message" rows={5} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors" required></textarea>
               </div>
 
-              <FormPrivacyAndSubmit 
-                id="privacyPolicyJoin"
-                isSubmitting={isSubmitting}
-                submitText={t("Soumettre", "Submit")}
-                submittingText={t("Envoi en cours...", "Sending...")}
-                type="join"
-              />
+              {formEnabled === false ? (
+                <div className="text-center py-6 px-4 bg-[#141824]/5 border border-[#141824]/20 rounded">
+                  <p className="text-[#141824] font-semibold text-[1.05rem] mb-1">
+                    {t("Candidatures temporairement fermées", "Applications temporarily closed")}
+                  </p>
+                  <p className="text-[#6e7891] text-[0.9rem]">
+                    {t("Les candidatures sont actuellement fermées. Veuillez nous contacter directement par email.", "Applications are currently closed. Please contact us directly by email.")}
+                  </p>
+                </div>
+              ) : (
+                <FormPrivacyAndSubmit 
+                  id="privacyPolicyJoin"
+                  isSubmitting={isSubmitting}
+                  submitText={t("Soumettre", "Submit")}
+                  submittingText={t("Envoi en cours...", "Sending...")}
+                  type="join"
+                />
+              )}
             </form>
           </div>
         </div>

@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.919Z",
-      "updatedAt": "2026-09-22T16:31:31.644Z"
+      "updatedAt": "2026-09-24T21:34:38.546Z"
     },
     {
       "id": "9b78a989-65aa-4d4d-903f-63d05b49f39b",
@@ -16,7 +16,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.927Z",
-      "updatedAt": "2026-09-22T16:31:31.684Z"
+      "updatedAt": "2026-09-24T21:34:38.559Z"
     },
     {
       "id": "b059904b-0f2d-488c-8211-f6d7b1ff9326",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-08-11T17:49:06.972Z",
-      "updatedAt": "2026-09-22T16:31:31.703Z"
+      "updatedAt": "2026-09-24T21:34:38.568Z"
     },
     {
       "id": "0ebd584a-a058-448f-a92d-028755745096",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-08-11T17:49:06.978Z",
-      "updatedAt": "2026-09-22T16:31:31.711Z"
+      "updatedAt": "2026-09-24T21:34:38.576Z"
     },
     {
       "id": "9cda2a10-5a4d-4e1c-8992-5a44a911dd83",
@@ -43,7 +43,7 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-08-11T17:49:06.988Z",
-      "updatedAt": "2026-09-22T16:31:31.724Z"
+      "updatedAt": "2026-09-24T21:34:38.595Z"
     },
     {
       "id": "d55ced4b-231c-4f79-a452-fc5a5b4d1e4d",
@@ -86,7 +86,7 @@
     {
       "id": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$Sui3RG1kjq/B.vEPUl3uxehtR7c6.6f1QbBiMqhqDBll09eRn1O9G",
+      "password": "$2a$10$/U197OSd1bwJa3iE1UY/rOXTztBej/5wPnHKQEzqkzBQDTP8w1Upm",
       "name": "Rosette Fouelefack",
       "roleId": "6b7502fd-dbf0-4cdb-9cfa-749dfb987171",
       "telephone": "+33659207511",
@@ -98,9 +98,9 @@
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
-      "lastLogin": "2026-09-22T16:25:19.205Z",
+      "lastLogin": "2026-09-24T20:33:30.756Z",
       "createdAt": "2026-08-11T17:49:07.301Z",
-      "updatedAt": "2026-09-22T16:31:31.953Z"
+      "updatedAt": "2026-09-24T21:34:38.802Z"
     },
     {
       "id": "f55e6633-1c91-4e47-b9cd-4734f02a7fe8",
@@ -581,12 +581,12 @@
       "nomPrenom": "Nissim Vargas",
       "email": "ludovicnkolo01@gmail.com",
       "telephone": "+1 (805) 523-3548",
-      "priority": "Normal",
+      "priority": "Urgent",
       "description": "Sed aliqua Nulla co",
       "raisonSocial": "fagbgbgb",
       "objet": "Demande de contact",
       "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de client</strong> : <span>Entreprise / Organisation</span><br/>\n        <strong>Société</strong> : <span>fagbgbgb</span><br/>\n        <strong>Nom complet</strong> : <span>Nissim Vargas</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (805) 523-3548</span>\n      </div>\n      <strong>Besoins identifiés</strong> : <div><ul><li>Renfort opérationnel</li><li>Externalisation middle office</li><li>Support opérationnel CGP / gestion de patrimoine</li><li>Autre besoin opérationnel</li></ul></div><br/>\n      <strong>Description du besoin</strong> : <div>\n      Sed aliqua Nulla co\n      </div>\n    ",
-      "status": "A_RAPPELER",
+      "status": "NOUVEAU",
       "isAnonyme": true,
       "verifaliaJobId": null,
       "verifaliaStatus": "COMPLETED_VALID",
@@ -599,7 +599,7 @@
       "assignedToId": null,
       "receivedAt": "2026-09-19T12:20:02.944Z",
       "createdAt": "2026-09-19T12:20:02.944Z",
-      "updatedAt": "2026-09-22T08:00:00.511Z"
+      "updatedAt": "2026-09-22T21:23:51.958Z"
     },
     {
       "id": "bb766edf-6eb2-4ac8-976e-63355ffb1f92",
@@ -684,6 +684,62 @@
       "receivedAt": "2026-09-22T16:23:03.762Z",
       "createdAt": "2026-09-22T16:23:03.762Z",
       "updatedAt": "2026-09-22T16:23:03.762Z"
+    },
+    {
+      "id": "3a502038-7704-4e26-bdc9-6c26cfa2ae52",
+      "formulaireId": "4b7144a0-05ba-401d-8210-2f26c2ec23cb",
+      "type": "RECRUTEMENT",
+      "statusSubmitter": "SOCIETE",
+      "nomPrenom": "Kermit Hardy",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "+1 (631) 554-3887",
+      "priority": "NORMAL",
+      "description": "Illo facere accusamu",
+      "raisonSocial": "dsvbj",
+      "objet": "Demande de collaboration",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de profil</strong> : <span>Entreprise (B2B)</span><br/>\n        <strong>Société</strong> : <span>dsvbj</span><br/>\n        <strong>Nom complet</strong> : <span>Hardy Kermit</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (631) 554-3887</span><br/>\n        <strong>Expérience</strong> : <span>5 à 10 ans</span><br/>\n        <strong>Langues</strong> : <span>Anglais</span><br/>\n        <strong>Localisation</strong> : <span>Cum esse est atque a</span><br/>\n        <strong>Disponibilité</strong> : <span>Sous 15 jours</span><br/>\n        <strong>LinkedIn / Portfolio</strong> : <span><a href=\"https://www.lenyq.ws\" style=\"color: #141824;\">https://www.lenyq.ws</a></span>\n      </div>\n      <strong>Compétences clés</strong> : <div><ul><li>Comptabilité</li><li>Risques et Conformité</li><li>Support opérationnel CGP</li></ul></div><br/>\n      <strong>Message / Motivations</strong> : <div>\n      Illo facere accusamu\n      </div>\n    ",
+      "status": "NOUVEAU",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-09-22T16:44:09.839Z",
+      "createdAt": "2026-09-22T16:44:09.839Z",
+      "updatedAt": "2026-09-22T16:44:09.839Z"
+    },
+    {
+      "id": "6ab8332e-520d-4466-ae4d-444005f44e9c",
+      "formulaireId": "99ba359c-c681-4d00-915e-250a01ebbe92",
+      "type": "RECRUTEMENT",
+      "statusSubmitter": "PARTICULIER",
+      "nomPrenom": "Jessica Willis",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "+1 (886) 942-8149",
+      "priority": "NORMAL",
+      "description": "Vel consequatur Eni",
+      "raisonSocial": null,
+      "objet": "Demande de collaboration",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de profil</strong> : <span>Particulier</span><br/>\n        \n        <strong>Nom complet</strong> : <span>Willis Jessica</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (886) 942-8149</span><br/>\n        <strong>Expérience</strong> : <span>2 à 5 ans</span><br/>\n        <strong>Langues</strong> : <span>Anglais</span><br/>\n        <strong>Localisation</strong> : <span>Omnis qui laborum N</span><br/>\n        <strong>Disponibilité</strong> : <span>Immédiate</span><br/>\n        <strong>LinkedIn / Portfolio</strong> : <span><a href=\"https://www.nadopysodebosez.in\" style=\"color: #141824;\">https://www.nadopysodebosez.in</a></span>\n      </div>\n      <strong>Compétences clés</strong> : <div><ul><li>Back et middle office</li><li>Comptabilité</li></ul></div><br/>\n      <strong>Message / Motivations</strong> : <div>\n      Vel consequatur Eni\n      </div>\n    ",
+      "status": "NOUVEAU",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-09-22T16:44:42.401Z",
+      "createdAt": "2026-09-22T16:44:42.401Z",
+      "updatedAt": "2026-09-22T16:44:42.401Z"
     }
   ],
   "formulaireRecrutements": [
@@ -731,6 +787,24 @@
       "lieuResidence": "Reprehenderit quod s",
       "langue": "Anglais",
       "lienLinkedin": "https://www.cemagodag.cm"
+    },
+    {
+      "id": "3d693918-b8b3-4655-b941-c423c474cc34",
+      "formulaireId": "3a502038-7704-4e26-bdc9-6c26cfa2ae52",
+      "competenceCle": "Comptabilité, Risques et Conformité, Support opérationnel CGP",
+      "anneeExperience": "5 à 10 ans",
+      "lieuResidence": "Cum esse est atque a",
+      "langue": "Anglais",
+      "lienLinkedin": "https://www.lenyq.ws"
+    },
+    {
+      "id": "3af060c8-c4a5-40c1-88e9-4ebf10fabdd6",
+      "formulaireId": "6ab8332e-520d-4466-ae4d-444005f44e9c",
+      "competenceCle": "Back et middle office, Comptabilité",
+      "anneeExperience": "2 à 5 ans",
+      "lieuResidence": "Omnis qui laborum N",
+      "langue": "Anglais",
+      "lienLinkedin": "https://www.nadopysodebosez.in"
     }
   ],
   "formulaireContacts": [
@@ -856,7 +930,7 @@
       "reference": "DOS-112",
       "name": "Dossier Tmp Mission 1790072841317",
       "description": "Dossier temporaire pour test mission",
-      "status": "NOUVEAU",
+      "status": "BLOQUE",
       "previousStatus": null,
       "priority": "NORMAL",
       "categorie": null,
@@ -865,7 +939,102 @@
       "traitantId": null,
       "parentDossierId": null,
       "createdAt": "2026-09-22T10:27:21.331Z",
-      "updatedAt": "2026-09-22T10:27:21.331Z",
+      "updatedAt": "2026-09-22T21:34:06.744Z",
+      "isSystem": false
+    },
+    {
+      "origin": "CLIENT",
+      "createdById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "id": "e4a0cb77-56f7-48f8-90ae-478daec3077b",
+      "reference": "DOS-113",
+      "name": "DOSSIER_CLIENT_TEST_BETA_22092026",
+      "description": "asbjrbg",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": "f06902dd-d713-4b73-aec4-8f2b739e8b7d",
+      "targetUserId": null,
+      "traitantId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "parentDossierId": null,
+      "createdAt": "2026-09-22T21:36:58.131Z",
+      "updatedAt": "2026-09-22T21:36:58.131Z",
+      "isSystem": false
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "id": "8e400e5f-becb-462b-b956-8531ef8f231f",
+      "reference": "DOS-114",
+      "name": "DOSSIER_LUDO_RESPONSABLE_22092026",
+      "description": "rfwgrg",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": "f55e6633-1c91-4e47-b9cd-4734f02a7fe8",
+      "traitantId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "parentDossierId": null,
+      "createdAt": "2026-09-22T21:37:20.856Z",
+      "updatedAt": "2026-09-22T21:37:20.856Z",
+      "isSystem": false
+    },
+    {
+      "origin": "GENERAL",
+      "createdById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "id": "bc1319ce-f416-4010-861d-c3d533f5b66b",
+      "reference": "DOS-115",
+      "name": "DOSSIER_NEW_NWE_22092026",
+      "description": "qvjbgtg",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "traitantId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "parentDossierId": null,
+      "createdAt": "2026-09-22T21:38:05.422Z",
+      "updatedAt": "2026-09-22T21:38:05.422Z",
+      "isSystem": false
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "id": "31baa350-8c3c-4263-8889-eccda56b6442",
+      "reference": "DOS-116",
+      "name": "DOSSIER_LUDO_RELECTEUR_22092026",
+      "description": "   ctrdtrdt",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": "9982ea43-d84c-4f56-bbe8-7a348e6a5d6e",
+      "traitantId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "parentDossierId": null,
+      "createdAt": "2026-09-22T21:39:46.989Z",
+      "updatedAt": "2026-09-22T21:39:46.989Z",
+      "isSystem": false
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "id": "dbc1e7ac-bda6-44c2-98bd-1e11da231c97",
+      "reference": "DOS-117",
+      "name": "DOSSIER_ROSETTE_FOUELEFACK_22092026",
+      "description": "nkn",
+      "status": "EN_COURS",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "traitantId": "697043ce-ecd8-4d49-b5cf-dffd8e4e1209",
+      "parentDossierId": null,
+      "createdAt": "2026-09-22T21:40:22.679Z",
+      "updatedAt": "2026-09-22T22:35:13.452Z",
       "isSystem": false
     }
   ],
@@ -895,13 +1064,13 @@
       "relecteurId": null,
       "createdById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
       "description": "Objet: Quia nobis quo in qu ch \nConsignes: Ut dolores voluptati ch ",
-      "echeance": "1985-09-10T00:00:00.000Z",
+      "echeance": "2027-09-10T00:00:00.000Z",
       "status": "EN_COURS",
-      "previousStatus": "BLOQUE",
+      "previousStatus": "EN_REVUE",
       "attachment": null,
       "dossierMissionId": "c946666a-8d15-4c59-95f6-4f01dd03e063",
       "createdAt": "2026-09-17T15:05:38.320Z",
-      "updatedAt": "2026-09-22T09:23:08.373Z",
+      "updatedAt": "2026-09-22T21:54:59.778Z",
       "parentMissionId": null
     }
   ],
@@ -913,30 +1082,19 @@
       "assignedToId": "d66c259a-6e05-4080-89c2-ff5b712184c1",
       "relecteurId": null,
       "createdById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
-      "description": "Objet: Molestiae quam digni\n\nConsignes: Ea id aliquam atque ",
-      "echeance": "2026-09-25T00:00:00.000Z",
-      "status": "EN_APPROBATION",
-      "previousStatus": "EN_RELECTURE",
+      "description": "Objet: Molestiae quam digni\nConsignes: Ea id aliquam atque ",
+      "echeance": "1999-09-25T00:00:00.000Z",
+      "status": "EN_COURS",
+      "previousStatus": "A_CORRIGER",
       "attachment": null,
       "adminFeedback": null,
       "managerFeedback": null,
       "dossierTacheId": "c946666a-8d15-4c59-95f6-4f01dd03e063",
       "createdAt": "2026-09-17T15:04:08.832Z",
-      "updatedAt": "2026-09-22T09:22:53.005Z"
+      "updatedAt": "2026-09-24T21:23:57.431Z"
     }
   ],
-  "documents": [
-    {
-      "id": "3d993676-02e8-4f66-9377-2438a1b1215b",
-      "name": "crm.pdf",
-      "url": "ged/1790012117348-0971178fb9d5fcff-crm.pdf",
-      "uploadedById": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
-      "dossierId": "a8a08555-ce45-4de2-91e6-f14932f11d14",
-      "missionId": null,
-      "createdAt": "2026-09-21T17:35:19.898Z",
-      "isDeleted": true
-    }
-  ],
+  "documents": [],
   "auditLogs": [
     {
       "id": "bffb6a94-2007-4d89-a874-067d9e1b34d3",
@@ -2708,6 +2866,204 @@
       "dossierId": null,
       "formulaireId": "c57f8600-a853-4113-b63e-1bb1d5a551b9",
       "createdAt": "2026-09-22T12:42:51.671Z"
+    },
+    {
+      "id": "9d377023-159e-4846-bc97-4d18a947c523",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "STATUT_FORMULAIRE",
+      "targetId": "65d9a5e9-a3fd-4e3a-9303-a99e537a3c40",
+      "targetType": "FORMULAIRE",
+      "details": "Statut formulaire mis à jour (modifié)",
+      "dossierId": null,
+      "formulaireId": "65d9a5e9-a3fd-4e3a-9303-a99e537a3c40",
+      "createdAt": "2026-09-22T21:22:18.210Z"
+    },
+    {
+      "id": "960f0ffc-13f1-46fe-bfb7-4bff527c75c9",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "STATUT_FORMULAIRE",
+      "targetId": "65d9a5e9-a3fd-4e3a-9303-a99e537a3c40",
+      "targetType": "FORMULAIRE",
+      "details": "Statut formulaire mis à jour (NOUVEAU)",
+      "dossierId": null,
+      "formulaireId": "65d9a5e9-a3fd-4e3a-9303-a99e537a3c40",
+      "createdAt": "2026-09-22T21:23:51.975Z"
+    },
+    {
+      "id": "a93c2f08-9a32-4f5b-8cfc-10333d12e264",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "PURGE_DOCUMENT",
+      "targetId": "3d993676-02e8-4f66-9377-2438a1b1215b",
+      "targetType": "DOCUMENT",
+      "details": "Document purgé définitivement: crm.pdf (S3: ged/1790012117348-0971178fb9d5fcff-crm.pdf)",
+      "dossierId": "a8a08555-ce45-4de2-91e6-f14932f11d14",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T21:32:33.538Z"
+    },
+    {
+      "id": "3f431e93-fe28-47d3-9ffb-d1d9276c951f",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "MODIFICATION_DOSSIER",
+      "targetId": "9bdb5193-c431-44a5-afab-7c439200b7b3",
+      "targetType": "DOSSIER",
+      "details": "Dossier modifié: Dossier Tmp Mission 1790072841317",
+      "dossierId": "9bdb5193-c431-44a5-afab-7c439200b7b3",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T21:34:06.762Z"
+    },
+    {
+      "id": "57eb2bdf-db83-4495-aa8f-b3c93ee73658",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "CREATION_DOSSIER",
+      "targetId": "e4a0cb77-56f7-48f8-90ae-478daec3077b",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: DOSSIER_CLIENT_TEST_BETA_22092026",
+      "dossierId": "e4a0cb77-56f7-48f8-90ae-478daec3077b",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T21:36:58.146Z"
+    },
+    {
+      "id": "4e3be0c2-70e1-4825-8b3e-620d4fa0a0db",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "CREATION_DOSSIER",
+      "targetId": "8e400e5f-becb-462b-b956-8531ef8f231f",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: DOSSIER_LUDO_RESPONSABLE_22092026",
+      "dossierId": "8e400e5f-becb-462b-b956-8531ef8f231f",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T21:37:20.871Z"
+    },
+    {
+      "id": "9706d63e-3424-4fa7-b15d-e95c967f01da",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "CREATION_DOSSIER",
+      "targetId": "bc1319ce-f416-4010-861d-c3d533f5b66b",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: DOSSIER_NEW_NWE_22092026",
+      "dossierId": "bc1319ce-f416-4010-861d-c3d533f5b66b",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T21:38:05.443Z"
+    },
+    {
+      "id": "aec23340-c18c-41a8-a5fb-e96354057822",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "CREATION_DOSSIER",
+      "targetId": "31baa350-8c3c-4263-8889-eccda56b6442",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: DOSSIER_LUDO_RELECTEUR_22092026",
+      "dossierId": "31baa350-8c3c-4263-8889-eccda56b6442",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T21:39:46.998Z"
+    },
+    {
+      "id": "c63e6fe1-6433-410b-9ec0-49104095e3e4",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "CREATION_DOSSIER",
+      "targetId": "dbc1e7ac-bda6-44c2-98bd-1e11da231c97",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: DOSSIER_ROSETTE_FOUELEFACK_22092026",
+      "dossierId": "dbc1e7ac-bda6-44c2-98bd-1e11da231c97",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T21:40:22.699Z"
+    },
+    {
+      "id": "fe4194b8-da38-461d-8668-b7b277ae873a",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "MODIFICATION_DOSSIER",
+      "targetId": "dbc1e7ac-bda6-44c2-98bd-1e11da231c97",
+      "targetType": "DOSSIER",
+      "details": "Dossier modifié: DOSSIER_ROSETTE_FOUELEFACK_22092026",
+      "dossierId": "dbc1e7ac-bda6-44c2-98bd-1e11da231c97",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T21:50:35.282Z"
+    },
+    {
+      "id": "909ba83a-4df3-44c9-8616-68a5b329d56c",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "MODIFICATION_DOSSIER",
+      "targetId": "dbc1e7ac-bda6-44c2-98bd-1e11da231c97",
+      "targetType": "DOSSIER",
+      "details": "Dossier modifié: DOSSIER_ROSETTE_FOUELEFACK_22092026",
+      "dossierId": "dbc1e7ac-bda6-44c2-98bd-1e11da231c97",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T21:52:27.348Z"
+    },
+    {
+      "id": "3abbd01b-8453-4732-adef-59a6a16951e6",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "MODIFICATION_MISSION",
+      "targetId": "0a3652f8-34b4-4cab-b140-1488fb3a8fbc",
+      "targetType": "MISSION",
+      "details": "Mission modifiée (Statut: EN_COURS)",
+      "dossierId": "c946666a-8d15-4c59-95f6-4f01dd03e063",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T21:53:54.795Z"
+    },
+    {
+      "id": "9e92c7ac-128f-4549-83fc-a340d7953191",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "MODIFICATION_MISSION",
+      "targetId": "0a3652f8-34b4-4cab-b140-1488fb3a8fbc",
+      "targetType": "MISSION",
+      "details": "Mission modifiée (Statut: EN_REVUE)",
+      "dossierId": "c946666a-8d15-4c59-95f6-4f01dd03e063",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T21:54:54.616Z"
+    },
+    {
+      "id": "9bc8f4e6-186c-4493-9ccf-a96588cd164f",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "MODIFICATION_MISSION",
+      "targetId": "0a3652f8-34b4-4cab-b140-1488fb3a8fbc",
+      "targetType": "MISSION",
+      "details": "Mission modifiée (Statut: EN_COURS)",
+      "dossierId": "c946666a-8d15-4c59-95f6-4f01dd03e063",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T21:54:59.788Z"
+    },
+    {
+      "id": "b0b8c9d3-e599-4300-bf0d-49432ddeb529",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "MODIFICATION_TACHE",
+      "targetId": "957c55ac-55b7-49c0-bc1e-06da14a14d5e",
+      "targetType": "TACHE",
+      "details": "Tâche modifiée (Statut: EN_APPROBATION)",
+      "dossierId": "c946666a-8d15-4c59-95f6-4f01dd03e063",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T21:56:16.274Z"
+    },
+    {
+      "id": "7c948bef-0a93-4d3c-a173-0557f4223ed2",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "MODIFICATION_DOSSIER",
+      "targetId": "dbc1e7ac-bda6-44c2-98bd-1e11da231c97",
+      "targetType": "DOSSIER",
+      "details": "Dossier modifié: DOSSIER_ROSETTE_FOUELEFACK_22092026",
+      "dossierId": "dbc1e7ac-bda6-44c2-98bd-1e11da231c97",
+      "formulaireId": null,
+      "createdAt": "2026-09-22T22:35:13.465Z"
+    },
+    {
+      "id": "0a300fd9-f339-49e9-a31b-73b42f1245b2",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "MODIFICATION_TACHE",
+      "targetId": "957c55ac-55b7-49c0-bc1e-06da14a14d5e",
+      "targetType": "TACHE",
+      "details": "Tâche modifiée (Statut: A_CORRIGER)",
+      "dossierId": "c946666a-8d15-4c59-95f6-4f01dd03e063",
+      "formulaireId": null,
+      "createdAt": "2026-09-24T21:23:44.733Z"
+    },
+    {
+      "id": "7a982a2e-83a3-4bcd-a940-8893b8960f04",
+      "userId": "fdd133d8-442c-49ad-9158-d9f10c51a3d1",
+      "action": "MODIFICATION_TACHE",
+      "targetId": "957c55ac-55b7-49c0-bc1e-06da14a14d5e",
+      "targetType": "TACHE",
+      "details": "Tâche modifiée (Statut: EN_COURS)",
+      "dossierId": "c946666a-8d15-4c59-95f6-4f01dd03e063",
+      "formulaireId": null,
+      "createdAt": "2026-09-24T21:23:57.463Z"
     }
   ],
   "messagePersonnels": [
@@ -3948,6 +4304,27 @@
       "dossierId": null,
       "missionId": null,
       "assignedToId": null,
+      "tacheId": null
+    },
+    {
+      "id": "543c66b7-400f-48ee-a453-29c9760b5d73",
+      "messageId": "6ee62946-b191-4497-a332-d2bfecb906f3",
+      "type": "INTERNE",
+      "subType": "Message direct",
+      "status": "EN_ATTENTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "Message Interne",
+      "bodyText": "bonjours",
+      "attachment": null,
+      "etiquette": null,
+      "priorite": "Normal",
+      "isDeleted": false,
+      "createdAt": "2026-09-24T21:06:15.804Z",
+      "receivedAt": "2026-09-24T21:06:15.804Z",
+      "dossierId": null,
+      "missionId": null,
+      "assignedToId": "d66c259a-6e05-4080-89c2-ff5b712184c1",
       "tacheId": null
     }
   ]

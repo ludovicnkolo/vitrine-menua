@@ -90,8 +90,8 @@ const DossiersPage = () => {
   const [previewFile, setPreviewFile] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [filterRole, setFilterRole] = useState('all');
   const [filterOrigine, setFilterOrigine] = useState('all');
+  const [pendingStatus, setPendingStatus] = useState('');
   
   // Mission Creation State
   const [createMissionModal, setCreateMissionModal] = useState(false);
@@ -173,7 +173,6 @@ const DossiersPage = () => {
     urlDossiers.searchParams.set('rootOnly', 'true');
     if (searchQuery) urlDossiers.searchParams.set('search', searchQuery);
     if (filterStatus) urlDossiers.searchParams.set('status', filterStatus);
-    if (filterRole) urlDossiers.searchParams.set('role', filterRole);
     if (filterOrigine) urlDossiers.searchParams.set('origin', filterOrigine);
 
     const urlTasks = new URL(getSafeApiUrl('/api/crm/tasks'));
@@ -197,12 +196,12 @@ const DossiersPage = () => {
 
   useEffect(() => {
     setPage(1);
-  }, [searchQuery, filterStatus, filterRole, filterOrigine]);
+  }, [searchQuery, filterStatus, filterOrigine]);
 
   useEffect(() => {
     setPage(1);
     fetchDossiers();
-  }, [filterStatus, filterRole, filterOrigine, searchQuery]);
+  }, [filterStatus, filterOrigine, searchQuery]);
 
   const handleCreateMission = async () => {
     if (!missionSubject) {
@@ -429,6 +428,7 @@ const DossiersPage = () => {
       if (res.ok) {
         if (consultDossier && consultDossier.id === dossierId) {
           setConsultDossier({...consultDossier, status: newStatus});
+          setPendingStatus('');
         }
         if (editDossier && editDossier.id === dossierId) {
           setEditDossier({...editDossier, status: newStatus});
@@ -520,8 +520,9 @@ const DossiersPage = () => {
     const isRespOrAdmin = isResp || isSuperAdmin;
 
     const ALL_LABELS = {
-      NOUVEAU: 'Nouveau', EN_COURS: 'En cours', CLOTURE: 'Clôturé',
-      ARCHIVE: 'Archivé', BLOQUE: 'Bloqué'
+      NOUVEAU: 'Nouveau', OUVERT: 'Ouvert', EN_COURS: 'En cours', 
+      EN_ATTENTE: 'En attente', TERMINE: 'Terminé', CLOTURE: 'Clôturé',
+      ARCHIVE: 'Archivé', BLOQUE: 'Bloqué', ANNULE: 'Annulé'
     };
     const make = (vals) => vals.map(v => ({ value: v, label: ALL_LABELS[v] || v }));
     const withCurrent = (vals) => {
@@ -532,19 +533,30 @@ const DossiersPage = () => {
 
     switch (currentStatus) {
       case 'NOUVEAU':
-        if (isRespOrAdmin) return withCurrent(['EN_COURS', 'BLOQUE']);
+        if (isRespOrAdmin) return withCurrent(['OUVERT', 'ANNULE']);
+        return lockedOnCurrent();
+      case 'OUVERT':
+        if (isRespOrAdmin) return withCurrent(['EN_COURS', 'EN_ATTENTE', 'BLOQUE', 'ANNULE']);
         return lockedOnCurrent();
       case 'EN_COURS':
-        if (isRespOrAdmin) return withCurrent(['CLOTURE', 'BLOQUE']);
+        if (isRespOrAdmin) return withCurrent(['TERMINE', 'EN_ATTENTE', 'BLOQUE']);
+        return lockedOnCurrent();
+      case 'EN_ATTENTE':
+        if (isRespOrAdmin) return withCurrent(['EN_COURS', 'BLOQUE']);
         return lockedOnCurrent();
       case 'BLOQUE':
-        if (isRespOrAdmin) return withCurrent(['EN_COURS']);
+        if (isRespOrAdmin) return withCurrent(['EN_COURS', 'OUVERT']);
+        return lockedOnCurrent();
+      case 'TERMINE':
+        if (isSuperAdmin) return withCurrent(['CLOTURE', 'OUVERT']);
+        if (isResp) return withCurrent(['OUVERT']); // Un RO peut réouvrir mais pas clôturer (au choix)
         return lockedOnCurrent();
       case 'CLOTURE':
-        if (isSuperAdmin) return withCurrent(['ARCHIVE', 'EN_COURS']);
+        if (isSuperAdmin) return withCurrent(['ARCHIVE', 'OUVERT']);
         return lockedOnCurrent();
       case 'ARCHIVE':
-        return lockedOnCurrent(); // État terminal irréversible
+      case 'ANNULE':
+        return lockedOnCurrent(); // États terminaux
       default:
         return lockedOnCurrent();
     }
@@ -567,8 +579,8 @@ const DossiersPage = () => {
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: isLocked ? '#F3F4F6' : '#F8FAFC', padding: '0.5rem 1rem', borderRadius: '8px', border: `1px solid ${isLocked ? '#E5E7EB' : 'var(--border)'}` }}>
         <span style={{ fontWeight: 600, color: isLocked ? '#9CA3AF' : 'var(--text-main)', fontSize: '0.875rem' }}>Statut :</span>
         <select
-          value={dossier.status || 'NOUVEAU'}
-          onChange={(e) => handleStatusAction(dossier.id, e.target.value)}
+          value={pendingStatus || dossier.status || 'NOUVEAU'}
+          onChange={(e) => setPendingStatus(e.target.value)}
           disabled={isLocked}
           title={isLocked ? (dossier.status === 'ARCHIVE' ? 'Dossier archivé — état terminal' : 'Aucune transition disponible pour votre rôle') : ''}
           style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: isLocked ? '#F3F4F6' : '#FFF', fontSize: '0.875rem', outline: 'none', cursor: isLocked ? 'not-allowed' : 'pointer', minWidth: '150px' }}
@@ -577,6 +589,16 @@ const DossiersPage = () => {
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
         </select>
+        {pendingStatus && pendingStatus !== (dossier.status || 'NOUVEAU') && (
+          <button 
+            type="button" 
+            onClick={() => handleStatusAction(dossier.id, pendingStatus)} 
+            className="btn btn-primary" 
+            style={{padding: '0.4rem 0.75rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.25rem'}}
+          >
+            <CheckSquare size={14} /> Enregistrer
+          </button>
+        )}
       </div>
     );
   };
@@ -837,7 +859,7 @@ const DossiersPage = () => {
                 <button type="button" onClick={saveEdit} className="btn btn-primary">Enregistrer</button>
               </>
             ) : (
-              <button type="button" onClick={() => setConsultDossier(null)} className="btn btn-outline">Fermer</button>
+              <button type="button" onClick={() => { setConsultDossier(null); setPendingStatus(''); }} className="btn btn-outline">Fermer</button>
             )}
           </div>
         </div>
@@ -1144,20 +1166,14 @@ const DossiersPage = () => {
         >
           <option value="all">Statut: Tous</option>
           <option value="NOUVEAU">Nouveau</option>
+          <option value="OUVERT">Ouvert</option>
           <option value="EN_COURS">En cours</option>
+          <option value="EN_ATTENTE">En attente</option>
+          <option value="TERMINE">Terminé</option>
           <option value="CLOTURE">Clôturé</option>
           <option value="ARCHIVE">Archivé</option>
           <option value="BLOQUE">Bloqué</option>
-        </select>
-        <select 
-          className="input-field" 
-          value={filterRole}
-          onChange={(e) => setFilterRole(e.target.value)}
-          style={{padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', minWidth: '150px'}}
-        >
-          <option value="all">Rôle: Tous</option>
-          <option value="Super-administrateur">Super-administrateur</option>
-          <option value="Responsable opérationnel">Responsable opérationnel</option>
+          <option value="ANNULE">Annulé</option>
         </select>
         <select 
           className="input-field" 
@@ -1166,8 +1182,9 @@ const DossiersPage = () => {
           style={{padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', minWidth: '150px'}}
         >
           <option value="all">Origine: Toutes</option>
-          <option value="Site Web">Site Web</option>
-          <option value="Interne">Interne</option>
+          <option value="CLIENT">Client</option>
+          <option value="EQUIPE">Équipe</option>
+          <option value="GENERAL">Général</option>
         </select>
       </div>
       <div className="table-wrapper">

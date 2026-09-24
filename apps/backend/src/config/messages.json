@@ -58,5 +58,13 @@
   "ERROR_NOT_FOUND": {
     "fr": "La ressource demandée n'a pas été trouvée.",
     "en": "The requested resource was not found."
+  },
+  "ERROR_FORBIDDEN": {
+    "fr": "L'accès est refusé pour cette adresse email ou ce domaine.",
+    "en": "Access is denied for this email address or domain."
+  },
+  "ERROR_FORM_DISABLED": {
+    "fr": "Ce formulaire est temporairement indisponible.",
+    "en": "This form is temporarily unavailable."
   }
 }

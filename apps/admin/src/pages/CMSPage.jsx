@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash, Eye, Globe, ArrowRight, Image as ImageIcon, ChevronUp, ChevronDown, X } from 'lucide-react';
+import { Plus, Edit, Trash, Eye, Globe, ArrowRight, Image as ImageIcon, ChevronUp, ChevronDown, X, Settings } from 'lucide-react';
 import { getSafeApiUrl, apiFetch, formatDate } from '../utils/helpers';
 import ConfirmModal from '../components/ConfirmModal';
 import TabsNavigation from '../components/TabsNavigation';
@@ -42,6 +42,17 @@ const CMSPage = () => {
   const [previewImage, setPreviewImage] = useState('');
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: null, type: 'warning' });
 
+  // Paramètres Formulaires State
+  const [formSettings, setFormSettings] = useState({
+    contactFormEnabled: true,
+    recrutementFormEnabled: true,
+    blacklistedEmails: [],
+    blacklistedDomains: []
+  });
+  const [newBlacklistEmail, setNewBlacklistEmail] = useState('');
+  const [newBlacklistDomain, setNewBlacklistDomain] = useState('');
+  const [loadingSettings, setLoadingSettings] = useState(false);
+
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
   const showToast = (message, type = 'success') => {
     setToast({ show: true, message, type });
@@ -65,9 +76,39 @@ const CMSPage = () => {
     }
   };
 
+  const fetchFormSettings = async () => {
+    if (!isSuperAdmin) return;
+    try {
+      setLoadingSettings(true);
+      const res = await apiFetch('/api/cms/settings/forms');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.data) setFormSettings(data.data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingSettings(false);
+    }
+  };
+
+  const saveFormSettings = async () => {
+    try {
+      const res = await apiFetch('/api/cms/settings/forms', 'PUT', formSettings);
+      if (res.ok) {
+        showToast('Paramètres mis à jour avec succès.');
+      } else {
+        showToast('Erreur lors de la mise à jour des paramètres.', 'error');
+      }
+    } catch (err) {
+      showToast('Erreur réseau.', 'error');
+    }
+  };
+
   useEffect(() => {
     fetchPublications();
-  }, []);
+    if (tab === 'parametrage') fetchFormSettings();
+  }, [tab]);
 
   const openModal = (pub = null) => {
     setFormLang('FR');
@@ -365,11 +406,94 @@ const CMSPage = () => {
       )}
 
       {tab === 'parametrage' && (
-        <div>
-          <h2 style={{fontSize: '1.25rem', color: 'var(--text-main)', marginBottom: '1rem'}}>Paramètres du site</h2>
-          <div style={{padding: '2rem', background: '#F8FAFC', borderRadius: '8px', border: '1px dashed var(--border)', textAlign: 'center', color: 'var(--text-muted)'}}>
-            Section de paramétrage du site en cours de construction...
-          </div>
+        <div style={{background: '#FFF', borderRadius: '12px', padding: '2rem', boxShadow: '0 2px 4px rgba(0,0,0,0.05)'}}>
+          <h2 style={{fontSize: '1.25rem', color: 'var(--text-main)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem'}}>
+            <Settings size={20} className="text-primary" />
+            Paramètres des formulaires
+          </h2>
+          
+          {loadingSettings ? (
+            <div style={{padding: '2rem', textAlign: 'center'}}>Chargement des paramètres...</div>
+          ) : (
+            <div style={{display: 'flex', flexDirection: 'column', gap: '2rem'}}>
+              {/* Statut global des formulaires */}
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem'}}>
+                <div className="card" style={{padding: '1.25rem'}}>
+                  <h3 style={{fontSize: '1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}><Settings size={16}/> Formulaire de Contact</h3>
+                  <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer'}}>
+                    <input 
+                      type="checkbox" 
+                      checked={formSettings.contactFormEnabled} 
+                      onChange={e => setFormSettings({...formSettings, contactFormEnabled: e.target.checked})} 
+                      style={{width: '1.25rem', height: '1.25rem', cursor: 'pointer'}}
+                    />
+                    <span style={{fontWeight: 500}}>{formSettings.contactFormEnabled ? 'Activé (Accepte les soumissions)' : 'Désactivé (Bloque les soumissions)'}</span>
+                  </label>
+                </div>
+                <div className="card" style={{padding: '1.25rem'}}>
+                  <h3 style={{fontSize: '1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}><Settings size={16}/> Formulaire Recrutement</h3>
+                  <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer'}}>
+                    <input 
+                      type="checkbox" 
+                      checked={formSettings.recrutementFormEnabled} 
+                      onChange={e => setFormSettings({...formSettings, recrutementFormEnabled: e.target.checked})} 
+                      style={{width: '1.25rem', height: '1.25rem', cursor: 'pointer'}}
+                    />
+                    <span style={{fontWeight: 500}}>{formSettings.recrutementFormEnabled ? 'Activé (Accepte les candidatures)' : 'Désactivé (Bloque les candidatures)'}</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Blacklists */}
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem'}}>
+                {/* Emails bloqués */}
+                <div className="card" style={{padding: '1.25rem'}}>
+                  <h3 style={{fontSize: '1rem', marginBottom: '1rem'}}>Adresses Email bloquées</h3>
+                  <div style={{display: 'flex', gap: '0.5rem', marginBottom: '1rem'}}>
+                    <input 
+                      type="email" 
+                      placeholder="spam@example.com"
+                      value={newBlacklistEmail}
+                      onChange={e => setNewBlacklistEmail(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' && newBlacklistEmail) {
+                          setFormSettings({...formSettings, blacklistedEmails: [...formSettings.blacklistedEmails, newBlacklistEmail]});
+                          setNewBlacklistEmail('');
+                        }
+                      }}
+                      style={{flex: 1, padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', outline: 'none'}}
+                    />
+                    <button 
+                      type="button" 
+                      onClick={() => {
+                        if (newBlacklistEmail) {
+                          setFormSettings({...formSettings, blacklistedEmails: [...formSettings.blacklistedEmails, newBlacklistEmail]});
+                          setNewBlacklistEmail('');
+                        }
+                      }}
+                      className="btn btn-primary"
+                    >Ajouter</button>
+                  </div>
+                  <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem'}}>
+                    {formSettings.blacklistedEmails?.length === 0 && <span style={{color: 'var(--text-muted)', fontSize: '0.875rem'}}>Aucun email bloqué.</span>}
+                    {formSettings.blacklistedEmails?.map(email => (
+                      <div key={email} style={{background: '#FEE2E2', color: '#991B1B', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                        {email}
+                        <button type="button" onClick={() => setFormSettings({...formSettings, blacklistedEmails: formSettings.blacklistedEmails.filter(e => e !== email)})} style={{background: 'none', border: 'none', color: '#991B1B', cursor: 'pointer', padding: 0}}>✕</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                </div>
+
+              <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
+                <button type="button" onClick={saveFormSettings} className="btn btn-primary" style={{padding: '0.75rem 2rem', fontWeight: 600}}>
+                  Enregistrer les paramètres
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

@@ -1,0 +1,122 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "dossiers": "Files",
+    "missions": "Missions",
+    "taches": "Tasks",
+    "ged": "Documents (DMS)",
+    "inbox": "Inbox",
+    "clients": "Clients",
+    "users": "Users",
+    "cms": "CMS",
+    "settings": "Settings",
+    "audit": "Audit Log",
+    "logout": "Logout"
+  },
+  "status": {
+    "NOUVEAU": "New",
+    "OUVERT": "Open",
+    "EN_COURS": "In Progress",
+    "EN_ATTENTE": "On Hold",
+    "TERMINE": "Completed",
+    "CLOTURE": "Closed",
+    "ARCHIVE": "Archived",
+    "BLOQUE": "Blocked",
+    "ANNULE": "Cancelled",
+    "CORBEILLE": "Trash",
+    "NON_DEMARREE": "Not Started",
+    "EN_REVUE": "In Review",
+    "A_CORRIGER": "To Correct",
+    "TERMINEE": "Completed",
+    "ANNULEE": "Cancelled"
+  },
+  "origin": {
+    "CLIENT": "Client",
+    "EQUIPE": "Team",
+    "GENERAL": "General"
+  },
+  "role": {
+    "Super-administrateur": "Super Administrator",
+    "Responsable opérationnel": "Operations Manager",
+    "Collaborateur": "Collaborator",
+    "Relecteur": "Reviewer"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "restore": "Restore",
+    "confirm": "Confirm",
+    "back": "← Back",
+    "search": "Search...",
+    "loading": "Loading...",
+    "noResult": "No results",
+    "status": "Status",
+    "all": "All",
+    "create": "Create",
+    "add": "Add",
+    "actions": "Actions",
+    "view": "View",
+    "yes": "Yes",
+    "no": "No",
+    "filter": "Filter",
+    "date": "Date",
+    "reference": "Reference",
+    "description": "Description",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "priority": "Priority",
+    "assignedTo": "Assigned to",
+    "createdBy": "Created by",
+    "createdAt": "Created at",
+    "updatedAt": "Updated at",
+    "dueDate": "Due date",
+    "language": "Language"
+  },
+  "dossier": {
+    "title": "Files",
+    "new": "New file",
+    "origin": "Origin",
+    "handler": "Handler",
+    "noHandler": "-- No handler --",
+    "statuses": "Statuses",
+    "workflow": {
+      "confirm": "Do you want to move this file to the trash?",
+      "systemProtected": "This folder is managed automatically by the system.",
+      "rootProtected": "This main folder cannot be deleted from the DMS."
+    }
+  },
+  "mission": {
+    "title": "Missions",
+    "new": "New mission",
+    "subject": "Mission subject",
+    "folder": "Mission folder"
+  },
+  "task": {
+    "title": "Tasks",
+    "new": "New task"
+  },
+  "inbox": {
+    "title": "Inbox",
+    "tabs": {
+      "contact": "Contact Forms",
+      "recrutement": "Recruitment",
+      "personnel": "Personal Emails",
+      "interne": "Internal Messages"
+    },
+    "copyRO": "Copy to (Operations Manager)",
+    "noRO": "-- No manager --"
+  },
+  "auth": {
+    "login": "Login",
+    "email": "Email address",
+    "password": "Password",
+    "submit": "Sign in",
+    "logout": "Logout",
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "inactiveLogout": "Logged out due to inactivity (1h)."
+  }
+}

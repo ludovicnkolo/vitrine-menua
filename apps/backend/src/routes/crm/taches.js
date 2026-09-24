@@ -268,7 +268,7 @@ router.post('/taches', async (req, res) => {
         where: { id: missionId },
         data: { status: 'OUVERT' }
       });
-      await logAudit(req.user?.id, 'MODIFICATION_MISSION', missionId, 'MISSION', `Statut automatique -> OUVERT (Tâche créée)`);
+      // Verbose audit log removed
     }
 
     await logAudit(

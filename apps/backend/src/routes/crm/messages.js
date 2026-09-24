@@ -133,7 +133,7 @@ async function checkAndUpdateDossierStatus(dossier, prisma) {
 
 const { syncMessages } = require('../../controllers/imapController');
 
-router.post('/messages/interne', async (req, res) => {
+router.post('/messages/interne', authenticateJWT, async (req, res) => {
   try {
     const { subType, objet, bodyText, attachment, dossierId, missionId, tacheId, assignedToId } = req.body;
     // [SECURITY] req.body intentionally not logged — contains PII (names, message content)
@@ -176,6 +176,93 @@ router.post('/messages/interne', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur lors de la création du message interne.', details: error.message });
+  }
+});
+// --- INTERNE CONVERSATIONS ---
+router.get('/messages/interne/conversations', authenticateJWT, async (req, res) => {
+  try {
+    const currentUserEmail = req.user.email;
+    const currentUserId = req.user.id === 'MASTER-ADMIN' ? null : req.user.id;
+
+    const whereOr = [{ email: currentUserEmail }];
+    if (currentUserId) whereOr.push({ assignedToId: currentUserId });
+
+    const messages = await prisma.messagePersonnel.findMany({
+      where: {
+        type: 'INTERNE',
+        isDeleted: false,
+        OR: whereOr
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    const allUsers = await prisma.utilisateur.findMany({ select: { id: true, name: true, email: true, profile: true }});
+    
+    // Group by contact
+    const conversationsMap = {};
+    for (const m of messages) {
+      let otherUserEmail = m.email === currentUserEmail ? null : m.email;
+      let otherUserId = m.assignedToId === currentUserId ? null : m.assignedToId;
+
+      if (!otherUserEmail && otherUserId) {
+        const u = allUsers.find(user => user.id === otherUserId);
+        if (u) otherUserEmail = u.email;
+      }
+      
+      if (!otherUserEmail) continue;
+
+      if (!conversationsMap[otherUserEmail]) {
+        const u = allUsers.find(user => user.email === otherUserEmail);
+        conversationsMap[otherUserEmail] = {
+          contact: {
+            id: u ? u.id : otherUserEmail,
+            name: u ? u.name : m.nomPrenom,
+            email: otherUserEmail,
+            profile: u ? u.profile : null
+          },
+          lastMessage: m,
+          unreadCount: (m.email === otherUserEmail && m.status !== 'Lu' && m.status !== 'TERMINE') ? 1 : 0
+        };
+      } else {
+        if (m.email === otherUserEmail && m.status !== 'Lu' && m.status !== 'TERMINE') {
+          conversationsMap[otherUserEmail].unreadCount += 1;
+        }
+      }
+    }
+
+    res.json({ success: true, conversations: Object.values(conversationsMap).sort((a, b) => b.lastMessage.createdAt - a.lastMessage.createdAt) });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des conversations.' });
+  }
+});
+
+router.get('/messages/interne/conversations/:contactEmail', authenticateJWT, async (req, res) => {
+  try {
+    const { contactEmail } = req.params;
+    const currentUserEmail = req.user.email;
+    const currentUserId = req.user.id === 'MASTER-ADMIN' ? null : req.user.id;
+    
+    // Find contact ID if possible
+    const contactUser = await prisma.utilisateur.findUnique({ where: { email: contactEmail } });
+    const contactId = contactUser?.id;
+
+    const messages = await prisma.messagePersonnel.findMany({
+      where: {
+        type: 'INTERNE',
+        isDeleted: false,
+        OR: [
+          { email: currentUserEmail, assignedToId: contactId },
+          { email: contactEmail, assignedToId: currentUserId }
+        ]
+      },
+      orderBy: { createdAt: 'asc' }
+    });
+
+    res.json({ success: true, messages });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération de la conversation.' });
   }
 });
 
@@ -394,15 +481,34 @@ router.post('/messages/:id/assign', async (req, res) => {
 router.patch('/messages/:id/status', async (req, res) => {
   try {
     const { id } = req.params;
-    const { status, dossierId, lieuTraitement, numeroReference, etiquette, priorite } = req.body;
+    const { status, dossierId, lieuTraitement, numeroReference, etiquette, priorite, assignedToId,
+            dateRappel, noteRappel, dateEntretien, lienVisio } = req.body;
     
     const dataToUpdate = {};
-    if (status !== undefined) dataToUpdate.status = status;
+    if (status !== undefined) {
+      dataToUpdate.status = status;
+      if (priorite === undefined) {
+        dataToUpdate.priorite = 'Normal'; // Règle: Dès qu'un statut change, la priorité redevient Normal par défaut
+      }
+    }
     if (etiquette !== undefined) dataToUpdate.etiquette = etiquette;
     if (priorite !== undefined) dataToUpdate.priorite = priorite;
+    // Mise en copie d'un RO — Super-Admin uniquement (vérifié ici côté serveur)
+    if (assignedToId !== undefined) {
+      if (!['Super-administrateur', 'Administrateur', 'Admin Tech'].includes(req.user.role)) {
+        return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut assigner un Responsable Opérationnel." });
+      }
+      dataToUpdate.assignedToId = assignedToId || null;
+    }
+    // Rappel / Entretien
+    if (dateRappel !== undefined) dataToUpdate.dateRappel = dateRappel ? new Date(dateRappel) : null;
+    if (noteRappel !== undefined) dataToUpdate.noteRappel = noteRappel;
+    if (dateEntretien !== undefined) dataToUpdate.dateEntretien = dateEntretien ? new Date(dateEntretien) : null;
+    if (lienVisio !== undefined) dataToUpdate.lienVisio = lienVisio;
     if (dossierId !== undefined) {
       dataToUpdate.dossierId = dossierId;
     }
+
 
     if (numeroReference && lieuTraitement) {
       if (lieuTraitement === 'Dossier') {
@@ -428,13 +534,13 @@ router.patch('/messages/:id/status', async (req, res) => {
         delete formUpdateData.priorite;
       }
       await prisma.formulaire.update({ where: { id }, data: formUpdateData });
-      await logAudit(req.user?.id, 'STATUT_FORMULAIRE', id, 'FORMULAIRE', `Statut formulaire mis à jour (${status || 'modifié'})`, formUpdateData.dossierId || null, form.id);
+      // Verbose audit log removed
       return res.json({ success: true, message: 'Statut mis à jour' });
     }
     const msg = await prisma.messagePersonnel.findUnique({ where: { id } });
     if (msg) {
       await prisma.messagePersonnel.update({ where: { id }, data: dataToUpdate });
-      await logAudit(req.user?.id, 'STATUT_MESSAGE', id, 'MESSAGE', `Statut message mis à jour (${status || 'modifié'})`, dataToUpdate.dossierId || null);
+      // Verbose audit log removed
       return res.json({ success: true, message: 'Statut mis à jour' });
     }
     res.status(404).json({ error: 'Message non trouvé' });

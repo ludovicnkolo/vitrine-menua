@@ -422,15 +422,66 @@ router.patch('/dossiers/:id', async (req, res) => {
       return res.status(400).json({ error: "Action impossible : le dossier est déjà dans ce statut (peut-être modifié par un autre utilisateur)." });
     }
 
-    // Le statut BLOQUÉ est réservé aux Super-Admin et Admin Technique
-    if (req.body.status === 'BLOQUE' && !isSuperAdmin(userRole)) {
-      return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur ou Administrateur Technique peut bloquer un dossier." });
+    // ── Matrice institutionnelle des transitions de statut ─────────────────────
+    if (req.body.status) {
+      const from = currentDossier.status;
+      const to = req.body.status;
+      const isSA = isSuperAdmin(userRole);
+      const isRO = userRole === 'Responsable opérationnel';
+      const isRespOrAdmin = isSA || isRO;
+
+      const VALID_TRANSITIONS = {
+        NOUVEAU:    { allowed: ['OUVERT', 'ANNULE'],               minRole: 'resp' },
+        OUVERT:     { allowed: ['EN_COURS', 'EN_ATTENTE', 'BLOQUE', 'ANNULE'], minRole: 'resp' },
+        EN_COURS:   { allowed: ['TERMINE', 'EN_ATTENTE', 'BLOQUE'],minRole: 'resp' },
+        EN_ATTENTE: { allowed: ['EN_COURS', 'BLOQUE'],             minRole: 'resp' },
+        BLOQUE:     { allowed: ['EN_COURS', 'OUVERT'],             minRole: 'resp' },
+        TERMINE:    { allowed: ['CLOTURE', 'OUVERT'],              minRole: 'super' },
+        CLOTURE:    { allowed: ['ARCHIVE', 'OUVERT'],              minRole: 'super' },
+        ARCHIVE:    { allowed: [],                                  minRole: 'super' },
+        ANNULE:     { allowed: [],                                  minRole: 'super' },
+      };
+
+      const rule = VALID_TRANSITIONS[from];
+      if (!rule) {
+        return res.status(400).json({ error: `Statut d'origine inconnu : ${from}` });
+      }
+
+      if (!rule.allowed.includes(to)) {
+        return res.status(400).json({
+          error: `Transition impossible : un dossier en statut "${from}" ne peut pas passer à "${to}". Progression attendue : ${rule.allowed.join(', ') || 'aucune (état terminal)'}.`
+        });
+      }
+
+      if (rule.minRole === 'super' && !isSA) {
+        return res.status(403).json({ error: `Accès refusé. Seul un Super-Administrateur peut effectuer cette transition (${from} → ${to}).` });
+      }
+      if (rule.minRole === 'resp' && !isRespOrAdmin) {
+        return res.status(403).json({ error: "Accès refusé. Droits insuffisants pour modifier ce statut." });
+      }
+
+      // BLOQUÉ : seulement Super-Admin peut bloquer
+      if (to === 'BLOQUE' && !isSA) {
+        return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut bloquer un dossier." });
+      }
+
+      // Contrainte métier : impossible de terminer/clôturer avec des missions/tâches incomplètes
+      if (['TERMINE', 'CLOTURE', 'ARCHIVE'].includes(to)) {
+        const incompleteMissions = await prisma.mission.count({
+          where: { dossierId: req.params.id, status: { notIn: ['TERMINE', 'TERMINEE', 'ANNULE', 'ANNULEE'] } }
+        });
+        const incompleteTaches = await prisma.tache.count({
+          where: { mission: { dossierId: req.params.id }, status: { notIn: ['TERMINE', 'TERMINEE', 'ANNULE', 'ANNULEE'] } }
+        });
+        if (incompleteMissions > 0 || incompleteTaches > 0) {
+          return res.status(400).json({ error: "Impossible de terminer ou clôturer le dossier : des missions ou tâches sont encore en cours." });
+        }
+      }
     }
 
-    // Vérification générale d'accès à la modification
+    // Vérification générale d'accès à la modification (champs hors statut)
     if (!isAdmin(userRole)) {
       if (userRole === 'Responsable opérationnel') {
-        // Le Responsable Op. ne peut modifier que ses propres dossiers
         const dossier = await prisma.dossier.findUnique({ where: { id: req.params.id }, select: { traitantId: true } });
         if (!dossier || dossier.traitantId !== userId) {
           return res.status(403).json({ error: "Accès refusé. Vous n'êtes pas le responsable de ce dossier." });
@@ -442,20 +493,7 @@ router.patch('/dossiers/:id', async (req, res) => {
 
     const { status, name, description, traitantId } = req.body;
     const updateData = {};
-    if (status !== undefined) {
-      if (status === 'TERMINE' || status === 'CLOTURE' || status === 'ARCHIVE') {
-        const incompleteMissions = await prisma.mission.count({
-          where: { dossierId: req.params.id, status: { notIn: ['TERMINE', 'TERMINEE', 'ANNULE', 'ANNULEE'] } }
-        });
-        const incompleteTaches = await prisma.tache.count({
-          where: { mission: { dossierId: req.params.id }, status: { notIn: ['TERMINE', 'TERMINEE', 'ANNULE', 'ANNULEE'] } }
-        });
-        if (incompleteMissions > 0 || incompleteTaches > 0) {
-          return res.status(400).json({ error: "Impossible de clôturer ou d'archiver le dossier : des missions ou tâches ne sont pas terminées." });
-        }
-      }
-      updateData.status = status;
-    }
+    if (status !== undefined) updateData.status = status;
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description;
     if (traitantId !== undefined) {
@@ -482,33 +520,90 @@ router.patch('/dossiers/:id', async (req, res) => {
   }
 });
 
+
 router.delete('/dossiers/:id', async (req, res) => {
   try {
-    if (!isAdmin(req.user.role)) {
-      return res.status(403).json({ error: "Accès refusé. Seul un administrateur peut supprimer un dossier." });
+    const userRole = req.user.role;
+    const isSA = isSuperAdmin(userRole);
+
+    // Seul le Super-Administrateur peut supprimer un dossier
+    if (!isSA) {
+      return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut supprimer un dossier." });
     }
     
-    await prisma.dossier.deleteMany({
-      where: { parentDossierId: req.params.id }
+    const dossier = await prisma.dossier.findUnique({ where: { id: req.params.id } });
+    if (!dossier) return res.status(404).json({ error: 'Dossier introuvable.' });
+
+    // Dossiers système (générés auto pour les missions) : protection absolue
+    if (dossier.isSystem) {
+      return res.status(403).json({ error: "Ce dossier est géré automatiquement par le système. Pour le supprimer, supprimez la mission ou le dossier parent associé." });
+    }
+
+    // Soft-delete : passer en corbeille (ne pas supprimer physiquement)
+    await prisma.dossier.update({
+      where: { id: req.params.id },
+      data: { status: 'CORBEILLE' }
     });
-    const dossier = await prisma.dossier.delete({
-      where: { id: req.params.id }
-    });
+
+    // Mettre en corbeille les sous-dossiers récursivement
+    const markSubFoldersAsDeleted = async (parentId) => {
+      const children = await prisma.dossier.findMany({ where: { parentDossierId: parentId }, select: { id: true } });
+      for (const child of children) {
+        await prisma.dossier.update({ where: { id: child.id }, data: { status: 'CORBEILLE' } });
+        await markSubFoldersAsDeleted(child.id);
+      }
+    };
+    await markSubFoldersAsDeleted(req.params.id);
 
     await logAudit(
       req.user?.id,
       'SUPPRESSION_DOSSIER',
       req.params.id,
       'DOSSIER',
-      `Dossier supprimé: ${dossier.name}`,
+      `Dossier mis en corbeille: ${dossier.name}`,
       null
     );
 
-    res.json({ success: true, message: 'Dossier supprimé' });
+    res.json({ success: true, message: 'Dossier mis en corbeille (soft-delete). Restaurable depuis la corbeille.' });
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la suppression: ' + error.message });
   }
 });
+
+// ── Restauration d'un dossier depuis la corbeille ───────────────────────────
+router.patch('/dossiers/:id/restore', async (req, res) => {
+  try {
+    if (!isSuperAdmin(req.user.role)) {
+      return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut restaurer un dossier." });
+    }
+    const dossier = await prisma.dossier.findUnique({ where: { id: req.params.id } });
+    if (!dossier) return res.status(404).json({ error: 'Dossier introuvable.' });
+    if (dossier.status !== 'CORBEILLE') return res.status(400).json({ error: 'Ce dossier n\'est pas en corbeille.' });
+
+    const previousStatus = dossier.previousStatus || 'OUVERT';
+    await prisma.dossier.update({
+      where: { id: req.params.id },
+      data: { status: previousStatus }
+    });
+
+    // Restaurer les sous-dossiers
+    const restoreSubFolders = async (parentId) => {
+      const children = await prisma.dossier.findMany({ where: { parentDossierId: parentId, status: 'CORBEILLE' }, select: { id: true, previousStatus: true } });
+      for (const child of children) {
+        await prisma.dossier.update({ where: { id: child.id }, data: { status: child.previousStatus || 'OUVERT' } });
+        await restoreSubFolders(child.id);
+      }
+    };
+    await restoreSubFolders(req.params.id);
+
+    await logAudit(req.user?.id, 'RESTAURATION_DOSSIER', req.params.id, 'DOSSIER', `Dossier restauré: ${dossier.name}`, null);
+    res.json({ success: true, message: 'Dossier restauré avec succès.' });
+  } catch (error) {
+    console.error(error); res.status(500).json({ error: 'Erreur lors de la restauration.' });
+  }
+});
+
+
 
 router.get('/dossiers/:id/tree', async (req, res) => {
   try {

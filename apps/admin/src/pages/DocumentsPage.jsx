@@ -202,19 +202,19 @@ export default function DocumentsPage() {
   }, []);
 
   const handleDeleteDossier = async (folder) => {
-    const protectedNames = ['ADMINISTRATION & FINANCES', 'OPÉRATIONS & RÉALISATIONS', 'RELATIONS & DÉVELOPPEMENT'];
-    if (protectedNames.includes(folder.name)) {
-      window.customAlert("Ce sous-dossier par défaut ne peut pas être supprimé de la GED.");
+    // Bloquer les dossiers racines (dossiers mères : pas de parent)
+    if (!folder.parentDossierId) {
+      window.customAlert("Ce dossier principal ne peut pas être supprimé depuis la GED.\n\nPour le supprimer, allez dans l'espace Dossiers et supprimez-le depuis là. Seul le Super-Administrateur peut effectuer cette action.");
       return;
     }
 
-    // Bloquer la suppression des sous-dossiers auto-générés par les missions
+    // Bloquer les sous-dossiers auto-générés par les missions
     if (folder.isSystem) {
       window.customAlert("Ce dossier a été créé automatiquement par une mission.\n\nPour le supprimer, supprimez la mission ou le dossier parent correspondant.");
       return;
     }
 
-    if (!(await window.customConfirm("Voulez-vous vraiment supprimer ce dossier ? Cette action est irréversible.", "Suppression de dossier"))) return;
+    if (!(await window.customConfirm("Voulez-vous mettre ce dossier à la corbeille ?\n\nIl sera masqué mais pourra être restauré par un Super-Administrateur.", "Mise à la corbeille"))) return;
     try {
       const token = sessionStorage.getItem('adminToken');
       const res = await fetch(getSafeApiUrl(`/api/crm/dossiers/${folder.id}`), {
@@ -232,6 +232,7 @@ export default function DocumentsPage() {
       console.error(e);
     }
   };
+
 
   const handleDeleteDocument = async (id) => {
     if (!(await window.customConfirm("Voulez-vous vraiment supprimer ce document ? Cette action est irréversible.", "Suppression de document"))) return;

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import AuditPage from './AuditPage';
 import SpacePageLayout from '../components/SpacePageLayout';
+import i18n from '../i18n';
 
 const SystemSpacePage = ({ userRole }) => {
   const [theme, setTheme] = useState(localStorage.getItem('adminTheme') || 'light');
-  const [lang, setLang] = useState(localStorage.getItem('adminLang') || 'fr');
+  const [lang, setLang] = useState(localStorage.getItem('adminLang') || i18n.language || 'fr');
 
   // Super-administrateur ET Administrateur technique voient l'onglet Audit
   // Collaborateur, Relecteur, Responsable opérationnel ne voient que Configuration
@@ -30,7 +31,7 @@ const SystemSpacePage = ({ userRole }) => {
     if (newLang !== 'fr' && newLang !== 'en') return;
     setLang(newLang);
     localStorage.setItem('adminLang', newLang);
-    window.location.reload();
+    i18n.changeLanguage(newLang);
   };
 
   return (

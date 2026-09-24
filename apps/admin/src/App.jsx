@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { LayoutDashboard, Files, Users, Settings, Inbox, LogOut, Globe } from 'lucide-react';
 import { getSafeApiUrl } from './utils/helpers';
+import { useTranslation } from 'react-i18next';
 
 import DashboardPage from './pages/DashboardPage';
 import DossiersPage from './pages/DossiersPage';
@@ -33,6 +34,8 @@ const MOCK_USER = {
 
 function App() {
   const location = useLocation();
+  const { t, i18n } = useTranslation();
+  const [lang, setLang] = useState(i18n.language?.startsWith('en') ? 'en' : 'fr');
   const [token, setToken] = useState(sessionStorage.getItem('adminToken') || null);
   const [user, setUser] = useState(() => {
     const saved = sessionStorage.getItem('adminUser');
@@ -297,8 +300,9 @@ function App() {
               <div style={{fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)'}}>{user.role}</div>
             </div>
           </div>
+          {/* Sélecteur de langue déplacé vers Espace système -> Configuration */}
           <button type="button" onClick={handleLogout} className="btn btn-outline" style={{width: '100%', borderColor: 'rgba(255,255,255,0.2)', color: 'white', display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center'}}>
-            <LogOut size={16} /> Déconnexion
+            <LogOut size={16} /> {t('nav.logout')}
           </button>
         </div>
       </aside>

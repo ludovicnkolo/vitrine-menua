@@ -162,13 +162,21 @@ const DashboardPage = () => {
               <ShieldAlert size={20} />, 
               "#8B5CF6" // Purple
             )}
-            {renderKPI(
-              "Vérifications", 
-              stats.verificationsEnAttente, 
-              "Tâches à contrôler", 
-              <CheckCircle size={20} />, 
-              "#3B82F6" // Blue
-            )}
+            <div className="card" style={{ padding: '1rem', borderTop: `4px solid #3B82F6`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+              <div>
+                <h3 style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Volume Total
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.85rem', color: 'var(--text-main)', fontWeight: 500 }}>
+                  <div>Dossiers : <span style={{fontWeight: 700}}>{stats.totalDossiers || 0}</span></div>
+                  <div>Missions : <span style={{fontWeight: 700}}>{stats.totalMissions || 0}</span></div>
+                  <div>Tâches : <span style={{fontWeight: 700}}>{stats.totalTaches || 0}</span></div>
+                </div>
+              </div>
+              <div style={{ padding: '0.6rem', background: `#3B82F615`, borderRadius: '8px', color: '#3B82F6' }}>
+                <CheckCircle size={20} />
+              </div>
+            </div>
             {renderKPI(
               "Nouveaux Dépôts", 
               stats.nouveauxDepots, 

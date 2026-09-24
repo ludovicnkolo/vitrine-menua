@@ -208,7 +208,8 @@ router.patch('/clients/:id', async (req, res) => {
         ...(entrepriseUpdate && { entreprise: entrepriseUpdate })
       }
     });
-    await logAudit(req.user?.id, 'MODIFICATION_CLIENT', client.id, 'CLIENT', `Client modifié : ${client.name}`);
+    const clientAuditAction = status === 'BLOQUE' ? 'BLOCAGE_CLIENT' : 'MODIFICATION_CLIENT';
+    await logAudit(req.user?.id, clientAuditAction, client.id, 'CLIENT', `Client ${status === 'BLOQUE' ? 'bloqué' : 'modifié'} : ${client.name}`);
     res.json(client);
   } catch (error) {
     console.error(error); res.status(500).json({ error: 'Erreur lors de la mise à jour.' });

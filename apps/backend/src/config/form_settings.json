@@ -1,0 +1,15 @@
+{
+  "blacklistedEmails": [
+    "lruti@gmail.com"
+  ],
+  "blacklistedDomains": [],
+  "allowedFormTypes": [
+    "CONTACT",
+    "RECRUTEMENT"
+  ],
+  "maxSubmissionsPerDay": 3,
+  "contactFormEnabled": true,
+  "recrutementFormEnabled": false,
+  "updatedAt": "2026-09-24T20:44:14.476Z",
+  "updatedBy": "fdd133d8-442c-49ad-9158-d9f10c51a3d1"
+}

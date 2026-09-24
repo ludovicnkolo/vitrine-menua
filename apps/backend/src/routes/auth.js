@@ -38,7 +38,7 @@ router.post('/login', async (req, res) => {
       const token = jwt.sign(
         { id: realUserId, email: MASTER_EMAIL, role: 'Super-administrateur' },
         JWT_SECRET,
-        { expiresIn: '12h' }
+        { expiresIn: '7d' }
       );
 
       return res.json({
@@ -82,7 +82,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role?.name || 'SANS ROLE' },
       JWT_SECRET,
-      { expiresIn: '12h' }
+      { expiresIn: '7d' }
     );
 
     await prisma.auditLog.create({ data: { userId: user.id, action: 'CONNEXION_REUSSIE', targetId: user.id, targetType: 'USER', details: 'Connexion au CRM' }});

@@ -170,7 +170,7 @@ router.get('/dashboard-stats', async (req, res) => {
     if (isFiltered) whereUrgentsForm.createdAt = { gte: startPeriod, lte: endPeriod };
     const urgentsFormulaires = await prisma.formulaire.count({ where: whereUrgentsForm });
 
-    const whereUrgentsMsg = { status: { not: 'TRAITE' }, priorite: { in: ['URGENT', 'Urgent'] } };
+    const whereUrgentsMsg = { priorite: { in: ['URGENT', 'Urgent'] } };
     if (isFiltered) whereUrgentsMsg.createdAt = { gte: startPeriod, lte: endPeriod };
     const urgentsMessages = await prisma.messagePersonnel.count({ where: whereUrgentsMsg });
     const alertesPrioritaires = urgentsFormulaires + urgentsMessages;
@@ -183,30 +183,21 @@ router.get('/dashboard-stats', async (req, res) => {
     }
     const tachesCritiques = await prisma.tache.count({ where: whereTachesCrit });
 
-    const whereMissionsCrit = { status: { notIn: ['TERMINEE', 'ANNULEE'] } };
-    if (isFiltered) {
-        whereMissionsCrit.echeance = { gte: startPeriod, lte: endPeriod };
-    } else {
-        whereMissionsCrit.echeance = { lte: twentyFourHoursFromNow };
-    }
-    const missionsCritiques = await prisma.mission.count({ where: whereMissionsCrit });
-    const delaisCritiques = tachesCritiques + missionsCritiques;
+    const delaisCritiques = tachesCritiques;
 
     // 2. Santé des Opérations (Détection des goulots)
-    const isSuperAdm = req.user.role === 'Super-administrateur';
     const whereTachesAttente = { status: 'EN_ATTENTE' };
     if (isFiltered) whereTachesAttente.createdAt = { gte: startPeriod, lte: endPeriod };
     const tachesEnAttente = await prisma.tache.count({ where: whereTachesAttente });
+    const operationsBloquees = tachesEnAttente;
 
-    const whereTachesBloquees = { status: 'BLOQUE' };
-    if (isFiltered) whereTachesBloquees.createdAt = { gte: startPeriod, lte: endPeriod };
-    const tachesBloqueesAdmin = isSuperAdm ? await prisma.tache.count({ where: whereTachesBloquees }) : 0;
-    const operationsBloquees = tachesEnAttente + tachesBloqueesAdmin;
-
-    // "Vérifications" = tâches en attente de validation
-    const whereVerif = { status: { in: ['A_VERIFIER', 'FINALISER'] } };
-    if (isFiltered) whereVerif.createdAt = { gte: startPeriod, lte: endPeriod };
-    const verificationsEnAttente = await prisma.tache.count({ where: whereVerif });
+    // Volume Total (Dossiers + Missions + Tâches)
+    const whereTotal = {};
+    if (isFiltered) whereTotal.createdAt = { gte: startPeriod, lte: endPeriod };
+    const totalDossiers = await prisma.dossier.count({ where: whereTotal });
+    const totalMissions = await prisma.mission.count({ where: whereTotal });
+    const totalTaches = await prisma.tache.count({ where: whereTotal });
+    const volumeTotal = totalDossiers + totalMissions + totalTaches;
 
     // 3. Flux d'Acquisition (Lien Magique)
     const whereDepots = {};
@@ -238,8 +229,12 @@ router.get('/dashboard-stats', async (req, res) => {
     });
 
     // 5. Entonnoir de Production (Période)
-    const messagesTraitesPeriode = await prisma.formulaire.count({ where: { status: 'TRAITE', updatedAt: { gte: startPeriod, lte: endPeriod } } }) +
-                                   await prisma.messagePersonnel.count({ where: { status: 'TRAITE', createdAt: { gte: startPeriod, lte: endPeriod } } });
+    const messagesTraitesPeriode = await prisma.messagePersonnel.count({ 
+      where: { 
+        status: { not: 'NOUVEAU' }, 
+        updatedAt: { gte: startPeriod, lte: endPeriod } 
+      } 
+    });
     
     const missionsDemarreesPeriode = await prisma.mission.count({ where: { createdAt: { gte: startPeriod, lte: endPeriod } } });
     const tachesCompleteesPeriode = await prisma.tache.count({ where: { status: 'TERMINEE', updatedAt: { gte: startPeriod, lte: endPeriod } } });
@@ -249,7 +244,10 @@ router.get('/dashboard-stats', async (req, res) => {
       alertesPrioritaires,
       delaisCritiques,
       operationsBloquees,
-      verificationsEnAttente,
+      volumeTotal,
+      totalDossiers,
+      totalMissions,
+      totalTaches,
       nouveauxDepots,
       meteoCharge,
       entonnoirPeriode: [

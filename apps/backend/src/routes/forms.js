@@ -5,6 +5,8 @@ const nodemailer = require('nodemailer');
 const xss = require('xss');
 const rateLimit = require('express-rate-limit');
 const dns = require('dns').promises;
+const fs = require('node:fs');
+const path = require('node:path');
 const { PrismaClient } = require('@prisma/client');
 const { sendResponse } = require('../utils/responses');
 const { transporter } = require('../utils/mailer');
@@ -15,6 +17,26 @@ const router = express.Router();
 const { verifyTurnstile } = require('../services/turnstile');
 const verifalia = require('../services/verifalia');
 const { sendAutoReply, sendAdminNotification } = require('../services/emailService');
+
+// ── Paramètres des formulaires (blacklist email/domain, activation) ──────────
+const FORM_SETTINGS_PATH = path.join(__dirname, '../config/form_settings.json');
+
+const getFormSettings = () => {
+  try {
+    const raw = fs.readFileSync(FORM_SETTINGS_PATH, 'utf-8');
+    return JSON.parse(raw);
+  } catch (e) {
+    console.error('Impossible de lire form_settings.json', e.message);
+    return { blacklistedEmails: [], contactFormEnabled: true, recrutementFormEnabled: true };
+  }
+};
+
+const isEmailBlacklisted = (email, settings) => {
+  const normalizedEmail = (email || '').toLowerCase().trim();
+  if (settings.blacklistedEmails?.map(e => e.toLowerCase()).includes(normalizedEmail)) return true;
+  return false;
+};
+
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -45,6 +67,18 @@ const sanitizeInput = (data) => {
 
 // Email templates are now in emailService.js
 
+// ── Récupérer le statut public des formulaires (sans blacklist) ──────────
+router.get('/status', (req, res) => {
+  const settings = getFormSettings();
+  res.json({
+    success: true,
+    data: {
+      contactFormEnabled: settings.contactFormEnabled,
+      recrutementFormEnabled: settings.recrutementFormEnabled
+    }
+  });
+});
+
 router.post('/contact', upload.none(), async (req, res) => {
   try {
     const sanitizedBody = sanitizeInput(req.body);
@@ -56,8 +90,17 @@ router.post('/contact', upload.none(), async (req, res) => {
     const senderEmail = email;
     const lang = req.query.lang || req.body.lang || 'fr';
 
+    const settings = getFormSettings();
+    if (!settings.contactFormEnabled) {
+      return sendResponse(res, 403, 'ERROR_FORM_DISABLED', lang); // Need to define this or use a generic error
+    }
+
     if (!senderEmail) {
       return sendResponse(res, 400, 'ERROR_EMAIL_REQUIRED', lang);
+    }
+
+    if (isEmailBlacklisted(senderEmail, settings)) {
+      return sendResponse(res, 403, 'ERROR_FORBIDDEN', lang); // Use a generic forbidden or specifically handle it. Let's return 403 with generic error or generic forbidden. We'll send a vague error to not confirm blacklist to spammer.
     }
     
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
@@ -176,8 +219,17 @@ router.post('/join', upload.none(), async (req, res) => {
     } = sanitizedBody;
     const lang = req.query.lang || req.body.lang || 'fr';
 
+    const settings = getFormSettings();
+    if (!settings.recrutementFormEnabled) {
+      return sendResponse(res, 403, 'ERROR_FORM_DISABLED', lang);
+    }
+
     if (!email) {
       return sendResponse(res, 400, 'ERROR_EMAIL_REQUIRED', lang);
+    }
+
+    if (isEmailBlacklisted(email, settings)) {
+      return sendResponse(res, 403, 'ERROR_FORBIDDEN', lang);
     }
     
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;

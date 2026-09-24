@@ -12,6 +12,43 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit for images
 });
+// ── Paramètres des formulaires ──
+const fs = require('node:fs');
+const path = require('node:path');
+const FORM_SETTINGS_PATH = path.join(__dirname, '../config/form_settings.json');
+
+// Récupérer les paramètres des formulaires
+router.get('/settings/forms', authenticateJWT, async (req, res) => {
+  try {
+    if (req.user.role !== 'Super-administrateur' && req.user.role !== 'ADMIN') {
+      return res.status(403).json({ success: false, error: 'Accès refusé' });
+    }
+    const raw = fs.readFileSync(FORM_SETTINGS_PATH, 'utf-8');
+    res.json({ success: true, data: JSON.parse(raw) });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Erreur lecture paramètres' });
+  }
+});
+
+// Mettre à jour les paramètres des formulaires
+router.put('/settings/forms', authenticateJWT, async (req, res) => {
+  try {
+    if (req.user.role !== 'Super-administrateur' && req.user.role !== 'ADMIN') {
+      return res.status(403).json({ success: false, error: 'Accès refusé' });
+    }
+    const current = JSON.parse(fs.readFileSync(FORM_SETTINGS_PATH, 'utf-8'));
+    const updated = {
+      ...current,
+      ...req.body,
+      updatedAt: new Date().toISOString(),
+      updatedBy: req.user.id
+    };
+    fs.writeFileSync(FORM_SETTINGS_PATH, JSON.stringify(updated, null, 2));
+    res.json({ success: true, data: updated });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Erreur écriture paramètres' });
+  }
+});
 
 // Récupérer toutes les publications (public ou admin)
 router.get('/', authenticateJWT, async (req, res) => {

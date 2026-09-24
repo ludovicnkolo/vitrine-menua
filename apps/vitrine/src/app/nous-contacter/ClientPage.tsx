@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "@/components/Link";
 import { ArrowRight, MapPin, Mail, Phone, Building2, CheckCircle2, AlertCircle } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -9,12 +9,22 @@ import ContactInfoFields from "@/components/ContactInfoFields";
 import FormPrivacyAndSubmit from "@/components/FormPrivacyAndSubmit";
 import { handleFormSubmit } from "@/utils/formSubmitHandler";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
 export default function NousContacter() {
   const { t, lang } = useLanguage();
   const [clientType, setClientType] = useState<"company" | "individual">("company");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
+  const [formEnabled, setFormEnabled] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    fetch(`/api/forms/status`)
+      .then(r => r.json())
+      .then(data => setFormEnabled(data?.data?.contactFormEnabled !== false))
+      .catch(() => setFormEnabled(true)); // En cas d'erreur, ne pas bloquer
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,6 +49,7 @@ export default function NousContacter() {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <main className="flex flex-col w-full min-h-screen">
@@ -204,13 +215,24 @@ export default function NousContacter() {
                 <textarea name="description" rows={5} required placeholder={t("Saisissez ou collez votre descriptif ici...", "Type or paste your description here...")} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf]"></textarea>
               </div>
 
-              <FormPrivacyAndSubmit 
-                id="privacyPolicyContact"
-                isSubmitting={isSubmitting}
-                submitText={t("Envoyer", "Send")}
-                submittingText={t("Envoi en cours...", "Sending...")}
-                type="contact"
-              />
+              {formEnabled === false ? (
+                <div className="text-center py-6 px-4 bg-[#141824]/5 border border-[#141824]/20 rounded">
+                  <p className="text-[#141824] font-semibold text-[1.05rem] mb-1">
+                    {t("Formulaire temporairement indisponible", "Form temporarily unavailable")}
+                  </p>
+                  <p className="text-[#6e7891] text-[0.9rem]">
+                    {t("Ce formulaire est actuellement fermé. Veuillez nous contacter directement par téléphone ou email.", "This form is currently closed. Please contact us directly by phone or email.")}
+                  </p>
+                </div>
+              ) : (
+                <FormPrivacyAndSubmit 
+                  id="privacyPolicyContact"
+                  isSubmitting={isSubmitting}
+                  submitText={t("Envoyer", "Send")}
+                  submittingText={t("Envoi en cours...", "Sending...")}
+                  type="contact"
+                />
+              )}
             </form>
           </div>
 

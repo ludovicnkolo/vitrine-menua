@@ -115,7 +115,20 @@ router.get('/verify/:token', async (req, res) => {
     }
 
     if (new Date() > new Date(magicLink.expiresAt)) {
-      return res.status(403).json({ success: false, error: 'Ce lien a expiré.' });
+      return res.status(403).json({ success: false, error: 'Ce lien a expiré. Veuillez contacter votre conseiller pour obtenir un nouveau lien.' });
+    }
+
+    // ── Vérification du statut du dossier ────────────────────────────────────
+    const dossierStatus = magicLink.dossier?.status;
+    if (['BLOQUE', 'ARCHIVE', 'CORBEILLE', 'CLOTURE', 'ANNULE'].includes(dossierStatus)) {
+      const statusMessages = {
+        BLOQUE:    'Ce lien est temporairement suspendu. Veuillez contacter votre conseiller.',
+        ARCHIVE:   'Ce dossier est archivé. Les échanges de documents ne sont plus possibles.',
+        CORBEILLE: 'Ce dossier n\'est plus disponible.',
+        CLOTURE:   'Ce dossier est clôturé. Les échanges de documents ne sont plus possibles.',
+        ANNULE:    'Ce dossier a été annulé.'
+      };
+      return res.status(403).json({ success: false, error: statusMessages[dossierStatus] || 'Ce dossier n\'est plus actif.' });
     }
 
     // Only expose safe information
@@ -153,6 +166,7 @@ router.get('/verify/:token', async (req, res) => {
     res.status(500).json({ success: false, error: 'Erreur serveur.' });
   }
 });
+
 
 // Upload files via Magic Link (ACQUISITION)
 router.post('/upload/:token', upload.array('files', 10), async (req, res) => {

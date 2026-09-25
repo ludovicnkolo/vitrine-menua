@@ -191,20 +191,27 @@ router.get("/tasks", async (req, res) => {
     const { page, limit, skip } = getPaginationParams(req.query);
     const { search, status } = req.query;
 
-    const where = { parentMissionId: null }; // Only parent tasks
+    const where = { parentMissionId: null, AND: [] }; // Only parent tasks
 
     if (
       req.user.role === "Responsable opérationnel" ||
       req.user.role === "Collaborateur"
     ) {
-      where.OR = [
-        { assignedToId: req.user.id },
-        { createdById: req.user.id },
-        { dossier: { traitantId: req.user.id } },
-        { taches: { some: { assignedToId: req.user.id } } },
-      ];
+      where.AND.push({
+        OR: [
+          { assignedToId: req.user.id },
+          { createdById: req.user.id },
+          { dossier: { traitantId: req.user.id } },
+          { taches: { some: { assignedToId: req.user.id } } },
+        ]
+      });
     } else if (req.user.role === "Relecteur") {
-      where.relecteurId = req.user.id;
+      where.AND.push({
+        OR: [
+          { relecteurId: req.user.id },
+          { taches: { some: { relecteurId: req.user.id } } },
+        ]
+      });
     }
 
     const isSuperAdm = req.user.role === "Super-administrateur";
@@ -224,14 +231,20 @@ router.get("/tasks", async (req, res) => {
     }
     if (search) {
       const s = search.toLowerCase();
-      where.OR = [
-        { reference: { contains: s } },
-        { dossier: { name: { contains: s } } },
-        { dossier: { reference: { contains: s } } },
-        { dossierId: { contains: s } },
-        { createdBy: { name: { contains: s } } },
-        { assignedTo: { name: { contains: s } } },
-      ];
+      where.AND.push({
+        OR: [
+          { reference: { contains: s } },
+          { dossier: { name: { contains: s } } },
+          { dossier: { reference: { contains: s } } },
+          { dossierId: { contains: s } },
+          { createdBy: { name: { contains: s } } },
+          { assignedTo: { name: { contains: s } } },
+        ]
+      });
+    }
+    
+    if (where.AND.length === 0) {
+        delete where.AND;
     }
 
     const total = await prisma.mission.count({ where });
@@ -610,28 +623,39 @@ router.patch("/tasks/:id", async (req, res) => {
       const isRO = userRole === "Responsable opérationnel";
       const isRespOrAdmin = isSA || isRO;
 
-      // ── Matrice institutionnelle des transitions de statut (Missions) ────────
-      const VALID_MISSION_TRANSITIONS = {
-        NON_DEMARREE: {
-          allowed: ["OUVERT", "EN_COURS", "EN_ATTENTE"],
-          minRole: "resp",
-        },
-        NOUVEAU: {
-          allowed: ["EN_COURS", "EN_ATTENTE", "ANNULEE"],
-          minRole: "resp",
-        },
-        OUVERT: {
-          allowed: ["EN_COURS", "EN_ATTENTE", "BLOQUE", "ANNULEE"],
-          minRole: "resp",
-        },
-        EN_COURS: {
-          allowed: ["EN_REVUE", "EN_ATTENTE", "BLOQUE"],
-          minRole: "resp",
-        },
-        EN_REVUE: {
-          allowed: ["TERMINE", "EN_COURS", "A_CORRIGER"],
-          minRole: "resp",
-        },
+      // ── Règles Spécifiques de Mission ─────────────────────────────────────
+      if (from === "NOUVEAU") {
+        if (to === "EN_COURS") {
+           return res.status(403).json({ error: "Le statut 'EN_COURS' est automatique selon l'état des tâches liées." });
+        }
+        let allowed = [];
+        if (isSA || currentMissionForAuth.dossier?.traitantId === userId) {
+           allowed.push("EN_ATTENTE", "BLOQUE");
+        } else if (currentMissionForAuth.assignedToId === userId) {
+           allowed.push("EN_ATTENTE");
+        }
+        if (!allowed.includes(to)) {
+           return res.status(403).json({ error: `Accès refusé. Vous ne pouvez pas passer cette mission de NOUVEAU à ${to}.` });
+        }
+      } else {
+        // ── Matrice institutionnelle des transitions de statut (Missions) ────────
+        const VALID_MISSION_TRANSITIONS = {
+          NON_DEMARREE: {
+            allowed: ["OUVERT", "EN_COURS", "EN_ATTENTE"],
+            minRole: "resp",
+          },
+          OUVERT: {
+            allowed: ["EN_COURS", "EN_ATTENTE", "BLOQUE", "ANNULEE"],
+            minRole: "resp",
+          },
+          EN_COURS: {
+            allowed: ["EN_REVUE", "EN_ATTENTE", "BLOQUE"],
+            minRole: "resp",
+          },
+          EN_REVUE: {
+            allowed: ["TERMINE", "EN_COURS", "A_CORRIGER"],
+            minRole: "resp",
+          },
         EN_ATTENTE: { allowed: ["EN_COURS", "BLOQUE"], minRole: "resp" },
         A_CORRIGER: { allowed: ["EN_COURS"], minRole: "resp" },
         BLOQUE: { allowed: ["EN_COURS", "OUVERT"], minRole: "resp" },
@@ -675,6 +699,21 @@ router.patch("/tasks/:id", async (req, res) => {
               });
           }
         }
+        }
+      }
+
+      if (status === "EN_REVUE") {
+        const unreadyTaches = await prisma.tache.count({
+          where: {
+            missionId: req.params.id,
+            status: { notIn: ["EN_RELECTURE", "EN_APPROBATION", "APPROUVEE", "TERMINE", "TERMINEE", "ANNULEE", "ANNULE"] },
+          },
+        });
+        if (unreadyTaches > 0) {
+          return res.status(400).json({
+            error: "Impossible de passer en revue : toutes les tâches ne sont pas en relecture, approbation ou terminées.",
+          });
+        }
       }
 
       if (status === "TERMINEE" || status === "TERMINE") {
@@ -685,12 +724,10 @@ router.patch("/tasks/:id", async (req, res) => {
           },
         });
         if (incompleteTaches > 0) {
-          return res
-            .status(400)
-            .json({
-              error:
-                "Impossible de terminer la mission : certaines tâches associées ne sont pas terminées.",
-            });
+          return res.status(400).json({
+            error:
+              "Impossible de terminer la mission : certaines tâches associées ne sont pas terminées.",
+          });
         }
       }
       const currentTask = await prisma.mission.findUnique({

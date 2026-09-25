@@ -124,12 +124,12 @@ async function checkAndUpdateMissionStatus(missionId, prisma) {
     mission.status === "NOUVEAU" &&
     allTaches.some((t) => t.status !== "NOUVEAU")
   ) {
-    newStatus = "OUVERT";
+    newStatus = "EN_COURS";
   } else if (
     mission.status === "TERMINE" &&
     allTaches.some((t) => t.status !== "TERMINE")
   ) {
-    newStatus = "OUVERT";
+    newStatus = "EN_COURS";
   }
 
   if (newStatus !== mission.status) {
@@ -140,13 +140,13 @@ async function checkAndUpdateMissionStatus(missionId, prisma) {
     if (newStatus === "TERMINE" && mission.dossier) {
       checkAndUpdateDossierStatus(mission.dossier, prisma);
     } else if (
-      newStatus === "OUVERT" &&
+      newStatus === "EN_COURS" &&
       mission.dossier &&
-      mission.dossier.status === "NOUVEAU"
+      (mission.dossier.status === "NOUVEAU" || mission.dossier.status === "OUVERT")
     ) {
       await prisma.dossier.update({
         where: { id: mission.dossier.id },
-        data: { status: "OUVERT" },
+        data: { status: "EN_COURS" },
       });
     }
   }
@@ -155,17 +155,22 @@ async function checkAndUpdateMissionStatus(missionId, prisma) {
 async function checkAndUpdateDossierStatus(dossier, prisma) {
   const freshDossier = await prisma.dossier.findUnique({
     where: { id: dossier.id },
-    include: { missions: true },
+    include: { missions: true, taches: true },
   });
   if (!freshDossier) return;
-  const allMissions = freshDossier.missions;
-  if (
-    allMissions.length > 0 &&
-    allMissions.every((m) => m.status === "TERMINE")
-  ) {
+  const allMissions = freshDossier.missions || [];
+  const allTaches = freshDossier.taches || [];
+  const allItems = [...allMissions, ...allTaches];
+
+  const isAllDone = allItems.every(
+    (item) => item.status === "TERMINE" || item.status === "TERMINEE" || item.status === "ANNULE" || item.status === "ANNULEE"
+  );
+
+  if (allItems.length > 0 && isAllDone) {
     if (
       freshDossier.status !== "TERMINE" &&
       freshDossier.status !== "ARCHIVE" &&
+      freshDossier.status !== "CLOTURE" &&
       freshDossier.status !== "BLOQUE"
     ) {
       await prisma.dossier.update({
@@ -175,11 +180,11 @@ async function checkAndUpdateDossierStatus(dossier, prisma) {
     }
   } else if (
     freshDossier.status === "TERMINE" &&
-    allMissions.some((m) => m.status !== "TERMINE")
+    !isAllDone
   ) {
     await prisma.dossier.update({
       where: { id: freshDossier.id },
-      data: { status: "OUVERT", previousStatus: freshDossier.status },
+      data: { status: "EN_COURS", previousStatus: freshDossier.status },
     });
   }
 }
@@ -457,87 +462,85 @@ router.patch("/taches/:id", async (req, res) => {
         });
     }
 
-    // ── GARDE-FOUS STRICTS PAR RÔLE ──────────────────────────────────────────
     if (status !== undefined && status !== currentTache.status) {
-      // Statut BLOQUÉ : Super-Admin et Admin Technique seulement
-      if (status === "BLOQUE" && !isSA) {
-        return res
-          .status(403)
-          .json({
-            error:
-              "Accès refusé. Seul un Super-Administrateur peut bloquer une tâche.",
+      if (currentTache.status === "BLOQUE" || currentTache.status === "EN_ATTENTE") {
+        if (currentTache.status === "BLOQUE" && !isSA) {
+          return res.status(403).json({
+            error: "Accès refusé. Seul un Super-Administrateur peut débloquer une tâche.",
           });
+        }
+        if (currentTache.status === "EN_ATTENTE" && !isSA && currentTache.mission?.assignedToId !== userId) {
+          return res.status(403).json({
+            error: "Accès refusé. Seul le Super-Admin ou l'assigné à la mission peut lever l'attente.",
+          });
+        }
+        if (currentTache.previousStatus && status !== currentTache.previousStatus) {
+          // Exception : on peut l'annuler si on est manager (déjà géré, mais pour SA on bloque si pas previousStatus)
+          // Wait, rule says ONLY previousStatus.
+          return res.status(403).json({
+            error: `Accès refusé. Une tâche en attente ou bloquée ne peut retourner qu'à son statut précédent (${currentTache.previousStatus}).`,
+          });
+        }
       }
+      if (!isSA) {
+        // Seul le Super-Admin peut bloquer (transition VERS bloque)
+        if (status === "BLOQUE") {
+          return res.status(403).json({
+            error: "Accès refusé. Seul un Super-Administrateur peut bloquer une tâche.",
+          });
+        }
 
-      // ── Collaborateur : transitions autorisées ──────────────────────────────
-      if (userRole === "Collaborateur") {
-        const allowedFromCollaborateur = {
-          NOUVEAU: ["EN_COURS"],
-          EN_COURS: ["A_VERIFIER", "EN_ATTENTE"],
-          EN_ATTENTE: ["EN_COURS"], // reprendre après attente
-        };
-        const allowed = allowedFromCollaborateur[currentTache.status] || [];
-        if (!allowed.includes(status)) {
-          return res
-            .status(403)
-            .json({
-              error: `Accès refusé. Un Collaborateur ne peut pas passer une tâche de '${currentTache.status}' à '${status}'.`,
-            });
+        let allowed = [];
+        
+        switch (currentTache.status) {
+          case "NOUVEAU":
+          case "EN_COURS":
+          case "A_CORRIGER":
+            if (currentTache.assignedToId === userId) {
+              if (currentTache.status === "NOUVEAU") allowed.push("EN_COURS");
+              if (currentTache.status === "EN_COURS") allowed.push("EN_RELECTURE");
+              if (currentTache.status === "A_CORRIGER") allowed.push("EN_COURS");
+            }
+            if (currentTache.mission?.assignedToId === userId) {
+              allowed.push("EN_ATTENTE");
+            }
+            // Conserver le droit d'annulation pour le Responsable
+            if (userRole === "Responsable opérationnel" && currentTache.status !== "A_CORRIGER") {
+              allowed.push("ANNULEE");
+            }
+            break;
+            
+          case "EN_RELECTURE":
+            if (userRole === "Relecteur") {
+              allowed.push("EN_APPROBATION", "A_CORRIGER", "EN_ATTENTE");
+            }
+            break;
+            
+          case "EN_ATTENTE":
+            // "Seul celui qui a mis ca en attente" (assigné à la mission)
+            if (currentTache.mission?.assignedToId === userId && currentTache.previousStatus) {
+              allowed.push(currentTache.previousStatus);
+            }
+            if (userRole === "Responsable opérationnel") allowed.push("ANNULEE");
+            break;
+            
+          case "BLOQUE":
+            // Seul Super-Admin peut débloquer (laissé vide ici pour bloquer les autres)
+            break;
+            
+          case "EN_APPROBATION":
+          case "APPROUVEE":
+          case "TERMINE":
+            // Uniquement Super-Admin
+            break;
         }
-        // Doit être assigné à la tâche
-        if (currentTache.assignedToId !== userId) {
-          return res
-            .status(403)
-            .json({
-              error: "Accès refusé. Vous n'êtes pas assigné à cette tâche.",
-            });
-        }
-      }
 
-      // ── Relecteur : transitions autorisées ─────────────────────────────────
-      else if (userRole === "Relecteur") {
-        const allowedFromRelecteur = {
-          A_VERIFIER: ["FINALISER", "A_CORRIGER"],
-        };
-        const allowed = allowedFromRelecteur[currentTache.status] || [];
         if (!allowed.includes(status)) {
-          return res
-            .status(403)
-            .json({
-              error: `Accès refusé. Un Relecteur ne peut pas passer une tâche de '${currentTache.status}' à '${status}'.`,
-            });
+          return res.status(403).json({
+            error: `Accès refusé. Vous ne pouvez pas passer cette tâche de '${currentTache.status}' à '${status}'.`,
+          });
         }
       }
-
-      // ── Responsable Opérationnel : transitions autorisées ───────────────────
-      else if (userRole === "Responsable opérationnel") {
-        // Doit être responsable du dossier de la mission
-        if (dossierTraitantId && dossierTraitantId !== userId) {
-          return res
-            .status(403)
-            .json({
-              error:
-                "Accès refusé. Vous n'êtes pas le responsable de ce dossier.",
-            });
-        }
-        const allowedFromManager = {
-          NOUVEAU: ["EN_COURS", "EN_ATTENTE", "ANNULEE"],
-          EN_COURS: ["A_VERIFIER", "EN_ATTENTE", "ANNULEE"],
-          EN_ATTENTE: ["EN_COURS", "ANNULEE"],
-          A_VERIFIER: ["FINALISER", "A_CORRIGER"],
-          FINALISER: ["TERMINE", "A_CORRIGER"],
-          A_CORRIGER: ["REATTRIBUEE", "EN_COURS"],
-        };
-        const allowed = allowedFromManager[currentTache.status] || [];
-        if (!allowed.includes(status)) {
-          return res
-            .status(403)
-            .json({
-              error: `Accès refusé. Un Responsable ne peut pas passer une tâche de '${currentTache.status}' à '${status}'.`,
-            });
-        }
-      }
-      // Super-Admin et Admin Tech : toutes les transitions autorisées
     }
 
     // Build the data payload

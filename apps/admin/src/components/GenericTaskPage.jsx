@@ -418,7 +418,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
    * Retourne uniquement les transitions autorisées pour le rôle et le statut courant.
    * Inclut toujours le statut courant en premier (pour que le select ne soit jamais vide).
    */
-  const getAllowedStatuses = (currentStatus, userRole, entityMode) => {
+  const getAllowedStatuses = (currentStatus, userRole, entityMode, taskObj) => {
     const role =
       typeof userRole === "object" ? userRole?.name || "" : userRole || "";
     const isSuperAdmin = role === "Super-administrateur";
@@ -449,54 +449,101 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
     if (entityMode === "TACHE") {
       switch (currentStatus) {
-        case "NOUVEAU":
-          if (isSuperAdmin)
-            return withCurrent(["EN_COURS", "EN_ATTENTE", "BLOQUE"]);
-          if (isResp) return withCurrent(["EN_COURS", "EN_ATTENTE", "BLOQUE"]);
-          if (isCollab) return withCurrent(["EN_COURS", "EN_ATTENTE"]);
+        case "NOUVEAU": {
+          if (isSuperAdmin) return withCurrent(["EN_COURS", "EN_ATTENTE", "BLOQUE"]);
+          const allowed = [];
+          if (taskObj && taskObj.assignedToId === currentUser?.id) {
+            allowed.push("EN_COURS");
+          }
+          if (taskObj && taskObj.mission?.assignedToId === currentUser?.id) {
+            allowed.push("EN_ATTENTE");
+          }
+          if (allowed.length > 0) return withCurrent(allowed);
           return lockedOnCurrent();
-        case "EN_COURS":
-          if (isSuperAdmin)
-            return withCurrent(["EN_RELECTURE", "BLOQUE", "EN_ATTENTE"]);
-          if (isResp)
-            return withCurrent(["EN_RELECTURE", "BLOQUE", "EN_ATTENTE"]);
-          if (isCollab) return withCurrent(["EN_RELECTURE", "EN_ATTENTE"]); // Collab ne peut pas bloquer
+        }
+        case "EN_COURS": {
+          if (isSuperAdmin) return withCurrent(["EN_RELECTURE", "EN_ATTENTE", "BLOQUE"]);
+          const allowed = [];
+          if (taskObj && taskObj.assignedToId === currentUser?.id) {
+            allowed.push("EN_RELECTURE");
+          }
+          if (taskObj && taskObj.mission?.assignedToId === currentUser?.id) {
+            allowed.push("EN_ATTENTE");
+          }
+          if (allowed.length > 0) return withCurrent(allowed);
           return lockedOnCurrent();
+        }
         case "EN_RELECTURE":
           if (isSuperAdmin || isRelecteur)
             return withCurrent(["EN_APPROBATION", "A_CORRIGER", "EN_ATTENTE"]);
           return lockedOnCurrent();
         case "EN_APPROBATION":
           if (isSuperAdmin)
-            return withCurrent(["APPROUVEE", "A_CORRIGER", "EN_COURS"]);
+            return withCurrent(["APPROUVEE", "A_CORRIGER"]);
           return lockedOnCurrent();
         case "APPROUVEE":
-          if (isSuperAdmin) return withCurrent(["EN_COURS"]); // déverrouillage d’urgence
+          if (isSuperAdmin) return withCurrent(["TERMINE", "A_CORRIGER"]);
           return lockedOnCurrent();
-        case "A_CORRIGER":
-          if (isCollab) return withCurrent(["EN_COURS", "BLOQUE"]);
-          if (isRespOrAdmin) return withCurrent(["EN_COURS", "BLOQUE"]);
+        case "A_CORRIGER": {
+          if (isSuperAdmin) return withCurrent(["EN_COURS", "EN_ATTENTE", "BLOQUE"]);
+          const allowed = [];
+          if (taskObj && taskObj.assignedToId === currentUser?.id) {
+            allowed.push("EN_COURS");
+          }
+          if (taskObj && taskObj.mission?.assignedToId === currentUser?.id) {
+            allowed.push("EN_ATTENTE");
+          }
+          if (allowed.length > 0) return withCurrent(allowed);
           return lockedOnCurrent();
-        case "BLOQUE":
-          if (isCollab || isRespOrAdmin) return withCurrent(["EN_COURS"]);
+        }
+        case "BLOQUE": {
+          if (isSuperAdmin && taskObj && taskObj.previousStatus) {
+            return withCurrent([taskObj.previousStatus]);
+          }
           return lockedOnCurrent();
-        case "EN_ATTENTE":
-          if (isCollab || isRespOrAdmin) return withCurrent(["EN_COURS"]);
+        }
+        case "EN_ATTENTE": {
+          const allowed = [];
+          if (taskObj && taskObj.previousStatus) {
+            if (isSuperAdmin) {
+              allowed.push(taskObj.previousStatus);
+            } else if (taskObj.mission?.assignedToId === currentUser?.id) {
+              allowed.push(taskObj.previousStatus);
+            }
+          }
+          if (allowed.length > 0) return withCurrent(allowed);
           return lockedOnCurrent();
+        }
         default:
           return lockedOnCurrent();
       }
     } else {
       // MISSION
       switch (currentStatus) {
-        case "NOUVEAU":
-          if (isRespOrAdmin)
-            return withCurrent(["EN_COURS", "EN_ATTENTE", "BLOQUE"]);
+        case "NOUVEAU": {
+          const allowed = [];
+          if (isSuperAdmin || isResp) {
+            allowed.push("EN_ATTENTE");
+          } else if (taskObj && taskObj.assignedToId === currentUser?.id) {
+            allowed.push("EN_ATTENTE");
+          }
+          if (isSuperAdmin || (taskObj && taskObj.dossier?.traitantId === currentUser?.id)) {
+            allowed.push("BLOQUE");
+          }
+          if (allowed.length > 0) return withCurrent(allowed);
           return lockedOnCurrent();
-        case "EN_COURS":
-          if (isRespOrAdmin)
-            return withCurrent(["EN_REVUE", "BLOQUE", "EN_ATTENTE"]);
+        }
+        case "EN_COURS": {
+          const allowed = [];
+          if (isRespOrAdmin) {
+            allowed.push("EN_REVUE", "EN_ATTENTE");
+          }
+          if (isSuperAdmin) {
+            allowed.push("BLOQUE");
+          }
+          if (allowed.length > 0) return withCurrent(allowed);
           return lockedOnCurrent();
+        }
         case "EN_REVUE":
           if (isRespOrAdmin) return withCurrent(["TERMINE", "EN_COURS"]);
           return lockedOnCurrent();
@@ -1539,6 +1586,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               consultTask.status || "NOUVEAU",
               role,
               mode,
+              consultTask
             );
             const isLocked = options.length === 1; // Seul le statut courant est disponible
             return (

@@ -229,7 +229,7 @@ router.post("/messages/interne", authenticateJWT, async (req, res) => {
         objet: objet,
         bodyText: bodyText,
         attachment: attachment,
-        status: "EN_ATTENTE",
+        status: "NOUVEAU",
         dossierId: dossierId || null,
         missionId: missionId || null,
         tacheId: tacheId || null,
@@ -630,6 +630,53 @@ router.patch("/messages/:id/status", async (req, res) => {
 
     const dataToUpdate = {};
     if (status !== undefined) {
+      // ── Gouvernance RBAC & Matrice de Transition ──────────────────────────
+      const userRole = req.user.role;
+      const isSuperAdmin = userRole === "Super-administrateur";
+      const isResp = userRole === "Responsable opérationnel";
+      
+      if (!isSuperAdmin && !isResp) {
+        return res.status(403).json({
+          error: "Accès refusé. Seuls le Super-Administrateur et le Responsable opérationnel peuvent modifier le statut d'un message.",
+        });
+      }
+
+      // Check current message status
+      const msg = await prisma.messagePersonnel.findUnique({ where: { id } }) || 
+                  await prisma.formulaire.findUnique({ where: { id } });
+                  
+      if (msg && msg.status !== status) {
+        const from = msg.status || "NOUVEAU";
+        const currentEtiquette = etiquette !== undefined ? etiquette : msg.etiquette || "";
+        let category = "none";
+        if (msg.type === "contact" || currentEtiquette === "Contact") category = "contact";
+        else if (msg.type === "recrutement" || currentEtiquette === "Recrutement") category = "recrutement";
+        
+        const VALID = {
+          contact: {
+            NOUVEAU: ["A_RAPPELER", "DISCUSSION", "SANS_SUITE", "GAGNE"],
+            A_RAPPELER: ["DISCUSSION", "SANS_SUITE", "GAGNE"],
+            DISCUSSION: ["A_RAPPELER", "SANS_SUITE", "GAGNE"],
+            SANS_SUITE: ["DISCUSSION"],
+            GAGNE: []
+          },
+          recrutement: {
+            NOUVEAU: ["A_RAPPELER", "ENTRETIEN", "REFUSE"],
+            A_RAPPELER: ["ENTRETIEN", "REFUSE"],
+            ENTRETIEN: ["A_RAPPELER", "RETENU", "REFUSE"],
+            RETENU: [],
+            REFUSE: []
+          }
+        };
+
+        const allowedTransitions = VALID[category]?.[from] || [];
+        if (!allowedTransitions.includes(status)) {
+          return res.status(400).json({
+            error: `Transition impossible : un message en statut "${from}" ne peut pas passer à "${status}".`,
+          });
+        }
+      }
+      
       dataToUpdate.status = status;
       if (priorite === undefined) {
         dataToUpdate.priorite = "Normal"; // Règle: Dès qu'un statut change, la priorité redevient Normal par défaut

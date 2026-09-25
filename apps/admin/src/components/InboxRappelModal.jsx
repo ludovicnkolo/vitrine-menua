@@ -73,8 +73,7 @@ const InboxRappelModal = ({ rappelModal, setRappelModal, handleUpdateMultiple })
                 fontSize: '0.875rem',
               }}
             >
-              {rappelModal.type === 'ENTRETIEN' ? "Date et heure de l'entretien" : 'Date et heure du rappel'}{' '}
-              <span style={{ color: '#EF4444' }}>*</span>
+              {rappelModal.type === 'ENTRETIEN' ? "Date et heure de l'entretien (optionnel)" : 'Date et heure du rappel (optionnel)'}
             </label>
             <input
               type="datetime-local"
@@ -155,24 +154,19 @@ const InboxRappelModal = ({ rappelModal, setRappelModal, handleUpdateMultiple })
           </button>
           <button
             type="button"
-            disabled={!rappelDate}
             onClick={async () => {
               const fields = { status: rappelModal.status };
               if (rappelModal.type === 'RAPPEL') {
-                fields.dateRappel = rappelDate;
+                if (rappelDate) fields.dateRappel = rappelDate;
                 if (rappelNote) fields.noteRappel = rappelNote;
               } else {
-                fields.dateEntretien = rappelDate;
+                if (rappelDate) fields.dateEntretien = rappelDate;
                 if (entretienLien) fields.lienVisio = entretienLien;
               }
               await handleUpdateMultiple(fields);
               setRappelModal(null);
             }}
             className="btn btn-primary"
-            style={{
-              opacity: rappelDate ? 1 : 0.5,
-              cursor: rappelDate ? 'pointer' : 'not-allowed',
-            }}
           >
             Confirmer
           </button>

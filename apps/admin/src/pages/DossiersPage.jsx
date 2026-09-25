@@ -678,23 +678,32 @@ const DossiersPage = () => {
       case "NOUVEAU":
         if (isRespOrAdmin) return withCurrent(["OUVERT", "ANNULE"]);
         return lockedOnCurrent();
-      case "OUVERT":
-        if (isRespOrAdmin)
-          return withCurrent(["EN_COURS", "EN_ATTENTE", "BLOQUE", "ANNULE"]);
+      case "OUVERT": {
+        const allowed = [];
+        if (isRespOrAdmin) allowed.push("EN_COURS", "EN_ATTENTE", "ANNULE");
+        if (isSuperAdmin) allowed.push("BLOQUE");
+        if (allowed.length > 0) return withCurrent(allowed);
         return lockedOnCurrent();
-      case "EN_COURS":
-        if (isRespOrAdmin)
-          return withCurrent(["TERMINE", "EN_ATTENTE", "BLOQUE"]);
+      }
+      case "EN_COURS": {
+        const allowed = [];
+        if (isRespOrAdmin) allowed.push("TERMINE", "EN_ATTENTE");
+        if (isSuperAdmin) allowed.push("BLOQUE");
+        if (allowed.length > 0) return withCurrent(allowed);
         return lockedOnCurrent();
-      case "EN_ATTENTE":
-        if (isRespOrAdmin) return withCurrent(["EN_COURS", "BLOQUE"]);
+      }
+      case "EN_ATTENTE": {
+        const allowed = [];
+        if (isRespOrAdmin) allowed.push("EN_COURS");
+        if (isSuperAdmin) allowed.push("BLOQUE");
+        if (allowed.length > 0) return withCurrent(allowed);
         return lockedOnCurrent();
+      }
       case "BLOQUE":
-        if (isRespOrAdmin) return withCurrent(["EN_COURS", "OUVERT"]);
+        if (isSuperAdmin) return withCurrent(["EN_COURS", "OUVERT"]); // As per validations
         return lockedOnCurrent();
       case "TERMINE":
         if (isSuperAdmin) return withCurrent(["CLOTURE", "OUVERT"]);
-        if (isResp) return withCurrent(["OUVERT"]); // Un RO peut réouvrir mais pas clôturer (au choix)
         return lockedOnCurrent();
       case "CLOTURE":
         if (isSuperAdmin) return withCurrent(["ARCHIVE", "OUVERT"]);
@@ -3229,8 +3238,7 @@ const DossiersPage = () => {
                         .filter(
                           (u) =>
                             u.role?.name === "Responsable opérationnel" ||
-                            u.role?.name === "Super-administrateur" ||
-                            u.role?.name === "Administrateur technique",
+                            u.role?.name === "Super-administrateur",
                         )
                         .map((u) => (
                           <option key={u.id} value={u.id}>

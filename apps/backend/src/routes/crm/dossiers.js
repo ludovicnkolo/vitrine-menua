@@ -590,7 +590,7 @@ router.patch("/dossiers/:id", async (req, res) => {
           minRole: "resp",
         },
         EN_ATTENTE: { allowed: ["EN_COURS", "BLOQUE"], minRole: "resp" },
-        BLOQUE: { allowed: ["EN_COURS", "OUVERT"], minRole: "resp" },
+        BLOQUE: { allowed: ["EN_COURS", "OUVERT"], minRole: "super" },
         TERMINE: { allowed: ["CLOTURE", "OUVERT"], minRole: "super" },
         CLOTURE: { allowed: ["ARCHIVE", "OUVERT"], minRole: "super" },
         ARCHIVE: { allowed: [], minRole: "super" },
@@ -645,7 +645,10 @@ router.patch("/dossiers/:id", async (req, res) => {
         });
         const incompleteTaches = await prisma.tache.count({
           where: {
-            mission: { dossierId: req.params.id },
+            OR: [
+              { mission: { dossierId: req.params.id } },
+              { dossierTacheId: req.params.id },
+            ],
             status: { notIn: ["TERMINE", "TERMINEE", "ANNULE", "ANNULEE"] },
           },
         });

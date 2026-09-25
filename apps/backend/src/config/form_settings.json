@@ -9,7 +9,7 @@
   ],
   "maxSubmissionsPerDay": 3,
   "contactFormEnabled": true,
-  "recrutementFormEnabled": false,
-  "updatedAt": "2026-09-24T20:44:14.476Z",
-  "updatedBy": "fdd133d8-442c-49ad-9158-d9f10c51a3d1"
+  "recrutementFormEnabled": true,
+  "updatedAt": "2026-09-25T14:10:08.633Z",
+  "updatedBy": "c0f2f22c-361e-471a-a82b-9745281fc4fa"
 }

@@ -669,7 +669,16 @@ const InboxPage = ({ userRole }) => {
 
   // Buffere une modification sans l'envoyer au serveur
   const setPendingChange = (field, value) => {
-    setPendingChanges((prev) => ({ ...prev, [field]: value }));
+    setPendingChanges((prev) => {
+      const next = { ...prev, [field]: value };
+      if (field === "etiquette") {
+        // Lorsqu'on change d'étiquette, on change de pipeline (catégorie)
+        // Les statuts d'un pipeline ne sont pas forcément compatibles avec l'autre.
+        // On réinitialise à NOUVEAU pour forcer un statut valide.
+        next.status = "NOUVEAU";
+      }
+      return next;
+    });
   };
 
   // Envoie toutes les modifications en attente
@@ -729,12 +738,8 @@ const InboxPage = ({ userRole }) => {
 
   const handleStatusWithModal = (newStatus) => {
     if (newStatus === "A_RAPPELER") {
-      setRappelDate("");
-      setRappelNote("");
       setRappelModal({ type: "RAPPEL", status: newStatus });
     } else if (newStatus === "ENTRETIEN") {
-      setRappelDate("");
-      setEntretienLien("");
       setRappelModal({ type: "ENTRETIEN", status: newStatus });
     } else {
       setPendingChange("status", newStatus);
@@ -768,6 +773,7 @@ const InboxPage = ({ userRole }) => {
         width="150px"
       >
         {(userRole === "Administrateur" ||
+          userRole === "Super-administrateur" || 
           userRole === "Super administrateur") && (
           <button
             type="button"
@@ -777,7 +783,7 @@ const InboxPage = ({ userRole }) => {
               setAssignMsg(m);
             }}
           >
-            <Files size={14} /> Assigner à...
+            <Files size={14} /> Mettre en copie...
           </button>
         )}
         <button
@@ -825,11 +831,6 @@ const InboxPage = ({ userRole }) => {
     const isSA = role === "Super-administrateur";
     const isRO = role === "Responsable opérationnel";
     
-    // Rôle non autorisé pour Contact/Recrutement/Email
-    if (!isSA && !isRO && category !== "interne") {
-      return [currentStatus];
-    }
-
     const ALL_LABELS = {
       NOUVEAU: "Nouveau",
       A_RAPPELER: "À rappeler",
@@ -843,6 +844,13 @@ const InboxPage = ({ userRole }) => {
     };
     
     const make = (vals) => vals.map(v => ({ value: v, label: ALL_LABELS[v] || v }));
+    
+    // Rôle non autorisé pour Contact/Recrutement
+    // La règle métier dit "Super-administrateur et Responsable opérationnel uniquement"
+    if (!isSA && !isRO) {
+      return make([currentStatus]);
+    }
+
     const withCurrent = (vals) => {
       const targets = vals.filter(v => v !== currentStatus);
       return make([currentStatus, ...targets]);
@@ -855,7 +863,7 @@ const InboxPage = ({ userRole }) => {
         case "DISCUSSION": return withCurrent(["A_RAPPELER", "SANS_SUITE", "GAGNE"]);
         case "SANS_SUITE": return withCurrent(["DISCUSSION"]);
         case "GAGNE": return withCurrent([]);
-        default: return make([currentStatus]);
+        default: return make(["NOUVEAU", "A_RAPPELER", "DISCUSSION", "SANS_SUITE"]);
       }
     } else if (category === "recrutement") {
       switch(currentStatus) {
@@ -864,15 +872,11 @@ const InboxPage = ({ userRole }) => {
         case "ENTRETIEN": return withCurrent(["A_RAPPELER", "RETENU", "REFUSE"]);
         case "RETENU": return withCurrent([]);
         case "REFUSE": return withCurrent([]);
-        default: return make([currentStatus]);
+        default: return make(["NOUVEAU", "A_RAPPELER", "ENTRETIEN"]);
       }
-    } else { // email / interne
-      switch(currentStatus) {
-        case "NOUVEAU": return withCurrent(["A_RAPPELER", "TRAITE"]);
-        case "A_RAPPELER": return withCurrent(["TRAITE"]);
-        case "TRAITE": return withCurrent(["NOUVEAU"]);
-        default: return make([currentStatus]);
-      }
+    } else { 
+      // Aucun pipeline défini pour "Général" ou "Interne"
+      return [];
     }
   };
 
@@ -881,17 +885,16 @@ const InboxPage = ({ userRole }) => {
     const currentEtiquette = pendingChanges.etiquette !== undefined ? pendingChanges.etiquette : msg.etiquette || "";
     const role = currentUser?.role?.name || currentUser?.role || "";
 
-    let category = "email";
-    if (currentTab === "contact" || (currentTab === "personnel" && currentEtiquette === "Contact")) category = "contact";
-    else if (currentTab === "recrutement" || (currentTab === "personnel" && currentEtiquette === "Recrutement")) category = "recrutement";
-    else if (currentTab === "personnel" || currentTab === "interne") category = "interne";
+    let category = "none";
+    if (currentTab === "contact" || currentEtiquette === "Contact") category = "contact";
+    else if (currentTab === "recrutement" || currentEtiquette === "Recrutement") category = "recrutement";
 
     const options = getAllowedMessageStatuses(currentStatus, category, role);
     const isDisabled = options.length <= 1;
 
     const selectElement = (
       <select
-        value={currentStatus}
+        value={options.length === 0 ? "" : currentStatus}
         onChange={(e) => handleStatusWithModal(e.target.value, currentTab)}
         disabled={isDisabled}
         style={{
@@ -904,11 +907,15 @@ const InboxPage = ({ userRole }) => {
           cursor: isDisabled ? "not-allowed" : "pointer",
         }}
       >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
+        {options.length === 0 ? (
+          <option value="" disabled>Sélectionnez une étiquette...</option>
+        ) : (
+          options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))
+        )}
       </select>
     );
 
@@ -1076,7 +1083,7 @@ const InboxPage = ({ userRole }) => {
                   <option value={50}>50 par page</option>
                 </select>
 
-                {tab === "personnel" && (
+                {tab === "personnel" && (currentUser?.role?.name === "Super-administrateur" || currentUser?.role === "Super-administrateur") && (
                   <button
                     type="button"
                     onClick={handleSyncEmails}
@@ -2098,6 +2105,37 @@ const InboxPage = ({ userRole }) => {
                       <InlineDetailField label="Statut">
                         {renderStatusDropdown(processMsg, tab, true)}
                       </InlineDetailField>
+                      {(currentUser?.role?.name === "Super-administrateur" || currentUser?.role === "Super-administrateur") && (
+                        <InlineDetailField label="Mettre en copie">
+                          <select
+                            value={
+                              pendingChanges.assignedToId !== undefined
+                                ? pendingChanges.assignedToId
+                                : processMsg.assignedToId || ""
+                            }
+                            onChange={(e) =>
+                              setPendingChange("assignedToId", e.target.value)
+                            }
+                            style={{
+                              padding: "0.25rem 0.5rem",
+                              borderRadius: "4px",
+                              border: `1px solid ${pendingChanges.assignedToId !== undefined ? "#D97706" : "var(--border)"}`,
+                              outline: "none",
+                              background: "#FFF",
+                              width: "100%",
+                            }}
+                          >
+                            <option value="">Aucun</option>
+                            {users
+                              .filter(u => u.role?.name === "Responsable opérationnel" || u.role === "Responsable opérationnel")
+                              .map((u) => (
+                                <option key={u.id} value={u.id}>
+                                  {u.name} (Responsable)
+                                </option>
+                            ))}
+                          </select>
+                        </InlineDetailField>
+                      )}
                     </>
                   )}
                   <InlineDetailField label="Fichiers joints">
@@ -3167,7 +3205,7 @@ const InboxPage = ({ userRole }) => {
                 fontSize: "1.25rem",
               }}
             >
-              Assigner le message
+              Mettre en copie le message
             </h3>
             <div style={{ marginBottom: "1.5rem" }}>
               <label
@@ -3221,7 +3259,7 @@ const InboxPage = ({ userRole }) => {
                 disabled={isSubmitting}
                 onClick={handleAssignSubmit}
               >
-                {isSubmitting ? "En cours..." : "Assigner"}
+                {isSubmitting ? "En cours..." : "Mettre en copie"}
               </button>
             </div>
           </div>

@@ -1,9 +1,9 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import App from './App.jsx'
-import './index.css'
-import './i18n.js'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App.jsx";
+import "./index.css";
+import "./i18n.js";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -23,18 +23,55 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: '2rem', background: '#FEE2E2', color: '#B91C1C', minHeight: '100vh', fontFamily: 'sans-serif' }}>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Erreur critique de l'application</h1>
-          <p style={{ marginBottom: '1rem' }}>Une erreur s'est produite lors du rendu de la page :</p>
-          <pre style={{ background: '#fff', padding: '1rem', borderRadius: '8px', overflowX: 'auto', border: '1px solid #F87171' }}>
+        <div
+          style={{
+            padding: "2rem",
+            background: "#FEE2E2",
+            color: "#B91C1C",
+            minHeight: "100vh",
+            fontFamily: "sans-serif",
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "1.5rem",
+              fontWeight: "bold",
+              marginBottom: "1rem",
+            }}
+          >
+            Erreur critique de l'application
+          </h1>
+          <p style={{ marginBottom: "1rem" }}>
+            Une erreur s'est produite lors du rendu de la page :
+          </p>
+          <pre
+            style={{
+              background: "#fff",
+              padding: "1rem",
+              borderRadius: "8px",
+              overflowX: "auto",
+              border: "1px solid #F87171",
+            }}
+          >
             {this.state.error?.toString()}
             <br />
             {this.state.errorInfo?.componentStack}
           </pre>
-          <button 
+          <button
             type="button"
-            onClick={() => { localStorage.clear(); window.location.href = '/'; }}
-            style={{ marginTop: '1rem', padding: '0.5rem 1rem', background: '#B91C1C', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+            onClick={() => {
+              localStorage.clear();
+              window.location.href = "/";
+            }}
+            style={{
+              marginTop: "1rem",
+              padding: "0.5rem 1rem",
+              background: "#B91C1C",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
           >
             Vider le cache et recommencer
           </button>
@@ -45,7 +82,7 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <ErrorBoundary>
@@ -53,4 +90,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </ErrorBoundary>
     </BrowserRouter>
   </React.StrictMode>,
-)
+);

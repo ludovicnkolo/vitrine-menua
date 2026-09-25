@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
 /** Style partagé pour tous les inputs/textareas du back-office admin */
 const inputStyle = {
-  width: '100%',
-  padding: '0.5rem',
-  borderRadius: '4px',
-  border: '1px solid var(--border)',
+  width: "100%",
+  padding: "0.5rem",
+  borderRadius: "4px",
+  border: "1px solid var(--border)",
 };
 
 /**
@@ -18,23 +18,37 @@ const inputStyle = {
  * @param {boolean}  required    - Affiche l'astérisque rouge et ajoute required
  * @param {object}   inputProps  - Props supplémentaires passées à l'élément input/textarea
  */
-const FormField = ({ label, type = 'text', value, onChange, required = false, inputProps = {} }) => {
+const FormField = ({
+  label,
+  type = "text",
+  value,
+  onChange,
+  required = false,
+  inputProps = {},
+}) => {
   const labelEl = (
-    <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem', fontWeight: 500 }}>
-      {label} {required && <span style={{ color: 'red' }}>*</span>}
+    <label
+      style={{
+        display: "block",
+        marginBottom: "0.25rem",
+        fontSize: "0.875rem",
+        fontWeight: 500,
+      }}
+    >
+      {label} {required && <span style={{ color: "red" }}>*</span>}
     </label>
   );
 
-  if (type === 'textarea') {
+  if (type === "textarea") {
     return (
       <div>
         {labelEl}
         <textarea
           rows={3}
-          value={value || ''}
+          value={value || ""}
           onChange={onChange}
           required={required}
-          style={{ ...inputStyle, resize: 'vertical', fontFamily: 'inherit' }}
+          style={{ ...inputStyle, resize: "vertical", fontFamily: "inherit" }}
           {...inputProps}
         />
       </div>
@@ -46,7 +60,7 @@ const FormField = ({ label, type = 'text', value, onChange, required = false, in
       {labelEl}
       <input
         type={type}
-        value={value || ''}
+        value={value || ""}
         onChange={onChange}
         required={required}
         style={inputStyle}

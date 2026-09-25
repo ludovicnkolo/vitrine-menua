@@ -1,26 +1,32 @@
-const express = require('express');
-const prisma = require('../../prisma');
-const crypto = require('node:crypto');
-const imaps = require('imap-simple');
-const simpleParser = require('mailparser').simpleParser;
-const fs = require('node:fs');
-const path = require('node:path');
+const express = require("express");
+const prisma = require("../../prisma");
+const crypto = require("node:crypto");
+const imaps = require("imap-simple");
+const simpleParser = require("mailparser").simpleParser;
+const fs = require("node:fs");
+const path = require("node:path");
 const router = express.Router();
 
-const { authenticateJWT, requireRoles, isSuperAdmin, isAdmin, isManager } = require('../../middlewares/auth');
-const { transporter } = require('../../utils/mailer');
-const { logAudit } = require('../../utils/audit');
+const {
+  authenticateJWT,
+  requireRoles,
+  isSuperAdmin,
+  isAdmin,
+  isManager,
+} = require("../../middlewares/auth");
+const { transporter } = require("../../utils/mailer");
+const { logAudit } = require("../../utils/audit");
 
 const imapConfig = {
   imap: {
-    user: process.env.IMAP_USER || 'contact@menuaconsulting.com',
-    password: process.env.IMAP_PASSWORD || '',
-    host: process.env.IMAP_HOST || 'ssl0.ovh.net',
+    user: process.env.IMAP_USER || "contact@menuaconsulting.com",
+    password: process.env.IMAP_PASSWORD || "",
+    host: process.env.IMAP_HOST || "ssl0.ovh.net",
     port: process.env.IMAP_PORT ? Number.parseInt(process.env.IMAP_PORT) : 993,
     tls: true,
     authTimeout: 10000,
-    tlsOptions: { rejectUnauthorized: false }
-  }
+    tlsOptions: { rejectUnauthorized: false },
+  },
 };
 
 const getPaginationParams = (query, defaultLimit = 6) => {
@@ -35,14 +41,16 @@ const sendPaginatedResponse = (res, data, total, page, limit) => {
     data,
     total,
     page,
-    totalPages: Math.ceil(total / limit) || 1
+    totalPages: Math.ceil(total / limit) || 1,
   });
 };
 
 const resolveCreatorId = async (req) => {
   let creatorId = req.user.id;
-  if (creatorId === 'MASTER-ADMIN') {
-    let masterUser = await prisma.utilisateur.findUnique({ where: { email: 'contact@menuaconsulting.com' } });
+  if (creatorId === "MASTER-ADMIN") {
+    let masterUser = await prisma.utilisateur.findUnique({
+      where: { email: "contact@menuaconsulting.com" },
+    });
     if (!masterUser) masterUser = await prisma.utilisateur.findFirst();
     return masterUser?.id || creatorId;
   }
@@ -51,8 +59,8 @@ const resolveCreatorId = async (req) => {
 
 const generateReference = async (model, prefix) => {
   const lastRecord = await prisma[model].findFirst({
-    orderBy: { createdAt: 'desc' },
-    select: { reference: true }
+    orderBy: { createdAt: "desc" },
+    select: { reference: true },
   });
   let nextNum = 1;
   if (lastRecord && lastRecord.reference) {
@@ -60,264 +68,350 @@ const generateReference = async (model, prefix) => {
     const match = lastRecord.reference.match(regex);
     if (match) nextNum = Number.parseInt(match[1], 10) + 1;
   }
-  return `${prefix}-${String(nextNum).padStart(2, '0')}`;
+  return `${prefix}-${String(nextNum).padStart(2, "0")}`;
 };
 
 const generateSubDossierReference = async (parentDossierId) => {
-  const parent = await prisma.dossier.findUnique({ where: { id: parentDossierId }, select: { reference: true } });
-  if (!parent || !parent.reference) return `DOS-SUB-${Math.floor(Math.random() * 1000)}`;
-  
-  const children = await prisma.dossier.findMany({ 
-    where: { parentDossierId },
-    select: { reference: true }
+  const parent = await prisma.dossier.findUnique({
+    where: { id: parentDossierId },
+    select: { reference: true },
   });
-  
+  if (!parent || !parent.reference)
+    return `DOS-SUB-${Math.floor(Math.random() * 1000)}`;
+
+  const children = await prisma.dossier.findMany({
+    where: { parentDossierId },
+    select: { reference: true },
+  });
+
   let maxSeq = 0;
   for (const child of children) {
     if (!child.reference) continue;
-    const parts = child.reference.split('-');
+    const parts = child.reference.split("-");
     if (parts.length >= 3) {
       const seq = parseInt(parts[parts.length - 1], 10);
       if (!isNaN(seq) && seq > maxSeq) {
         maxSeq = seq;
       }
     } else if (parts.length === 2) {
-        // Just in case it was a DOS-XX format incorrectly saved as a child previously
-        const seq = parseInt(parts[1], 10);
-        if (!isNaN(seq) && seq > maxSeq) maxSeq = seq;
+      // Just in case it was a DOS-XX format incorrectly saved as a child previously
+      const seq = parseInt(parts[1], 10);
+      if (!isNaN(seq) && seq > maxSeq) maxSeq = seq;
     }
   }
-  return `${parent.reference}-${String(maxSeq + 1).padStart(2, '0')}`;
+  return `${parent.reference}-${String(maxSeq + 1).padStart(2, "0")}`;
 };
 
 router.use(authenticateJWT);
 
 // --- ROLES ---
 async function checkAndUpdateMissionStatus(missionId, prisma) {
-  const mission = await prisma.mission.findUnique({ where: { id: missionId }, include: { taches: true, dossier: { include: { missions: true } } } });
+  const mission = await prisma.mission.findUnique({
+    where: { id: missionId },
+    include: { taches: true, dossier: { include: { missions: true } } },
+  });
   if (!mission) return;
 
   const allTaches = mission.taches;
   let newStatus = mission.status;
 
-  if (allTaches.length > 0 && allTaches.every(t => t.status === 'TERMINE')) {
-    newStatus = 'TERMINE';
-  } else if (mission.status === 'NOUVEAU' && allTaches.some(t => t.status !== 'NOUVEAU')) {
-    newStatus = 'OUVERT';
-  } else if (mission.status === 'TERMINE' && allTaches.some(t => t.status !== 'TERMINE')) {
-    newStatus = 'OUVERT';
+  if (allTaches.length > 0 && allTaches.every((t) => t.status === "TERMINE")) {
+    newStatus = "TERMINE";
+  } else if (
+    mission.status === "NOUVEAU" &&
+    allTaches.some((t) => t.status !== "NOUVEAU")
+  ) {
+    newStatus = "OUVERT";
+  } else if (
+    mission.status === "TERMINE" &&
+    allTaches.some((t) => t.status !== "TERMINE")
+  ) {
+    newStatus = "OUVERT";
   }
 
   if (newStatus !== mission.status) {
-    await prisma.mission.update({ where: { id: mission.id }, data: { status: newStatus, previousStatus: mission.status } });
-    if (newStatus === 'TERMINE' && mission.dossier) {
-       checkAndUpdateDossierStatus(mission.dossier, prisma);
-    } else if (newStatus === 'OUVERT' && mission.dossier && mission.dossier.status === 'NOUVEAU') {
-       await prisma.dossier.update({ where: { id: mission.dossier.id }, data: { status: 'OUVERT' } });
+    await prisma.mission.update({
+      where: { id: mission.id },
+      data: { status: newStatus, previousStatus: mission.status },
+    });
+    if (newStatus === "TERMINE" && mission.dossier) {
+      checkAndUpdateDossierStatus(mission.dossier, prisma);
+    } else if (
+      newStatus === "OUVERT" &&
+      mission.dossier &&
+      mission.dossier.status === "NOUVEAU"
+    ) {
+      await prisma.dossier.update({
+        where: { id: mission.dossier.id },
+        data: { status: "OUVERT" },
+      });
     }
   }
 }
 
 async function checkAndUpdateDossierStatus(dossier, prisma) {
-  const freshDossier = await prisma.dossier.findUnique({ where: { id: dossier.id }, include: { missions: true } });
+  const freshDossier = await prisma.dossier.findUnique({
+    where: { id: dossier.id },
+    include: { missions: true },
+  });
   if (!freshDossier) return;
   const allMissions = freshDossier.missions;
-  if (allMissions.length > 0 && allMissions.every(m => m.status === 'TERMINE')) {
-    if (freshDossier.status !== 'TERMINE' && freshDossier.status !== 'ARCHIVE' && freshDossier.status !== 'BLOQUE') {
-       await prisma.dossier.update({ where: { id: freshDossier.id }, data: { status: 'TERMINE', previousStatus: freshDossier.status } });
+  if (
+    allMissions.length > 0 &&
+    allMissions.every((m) => m.status === "TERMINE")
+  ) {
+    if (
+      freshDossier.status !== "TERMINE" &&
+      freshDossier.status !== "ARCHIVE" &&
+      freshDossier.status !== "BLOQUE"
+    ) {
+      await prisma.dossier.update({
+        where: { id: freshDossier.id },
+        data: { status: "TERMINE", previousStatus: freshDossier.status },
+      });
     }
-  } else if (freshDossier.status === 'TERMINE' && allMissions.some(m => m.status !== 'TERMINE')) {
-       await prisma.dossier.update({ where: { id: freshDossier.id }, data: { status: 'OUVERT', previousStatus: freshDossier.status } });
+  } else if (
+    freshDossier.status === "TERMINE" &&
+    allMissions.some((m) => m.status !== "TERMINE")
+  ) {
+    await prisma.dossier.update({
+      where: { id: freshDossier.id },
+      data: { status: "OUVERT", previousStatus: freshDossier.status },
+    });
   }
 }
 
-const { syncMessages } = require('../../controllers/imapController');
+const { syncMessages } = require("../../controllers/imapController");
 
-router.post('/documents', async (req, res) => {
+router.post("/documents", async (req, res) => {
   try {
     const { name, filename, bucket, dossierId, missionId } = req.body;
     const creatorId = await resolveCreatorId(req);
     if (!filename || (!dossierId && !missionId)) {
-      return res.status(400).json({ error: 'filename et dossierId ou missionId sont requis.' });
+      return res
+        .status(400)
+        .json({ error: "filename et dossierId ou missionId sont requis." });
     }
     const document = await prisma.document.create({
       data: {
         name: name || filename,
-        url: `${bucket || 'formulaires'}/${filename}`,
+        url: `${bucket || "formulaires"}/${filename}`,
         uploadedById: creatorId,
         ...(dossierId && { dossierId }),
-        ...(missionId && { missionId })
+        ...(missionId && { missionId }),
       },
-      include: { uploadedBy: true }
+      include: { uploadedBy: true },
     });
 
     await logAudit(
       req.user?.id,
-      'AJOUT_DOCUMENT',
+      "AJOUT_DOCUMENT",
       document.id,
-      'DOCUMENT',
+      "DOCUMENT",
       `Document rattaché: ${document.name}`,
-      document.dossierId || null
+      document.dossierId || null,
     );
 
     res.status(201).json(document);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erreur lors de l\'enregistrement du document: ' + error.message });
+    res
+      .status(500)
+      .json({
+        error: "Erreur lors de l'enregistrement du document: " + error.message,
+      });
   }
 });
 
 // Lister les documents d'une entité (exclut les documents supprimés)
 // Lister la corbeille (documents soft-deleted)
-router.get('/documents/trash/list', async (req, res) => {
+router.get("/documents/trash/list", async (req, res) => {
   try {
     const docs = await prisma.document.findMany({
       where: { isDeleted: true },
       include: {
         uploadedBy: true,
         dossier: { select: { id: true, name: true } },
-        mission: { select: { id: true, description: true } }
+        mission: { select: { id: true, description: true } },
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: "desc" },
     });
     res.json(docs);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la récupération de la corbeille.' });
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la récupération de la corbeille." });
   }
 });
 
-router.get('/documents/:type/:id', async (req, res) => {
+router.get("/documents/:type/:id", async (req, res) => {
   try {
     const { type, id } = req.params;
-    const entityFilter = type === 'dossier' ? { dossierId: id } : { missionId: id };
+    const entityFilter =
+      type === "dossier" ? { dossierId: id } : { missionId: id };
     const docs = await prisma.document.findMany({
       where: { ...entityFilter, isDeleted: false },
       include: { uploadedBy: true },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: "desc" },
     });
     res.json(docs);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la récupération des documents.' });
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la récupération des documents." });
   }
 });
 
-router.delete('/documents/:id', async (req, res) => {
+router.delete("/documents/:id", async (req, res) => {
   try {
-    const doc = await prisma.document.findUnique({ where: { id: req.params.id } });
-    if (!doc) return res.status(404).json({ error: 'Document introuvable.' });
-    if (doc.isDeleted) return res.status(409).json({ error: 'Ce document est déjà supprimé.' });
+    const doc = await prisma.document.findUnique({
+      where: { id: req.params.id },
+    });
+    if (!doc) return res.status(404).json({ error: "Document introuvable." });
+    if (doc.isDeleted)
+      return res.status(409).json({ error: "Ce document est déjà supprimé." });
 
     // Soft delete : marque comme supprimé en BDD (récupérable)
     // La suppression physique dans OVH est gérée par le cron de nettoyage (P4)
     await prisma.document.update({
       where: { id: req.params.id },
-      data: { isDeleted: true }
+      data: { isDeleted: true },
     });
 
     await logAudit(
       req.user?.id,
-      'SUPPRESSION_DOCUMENT',
+      "SUPPRESSION_DOCUMENT",
       doc.id,
-      'DOCUMENT',
+      "DOCUMENT",
       `Document supprimé (soft): ${doc.name}`,
-      doc.dossierId || null
+      doc.dossierId || null,
     );
-    
-    res.json({ success: true, message: 'Document supprimé. Il pourra être purgé ultérieurement.' });
+
+    res.json({
+      success: true,
+      message: "Document supprimé. Il pourra être purgé ultérieurement.",
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la suppression du document.' });
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la suppression du document." });
   }
 });
 
 // ─── P2 : CORBEILLE ─────────────────────────────────────────────────────────
 
-
-
 // Restaurer un document depuis la corbeille
-router.post('/documents/:id/restore', async (req, res) => {
+router.post("/documents/:id/restore", async (req, res) => {
   try {
-    const doc = await prisma.document.findUnique({ where: { id: req.params.id } });
-    if (!doc) return res.status(404).json({ error: 'Document introuvable.' });
-    if (!doc.isDeleted) return res.status(409).json({ error: 'Ce document n\'est pas en corbeille.' });
+    const doc = await prisma.document.findUnique({
+      where: { id: req.params.id },
+    });
+    if (!doc) return res.status(404).json({ error: "Document introuvable." });
+    if (!doc.isDeleted)
+      return res
+        .status(409)
+        .json({ error: "Ce document n'est pas en corbeille." });
 
     const restored = await prisma.document.update({
       where: { id: req.params.id },
-      data: { isDeleted: false }
+      data: { isDeleted: false },
     });
 
     await logAudit(
       req.user?.id,
-      'RESTAURATION_DOCUMENT',
+      "RESTAURATION_DOCUMENT",
       doc.id,
-      'DOCUMENT',
+      "DOCUMENT",
       `Document restauré: ${doc.name}`,
-      doc.dossierId || null
+      doc.dossierId || null,
     );
 
     res.json({ success: true, document: restored });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la restauration du document.' });
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la restauration du document." });
   }
 });
 
 // Purge définitive d'un document (hard delete BDD + suppression OVH)
-router.delete('/documents/:id/purge', async (req, res) => {
+router.delete("/documents/:id/purge", async (req, res) => {
   try {
-    const doc = await prisma.document.findUnique({ where: { id: req.params.id } });
-    if (!doc) return res.status(404).json({ error: 'Document introuvable.' });
+    const doc = await prisma.document.findUnique({
+      where: { id: req.params.id },
+    });
+    if (!doc) return res.status(404).json({ error: "Document introuvable." });
 
     // Suppression physique en BDD
     await prisma.document.delete({ where: { id: req.params.id } });
 
     // Suppression dans OVH S3
     try {
-      const { deleteFromS3 } = require('../services/s3Service');
+      const { deleteFromS3 } = require("../services/s3Service");
       await deleteFromS3(doc.url);
     } catch (s3Err) {
-      console.error({ event: 'purge_s3_delete_failed', key: doc.url, error: s3Err.message });
+      console.error({
+        event: "purge_s3_delete_failed",
+        key: doc.url,
+        error: s3Err.message,
+      });
       // Non bloquant — la suppression BDD est déjà faite
     }
 
     await logAudit(
       req.user?.id,
-      'PURGE_DOCUMENT',
+      "PURGE_DOCUMENT",
       doc.id,
-      'DOCUMENT',
+      "DOCUMENT",
       `Document purgé définitivement: ${doc.name} (S3: ${doc.url})`,
-      doc.dossierId || null
+      doc.dossierId || null,
     );
 
-    res.json({ success: true, message: 'Document supprimé définitivement.' });
+    res.json({ success: true, message: "Document supprimé définitivement." });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la purge du document.' });
+    res.status(500).json({ error: "Erreur lors de la purge du document." });
   }
 });
 
 // ─── P3 : REMPLACEMENT DE DOCUMENT ─────────────────────────────────────────
 // Le remplacement est géré côté /api/files/replace/:id (voir files.js)
 // Route de mise à jour du nom uniquement (sans nouveau fichier)
-router.patch('/documents/:id', async (req, res) => {
+router.patch("/documents/:id", async (req, res) => {
   try {
     const { name } = req.body;
-    const doc = await prisma.document.findUnique({ where: { id: req.params.id } });
-    if (!doc) return res.status(404).json({ error: 'Document introuvable.' });
-    if (doc.isDeleted) return res.status(409).json({ error: 'Document supprimé, veuillez le restaurer d\'abord.' });
+    const doc = await prisma.document.findUnique({
+      where: { id: req.params.id },
+    });
+    if (!doc) return res.status(404).json({ error: "Document introuvable." });
+    if (doc.isDeleted)
+      return res
+        .status(409)
+        .json({ error: "Document supprimé, veuillez le restaurer d'abord." });
 
     const updated = await prisma.document.update({
       where: { id: req.params.id },
-      data: { ...(name && { name }) }
+      data: { ...(name && { name }) },
     });
 
-    await logAudit(req.user?.id, 'RENOMMAGE_DOCUMENT', doc.id, 'DOCUMENT', `Document renommé: ${doc.name} → ${name}`, doc.dossierId || null);
+    await logAudit(
+      req.user?.id,
+      "RENOMMAGE_DOCUMENT",
+      doc.id,
+      "DOCUMENT",
+      `Document renommé: ${doc.name} → ${name}`,
+      doc.dossierId || null,
+    );
     res.json(updated);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la mise à jour du document.' });
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la mise à jour du document." });
   }
 });
 

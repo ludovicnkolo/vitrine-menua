@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import ConfirmModal from './ConfirmModal';
-import AlertModal from './AlertModal';
-import { alertService } from '../utils/AlertService';
+import React, { useState, useEffect } from "react";
+import ConfirmModal from "./ConfirmModal";
+import AlertModal from "./AlertModal";
+import { alertService } from "../utils/AlertService";
 
 const GlobalAlerts = () => {
   const [alertData, setAlertData] = useState(null); // { message, title, type }
@@ -35,19 +35,19 @@ const GlobalAlerts = () => {
 
   return (
     <>
-      <AlertModal 
-        isOpen={!!alertData} 
-        title={alertData?.title} 
-        message={alertData?.message} 
-        type={alertData?.type} 
-        onClose={handleAlertClose} 
+      <AlertModal
+        isOpen={!!alertData}
+        title={alertData?.title}
+        message={alertData?.message}
+        type={alertData?.type}
+        onClose={handleAlertClose}
       />
-      <ConfirmModal 
-        isOpen={!!confirmData} 
-        title={confirmData?.title} 
-        message={confirmData?.message} 
-        onConfirm={() => handleConfirm(true)} 
-        onCancel={() => handleConfirm(false)} 
+      <ConfirmModal
+        isOpen={!!confirmData}
+        title={confirmData?.title}
+        message={confirmData?.message}
+        onConfirm={() => handleConfirm(true)}
+        onCancel={() => handleConfirm(false)}
       />
     </>
   );

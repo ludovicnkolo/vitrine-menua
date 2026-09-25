@@ -1,4 +1,4 @@
-const messages = require('../config/messages.json');
+const messages = require("../config/messages.json");
 
 /**
  * Retourne le message traduit selon la clé et la langue.
@@ -6,10 +6,12 @@ const messages = require('../config/messages.json');
  * @param {string} lang - La langue ('fr' ou 'en'), par défaut 'fr'
  * @returns {string} Le message traduit
  */
-const getMessage = (key, lang = 'fr') => {
-  const normalizedLang = ['fr', 'en'].includes(lang?.toLowerCase()) ? lang.toLowerCase() : 'fr';
+const getMessage = (key, lang = "fr") => {
+  const normalizedLang = ["fr", "en"].includes(lang?.toLowerCase())
+    ? lang.toLowerCase()
+    : "fr";
   if (messages[key]) {
-    return messages[key][normalizedLang] || messages[key]['fr'];
+    return messages[key][normalizedLang] || messages[key]["fr"];
   }
   return key; // Retourne la clé par défaut si non trouvée
 };
@@ -22,15 +24,15 @@ const getMessage = (key, lang = 'fr') => {
  * @param {string} lang - Langue de la requête
  * @param {Object} [data] - Données additionnelles éventuelles
  */
-const sendResponse = (res, statusCode, messageKey, lang = 'fr', data = {}) => {
+const sendResponse = (res, statusCode, messageKey, lang = "fr", data = {}) => {
   const isSuccess = statusCode >= 200 && statusCode < 300;
   const message = getMessage(messageKey, lang);
-  
+
   const responseBody = {
     success: isSuccess,
     code: messageKey,
     ...(isSuccess ? { message } : { error: message }),
-    ...data
+    ...data,
   };
 
   return res.status(statusCode).json(responseBody);
@@ -38,5 +40,5 @@ const sendResponse = (res, statusCode, messageKey, lang = 'fr', data = {}) => {
 
 module.exports = {
   getMessage,
-  sendResponse
+  sendResponse,
 };

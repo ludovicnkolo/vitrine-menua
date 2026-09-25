@@ -1,25 +1,43 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Search, MoreVertical, Pencil, Eye, Trash, MessageSquare, Paperclip, FileText, Download, Plus, X, Folder, ChevronRight, ChevronDown, CheckSquare, Square, Link as LinkIcon } from 'lucide-react';
-import { getSafeApiUrl, uploadFile, formatDate } from '../utils/helpers';
-import ConfirmModal from '../components/ConfirmModal';
-import ActionDropdown from '../components/ActionDropdown';
-import { getStatusBadge } from '../utils/helpers';
-import PaginationControls from '../components/PaginationControls';
-import ReadOnlyField from '../components/ReadOnlyField';
-import TaskConsultModal from '../components/TaskConsultModal';
-import FilePreviewModal from '../components/FilePreviewModal';
-import GedExplorer, { flattenFolderIds } from '../components/GedExplorer';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Search,
+  MoreVertical,
+  Pencil,
+  Eye,
+  Trash,
+  MessageSquare,
+  Paperclip,
+  FileText,
+  Download,
+  Plus,
+  X,
+  Folder,
+  ChevronRight,
+  ChevronDown,
+  CheckSquare,
+  Square,
+  Link as LinkIcon,
+} from "lucide-react";
+import { getSafeApiUrl, uploadFile, formatDate } from "../utils/helpers";
+import ConfirmModal from "../components/ConfirmModal";
+import ActionDropdown from "../components/ActionDropdown";
+import { getStatusBadge } from "../utils/helpers";
+import PaginationControls from "../components/PaginationControls";
+import ReadOnlyField from "../components/ReadOnlyField";
+import TaskConsultModal from "../components/TaskConsultModal";
+import FilePreviewModal from "../components/FilePreviewModal";
+import GedExplorer, { flattenFolderIds } from "../components/GedExplorer";
 const SearchableDropdown = ({ options, value, onChange, placeholder }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
 
   useEffect(() => {
-    const selectedOption = options.find(opt => opt.value === value);
+    const selectedOption = options.find((opt) => opt.value === value);
     if (selectedOption) {
       setSearchTerm(selectedOption.label);
     } else {
-      setSearchTerm('');
+      setSearchTerm("");
     }
   }, [value, options]);
 
@@ -27,19 +45,21 @@ const SearchableDropdown = ({ options, value, onChange, placeholder }) => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         setIsOpen(false);
-        const selectedOption = options.find(opt => opt.value === value);
+        const selectedOption = options.find((opt) => opt.value === value);
         if (selectedOption) setSearchTerm(selectedOption.label);
-        else setSearchTerm('');
+        else setSearchTerm("");
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [value, options]);
 
-  const filteredOptions = options.filter(opt => opt.label.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredOptions = options.filter((opt) =>
+    opt.label.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
   return (
-    <div ref={wrapperRef} style={{ position: 'relative', width: '100%' }}>
+    <div ref={wrapperRef} style={{ position: "relative", width: "100%" }}>
       <input
         type="text"
         className="input-field"
@@ -51,29 +71,62 @@ const SearchableDropdown = ({ options, value, onChange, placeholder }) => {
         }}
         onFocus={() => {
           setIsOpen(true);
-          setSearchTerm(''); // clear to show all options on focus
+          setSearchTerm(""); // clear to show all options on focus
         }}
-        style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF' }}
+        style={{
+          width: "100%",
+          padding: "0.75rem",
+          borderRadius: "8px",
+          border: "1px solid var(--border)",
+          background: "#FFF",
+        }}
       />
       {isOpen && (
-        <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 1000, background: '#FFF', border: '1px solid var(--border)', borderRadius: '8px', marginTop: '0.25rem', maxHeight: '200px', overflowY: 'auto', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-          {filteredOptions.length > 0 ? filteredOptions.map(opt => (
-            <div
-              key={opt.value}
-              style={{ padding: '0.75rem', cursor: 'pointer', borderBottom: '1px solid #f1f5f9' }}
-              onMouseDown={(e) => {
-                e.preventDefault(); 
-                onChange(opt.value);
-                setSearchTerm(opt.label);
-                setIsOpen(false);
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.background = '#f8fafc'}
-              onMouseLeave={(e) => e.currentTarget.style.background = '#FFF'}
-            >
-              {opt.label}
+        <div
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            right: 0,
+            zIndex: 1000,
+            background: "#FFF",
+            border: "1px solid var(--border)",
+            borderRadius: "8px",
+            marginTop: "0.25rem",
+            maxHeight: "200px",
+            overflowY: "auto",
+            boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+          }}
+        >
+          {filteredOptions.length > 0 ? (
+            filteredOptions.map((opt) => (
+              <div
+                key={opt.value}
+                style={{
+                  padding: "0.75rem",
+                  cursor: "pointer",
+                  borderBottom: "1px solid #f1f5f9",
+                }}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  onChange(opt.value);
+                  setSearchTerm(opt.label);
+                  setIsOpen(false);
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = "#f8fafc")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = "#FFF")
+                }
+              >
+                {opt.label}
+              </div>
+            ))
+          ) : (
+            <div style={{ padding: "0.75rem", color: "var(--text-muted)" }}>
+              Aucun résultat trouvé
             </div>
-          )) : (
-             <div style={{ padding: '0.75rem', color: 'var(--text-muted)' }}>Aucun résultat trouvé</div>
           )}
         </div>
       )}
@@ -84,72 +137,85 @@ const SearchableDropdown = ({ options, value, onChange, placeholder }) => {
 const DossiersPage = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [consultDossier, setConsultDossier] = useState(null);
-  const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: null, type: 'warning' });
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    onConfirm: null,
+    type: "warning",
+  });
   const [editDossier, setEditDossier] = useState(null);
   const [localConsultTask, setLocalConsultTask] = useState(null);
   const [previewFile, setPreviewFile] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
-  const [filterOrigine, setFilterOrigine] = useState('all');
-  const [pendingStatus, setPendingStatus] = useState('');
-  
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterOrigine, setFilterOrigine] = useState("all");
+  const [pendingStatus, setPendingStatus] = useState("");
+
   // Mission Creation State
   const [createMissionModal, setCreateMissionModal] = useState(false);
-  const [missionSubject, setMissionSubject] = useState('');
-  const [missionAssignedTo, setMissionAssignedTo] = useState('');
-  const [missionEcheance, setMissionEcheance] = useState('');
-  const [missionDescription, setMissionDescription] = useState('');
+  const [missionSubject, setMissionSubject] = useState("");
+  const [missionAssignedTo, setMissionAssignedTo] = useState("");
+  const [missionEcheance, setMissionEcheance] = useState("");
+  const [missionDescription, setMissionDescription] = useState("");
   const [missionFile, setMissionFile] = useState(null);
   const [selectedDossierDocs, setSelectedDossierDocs] = useState([]);
-  const [missionDossierId, setMissionDossierId] = useState('');
+  const [missionDossierId, setMissionDossierId] = useState("");
   const [authorizedDossierIds, setAuthorizedDossierIds] = useState([]);
   const [isSubmittingMission, setIsSubmittingMission] = useState(false);
   const [operationalTree, setOperationalTree] = useState(null);
 
   // Magic Link State
   const [showMagicModal, setShowMagicModal] = useState(false);
-  const [magicType, setMagicType] = useState('ACQUISITION');
-  const [magicExpires, setMagicExpires] = useState('7');
-  const [magicNote, setMagicNote] = useState('');
-  const [generatedMagicUrl, setGeneratedMagicUrl] = useState('');
+  const [magicType, setMagicType] = useState("ACQUISITION");
+  const [magicExpires, setMagicExpires] = useState("7");
+  const [magicNote, setMagicNote] = useState("");
+  const [generatedMagicUrl, setGeneratedMagicUrl] = useState("");
 
   useEffect(() => {
     if (createMissionModal && consultDossier) {
       const fetchTree = async () => {
         try {
-          const token = sessionStorage.getItem('adminToken');
-          const operationalDossier = consultDossier.subDossiers?.find(d => d.name === 'OPÉRATIONS & RÉALISATIONS');
+          const token = sessionStorage.getItem("adminToken");
+          const operationalDossier = consultDossier.subDossiers?.find(
+            (d) => d.name === "OPÉRATIONS & RÉALISATIONS",
+          );
           if (operationalDossier) {
-            const res = await fetch(getSafeApiUrl(`/api/crm/dossiers/${operationalDossier.id}/tree`), {
-              headers: { 'Authorization': `Bearer ${token}` }
-            });
+            const res = await fetch(
+              getSafeApiUrl(`/api/crm/dossiers/${operationalDossier.id}/tree`),
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              },
+            );
             if (res.ok) {
               const data = await res.json();
               setOperationalTree(data);
             }
           }
-        } catch (e) { console.error(e); }
+        } catch (e) {
+          console.error(e);
+        }
       };
       fetchTree();
     } else {
       setOperationalTree(null);
     }
   }, [createMissionModal, consultDossier]);
-  
+
   // Dossier Creation State
   const [showCreateDossierModal, setShowCreateDossierModal] = useState(false);
   const [newDossierData, setNewDossierData] = useState({
-    name: '',
-    description: '',
-    priority: 'NORMAL',
-    origin: '',
-    parentDossierId: '',
-    targetId: '',
-    generalName: '',
-    traitantId: ''
+    name: "",
+    description: "",
+    priority: "NORMAL",
+    origin: "",
+    parentDossierId: "",
+    targetId: "",
+    generalName: "",
+    traitantId: "",
   });
   const [isSubmittingDossier, setIsSubmittingDossier] = useState(false);
-  
+
   const menuRef = useRef(null);
 
   // States for real API data
@@ -160,32 +226,42 @@ const DossiersPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const currentUser = JSON.parse(sessionStorage.getItem('adminUser') || '{}');
+  const currentUser = JSON.parse(sessionStorage.getItem("adminUser") || "{}");
 
   const fetchDossiers = () => {
     setIsLoading(true);
-    const token = sessionStorage.getItem('adminToken');
-    const headers = { 'Authorization': `Bearer ${token}` };
-    
-    const urlDossiers = new URL(getSafeApiUrl('/api/crm/dossiers'));
-    urlDossiers.searchParams.set('page', page);
-    urlDossiers.searchParams.set('limit', 15);
-    urlDossiers.searchParams.set('rootOnly', 'true');
-    if (searchQuery) urlDossiers.searchParams.set('search', searchQuery);
-    if (filterStatus) urlDossiers.searchParams.set('status', filterStatus);
-    if (filterOrigine) urlDossiers.searchParams.set('origin', filterOrigine);
+    const token = sessionStorage.getItem("adminToken");
+    const headers = { Authorization: `Bearer ${token}` };
 
-    const urlTasks = new URL(getSafeApiUrl('/api/crm/tasks'));
-    urlTasks.searchParams.set('page', 1);
-    urlTasks.searchParams.set('limit', 1000);
+    const urlDossiers = new URL(getSafeApiUrl("/api/crm/dossiers"));
+    urlDossiers.searchParams.set("page", page);
+    urlDossiers.searchParams.set("limit", 15);
+    urlDossiers.searchParams.set("rootOnly", "true");
+    if (searchQuery) urlDossiers.searchParams.set("search", searchQuery);
+    if (filterStatus) urlDossiers.searchParams.set("status", filterStatus);
+    if (filterOrigine) urlDossiers.searchParams.set("origin", filterOrigine);
+
+    const urlTasks = new URL(getSafeApiUrl("/api/crm/tasks"));
+    urlTasks.searchParams.set("page", 1);
+    urlTasks.searchParams.set("limit", 1000);
 
     Promise.all([
-      fetch(urlDossiers.toString(), { headers }).then(res => res.json()).catch(() => ({ data: [], totalPages: 1 })),
-      fetch(urlTasks.toString(), { headers }).then(res => res.json()).catch(() => ({ data: [] })),
-      fetch(getSafeApiUrl('/api/crm/users'), { headers }).then(res => res.json()).catch(() => ([])),
-      fetch(getSafeApiUrl('/api/crm/clients'), { headers }).then(res => res.json()).catch(() => ([]))
+      fetch(urlDossiers.toString(), { headers })
+        .then((res) => res.json())
+        .catch(() => ({ data: [], totalPages: 1 })),
+      fetch(urlTasks.toString(), { headers })
+        .then((res) => res.json())
+        .catch(() => ({ data: [] })),
+      fetch(getSafeApiUrl("/api/crm/users"), { headers })
+        .then((res) => res.json())
+        .catch(() => []),
+      fetch(getSafeApiUrl("/api/crm/clients"), { headers })
+        .then((res) => res.json())
+        .catch(() => []),
     ]).then(([dossiersRes, tasksRes, usersRes, clientsRes]) => {
-      setDbDossiers(dossiersRes?.data || (Array.isArray(dossiersRes) ? dossiersRes : []));
+      setDbDossiers(
+        dossiersRes?.data || (Array.isArray(dossiersRes) ? dossiersRes : []),
+      );
       setTotalPages(dossiersRes?.totalPages || 1);
       setDbTasks(tasksRes?.data || (Array.isArray(tasksRes) ? tasksRes : []));
       setDbUsers(Array.isArray(usersRes) ? usersRes : []);
@@ -224,22 +300,22 @@ const DossiersPage = () => {
       window.customAlert("Le message / consignes est requis.");
       return;
     }
-    
+
     setIsSubmittingMission(true);
-    const token = sessionStorage.getItem('adminToken');
-    
+    const token = sessionStorage.getItem("adminToken");
+
     try {
       // 1. Upload file if any
       let attachmentFilename = null;
       if (missionFile) {
-        attachmentFilename = await uploadFile(missionFile, 'missions');
+        attachmentFilename = await uploadFile(missionFile, "missions");
       }
 
-      const res = await fetch(getSafeApiUrl('/api/crm/tasks'), {
-        method: 'POST',
+      const res = await fetch(getSafeApiUrl("/api/crm/tasks"), {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           description: `${missionSubject}\n\n${missionDescription}`,
@@ -248,44 +324,50 @@ const DossiersPage = () => {
           echeance: missionEcheance,
           attachment: attachmentFilename,
           dossierMissionId: missionDossierId || null,
-          authorizedDossierIds: authorizedDossierIds
-        })
+          authorizedDossierIds: authorizedDossierIds,
+        }),
       });
-      
+
       if (res.ok) {
         const missionData = await res.json();
         // 2. If file was uploaded, register it as a Document linked to this mission
         if (attachmentFilename) {
-          await fetch(getSafeApiUrl('/api/crm/documents'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          await fetch(getSafeApiUrl("/api/crm/documents"), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify({
               name: missionFile.name,
               filename: attachmentFilename,
-              bucket: 'missions',
-              missionId: missionData.id
-            })
+              bucket: "missions",
+              missionId: missionData.id,
+            }),
           });
         }
 
         // 3. Link selected dossier documents
         if (selectedDossierDocs.length > 0 && consultDossier.documents) {
           for (const docId of selectedDossierDocs) {
-            const d = consultDossier.documents.find(x => x.id === docId);
+            const d = consultDossier.documents.find((x) => x.id === docId);
             if (d && d.url) {
-              const parts = d.url.split('/');
+              const parts = d.url.split("/");
               if (parts.length >= 2) {
                 const b = parts.shift();
-                const fn = parts.join('/');
-                await fetch(getSafeApiUrl('/api/crm/documents'), {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                const fn = parts.join("/");
+                await fetch(getSafeApiUrl("/api/crm/documents"), {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                  },
                   body: JSON.stringify({
                     name: d.name,
                     filename: fn,
                     bucket: b,
-                    missionId: missionData.id
-                  })
+                    missionId: missionData.id,
+                  }),
                 });
               }
             }
@@ -294,18 +376,21 @@ const DossiersPage = () => {
 
         window.customAlert("Mission créée avec succès !");
         setCreateMissionModal(false);
-        setMissionSubject('');
-        setMissionDescription('');
-        setMissionAssignedTo('');
-        setMissionEcheance('');
+        setMissionSubject("");
+        setMissionDescription("");
+        setMissionAssignedTo("");
+        setMissionEcheance("");
         setMissionFile(null);
         setSelectedDossierDocs([]);
-        setMissionDossierId('');
+        setMissionDossierId("");
         setAuthorizedDossierIds([]);
         fetchDossiers();
       } else {
         const errData = await res.json().catch(() => ({}));
-        window.customAlert("Erreur lors de la création de la mission : " + (errData.error || res.status));
+        window.customAlert(
+          "Erreur lors de la création de la mission : " +
+            (errData.error || res.status),
+        );
       }
     } catch (e) {
       console.error(e);
@@ -317,11 +402,19 @@ const DossiersPage = () => {
 
   const handleGenerateMagicLink = async () => {
     try {
-      const token = sessionStorage.getItem('adminToken');
-      const res = await fetch(getSafeApiUrl('/api/magic/generate'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ dossierId: consultDossier.id, type: magicType, expiresInDays: magicExpires, note: magicNote.trim() || null })
+      const token = sessionStorage.getItem("adminToken");
+      const res = await fetch(getSafeApiUrl("/api/magic/generate"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          dossierId: consultDossier.id,
+          type: magicType,
+          expiresInDays: magicExpires,
+          note: magicNote.trim() || null,
+        }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -337,39 +430,49 @@ const DossiersPage = () => {
     }
   };
 
-
   const handleCreateDossier = async (e) => {
     e.preventDefault();
     if (!newDossierData.origin) {
-      window.customAlert("Veuillez sélectionner une Origine (Client ou Collaborateur).");
+      window.customAlert(
+        "Veuillez sélectionner une Origine (Client ou Collaborateur).",
+      );
       return;
     }
-    if (!newDossierData.targetId && (newDossierData.origin === 'CLIENT' || newDossierData.origin === 'COLLABORATEUR')) {
-      window.customAlert(`Veuillez sélectionner la Cible (${newDossierData.origin === 'CLIENT' ? 'Client' : 'Collaborateur'}).`);
+    if (
+      !newDossierData.targetId &&
+      (newDossierData.origin === "CLIENT" ||
+        newDossierData.origin === "COLLABORATEUR")
+    ) {
+      window.customAlert(
+        `Veuillez sélectionner la Cible (${newDossierData.origin === "CLIENT" ? "Client" : "Collaborateur"}).`,
+      );
       return;
     }
-    if (newDossierData.origin === 'GENERAL' && !newDossierData.generalName?.trim()) {
+    if (
+      newDossierData.origin === "GENERAL" &&
+      !newDossierData.generalName?.trim()
+    ) {
       window.customAlert("Veuillez saisir un nom pour ce dossier.");
       return;
     }
 
     let targetName = "";
-    if (newDossierData.origin === 'CLIENT') {
-      const client = dbClients.find(c => c.id === newDossierData.targetId);
-      targetName = client ? client.name.replace(/\s+/g, '_') : "INCONNU";
-    } else if (newDossierData.origin === 'COLLABORATEUR') {
-      const user = dbUsers.find(u => u.id === newDossierData.targetId);
-      targetName = user ? user.name.replace(/\s+/g, '_') : "INCONNU";
-    } else if (newDossierData.origin === 'GENERAL') {
-      targetName = newDossierData.generalName.replace(/\s+/g, '_');
+    if (newDossierData.origin === "CLIENT") {
+      const client = dbClients.find((c) => c.id === newDossierData.targetId);
+      targetName = client ? client.name.replace(/\s+/g, "_") : "INCONNU";
+    } else if (newDossierData.origin === "COLLABORATEUR") {
+      const user = dbUsers.find((u) => u.id === newDossierData.targetId);
+      targetName = user ? user.name.replace(/\s+/g, "_") : "INCONNU";
+    } else if (newDossierData.origin === "GENERAL") {
+      targetName = newDossierData.generalName.replace(/\s+/g, "_");
     }
 
     const today = new Date();
-    const dateStr = `${String(today.getDate()).padStart(2, '0')}${String(today.getMonth() + 1).padStart(2, '0')}${today.getFullYear()}`;
+    const dateStr = `${String(today.getDate()).padStart(2, "0")}${String(today.getMonth() + 1).padStart(2, "0")}${today.getFullYear()}`;
     const generatedName = `Dossier_${targetName}_${dateStr}`.toUpperCase();
 
     setIsSubmittingDossier(true);
-    const token = sessionStorage.getItem('adminToken');
+    const token = sessionStorage.getItem("adminToken");
 
     try {
       const payload = {
@@ -378,33 +481,47 @@ const DossiersPage = () => {
         priority: newDossierData.priority,
         origin: newDossierData.origin,
         parentDossierId: newDossierData.parentDossierId || null,
-        traitantId: newDossierData.traitantId || null
+        traitantId: newDossierData.traitantId || null,
       };
-      
-      if (newDossierData.origin === 'CLIENT' && newDossierData.targetId) {
+
+      if (newDossierData.origin === "CLIENT" && newDossierData.targetId) {
         payload.clientId = newDossierData.targetId;
-      } else if (newDossierData.origin === 'COLLABORATEUR' && newDossierData.targetId) {
+      } else if (
+        newDossierData.origin === "COLLABORATEUR" &&
+        newDossierData.targetId
+      ) {
         payload.targetUserId = newDossierData.targetId;
       }
       // GENERAL origin: no clientId or targetUserId needed
 
-      const res = await fetch(getSafeApiUrl('/api/crm/dossiers'), {
-        method: 'POST',
+      const res = await fetch(getSafeApiUrl("/api/crm/dossiers"), {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {
         window.customAlert("Dossier créé avec succès !");
         setShowCreateDossierModal(false);
-        setNewDossierData({ name: '', description: '', priority: 'NORMAL', origin: '', parentDossierId: '', targetId: '', generalName: '', traitantId: '' });
+        setNewDossierData({
+          name: "",
+          description: "",
+          priority: "NORMAL",
+          origin: "",
+          parentDossierId: "",
+          targetId: "",
+          generalName: "",
+          traitantId: "",
+        });
         fetchDossiers();
       } else {
         const errData = await res.json();
-        window.customAlert("Erreur: " + (errData.error || "Création impossible"));
+        window.customAlert(
+          "Erreur: " + (errData.error || "Création impossible"),
+        );
       }
     } catch (err) {
       console.error(err);
@@ -416,62 +533,70 @@ const DossiersPage = () => {
 
   const handleStatusAction = async (dossierId, newStatus) => {
     try {
-      const token = sessionStorage.getItem('adminToken');
+      const token = sessionStorage.getItem("adminToken");
       const res = await fetch(getSafeApiUrl(`/api/crm/dossiers/${dossierId}`), {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ status: newStatus })
+        body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
         if (consultDossier && consultDossier.id === dossierId) {
-          setConsultDossier({...consultDossier, status: newStatus});
-          setPendingStatus('');
+          setConsultDossier({ ...consultDossier, status: newStatus });
+          setPendingStatus("");
         }
         if (editDossier && editDossier.id === dossierId) {
-          setEditDossier({...editDossier, status: newStatus});
+          setEditDossier({ ...editDossier, status: newStatus });
         }
         fetchDossiers();
       } else {
         const errData = await res.json();
-        window.customAlert("Erreur : " + (errData.error || "Action impossible"));
+        window.customAlert(
+          "Erreur : " + (errData.error || "Action impossible"),
+        );
       }
     } catch (err) {
       console.error(err);
-      window.customAlert('Erreur réseau lors de la modification du statut.');
+      window.customAlert("Erreur réseau lors de la modification du statut.");
     }
   };
 
   const handleUpdateDossier = async () => {
     try {
-      const token = sessionStorage.getItem('adminToken');
+      const token = sessionStorage.getItem("adminToken");
       const payload = {
         name: editDossier.name,
         description: editDossier.description,
         status: editDossier.status,
-        traitantId: editDossier.traitantId
+        traitantId: editDossier.traitantId,
       };
-      const res = await fetch(getSafeApiUrl(`/api/crm/dossiers/${editDossier.id}`), {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+      const res = await fetch(
+        getSafeApiUrl(`/api/crm/dossiers/${editDossier.id}`),
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
         },
-        body: JSON.stringify(payload)
-      });
+      );
       if (res.ok) {
-        window.customAlert('Dossier modifié avec succès !');
+        window.customAlert("Dossier modifié avec succès !");
         setEditDossier(null);
         fetchDossiers();
       } else {
         const errData = await res.json();
-        window.customAlert("Erreur lors de la modification: " + (errData.error || "Impossible de sauvegarder"));
+        window.customAlert(
+          "Erreur lors de la modification: " +
+            (errData.error || "Impossible de sauvegarder"),
+        );
       }
     } catch (err) {
       console.error(err);
-      window.customAlert('Erreur réseau lors de la modification.');
+      window.customAlert("Erreur réseau lors de la modification.");
     }
   };
 
@@ -481,8 +606,8 @@ const DossiersPage = () => {
         setOpenMenuId(null);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const toggleMenu = (e, id) => {
@@ -491,71 +616,91 @@ const DossiersPage = () => {
   };
 
   const handleDeleteDossier = async (dossier) => {
-    if (!window.confirm(`Supprimer le dossier "${dossier.name}" ? Cette action est irréversible.`)) return;
+    if (
+      !window.confirm(
+        `Supprimer le dossier "${dossier.name}" ? Cette action est irréversible.`,
+      )
+    )
+      return;
     try {
-      const token = sessionStorage.getItem('adminToken');
-      const res = await fetch(getSafeApiUrl(`/api/crm/dossiers/${dossier.id}`), {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const token = sessionStorage.getItem("adminToken");
+      const res = await fetch(
+        getSafeApiUrl(`/api/crm/dossiers/${dossier.id}`),
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (res.ok) {
         fetchDossiers();
         if (consultDossier?.id === dossier.id) setConsultDossier(null);
       } else {
         const err = await res.json();
-        window.customAlert('Erreur : ' + (err.error || 'Suppression impossible'));
+        window.customAlert(
+          "Erreur : " + (err.error || "Suppression impossible"),
+        );
       }
     } catch (e) {
       console.error(e);
-      window.customAlert('Erreur réseau.');
+      window.customAlert("Erreur réseau.");
     }
   };
   /**
    * getAllowedDossierStatuses — Matrice de transition dossier par rôle
    */
   const getAllowedDossierStatuses = (currentStatus, userRole) => {
-    const role = typeof userRole === 'object' ? (userRole?.name || '') : (userRole || '');
-    const isSuperAdmin = role === 'Super-administrateur';
-    const isResp = role === 'Responsable opérationnel';
+    const role =
+      typeof userRole === "object" ? userRole?.name || "" : userRole || "";
+    const isSuperAdmin = role === "Super-administrateur";
+    const isResp = role === "Responsable opérationnel";
     const isRespOrAdmin = isResp || isSuperAdmin;
 
     const ALL_LABELS = {
-      NOUVEAU: 'Nouveau', OUVERT: 'Ouvert', EN_COURS: 'En cours', 
-      EN_ATTENTE: 'En attente', TERMINE: 'Terminé', CLOTURE: 'Clôturé',
-      ARCHIVE: 'Archivé', BLOQUE: 'Bloqué', ANNULE: 'Annulé'
+      NOUVEAU: "Nouveau",
+      OUVERT: "Ouvert",
+      EN_COURS: "En cours",
+      EN_ATTENTE: "En attente",
+      TERMINE: "Terminé",
+      CLOTURE: "Clôturé",
+      ARCHIVE: "Archivé",
+      BLOQUE: "Bloqué",
+      ANNULE: "Annulé",
     };
-    const make = (vals) => vals.map(v => ({ value: v, label: ALL_LABELS[v] || v }));
+    const make = (vals) =>
+      vals.map((v) => ({ value: v, label: ALL_LABELS[v] || v }));
     const withCurrent = (vals) => {
-      const targets = vals.filter(v => v !== currentStatus);
+      const targets = vals.filter((v) => v !== currentStatus);
       return make([currentStatus, ...targets]);
     };
     const lockedOnCurrent = () => make([currentStatus]);
 
     switch (currentStatus) {
-      case 'NOUVEAU':
-        if (isRespOrAdmin) return withCurrent(['OUVERT', 'ANNULE']);
+      case "NOUVEAU":
+        if (isRespOrAdmin) return withCurrent(["OUVERT", "ANNULE"]);
         return lockedOnCurrent();
-      case 'OUVERT':
-        if (isRespOrAdmin) return withCurrent(['EN_COURS', 'EN_ATTENTE', 'BLOQUE', 'ANNULE']);
+      case "OUVERT":
+        if (isRespOrAdmin)
+          return withCurrent(["EN_COURS", "EN_ATTENTE", "BLOQUE", "ANNULE"]);
         return lockedOnCurrent();
-      case 'EN_COURS':
-        if (isRespOrAdmin) return withCurrent(['TERMINE', 'EN_ATTENTE', 'BLOQUE']);
+      case "EN_COURS":
+        if (isRespOrAdmin)
+          return withCurrent(["TERMINE", "EN_ATTENTE", "BLOQUE"]);
         return lockedOnCurrent();
-      case 'EN_ATTENTE':
-        if (isRespOrAdmin) return withCurrent(['EN_COURS', 'BLOQUE']);
+      case "EN_ATTENTE":
+        if (isRespOrAdmin) return withCurrent(["EN_COURS", "BLOQUE"]);
         return lockedOnCurrent();
-      case 'BLOQUE':
-        if (isRespOrAdmin) return withCurrent(['EN_COURS', 'OUVERT']);
+      case "BLOQUE":
+        if (isRespOrAdmin) return withCurrent(["EN_COURS", "OUVERT"]);
         return lockedOnCurrent();
-      case 'TERMINE':
-        if (isSuperAdmin) return withCurrent(['CLOTURE', 'OUVERT']);
-        if (isResp) return withCurrent(['OUVERT']); // Un RO peut réouvrir mais pas clôturer (au choix)
+      case "TERMINE":
+        if (isSuperAdmin) return withCurrent(["CLOTURE", "OUVERT"]);
+        if (isResp) return withCurrent(["OUVERT"]); // Un RO peut réouvrir mais pas clôturer (au choix)
         return lockedOnCurrent();
-      case 'CLOTURE':
-        if (isSuperAdmin) return withCurrent(['ARCHIVE', 'OUVERT']);
+      case "CLOTURE":
+        if (isSuperAdmin) return withCurrent(["ARCHIVE", "OUVERT"]);
         return lockedOnCurrent();
-      case 'ARCHIVE':
-      case 'ANNULE':
+      case "ARCHIVE":
+      case "ANNULE":
         return lockedOnCurrent(); // États terminaux
       default:
         return lockedOnCurrent();
@@ -564,37 +709,82 @@ const DossiersPage = () => {
 
   const renderWorkflowButtons = (dossier) => {
     if (!dossier) return null;
-    const role = currentUser?.role?.name || currentUser?.role || '';
-    const isSuperAdmin = role === 'Super-administrateur';
-    const isResp = role === 'Responsable opérationnel';
+    const role = currentUser?.role?.name || currentUser?.role || "";
+    const isSuperAdmin = role === "Super-administrateur";
+    const isResp = role === "Responsable opérationnel";
     const isRespOrAdmin = isResp || isSuperAdmin;
 
     // Seuls Super-admin et Resp.Op. assigné peuvent agir
-    if (!isSuperAdmin && !isResp && currentUser?.id !== dossier.traitantId) return null;
+    if (!isSuperAdmin && !isResp && currentUser?.id !== dossier.traitantId)
+      return null;
 
-    const options = getAllowedDossierStatuses(dossier.status || 'NOUVEAU', role);
+    const options = getAllowedDossierStatuses(
+      dossier.status || "NOUVEAU",
+      role,
+    );
     const isLocked = options.length === 1;
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: isLocked ? '#F3F4F6' : '#F8FAFC', padding: '0.5rem 1rem', borderRadius: '8px', border: `1px solid ${isLocked ? '#E5E7EB' : 'var(--border)'}` }}>
-        <span style={{ fontWeight: 600, color: isLocked ? '#9CA3AF' : 'var(--text-main)', fontSize: '0.875rem' }}>Statut :</span>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          background: isLocked ? "#F3F4F6" : "#F8FAFC",
+          padding: "0.5rem 1rem",
+          borderRadius: "8px",
+          border: `1px solid ${isLocked ? "#E5E7EB" : "var(--border)"}`,
+        }}
+      >
+        <span
+          style={{
+            fontWeight: 600,
+            color: isLocked ? "#9CA3AF" : "var(--text-main)",
+            fontSize: "0.875rem",
+          }}
+        >
+          Statut :
+        </span>
         <select
-          value={pendingStatus || dossier.status || 'NOUVEAU'}
+          value={pendingStatus || dossier.status || "NOUVEAU"}
           onChange={(e) => setPendingStatus(e.target.value)}
           disabled={isLocked}
-          title={isLocked ? (dossier.status === 'ARCHIVE' ? 'Dossier archivé — état terminal' : 'Aucune transition disponible pour votre rôle') : ''}
-          style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)', background: isLocked ? '#F3F4F6' : '#FFF', fontSize: '0.875rem', outline: 'none', cursor: isLocked ? 'not-allowed' : 'pointer', minWidth: '150px' }}
+          title={
+            isLocked
+              ? dossier.status === "ARCHIVE"
+                ? "Dossier archivé — état terminal"
+                : "Aucune transition disponible pour votre rôle"
+              : ""
+          }
+          style={{
+            padding: "0.5rem",
+            borderRadius: "4px",
+            border: "1px solid var(--border)",
+            background: isLocked ? "#F3F4F6" : "#FFF",
+            fontSize: "0.875rem",
+            outline: "none",
+            cursor: isLocked ? "not-allowed" : "pointer",
+            minWidth: "150px",
+          }}
         >
-          {options.map(opt => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
           ))}
         </select>
-        {pendingStatus && pendingStatus !== (dossier.status || 'NOUVEAU') && (
-          <button 
-            type="button" 
-            onClick={() => handleStatusAction(dossier.id, pendingStatus)} 
-            className="btn btn-primary" 
-            style={{padding: '0.4rem 0.75rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.25rem'}}
+        {pendingStatus && pendingStatus !== (dossier.status || "NOUVEAU") && (
+          <button
+            type="button"
+            onClick={() => handleStatusAction(dossier.id, pendingStatus)}
+            className="btn btn-primary"
+            style={{
+              padding: "0.4rem 0.75rem",
+              fontSize: "0.75rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.25rem",
+            }}
           >
             <CheckSquare size={14} /> Enregistrer
           </button>
@@ -603,108 +793,392 @@ const DossiersPage = () => {
     );
   };
 
-
   const renderDossierFields = (dossier, isEdit) => (
     <>
-    <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem', background: '#F8FAFC', padding: '1.25rem 1.5rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
-      
-      {/* Colonne 1 — Identification du dossier */}
-      <div style={{display: 'flex', flexDirection: 'column', gap: '0.85rem', borderRight: '1px solid var(--border)', paddingRight: '1rem'}}>
-        <div style={{fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--primary)', marginBottom: '0.25rem'}}>
-          Identification du dossier
-        </div>
-        
-        <div style={{display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem'}}>
-          <strong style={{color: 'var(--text-muted)', fontWeight: 600, flexShrink: 0}}>Nom du dossier :</strong>
-          {isEdit ? (
-            <input type="text" value={dossier.name || ''} onChange={(e) => setEditDossier({...editDossier, name: e.target.value})} className="input-field" style={{padding: '0.25rem 0.5rem', borderRadius: '4px', border: '1px solid var(--primary)', background: '#FFF', flex: 1}} />
-          ) : (
-            <span style={{fontWeight: 500, color: 'var(--text-main)', wordBreak: 'break-word'}}>{dossier.name || '-'}</span>
-          )}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "1rem",
+          marginBottom: "1.5rem",
+          background: "#F8FAFC",
+          padding: "1.25rem 1.5rem",
+          borderRadius: "8px",
+          border: "1px solid var(--border)",
+        }}
+      >
+        {/* Colonne 1 — Identification du dossier */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.85rem",
+            borderRight: "1px solid var(--border)",
+            paddingRight: "1rem",
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: "0.75rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              color: "var(--primary)",
+              marginBottom: "0.25rem",
+            }}
+          >
+            Identification du dossier
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "0.5rem",
+              fontSize: "0.875rem",
+            }}
+          >
+            <strong
+              style={{
+                color: "var(--text-muted)",
+                fontWeight: 600,
+                flexShrink: 0,
+              }}
+            >
+              Nom du dossier :
+            </strong>
+            {isEdit ? (
+              <input
+                type="text"
+                value={dossier.name || ""}
+                onChange={(e) =>
+                  setEditDossier({ ...editDossier, name: e.target.value })
+                }
+                className="input-field"
+                style={{
+                  padding: "0.25rem 0.5rem",
+                  borderRadius: "4px",
+                  border: "1px solid var(--primary)",
+                  background: "#FFF",
+                  flex: 1,
+                }}
+              />
+            ) : (
+              <span
+                style={{
+                  fontWeight: 500,
+                  color: "var(--text-main)",
+                  wordBreak: "break-word",
+                }}
+              >
+                {dossier.name || "-"}
+              </span>
+            )}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              fontSize: "0.875rem",
+            }}
+          >
+            <strong
+              style={{
+                color: "var(--text-muted)",
+                fontWeight: 600,
+                flexShrink: 0,
+              }}
+            >
+              Origine :
+            </strong>
+            <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
+              {dossier.origin || "INTERNE"}
+            </span>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "0.5rem",
+              fontSize: "0.875rem",
+            }}
+          >
+            <strong
+              style={{
+                color: "var(--text-muted)",
+                fontWeight: 600,
+                flexShrink: 0,
+              }}
+            >
+              Propriétaire :
+            </strong>
+            <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
+              {dossier.origin === "CLIENT"
+                ? dossier.client?.name ||
+                  dossier.client?.companyName ||
+                  dbClients.find((c) => c.id === dossier.clientId)?.name ||
+                  dbClients.find((c) => c.id === dossier.clientId)
+                    ?.companyName ||
+                  "Client inconnu"
+                : dossier.origin === "COLLABORATEUR"
+                  ? dossier.targetUser?.name ||
+                    dbUsers.find((u) => u.id === dossier.targetUserId)?.name ||
+                    "Collaborateur inconnu"
+                  : "MENUA CONSULTING (Interne)"}
+            </span>
+          </div>
         </div>
 
-        <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-          <strong style={{color: 'var(--text-muted)', fontWeight: 600, flexShrink: 0}}>Origine :</strong>
-          <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{dossier.origin || 'INTERNE'}</span>
-        </div>
+        {/* Colonne 2 — Gestion du dossier */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.85rem",
+            paddingLeft: "0.5rem",
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: "0.75rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              color: "var(--secondary-dark)",
+              marginBottom: "0.25rem",
+            }}
+          >
+            Gestion du dossier
+          </div>
 
-        <div style={{display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem'}}>
-          <strong style={{color: 'var(--text-muted)', fontWeight: 600, flexShrink: 0}}>Propriétaire :</strong>
-          <span style={{fontWeight: 500, color: 'var(--text-main)'}}>
-            {dossier.origin === 'CLIENT' 
-              ? (dossier.client?.name || dossier.client?.companyName || dbClients.find(c => c.id === dossier.clientId)?.name || dbClients.find(c => c.id === dossier.clientId)?.companyName || 'Client inconnu') 
-              : dossier.origin === 'COLLABORATEUR'
-              ? (dossier.targetUser?.name || dbUsers.find(u => u.id === dossier.targetUserId)?.name || 'Collaborateur inconnu')
-              : 'MENUA CONSULTING (Interne)'
-            }
-          </span>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              fontSize: "0.875rem",
+            }}
+          >
+            <strong
+              style={{
+                color: "var(--text-muted)",
+                fontWeight: 600,
+                flexShrink: 0,
+              }}
+            >
+              Traitant :
+            </strong>
+            {isEdit &&
+            (currentUser?.role?.name === "Super-administrateur" ||
+              currentUser?.role === "Super-administrateur") ? (
+              <select
+                value={editDossier?.traitantId || dossier.traitantId || ""}
+                onChange={(e) =>
+                  setEditDossier({ ...editDossier, traitantId: e.target.value })
+                }
+                className="input-field"
+                style={{
+                  padding: "0.25rem 0.5rem",
+                  borderRadius: "4px",
+                  border: "1px solid var(--primary)",
+                  background: "#FFF",
+                  flex: 1,
+                }}
+              >
+                <option value="">-- Aucun traitant --</option>
+                {dbUsers
+                  .filter(
+                    (u) =>
+                      u.role?.name === "Responsable opérationnel" ||
+                      u.role?.name === "Super-administrateur",
+                  )
+                  .map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.name} ({u.role?.name})
+                    </option>
+                  ))}
+              </select>
+            ) : (
+              <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
+                {dossier.traitant?.name || "Aucun"}
+              </span>
+            )}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              fontSize: "0.875rem",
+            }}
+          >
+            <strong
+              style={{
+                color: "var(--text-muted)",
+                fontWeight: 600,
+                flexShrink: 0,
+              }}
+            >
+              Créé par :
+            </strong>
+            <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
+              {dossier.createdBy?.name || "Inconnu"}
+              {dossier.createdBy?.role?.name ? (
+                <span
+                  style={{
+                    color: "var(--text-muted)",
+                    marginLeft: "0.4rem",
+                    fontSize: "0.8rem",
+                  }}
+                >
+                  ({dossier.createdBy.role.name})
+                </span>
+              ) : (
+                ""
+              )}
+            </span>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              fontSize: "0.875rem",
+            }}
+          >
+            <strong
+              style={{
+                color: "var(--text-muted)",
+                fontWeight: 600,
+                flexShrink: 0,
+              }}
+            >
+              Statut :
+            </strong>
+            {isEdit ? (
+              <span>
+                {getStatusBadge(editDossier?.status || dossier.status)}
+              </span>
+            ) : (
+              <span>{getStatusBadge(dossier.status)}</span>
+            )}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              fontSize: "0.875rem",
+            }}
+          >
+            <strong
+              style={{
+                color: "var(--text-muted)",
+                fontWeight: 600,
+                flexShrink: 0,
+              }}
+            >
+              Date de création :
+            </strong>
+            <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
+              {new Date(dossier.createdAt).toLocaleString("fr-FR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+          </div>
         </div>
       </div>
-
-      {/* Colonne 2 — Gestion du dossier */}
-      <div style={{display: 'flex', flexDirection: 'column', gap: '0.85rem', paddingLeft: '0.5rem'}}>
-        <div style={{fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--secondary-dark)', marginBottom: '0.25rem'}}>
-          Gestion du dossier
-        </div>
-
-        <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-          <strong style={{color: 'var(--text-muted)', fontWeight: 600, flexShrink: 0}}>Traitant :</strong>
-          {isEdit && (currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Super-administrateur') ? (
-            <select value={editDossier?.traitantId || dossier.traitantId || ''} onChange={(e) => setEditDossier({...editDossier, traitantId: e.target.value})} className="input-field" style={{padding: '0.25rem 0.5rem', borderRadius: '4px', border: '1px solid var(--primary)', background: '#FFF', flex: 1}}>
-              <option value="">-- Aucun traitant --</option>
-              {dbUsers.filter(u => u.role?.name === 'Responsable opérationnel' || u.role?.name === 'Super-administrateur').map(u => (
-                <option key={u.id} value={u.id}>{u.name} ({u.role?.name})</option>
-              ))}
-            </select>
-          ) : (
-            <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{dossier.traitant?.name || 'Aucun'}</span>
-          )}
-        </div>
-
-        <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-          <strong style={{color: 'var(--text-muted)', fontWeight: 600, flexShrink: 0}}>Créé par :</strong>
-          <span style={{fontWeight: 500, color: 'var(--text-main)'}}>
-            {dossier.createdBy?.name || 'Inconnu'}
-            {dossier.createdBy?.role?.name ? <span style={{color: 'var(--text-muted)', marginLeft: '0.4rem', fontSize: '0.8rem'}}>({dossier.createdBy.role.name})</span> : ''}
-          </span>
-        </div>
-
-        <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-          <strong style={{color: 'var(--text-muted)', fontWeight: 600, flexShrink: 0}}>Statut :</strong>
-          {isEdit ? (
-            <span>{getStatusBadge(editDossier?.status || dossier.status)}</span>
-          ) : (
-            <span>{getStatusBadge(dossier.status)}</span>
-          )}
-        </div>
-
-        <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem'}}>
-          <strong style={{color: 'var(--text-muted)', fontWeight: 600, flexShrink: 0}}>Date de création :</strong>
-          <span style={{fontWeight: 500, color: 'var(--text-main)'}}>{new Date(dossier.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</span>
-        </div>
-      </div>
-
-    </div>
-  </>
+    </>
   );
 
-
   const renderAssociatedTasks = (tasks, isEdit) => (
-    <div style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
-      <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>
-        {isEdit ? 'Gérer les missions associées' : 'Vues des missions associées'}
+    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <h4 style={{ margin: "0 0 1rem 0", fontSize: "1rem", fontWeight: 600 }}>
+        {isEdit
+          ? "Gérer les missions associées"
+          : "Vues des missions associées"}
       </h4>
       {tasks.length > 0 ? (
-        <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-          {tasks.map(task => (
-            <button type="button" key={task.id} onClick={() => setLocalConsultTask(task)} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border)'} onFocus={(e) => e.currentTarget.style.borderColor = 'var(--primary)'} onBlur={(e) => e.currentTarget.style.borderColor = 'var(--border)'} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer', transition: 'border-color 0.2s', width: '100%', textAlign: 'left', fontFamily: 'inherit'}}>
-              <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
-                <strong className="truncate-text" style={{fontSize: '0.875rem'}}>{task.subject || `Mission ${task.reference || task.id}`}</strong>
-                <span style={{display: 'flex', alignItems: 'center'}}>{getStatusBadge(task.status)}</span>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          {tasks.map((task) => (
+            <button
+              type="button"
+              key={task.id}
+              onClick={() => setLocalConsultTask(task)}
+              onMouseOver={(e) =>
+                (e.currentTarget.style.borderColor = "var(--primary)")
+              }
+              onMouseOut={(e) =>
+                (e.currentTarget.style.borderColor = "var(--border)")
+              }
+              onFocus={(e) =>
+                (e.currentTarget.style.borderColor = "var(--primary)")
+              }
+              onBlur={(e) =>
+                (e.currentTarget.style.borderColor = "var(--border)")
+              }
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "1rem",
+                background: "#F8FAFC",
+                borderRadius: "8px",
+                border: "1px solid var(--border)",
+                cursor: "pointer",
+                transition: "border-color 0.2s",
+                width: "100%",
+                textAlign: "left",
+                fontFamily: "inherit",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.25rem",
+                }}
+              >
+                <strong
+                  className="truncate-text"
+                  style={{ fontSize: "0.875rem" }}
+                >
+                  {task.subject || `Mission ${task.reference || task.id}`}
+                </strong>
+                <span style={{ display: "flex", alignItems: "center" }}>
+                  {getStatusBadge(task.status)}
+                </span>
               </div>
               {isEdit && (
-                <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                  <button type="button" onClick={(e) => { e.stopPropagation(); window.customAlert(`Mission ${task.id} supprimée avec succès !`); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)'}} title="Supprimer la mission">
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "1rem" }}
+                >
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      window.customAlert(
+                        `Mission ${task.id} supprimée avec succès !`,
+                      );
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "var(--danger)",
+                    }}
+                    title="Supprimer la mission"
+                  >
                     <Trash size={18} />
                   </button>
                 </div>
@@ -713,84 +1187,191 @@ const DossiersPage = () => {
           ))}
         </div>
       ) : (
-         <div style={{padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px dashed var(--border)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem'}}>
-           Aucune mission associée pour le moment.
-         </div>
+        <div
+          style={{
+            padding: "1rem",
+            background: "#F8FAFC",
+            borderRadius: "8px",
+            border: "1px dashed var(--border)",
+            textAlign: "center",
+            color: "var(--text-muted)",
+            fontSize: "0.875rem",
+          }}
+        >
+          Aucune mission associée pour le moment.
+        </div>
       )}
     </div>
   );
 
-  const renderDocuments = (documents, label = 'Documents attachés') => (
-    <div style={{marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem'}}>
-      <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+  const renderDocuments = (documents, label = "Documents attachés") => (
+    <div
+      style={{
+        marginTop: "1rem",
+        borderTop: "1px solid var(--border)",
+        paddingTop: "1.5rem",
+      }}
+    >
+      <h4
+        style={{
+          margin: "0 0 1rem 0",
+          fontSize: "1rem",
+          fontWeight: 600,
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+        }}
+      >
         <Paperclip size={16} /> {label}
       </h4>
-      {(documents && documents.length > 0) ? (
-        <select 
+      {documents && documents.length > 0 ? (
+        <select
           onChange={(e) => {
-            if(e.target.value) {
+            if (e.target.value) {
               setPreviewFile(e.target.value);
               e.target.selectedIndex = 0;
             }
           }}
           className="input-field"
-          style={{padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', width: '100%', background: '#FFF', cursor: 'pointer', fontFamily: 'inherit'}}
+          style={{
+            padding: "0.75rem",
+            borderRadius: "8px",
+            border: "1px solid var(--border)",
+            width: "100%",
+            background: "#FFF",
+            cursor: "pointer",
+            fontFamily: "inherit",
+          }}
         >
-          <option value="">-- Sélectionner un document pour le consulter --</option>
-          {documents.map(doc => (
-            <option key={doc.id} value={doc.url}>{doc.name}</option>
+          <option value="">
+            -- Sélectionner un document pour le consulter --
+          </option>
+          {documents.map((doc) => (
+            <option key={doc.id} value={doc.url}>
+              {doc.name}
+            </option>
           ))}
         </select>
       ) : (
-        <div style={{padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px dashed var(--border)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem'}}>
+        <div
+          style={{
+            padding: "1rem",
+            background: "#F8FAFC",
+            borderRadius: "8px",
+            border: "1px dashed var(--border)",
+            textAlign: "center",
+            color: "var(--text-muted)",
+            fontSize: "0.875rem",
+          }}
+        >
           Aucun document attaché.
         </div>
       )}
     </div>
   );
 
-
   if (consultDossier) {
-    const associatedTasks = dbTasks.filter(t => t.dossierId === consultDossier.id);
-    const isSuperAdmin = currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Super-administrateur';
-    const canEdit = isSuperAdmin || currentUser?.id === consultDossier.traitantId;
-    
+    const associatedTasks = dbTasks.filter(
+      (t) => t.dossierId === consultDossier.id,
+    );
+    const isSuperAdmin =
+      currentUser?.role?.name === "Super-administrateur" ||
+      currentUser?.role === "Super-administrateur";
+    const canEdit =
+      isSuperAdmin || currentUser?.id === consultDossier.traitantId;
+
     // isEditingConsult est géré via un objet temporaire dans consultDossier._editing
     const isEditMode = consultDossier._editing === true;
 
-    const startEdit = () => setConsultDossier({ ...consultDossier, _editing: true, _draft: { description: consultDossier.description || '', traitantId: consultDossier.traitantId || '' } });
-    const cancelEdit = () => setConsultDossier({ ...consultDossier, _editing: false, description: consultDossier._origDesc ?? consultDossier.description, traitantId: consultDossier._origTraitant ?? consultDossier.traitantId });
+    const startEdit = () =>
+      setConsultDossier({
+        ...consultDossier,
+        _editing: true,
+        _draft: {
+          description: consultDossier.description || "",
+          traitantId: consultDossier.traitantId || "",
+        },
+      });
+    const cancelEdit = () =>
+      setConsultDossier({
+        ...consultDossier,
+        _editing: false,
+        description: consultDossier._origDesc ?? consultDossier.description,
+        traitantId: consultDossier._origTraitant ?? consultDossier.traitantId,
+      });
     const saveEdit = async () => {
       try {
-        const token = sessionStorage.getItem('adminToken');
-        const res = await fetch(getSafeApiUrl(`/api/crm/dossiers/${consultDossier.id}`), {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-          body: JSON.stringify({ description: consultDossier.description, traitantId: consultDossier.traitantId || null })
-        });
+        const token = sessionStorage.getItem("adminToken");
+        const res = await fetch(
+          getSafeApiUrl(`/api/crm/dossiers/${consultDossier.id}`),
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              description: consultDossier.description,
+              traitantId: consultDossier.traitantId || null,
+            }),
+          },
+        );
         if (res.ok) {
           setConsultDossier({ ...consultDossier, _editing: false });
           fetchDossiers();
-          window.customAlert('Dossier mis à jour !');
+          window.customAlert("Dossier mis à jour !");
         } else {
           const err = await res.json().catch(() => ({}));
-          window.customAlert('Erreur : ' + (err.error || 'Impossible de sauvegarder'));
+          window.customAlert(
+            "Erreur : " + (err.error || "Impossible de sauvegarder"),
+          );
         }
-      } catch(e) { window.customAlert('Erreur réseau'); }
+      } catch (e) {
+        window.customAlert("Erreur réseau");
+      }
     };
-    
+
     return (
-      <div className="fade-in" style={{width: "100%", padding: "0"}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem', flexWrap: 'wrap'}}>
-          <button type="button" onClick={() => setConsultDossier(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour</button>
-          <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600, flex: 1}}>consultation du dossier : {consultDossier.reference || consultDossier.id}</h2>
+      <div className="fade-in" style={{ width: "100%", padding: "0" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "1rem",
+            marginBottom: "2rem",
+            borderBottom: "1px solid var(--border)",
+            paddingBottom: "1.5rem",
+            flexWrap: "wrap",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setConsultDossier(null)}
+            className="btn btn-outline"
+            style={{ padding: "0.5rem 1rem" }}
+          >
+            ← Retour
+          </button>
+          <h2
+            style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600, flex: 1 }}
+          >
+            consultation du dossier :{" "}
+            {consultDossier.reference || consultDossier.id}
+          </h2>
           {canEdit && renderWorkflowButtons(consultDossier)}
           {canEdit && !isEditMode && (
             <button
               type="button"
               onClick={startEdit}
               className="btn btn-outline"
-              style={{padding: '0.5rem 1rem', borderColor: '#D97706', color: '#D97706', display: 'flex', alignItems: 'center', gap: '0.4rem'}}
+              style={{
+                padding: "0.5rem 1rem",
+                borderColor: "#D97706",
+                color: "#D97706",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.4rem",
+              }}
             >
               <Pencil size={16} /> Modifier
             </button>
@@ -798,90 +1379,314 @@ const DossiersPage = () => {
         </div>
 
         {renderDossierFields(consultDossier, false)}
-        <div style={{display: 'flex', gap: '2rem', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', alignItems: 'flex-start'}}>
-          <div style={{flex: '0 0 70%'}}>
-            <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Description du dossier</h4>
+        <div
+          style={{
+            display: "flex",
+            gap: "2rem",
+            marginTop: "1rem",
+            borderTop: "1px solid var(--border)",
+            paddingTop: "1.5rem",
+            alignItems: "flex-start",
+          }}
+        >
+          <div style={{ flex: "0 0 70%" }}>
+            <h4
+              style={{
+                margin: "0 0 1rem 0",
+                fontSize: "1rem",
+                fontWeight: 600,
+              }}
+            >
+              Description du dossier
+            </h4>
             {isEditMode ? (
               <textarea
-                value={consultDossier.description || ''}
-                onChange={(e) => setConsultDossier({...consultDossier, description: e.target.value})}
-                style={{width: '100%', padding: '1rem', background: '#FFF', borderRadius: '8px', border: '1px solid var(--primary)', fontSize: '0.875rem', color: 'var(--text-main)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box'}}
+                value={consultDossier.description || ""}
+                onChange={(e) =>
+                  setConsultDossier({
+                    ...consultDossier,
+                    description: e.target.value,
+                  })
+                }
+                style={{
+                  width: "100%",
+                  padding: "1rem",
+                  background: "#FFF",
+                  borderRadius: "8px",
+                  border: "1px solid var(--primary)",
+                  fontSize: "0.875rem",
+                  color: "var(--text-main)",
+                  minHeight: "120px",
+                  resize: "vertical",
+                  fontFamily: "inherit",
+                  boxSizing: "border-box",
+                }}
                 placeholder="Description du dossier..."
               />
             ) : (
-              <div style={{padding: '1.5rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', whiteSpace: 'pre-wrap', fontSize: '0.875rem', color: 'var(--text-main)', minHeight: '120px'}}>
-                {consultDossier.description || <span style={{color: 'var(--text-muted)'}}>Aucune description fournie.</span>}
+              <div
+                style={{
+                  padding: "1.5rem",
+                  background: "#F8FAFC",
+                  borderRadius: "8px",
+                  border: "1px solid var(--border)",
+                  whiteSpace: "pre-wrap",
+                  fontSize: "0.875rem",
+                  color: "var(--text-main)",
+                  minHeight: "120px",
+                }}
+              >
+                {consultDossier.description || (
+                  <span style={{ color: "var(--text-muted)" }}>
+                    Aucune description fournie.
+                  </span>
+                )}
               </div>
             )}
           </div>
-          <div style={{flex: '1 1 auto', minWidth: 0}}>
+          <div style={{ flex: "1 1 auto", minWidth: 0 }}>
             {isSuperAdmin && isEditMode && (
-              <div style={{marginBottom: '1.5rem'}}>
-                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--secondary-dark)'}}>Traitant</label>
+              <div style={{ marginBottom: "1.5rem" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: 600,
+                    fontSize: "0.875rem",
+                    color: "var(--secondary-dark)",
+                  }}
+                >
+                  Traitant
+                </label>
                 <select
-                  value={consultDossier.traitantId || ''}
-                  onChange={(e) => setConsultDossier({...consultDossier, traitantId: e.target.value})}
+                  value={consultDossier.traitantId || ""}
+                  onChange={(e) =>
+                    setConsultDossier({
+                      ...consultDossier,
+                      traitantId: e.target.value,
+                    })
+                  }
                   className="input-field"
-                  style={{width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid var(--primary)', background: '#FFF'}}
+                  style={{
+                    width: "100%",
+                    padding: "0.6rem",
+                    borderRadius: "8px",
+                    border: "1px solid var(--primary)",
+                    background: "#FFF",
+                  }}
                 >
                   <option value="">-- Aucun traitant --</option>
-                  {dbUsers.filter(u => u.role?.name === 'Responsable opérationnel' || u.role?.name === 'Super-administrateur').map(u => (
-                    <option key={u.id} value={u.id}>{u.name} ({u.role?.name})</option>
-                  ))}
+                  {dbUsers
+                    .filter(
+                      (u) =>
+                        u.role?.name === "Responsable opérationnel" ||
+                        u.role?.name === "Super-administrateur",
+                    )
+                    .map((u) => (
+                      <option key={u.id} value={u.id}>
+                        {u.name} ({u.role?.name})
+                      </option>
+                    ))}
                 </select>
               </div>
             )}
             {isSuperAdmin && !isEditMode && consultDossier.traitantId && (
-              <div style={{marginBottom: '1.5rem', padding: '0.75rem 1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '0.875rem'}}>
-                <strong style={{color: 'var(--text-muted)'}}>Traitant :</strong>{' '}
-                <span style={{fontWeight: 500}}>{dbUsers.find(u => u.id === consultDossier.traitantId)?.name || consultDossier.traitant?.name || 'Inconnu'}</span>
+              <div
+                style={{
+                  marginBottom: "1.5rem",
+                  padding: "0.75rem 1rem",
+                  background: "#F8FAFC",
+                  borderRadius: "8px",
+                  border: "1px solid var(--border)",
+                  fontSize: "0.875rem",
+                }}
+              >
+                <strong style={{ color: "var(--text-muted)" }}>
+                  Traitant :
+                </strong>{" "}
+                <span style={{ fontWeight: 500 }}>
+                  {dbUsers.find((u) => u.id === consultDossier.traitantId)
+                    ?.name ||
+                    consultDossier.traitant?.name ||
+                    "Inconnu"}
+                </span>
               </div>
             )}
             {renderAssociatedTasks(associatedTasks, false)}
           </div>
         </div>
 
-        <div style={{marginTop: '2rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem'}}>
-          <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
-            {!['TERMINE', 'ARCHIVE'].includes(consultDossier.status) && (currentUser?.role === 'Super-administrateur' || currentUser?.role?.name === 'Super-administrateur' || consultDossier.traitantId === currentUser?.id) && (
-              <button type="button" onClick={() => { setCreateMissionModal(true); setMissionDossierId(consultDossier.id); }} className="btn btn-primary" style={{display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
-                Créer une mission
-              </button>
-            )}
-            <button type="button" onClick={() => { setShowMagicModal(true); setGeneratedMagicUrl(''); }} className="btn btn-outline" style={{borderColor: 'var(--secondary)', color: 'var(--secondary-dark)', display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
+        <div
+          style={{
+            marginTop: "2rem",
+            borderTop: "1px solid var(--border)",
+            paddingTop: "1.5rem",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "1rem",
+          }}
+        >
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            {!["TERMINE", "ARCHIVE"].includes(consultDossier.status) &&
+              (currentUser?.role === "Super-administrateur" ||
+                currentUser?.role?.name === "Super-administrateur" ||
+                consultDossier.traitantId === currentUser?.id) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCreateMissionModal(true);
+                    setMissionDossierId(consultDossier.id);
+                  }}
+                  className="btn btn-primary"
+                  style={{
+                    display: "flex",
+                    gap: "0.5rem",
+                    alignItems: "center",
+                  }}
+                >
+                  Créer une mission
+                </button>
+              )}
+            <button
+              type="button"
+              onClick={() => {
+                setShowMagicModal(true);
+                setGeneratedMagicUrl("");
+              }}
+              className="btn btn-outline"
+              style={{
+                borderColor: "var(--secondary)",
+                color: "var(--secondary-dark)",
+                display: "flex",
+                gap: "0.5rem",
+                alignItems: "center",
+              }}
+            >
               <LinkIcon size={16} /> Générer Lien Magique
             </button>
           </div>
-          <div style={{display: 'flex', gap: '1rem'}}>
+          <div style={{ display: "flex", gap: "1rem" }}>
             {isEditMode ? (
               <>
-                <button type="button" onClick={cancelEdit} className="btn btn-outline">Annuler</button>
-                <button type="button" onClick={saveEdit} className="btn btn-primary">Enregistrer</button>
+                <button
+                  type="button"
+                  onClick={cancelEdit}
+                  className="btn btn-outline"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="button"
+                  onClick={saveEdit}
+                  className="btn btn-primary"
+                >
+                  Enregistrer
+                </button>
               </>
             ) : (
-              <button type="button" onClick={() => { setConsultDossier(null); setPendingStatus(''); }} className="btn btn-outline">Fermer</button>
+              <button
+                type="button"
+                onClick={() => {
+                  setConsultDossier(null);
+                  setPendingStatus("");
+                }}
+                className="btn btn-outline"
+              >
+                Fermer
+              </button>
             )}
           </div>
         </div>
 
         {/* Modal Magic Link */}
         {showMagicModal && (
-          <div className="fade-in" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
-            <div className="card" style={{width: '90%', maxWidth: '500px', padding: '2rem'}}>
-              <h3 style={{marginTop: 0, marginBottom: '1.5rem', fontSize: '1.25rem'}}>Lien Magique (Dossier: {consultDossier.reference || consultDossier.id})</h3>
-              
+          <div
+            className="fade-in"
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "rgba(0,0,0,0.5)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1000,
+            }}
+          >
+            <div
+              className="card"
+              style={{ width: "90%", maxWidth: "500px", padding: "2rem" }}
+            >
+              <h3
+                style={{
+                  marginTop: 0,
+                  marginBottom: "1.5rem",
+                  fontSize: "1.25rem",
+                }}
+              >
+                Lien Magique (Dossier:{" "}
+                {consultDossier.reference || consultDossier.id})
+              </h3>
+
               {!generatedMagicUrl ? (
                 <>
-                  <div style={{marginBottom: '1.5rem'}}>
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Type de lien</label>
-                    <select value={magicType} onChange={e => setMagicType(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
-                      <option value="ACQUISITION">📤 Lien de dépôt (Le client nous envoie des fichiers)</option>
-                      <option value="LIVRAISON">📦 Lien de partage (Nous envoyons des fichiers au client)</option>
+                  <div style={{ marginBottom: "1.5rem" }}>
+                    <label
+                      style={{
+                        display: "block",
+                        marginBottom: "0.5rem",
+                        fontWeight: 500,
+                        fontSize: "0.875rem",
+                      }}
+                    >
+                      Type de lien
+                    </label>
+                    <select
+                      value={magicType}
+                      onChange={(e) => setMagicType(e.target.value)}
+                      className="input-field"
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        borderRadius: "8px",
+                        border: "1px solid var(--border)",
+                      }}
+                    >
+                      <option value="ACQUISITION">
+                        📤 Lien de dépôt (Le client nous envoie des fichiers)
+                      </option>
+                      <option value="LIVRAISON">
+                        📦 Lien de partage (Nous envoyons des fichiers au
+                        client)
+                      </option>
                     </select>
                   </div>
-                  <div style={{marginBottom: '1.5rem'}}>
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Validité (jours)</label>
-                    <select value={magicExpires} onChange={e => setMagicExpires(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+                  <div style={{ marginBottom: "1.5rem" }}>
+                    <label
+                      style={{
+                        display: "block",
+                        marginBottom: "0.5rem",
+                        fontWeight: 500,
+                        fontSize: "0.875rem",
+                      }}
+                    >
+                      Validité (jours)
+                    </label>
+                    <select
+                      value={magicExpires}
+                      onChange={(e) => setMagicExpires(e.target.value)}
+                      className="input-field"
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        borderRadius: "8px",
+                        border: "1px solid var(--border)",
+                      }}
+                    >
                       <option value="1">1 jour</option>
                       <option value="7">7 jours</option>
                       <option value="30">30 jours</option>
@@ -889,42 +1694,144 @@ const DossiersPage = () => {
                   </div>
 
                   {/* Instructions pour le client */}
-                  <div style={{marginBottom: '1.5rem', padding: '1rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)'}}>
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
-                      {magicType === 'ACQUISITION' ? '📋 Quels fichiers demandez-vous au client ?' : '📝 Message d\'accompagnement (optionnel)'}
+                  <div
+                    style={{
+                      marginBottom: "1.5rem",
+                      padding: "1rem",
+                      background: "#F8FAFC",
+                      borderRadius: "8px",
+                      border: "1px solid var(--border)",
+                    }}
+                  >
+                    <label
+                      style={{
+                        display: "block",
+                        marginBottom: "0.5rem",
+                        fontWeight: 600,
+                        fontSize: "0.875rem",
+                        color: "var(--primary-dark)",
+                      }}
+                    >
+                      {magicType === "ACQUISITION"
+                        ? "📋 Quels fichiers demandez-vous au client ?"
+                        : "📝 Message d'accompagnement (optionnel)"}
                     </label>
                     <textarea
                       value={magicNote}
-                      onChange={e => setMagicNote(e.target.value)}
-                      placeholder={magicType === 'ACQUISITION' 
-                        ? 'Ex: Merci de nous transmettre votre dernier bilan comptable, vos relevés bancaires des 3 derniers mois et une copie de votre pièce d\'identité.'
-                        : 'Ex: Veuillez trouver ci-joint les documents préparés dans le cadre de votre dossier. N\'hésitez pas à nous contacter si vous avez des questions.'}
-                      style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '100px', resize: 'vertical', fontFamily: 'inherit', fontSize: '0.875rem', boxSizing: 'border-box'}}
+                      onChange={(e) => setMagicNote(e.target.value)}
+                      placeholder={
+                        magicType === "ACQUISITION"
+                          ? "Ex: Merci de nous transmettre votre dernier bilan comptable, vos relevés bancaires des 3 derniers mois et une copie de votre pièce d'identité."
+                          : "Ex: Veuillez trouver ci-joint les documents préparés dans le cadre de votre dossier. N'hésitez pas à nous contacter si vous avez des questions."
+                      }
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        borderRadius: "8px",
+                        border: "1px solid var(--border)",
+                        minHeight: "100px",
+                        resize: "vertical",
+                        fontFamily: "inherit",
+                        fontSize: "0.875rem",
+                        boxSizing: "border-box",
+                      }}
                     />
-                    <small style={{color: 'var(--text-muted)', display: 'block', marginTop: '0.25rem'}}>
-                      {magicType === 'ACQUISITION' 
-                        ? 'Ces instructions seront affichées au client sur la page de dépôt.' 
-                        : 'Ce message sera affiché au client sur la page de téléchargement.'}
+                    <small
+                      style={{
+                        color: "var(--text-muted)",
+                        display: "block",
+                        marginTop: "0.25rem",
+                      }}
+                    >
+                      {magicType === "ACQUISITION"
+                        ? "Ces instructions seront affichées au client sur la page de dépôt."
+                        : "Ce message sera affiché au client sur la page de téléchargement."}
                     </small>
                   </div>
-                  <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
-                    <button type="button" onClick={() => setShowMagicModal(false)} className="btn btn-outline">Annuler</button>
-                    <button type="button" onClick={handleGenerateMagicLink} className="btn btn-primary" style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      gap: "1rem",
+                      marginTop: "2rem",
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setShowMagicModal(false)}
+                      className="btn btn-outline"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleGenerateMagicLink}
+                      className="btn btn-primary"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
                       <LinkIcon size={16} /> Générer
                     </button>
                   </div>
                 </>
               ) : (
                 <>
-                  <div style={{padding: '1.5rem', background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '8px', marginBottom: '1.5rem'}}>
-                    <p style={{margin: '0 0 1rem 0', color: '#166534', fontWeight: 500}}>Lien généré avec succès ! Vous pouvez le copier et l'envoyer au client.</p>
-                    <div style={{display: 'flex', gap: '0.5rem'}}>
-                      <input type="text" readOnly value={generatedMagicUrl} className="input-field" style={{flex: 1, padding: '0.75rem', borderRadius: '8px', border: '1px solid #BBF7D0', background: '#FFF'}} />
-                      <button type="button" onClick={() => { navigator.clipboard.writeText(generatedMagicUrl); window.customAlert('Lien copié !'); }} className="btn btn-primary">Copier</button>
+                  <div
+                    style={{
+                      padding: "1.5rem",
+                      background: "#F0FDF4",
+                      border: "1px solid #BBF7D0",
+                      borderRadius: "8px",
+                      marginBottom: "1.5rem",
+                    }}
+                  >
+                    <p
+                      style={{
+                        margin: "0 0 1rem 0",
+                        color: "#166534",
+                        fontWeight: 500,
+                      }}
+                    >
+                      Lien généré avec succès ! Vous pouvez le copier et
+                      l'envoyer au client.
+                    </p>
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                      <input
+                        type="text"
+                        readOnly
+                        value={generatedMagicUrl}
+                        className="input-field"
+                        style={{
+                          flex: 1,
+                          padding: "0.75rem",
+                          borderRadius: "8px",
+                          border: "1px solid #BBF7D0",
+                          background: "#FFF",
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(generatedMagicUrl);
+                          window.customAlert("Lien copié !");
+                        }}
+                        className="btn btn-primary"
+                      >
+                        Copier
+                      </button>
                     </div>
                   </div>
-                  <div style={{display: 'flex', justifyContent: 'center'}}>
-                    <button type="button" onClick={() => setShowMagicModal(false)} className="btn btn-outline">Fermer</button>
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <button
+                      type="button"
+                      onClick={() => setShowMagicModal(false)}
+                      className="btn btn-outline"
+                    >
+                      Fermer
+                    </button>
                   </div>
                 </>
               )}
@@ -932,237 +1839,722 @@ const DossiersPage = () => {
           </div>
         )}
 
+        {createMissionModal &&
+          (() => {
+            const operationalDossier = consultDossier?.subDossiers?.find(
+              (d) => d.name === "OPÉRATIONS & RÉALISATIONS",
+            );
+            const operationalSubFolders = operationalDossier
+              ? [operationalDossier, ...(operationalDossier.subDossiers || [])]
+              : [];
+            return (
+              <div
+                className="fade-in"
+                style={{
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: "rgba(0,0,0,0.5)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 1000,
+                }}
+              >
+                <div
+                  style={{
+                    background: "#FFF",
+                    padding: "2rem",
+                    borderRadius: "8px",
+                    width: "90%",
+                    maxWidth: "800px",
+                    maxHeight: "90vh",
+                    overflowY: "auto",
+                    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                  }}
+                >
+                  <h3
+                    style={{
+                      marginTop: 0,
+                      marginBottom: "1.5rem",
+                      fontSize: "1.25rem",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Nouvelle Mission
+                  </h3>
 
-        {createMissionModal && (() => {
-          const operationalDossier = consultDossier?.subDossiers?.find(d => d.name === 'OPÉRATIONS & RÉALISATIONS');
-          const operationalSubFolders = operationalDossier ? [operationalDossier, ...(operationalDossier.subDossiers || [])] : [];
-          return (
-          <div className="fade-in" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
-            <div style={{background: '#FFF', padding: '2rem', borderRadius: '8px', width: '90%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
-              <h3 style={{marginTop: 0, marginBottom: '1.5rem', fontSize: '1.25rem', fontWeight: 600}}>Nouvelle Mission</h3>
-              
-              <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Objet de la mission *</label>
-                  <input type="text" value={missionSubject} onChange={(e) => setMissionSubject(e.target.value)} placeholder="Sujet..." className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)'}} />
-                </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1rem",
+                    }}
+                  >
+                    <div>
+                      <label
+                        style={{
+                          display: "block",
+                          marginBottom: "0.5rem",
+                          fontWeight: 500,
+                          fontSize: "0.875rem",
+                        }}
+                      >
+                        Objet de la mission *
+                      </label>
+                      <input
+                        type="text"
+                        value={missionSubject}
+                        onChange={(e) => setMissionSubject(e.target.value)}
+                        placeholder="Sujet..."
+                        className="input-field"
+                        style={{
+                          width: "100%",
+                          padding: "0.75rem",
+                          borderRadius: "8px",
+                          border: "1px solid var(--border)",
+                        }}
+                      />
+                    </div>
 
-                {operationalTree && (
-                  <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
-                    <div style={{display: 'flex', flexDirection: 'column', gap: '2rem'}}>
-                      <div>
-                        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>Dossier mission (Sélection unique) *</label>
-                        <div style={{maxHeight: '300px', overflowY: 'auto'}}>
-                          <GedExplorer 
-                            tree={operationalTree} 
-                            multiSelect={false}
-                            selectedId={missionDossierId} 
-                            onSelectId={setMissionDossierId} 
-                          />
-                        </div>
-                      </div>
-                      {/* Authorized dossiers: exclude the selected mission dossier (auto-included) */}
-                      {(() => {
-                        const filteredTree = {
-                          ...operationalTree,
-                          subDossiers: (operationalTree.subDossiers || []).filter(d => d.id !== missionDossierId)
-                        };
-                        if (filteredTree.subDossiers.length === 0) return null;
-                        return (
+                    {operationalTree && (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "1rem",
+                          background: "#F8FAFC",
+                          padding: "1rem",
+                          borderRadius: "8px",
+                          border: "1px solid var(--border)",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "2rem",
+                          }}
+                        >
                           <div>
-                            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
-                              Dossiers autorisés <span style={{fontWeight: 400, color: 'var(--text-muted)', fontSize: '0.8rem'}}>(lecture seule)</span>
+                            <label
+                              style={{
+                                display: "block",
+                                marginBottom: "0.5rem",
+                                fontWeight: 600,
+                                fontSize: "0.875rem",
+                                color: "var(--primary-dark)",
+                              }}
+                            >
+                              Dossier mission (Sélection unique) *
                             </label>
-                            <div style={{maxHeight: '300px', overflowY: 'auto'}}>
-                              <GedExplorer 
-                                tree={filteredTree} 
-                                multiSelect={true}
-                                selectedIds={authorizedDossierIds} 
-                                disabledIds={missionDossierId ? [missionDossierId] : []}
-                                onToggleChildren={(child) => {
-                                  const ids = flattenFolderIds(child);
-                                  if (authorizedDossierIds.includes(child.id)) {
-                                    setAuthorizedDossierIds(prev => prev.filter(id => !ids.includes(id)));
-                                  } else {
-                                    setAuthorizedDossierIds(prev => Array.from(new Set([...prev, ...ids])));
-                                  }
-                                }} 
+                            <div
+                              style={{ maxHeight: "300px", overflowY: "auto" }}
+                            >
+                              <GedExplorer
+                                tree={operationalTree}
+                                multiSelect={false}
+                                selectedId={missionDossierId}
+                                onSelectId={setMissionDossierId}
                               />
                             </div>
-                            {authorizedDossierIds.length > 0 && (() => {
-                              const getNames = (folder, ids) => {
-                                let names = [];
-                                if (ids.includes(folder.id)) names.push(folder.name);
-                                if (folder.subDossiers) {
-                                  folder.subDossiers.forEach(sub => names = [...names, ...getNames(sub, ids)]);
-                                }
-                                return names;
-                              };
-                              const selectedNames = getNames(filteredTree, authorizedDossierIds);
-                              if (selectedNames.length === 0) return null;
-                              return (
-                                <div style={{padding: '0.75rem', background: '#e0f2fe', borderRadius: '8px', fontSize: '0.875rem', border: '1px solid #bae6fd', marginTop: '0.5rem'}}>
-                                  <strong style={{display: 'block', marginBottom: '0.25rem', color: '#0369a1'}}>Panier des dossiers autorisés :</strong>
-                                  <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem'}}>
-                                    {selectedNames.map((name, i) => (
-                                      <span key={i} style={{background: '#FFF', color: '#0369a1', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 500, border: '1px solid #7dd3fc'}}>{name}</span>
-                                    ))}
-                                  </div>
-                                </div>
-                              );
-                            })()}
                           </div>
-                        );
-                      })()}
-                    </div>
-                  </div>
-                )}
-                
-                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                  <div>
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Assigner à *</label>
-                    <select value={missionAssignedTo} onChange={(e) => setMissionAssignedTo(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
-                      <option value="">Sélectionner...</option>
-                      {dbUsers.filter(u => u.role?.name === 'Responsable opérationnel' || u.role?.name === 'Super-administrateur').map(u => (
-                        <option key={u.id} value={u.id}>{u.name} ({u.role?.name})</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Échéance *</label>
-                    <input type="date" min={new Date().toISOString().split('T')[0]} value={missionEcheance} onChange={(e) => setMissionEcheance(e.target.value)} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}} />
-                  </div>
-                </div>
-
-                <div>
-                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Message / Consignes *</label>
-                  <textarea value={missionDescription} onChange={(e) => setMissionDescription(e.target.value)} placeholder="Détails de la mission..." style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
-                </div>
-
-
-
-                {consultDossier?.documents?.length > 0 && (
-                  <div style={{marginTop: '0.5rem', padding: '0.75rem', background: '#F0F9FF', borderRadius: '8px', border: '1px solid #BAE6FD'}}>
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem', color: 'var(--primary-dark)'}}>
-                      Inclure des documents du dossier (optionnel) :
-                    </label>
-                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
-                      {consultDossier.documents.map(doc => (
-                        <div key={doc.id} style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                          <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', margin: 0}}>
-                            <input 
-                              type="checkbox" 
-                              checked={selectedDossierDocs.includes(doc.id)} 
-                              onChange={(e) => {
-                                if (e.target.checked) setSelectedDossierDocs([...selectedDossierDocs, doc.id]);
-                                else setSelectedDossierDocs(selectedDossierDocs.filter(id => id !== doc.id));
-                              }} 
-                            />
-                            <FileText size={14} style={{color: 'var(--primary)'}}/> {doc.name}
-                          </label>
-                          <button type="button" onClick={(e) => { e.preventDefault(); setPreviewFile(doc.url); }} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', display: 'flex', alignItems: 'center'}} title="Prévisualiser">
-                            <Eye size={16} />
-                          </button>
+                          {/* Authorized dossiers: exclude the selected mission dossier (auto-included) */}
+                          {(() => {
+                            const filteredTree = {
+                              ...operationalTree,
+                              subDossiers: (
+                                operationalTree.subDossiers || []
+                              ).filter((d) => d.id !== missionDossierId),
+                            };
+                            if (filteredTree.subDossiers.length === 0)
+                              return null;
+                            return (
+                              <div>
+                                <label
+                                  style={{
+                                    display: "block",
+                                    marginBottom: "0.5rem",
+                                    fontWeight: 600,
+                                    fontSize: "0.875rem",
+                                    color: "var(--primary-dark)",
+                                  }}
+                                >
+                                  Dossiers autorisés{" "}
+                                  <span
+                                    style={{
+                                      fontWeight: 400,
+                                      color: "var(--text-muted)",
+                                      fontSize: "0.8rem",
+                                    }}
+                                  >
+                                    (lecture seule)
+                                  </span>
+                                </label>
+                                <div
+                                  style={{
+                                    maxHeight: "300px",
+                                    overflowY: "auto",
+                                  }}
+                                >
+                                  <GedExplorer
+                                    tree={filteredTree}
+                                    multiSelect={true}
+                                    selectedIds={authorizedDossierIds}
+                                    disabledIds={
+                                      missionDossierId ? [missionDossierId] : []
+                                    }
+                                    onToggleChildren={(child) => {
+                                      const ids = flattenFolderIds(child);
+                                      if (
+                                        authorizedDossierIds.includes(child.id)
+                                      ) {
+                                        setAuthorizedDossierIds((prev) =>
+                                          prev.filter(
+                                            (id) => !ids.includes(id),
+                                          ),
+                                        );
+                                      } else {
+                                        setAuthorizedDossierIds((prev) =>
+                                          Array.from(
+                                            new Set([...prev, ...ids]),
+                                          ),
+                                        );
+                                      }
+                                    }}
+                                  />
+                                </div>
+                                {authorizedDossierIds.length > 0 &&
+                                  (() => {
+                                    const getNames = (folder, ids) => {
+                                      let names = [];
+                                      if (ids.includes(folder.id))
+                                        names.push(folder.name);
+                                      if (folder.subDossiers) {
+                                        folder.subDossiers.forEach(
+                                          (sub) =>
+                                            (names = [
+                                              ...names,
+                                              ...getNames(sub, ids),
+                                            ]),
+                                        );
+                                      }
+                                      return names;
+                                    };
+                                    const selectedNames = getNames(
+                                      filteredTree,
+                                      authorizedDossierIds,
+                                    );
+                                    if (selectedNames.length === 0) return null;
+                                    return (
+                                      <div
+                                        style={{
+                                          padding: "0.75rem",
+                                          background: "#e0f2fe",
+                                          borderRadius: "8px",
+                                          fontSize: "0.875rem",
+                                          border: "1px solid #bae6fd",
+                                          marginTop: "0.5rem",
+                                        }}
+                                      >
+                                        <strong
+                                          style={{
+                                            display: "block",
+                                            marginBottom: "0.25rem",
+                                            color: "#0369a1",
+                                          }}
+                                        >
+                                          Panier des dossiers autorisés :
+                                        </strong>
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            gap: "0.5rem",
+                                          }}
+                                        >
+                                          {selectedNames.map((name, i) => (
+                                            <span
+                                              key={i}
+                                              style={{
+                                                background: "#FFF",
+                                                color: "#0369a1",
+                                                padding: "0.25rem 0.5rem",
+                                                borderRadius: "4px",
+                                                fontSize: "0.75rem",
+                                                fontWeight: 500,
+                                                border: "1px solid #7dd3fc",
+                                              }}
+                                            >
+                                              {name}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    );
+                                  })()}
+                              </div>
+                            );
+                          })()}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
-                <button type="button" onClick={() => { setCreateMissionModal(false); setSelectedDossierDocs([]); setMissionDossierId(''); setAuthorizedDossierIds([]); }} className="btn btn-outline" disabled={isSubmittingMission}>Annuler</button>
-                <button type="button" onClick={handleCreateMission} disabled={isSubmittingMission} className="btn btn-primary">{isSubmittingMission ? 'Création...' : 'Créer la mission'}</button>
-              </div>
-            </div>
-          </div>
-          );
-        })()}
+                      </div>
+                    )}
 
-        <TaskConsultModal task={localConsultTask} onClose={() => setLocalConsultTask(null)} titlePrefix="Consulter la Mission:" />
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: "1rem",
+                      }}
+                    >
+                      <div>
+                        <label
+                          style={{
+                            display: "block",
+                            marginBottom: "0.5rem",
+                            fontWeight: 500,
+                            fontSize: "0.875rem",
+                          }}
+                        >
+                          Assigner à *
+                        </label>
+                        <select
+                          value={missionAssignedTo}
+                          onChange={(e) => setMissionAssignedTo(e.target.value)}
+                          className="input-field"
+                          style={{
+                            width: "100%",
+                            padding: "0.75rem",
+                            borderRadius: "8px",
+                            border: "1px solid var(--border)",
+                            background: "#FFF",
+                          }}
+                        >
+                          <option value="">Sélectionner...</option>
+                          {dbUsers
+                            .filter(
+                              (u) =>
+                                u.role?.name === "Responsable opérationnel" ||
+                                u.role?.name === "Super-administrateur",
+                            )
+                            .map((u) => (
+                              <option key={u.id} value={u.id}>
+                                {u.name} ({u.role?.name})
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label
+                          style={{
+                            display: "block",
+                            marginBottom: "0.5rem",
+                            fontWeight: 500,
+                            fontSize: "0.875rem",
+                          }}
+                        >
+                          Échéance *
+                        </label>
+                        <input
+                          type="date"
+                          min={new Date().toISOString().split("T")[0]}
+                          value={missionEcheance}
+                          onChange={(e) => setMissionEcheance(e.target.value)}
+                          className="input-field"
+                          style={{
+                            width: "100%",
+                            padding: "0.75rem",
+                            borderRadius: "8px",
+                            border: "1px solid var(--border)",
+                            background: "#FFF",
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        style={{
+                          display: "block",
+                          marginBottom: "0.5rem",
+                          fontWeight: 500,
+                          fontSize: "0.875rem",
+                        }}
+                      >
+                        Message / Consignes *
+                      </label>
+                      <textarea
+                        value={missionDescription}
+                        onChange={(e) => setMissionDescription(e.target.value)}
+                        placeholder="Détails de la mission..."
+                        style={{
+                          width: "100%",
+                          padding: "0.75rem",
+                          borderRadius: "8px",
+                          border: "1px solid var(--border)",
+                          minHeight: "120px",
+                          resize: "vertical",
+                          fontFamily: "inherit",
+                        }}
+                      ></textarea>
+                    </div>
+
+                    {consultDossier?.documents?.length > 0 && (
+                      <div
+                        style={{
+                          marginTop: "0.5rem",
+                          padding: "0.75rem",
+                          background: "#F0F9FF",
+                          borderRadius: "8px",
+                          border: "1px solid #BAE6FD",
+                        }}
+                      >
+                        <label
+                          style={{
+                            display: "block",
+                            marginBottom: "0.5rem",
+                            fontWeight: 500,
+                            fontSize: "0.875rem",
+                            color: "var(--primary-dark)",
+                          }}
+                        >
+                          Inclure des documents du dossier (optionnel) :
+                        </label>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "0.5rem",
+                          }}
+                        >
+                          {consultDossier.documents.map((doc) => (
+                            <div
+                              key={doc.id}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "1rem",
+                              }}
+                            >
+                              <label
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "0.5rem",
+                                  fontSize: "0.875rem",
+                                  cursor: "pointer",
+                                  margin: 0,
+                                }}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={selectedDossierDocs.includes(doc.id)}
+                                  onChange={(e) => {
+                                    if (e.target.checked)
+                                      setSelectedDossierDocs([
+                                        ...selectedDossierDocs,
+                                        doc.id,
+                                      ]);
+                                    else
+                                      setSelectedDossierDocs(
+                                        selectedDossierDocs.filter(
+                                          (id) => id !== doc.id,
+                                        ),
+                                      );
+                                  }}
+                                />
+                                <FileText
+                                  size={14}
+                                  style={{ color: "var(--primary)" }}
+                                />{" "}
+                                {doc.name}
+                              </label>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setPreviewFile(doc.url);
+                                }}
+                                style={{
+                                  background: "none",
+                                  border: "none",
+                                  cursor: "pointer",
+                                  color: "var(--primary)",
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                                title="Prévisualiser"
+                              >
+                                <Eye size={16} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      gap: "1rem",
+                      marginTop: "2rem",
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCreateMissionModal(false);
+                        setSelectedDossierDocs([]);
+                        setMissionDossierId("");
+                        setAuthorizedDossierIds([]);
+                      }}
+                      className="btn btn-outline"
+                      disabled={isSubmittingMission}
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleCreateMission}
+                      disabled={isSubmittingMission}
+                      className="btn btn-primary"
+                    >
+                      {isSubmittingMission ? "Création..." : "Créer la mission"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+        <TaskConsultModal
+          task={localConsultTask}
+          onClose={() => setLocalConsultTask(null)}
+          titlePrefix="Consulter la Mission:"
+        />
       </div>
     );
   }
 
   if (editDossier) {
-    const associatedTasks = dbTasks.filter(t => t.dossierId === editDossier.id);
+    const associatedTasks = dbTasks.filter(
+      (t) => t.dossierId === editDossier.id,
+    );
     return (
-      <div className="fade-in" style={{width: "100%", padding: "0"}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem'}}>
-          <button type="button" onClick={() => setEditDossier(null)} className="btn btn-outline" style={{padding: '0.5rem 1rem'}}>← Retour</button>
-          <h2 style={{margin: 0, fontSize: '1.5rem', fontWeight: 600}}>Modifier le Dossier: {editDossier.reference || editDossier.id}</h2>
+      <div className="fade-in" style={{ width: "100%", padding: "0" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "1rem",
+            marginBottom: "2rem",
+            borderBottom: "1px solid var(--border)",
+            paddingBottom: "1.5rem",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setEditDossier(null)}
+            className="btn btn-outline"
+            style={{ padding: "0.5rem 1rem" }}
+          >
+            ← Retour
+          </button>
+          <h2 style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600 }}>
+            Modifier le Dossier: {editDossier.reference || editDossier.id}
+          </h2>
         </div>
 
         {renderDossierFields(editDossier, true)}
-        <div style={{display: 'flex', gap: '2rem', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', alignItems: 'flex-start'}}>
-          <div style={{flex: '0 0 70%'}}>
-            <h4 style={{margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: 600}}>Description du dossier</h4>
+        <div
+          style={{
+            display: "flex",
+            gap: "2rem",
+            marginTop: "1rem",
+            borderTop: "1px solid var(--border)",
+            paddingTop: "1.5rem",
+            alignItems: "flex-start",
+          }}
+        >
+          <div style={{ flex: "0 0 70%" }}>
+            <h4
+              style={{
+                margin: "0 0 1rem 0",
+                fontSize: "1rem",
+                fontWeight: 600,
+              }}
+            >
+              Description du dossier
+            </h4>
             <textarea
-              value={editDossier.description || ''}
-              onChange={(e) => setEditDossier({...editDossier, description: e.target.value})}
+              value={editDossier.description || ""}
+              onChange={(e) =>
+                setEditDossier({ ...editDossier, description: e.target.value })
+              }
               className="input-field"
-              style={{width: '100%', padding: '1.5rem', background: '#FFF', borderRadius: '8px', border: '1px solid var(--primary)', fontSize: '0.875rem', color: 'var(--text-main)', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'}}
+              style={{
+                width: "100%",
+                padding: "1.5rem",
+                background: "#FFF",
+                borderRadius: "8px",
+                border: "1px solid var(--primary)",
+                fontSize: "0.875rem",
+                color: "var(--text-main)",
+                minHeight: "120px",
+                resize: "vertical",
+                fontFamily: "inherit",
+              }}
               placeholder="Description du dossier..."
             />
           </div>
-          <div style={{flex: '1 1 auto', minWidth: 0}}>
+          <div style={{ flex: "1 1 auto", minWidth: 0 }}>
             {renderAssociatedTasks(associatedTasks, true)}
           </div>
         </div>
 
-        <div style={{marginTop: '2rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem'}}>
-          <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
+        <div
+          style={{
+            marginTop: "2rem",
+            borderTop: "1px solid var(--border)",
+            paddingTop: "1.5rem",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "1rem",
+          }}
+        >
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
             {renderWorkflowButtons(editDossier)}
           </div>
-          <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
-            <button type="button" onClick={() => setEditDossier(null)} className="btn btn-outline">Annuler</button>
-            <button type="button" onClick={handleUpdateDossier} className="btn btn-primary">Enregistrer</button>
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            <button
+              type="button"
+              onClick={() => setEditDossier(null)}
+              className="btn btn-outline"
+            >
+              Annuler
+            </button>
+            <button
+              type="button"
+              onClick={handleUpdateDossier}
+              className="btn btn-primary"
+            >
+              Enregistrer
+            </button>
           </div>
         </div>
 
-        <TaskConsultModal task={localConsultTask} onClose={() => setLocalConsultTask(null)} titlePrefix="Consulter la Mission:" />
+        <TaskConsultModal
+          task={localConsultTask}
+          onClose={() => setLocalConsultTask(null)}
+          titlePrefix="Consulter la Mission:"
+        />
       </div>
     );
   }
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', alignItems: 'center'}}>
+      <div
+        className="flex justify-between items-center mb-6"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "1.5rem",
+          alignItems: "center",
+        }}
+      >
         <div>
-          <h1 style={{fontSize: '1.5rem', fontWeight: 600, color: 'var(--text-main)'}}>Tous les Dossiers</h1>
-          <p style={{color: 'var(--text-muted)'}}>Gestion complète et cycle de vie</p>
+          <h1
+            style={{
+              fontSize: "1.5rem",
+              fontWeight: 600,
+              color: "var(--text-main)",
+            }}
+          >
+            Tous les Dossiers
+          </h1>
+          <p style={{ color: "var(--text-muted)" }}>
+            Gestion complète et cycle de vie
+          </p>
         </div>
-        {(currentUser?.role === 'Super-administrateur' || currentUser?.role?.name === 'Super-administrateur') && (
-          <button 
-            onClick={() => { 
-              setNewDossierData({ name: '', description: '', priority: 'NORMAL', origin: '', parentDossierId: '', targetId: '', generalName: '', traitantId: currentUser.id }); 
-              setShowCreateDossierModal(true); 
-            }} 
-            className="btn btn-primary" 
-            style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}
+        {(currentUser?.role === "Super-administrateur" ||
+          currentUser?.role?.name === "Super-administrateur") && (
+          <button
+            onClick={() => {
+              setNewDossierData({
+                name: "",
+                description: "",
+                priority: "NORMAL",
+                origin: "",
+                parentDossierId: "",
+                targetId: "",
+                generalName: "",
+                traitantId: currentUser.id,
+              });
+              setShowCreateDossierModal(true);
+            }}
+            className="btn btn-primary"
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
           >
             <Plus size={18} /> Nouveau Dossier
           </button>
         )}
       </div>
-      
-      <div style={{display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem', background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
-        <div style={{flex: '1 1 250px', position: 'relative'}}>
-          <Search size={18} style={{position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)'}} />
-          <input 
-            type="text" 
-            placeholder="Rechercher par ID, Nom ou Créateur..." 
+
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "1rem",
+          marginBottom: "1.5rem",
+          background: "#F8FAFC",
+          padding: "1rem",
+          borderRadius: "8px",
+          border: "1px solid var(--border)",
+        }}
+      >
+        <div style={{ flex: "1 1 250px", position: "relative" }}>
+          <Search
+            size={18}
+            style={{
+              position: "absolute",
+              left: "1rem",
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "var(--text-muted)",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Rechercher par ID, Nom ou Créateur..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input-field" 
-            style={{width: '100%', padding: '0.75rem 1rem 0.75rem 2.5rem', borderRadius: '8px', border: '1px solid var(--border)'}} 
+            className="input-field"
+            style={{
+              width: "100%",
+              padding: "0.75rem 1rem 0.75rem 2.5rem",
+              borderRadius: "8px",
+              border: "1px solid var(--border)",
+            }}
           />
         </div>
-        <select 
-          className="input-field" 
+        <select
+          className="input-field"
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          style={{padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', minWidth: '150px'}}
+          style={{
+            padding: "0.75rem 1rem",
+            borderRadius: "8px",
+            border: "1px solid var(--border)",
+            background: "#FFF",
+            minWidth: "150px",
+          }}
         >
           <option value="all">Statut: Tous</option>
           <option value="NOUVEAU">Nouveau</option>
@@ -1175,11 +2567,17 @@ const DossiersPage = () => {
           <option value="BLOQUE">Bloqué</option>
           <option value="ANNULE">Annulé</option>
         </select>
-        <select 
-          className="input-field" 
+        <select
+          className="input-field"
           value={filterOrigine}
           onChange={(e) => setFilterOrigine(e.target.value)}
-          style={{padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF', minWidth: '150px'}}
+          style={{
+            padding: "0.75rem 1rem",
+            borderRadius: "8px",
+            border: "1px solid var(--border)",
+            background: "#FFF",
+            minWidth: "150px",
+          }}
         >
           <option value="all">Origine: Toutes</option>
           <option value="CLIENT">Client</option>
@@ -1191,213 +2589,705 @@ const DossiersPage = () => {
         <table>
           <thead>
             <tr>
-              <th style={{ width: '10%' }}>ID</th>
-              <th style={{ width: '22%' }}>Nom du dossier</th>
-              <th style={{ width: '15%' }}>Origine</th>
-              <th style={{ width: '20%' }}>Propriétaire</th>
-              <th style={{ width: '10%' }}>Statut</th>
-              <th style={{ width: '13%' }}>Date de création</th>
-              <th style={{ width: '10%' }}>Actions</th>
+              <th style={{ width: "10%" }}>ID</th>
+              <th style={{ width: "22%" }}>Nom du dossier</th>
+              <th style={{ width: "15%" }}>Origine</th>
+              <th style={{ width: "20%" }}>Propriétaire</th>
+              <th style={{ width: "10%" }}>Statut</th>
+              <th style={{ width: "13%" }}>Date de création</th>
+              <th style={{ width: "10%" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
-              <tr><td colSpan="7" style={{textAlign: 'center', padding: '2rem'}}>Chargement des dossiers...</td></tr>
-            ) : dbDossiers.filter(d => !d.parentDossierId).length === 0 ? (
-              <tr><td colSpan="7" style={{textAlign: 'center', padding: '2rem'}}>Aucun dossier principal trouvé.</td></tr>
-            ) : dbDossiers.filter(d => !d.parentDossierId).map(d => {
-              const dOrigin = d.origin || 'INTERNE';
-              const dOwner = d.origin === 'CLIENT' 
-                ? (d.client?.name || d.client?.companyName || dbClients.find(c => c.id === d.clientId)?.name || dbClients.find(c => c.id === d.clientId)?.companyName || 'Client inconnu') 
-                : d.origin === 'COLLABORATEUR'
-                ? (d.targetUser?.name || dbUsers.find(u => u.id === d.targetUserId)?.name || 'Collaborateur inconnu')
-                : 'MENUA CONSULTING (Interne)';
-              const dCreatorRole = d.createdBy?.role?.name || '-';
-              const isExpired = (dossier) => {
-                const d = dossier.echeance;
-                if (!d) return false;
-                if (['TERMINE', 'TERMINEE', 'ARCHIVE', 'ANNULEE', 'BLOQUE'].includes(dossier.status)) return false;
-                const today = new Date();
-                today.setHours(0,0,0,0);
-                const date = new Date(d);
-                date.setHours(0,0,0,0);
-                return date <= today;
-              };
-              return (
-              <tr key={d.id} className={isExpired(d) ? 'row-expired' : ''}>
-                <td><div style={{whiteSpace: 'nowrap', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '90px'}} title={d.reference || d.id}>{d.reference || d.id}</div></td>
-                <td><strong className="truncate-name" style={{color: 'var(--text-main)'}}>{d.name}</strong></td>
-                <td><div style={{color: 'var(--text-muted)', fontSize: '0.875rem', textTransform: 'capitalize', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px'}} title={dOrigin}>{dOrigin}</div></td>
-                <td><div style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '160px'}} title={dOwner}>{dOwner}</div></td>
-                <td><div className="truncate-text">{getStatusBadge(d.status)}</div></td>
-
-                <td style={{color: 'var(--text-muted)', whiteSpace: "nowrap", fontSize: "0.875rem"}}>{new Date(d.createdAt).toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</td>
-                <td>
-                  <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem', alignItems: 'center'}}>
-                    <button
-                      type="button"
-                      onClick={() => { setConsultDossier(d); setShowMagicModal(false); }}
-                      style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', padding: '4px'}}
-                      title="Consulter le dossier"
-                    >
-                      <Eye size={18} />
-                    </button>
-                    {(currentUser?.role === 'Super-administrateur' || currentUser?.role?.name === 'Super-administrateur' || currentUser?.role === 'Responsable opérationnel' || currentUser?.role?.name === 'Responsable opérationnel') && (
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteDossier(d)}
-                        style={{background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444', padding: '4px'}}
-                        title="Supprimer le dossier"
-                      >
-                        <Trash size={18} />
-                      </button>
-                    )}
-                  </div>
+              <tr>
+                <td
+                  colSpan="7"
+                  style={{ textAlign: "center", padding: "2rem" }}
+                >
+                  Chargement des dossiers...
                 </td>
               </tr>
-              );
-            })}
+            ) : dbDossiers.filter((d) => !d.parentDossierId).length === 0 ? (
+              <tr>
+                <td
+                  colSpan="7"
+                  style={{ textAlign: "center", padding: "2rem" }}
+                >
+                  Aucun dossier principal trouvé.
+                </td>
+              </tr>
+            ) : (
+              dbDossiers
+                .filter((d) => !d.parentDossierId)
+                .map((d) => {
+                  const dOrigin = d.origin || "INTERNE";
+                  const dOwner =
+                    d.origin === "CLIENT"
+                      ? d.client?.name ||
+                        d.client?.companyName ||
+                        dbClients.find((c) => c.id === d.clientId)?.name ||
+                        dbClients.find((c) => c.id === d.clientId)
+                          ?.companyName ||
+                        "Client inconnu"
+                      : d.origin === "COLLABORATEUR"
+                        ? d.targetUser?.name ||
+                          dbUsers.find((u) => u.id === d.targetUserId)?.name ||
+                          "Collaborateur inconnu"
+                        : "MENUA CONSULTING (Interne)";
+                  const dCreatorRole = d.createdBy?.role?.name || "-";
+                  const isExpired = (dossier) => {
+                    const d = dossier.echeance;
+                    if (!d) return false;
+                    if (
+                      [
+                        "TERMINE",
+                        "TERMINEE",
+                        "ARCHIVE",
+                        "ANNULEE",
+                        "BLOQUE",
+                      ].includes(dossier.status)
+                    )
+                      return false;
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    const date = new Date(d);
+                    date.setHours(0, 0, 0, 0);
+                    return date <= today;
+                  };
+                  return (
+                    <tr
+                      key={d.id}
+                      className={isExpired(d) ? "row-expired" : ""}
+                    >
+                      <td>
+                        <div
+                          style={{
+                            whiteSpace: "nowrap",
+                            fontWeight: 500,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            maxWidth: "90px",
+                          }}
+                          title={d.reference || d.id}
+                        >
+                          {d.reference || d.id}
+                        </div>
+                      </td>
+                      <td>
+                        <strong
+                          className="truncate-name"
+                          style={{ color: "var(--text-main)" }}
+                        >
+                          {d.name}
+                        </strong>
+                      </td>
+                      <td>
+                        <div
+                          style={{
+                            color: "var(--text-muted)",
+                            fontSize: "0.875rem",
+                            textTransform: "capitalize",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            maxWidth: "120px",
+                          }}
+                          title={dOrigin}
+                        >
+                          {dOrigin}
+                        </div>
+                      </td>
+                      <td>
+                        <div
+                          style={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            maxWidth: "160px",
+                          }}
+                          title={dOwner}
+                        >
+                          {dOwner}
+                        </div>
+                      </td>
+                      <td>
+                        <div className="truncate-text">
+                          {getStatusBadge(d.status)}
+                        </div>
+                      </td>
+
+                      <td
+                        style={{
+                          color: "var(--text-muted)",
+                          whiteSpace: "nowrap",
+                          fontSize: "0.875rem",
+                        }}
+                      >
+                        {new Date(d.createdAt).toLocaleString("fr-FR", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </td>
+                      <td>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "0.25rem",
+                            alignItems: "center",
+                          }}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setConsultDossier(d);
+                              setShowMagicModal(false);
+                            }}
+                            style={{
+                              background: "none",
+                              border: "none",
+                              cursor: "pointer",
+                              color: "var(--primary)",
+                              padding: "4px",
+                            }}
+                            title="Consulter le dossier"
+                          >
+                            <Eye size={18} />
+                          </button>
+                          {(currentUser?.role === "Super-administrateur" ||
+                            currentUser?.role?.name ===
+                              "Super-administrateur" ||
+                            currentUser?.role === "Responsable opérationnel" ||
+                            currentUser?.role?.name ===
+                              "Responsable opérationnel") && (
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteDossier(d)}
+                              style={{
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                color: "#EF4444",
+                                padding: "4px",
+                              }}
+                              title="Supprimer le dossier"
+                            >
+                              <Trash size={18} />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+            )}
           </tbody>
         </table>
       </div>
 
-      <PaginationControls page={page} totalPages={totalPages} setPage={setPage} />
-      <FilePreviewModal previewFile={previewFile} onClose={() => setPreviewFile(null)} />
+      <PaginationControls
+        page={page}
+        totalPages={totalPages}
+        setPage={setPage}
+      />
+      <FilePreviewModal
+        previewFile={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
 
       {/* Modal Création Dossier */}
       {showCreateDossierModal && (
-        <div className="fade-in" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
-          <div style={{background: '#FFF', padding: '2rem', borderRadius: '8px', width: '90%', maxWidth: '500px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-              <h3 style={{margin: 0, fontSize: '1.25rem', fontWeight: 600}}>Nouveau Dossier</h3>
-              <button onClick={() => setShowCreateDossierModal(false)} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)'}}><X size={20}/></button>
+        <div
+          className="fade-in"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              background: "#FFF",
+              padding: "2rem",
+              borderRadius: "8px",
+              width: "90%",
+              maxWidth: "500px",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "1.5rem",
+              }}
+            >
+              <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
+                Nouveau Dossier
+              </h3>
+              <button
+                onClick={() => setShowCreateDossierModal(false)}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "var(--text-muted)",
+                }}
+              >
+                <X size={20} />
+              </button>
             </div>
-            
+
             <form onSubmit={handleCreateDossier}>
-              <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1.5rem",
+                }}
+              >
                 {/* BLOC 1: ORIGINE ET CIBLE */}
-                <div style={{ padding: '1.5rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                  <label style={{display: 'block', marginBottom: '1rem', fontWeight: 600, fontSize: '0.95rem', color: 'var(--primary-dark)'}}>1. Type de dossier (Origine) *</label>
-                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem', marginBottom: newDossierData.origin && newDossierData.origin !== 'GENERAL' ? '1.5rem' : '0'}}>
-                    <button 
+                <div
+                  style={{
+                    padding: "1.5rem",
+                    background: "#F8FAFC",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                  }}
+                >
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "1rem",
+                      fontWeight: 600,
+                      fontSize: "0.95rem",
+                      color: "var(--primary-dark)",
+                    }}
+                  >
+                    1. Type de dossier (Origine) *
+                  </label>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr 1fr",
+                      gap: "0.75rem",
+                      marginBottom:
+                        newDossierData.origin &&
+                        newDossierData.origin !== "GENERAL"
+                          ? "1.5rem"
+                          : "0",
+                    }}
+                  >
+                    <button
                       type="button"
-                      onClick={() => setNewDossierData({...newDossierData, origin: 'CLIENT', targetId: ''})}
+                      onClick={() =>
+                        setNewDossierData({
+                          ...newDossierData,
+                          origin: "CLIENT",
+                          targetId: "",
+                        })
+                      }
                       style={{
-                        padding: '1rem 0.5rem', borderRadius: '8px', border: newDossierData.origin === 'CLIENT' ? '2px solid var(--primary)' : '1px solid var(--border)',
-                        background: newDossierData.origin === 'CLIENT' ? '#e0f2fe' : '#FFF', color: newDossierData.origin === 'CLIENT' ? 'var(--primary-dark)' : 'var(--text-main)',
-                        fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', fontSize: '0.85rem', textAlign: 'center'
+                        padding: "1rem 0.5rem",
+                        borderRadius: "8px",
+                        border:
+                          newDossierData.origin === "CLIENT"
+                            ? "2px solid var(--primary)"
+                            : "1px solid var(--border)",
+                        background:
+                          newDossierData.origin === "CLIENT"
+                            ? "#e0f2fe"
+                            : "#FFF",
+                        color:
+                          newDossierData.origin === "CLIENT"
+                            ? "var(--primary-dark)"
+                            : "var(--text-main)",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.4rem",
+                        fontSize: "0.85rem",
+                        textAlign: "center",
                       }}
                     >
-                      <span style={{fontSize: '1.5rem'}}>🏢</span>
+                      <span style={{ fontSize: "1.5rem" }}>🏢</span>
                       Dossier Client
                     </button>
-                    <button 
+                    <button
                       type="button"
-                      onClick={() => setNewDossierData({...newDossierData, origin: 'COLLABORATEUR', targetId: ''})}
+                      onClick={() =>
+                        setNewDossierData({
+                          ...newDossierData,
+                          origin: "COLLABORATEUR",
+                          targetId: "",
+                        })
+                      }
                       style={{
-                        padding: '1rem 0.5rem', borderRadius: '8px', border: newDossierData.origin === 'COLLABORATEUR' ? '2px solid var(--primary)' : '1px solid var(--border)',
-                        background: newDossierData.origin === 'COLLABORATEUR' ? '#e0f2fe' : '#FFF', color: newDossierData.origin === 'COLLABORATEUR' ? 'var(--primary-dark)' : 'var(--text-main)',
-                        fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', fontSize: '0.85rem', textAlign: 'center'
+                        padding: "1rem 0.5rem",
+                        borderRadius: "8px",
+                        border:
+                          newDossierData.origin === "COLLABORATEUR"
+                            ? "2px solid var(--primary)"
+                            : "1px solid var(--border)",
+                        background:
+                          newDossierData.origin === "COLLABORATEUR"
+                            ? "#e0f2fe"
+                            : "#FFF",
+                        color:
+                          newDossierData.origin === "COLLABORATEUR"
+                            ? "var(--primary-dark)"
+                            : "var(--text-main)",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.4rem",
+                        fontSize: "0.85rem",
+                        textAlign: "center",
                       }}
                     >
-                      <span style={{fontSize: '1.5rem'}}>👥</span>
+                      <span style={{ fontSize: "1.5rem" }}>👥</span>
                       Dossier Interne (Collab.)
                     </button>
-                    <button 
+                    <button
                       type="button"
-                      onClick={() => setNewDossierData({...newDossierData, origin: 'GENERAL', targetId: ''})}
+                      onClick={() =>
+                        setNewDossierData({
+                          ...newDossierData,
+                          origin: "GENERAL",
+                          targetId: "",
+                        })
+                      }
                       style={{
-                        padding: '1rem 0.5rem', borderRadius: '8px', border: newDossierData.origin === 'GENERAL' ? '2px solid #7c3aed' : '1px solid var(--border)',
-                        background: newDossierData.origin === 'GENERAL' ? '#ede9fe' : '#FFF', color: newDossierData.origin === 'GENERAL' ? '#5b21b6' : 'var(--text-main)',
-                        fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', fontSize: '0.85rem', textAlign: 'center'
+                        padding: "1rem 0.5rem",
+                        borderRadius: "8px",
+                        border:
+                          newDossierData.origin === "GENERAL"
+                            ? "2px solid #7c3aed"
+                            : "1px solid var(--border)",
+                        background:
+                          newDossierData.origin === "GENERAL"
+                            ? "#ede9fe"
+                            : "#FFF",
+                        color:
+                          newDossierData.origin === "GENERAL"
+                            ? "#5b21b6"
+                            : "var(--text-main)",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.4rem",
+                        fontSize: "0.85rem",
+                        textAlign: "center",
                       }}
                     >
-                      <span style={{fontSize: '1.5rem'}}>📁</span>
+                      <span style={{ fontSize: "1.5rem" }}>📁</span>
                       Général / Entreprise
                     </button>
                   </div>
 
-                  {(newDossierData.origin === 'CLIENT' || newDossierData.origin === 'COLLABORATEUR') && (
-                    <div className="fade-in" style={{paddingTop: '1rem', borderTop: '1px solid var(--border)'}}>
-                      <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.95rem', color: 'var(--primary-dark)'}}>
-                        {newDossierData.origin === 'CLIENT' ? '2. Rechercher le Client cible *' : '2. Sélectionner le Collaborateur *'}
+                  {(newDossierData.origin === "CLIENT" ||
+                    newDossierData.origin === "COLLABORATEUR") && (
+                    <div
+                      className="fade-in"
+                      style={{
+                        paddingTop: "1rem",
+                        borderTop: "1px solid var(--border)",
+                      }}
+                    >
+                      <label
+                        style={{
+                          display: "block",
+                          marginBottom: "0.5rem",
+                          fontWeight: 600,
+                          fontSize: "0.95rem",
+                          color: "var(--primary-dark)",
+                        }}
+                      >
+                        {newDossierData.origin === "CLIENT"
+                          ? "2. Rechercher le Client cible *"
+                          : "2. Sélectionner le Collaborateur *"}
                       </label>
-                      {newDossierData.origin === 'CLIENT' ? (
+                      {newDossierData.origin === "CLIENT" ? (
                         <SearchableDropdown
-                          options={dbClients.map(c => ({ value: c.id, label: c.name || 'Client Inconnu' }))}
+                          options={dbClients.map((c) => ({
+                            value: c.id,
+                            label: c.name || "Client Inconnu",
+                          }))}
                           value={newDossierData.targetId}
-                          onChange={(val) => setNewDossierData({...newDossierData, targetId: val})}
+                          onChange={(val) =>
+                            setNewDossierData({
+                              ...newDossierData,
+                              targetId: val,
+                            })
+                          }
                           placeholder="-- Rechercher un client --"
                         />
                       ) : (
                         <SearchableDropdown
-                          options={dbUsers.map(u => ({ value: u.id, label: u.name }))}
+                          options={dbUsers.map((u) => ({
+                            value: u.id,
+                            label: u.name,
+                          }))}
                           value={newDossierData.targetId}
-                          onChange={(val) => setNewDossierData({...newDossierData, targetId: val})}
+                          onChange={(val) =>
+                            setNewDossierData({
+                              ...newDossierData,
+                              targetId: val,
+                            })
+                          }
                           placeholder="-- Rechercher un collaborateur --"
                         />
                       )}
                     </div>
                   )}
-                  {newDossierData.origin === 'GENERAL' && (
-                    <div className="fade-in" style={{paddingTop: '1rem', borderTop: '1px solid var(--border)'}}>
-                      <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.95rem', color: '#5b21b6'}}>
+                  {newDossierData.origin === "GENERAL" && (
+                    <div
+                      className="fade-in"
+                      style={{
+                        paddingTop: "1rem",
+                        borderTop: "1px solid var(--border)",
+                      }}
+                    >
+                      <label
+                        style={{
+                          display: "block",
+                          marginBottom: "0.5rem",
+                          fontWeight: 600,
+                          fontSize: "0.95rem",
+                          color: "#5b21b6",
+                        }}
+                      >
                         📁 Nom du dossier *
                       </label>
                       <input
                         type="text"
                         required
                         placeholder="Ex: Projet Marketing, Chantier 2026..."
-                        value={newDossierData.generalName || ''}
-                        onChange={(e) => setNewDossierData({...newDossierData, generalName: e.target.value})}
+                        value={newDossierData.generalName || ""}
+                        onChange={(e) =>
+                          setNewDossierData({
+                            ...newDossierData,
+                            generalName: e.target.value,
+                          })
+                        }
                         className="input-field"
-                        style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #7c3aed', background: '#faf5ff', boxSizing: 'border-box'}}
+                        style={{
+                          width: "100%",
+                          padding: "0.75rem",
+                          borderRadius: "8px",
+                          border: "1px solid #7c3aed",
+                          background: "#faf5ff",
+                          boxSizing: "border-box",
+                        }}
                       />
-                      <p style={{margin: '0.4rem 0 0', color: '#7c3aed', fontSize: '0.8rem'}}>
-                        Ce nom sera utilisé pour identifier le dossier dans la GED.
+                      <p
+                        style={{
+                          margin: "0.4rem 0 0",
+                          color: "#7c3aed",
+                          fontSize: "0.8rem",
+                        }}
+                      >
+                        Ce nom sera utilisé pour identifier le dossier dans la
+                        GED.
                       </p>
                     </div>
                   )}
                 </div>
 
                 {/* BLOC 2: INFOS GENERALES */}
-                <div style={{ padding: '1.5rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                  <label style={{display: 'block', marginBottom: '1rem', fontWeight: 600, fontSize: '0.95rem', color: 'var(--primary-dark)'}}>2. Informations générales</label>
+                <div
+                  style={{
+                    padding: "1.5rem",
+                    background: "#F8FAFC",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                  }}
+                >
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "1rem",
+                      fontWeight: 600,
+                      fontSize: "0.95rem",
+                      color: "var(--primary-dark)",
+                    }}
+                  >
+                    2. Informations générales
+                  </label>
                   <div>
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Description *</label>
-                    <textarea required value={newDossierData.description} onChange={(e) => setNewDossierData({...newDossierData, description: e.target.value})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', minHeight: '80px', resize: 'vertical', fontFamily: 'inherit'}}></textarea>
+                    <label
+                      style={{
+                        display: "block",
+                        marginBottom: "0.5rem",
+                        fontWeight: 500,
+                        fontSize: "0.875rem",
+                      }}
+                    >
+                      Description *
+                    </label>
+                    <textarea
+                      required
+                      value={newDossierData.description}
+                      onChange={(e) =>
+                        setNewDossierData({
+                          ...newDossierData,
+                          description: e.target.value,
+                        })
+                      }
+                      className="input-field"
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        borderRadius: "8px",
+                        border: "1px solid var(--border)",
+                        minHeight: "80px",
+                        resize: "vertical",
+                        fontFamily: "inherit",
+                      }}
+                    ></textarea>
                   </div>
                 </div>
 
-                <div style={{ padding: '1.5rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                  <label style={{display: 'block', marginBottom: '1rem', fontWeight: 600, fontSize: '0.95rem', color: 'var(--primary-dark)'}}>3. Attribution</label>
+                <div
+                  style={{
+                    padding: "1.5rem",
+                    background: "#F8FAFC",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                  }}
+                >
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "1rem",
+                      fontWeight: 600,
+                      fontSize: "0.95rem",
+                      color: "var(--primary-dark)",
+                    }}
+                  >
+                    3. Attribution
+                  </label>
                   <div>
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem'}}>Responsable du dossier (Traitant) *</label>
-                    <select required value={newDossierData.traitantId} onChange={(e) => setNewDossierData({...newDossierData, traitantId: e.target.value})} className="input-field" style={{width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#FFF'}}>
-                      <option value="" disabled>-- Sélectionner un traitant --</option>
-                      {dbUsers.filter(u => u.role?.name === 'Responsable opérationnel' || u.role?.name === 'Super-administrateur' || u.role?.name === 'Administrateur technique').map(u => (
-                        <option key={u.id} value={u.id}>{u.name} ({u.role?.name})</option>
-                      ))}
+                    <label
+                      style={{
+                        display: "block",
+                        marginBottom: "0.5rem",
+                        fontWeight: 500,
+                        fontSize: "0.875rem",
+                      }}
+                    >
+                      Responsable du dossier (Traitant) *
+                    </label>
+                    <select
+                      required
+                      value={newDossierData.traitantId}
+                      onChange={(e) =>
+                        setNewDossierData({
+                          ...newDossierData,
+                          traitantId: e.target.value,
+                        })
+                      }
+                      className="input-field"
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        borderRadius: "8px",
+                        border: "1px solid var(--border)",
+                        background: "#FFF",
+                      }}
+                    >
+                      <option value="" disabled>
+                        -- Sélectionner un traitant --
+                      </option>
+                      {dbUsers
+                        .filter(
+                          (u) =>
+                            u.role?.name === "Responsable opérationnel" ||
+                            u.role?.name === "Super-administrateur" ||
+                            u.role?.name === "Administrateur technique",
+                        )
+                        .map((u) => (
+                          <option key={u.id} value={u.id}>
+                            {u.name} ({u.role?.name})
+                          </option>
+                        ))}
                     </select>
                   </div>
                 </div>
               </div>
-              
-              <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
-                <button type="button" onClick={() => setShowCreateDossierModal(false)} className="btn btn-outline" disabled={isSubmittingDossier}>Annuler</button>
-                <button 
-                  type="submit" 
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "1rem",
+                  marginTop: "2rem",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setShowCreateDossierModal(false)}
+                  className="btn btn-outline"
+                  disabled={isSubmittingDossier}
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
                   disabled={
-                    isSubmittingDossier || 
-                    !newDossierData.description.trim() || 
-                    !newDossierData.origin || 
-                    ((newDossierData.origin === 'CLIENT' || newDossierData.origin === 'COLLABORATEUR') && !newDossierData.targetId) ||
-                    (newDossierData.origin === 'GENERAL' && !newDossierData.generalName?.trim()) ||
+                    isSubmittingDossier ||
+                    !newDossierData.description.trim() ||
+                    !newDossierData.origin ||
+                    ((newDossierData.origin === "CLIENT" ||
+                      newDossierData.origin === "COLLABORATEUR") &&
+                      !newDossierData.targetId) ||
+                    (newDossierData.origin === "GENERAL" &&
+                      !newDossierData.generalName?.trim()) ||
                     !newDossierData.traitantId
-                  } 
-                  className="btn btn-primary" 
-                  style={{ opacity: (!newDossierData.description.trim() || !newDossierData.origin || ((newDossierData.origin === 'CLIENT' || newDossierData.origin === 'COLLABORATEUR') && !newDossierData.targetId) || (newDossierData.origin === 'GENERAL' && !newDossierData.generalName?.trim()) || !newDossierData.traitantId) ? 0.5 : 1 }}
-                >{isSubmittingDossier ? 'Création...' : 'Créer le dossier'}</button>
+                  }
+                  className="btn btn-primary"
+                  style={{
+                    opacity:
+                      !newDossierData.description.trim() ||
+                      !newDossierData.origin ||
+                      ((newDossierData.origin === "CLIENT" ||
+                        newDossierData.origin === "COLLABORATEUR") &&
+                        !newDossierData.targetId) ||
+                      (newDossierData.origin === "GENERAL" &&
+                        !newDossierData.generalName?.trim()) ||
+                      !newDossierData.traitantId
+                        ? 0.5
+                        : 1,
+                  }}
+                >
+                  {isSubmittingDossier ? "Création..." : "Créer le dossier"}
+                </button>
               </div>
             </form>
           </div>
@@ -1407,14 +3297,14 @@ const DossiersPage = () => {
         isOpen={confirmModal.isOpen}
         title={confirmModal.title}
         message={confirmModal.message}
-        type={confirmModal.type || 'warning'}
+        type={confirmModal.type || "warning"}
         confirmText="Confirmer"
         cancelText="Annuler"
         onConfirm={confirmModal.onConfirm}
-        onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+        onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
       />
     </div>
-  )
-}
+  );
+};
 
 export default DossiersPage;

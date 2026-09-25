@@ -1,6 +1,6 @@
-const { transporter } = require('../utils/mailer');
-const fs = require('node:fs');
-const path = require('node:path');
+const { transporter } = require("../utils/mailer");
+const fs = require("node:fs");
+const path = require("node:path");
 
 const buildEmailTemplate = (title, contentHTML) => `
 <!DOCTYPE html>
@@ -32,51 +32,68 @@ const buildEmailTemplate = (title, contentHTML) => `
 </html>
 `;
 
-const sendAutoReply = async (email, lang = 'fr') => {
-  const isEn = (lang || '').toLowerCase() === 'en';
+const sendAutoReply = async (email, lang = "fr") => {
+  const isEn = (lang || "").toLowerCase() === "en";
 
-  const subject = isEn 
-    ? 'MENUA CONSULTING — We have received your request'
-    : 'MENUA CONSULTING — Nous avons bien reçu votre demande';
+  const subject = isEn
+    ? "MENUA CONSULTING — We have received your request"
+    : "MENUA CONSULTING — Nous avons bien reçu votre demande";
 
-  const text = isEn 
+  const text = isEn
     ? `Hello,\n\nWe confirm receipt of your request addressed to MENUA CONSULTING.\nOur team will review it and get back to you to clarify your needs.\n\nTo protect your information, please do not send any sensitive documents by return\nemail unless requested to do so.\n\nBest regards,\nMENUA CONSULTING\nYour operations. Our expertise.`
     : `Bonjour,\n\nNous vous confirmons la bonne réception de votre demande adressée à MENUA CONSULTING.\nNotre équipe va en prendre connaissance et reviendra vers vous afin de préciser votre besoin.\n\nPour protéger vos informations, merci de ne pas transmettre de document sensible par retour\nd'e-mail sans y avoir été invité.\n\nBien cordialement,\nMENUA CONSULTING\nVos opérations. Notre expertise.`;
 
-  const html = buildEmailTemplate(subject, `
+  const html = buildEmailTemplate(
+    subject,
+    `
     <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 15px;">
-      ${isEn ? 'Hello,' : 'Bonjour,'}
+      ${isEn ? "Hello," : "Bonjour,"}
     </p>
     <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 15px;">
-      ${isEn 
-        ? 'We confirm receipt of your request addressed to MENUA CONSULTING.<br>Our team will review it and get back to you to clarify your needs.' 
-        : 'Nous vous confirmons la bonne réception de votre demande adressée à MENUA CONSULTING.<br>Notre équipe va en prendre connaissance et reviendra vers vous afin de préciser votre besoin.'}
+      ${
+        isEn
+          ? "We confirm receipt of your request addressed to MENUA CONSULTING.<br>Our team will review it and get back to you to clarify your needs."
+          : "Nous vous confirmons la bonne réception de votre demande adressée à MENUA CONSULTING.<br>Notre équipe va en prendre connaissance et reviendra vers vous afin de préciser votre besoin."
+      }
     </p>
     <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 15px;">
-      ${isEn 
-        ? 'To protect your information, please do not send any sensitive documents by return email unless requested to do so.' 
-        : "Pour protéger vos informations, merci de ne pas transmettre de document sensible par retour d'e-mail sans y avoir été invité."}
+      ${
+        isEn
+          ? "To protect your information, please do not send any sensitive documents by return email unless requested to do so."
+          : "Pour protéger vos informations, merci de ne pas transmettre de document sensible par retour d'e-mail sans y avoir été invité."
+      }
     </p>
     <p style="font-size: 14px; color: #4a5568; line-height: 1.6; margin-bottom: 0;">
-      ${isEn 
-        ? 'Best regards,<br><strong>MENUA CONSULTING</strong><br><em>Your operations. Our expertise.</em>' 
-        : 'Bien cordialement,<br><strong>MENUA CONSULTING</strong><br><em>Vos opérations. Notre expertise.</em>'}
+      ${
+        isEn
+          ? "Best regards,<br><strong>MENUA CONSULTING</strong><br><em>Your operations. Our expertise.</em>"
+          : "Bien cordialement,<br><strong>MENUA CONSULTING</strong><br><em>Vos opérations. Notre expertise.</em>"
+      }
     </p>
-  `);
+  `,
+  );
 
   const mailOptions = {
     from: process.env.SMTP_FROM,
     to: email,
     subject: subject,
     text: text,
-    html: html
+    html: html,
   };
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log({ event: "auto_reply_success", email: email, messageId: info.messageId });
+    console.log({
+      event: "auto_reply_success",
+      email: email,
+      messageId: info.messageId,
+    });
   } catch (error) {
-    console.error({ event: "auto_reply_immediate_error", email, error: error.message || error });
+    console.error({
+      event: "auto_reply_immediate_error",
+      email,
+      error: error.message || error,
+    });
     throw error;
   }
 };
@@ -89,15 +106,24 @@ const sendAdminNotification = async (formulaire) => {
 
   let attachments = [];
   if (formulaire.contact?.pieceJointe) {
-    const rootPath = process.env.DOCUMENTS_STORAGE_PATH || '/var/menua/documents';
-    let destPath = path.join(rootPath, 'formulaires', formulaire.contact.pieceJointe);
+    const rootPath =
+      process.env.DOCUMENTS_STORAGE_PATH || "/var/menua/documents";
+    let destPath = path.join(
+      rootPath,
+      "formulaires",
+      formulaire.contact.pieceJointe,
+    );
     if (!fs.existsSync(destPath)) {
-      destPath = path.join(__dirname, '../../../../storage/formulaires', formulaire.contact.pieceJointe);
+      destPath = path.join(
+        __dirname,
+        "../../../../storage/formulaires",
+        formulaire.contact.pieceJointe,
+      );
     }
     if (fs.existsSync(destPath)) {
       attachments.push({
         filename: formulaire.contact.pieceJointe,
-        path: destPath
+        path: destPath,
       });
     }
   }
@@ -113,14 +139,20 @@ const sendAdminNotification = async (formulaire) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log({ event: "admin_notification_success", email: formulaire.email });
+    console.log({
+      event: "admin_notification_success",
+      email: formulaire.email,
+    });
   } catch (error) {
-    console.error(`Erreur SMTP détaillée: Code ${error.responseCode || error.code || 'Inconnu'}`, error);
+    console.error(
+      `Erreur SMTP détaillée: Code ${error.responseCode || error.code || "Inconnu"}`,
+      error,
+    );
     throw error;
   }
 };
 
 module.exports = {
   sendAutoReply,
-  sendAdminNotification
+  sendAdminNotification,
 };

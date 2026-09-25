@@ -1,61 +1,75 @@
-const express = require('express');
-const multer = require('multer');
-const crypto = require('node:crypto');
-const nodemailer = require('nodemailer');
-const xss = require('xss');
-const rateLimit = require('express-rate-limit');
-const dns = require('dns').promises;
-const fs = require('node:fs');
-const path = require('node:path');
-const { PrismaClient } = require('@prisma/client');
-const { sendResponse } = require('../utils/responses');
-const { transporter } = require('../utils/mailer');
+const express = require("express");
+const multer = require("multer");
+const crypto = require("node:crypto");
+const nodemailer = require("nodemailer");
+const xss = require("xss");
+const rateLimit = require("express-rate-limit");
+const dns = require("dns").promises;
+const fs = require("node:fs");
+const path = require("node:path");
+const { PrismaClient } = require("@prisma/client");
+const { sendResponse } = require("../utils/responses");
+const { transporter } = require("../utils/mailer");
 const prisma = new PrismaClient();
 
 const router = express.Router();
 
-const { verifyTurnstile } = require('../services/turnstile');
-const verifalia = require('../services/verifalia');
-const { sendAutoReply, sendAdminNotification } = require('../services/emailService');
+const { verifyTurnstile } = require("../services/turnstile");
+const verifalia = require("../services/verifalia");
+const {
+  sendAutoReply,
+  sendAdminNotification,
+} = require("../services/emailService");
 
 // ── Paramètres des formulaires (blacklist email/domain, activation) ──────────
-const FORM_SETTINGS_PATH = path.join(__dirname, '../config/form_settings.json');
+const FORM_SETTINGS_PATH = path.join(__dirname, "../config/form_settings.json");
 
 const getFormSettings = () => {
   try {
-    const raw = fs.readFileSync(FORM_SETTINGS_PATH, 'utf-8');
+    const raw = fs.readFileSync(FORM_SETTINGS_PATH, "utf-8");
     return JSON.parse(raw);
   } catch (e) {
-    console.error('Impossible de lire form_settings.json', e.message);
-    return { blacklistedEmails: [], contactFormEnabled: true, recrutementFormEnabled: true };
+    console.error("Impossible de lire form_settings.json", e.message);
+    return {
+      blacklistedEmails: [],
+      contactFormEnabled: true,
+      recrutementFormEnabled: true,
+    };
   }
 };
 
 const isEmailBlacklisted = (email, settings) => {
-  const normalizedEmail = (email || '').toLowerCase().trim();
-  if (settings.blacklistedEmails?.map(e => e.toLowerCase()).includes(normalizedEmail)) return true;
+  const normalizedEmail = (email || "").toLowerCase().trim();
+  if (
+    settings.blacklistedEmails
+      ?.map((e) => e.toLowerCase())
+      .includes(normalizedEmail)
+  )
+    return true;
   return false;
 };
 
-
-const upload = multer({ 
+const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: Number.parseInt(process.env.UPLOAD_MAX_FILE_SIZE) }
+  limits: { fileSize: Number.parseInt(process.env.UPLOAD_MAX_FILE_SIZE) },
 });
 
 // Strict rate limiting specifically for forms
 const formLimiter = rateLimit({
   windowMs: Number.parseInt(process.env.RATE_LIMIT_FORM_WINDOW_MS),
   max: Number.parseInt(process.env.RATE_LIMIT_FORM_MAX),
-  message: { success: false, error: 'Trop de soumissions, veuillez réessayer plus tard.' }
+  message: {
+    success: false,
+    error: "Trop de soumissions, veuillez réessayer plus tard.",
+  },
 });
 
 router.use(formLimiter);
 
 const sanitizeInput = (data) => {
-  if (typeof data === 'string') return xss(data);
+  if (typeof data === "string") return xss(data);
   if (Array.isArray(data)) return data.map(sanitizeInput);
-  if (typeof data === 'object' && data !== null) {
+  if (typeof data === "object" && data !== null) {
     const sanitized = {};
     for (const key in data) {
       sanitized[key] = sanitizeInput(data[key]);
@@ -68,56 +82,64 @@ const sanitizeInput = (data) => {
 // Email templates are now in emailService.js
 
 // ── Récupérer le statut public des formulaires (sans blacklist) ──────────
-router.get('/status', (req, res) => {
+router.get("/status", (req, res) => {
   const settings = getFormSettings();
   res.json({
     success: true,
     data: {
       contactFormEnabled: settings.contactFormEnabled,
-      recrutementFormEnabled: settings.recrutementFormEnabled
-    }
+      recrutementFormEnabled: settings.recrutementFormEnabled,
+    },
   });
 });
 
-router.post('/contact', upload.none(), async (req, res) => {
+router.post("/contact", upload.none(), async (req, res) => {
   try {
     const sanitizedBody = sanitizeInput(req.body);
     const {
-      clientType, company, firstName, lastName, email, phone, description, needs, "cf-turnstile-response": turnstileToken
+      clientType,
+      company,
+      firstName,
+      lastName,
+      email,
+      phone,
+      description,
+      needs,
+      "cf-turnstile-response": turnstileToken,
     } = sanitizedBody;
 
-    const fullName = `${firstName || ''} ${lastName || ''}`.trim();
+    const fullName = `${firstName || ""} ${lastName || ""}`.trim();
     const senderEmail = email;
-    const lang = req.query.lang || req.body.lang || 'fr';
+    const lang = req.query.lang || req.body.lang || "fr";
 
     const settings = getFormSettings();
     if (!settings.contactFormEnabled) {
-      return sendResponse(res, 403, 'ERROR_FORM_DISABLED', lang); // Need to define this or use a generic error
+      return sendResponse(res, 403, "ERROR_FORM_DISABLED", lang); // Need to define this or use a generic error
     }
 
     if (!senderEmail) {
-      return sendResponse(res, 400, 'ERROR_EMAIL_REQUIRED', lang);
+      return sendResponse(res, 400, "ERROR_EMAIL_REQUIRED", lang);
     }
 
     if (isEmailBlacklisted(senderEmail, settings)) {
-      return sendResponse(res, 403, 'ERROR_FORBIDDEN', lang); // Use a generic forbidden or specifically handle it. Let's return 403 with generic error or generic forbidden. We'll send a vague error to not confirm blacklist to spammer.
+      return sendResponse(res, 403, "ERROR_FORBIDDEN", lang); // Use a generic forbidden or specifically handle it. Let's return 403 with generic error or generic forbidden. We'll send a vague error to not confirm blacklist to spammer.
     }
-    
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
     const isTurnstileValid = await verifyTurnstile(turnstileToken, ip);
     if (!isTurnstileValid) {
-      return sendResponse(res, 400, 'ERROR_INVALID_CAPTCHA', lang);
+      return sendResponse(res, 400, "ERROR_INVALID_CAPTCHA", lang);
     }
 
     // Validation des champs obligatoires (*)
     if (!firstName || !lastName) {
-      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+      return sendResponse(res, 400, "ERROR_REQUIRED_FIELDS", lang);
     }
     if (!description) {
-      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+      return sendResponse(res, 400, "ERROR_REQUIRED_FIELDS", lang);
     }
-    if (clientType === 'company' && !company) {
-      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+    if (clientType === "company" && !company) {
+      return sendResponse(res, 400, "ERROR_REQUIRED_FIELDS", lang);
     }
 
     let parsedNeeds = [];
@@ -127,11 +149,16 @@ router.post('/contact', upload.none(), async (req, res) => {
       parsedNeeds = [needs];
     }
 
-    const typeText = clientType === 'company' ? 'Entreprise / Organisation' : 'Particulier';
-    const companyHtml = clientType === 'company' ? `<strong>Société</strong> : <span>${company}</span><br/>` : '';
-    const needsHtml = parsedNeeds.length > 0 
-      ? `<ul>${parsedNeeds.map(n => `<li>${n}</li>`).join('')}</ul>`
-      : '<em>Aucun besoin spécifique coché</em>';
+    const typeText =
+      clientType === "company" ? "Entreprise / Organisation" : "Particulier";
+    const companyHtml =
+      clientType === "company"
+        ? `<strong>Société</strong> : <span>${company}</span><br/>`
+        : "";
+    const needsHtml =
+      parsedNeeds.length > 0
+        ? `<ul>${parsedNeeds.map((n) => `<li>${n}</li>`).join("")}</ul>`
+        : "<em>Aucun besoin spécifique coché</em>";
 
     const contentHTML = `
       <div style="margin-bottom: 20px;">
@@ -139,24 +166,24 @@ router.post('/contact', upload.none(), async (req, res) => {
         ${companyHtml}
         <strong>Nom complet</strong> : <span>${fullName}</span><br/>
         <strong>Email</strong> : <span>${senderEmail}</span><br/>
-        <strong>Téléphone</strong> : <span>${phone || ''}</span>
+        <strong>Téléphone</strong> : <span>${phone || ""}</span>
       </div>
       <strong>Besoins identifiés</strong> : <div>${needsHtml}</div><br/>
       <strong>Description du besoin</strong> : <div>
-      ${description ? description.replaceAll('\n', '<br/>') : ''}
+      ${description ? description.replaceAll("\n", "<br/>") : ""}
       </div>
     `;
 
     // --- IMMEDIATE VERIFALIA CHECK ---
     const verification = await verifalia.verifyEmailImmediate(senderEmail);
-    if (verification.status === 'INVALID') {
-      return sendResponse(res, 400, 'ERROR_EMAIL_INVALID', lang);
+    if (verification.status === "INVALID") {
+      return sendResponse(res, 400, "ERROR_EMAIL_INVALID", lang);
     }
-    
+
     // Si VALID => on procède normalement (NOUVEAU) et on envoie les emails.
     // Si DEFERRED => on enregistre avec A_VERIFIER pour que le cron prenne le relais.
-    const isDeferred = verification.status === 'DEFERRED';
-    const formStatus = isDeferred ? 'A_VERIFIER' : 'NOUVEAU';
+    const isDeferred = verification.status === "DEFERRED";
+    const formStatus = isDeferred ? "A_VERIFIER" : "NOUVEAU";
 
     // Enregistrement dans le CRM
     let formulaireRecord;
@@ -164,104 +191,136 @@ router.post('/contact', upload.none(), async (req, res) => {
       formulaireRecord = await prisma.formulaire.create({
         data: {
           formulaireId: crypto.randomUUID(),
-          type: 'CONTACT',
-          statusSubmitter: clientType === 'company' ? 'SOCIETE' : 'PARTICULIER',
+          type: "CONTACT",
+          statusSubmitter: clientType === "company" ? "SOCIETE" : "PARTICULIER",
           nomPrenom: fullName,
           email: senderEmail,
           telephone: phone || null,
           description: description || null,
           raisonSocial: company || null,
-          objet: 'Demande de contact',
+          objet: "Demande de contact",
           bodyHtml: contentHTML,
           isAnonyme: true,
           status: formStatus,
           verifaliaJobId: isDeferred ? verification.jobId : null,
-          verifaliaStatus: verification.status === 'VALID' ? 'COMPLETED_VALID' : (verification.reason || 'A_VERIFIER'),
+          verifaliaStatus:
+            verification.status === "VALID"
+              ? "COMPLETED_VALID"
+              : verification.reason || "A_VERIFIER",
           contact: {
             create: {
-              typeBesoin: parsedNeeds.join(', '),
-              pieceJointe: null
-            }
-          }
+              typeBesoin: parsedNeeds.join(", "),
+              pieceJointe: null,
+            },
+          },
         },
-        include: { contact: true }
+        include: { contact: true },
       });
     } catch (dbError) {
-      console.error({ event: "db_save_error_contact", error: dbError.message || dbError });
-      return sendResponse(res, 500, 'ERROR_INTERNAL_SERVER', lang);
+      console.error({
+        event: "db_save_error_contact",
+        error: dbError.message || dbError,
+      });
+      return sendResponse(res, 500, "ERROR_INTERNAL_SERVER", lang);
     }
 
     // Si on a pu valider l'email immédiatement, on envoie les notifications tout de suite
     if (!isDeferred && formulaireRecord) {
       Promise.all([
-        sendAutoReply(senderEmail, lang).catch(e => console.error({ event: 'contact_autoreply_error', error: e.message })),
-        sendAdminNotification(formulaireRecord).catch(e => console.error({ event: 'contact_adminnotif_error', error: e.message }))
+        sendAutoReply(senderEmail, lang).catch((e) =>
+          console.error({ event: "contact_autoreply_error", error: e.message }),
+        ),
+        sendAdminNotification(formulaireRecord).catch((e) =>
+          console.error({
+            event: "contact_adminnotif_error",
+            error: e.message,
+          }),
+        ),
       ]);
     } else if (formulaireRecord) {
       // Pour les cas différés / à vérifier : notifier l'administrateur interne, mais PAS d'envoi externe
-      sendAdminNotification(formulaireRecord).catch(e => console.error({ event: 'contact_adminnotif_error', error: e.message }));
+      sendAdminNotification(formulaireRecord).catch((e) =>
+        console.error({ event: "contact_adminnotif_error", error: e.message }),
+      );
     }
 
-    return sendResponse(res, 200, 'SUCCESS_CONTACT', lang);
+    return sendResponse(res, 200, "SUCCESS_CONTACT", lang);
   } catch (error) {
-    const lang = req.query.lang || req.body.lang || 'fr';
-    console.error({ event: "contact_form_error", error: error.message || error });
-    return sendResponse(res, 500, 'ERROR_INTERNAL_SERVER', lang);
+    const lang = req.query.lang || req.body.lang || "fr";
+    console.error({
+      event: "contact_form_error",
+      error: error.message || error,
+    });
+    return sendResponse(res, 500, "ERROR_INTERNAL_SERVER", lang);
   }
 });
 
-router.post('/join', upload.none(), async (req, res) => {
+router.post("/join", upload.none(), async (req, res) => {
   try {
     const sanitizedBody = sanitizeInput(req.body);
     const {
-      profileType, company, lastName, firstName, email, phone,
-      experience, languages, location, availability, linkedin, message, skills, otherSkill, "cf-turnstile-response": turnstileToken
+      profileType,
+      company,
+      lastName,
+      firstName,
+      email,
+      phone,
+      experience,
+      languages,
+      location,
+      availability,
+      linkedin,
+      message,
+      skills,
+      otherSkill,
+      "cf-turnstile-response": turnstileToken,
     } = sanitizedBody;
-    const lang = req.query.lang || req.body.lang || 'fr';
+    const lang = req.query.lang || req.body.lang || "fr";
 
     const settings = getFormSettings();
     if (!settings.recrutementFormEnabled) {
-      return sendResponse(res, 403, 'ERROR_FORM_DISABLED', lang);
+      return sendResponse(res, 403, "ERROR_FORM_DISABLED", lang);
     }
 
     if (!email) {
-      return sendResponse(res, 400, 'ERROR_EMAIL_REQUIRED', lang);
+      return sendResponse(res, 400, "ERROR_EMAIL_REQUIRED", lang);
     }
 
     if (isEmailBlacklisted(email, settings)) {
-      return sendResponse(res, 403, 'ERROR_FORBIDDEN', lang);
+      return sendResponse(res, 403, "ERROR_FORBIDDEN", lang);
     }
-    
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
     const isTurnstileValid = await verifyTurnstile(turnstileToken, ip);
     if (!isTurnstileValid) {
-      return sendResponse(res, 400, 'ERROR_INVALID_CAPTCHA', lang);
+      return sendResponse(res, 400, "ERROR_INVALID_CAPTCHA", lang);
     }
 
     // Validation des champs obligatoires (*) pour le formulaire de recrutement
     if (!firstName || !lastName) {
-      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+      return sendResponse(res, 400, "ERROR_REQUIRED_FIELDS", lang);
     }
     if (!message) {
-      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+      return sendResponse(res, 400, "ERROR_REQUIRED_FIELDS", lang);
     }
     if (!experience) {
-      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+      return sendResponse(res, 400, "ERROR_REQUIRED_FIELDS", lang);
     }
     if (!languages) {
-      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+      return sendResponse(res, 400, "ERROR_REQUIRED_FIELDS", lang);
     }
     if (!availability) {
-      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+      return sendResponse(res, 400, "ERROR_REQUIRED_FIELDS", lang);
     }
     // Compétences clés obligatoires
     const rawSkills = req.body.skills;
-    const hasSkills = rawSkills && (Array.isArray(rawSkills) ? rawSkills.length > 0 : true);
+    const hasSkills =
+      rawSkills && (Array.isArray(rawSkills) ? rawSkills.length > 0 : true);
     if (!hasSkills) {
-      return sendResponse(res, 400, 'ERROR_SKILLS_REQUIRED', lang);
+      return sendResponse(res, 400, "ERROR_SKILLS_REQUIRED", lang);
     }
-    if (profileType === 'company' && !company) {
-      return sendResponse(res, 400, 'ERROR_REQUIRED_FIELDS', lang);
+    if (profileType === "company" && !company) {
+      return sendResponse(res, 400, "ERROR_REQUIRED_FIELDS", lang);
     }
 
     let parsedSkills = [];
@@ -270,46 +329,55 @@ router.post('/join', upload.none(), async (req, res) => {
     } else if (skills) {
       parsedSkills = [skills];
     }
-    parsedSkills = parsedSkills.map(s => {
-      const isOther = s.toLowerCase().trim() === 'autre' || s.toLowerCase().trim() === 'other';
-      return (isOther && otherSkill && otherSkill.trim() !== '') ? `${s} (${otherSkill.trim()})` : s;
+    parsedSkills = parsedSkills.map((s) => {
+      const isOther =
+        s.toLowerCase().trim() === "autre" ||
+        s.toLowerCase().trim() === "other";
+      return isOther && otherSkill && otherSkill.trim() !== ""
+        ? `${s} (${otherSkill.trim()})`
+        : s;
     });
 
-    const typeText = profileType === 'company' ? 'Entreprise (B2B)' : 'Particulier';
-    const companyHtml = profileType === 'company' ? `<strong>Société</strong> : <span>${company}</span><br/>` : '';
-    const skillsHtml = parsedSkills.length > 0 
-      ? `<ul>${parsedSkills.map(s => `<li>${s}</li>`).join('')}</ul>`
-      : '<em>Aucune compétence spécifique cochée</em>';
+    const typeText =
+      profileType === "company" ? "Entreprise (B2B)" : "Particulier";
+    const companyHtml =
+      profileType === "company"
+        ? `<strong>Société</strong> : <span>${company}</span><br/>`
+        : "";
+    const skillsHtml =
+      parsedSkills.length > 0
+        ? `<ul>${parsedSkills.map((s) => `<li>${s}</li>`).join("")}</ul>`
+        : "<em>Aucune compétence spécifique cochée</em>";
 
     const contentHTML = `
       <div style="margin-bottom: 20px;">
         <strong>Type de profil</strong> : <span>${typeText}</span><br/>
         ${companyHtml}
-        <strong>Nom complet</strong> : <span>${lastName + ' ' + firstName}</span><br/>
+        <strong>Nom complet</strong> : <span>${lastName + " " + firstName}</span><br/>
         <strong>Email</strong> : <span>${email}</span><br/>
-        <strong>Téléphone</strong> : <span>${phone || ''}</span><br/>
-        <strong>Expérience</strong> : <span>${experience || ''}</span><br/>
-        <strong>Langues</strong> : <span>${languages || ''}</span><br/>
-        <strong>Localisation</strong> : <span>${location || ''}</span><br/>
-        <strong>Disponibilité</strong> : <span>${availability || ''}</span><br/>
-        <strong>LinkedIn / Portfolio</strong> : <span>${linkedin ? `<a href="${linkedin}" style="color: #141824;">${linkedin}</a>` : ''}</span>
+        <strong>Téléphone</strong> : <span>${phone || ""}</span><br/>
+        <strong>Expérience</strong> : <span>${experience || ""}</span><br/>
+        <strong>Langues</strong> : <span>${languages || ""}</span><br/>
+        <strong>Localisation</strong> : <span>${location || ""}</span><br/>
+        <strong>Disponibilité</strong> : <span>${availability || ""}</span><br/>
+        <strong>LinkedIn / Portfolio</strong> : <span>${linkedin ? `<a href="${linkedin}" style="color: #141824;">${linkedin}</a>` : ""}</span>
       </div>
       <strong>Compétences clés</strong> : <div>${skillsHtml}</div><br/>
       <strong>Message / Motivations</strong> : <div>
-      ${message ? message.replaceAll('\n', '<br/>') : ''}
+      ${message ? message.replaceAll("\n", "<br/>") : ""}
       </div>
     `;
 
     // --- IMMMEDIATE VERIFALIA CHECK ---
     const verification = await verifalia.verifyEmailImmediate(email);
-    if (verification.status === 'INVALID') {
-      return sendResponse(res, 400, 'ERROR_EMAIL_INVALID', lang);
+    if (verification.status === "INVALID") {
+      return sendResponse(res, 400, "ERROR_EMAIL_INVALID", lang);
     }
-    
+
     // Si VALID => on procède normalement (NOUVEAU) et on envoie les emails.
     // Si DEFERRED => on enregistre avec A_VERIFIER pour que le cron prenne le relais.
-    const isDeferred = verification.status === 'DEFERRED';
-    const formStatus = isDeferred ? 'A_VERIFIER' : 'NOUVEAU';
+    const isDeferred = verification.status === "DEFERRED";
+    const formStatus = isDeferred ? "A_VERIFIER" : "NOUVEAU";
 
     // Enregistrement dans le CRM
     let formulaireRecord;
@@ -317,48 +385,61 @@ router.post('/join', upload.none(), async (req, res) => {
       formulaireRecord = await prisma.formulaire.create({
         data: {
           formulaireId: crypto.randomUUID(),
-          type: 'RECRUTEMENT',
-          statusSubmitter: profileType === 'company' ? 'SOCIETE' : 'PARTICULIER',
-          nomPrenom: `${firstName || ''} ${lastName || ''}`.trim(),
+          type: "RECRUTEMENT",
+          statusSubmitter:
+            profileType === "company" ? "SOCIETE" : "PARTICULIER",
+          nomPrenom: `${firstName || ""} ${lastName || ""}`.trim(),
           email: email,
           telephone: phone || null,
           description: message || null,
           raisonSocial: company || null,
-          objet: 'Demande de collaboration',
+          objet: "Demande de collaboration",
           bodyHtml: contentHTML,
           isAnonyme: true,
           status: formStatus,
           verifaliaJobId: isDeferred ? verification.jobId : null,
-          verifaliaStatus: verification.status === 'VALID' ? 'COMPLETED_VALID' : (verification.reason || 'A_VERIFIER'),
+          verifaliaStatus:
+            verification.status === "VALID"
+              ? "COMPLETED_VALID"
+              : verification.reason || "A_VERIFIER",
           recrutement: {
             create: {
-              competenceCle: parsedSkills.join(', '),
+              competenceCle: parsedSkills.join(", "),
               anneeExperience: experience || null,
               lieuResidence: location || null,
               langue: languages || null,
-              lienLinkedin: linkedin || null
-            }
-          }
-        }
+              lienLinkedin: linkedin || null,
+            },
+          },
+        },
       });
     } catch (dbError) {
-      console.error({ event: "db_save_error_join", error: dbError.message || dbError });
-      return sendResponse(res, 500, 'ERROR_INTERNAL_SERVER', lang);
+      console.error({
+        event: "db_save_error_join",
+        error: dbError.message || dbError,
+      });
+      return sendResponse(res, 500, "ERROR_INTERNAL_SERVER", lang);
     }
 
     // Si on a pu valider l'email immédiatement, on envoie les notifications tout de suite
     if (!isDeferred && formulaireRecord) {
-      sendAutoReply(email, lang).catch(e => console.error({ event: 'join_autoreply_error', error: e.message }));
-      sendAdminNotification(formulaireRecord).catch(e => console.error({ event: 'join_adminnotif_error', error: e.message }));
+      sendAutoReply(email, lang).catch((e) =>
+        console.error({ event: "join_autoreply_error", error: e.message }),
+      );
+      sendAdminNotification(formulaireRecord).catch((e) =>
+        console.error({ event: "join_adminnotif_error", error: e.message }),
+      );
     } else if (formulaireRecord) {
-      sendAdminNotification(formulaireRecord).catch(e => console.error({ event: 'join_adminnotif_error', error: e.message }));
+      sendAdminNotification(formulaireRecord).catch((e) =>
+        console.error({ event: "join_adminnotif_error", error: e.message }),
+      );
     }
 
-    return sendResponse(res, 200, 'SUCCESS_JOIN', lang);
+    return sendResponse(res, 200, "SUCCESS_JOIN", lang);
   } catch (error) {
-    const lang = req.query.lang || req.body.lang || 'fr';
+    const lang = req.query.lang || req.body.lang || "fr";
     console.error({ event: "join_email_error", error: error.message || error });
-    return sendResponse(res, 500, 'ERROR_SENDING_EMAIL', lang);
+    return sendResponse(res, 500, "ERROR_SENDING_EMAIL", lang);
   }
 });
 

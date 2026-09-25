@@ -1,4 +1,4 @@
-const prisma = require('../prisma');
+const prisma = require("../prisma");
 
 /**
  * Log an audit entry into the AuditLog table.
@@ -11,22 +11,30 @@ const prisma = require('../prisma');
  * @param {string|null} dossierId - Optional linked dossier ID
  * @param {string|null} formulaireId - Optional linked formulaire ID
  */
-const logAudit = async (userId, action, targetId, targetType, details, dossierId = null, formulaireId = null) => {
+const logAudit = async (
+  userId,
+  action,
+  targetId,
+  targetType,
+  details,
+  dossierId = null,
+  formulaireId = null,
+) => {
   try {
-    const validUserId = (userId && userId !== 'MASTER-ADMIN') ? userId : null;
+    const validUserId = userId && userId !== "MASTER-ADMIN" ? userId : null;
     await prisma.auditLog.create({
       data: {
         userId: validUserId,
         action,
         targetId: targetId ? String(targetId) : null,
         targetType: targetType || null,
-        details: details || '',
+        details: details || "",
         dossierId: dossierId || null,
-        formulaireId: formulaireId || null
-      }
+        formulaireId: formulaireId || null,
+      },
     });
   } catch (err) {
-    console.error('[AUDIT ERROR]', err.message);
+    console.error("[AUDIT ERROR]", err.message);
   }
 };
 

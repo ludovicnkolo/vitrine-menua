@@ -135,6 +135,11 @@ model Formulaire {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  dateRappel    DateTime?
+  noteRappel    String?
+  dateEntretien DateTime?
+  lienVisio     String?
+
   auditLogs AuditLog[]
 }
 
@@ -336,6 +341,11 @@ model MessagePersonnel {
 
   createdAt  DateTime @default(now())
   receivedAt DateTime @default(now())
+
+  dateRappel    DateTime?
+  noteRappel    String?
+  dateEntretien DateTime?
+  lienVisio     String?
 
   dossierId String?
   dossier   Dossier? @relation(fields: [dossierId], references: [id], onDelete: SetNull)

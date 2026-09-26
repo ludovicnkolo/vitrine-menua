@@ -453,6 +453,10 @@ router.get("/messages", async (req, res) => {
         recrutement: f.recrutement,
         verifaliaStatus: f.verifaliaStatus,
         priorite: f.priority,
+        dateRappel: f.dateRappel,
+        noteRappel: f.noteRappel,
+        dateEntretien: f.dateEntretien,
+        lienVisio: f.lienVisio,
       }));
     } else {
       let where = { type: tabType, isDeleted: false };
@@ -536,6 +540,10 @@ router.get("/messages", async (req, res) => {
         missionId: e.missionId,
         tacheId: e.tacheId,
         assignedToId: e.assignedToId,
+        dateRappel: e.dateRappel,
+        noteRappel: e.noteRappel,
+        dateEntretien: e.dateEntretien,
+        lienVisio: e.lienVisio,
         sourceType: e.Tache
           ? "Tâche"
           : e.mission

@@ -16,7 +16,6 @@ const prisma = new PrismaClient();
 const PASSWORD = '1234567t';
 
 const USERS_TO_CREATE = [
-  { roleName: 'Super-administrateur', prefix: 'superadmin.recette' },
   { roleName: 'Responsable opérationnel', prefix: 'resp.op.recette' },
   { roleName: 'Relecteur', prefix: 'relecteur.recette' },
   { roleName: 'Collaborateur', prefix: 'collaborateur.recette' },

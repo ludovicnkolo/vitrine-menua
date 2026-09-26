@@ -2036,126 +2036,137 @@ const InboxPage = ({ userRole }) => {
                     border: "1px solid var(--border)",
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr 1fr",
-                    gap: "1rem",
+                    gap: "1.5rem",
                     marginBottom: "1.5rem",
                   }}
                 >
-                  <InlineDetailField
-                    label="Nom"
-                    value={processMsg.nomPrenom || "Non renseigné"}
-                  />
-                  <InlineDetailField
-                    label="Email"
-                    value={processMsg.email || "Non renseigné"}
-                  />
-                  <InlineDetailField
-                    label="Objet"
-                    value={processMsg.objet || "Aucun objet"}
-                  />
-                  {tab === "personnel" && (
-                    <>
-                      <InlineDetailField label="Priorité">
-                        <select
-                          value={
-                            pendingChanges.priorite !== undefined
-                              ? pendingChanges.priorite
-                              : processMsg.priorite || "Normal"
-                          }
-                          onChange={(e) =>
-                            setPendingChange("priorite", e.target.value)
-                          }
-                          style={{
-                            padding: "0.25rem 0.5rem",
-                            borderRadius: "4px",
-                            border: `1px solid ${pendingChanges.priorite !== undefined ? "#D97706" : "var(--border)"}`,
-                            outline: "none",
-                            background: "#FFF",
-                            width: "100%",
-                          }}
-                        >
-                          <option value="Normal">Normal</option>
-                          <option value="Prioritaire">Prioritaire</option>
-                          <option value="Urgent">Urgent</option>
-                        </select>
-                      </InlineDetailField>
-                      <InlineDetailField label="Étiquette">
-                        <select
-                          value={
-                            pendingChanges.etiquette !== undefined
-                              ? pendingChanges.etiquette
-                              : processMsg.etiquette || ""
-                          }
-                          onChange={(e) =>
-                            setPendingChange("etiquette", e.target.value)
-                          }
-                          style={{
-                            padding: "0.25rem 0.5rem",
-                            borderRadius: "4px",
-                            border: `1px solid ${pendingChanges.etiquette !== undefined ? "#D97706" : "var(--border)"}`,
-                            outline: "none",
-                            background: "#FFF",
-                            width: "100%",
-                          }}
-                        >
-                          <option value="">Général</option>
-                          <option value="Contact">Contact</option>
-                          <option value="Recrutement">Recrutement</option>
-                        </select>
-                      </InlineDetailField>
-                      <InlineDetailField label="Statut">
-                        {renderStatusDropdown(processMsg, tab, true)}
-                      </InlineDetailField>
-                      {(currentUser?.role?.name === "Super-administrateur" || currentUser?.role === "Super-administrateur") && (
-                        <InlineDetailField label="Mettre en copie">
+                  {/* Colonne 1 : Nom, Email, Fichiers joints */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                    <InlineDetailField
+                      label="Nom"
+                      value={processMsg.nomPrenom || "Non renseigné"}
+                    />
+                    <InlineDetailField
+                      label="Email"
+                      value={processMsg.email || "Non renseigné"}
+                    />
+                    <InlineDetailField label="Fichiers joints">
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "1rem",
+                          alignItems: "center",
+                        }}
+                      >
+                        <AttachmentSelect
+                          files={[
+                            processMsg.cv,
+                            processMsg.attachment,
+                            processMsg.contact?.pieceJointe,
+                          ]}
+                          onPreview={setPreviewFile}
+                        />
+                      </div>
+                    </InlineDetailField>
+                  </div>
+
+                  {/* Colonne 2 : Étiquette, Statut */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                    {tab === "personnel" && (
+                      <>
+                        <InlineDetailField label="Étiquette">
                           <select
                             value={
-                              pendingChanges.assignedToId !== undefined
-                                ? pendingChanges.assignedToId
-                                : processMsg.assignedToId || ""
+                              pendingChanges.etiquette !== undefined
+                                ? pendingChanges.etiquette
+                                : processMsg.etiquette || ""
                             }
                             onChange={(e) =>
-                              setPendingChange("assignedToId", e.target.value)
+                              setPendingChange("etiquette", e.target.value)
                             }
                             style={{
                               padding: "0.25rem 0.5rem",
                               borderRadius: "4px",
-                              border: `1px solid ${pendingChanges.assignedToId !== undefined ? "#D97706" : "var(--border)"}`,
+                              border: `1px solid ${pendingChanges.etiquette !== undefined ? "#D97706" : "var(--border)"}`,
                               outline: "none",
                               background: "#FFF",
                               width: "100%",
                             }}
                           >
-                            <option value="">Aucun</option>
-                            {users
-                              .filter(u => u.role?.name === "Responsable opérationnel" || u.role === "Responsable opérationnel")
-                              .map((u) => (
-                                <option key={u.id} value={u.id}>
-                                  {u.name} (Responsable)
-                                </option>
-                            ))}
+                            <option value="">Général</option>
+                            <option value="Contact">Contact</option>
+                            <option value="Recrutement">Recrutement</option>
                           </select>
                         </InlineDetailField>
-                      )}
-                    </>
-                  )}
-                  <InlineDetailField label="Fichiers joints">
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "1rem",
-                        alignItems: "center",
-                      }}
-                    >
-                      <AttachmentSelect
-                        files={[
-                          processMsg.cv,
-                          processMsg.attachment,
-                          processMsg.contact?.pieceJointe,
-                        ]}
-                        onPreview={setPreviewFile}
-                      />
-                    </div>
-                  </InlineDetailField>
+                        <InlineDetailField label="Statut">
+                          {renderStatusDropdown(processMsg, tab, true)}
+                        </InlineDetailField>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Colonne 3 : Priorité, Mettre en copie */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                    {tab === "personnel" && (
+                      <>
+                        <InlineDetailField label="Priorité">
+                          <select
+                            value={
+                              pendingChanges.priorite !== undefined
+                                ? pendingChanges.priorite
+                                : processMsg.priorite || "Normal"
+                            }
+                            onChange={(e) =>
+                              setPendingChange("priorite", e.target.value)
+                            }
+                            style={{
+                              padding: "0.25rem 0.5rem",
+                              borderRadius: "4px",
+                              border: `1px solid ${pendingChanges.priorite !== undefined ? "#D97706" : "var(--border)"}`,
+                              outline: "none",
+                              background: "#FFF",
+                              width: "100%",
+                            }}
+                          >
+                            <option value="Normal">Normal</option>
+                            <option value="Prioritaire">Prioritaire</option>
+                            <option value="Urgent">Urgent</option>
+                          </select>
+                        </InlineDetailField>
+                        {(currentUser?.role?.name === "Super-administrateur" || currentUser?.role === "Super-administrateur") && (
+                          <InlineDetailField label="Mettre en copie">
+                            <select
+                              value={
+                                pendingChanges.assignedToId !== undefined
+                                  ? pendingChanges.assignedToId
+                                  : processMsg.assignedToId || ""
+                              }
+                              onChange={(e) =>
+                                setPendingChange("assignedToId", e.target.value)
+                              }
+                              style={{
+                                padding: "0.25rem 0.5rem",
+                                borderRadius: "4px",
+                                border: `1px solid ${pendingChanges.assignedToId !== undefined ? "#D97706" : "var(--border)"}`,
+                                outline: "none",
+                                background: "#FFF",
+                                width: "100%",
+                              }}
+                            >
+                              <option value="">Aucun</option>
+                              {users
+                                .filter(u => u.role?.name === "Responsable opérationnel" || u.role === "Responsable opérationnel")
+                                .map((u) => (
+                                  <option key={u.id} value={u.id}>
+                                    {u.name} (Responsable)
+                                  </option>
+                              ))}
+                            </select>
+                          </InlineDetailField>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -2417,59 +2428,67 @@ const InboxPage = ({ userRole }) => {
                           </div>
                         )}
                       </div>
-                    ) : (
-                      <div
-                        style={{
-                          whiteSpace: "pre-wrap",
-                          wordBreak: "break-word",
-                          color: "var(--text-main)",
-                          fontSize: "0.9rem",
-                          lineHeight: "1.5",
-                        }}
-                      >
-                        {processMsg.description ||
-                          processMsg.bodyText ||
-                          (() => {
-                            if (tab === "recrutement")
-                              return extractBlockFromHtml(
-                                processMsg.bodyHtml,
-                                "Message / Motivations",
-                              );
-                            if (tab === "contact")
-                              return extractBlockFromHtml(
-                                processMsg.bodyHtml,
-                                "Description du besoin",
-                              );
-                            return null;
-                          })()}
+                    ) : (() => {
+                      let contentToRender = null;
+                      let isHtml = false;
 
-                        {!processMsg.description &&
-                          !processMsg.bodyText &&
-                          tab !== "recrutement" &&
-                          tab !== "contact" &&
-                          processMsg.bodyHtml && (
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: processMsg.bodyHtml,
-                              }}
-                            />
+                      if (processMsg.description) {
+                        contentToRender = processMsg.description;
+                      } else if (tab === "recrutement") {
+                        contentToRender = extractBlockFromHtml(processMsg.bodyHtml, "Message / Motivations") || processMsg.bodyText;
+                      } else if (tab === "contact") {
+                        contentToRender = extractBlockFromHtml(processMsg.bodyHtml, "Description du besoin") || processMsg.bodyText;
+                      } else if (processMsg.bodyHtml && processMsg.bodyHtml.includes("<")) {
+                        contentToRender = processMsg.bodyHtml;
+                        isHtml = true;
+                      } else if (processMsg.bodyText || processMsg.bodyHtml) {
+                        // Le backend envoie bodyText dans bodyHtml pour les messages internes/IMAP
+                        let text = processMsg.bodyText || processMsg.bodyHtml;
+                        // Nettoyer les sauts de ligne simples (hard-wraps) tout en préservant les paragraphes (\n\n) et les listes
+                        if (typeof text === 'string') {
+                           text = text.replace(/([^\n])\n([^\n\-\*•])/g, "$1 $2");
+                        }
+                        contentToRender = text;
+                      }
+
+                      if (!contentToRender) {
+                        contentToRender = "Aucun contenu.";
+                      }
+
+                      return (
+                        <div
+                          style={{
+                            color: "var(--text-main)",
+                            fontSize: "0.95rem",
+                            lineHeight: "1.6",
+                          }}
+                        >
+                          {processMsg.objet && (
+                            <div style={{
+                              fontWeight: "bold",
+                              fontSize: "1.05rem",
+                              marginBottom: "1rem",
+                              paddingBottom: "0.5rem",
+                              borderBottom: "1px solid var(--border)"
+                            }}>
+                              Objet : {processMsg.objet}
+                            </div>
                           )}
-                        {!processMsg.description &&
-                          !processMsg.bodyText &&
-                          !extractBlockFromHtml(
-                            processMsg.bodyHtml,
-                            "Message / Motivations",
-                          ) &&
-                          !extractBlockFromHtml(
-                            processMsg.bodyHtml,
-                            "Description du besoin",
-                          ) &&
-                          (!processMsg.bodyHtml ||
-                            tab === "contact" ||
-                            tab === "recrutement") &&
-                          "Aucun contenu."}
-                      </div>
-                    )}
+                          <div
+                            style={{
+                              whiteSpace: isHtml ? "normal" : "pre-wrap",
+                              wordBreak: "break-word",
+                            }}
+                          >
+                            {isHtml ? (
+                              <div dangerouslySetInnerHTML={{ __html: contentToRender }} />
+                            ) : (
+                              contentToRender
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
               </div>

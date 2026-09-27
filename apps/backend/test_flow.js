@@ -66,13 +66,13 @@ async function runTest() {
     const missionUpdate2 = await resUpdate2.json();
     console.log(`✅ Status updated to:`, { status: missionUpdate2.status, previous: missionUpdate2.previousStatus });
     
-    // 6. Update Status to TERMINEE
-    console.log("6. Updating status to TERMINEE...");
+    // 6. Update Status to TERMINE
+    console.log("6. Updating status to TERMINE...");
     const taskUrl3 = new URL(`http://localhost:4000/api/crm/tasks/${encodeURIComponent(safeMissionId)}`);
     const resUpdate3 = await fetch(taskUrl3.toString(), {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({ status: 'TERMINEE' })
+      body: JSON.stringify({ status: 'TERMINE' })
     });
     const missionUpdate3 = await resUpdate3.json();
     console.log(`✅ Status updated to:`, { status: missionUpdate3.status, previous: missionUpdate3.previousStatus });

@@ -15,19 +15,19 @@
   },
   "status": {
     "NOUVEAU": "New",
-    "OUVERT": "Open",
+    
     "EN_COURS": "In Progress",
     "EN_ATTENTE": "On Hold",
     "TERMINE": "Completed",
     "CLOTURE": "Closed",
     "ARCHIVE": "Archived",
     "BLOQUE": "Blocked",
-    "ANNULE": "Cancelled",
+    "ANNULEE": "Cancelled",
     "CORBEILLE": "Trash",
-    "NON_DEMARREE": "Not Started",
-    "EN_REVUE": "In Review",
+
+    
     "A_CORRIGER": "To Correct",
-    "TERMINEE": "Completed",
+    "TERMINE": "Completed",
     "ANNULEE": "Cancelled"
   },
   "origin": {

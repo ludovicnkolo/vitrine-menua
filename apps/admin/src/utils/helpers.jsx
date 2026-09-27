@@ -7,7 +7,7 @@ function getStatusBadge(status) {
 
     // STATUTS COMMUNS (Dossier, Mission, Tache)
     NOUVEAU: { text: "Nouveau", class: "badge-new" },
-    OUVERT: { text: "Ouvert", class: "badge-progress" }, // Dossier / Mission
+    
     EN_COURS: { text: "En cours", class: "badge-progress" }, // Tache
     EN_ATTENTE: { text: "En attente", class: "badge-warning" },
     BLOQUE: {
@@ -33,7 +33,7 @@ function getStatusBadge(status) {
         fontWeight: 600,
       },
     },
-    ANNULE: {
+    ANNULEE: {
       text: "Annulé",
       style: {
         backgroundColor: "#FEE2E2",

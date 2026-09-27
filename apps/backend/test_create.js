@@ -11,7 +11,7 @@ async function test() {
         name: "Test Dossier",
         description: "Test",
         priority: "NORMAL",
-        status: "OUVERT",
+        status: "NOUVEAU",
         origin: "INTERNE",
       }
     });

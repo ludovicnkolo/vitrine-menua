@@ -132,7 +132,7 @@ router.get("/verify/:token", async (req, res) => {
     // ── Vérification du statut du dossier ────────────────────────────────────
     const dossierStatus = magicLink.dossier?.status;
     if (
-      ["BLOQUE", "ARCHIVE", "CORBEILLE", "CLOTURE", "ANNULE"].includes(
+      ["BLOQUE", "ARCHIVE", "CORBEILLE", "CLOTURE", "ANNULEE"].includes(
         dossierStatus,
       )
     ) {
@@ -144,7 +144,7 @@ router.get("/verify/:token", async (req, res) => {
         CORBEILLE: "Ce dossier n'est plus disponible.",
         CLOTURE:
           "Ce dossier est clôturé. Les échanges de documents ne sont plus possibles.",
-        ANNULE: "Ce dossier a été annulé.",
+        ANNULEE: "Ce dossier a été annulé.",
       };
       return res
         .status(403)

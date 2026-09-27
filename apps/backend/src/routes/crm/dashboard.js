@@ -121,12 +121,12 @@ async function checkAndUpdateMissionStatus(missionId, prisma) {
     mission.status === "NOUVEAU" &&
     allTaches.some((t) => t.status !== "NOUVEAU")
   ) {
-    newStatus = "OUVERT";
+    newStatus = "NOUVEAU";
   } else if (
     mission.status === "TERMINE" &&
     allTaches.some((t) => t.status !== "TERMINE")
   ) {
-    newStatus = "OUVERT";
+    newStatus = "NOUVEAU";
   }
 
   if (newStatus !== mission.status) {
@@ -137,13 +137,13 @@ async function checkAndUpdateMissionStatus(missionId, prisma) {
     if (newStatus === "TERMINE" && mission.dossier) {
       checkAndUpdateDossierStatus(mission.dossier, prisma);
     } else if (
-      newStatus === "OUVERT" &&
+      newStatus === "NOUVEAU" &&
       mission.dossier &&
       mission.dossier.status === "NOUVEAU"
     ) {
       await prisma.dossier.update({
         where: { id: mission.dossier.id },
-        data: { status: "OUVERT" },
+        data: { status: "NOUVEAU" },
       });
     }
   }
@@ -176,7 +176,7 @@ async function checkAndUpdateDossierStatus(dossier, prisma) {
   ) {
     await prisma.dossier.update({
       where: { id: freshDossier.id },
-      data: { status: "OUVERT", previousStatus: freshDossier.status },
+      data: { status: "NOUVEAU", previousStatus: freshDossier.status },
     });
   }
 }
@@ -247,7 +247,7 @@ router.get("/dashboard-stats", async (req, res) => {
     });
     const alertesPrioritaires = urgentsFormulaires + urgentsMessages;
 
-    const whereTachesCrit = { status: { notIn: ["TERMINEE", "ARCHIVE"] } };
+    const whereTachesCrit = { status: { notIn: ["TERMINE", "ARCHIVE"] } };
     if (isFiltered) {
       whereTachesCrit.echeance = { gte: startPeriod, lte: endPeriod };
     } else {
@@ -327,7 +327,7 @@ router.get("/dashboard-stats", async (req, res) => {
     });
     const tachesCompleteesPeriode = await prisma.tache.count({
       where: {
-        status: "TERMINEE",
+        status: "TERMINE",
         updatedAt: { gte: startPeriod, lte: endPeriod },
       },
     });

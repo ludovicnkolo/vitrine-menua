@@ -7,7 +7,7 @@ async function main() {
   
   const allMissions = await prisma.mission.findMany({
     where: {
-      status: { notIn: ['TERMINEE', 'ANNULEE'] },
+      status: { notIn: ['TERMINE', 'ANNULEE'] },
       echeance: { lte: twentyFourHoursFromNow }
     },
     select: { id: true, echeance: true, createdAt: true, status: true }

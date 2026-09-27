@@ -15,19 +15,19 @@
   },
   "status": {
     "NOUVEAU": "Nouveau",
-    "OUVERT": "Ouvert",
+    
     "EN_COURS": "En cours",
     "EN_ATTENTE": "En attente",
     "TERMINE": "Terminé",
     "CLOTURE": "Clôturé",
     "ARCHIVE": "Archivé",
     "BLOQUE": "Bloqué",
-    "ANNULE": "Annulé",
+    "ANNULEE": "Annulé",
     "CORBEILLE": "Corbeille",
-    "NON_DEMARREE": "Non démarrée",
-    "EN_REVUE": "En revue",
+
+    
     "A_CORRIGER": "À corriger",
-    "TERMINEE": "Terminée",
+    "TERMINE": "Terminée",
     "ANNULEE": "Annulée"
   },
   "origin": {

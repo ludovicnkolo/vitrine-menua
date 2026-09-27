@@ -402,7 +402,7 @@ model Notification {
   userId    String
   user      Utilisateur @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  type      String   // TACHE_ASSIGNEE, TACHE_A_CORRIGER, TACHE_ECHEANCE, TACHE_CLOTUREE, TACHE_A_VERIFIER, TACHE_FINALISER, MISSION_TERMINEE, DOSSIER_CLOTURE, NOUVEAU_MESSAGE
+  type      String   // TACHE_ASSIGNEE, TACHE_A_CORRIGER, TACHE_ECHEANCE, TACHE_CLOTUREE, TACHE_A_VERIFIER, TACHE_FINALISER, MISSION_TERMINE, DOSSIER_CLOTURE, NOUVEAU_MESSAGE
   title     String
   message   String
   isRead    Boolean  @default(false)

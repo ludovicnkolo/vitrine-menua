@@ -142,7 +142,7 @@ async function checkAndUpdateMissionStatus(missionId, prisma) {
     } else if (
       newStatus === "EN_COURS" &&
       mission.dossier &&
-      (mission.dossier.status === "NOUVEAU" || mission.dossier.status === "OUVERT")
+      (mission.dossier.status === "NOUVEAU" || mission.dossier.status === "NOUVEAU")
     ) {
       await prisma.dossier.update({
         where: { id: mission.dossier.id },
@@ -163,7 +163,7 @@ async function checkAndUpdateDossierStatus(dossier, prisma) {
   const allItems = [...allMissions, ...allTaches];
 
   const isAllDone = allItems.every(
-    (item) => item.status === "TERMINE" || item.status === "TERMINEE" || item.status === "ANNULE" || item.status === "ANNULEE"
+    (item) => item.status === "TERMINE" || item.status === "TERMINE" || item.status === "ANNULEE" || item.status === "ANNULEE"
   );
 
   if (allItems.length > 0 && isAllDone) {
@@ -196,47 +196,62 @@ router.get("/taches", async (req, res) => {
     const { page, limit, skip } = getPaginationParams(req.query);
     const { search, status } = req.query;
 
-    const where = {};
+    const where = { AND: [] };
     // ── Filtrage par rôle (Zero-Trust Interne) ──────────────────────────
     if (
       req.user.role === "Responsable opérationnel" ||
       req.user.role === "Collaborateur"
     ) {
-      where.OR = [
-        { assignedToId: req.user.id },
-        { createdById: req.user.id },
-        { mission: { assignedToId: req.user.id } },
-        { mission: { dossier: { traitantId: req.user.id } } },
-      ];
+      where.AND.push({
+        OR: [
+          { assignedToId: req.user.id },
+          { createdById: req.user.id },
+          { mission: { assignedToId: req.user.id } },
+          { mission: { dossier: { traitantId: req.user.id } } },
+        ]
+      });
     } else if (req.user.role === "Relecteur") {
-      where.relecteurId = req.user.id;
+      where.AND.push({ relecteurId: req.user.id });
     }
 
     const isSuperAdm = req.user.role === "Super-administrateur";
+
     if (status && status !== "all") {
-      where.status = status;
+      where.AND.push({ status: status });
     }
+
+    // Filtrage BLOQUE
     if (!isSuperAdm) {
-      if (where.status === "BLOQUE") {
-        where.id = "unauthorized_so_return_empty";
-      } else if (!where.status) {
-        where.status = { not: "BLOQUE" };
+      if (status === "BLOQUE") {
+        where.AND.push({ id: "unauthorized_so_return_empty" });
+      } else if (!status || status === "all") {
+        where.AND.push({ status: { not: "BLOQUE" } });
       }
-      where.mission = {
-        ...where.mission,
-        status: { not: "BLOQUE" },
-        dossier: { status: { not: "BLOQUE" } },
-      };
+      
+      // La mission et le dossier parents ne doivent pas être bloqués
+      where.AND.push({
+        mission: {
+          status: { not: "BLOQUE" },
+          dossier: { status: { not: "BLOQUE" } }
+        }
+      });
     }
+
     if (search) {
       const s = search.toLowerCase();
-      where.OR = [
-        { reference: { contains: s } },
-        { mission: { reference: { contains: s } } },
-        { missionId: { contains: s } },
-        { createdBy: { name: { contains: s } } },
-        { assignedTo: { name: { contains: s } } },
-      ];
+      where.AND.push({
+        OR: [
+          { reference: { contains: s } },
+          { mission: { reference: { contains: s } } },
+          { missionId: { contains: s } },
+          { createdBy: { name: { contains: s } } },
+          { assignedTo: { name: { contains: s } } },
+        ]
+      });
+    }
+
+    if (where.AND.length === 0) {
+      delete where.AND;
     }
 
     const total = await prisma.tache.count({ where });
@@ -246,7 +261,7 @@ router.get("/taches", async (req, res) => {
       take: limit,
       include: {
         mission: {
-          include: { dossier: { select: { name: true, reference: true } } },
+          include: { dossier: { select: { name: true, reference: true, status: true } } },
         },
         dossierTache: { include: { subDossiers: true } },
         authorizedDossiers: { include: { subDossiers: true } },
@@ -372,7 +387,7 @@ router.post("/taches", async (req, res) => {
     if (missionToUpdate && missionToUpdate.status === "NOUVEAU") {
       await prisma.mission.update({
         where: { id: missionId },
-        data: { status: "OUVERT" },
+        data: { status: "NOUVEAU" },
       });
       // Verbose audit log removed
     }
@@ -416,6 +431,22 @@ router.patch("/taches/:id", async (req, res) => {
     });
     if (!currentTache)
       return res.status(404).json({ error: "Tâche introuvable." });
+
+    const isTacheLocked = ["BLOQUE", "EN_ATTENTE"].includes(currentTache.status);
+    const isParentLocked = 
+      ["BLOQUE", "EN_ATTENTE"].includes(currentTache.mission?.status) || 
+      ["BLOQUE", "EN_ATTENTE"].includes(currentTache.mission?.dossier?.status);
+
+    if (isParentLocked) {
+      return res.status(403).json({ error: "Action impossible : le parent (mission ou dossier) est bloqué ou en attente. Veuillez le débloquer d'abord." });
+    }
+
+    if (isTacheLocked) {
+      const keys = Object.keys(req.body).filter(k => req.body[k] !== undefined);
+      if (keys.some(k => k !== "status")) {
+        return res.status(403).json({ error: "Action impossible : la tâche est bloquée ou en attente. Vous devez d'abord la débloquer avant de modifier son contenu." });
+      }
+    }
 
     if (
       ["TERMINE", "ARCHIVE"].includes(currentTache.mission?.status) ||
@@ -463,83 +494,73 @@ router.patch("/taches/:id", async (req, res) => {
     }
 
     if (status !== undefined && status !== currentTache.status) {
-      if (currentTache.status === "BLOQUE" || currentTache.status === "EN_ATTENTE") {
-        if (currentTache.status === "BLOQUE" && !isSA) {
-          return res.status(403).json({
-            error: "Accès refusé. Seul un Super-Administrateur peut débloquer une tâche.",
-          });
+      const from = currentTache.status;
+      const to = status;
+      let allowed = false;
+
+      const isAssigned = currentTache.assignedToId === userId;
+      const isRelecteurAssigned = currentTache.relecteurId === userId;
+      const isMissionResp = currentTache.mission?.assignedToId === userId;
+
+      if (from === "BLOQUE") {
+        if (!isSA) {
+          return res.status(403).json({ error: "Seul un Super-Administrateur peut débloquer une tâche." });
         }
-        if (currentTache.status === "EN_ATTENTE" && !isSA && currentTache.mission?.assignedToId !== userId) {
-          return res.status(403).json({
-            error: "Accès refusé. Seul le Super-Admin ou l'assigné à la mission peut lever l'attente.",
-          });
+        if (to !== currentTache.previousStatus) {
+          return res.status(403).json({ error: `Une tâche bloquée ne peut retourner qu'à son statut précédent (${currentTache.previousStatus}).` });
         }
-        if (currentTache.previousStatus && status !== currentTache.previousStatus) {
-          // Exception : on peut l'annuler si on est manager (déjà géré, mais pour SA on bloque si pas previousStatus)
-          // Wait, rule says ONLY previousStatus.
-          return res.status(403).json({
-            error: `Accès refusé. Une tâche en attente ou bloquée ne peut retourner qu'à son statut précédent (${currentTache.previousStatus}).`,
-          });
+        allowed = true;
+      } else if (from === "EN_ATTENTE") {
+        if (!isSA && !isRelecteurAssigned && !isMissionResp) {
+          return res.status(403).json({ error: "Accès refusé. Seul le relecteur, le responsable de mission ou le Super-Admin peut lever l'attente." });
+        }
+        if (to === "BLOQUE") {
+          if (!isSA) return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut bloquer une tâche." });
+          allowed = true;
+        } else if (to === currentTache.previousStatus) {
+          allowed = true;
+        } else {
+          return res.status(403).json({ error: `Une tâche en attente ne peut retourner qu'à son statut précédent (${currentTache.previousStatus}) ou être bloquée.` });
+        }
+      } else {
+        if (to === "BLOQUE") {
+          if (!isSA) return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut bloquer une tâche." });
+          allowed = true;
+        } else if (to === "EN_ATTENTE") {
+          if (!isSA && !isRelecteurAssigned && !isMissionResp) {
+            return res.status(403).json({ error: "Accès refusé. Seul le relecteur, le responsable de mission ou le Super-Admin peut mettre en attente." });
+          }
+          allowed = true;
+        } else {
+          switch (from) {
+            case "NOUVEAU":
+            case "A_CORRIGER":
+              if (to === "EN_COURS" && (isSA || isAssigned)) allowed = true;
+              break;
+            case "EN_COURS":
+              if (to === "EN_RELECTURE" && (isSA || isAssigned)) allowed = true;
+              break;
+            case "EN_RELECTURE":
+              if (to === "EN_APPROBATION" && (isSA || isRelecteurAssigned)) allowed = true;
+              if (to === "A_CORRIGER" && (isSA || isRelecteurAssigned)) allowed = true;
+              break;
+            case "EN_APPROBATION":
+              if (to === "APPROUVEE" && isSA) allowed = true;
+              if (to === "A_CORRIGER" && (isSA || isRelecteurAssigned)) allowed = true;
+              break;
+            case "APPROUVEE":
+              if (to === "TERMINE" && isSA) allowed = true;
+              break;
+            case "TERMINE":
+              break;
+          }
         }
       }
-      if (!isSA) {
-        // Seul le Super-Admin peut bloquer (transition VERS bloque)
-        if (status === "BLOQUE") {
-          return res.status(403).json({
-            error: "Accès refusé. Seul un Super-Administrateur peut bloquer une tâche.",
-          });
-        }
 
-        let allowed = [];
-        
-        switch (currentTache.status) {
-          case "NOUVEAU":
-          case "EN_COURS":
-          case "A_CORRIGER":
-            if (currentTache.assignedToId === userId) {
-              if (currentTache.status === "NOUVEAU") allowed.push("EN_COURS");
-              if (currentTache.status === "EN_COURS") allowed.push("EN_RELECTURE");
-              if (currentTache.status === "A_CORRIGER") allowed.push("EN_COURS");
-            }
-            if (currentTache.mission?.assignedToId === userId) {
-              allowed.push("EN_ATTENTE");
-            }
-            // Conserver le droit d'annulation pour le Responsable
-            if (userRole === "Responsable opérationnel" && currentTache.status !== "A_CORRIGER") {
-              allowed.push("ANNULEE");
-            }
-            break;
-            
-          case "EN_RELECTURE":
-            if (userRole === "Relecteur") {
-              allowed.push("EN_APPROBATION", "A_CORRIGER", "EN_ATTENTE");
-            }
-            break;
-            
-          case "EN_ATTENTE":
-            // "Seul celui qui a mis ca en attente" (assigné à la mission)
-            if (currentTache.mission?.assignedToId === userId && currentTache.previousStatus) {
-              allowed.push(currentTache.previousStatus);
-            }
-            if (userRole === "Responsable opérationnel") allowed.push("ANNULEE");
-            break;
-            
-          case "BLOQUE":
-            // Seul Super-Admin peut débloquer (laissé vide ici pour bloquer les autres)
-            break;
-            
-          case "EN_APPROBATION":
-          case "APPROUVEE":
-          case "TERMINE":
-            // Uniquement Super-Admin
-            break;
-        }
-
-        if (!allowed.includes(status)) {
-          return res.status(403).json({
-            error: `Accès refusé. Vous ne pouvez pas passer cette tâche de '${currentTache.status}' à '${status}'.`,
-          });
-        }
+      if (!allowed) {
+        return res.status(403).json({
+          error: `Accès refusé. Vous ne pouvez pas passer cette tâche de '${from}' à '${to}'.`,
+        });
       }
     }
 

@@ -1821,6 +1821,33 @@ const InboxPage = ({ userRole }) => {
                         "Non renseigné"
                       }
                     />
+                    <InlineDetailField label="Priorité">
+                      <select
+                        value={
+                          pendingChanges.priorite !== undefined
+                            ? pendingChanges.priorite
+                            : processMsg.priorite || "Normal"
+                        }
+                        onChange={(e) =>
+                          setPendingChange("priorite", e.target.value)
+                        }
+                        style={{
+                          padding: "0.25rem 0.5rem",
+                          borderRadius: "4px",
+                          border: `1px solid ${pendingChanges.priorite !== undefined ? "#D97706" : "var(--border)"}`,
+                          outline: "none",
+                          background: "#FFF",
+                          width: "100%",
+                        }}
+                      >
+                        <option value="Normal">Normal</option>
+                        <option value="Prioritaire">Prioritaire</option>
+                        <option value="Urgent">Urgent</option>
+                      </select>
+                    </InlineDetailField>
+                    <InlineDetailField label="Statut">
+                      {renderStatusDropdown(processMsg, tab, true)}
+                    </InlineDetailField>
                   </div>
                 </div>
               )}
@@ -2022,6 +2049,33 @@ const InboxPage = ({ userRole }) => {
                         "Non renseigné"
                       }
                     />
+                    <InlineDetailField label="Priorité">
+                      <select
+                        value={
+                          pendingChanges.priorite !== undefined
+                            ? pendingChanges.priorite
+                            : processMsg.priorite || "Normal"
+                        }
+                        onChange={(e) =>
+                          setPendingChange("priorite", e.target.value)
+                        }
+                        style={{
+                          padding: "0.25rem 0.5rem",
+                          borderRadius: "4px",
+                          border: `1px solid ${pendingChanges.priorite !== undefined ? "#D97706" : "var(--border)"}`,
+                          outline: "none",
+                          background: "#FFF",
+                          width: "100%",
+                        }}
+                      >
+                        <option value="Normal">Normal</option>
+                        <option value="Prioritaire">Prioritaire</option>
+                        <option value="Urgent">Urgent</option>
+                      </select>
+                    </InlineDetailField>
+                    <InlineDetailField label="Statut">
+                      {renderStatusDropdown(processMsg, tab, true)}
+                    </InlineDetailField>
                   </div>
                 </div>
               )}
@@ -2174,72 +2228,12 @@ const InboxPage = ({ userRole }) => {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns:
-                    tab === "contact" || tab === "recrutement"
-                      ? "1fr 4fr"
-                      : "1fr",
+                  gridTemplateColumns: "1fr",
                   gap: "1.5rem",
                   marginBottom: "1.5rem",
                   minHeight: "300px",
                 }}
               >
-                {/* Left column: Actions / Pièces jointes */}
-                {(tab === "contact" || tab === "recrutement") && (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "1rem",
-                    }}
-                  >
-                    <div
-                      className="card"
-                      style={{
-                        padding: "1.25rem",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "1.5rem",
-                      }}
-                    >
-                      <div>
-                        <span
-                          style={{
-                            display: "block",
-                            marginBottom: "1rem",
-                            fontSize: "0.875rem",
-                            fontWeight: 500,
-                            color: "var(--text-muted)",
-                          }}
-                        >
-                          Priorité
-                        </span>
-                        <select
-                          value={
-                            pendingChanges.priorite !== undefined
-                              ? pendingChanges.priorite
-                              : processMsg.priorite || "Normal"
-                          }
-                          onChange={(e) =>
-                            setPendingChange("priorite", e.target.value)
-                          }
-                          style={{
-                            width: "100%",
-                            padding: "0.5rem",
-                            borderRadius: "4px",
-                            border: `1px solid ${pendingChanges.priorite !== undefined ? "#D97706" : "var(--border)"}`,
-                            outline: "none",
-                            background: "#FFF",
-                          }}
-                        >
-                          <option value="Normal">Normal</option>
-                          <option value="Prioritaire">Prioritaire</option>
-                          <option value="Urgent">Urgent</option>
-                        </select>
-                      </div>
-                      <div>{renderStatusDropdown(processMsg, tab)}</div>
-                    </div>
-                  </div>
-                )}
 
                 <div
                   className="card"
@@ -2496,22 +2490,14 @@ const InboxPage = ({ userRole }) => {
               {tab !== "interne" && (
                 <div
                   style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 4fr",
-                    gap: "1.5rem",
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "1rem",
+                    flexWrap: "wrap",
+                    alignItems: "center",
                     marginTop: "2rem",
                   }}
                 >
-                  <div></div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      gap: "1rem",
-                      flexWrap: "wrap",
-                      alignItems: "center",
-                    }}
-                  >
                     {processMsg.dossierId && (
                       <button
                         type="button"
@@ -2568,7 +2554,6 @@ const InboxPage = ({ userRole }) => {
                       )}
                     </button>
                   </div>
-                </div>
               )}
             </div>
           </div>

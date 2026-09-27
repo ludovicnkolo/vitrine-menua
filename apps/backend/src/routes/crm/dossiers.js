@@ -121,12 +121,12 @@ async function checkAndUpdateMissionStatus(missionId, prisma) {
     mission.status === "NOUVEAU" &&
     allTaches.some((t) => t.status !== "NOUVEAU")
   ) {
-    newStatus = "OUVERT";
+    newStatus = "NOUVEAU";
   } else if (
     mission.status === "TERMINE" &&
     allTaches.some((t) => t.status !== "TERMINE")
   ) {
-    newStatus = "OUVERT";
+    newStatus = "NOUVEAU";
   }
 
   if (newStatus !== mission.status) {
@@ -137,13 +137,13 @@ async function checkAndUpdateMissionStatus(missionId, prisma) {
     if (newStatus === "TERMINE" && mission.dossier) {
       checkAndUpdateDossierStatus(mission.dossier, prisma);
     } else if (
-      newStatus === "OUVERT" &&
+      newStatus === "NOUVEAU" &&
       mission.dossier &&
       mission.dossier.status === "NOUVEAU"
     ) {
       await prisma.dossier.update({
         where: { id: mission.dossier.id },
-        data: { status: "OUVERT" },
+        data: { status: "NOUVEAU" },
       });
     }
   }
@@ -176,7 +176,7 @@ async function checkAndUpdateDossierStatus(dossier, prisma) {
   ) {
     await prisma.dossier.update({
       where: { id: freshDossier.id },
-      data: { status: "OUVERT", previousStatus: freshDossier.status },
+      data: { status: "NOUVEAU", previousStatus: freshDossier.status },
     });
   }
 }
@@ -194,76 +194,71 @@ router.get("/dossiers", async (req, res) => {
     const isAdminUser = isAdmin(userRole);
 
     let inMemoryFilter = false;
-    const where = {};
+    const where = { AND: [] };
 
     // ── Filtrage par rôle (Zero-Trust Interne) ──────────────────────────
     if (
       userRole === "Responsable opérationnel" ||
       userRole === "Collaborateur"
     ) {
-      where.AND = [
-        {
-          OR: [
-            { traitantId: userId },
-            { createdById: userId },
-            { missions: { some: { assignedToId: userId } } },
-            {
-              missions: {
-                some: { taches: { some: { assignedToId: userId } } },
-              },
+      where.AND.push({
+        OR: [
+          { traitantId: userId },
+          { createdById: userId },
+          { missions: { some: { assignedToId: userId } } },
+          {
+            missions: {
+              some: { taches: { some: { assignedToId: userId } } },
             },
-          ],
-        },
-      ];
+          },
+        ],
+      });
     } else if (userRole === "Relecteur") {
-      where.AND = [
-        {
-          OR: [
-            { missions: { some: { relecteurId: userId } } },
-            {
-              missions: { some: { taches: { some: { relecteurId: userId } } } },
-            },
-          ],
-        },
-      ];
+      where.AND.push({
+        OR: [
+          { missions: { some: { relecteurId: userId } } },
+          {
+            missions: { some: { taches: { some: { relecteurId: userId } } } },
+          },
+        ],
+      });
     }
     // Super-Admin, Admin Tech, Administrateur : pas de filtre sur le propriétaire
 
     // ── Filtre BLOQUÉ ─────────────────────────────────────────────────────────
     if (status && status !== "all") {
-      if (status === "BLOQUE" && !canSeeBlocked) {
-        // Retourne vide si non autorisé
-        where.id = "unauthorized_so_return_empty";
-      } else {
-        where.status = status;
-      }
-    } else if (!canSeeBlocked) {
-      // Par défaut, exclure BLOQUÉ pour tous sauf Super-Admin/Admin Tech
-      if (where.AND) {
+      where.AND.push({ status: status });
+    }
+
+    if (!canSeeBlocked) {
+      if (status === "BLOQUE") {
+        where.AND.push({ id: "unauthorized_so_return_empty" });
+      } else if (!status || status === "all") {
         where.AND.push({ status: { not: "BLOQUE" } });
-      } else {
-        where.status = { not: "BLOQUE" };
       }
     }
 
-    if (origin && origin !== "all") where.origin = origin;
+    if (origin && origin !== "all") {
+      where.AND.push({ origin: origin });
+    }
     if (role && role !== "all") {
-      where.createdBy = { role: { name: role } };
+      where.AND.push({ createdBy: { role: { name: role } } });
     }
 
     if (search) {
       const s = search.toLowerCase();
-      const searchOr = [
-        { id: { contains: s } },
-        { reference: { contains: s } },
-        { name: { contains: s } },
-        { createdBy: { name: { contains: s } } },
-      ];
-      if (where.AND) {
-        where.AND.push({ OR: searchOr });
-      } else {
-        where.OR = searchOr;
-      }
+      where.AND.push({
+        OR: [
+          { id: { contains: s } },
+          { reference: { contains: s } },
+          { name: { contains: s } },
+          { createdBy: { name: { contains: s } } },
+        ],
+      });
+    }
+
+    if (where.AND.length === 0) {
+      delete where.AND;
     }
 
     let total = await prisma.dossier.count({ where });
@@ -490,21 +485,8 @@ router.post("/dossiers", async (req, res) => {
       }
     }
 
-    // ── Vérification d'unicité du nom dans le même parent ─────────────────────
+    // ── Vérification d'unicité du nom supprimée à la demande ─────────────────────
     const parentId = req.body.parentDossierId || null;
-    const existingName = await prisma.dossier.findFirst({
-      where: {
-        name: name,
-        parentDossierId: parentId,
-      },
-    });
-    if (existingName) {
-      return res
-        .status(409)
-        .json({
-          error: `Un dossier nommé "${name}" existe déjà ${parentId ? "dans ce dossier" : "à la racine"}.`,
-        });
-    }
 
     // Ne plus créer de sous-dossiers par défaut
     const defaultSubFolders = [];
@@ -571,6 +553,13 @@ router.patch("/dossiers/:id", async (req, res) => {
         });
     }
 
+    if (["BLOQUE", "EN_ATTENTE"].includes(currentDossier.status)) {
+      const keys = Object.keys(req.body).filter(k => req.body[k] !== undefined);
+      if (keys.some(k => k !== "status")) {
+        return res.status(403).json({ error: "Action impossible : le dossier est bloqué ou en attente. Vous devez d'abord le débloquer avant de modifier son contenu." });
+      }
+    }
+
     // ── Matrice institutionnelle des transitions de statut ─────────────────────
     if (req.body.status) {
       const from = currentDossier.status;
@@ -579,60 +568,90 @@ router.patch("/dossiers/:id", async (req, res) => {
       const isRO = userRole === "Responsable opérationnel";
       const isRespOrAdmin = isSA || isRO;
 
-      const VALID_TRANSITIONS = {
-        NOUVEAU: { allowed: ["OUVERT", "ANNULE"], minRole: "resp" },
-        OUVERT: {
-          allowed: ["EN_COURS", "EN_ATTENTE", "BLOQUE", "ANNULE"],
-          minRole: "resp",
-        },
-        EN_COURS: {
-          allowed: ["TERMINE", "EN_ATTENTE", "BLOQUE"],
-          minRole: "resp",
-        },
-        EN_ATTENTE: { allowed: ["EN_COURS", "BLOQUE"], minRole: "resp" },
-        BLOQUE: { allowed: ["EN_COURS", "OUVERT"], minRole: "super" },
-        TERMINE: { allowed: ["CLOTURE", "OUVERT"], minRole: "super" },
-        CLOTURE: { allowed: ["ARCHIVE", "OUVERT"], minRole: "super" },
-        ARCHIVE: { allowed: [], minRole: "super" },
-        ANNULE: { allowed: [], minRole: "super" },
-      };
+      const isAssigned = currentDossier.traitantId === userId;
+      let allowed = false;
 
-      const rule = VALID_TRANSITIONS[from];
-      if (!rule) {
-        return res
-          .status(400)
-          .json({ error: `Statut d'origine inconnu : ${from}` });
+      // Auto states that cannot be manually set
+      if ((to === "NOUVEAU" || to === "EN_COURS" || to === "TERMINE") && from !== "BLOQUE" && from !== "EN_ATTENTE") {
+         return res.status(403).json({ error: `Le statut '${to}' est automatique et ne peut pas être forcé manuellement.` });
       }
 
-      if (!rule.allowed.includes(to)) {
-        return res.status(400).json({
-          error: `Transition impossible : un dossier en statut "${from}" ne peut pas passer à "${to}". Progression attendue : ${rule.allowed.join(", ") || "aucune (état terminal)"}.`,
+      if (from === "ARCHIVE") {
+         return res.status(403).json({ error: "Un dossier archivé ne peut plus être modifié." });
+      }
+
+      if (from === "BLOQUE") {
+        if (!isSA) {
+          return res.status(403).json({ error: "Seul un Super-Administrateur peut débloquer." });
+        }
+        if (to !== currentDossier.previousStatus) {
+          return res.status(403).json({ error: `Un dossier bloqué ne peut retourner qu'à son statut précédent (${currentDossier.previousStatus}).` });
+        }
+        allowed = true;
+      } else if (from === "CLOTURE") {
+        if (!isSA && !isAssigned) {
+          return res.status(403).json({ error: "Accès refusé. Seul l'assigné ou le Super-Admin peut retirer la clôture." });
+        }
+        if (to === currentDossier.previousStatus) {
+          allowed = true;
+        } else if (to === "BLOQUE") {
+          if (!isSA) return res.status(403).json({ error: "Seul un Super-Admin peut bloquer." });
+          allowed = true;
+        } else if (to === "EN_ATTENTE") {
+          allowed = true;
+        } else {
+          return res.status(403).json({ error: `Un dossier clôturé ne peut retourner qu'à son statut précédent (${currentDossier.previousStatus}).` });
+        }
+      } else if (from === "EN_ATTENTE") {
+        if (!isSA && !isAssigned) {
+          return res.status(403).json({ error: "Accès refusé. Seul l'assigné ou le Super-Admin peut lever l'attente." });
+        }
+        if (to === "BLOQUE") {
+          if (!isSA) return res.status(403).json({ error: "Seul un Super-Admin peut bloquer." });
+          allowed = true;
+        } else if (to === currentDossier.previousStatus) {
+          allowed = true;
+        } else if (to === "CLOTURE") {
+          allowed = true;
+        } else {
+          return res.status(403).json({ error: `Un dossier en attente ne peut retourner qu'à son statut précédent (${currentDossier.previousStatus}) ou être bloqué/clôturé.` });
+        }
+      } else {
+        // Target is BLOQUE
+        if (to === "BLOQUE") {
+          if (!isSA) return res.status(403).json({ error: "Seul un Super-Admin peut bloquer." });
+          allowed = true;
+        } 
+        // Target is EN_ATTENTE
+        else if (to === "EN_ATTENTE") {
+          if (!isSA && !isAssigned) {
+             return res.status(403).json({ error: "Accès refusé pour mettre en attente." });
+          }
+          allowed = true;
+        }
+        // Target is CLOTURE
+        else if (to === "CLOTURE") {
+          if (!isSA && !isAssigned) {
+             return res.status(403).json({ error: "Accès refusé pour clôturer." });
+          }
+          allowed = true;
+        }
+        // Target is ARCHIVE
+        else if (to === "ARCHIVE") {
+          if (from !== "TERMINE") {
+             return res.status(403).json({ error: "Un dossier ne peut être archivé que s'il est au statut TERMINE." });
+          }
+          if (!isSA) {
+             return res.status(403).json({ error: "Seul un Super-Admin peut archiver." });
+          }
+          allowed = true;
+        }
+      }
+
+      if (!allowed) {
+        return res.status(403).json({
+          error: `Transition invalide ou non autorisée : de '${from}' à '${to}'.`,
         });
-      }
-
-      if (rule.minRole === "super" && !isSA) {
-        return res
-          .status(403)
-          .json({
-            error: `Accès refusé. Seul un Super-Administrateur peut effectuer cette transition (${from} → ${to}).`,
-          });
-      }
-      if (rule.minRole === "resp" && !isRespOrAdmin) {
-        return res
-          .status(403)
-          .json({
-            error: "Accès refusé. Droits insuffisants pour modifier ce statut.",
-          });
-      }
-
-      // BLOQUÉ : seulement Super-Admin peut bloquer
-      if (to === "BLOQUE" && !isSA) {
-        return res
-          .status(403)
-          .json({
-            error:
-              "Accès refusé. Seul un Super-Administrateur peut bloquer un dossier.",
-          });
       }
 
       // Contrainte métier : impossible de terminer/clôturer avec des missions/tâches incomplètes
@@ -640,7 +659,7 @@ router.patch("/dossiers/:id", async (req, res) => {
         const incompleteMissions = await prisma.mission.count({
           where: {
             dossierId: req.params.id,
-            status: { notIn: ["TERMINE", "TERMINEE", "ANNULE", "ANNULEE"] },
+            status: { notIn: ["TERMINE", "TERMINE", "ANNULEE", "ANNULEE"] },
           },
         });
         const incompleteTaches = await prisma.tache.count({
@@ -649,7 +668,7 @@ router.patch("/dossiers/:id", async (req, res) => {
               { mission: { dossierId: req.params.id } },
               { dossierTacheId: req.params.id },
             ],
-            status: { notIn: ["TERMINE", "TERMINEE", "ANNULE", "ANNULEE"] },
+            status: { notIn: ["TERMINE", "TERMINE", "ANNULEE", "ANNULEE"] },
           },
         });
         if (incompleteMissions > 0 || incompleteTaches > 0) {
@@ -687,7 +706,10 @@ router.patch("/dossiers/:id", async (req, res) => {
 
     const { status, name, description, traitantId } = req.body;
     const updateData = {};
-    if (status !== undefined) updateData.status = status;
+    if (status !== undefined && status !== currentDossier.status) {
+      updateData.status = status;
+      updateData.previousStatus = currentDossier.status;
+    }
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description;
     if (traitantId !== undefined) {
@@ -816,7 +838,7 @@ router.patch("/dossiers/:id/restore", async (req, res) => {
         .status(400)
         .json({ error: "Ce dossier n'est pas en corbeille." });
 
-    const previousStatus = dossier.previousStatus || "OUVERT";
+    const previousStatus = dossier.previousStatus || "NOUVEAU";
     await prisma.dossier.update({
       where: { id: req.params.id },
       data: { status: previousStatus },
@@ -831,7 +853,7 @@ router.patch("/dossiers/:id/restore", async (req, res) => {
       for (const child of children) {
         await prisma.dossier.update({
           where: { id: child.id },
-          data: { status: child.previousStatus || "OUVERT" },
+          data: { status: child.previousStatus || "NOUVEAU" },
         });
         await restoreSubFolders(child.id);
       }
@@ -855,7 +877,14 @@ router.patch("/dossiers/:id/restore", async (req, res) => {
 
 router.get("/dossiers/:id/tree", async (req, res) => {
   try {
+    const isSuperAdm = req.user.role === "Super-administrateur";
+    const where = {};
+    if (!isSuperAdm) {
+      where.status = { not: "BLOQUE" };
+    }
+    
     const allDossiers = await prisma.dossier.findMany({
+      where,
       select: { id: true, name: true, parentDossierId: true, reference: true },
     });
 

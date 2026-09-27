@@ -124,12 +124,12 @@ async function checkAndUpdateMissionStatus(missionId, prisma) {
     mission.status === "NOUVEAU" &&
     allTaches.some((t) => t.status !== "NOUVEAU")
   ) {
-    newStatus = "OUVERT";
+    newStatus = "NOUVEAU";
   } else if (
     mission.status === "TERMINE" &&
     allTaches.some((t) => t.status !== "TERMINE")
   ) {
-    newStatus = "OUVERT";
+    newStatus = "NOUVEAU";
   }
 
   if (newStatus !== mission.status) {
@@ -140,13 +140,13 @@ async function checkAndUpdateMissionStatus(missionId, prisma) {
     if (newStatus === "TERMINE" && mission.dossier) {
       checkAndUpdateDossierStatus(mission.dossier, prisma);
     } else if (
-      newStatus === "OUVERT" &&
+      newStatus === "NOUVEAU" &&
       mission.dossier &&
       mission.dossier.status === "NOUVEAU"
     ) {
       await prisma.dossier.update({
         where: { id: mission.dossier.id },
-        data: { status: "OUVERT" },
+        data: { status: "NOUVEAU" },
       });
     }
   }
@@ -179,7 +179,7 @@ async function checkAndUpdateDossierStatus(dossier, prisma) {
   ) {
     await prisma.dossier.update({
       where: { id: freshDossier.id },
-      data: { status: "OUVERT", previousStatus: freshDossier.status },
+      data: { status: "NOUVEAU", previousStatus: freshDossier.status },
     });
   }
 }
@@ -216,19 +216,22 @@ router.get("/tasks", async (req, res) => {
 
     const isSuperAdm = req.user.role === "Super-administrateur";
     if (status && status !== "all") {
-      where.status = status;
+      where.AND.push({ status: status });
     }
+
     if (!isSuperAdm) {
-      if (where.status === "BLOQUE") {
-        where.id = "unauthorized_so_return_empty";
-      } else if (!where.status) {
-        where.status = { not: "BLOQUE" };
+      if (status === "BLOQUE") {
+        where.AND.push({ id: "unauthorized_so_return_empty" });
+      } else if (!status || status === "all") {
+        where.AND.push({ status: { not: "BLOQUE" } });
       }
-      where.dossier = {
-        ...where.dossier,
-        status: { not: "BLOQUE" },
-      };
+      
+      // Le dossier parent ne doit pas être bloqué
+      where.AND.push({
+        dossier: { status: { not: "BLOQUE" } }
+      });
     }
+
     if (search) {
       const s = search.toLowerCase();
       where.AND.push({
@@ -344,7 +347,7 @@ router.post("/tasks", async (req, res) => {
         assignedToId,
         relecteurId,
         createdById: creatorId,
-        status: "NON_DEMARREE",
+        status: "NOUVEAU",
         echeance: echeance ? new Date(echeance) : null,
         attachment,
         ...(parentMissionId && { parentMissionId }),
@@ -364,7 +367,7 @@ router.post("/tasks", async (req, res) => {
     if (dossierToUpdate && dossierToUpdate.status === "NOUVEAU") {
       await prisma.dossier.update({
         where: { id: dossierId },
-        data: { status: "OUVERT" },
+        data: { status: "NOUVEAU" },
       });
       // Verbose audit log removed
     }
@@ -448,7 +451,7 @@ router.post("/tasks", async (req, res) => {
             name: uniqueName,
             description: `Sous-dossier GED auto-généré pour la mission ${task.reference}`,
             origin: parentDossier?.origin || "INTERNE",
-            status: "OUVERT",
+            status: "NOUVEAU",
             parentDossierId: dossierId,
             isSystem: true,
             createdById: creatorId,
@@ -471,7 +474,7 @@ router.post("/tasks", async (req, res) => {
             name: missionSubFolderName,
             description: `Sous-dossier GED auto-généré pour la mission ${task.reference}`,
             origin: parentDossier?.origin || "INTERNE",
-            status: "OUVERT",
+            status: "NOUVEAU",
             parentDossierId: dossierId,
             isSystem: true,
             createdById: creatorId,
@@ -514,9 +517,23 @@ router.patch("/tasks/:id", async (req, res) => {
     if (!currentMissionForAuth)
       return res.status(404).json({ error: "Mission introuvable." });
 
+    const isMissionLocked = ["BLOQUE", "EN_ATTENTE"].includes(currentMissionForAuth.status);
+    const isParentLocked = ["BLOQUE", "EN_ATTENTE"].includes(currentMissionForAuth.dossier?.status);
+
+    if (isParentLocked) {
+      return res.status(403).json({ error: "Action impossible : le dossier parent est bloqué ou en attente. Veuillez le débloquer d'abord." });
+    }
+
+    if (isMissionLocked) {
+      const keys = Object.keys(req.body).filter(k => req.body[k] !== undefined);
+      if (keys.some(k => k !== "status")) {
+        return res.status(403).json({ error: "Action impossible : la mission est bloquée ou en attente. Vous devez d'abord la débloquer avant de modifier son contenu." });
+      }
+    }
+
     // Empêcher la modification si le parent est clôturé (sauf pour déclôturer par admin)
     if (
-      req.body.status !== "OUVERT" &&
+      req.body.status !== "NOUVEAU" &&
       ["TERMINE", "ARCHIVE"].includes(currentMissionForAuth.dossier?.status)
     ) {
       return res
@@ -624,89 +641,69 @@ router.patch("/tasks/:id", async (req, res) => {
       const isRespOrAdmin = isSA || isRO;
 
       // ── Règles Spécifiques de Mission ─────────────────────────────────────
-      if (from === "NOUVEAU") {
-        if (to === "EN_COURS") {
-           return res.status(403).json({ error: "Le statut 'EN_COURS' est automatique selon l'état des tâches liées." });
+      const isAssigned = currentMissionForAuth.assignedToId === userId;
+      let allowed = false;
+
+      // Auto states that cannot be manually set
+      if ((to === "NOUVEAU" || to === "EN_COURS" || to === "TERMINE") && from !== "BLOQUE" && from !== "EN_ATTENTE") {
+         return res.status(403).json({ error: `Le statut '${to}' est automatique et ne peut pas être forcé manuellement.` });
+      }
+
+      if (from === "BLOQUE") {
+        if (!isSA) {
+          return res.status(403).json({ error: "Seul un Super-Administrateur peut débloquer." });
         }
-        let allowed = [];
-        if (isSA || currentMissionForAuth.dossier?.traitantId === userId) {
-           allowed.push("EN_ATTENTE", "BLOQUE");
-        } else if (currentMissionForAuth.assignedToId === userId) {
-           allowed.push("EN_ATTENTE");
+        if (to !== currentMissionForAuth.previousStatus) {
+          return res.status(403).json({ error: `Une mission bloquée ne peut retourner qu'à son statut précédent (${currentMissionForAuth.previousStatus}).` });
         }
-        if (!allowed.includes(to)) {
-           return res.status(403).json({ error: `Accès refusé. Vous ne pouvez pas passer cette mission de NOUVEAU à ${to}.` });
+        allowed = true;
+      } else if (from === "EN_ATTENTE") {
+        if (!isSA && !isAssigned) {
+          return res.status(403).json({ error: "Accès refusé. Seul l'assigné ou le Super-Admin peut lever l'attente." });
+        }
+        if (to === "BLOQUE") {
+          if (!isSA) return res.status(403).json({ error: "Seul un Super-Admin peut bloquer." });
+          allowed = true;
+        } else if (to === currentMissionForAuth.previousStatus) {
+          allowed = true;
+        } else if (to === "ANNULEE" || to === "ANNULEE") {
+          allowed = true;
+        } else {
+          return res.status(403).json({ error: `Une mission en attente ne peut retourner qu'à son statut précédent (${currentMissionForAuth.previousStatus}) ou être bloquée/annulée.` });
         }
       } else {
-        // ── Matrice institutionnelle des transitions de statut (Missions) ────────
-        const VALID_MISSION_TRANSITIONS = {
-          NON_DEMARREE: {
-            allowed: ["OUVERT", "EN_COURS", "EN_ATTENTE"],
-            minRole: "resp",
-          },
-          OUVERT: {
-            allowed: ["EN_COURS", "EN_ATTENTE", "BLOQUE", "ANNULEE"],
-            minRole: "resp",
-          },
-          EN_COURS: {
-            allowed: ["EN_REVUE", "EN_ATTENTE", "BLOQUE"],
-            minRole: "resp",
-          },
-          EN_REVUE: {
-            allowed: ["TERMINE", "EN_COURS", "A_CORRIGER"],
-            minRole: "resp",
-          },
-        EN_ATTENTE: { allowed: ["EN_COURS", "BLOQUE"], minRole: "resp" },
-        A_CORRIGER: { allowed: ["EN_COURS"], minRole: "resp" },
-        BLOQUE: { allowed: ["EN_COURS", "OUVERT"], minRole: "resp" },
-        TERMINE: { allowed: ["EN_COURS", "ANNULEE"], minRole: "super" },
-        TERMINEE: { allowed: ["EN_COURS", "ANNULEE"], minRole: "super" },
-        ANNULEE: { allowed: [], minRole: "super" },
-        ANNULE: { allowed: [], minRole: "super" },
-      };
-
-      const rule = VALID_MISSION_TRANSITIONS[from];
-      if (rule) {
-        if (!rule.allowed.includes(to)) {
-          return res.status(400).json({
-            error: `Transition impossible : une mission en statut "${from}" ne peut pas passer à "${to}". Progression attendue : ${rule.allowed.join(", ") || "aucune (état terminal)"}.`,
-          });
-        }
-        if (rule.minRole === "super" && !isSA) {
-          return res
-            .status(403)
-            .json({
-              error: `Accès refusé. Seul un Super-Administrateur peut effectuer cette transition (${from} → ${to}).`,
-            });
-        }
-        if (rule.minRole === "resp" && !isRespOrAdmin) {
-          // Collaborateur peut passer vers EN_COURS ou EN_REVUE depuis sa mission
-          const collabAllowed = {
-            NON_DEMARREE: ["EN_COURS"],
-            NOUVEAU: ["EN_COURS"],
-            EN_COURS: ["EN_REVUE", "EN_ATTENTE"],
-            EN_ATTENTE: ["EN_COURS"],
-            A_CORRIGER: ["EN_COURS"],
-          };
-          const collabOk =
-            collabAllowed[from]?.includes(to) &&
-            currentMissionForAuth.assignedToId === userId;
-          if (!collabOk) {
-            return res
-              .status(403)
-              .json({
-                error: `Accès refusé. Vous ne pouvez pas passer cette mission de "${from}" à "${to}".`,
-              });
+        // Target is BLOQUE
+        if (to === "BLOQUE") {
+          if (!isSA) return res.status(403).json({ error: "Seul un Super-Admin peut bloquer." });
+          allowed = true;
+        } 
+        // Target is EN_ATTENTE
+        else if (to === "EN_ATTENTE") {
+          if (!isSA && !isAssigned) {
+             return res.status(403).json({ error: "Accès refusé pour mettre en attente." });
           }
+          allowed = true;
         }
+        // Target is ANNULEE
+        else if (to === "ANNULEE" || to === "ANNULEE") {
+          if (!isSA && !isAssigned) {
+             return res.status(403).json({ error: "Accès refusé pour annuler." });
+          }
+          allowed = true;
         }
+      }
+
+      if (!allowed) {
+        return res.status(403).json({
+          error: `Transition invalide ou non autorisée : de '${from}' à '${to}'.`,
+        });
       }
 
       if (status === "EN_REVUE") {
         const unreadyTaches = await prisma.tache.count({
           where: {
             missionId: req.params.id,
-            status: { notIn: ["EN_RELECTURE", "EN_APPROBATION", "APPROUVEE", "TERMINE", "TERMINEE", "ANNULEE", "ANNULE"] },
+            status: { notIn: ["EN_RELECTURE", "EN_APPROBATION", "APPROUVEE", "TERMINE", "TERMINE", "ANNULEE", "ANNULEE"] },
           },
         });
         if (unreadyTaches > 0) {
@@ -716,11 +713,11 @@ router.patch("/tasks/:id", async (req, res) => {
         }
       }
 
-      if (status === "TERMINEE" || status === "TERMINE") {
+      if (status === "TERMINE" || status === "TERMINE") {
         const incompleteTaches = await prisma.tache.count({
           where: {
             missionId: req.params.id,
-            status: { notIn: ["TERMINEE", "TERMINE", "ANNULEE", "ANNULE"] },
+            status: { notIn: ["TERMINE", "TERMINE", "ANNULEE", "ANNULEE"] },
           },
         });
         if (incompleteTaches > 0) {
@@ -753,7 +750,7 @@ router.patch("/tasks/:id", async (req, res) => {
       const missionRef = task.reference || task.id.slice(0, 8).toUpperCase();
       const newStatus = dataToUpdate.status;
 
-      if (newStatus === "OUVERT" && task.assignedToId) {
+      if (newStatus === "NOUVEAU" && task.assignedToId) {
         // Mission démarrée: notifier l'assigné
         await notify(task.assignedToId, {
           type: "TACHE_ASSIGNEE",
@@ -763,7 +760,7 @@ router.patch("/tasks/:id", async (req, res) => {
           targetType: "MISSION",
         });
       }
-      if (newStatus === "TERMINEE") {
+      if (newStatus === "TERMINE") {
         // Mission terminée: notifier le Super-Admin et le responsable du dossier
         const superAdmins = await prisma.utilisateur.findMany({
           where: { role: { name: "Super-administrateur" } },
@@ -775,7 +772,7 @@ router.patch("/tasks/:id", async (req, res) => {
         ].filter(Boolean);
         if (recipients.length)
           await notify(recipients, {
-            type: "MISSION_TERMINEE",
+            type: "MISSION_TERMINE",
             title: "Mission terminée",
             message: `La mission ${missionRef} a été clôturée avec succès.`,
             targetId: task.id,
@@ -786,7 +783,7 @@ router.patch("/tasks/:id", async (req, res) => {
     // ── Fin Notifications ────────────────────────────────────────────────────
 
     const auditAction =
-      dataToUpdate.status === "TERMINEE"
+      dataToUpdate.status === "TERMINE"
         ? "APPROBATION_MISSION"
         : "MODIFICATION_MISSION";
     await logAudit(
@@ -794,7 +791,7 @@ router.patch("/tasks/:id", async (req, res) => {
       auditAction,
       task.id,
       "MISSION",
-      `Mission ${dataToUpdate.status === "TERMINEE" ? "approuvée/clôturée" : "modifiée"} (Statut: ${task.status})`,
+      `Mission ${dataToUpdate.status === "TERMINE" ? "approuvée/clôturée" : "modifiée"} (Statut: ${task.status})`,
       task.dossierId,
     );
 

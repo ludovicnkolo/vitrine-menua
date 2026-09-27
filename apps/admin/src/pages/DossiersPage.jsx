@@ -151,6 +151,8 @@ const DossiersPage = () => {
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterOrigine, setFilterOrigine] = useState("all");
   const [pendingStatus, setPendingStatus] = useState("");
+  const [confirmingStatus, setConfirmingStatus] = useState(null);
+  const [confirmingDossierId, setConfirmingDossierId] = useState(null);
 
   // Mission Creation State
   const [createMissionModal, setCreateMissionModal] = useState(false);
@@ -648,23 +650,20 @@ const DossiersPage = () => {
   /**
    * getAllowedDossierStatuses — Matrice de transition dossier par rôle
    */
-  const getAllowedDossierStatuses = (currentStatus, userRole) => {
-    const role =
-      typeof userRole === "object" ? userRole?.name || "" : userRole || "";
+  const getAllowedDossierStatuses = (dossier, currentUser) => {
+    const currentStatus = dossier?.status || "NOUVEAU";
+    const role = currentUser?.role?.name || currentUser?.role || "";
     const isSuperAdmin = role === "Super-administrateur";
-    const isResp = role === "Responsable opérationnel";
-    const isRespOrAdmin = isResp || isSuperAdmin;
+    const isAssigned = dossier?.traitantId === currentUser?.id;
 
     const ALL_LABELS = {
       NOUVEAU: "Nouveau",
-      OUVERT: "Ouvert",
       EN_COURS: "En cours",
       EN_ATTENTE: "En attente",
       TERMINE: "Terminé",
       CLOTURE: "Clôturé",
       ARCHIVE: "Archivé",
       BLOQUE: "Bloqué",
-      ANNULE: "Annulé",
     };
     const make = (vals) =>
       vals.map((v) => ({ value: v, label: ALL_LABELS[v] || v }));
@@ -674,46 +673,48 @@ const DossiersPage = () => {
     };
     const lockedOnCurrent = () => make([currentStatus]);
 
-    switch (currentStatus) {
-      case "NOUVEAU":
-        if (isRespOrAdmin) return withCurrent(["OUVERT", "ANNULE"]);
-        return lockedOnCurrent();
-      case "OUVERT": {
-        const allowed = [];
-        if (isRespOrAdmin) allowed.push("EN_COURS", "EN_ATTENTE", "ANNULE");
-        if (isSuperAdmin) allowed.push("BLOQUE");
-        if (allowed.length > 0) return withCurrent(allowed);
-        return lockedOnCurrent();
-      }
-      case "EN_COURS": {
-        const allowed = [];
-        if (isRespOrAdmin) allowed.push("TERMINE", "EN_ATTENTE");
-        if (isSuperAdmin) allowed.push("BLOQUE");
-        if (allowed.length > 0) return withCurrent(allowed);
-        return lockedOnCurrent();
-      }
-      case "EN_ATTENTE": {
-        const allowed = [];
-        if (isRespOrAdmin) allowed.push("EN_COURS");
-        if (isSuperAdmin) allowed.push("BLOQUE");
-        if (allowed.length > 0) return withCurrent(allowed);
-        return lockedOnCurrent();
-      }
-      case "BLOQUE":
-        if (isSuperAdmin) return withCurrent(["EN_COURS", "OUVERT"]); // As per validations
-        return lockedOnCurrent();
-      case "TERMINE":
-        if (isSuperAdmin) return withCurrent(["CLOTURE", "OUVERT"]);
-        return lockedOnCurrent();
-      case "CLOTURE":
-        if (isSuperAdmin) return withCurrent(["ARCHIVE", "OUVERT"]);
-        return lockedOnCurrent();
-      case "ARCHIVE":
-      case "ANNULE":
-        return lockedOnCurrent(); // États terminaux
-      default:
-        return lockedOnCurrent();
+    if (currentStatus === "ARCHIVE") {
+      return lockedOnCurrent();
     }
+
+    if (currentStatus === "BLOQUE") {
+      if (isSuperAdmin) {
+        return withCurrent([dossier?.previousStatus || "EN_COURS"]);
+      }
+      return lockedOnCurrent();
+    }
+
+    if (currentStatus === "CLOTURE") {
+      const allowed = [];
+      if (isSuperAdmin || isAssigned) {
+        if (dossier?.previousStatus) allowed.push(dossier.previousStatus);
+        if (isSuperAdmin) allowed.push("BLOQUE");
+        allowed.push("EN_ATTENTE");
+      }
+      if (allowed.length > 0) return withCurrent(allowed);
+      return lockedOnCurrent();
+    }
+
+    if (currentStatus === "EN_ATTENTE") {
+      if (isSuperAdmin || isAssigned) {
+        return withCurrent([dossier?.previousStatus || "EN_COURS"]);
+      }
+      return lockedOnCurrent();
+    }
+
+    const allowed = [];
+    if (isSuperAdmin) allowed.push("BLOQUE");
+
+    if (isSuperAdmin || isAssigned) {
+      allowed.push("EN_ATTENTE", "CLOTURE");
+    }
+
+    if (currentStatus === "TERMINE") {
+      if (isSuperAdmin) allowed.push("ARCHIVE");
+    }
+
+    if (allowed.length > 0) return withCurrent([...new Set(allowed)]);
+    return lockedOnCurrent();
   };
 
   const renderWorkflowButtons = (dossier) => {
@@ -727,10 +728,7 @@ const DossiersPage = () => {
     if (!isSuperAdmin && !isResp && currentUser?.id !== dossier.traitantId)
       return null;
 
-    const options = getAllowedDossierStatuses(
-      dossier.status || "NOUVEAU",
-      role,
-    );
+    const options = getAllowedDossierStatuses(dossier, currentUser);
     const isLocked = options.length === 1;
 
     return (
@@ -785,7 +783,11 @@ const DossiersPage = () => {
         {pendingStatus && pendingStatus !== (dossier.status || "NOUVEAU") && (
           <button
             type="button"
-            onClick={() => handleStatusAction(dossier.id, pendingStatus)}
+            onClick={async () => {
+              if (await window.customConfirm(`Vous allez enregistrer 1 modification(s) sur ce dossier.\n\nStatut : ${pendingStatus}`, "Confirmer l'enregistrement")) {
+                handleStatusAction(dossier.id, pendingStatus);
+              }
+            }}
             className="btn btn-primary"
             style={{
               padding: "0.4rem 0.75rem",
@@ -1052,31 +1054,33 @@ const DossiersPage = () => {
             </span>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              fontSize: "0.875rem",
-            }}
-          >
-            <strong
+          {renderWorkflowButtons(isEdit ? editDossier : dossier) || (
+            <div
               style={{
-                color: "var(--text-muted)",
-                fontWeight: 600,
-                flexShrink: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                fontSize: "0.875rem",
               }}
             >
-              Statut :
-            </strong>
-            {isEdit ? (
-              <span>
-                {getStatusBadge(editDossier?.status || dossier.status)}
-              </span>
-            ) : (
-              <span>{getStatusBadge(dossier.status)}</span>
-            )}
-          </div>
+              <strong
+                style={{
+                  color: "var(--text-muted)",
+                  fontWeight: 600,
+                  flexShrink: 0,
+                }}
+              >
+                Statut :
+              </strong>
+              {isEdit ? (
+                <span>
+                  {getStatusBadge(editDossier?.status || dossier.status)}
+                </span>
+              ) : (
+                <span>{getStatusBadge(dossier.status)}</span>
+              )}
+            </div>
+          )}
 
           <div
             style={{
@@ -1286,8 +1290,9 @@ const DossiersPage = () => {
     const isSuperAdmin =
       currentUser?.role?.name === "Super-administrateur" ||
       currentUser?.role === "Super-administrateur";
+    const isLocked = ["BLOQUE", "EN_ATTENTE"].includes(consultDossier.status);
     const canEdit =
-      isSuperAdmin || currentUser?.id === consultDossier.traitantId;
+      (isSuperAdmin || currentUser?.id === consultDossier.traitantId) && !isLocked;
 
     // isEditingConsult est géré via un objet temporaire dans consultDossier._editing
     const isEditMode = consultDossier._editing === true;
@@ -1367,7 +1372,6 @@ const DossiersPage = () => {
             consultation du dossier :{" "}
             {consultDossier.reference || consultDossier.id}
           </h2>
-          {canEdit && renderWorkflowButtons(consultDossier)}
           {canEdit && !isEditMode && (
             <button
               type="button"
@@ -1508,6 +1512,7 @@ const DossiersPage = () => {
                   borderRadius: "8px",
                   border: "1px solid var(--border)",
                   fontSize: "0.875rem",
+                  display: "none", // Masqué car affiché en double dans l'en-tête du dossier
                 }}
               >
                 <strong style={{ color: "var(--text-muted)" }}>
@@ -1538,43 +1543,46 @@ const DossiersPage = () => {
           }}
         >
           <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-            {!["TERMINE", "ARCHIVE"].includes(consultDossier.status) &&
-              (currentUser?.role === "Super-administrateur" ||
-                currentUser?.role?.name === "Super-administrateur" ||
-                consultDossier.traitantId === currentUser?.id) && (
+            {!["TERMINE", "ARCHIVE", "BLOQUE", "EN_ATTENTE"].includes(consultDossier.status) && (
+              <>
+                {(currentUser?.role === "Super-administrateur" ||
+                  currentUser?.role?.name === "Super-administrateur" ||
+                  consultDossier.traitantId === currentUser?.id) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCreateMissionModal(true);
+                      setMissionDossierId(consultDossier.id);
+                    }}
+                    className="btn btn-primary"
+                    style={{
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                    }}
+                  >
+                    Créer une mission
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => {
-                    setCreateMissionModal(true);
-                    setMissionDossierId(consultDossier.id);
+                    setShowMagicModal(true);
+                    setGeneratedMagicUrl("");
                   }}
-                  className="btn btn-primary"
+                  className="btn btn-outline"
                   style={{
+                    borderColor: "var(--secondary)",
+                    color: "var(--secondary-dark)",
                     display: "flex",
                     gap: "0.5rem",
                     alignItems: "center",
                   }}
                 >
-                  Créer une mission
+                  <LinkIcon size={16} /> Générer Lien Magique
                 </button>
-              )}
-            <button
-              type="button"
-              onClick={() => {
-                setShowMagicModal(true);
-                setGeneratedMagicUrl("");
-              }}
-              className="btn btn-outline"
-              style={{
-                borderColor: "var(--secondary)",
-                color: "var(--secondary-dark)",
-                display: "flex",
-                gap: "0.5rem",
-                alignItems: "center",
-              }}
-            >
-              <LinkIcon size={16} /> Générer Lien Magique
-            </button>
+              </>
+            )}
           </div>
           <div style={{ display: "flex", gap: "1rem" }}>
             {isEditMode ? (
@@ -2463,6 +2471,8 @@ const DossiersPage = () => {
           onClose={() => setLocalConsultTask(null)}
           titlePrefix="Consulter la Mission:"
         />
+
+
       </div>
     );
   }
@@ -2567,14 +2577,14 @@ const DossiersPage = () => {
         >
           <option value="all">Statut: Tous</option>
           <option value="NOUVEAU">Nouveau</option>
-          <option value="OUVERT">Ouvert</option>
+          
           <option value="EN_COURS">En cours</option>
           <option value="EN_ATTENTE">En attente</option>
           <option value="TERMINE">Terminé</option>
           <option value="CLOTURE">Clôturé</option>
           <option value="ARCHIVE">Archivé</option>
           <option value="BLOQUE">Bloqué</option>
-          <option value="ANNULE">Annulé</option>
+
         </select>
         <select
           className="input-field"
@@ -2651,7 +2661,7 @@ const DossiersPage = () => {
                     if (
                       [
                         "TERMINE",
-                        "TERMINEE",
+                        "TERMINE",
                         "ARCHIVE",
                         "ANNULEE",
                         "BLOQUE",
@@ -3311,6 +3321,83 @@ const DossiersPage = () => {
         onConfirm={confirmModal.onConfirm}
         onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
       />
+
+      {confirmingStatus && confirmingDossierId && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              background: "#FFF",
+              padding: "2rem",
+              borderRadius: "12px",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+              width: "100%",
+              maxWidth: "400px",
+              textAlign: "center",
+            }}
+          >
+            <h3 style={{ marginTop: 0, color: "var(--primary-dark)", fontSize: "1.2rem", marginBottom: "0.5rem" }}>
+              Confirmer l'enregistrement
+            </h3>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginBottom: "1.5rem" }}>
+              Vous allez enregistrer <strong>1 modification(s)</strong> sur ce dossier.
+            </p>
+            <div
+              style={{
+                background: "#F8FAFC",
+                borderRadius: "8px",
+                padding: "0.75rem 1rem",
+                marginBottom: "1.5rem",
+                fontSize: "0.9rem",
+                color: "var(--text-main)",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span style={{ color: "var(--text-muted)", fontWeight: 500 }}>Statut</span>
+              <span style={{ fontWeight: 600 }}>{DOSSIER_STATUS_LABELS[confirmingStatus] || confirmingStatus}</span>
+            </div>
+            <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => {
+                  setConfirmingStatus(null);
+                  setConfirmingDossierId(null);
+                }}
+                style={{ padding: "0.5rem 1.5rem" }}
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => {
+                  handleStatusAction(confirmingDossierId, confirmingStatus);
+                  setConfirmingStatus(null);
+                  setConfirmingDossierId(null);
+                }}
+                style={{ padding: "0.5rem 1.5rem" }}
+              >
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

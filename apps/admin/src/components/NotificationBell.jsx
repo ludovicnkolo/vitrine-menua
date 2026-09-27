@@ -8,7 +8,7 @@ const TYPE_ICON = {
   TACHE_A_VERIFIER: { icon: "🔍", color: "#F59E0B" },
   TACHE_FINALISER: { icon: "✅", color: "#10B981" },
   TACHE_CLOTUREE: { icon: "🏁", color: "#10B981" },
-  MISSION_TERMINEE: { icon: "🎯", color: "#6366F1" },
+  MISSION_TERMINE: { icon: "🎯", color: "#6366F1" },
   DOSSIER_CLOTURE: { icon: "📁", color: "#4B5563" },
   NOUVEAU_MESSAGE: { icon: "💬", color: "#3B82F6" },
 };

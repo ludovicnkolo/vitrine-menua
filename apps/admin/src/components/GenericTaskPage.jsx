@@ -16,6 +16,7 @@ import {
   Search,
   Files,
   FileText,
+  Check,
 } from "lucide-react";
 import ActionDropdown from "../components/ActionDropdown";
 import FilePreviewModal from "../components/FilePreviewModal";
@@ -128,7 +129,7 @@ const TaskDropdown = ({
   const isLockedForCollab =
     (task?.status === "EN_FINALISATION" ||
       task?.status === "EN_CONTROLE" ||
-      task?.status === "TERMINEE") &&
+      task?.status === "TERMINE") &&
     !isController;
 
   return (
@@ -208,6 +209,8 @@ const TaskDropdown = ({
 const GenericTaskPage = ({ mode = "MISSION" }) => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [consultTask, setConsultTask] = useState(null);
+  const [pendingStatus, setPendingStatus] = useState("");
+  const [confirmingStatus, setConfirmingStatus] = useState("");
   const [editTask, setEditTask] = useState(null);
   const [localConsultSubTask, setLocalConsultSubTask] = useState(null);
   const [editFormData, setEditFormData] = useState({
@@ -258,8 +261,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setRawErrorMsg] = useState(null);
   const setErrorMsg = (msg) => {
-    setRawErrorMsg(msg);
-    if (msg) setTimeout(() => setRawErrorMsg(null), 3000);
+    if (msg) window.customAlert(msg);
   };
 
   const [page, setPage] = useState(1);
@@ -355,7 +357,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       if (res.ok) {
         setEditTask(null);
         fetchData();
-        setErrorMsg("Mission mise à jour avec succès !");
+        setErrorMsg(`${mode === "MISSION" ? "Mission" : "Tâche"} mise à jour avec succès !`);
       } else {
         let errMsg = "Erreur lors de la mise à jour.";
         try {
@@ -373,14 +375,15 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const handleWorkflowAction = async (taskId, newStatus) => {
     try {
       const token = sessionStorage.getItem("adminToken");
-      const res = await fetch(
-        new URL(
-          getSafeApiUrl(
-            mode === "MISSION"
-              ? `/api/crm/tasks/${encodeURIComponent(taskId)}`
-              : `/api/crm/taches/${encodeURIComponent(taskId)}`,
-          ),
-        ).toString(),
+      const url = new URL(
+        getSafeApiUrl(
+          mode === "MISSION"
+            ? `/api/crm/tasks/${encodeURIComponent(taskId)}`
+            : `/api/crm/taches/${encodeURIComponent(taskId)}`,
+        ),
+      ).toString();
+      
+      const res = await fetch(url,
         {
           method: "PATCH",
           headers: {
@@ -398,7 +401,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         if (editTask && editTask.id === taskId) {
           setEditTask({ ...editTask, status: newStatus });
         }
-        setErrorMsg(`Statut passé à ${newStatus}`);
+        setPendingStatus("");
+        
+        // Show success popup with same styling as errors
+        // setErrorMsg(`Statut mis à jour : ${newStatus}`);
       } else {
         let errMsg = "Erreur lors de la mise à jour du statut.";
         try {
@@ -436,7 +442,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       A_CORRIGER: "À corriger",
       BLOQUE: "Bloqué",
       EN_ATTENTE: "En attente",
-      EN_REVUE: "En revue",
+      
       TERMINE: "Terminé",
     };
     const make = (vals) =>
@@ -448,117 +454,110 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     const lockedOnCurrent = () => make([currentStatus]);
 
     if (entityMode === "TACHE") {
+      const isAssigned = taskObj && taskObj.assignedToId === currentUser?.id;
+      const isRelecteurAssigned = taskObj && taskObj.relecteurId === currentUser?.id;
+      const isMissionResp = taskObj && taskObj.mission?.assignedToId === currentUser?.id;
+
+      const isParentLocked = 
+        taskObj && (
+          ["BLOQUE", "EN_ATTENTE"].includes(taskObj.mission?.status) || 
+          ["BLOQUE", "EN_ATTENTE"].includes(taskObj.mission?.dossier?.status)
+        );
+
+      if (isParentLocked) return lockedOnCurrent();
+
+      if (currentStatus === "BLOQUE") {
+        if (isSuperAdmin && taskObj) {
+          return withCurrent([taskObj.previousStatus || "EN_COURS"]);
+        }
+        return lockedOnCurrent();
+      }
+
+      if (currentStatus === "EN_ATTENTE") {
+        if (isSuperAdmin || isRelecteurAssigned || isMissionResp || isAssigned) {
+          return withCurrent([taskObj?.previousStatus || "EN_COURS"]);
+        }
+        return lockedOnCurrent();
+      }
+
+      const allowed = [];
+      if (isSuperAdmin) allowed.push("BLOQUE");
+
+      if (isSuperAdmin || isRelecteurAssigned || isMissionResp) {
+        allowed.push("EN_ATTENTE");
+      }
+
       switch (currentStatus) {
-        case "NOUVEAU": {
-          if (isSuperAdmin) return withCurrent(["EN_COURS", "EN_ATTENTE", "BLOQUE"]);
-          const allowed = [];
-          if (taskObj && taskObj.assignedToId === currentUser?.id) {
-            allowed.push("EN_COURS");
-          }
-          if (taskObj && taskObj.mission?.assignedToId === currentUser?.id) {
-            allowed.push("EN_ATTENTE");
-          }
-          if (allowed.length > 0) return withCurrent(allowed);
-          return lockedOnCurrent();
-        }
-        case "EN_COURS": {
-          if (isSuperAdmin) return withCurrent(["EN_RELECTURE", "EN_ATTENTE", "BLOQUE"]);
-          const allowed = [];
-          if (taskObj && taskObj.assignedToId === currentUser?.id) {
-            allowed.push("EN_RELECTURE");
-          }
-          if (taskObj && taskObj.mission?.assignedToId === currentUser?.id) {
-            allowed.push("EN_ATTENTE");
-          }
-          if (allowed.length > 0) return withCurrent(allowed);
-          return lockedOnCurrent();
-        }
+        case "NOUVEAU":
+        case "A_CORRIGER":
+          if (isSuperAdmin || isAssigned) allowed.push("EN_COURS");
+          break;
+        case "EN_COURS":
+          if (isSuperAdmin || isAssigned) allowed.push("EN_RELECTURE");
+          break;
         case "EN_RELECTURE":
-          if (isSuperAdmin || isRelecteur)
-            return withCurrent(["EN_APPROBATION", "A_CORRIGER", "EN_ATTENTE"]);
-          return lockedOnCurrent();
+          if (isSuperAdmin || isRelecteurAssigned) allowed.push("EN_APPROBATION", "A_CORRIGER");
+          break;
         case "EN_APPROBATION":
-          if (isSuperAdmin)
-            return withCurrent(["APPROUVEE", "A_CORRIGER"]);
-          return lockedOnCurrent();
+          if (isSuperAdmin) allowed.push("APPROUVEE");
+          if (isSuperAdmin || isRelecteurAssigned) allowed.push("A_CORRIGER");
+          break;
         case "APPROUVEE":
-          if (isSuperAdmin) return withCurrent(["TERMINE", "A_CORRIGER"]);
-          return lockedOnCurrent();
-        case "A_CORRIGER": {
-          if (isSuperAdmin) return withCurrent(["EN_COURS", "EN_ATTENTE", "BLOQUE"]);
-          const allowed = [];
-          if (taskObj && taskObj.assignedToId === currentUser?.id) {
-            allowed.push("EN_COURS");
-          }
-          if (taskObj && taskObj.mission?.assignedToId === currentUser?.id) {
-            allowed.push("EN_ATTENTE");
-          }
-          if (allowed.length > 0) return withCurrent(allowed);
-          return lockedOnCurrent();
-        }
-        case "BLOQUE": {
-          if (isSuperAdmin && taskObj && taskObj.previousStatus) {
-            return withCurrent([taskObj.previousStatus]);
-          }
-          return lockedOnCurrent();
-        }
-        case "EN_ATTENTE": {
-          const allowed = [];
-          if (taskObj && taskObj.previousStatus) {
-            if (isSuperAdmin) {
-              allowed.push(taskObj.previousStatus);
-            } else if (taskObj.mission?.assignedToId === currentUser?.id) {
-              allowed.push(taskObj.previousStatus);
-            }
-          }
-          if (allowed.length > 0) return withCurrent(allowed);
-          return lockedOnCurrent();
-        }
-        default:
+          if (isSuperAdmin) allowed.push("TERMINE");
+          break;
+        case "TERMINE":
+          // Remove EN_ATTENTE and BLOQUE if already TERMINE (usually terminal)
           return lockedOnCurrent();
       }
+
+      if (allowed.length > 0) return withCurrent([...new Set(allowed)]);
+      return lockedOnCurrent();
     } else {
       // MISSION
-      switch (currentStatus) {
-        case "NOUVEAU": {
-          const allowed = [];
-          if (isSuperAdmin || isResp) {
-            allowed.push("EN_ATTENTE");
-          } else if (taskObj && taskObj.assignedToId === currentUser?.id) {
-            allowed.push("EN_ATTENTE");
-          }
-          if (isSuperAdmin || (taskObj && taskObj.dossier?.traitantId === currentUser?.id)) {
-            allowed.push("BLOQUE");
-          }
-          if (allowed.length > 0) return withCurrent(allowed);
-          return lockedOnCurrent();
+      const isMissionAssigned = taskObj && taskObj.assignedToId === currentUser?.id;
+
+      const isParentLocked = taskObj && ["BLOQUE", "EN_ATTENTE"].includes(taskObj.dossier?.status);
+
+      if (isParentLocked) return lockedOnCurrent();
+
+      if (currentStatus === "BLOQUE") {
+        if (isSuperAdmin && taskObj) {
+          return withCurrent([taskObj.previousStatus || "EN_COURS"]);
         }
-        case "EN_COURS": {
-          const allowed = [];
-          if (isRespOrAdmin) {
-            allowed.push("EN_REVUE", "EN_ATTENTE");
-          }
-          if (isSuperAdmin) {
-            allowed.push("BLOQUE");
-          }
-          if (allowed.length > 0) return withCurrent(allowed);
-          return lockedOnCurrent();
-        }
-        case "EN_REVUE":
-          if (isRespOrAdmin) return withCurrent(["TERMINE", "EN_COURS"]);
-          return lockedOnCurrent();
-        case "BLOQUE":
-          if (isRespOrAdmin) return withCurrent(["EN_COURS"]);
-          return lockedOnCurrent();
-        case "EN_ATTENTE":
-          if (isRespOrAdmin) return withCurrent(["EN_COURS"]);
-          return lockedOnCurrent();
-        case "TERMINE":
-          if (isSuperAdmin) return withCurrent(["EN_COURS"]); // réouverture exceptionnelle
-          return lockedOnCurrent();
-        default:
-          return lockedOnCurrent();
+        return lockedOnCurrent();
       }
+
+      if (currentStatus === "EN_ATTENTE") {
+        if (isSuperAdmin || isMissionAssigned) {
+          return withCurrent([taskObj?.previousStatus || "EN_COURS"]);
+        }
+        return lockedOnCurrent();
+      }
+
+      const allowed = [];
+      if (isSuperAdmin) allowed.push("BLOQUE");
+
+      if (isSuperAdmin || isMissionAssigned) {
+        allowed.push("EN_ATTENTE", "ANNULEE");
+      }
+
+      switch (currentStatus) {
+        case "NOUVEAU":
+        case "OUVERT":
+        case "EN_COURS":
+        case "EN_REVUE":
+        case "A_CORRIGER":
+        case "TERMINE":
+        case "TERMINE":
+        case "ANNULEE":
+        case "ANNULEE":
+          break;
+        default:
+          break;
+      }
+
+      if (allowed.length > 0) return withCurrent([...new Set(allowed)]);
+      return lockedOnCurrent();
     }
   };
 
@@ -1579,68 +1578,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             {consultTask.reference || consultTask.id}
           </h2>
 
-          {/* Déroulant statut — filtré selon rôle + matrice de transition */}
-          {(() => {
-            const role = currentUser?.role?.name || currentUser?.role || "";
-            const options = getAllowedStatuses(
-              consultTask.status || "NOUVEAU",
-              role,
-              mode,
-              consultTask
-            );
-            const isLocked = options.length === 1; // Seul le statut courant est disponible
-            return (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  background: isLocked ? "#F3F4F6" : "#F8FAFC",
-                  padding: "0.4rem 0.9rem",
-                  borderRadius: "8px",
-                  border: `1px solid ${isLocked ? "#E5E7EB" : "var(--border)"}`,
-                }}
-              >
-                <span
-                  style={{
-                    fontWeight: 600,
-                    color: isLocked ? "#9CA3AF" : "var(--text-main)",
-                    fontSize: "0.85rem",
-                  }}
-                >
-                  Statut :
-                </span>
-                <select
-                  value={consultTask.status || "NOUVEAU"}
-                  onChange={(e) =>
-                    handleWorkflowAction(consultTask.id, e.target.value)
-                  }
-                  disabled={isLocked}
-                  title={
-                    isLocked
-                      ? "Aucune transition disponible pour votre rôle"
-                      : ""
-                  }
-                  style={{
-                    padding: "0.4rem 0.6rem",
-                    borderRadius: "4px",
-                    border: "1px solid var(--border)",
-                    background: isLocked ? "#F3F4F6" : "#FFF",
-                    fontSize: "0.875rem",
-                    outline: "none",
-                    cursor: isLocked ? "not-allowed" : "pointer",
-                    minWidth: "140px",
-                  }}
-                >
-                  {options.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            );
-          })()}
+
 
           {(currentUser?.role === "Super-administrateur" ||
             currentUser?.role?.name === "Super-administrateur" ||
@@ -1649,7 +1587,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             !(
               (consultTask?.status === "EN_FINALISATION" ||
                 consultTask?.status === "EN_CONTROLE" ||
-                consultTask?.status === "TERMINEE") &&
+                consultTask?.status === "TERMINE") &&
               !(
                 currentUser?.role === "Relecteur" ||
                 currentUser?.role?.name === "Relecteur" ||
@@ -1658,7 +1596,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 currentUser?.role === "Super-administrateur" ||
                 currentUser?.role?.name === "Super-administrateur"
               )
-            ) && (
+            ) && !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.status) && !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.mission?.status) && !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.dossier?.status) && !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.mission?.dossier?.status) && (
               <button
                 type="button"
                 onClick={() => {
@@ -2008,27 +1946,90 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     : "Non définie"}
                 </span>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  fontSize: "0.875rem",
-                }}
-              >
-                <strong
-                  style={{
-                    color: "var(--text-muted)",
-                    fontWeight: 600,
-                    minWidth: "130px",
-                  }}
-                >
-                  Statut :
-                </strong>
-                <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
-                  {getStatusBadge(consultTask.status)}
-                </span>
-              </div>
+              {(() => {
+                const role = currentUser?.role?.name || currentUser?.role || "";
+                const options = getAllowedStatuses(
+                  consultTask.status || "NOUVEAU",
+                  role,
+                  mode,
+                  consultTask
+                );
+                const isLocked = options.length === 1;
+                return (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    <strong
+                      style={{
+                        color: "var(--text-muted)",
+                        fontWeight: 600,
+                        minWidth: "130px",
+                      }}
+                    >
+                      Statut :
+                    </strong>
+                    <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                      <select
+                        value={pendingStatus || consultTask.status || "NOUVEAU"}
+                        onChange={(e) => setPendingStatus(e.target.value)}
+                        disabled={isLocked}
+                        title={
+                          isLocked
+                            ? "Aucune transition disponible pour votre rôle"
+                            : "Changer le statut"
+                        }
+                        style={{
+                          padding: "0.4rem 0.6rem",
+                          borderRadius: "4px",
+                          border: "1px solid var(--border)",
+                          background: isLocked ? "#F3F4F6" : "#FFF",
+                          fontSize: "0.875rem",
+                          outline: "none",
+                          cursor: isLocked ? "not-allowed" : "pointer",
+                          minWidth: "140px",
+                        }}
+                      >
+                        {options.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+
+                      {!isLocked && pendingStatus && pendingStatus !== consultTask.status && (
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            if (await window.customConfirm(`Êtes-vous sûr de vouloir passer au statut : ${pendingStatus} ?`, "Confirmer le statut")) {
+                              handleWorkflowAction(consultTask.id, pendingStatus);
+                            }
+                          }}
+                          className="btn btn-primary"
+                          style={{
+                            padding: "0.4rem 0.8rem",
+                            fontSize: "0.875rem",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.4rem",
+                            backgroundColor: "#1D4ED8",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <Check size={14} color="white" /> Enregistrer
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </div>
 
@@ -2105,7 +2106,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             </button>
 
             {mode === "MISSION" &&
-              !["TERMINE", "ARCHIVE"].includes(consultTask.status) &&
+              !["TERMINE", "ARCHIVE", "BLOQUE", "EN_ATTENTE"].includes(consultTask.status) &&
+              !["BLOQUE", "EN_ATTENTE"].includes(consultTask.dossier?.status) &&
               (isSuperAdmin ||
                 consultTask.assignedToId === currentUser?.id) && (
                 <button
@@ -2167,6 +2169,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           onSubmit={(text) => handleFeedbackSubmit(text, "manager")}
           isSubmitting={isFeedbackSubmitting}
         />
+
+
       </div>
     );
   }
@@ -2261,7 +2265,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             <>
               <option value="NOUVEAU">Nouveau</option>
               <option value="EN_COURS">En cours</option>
-              <option value="EN_REVUE">En revue</option>
+              
               <option value="TERMINE">Terminé</option>
               <option value="BLOQUE">Bloqué</option>
               <option value="EN_ATTENTE">En attente</option>
@@ -2298,7 +2302,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 const d = task.echeance;
                 if (!d) return false;
                 if (
-                  ["TERMINE", "TERMINEE", "ARCHIVE", "ANNULEE"].includes(
+                  ["TERMINE", "TERMINE", "ARCHIVE", "ANNULEE"].includes(
                     task.status,
                   )
                 )
@@ -2505,6 +2509,79 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           >
             Suivant
           </button>
+        </div>
+      )}
+
+      {confirmingStatus && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              background: "#FFF",
+              padding: "2rem",
+              borderRadius: "12px",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+              width: "100%",
+              maxWidth: "400px",
+              textAlign: "center",
+            }}
+          >
+            <h3 style={{ marginTop: 0, color: "var(--primary-dark)", fontSize: "1.2rem", marginBottom: "0.5rem" }}>
+              Confirmer l'enregistrement
+            </h3>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginBottom: "1.5rem" }}>
+              Vous allez enregistrer <strong>1 modification(s)</strong> sur ce(tte) {mode === "MISSION" ? "mission" : "tâche"}.
+            </p>
+            <div
+              style={{
+                background: "#F8FAFC",
+                borderRadius: "8px",
+                padding: "0.75rem 1rem",
+                marginBottom: "1.5rem",
+                fontSize: "0.9rem",
+                color: "var(--text-main)",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span style={{ color: "var(--text-muted)", fontWeight: 500 }}>Statut</span>
+              <span style={{ fontWeight: 600 }}>{ALL_LABELS[confirmingStatus] || confirmingStatus}</span>
+            </div>
+            <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => setConfirmingStatus("")}
+                style={{ padding: "0.5rem 1.5rem" }}
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => {
+                  handleWorkflowAction(consultTask.id, confirmingStatus);
+                  setConfirmingStatus("");
+                }}
+                style={{ padding: "0.5rem 1.5rem" }}
+              >
+                Confirmer
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

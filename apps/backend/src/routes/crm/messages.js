@@ -710,13 +710,48 @@ router.patch("/messages/:id/status", async (req, res) => {
       dataToUpdate.assignedToId = assignedToId || null;
     }
     // Rappel / Entretien
-    if (dateRappel !== undefined)
-      dataToUpdate.dateRappel = dateRappel ? new Date(dateRappel) : null;
+    if (dateRappel !== undefined) {
+      if (dateRappel) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const parsedDate = new Date(dateRappel);
+        parsedDate.setHours(0, 0, 0, 0);
+
+        const currentDate = msg?.dateRappel ? new Date(msg.dateRappel) : null;
+        if (currentDate) currentDate.setHours(0, 0, 0, 0);
+
+        if (!currentDate || parsedDate.getTime() !== currentDate.getTime()) {
+          if (parsedDate < today) {
+            return res.status(400).json({ error: "La date de rappel ne peut pas être antérieure à aujourd'hui." });
+          }
+        }
+        dataToUpdate.dateRappel = parsedDate;
+      } else {
+        dataToUpdate.dateRappel = null;
+      }
+    }
     if (noteRappel !== undefined) dataToUpdate.noteRappel = noteRappel;
-    if (dateEntretien !== undefined)
-      dataToUpdate.dateEntretien = dateEntretien
-        ? new Date(dateEntretien)
-        : null;
+    
+    if (dateEntretien !== undefined) {
+      if (dateEntretien) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const parsedDate = new Date(dateEntretien);
+        parsedDate.setHours(0, 0, 0, 0);
+
+        const currentDate = msg?.dateEntretien ? new Date(msg.dateEntretien) : null;
+        if (currentDate) currentDate.setHours(0, 0, 0, 0);
+
+        if (!currentDate || parsedDate.getTime() !== currentDate.getTime()) {
+          if (parsedDate < today) {
+            return res.status(400).json({ error: "La date d'entretien ne peut pas être antérieure à aujourd'hui." });
+          }
+        }
+        dataToUpdate.dateEntretien = parsedDate;
+      } else {
+        dataToUpdate.dateEntretien = null;
+      }
+    }
     if (lienVisio !== undefined) dataToUpdate.lienVisio = lienVisio;
     if (dossierId !== undefined) {
       dataToUpdate.dossierId = dossierId;

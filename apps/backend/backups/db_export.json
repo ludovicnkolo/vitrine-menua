@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-25T13:47:28.329Z",
-      "updatedAt": "2026-09-27T17:41:03.966Z"
+      "updatedAt": "2026-09-27T18:30:29.561Z"
     },
     {
       "id": "f078a26d-feb6-4c12-89b1-0859bb1f4b49",
@@ -16,7 +16,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-09-25T13:47:28.336Z",
-      "updatedAt": "2026-09-27T17:41:03.982Z"
+      "updatedAt": "2026-09-27T18:30:29.575Z"
     },
     {
       "id": "5d37271d-0c84-4c7c-bd0a-2968ee0de5dd",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-09-25T13:47:28.341Z",
-      "updatedAt": "2026-09-27T17:41:04.003Z"
+      "updatedAt": "2026-09-27T18:30:29.582Z"
     },
     {
       "id": "3e77b306-86ea-4ff9-b907-9e4768e6dfe8",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-09-25T13:47:28.346Z",
-      "updatedAt": "2026-09-27T17:41:04.038Z"
+      "updatedAt": "2026-09-27T18:30:29.590Z"
     },
     {
       "id": "32097424-1035-4c44-a5fe-57072a8700eb",
@@ -43,14 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-25T13:47:28.351Z",
-      "updatedAt": "2026-09-27T17:41:04.055Z"
+      "updatedAt": "2026-09-27T18:30:29.600Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$c7iKubKfeH0lyN3cnTiWEeE.QBKtphIKztmUzzcs/2tUgEX1KwcF2",
+      "password": "$2a$10$gHf8PZSS6TmLbbHRE6m75Op/.kbhy9bonCdd1ThDa2UNhXwxqqJnK",
       "name": "Rosette Fouelefack",
       "roleId": "c85d3514-21bf-41aa-aa70-8ad8c700c5f1",
       "telephone": "+33659207511",
@@ -64,7 +64,7 @@
       "isBlocked": false,
       "lastLogin": "2026-09-27T15:30:33.092Z",
       "createdAt": "2026-09-25T13:47:28.473Z",
-      "updatedAt": "2026-09-27T17:41:04.692Z"
+      "updatedAt": "2026-09-27T18:30:29.839Z"
     },
     {
       "id": "633c0313-c4ed-4890-a6f7-7e3dd4be6c27",
@@ -587,7 +587,7 @@
       "reference": "DOS-01",
       "name": "DOSSIER_CLIENT_TEST_2_25092026",
       "description": "smfavsfn",
-      "status": "BLOQUE",
+      "status": "CORBEILLE",
       "previousStatus": null,
       "priority": "NORMAL",
       "categorie": null,
@@ -596,7 +596,7 @@
       "traitantId": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
       "parentDossierId": null,
       "createdAt": "2026-09-25T14:02:34.654Z",
-      "updatedAt": "2026-09-27T16:05:27.617Z",
+      "updatedAt": "2026-09-27T18:11:18.927Z",
       "isSystem": false
     },
     {
@@ -606,7 +606,7 @@
       "reference": "DOS-02",
       "name": "Mission-Client_Test_2-25092026",
       "description": "Sous-dossier GED auto-généré pour la mission MSN-01",
-      "status": "NOUVEAU",
+      "status": "CORBEILLE",
       "previousStatus": null,
       "priority": "NORMAL",
       "categorie": null,
@@ -615,7 +615,7 @@
       "traitantId": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
       "parentDossierId": "65cd6386-f56d-465d-9aae-5e1c0bffedf0",
       "createdAt": "2026-09-25T14:03:04.497Z",
-      "updatedAt": "2026-09-27T14:21:52.092Z",
+      "updatedAt": "2026-09-27T18:11:18.945Z",
       "isSystem": true
     },
     {
@@ -626,7 +626,7 @@
       "name": "DOSSIER_TEST_RESPONSABLE_OPÉRATIONNEL_1_27092026",
       "description": " j hjuguy",
       "status": "BLOQUE",
-      "previousStatus": null,
+      "previousStatus": "CORBEILLE",
       "priority": "NORMAL",
       "categorie": null,
       "clientId": null,
@@ -634,7 +634,7 @@
       "traitantId": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
       "parentDossierId": null,
       "createdAt": "2026-09-27T04:12:08.464Z",
-      "updatedAt": "2026-09-27T16:02:09.880Z",
+      "updatedAt": "2026-09-27T18:11:46.960Z",
       "isSystem": false
     },
     {
@@ -644,7 +644,7 @@
       "reference": "DOS-04",
       "name": "Mission-Client_Test_2-27092026",
       "description": "Sous-dossier GED auto-généré pour la mission MSN-02",
-      "status": "NOUVEAU",
+      "status": "CORBEILLE",
       "previousStatus": null,
       "priority": "NORMAL",
       "categorie": null,
@@ -653,7 +653,7 @@
       "traitantId": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
       "parentDossierId": "65cd6386-f56d-465d-9aae-5e1c0bffedf0",
       "createdAt": "2026-09-27T04:20:28.883Z",
-      "updatedAt": "2026-09-27T14:21:52.092Z",
+      "updatedAt": "2026-09-27T18:11:18.955Z",
       "isSystem": true
     },
     {
@@ -720,8 +720,8 @@
       "reference": "DOS-08",
       "name": "DOSSIER_CLIENT_TEST_ALPHA_27092026",
       "description": "agrr",
-      "status": "BLOQUE",
-      "previousStatus": "EN_COURS",
+      "status": "CORBEILLE",
+      "previousStatus": "BLOQUE",
       "priority": "NORMAL",
       "categorie": null,
       "clientId": "fc475901-3d68-4b88-ad3b-bd750884c144",
@@ -729,7 +729,7 @@
       "traitantId": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
       "parentDossierId": null,
       "createdAt": "2026-09-27T16:18:36.888Z",
-      "updatedAt": "2026-09-27T16:20:17.803Z",
+      "updatedAt": "2026-09-27T18:19:12.729Z",
       "isSystem": false
     },
     {
@@ -739,7 +739,7 @@
       "reference": "DOS-09",
       "name": "Mission-ALPHA_CORP-27092026",
       "description": "Sous-dossier GED auto-généré pour la mission MSN-04",
-      "status": "NOUVEAU",
+      "status": "CORBEILLE",
       "previousStatus": null,
       "priority": "NORMAL",
       "categorie": null,
@@ -748,7 +748,7 @@
       "traitantId": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
       "parentDossierId": "b3a00d1c-77a6-4493-b507-bf4214d8d182",
       "createdAt": "2026-09-27T16:19:18.302Z",
-      "updatedAt": "2026-09-27T16:19:18.302Z",
+      "updatedAt": "2026-09-27T18:19:12.748Z",
       "isSystem": true
     }
   ],
@@ -762,12 +762,12 @@
       "createdById": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
       "description": "Objet: Consequatur Quae la\nConsignes: Libero aperiam magni",
       "echeance": "2027-10-20T00:00:00.000Z",
-      "status": "NOUVEAU",
+      "status": "CORBEILLE",
       "previousStatus": null,
       "attachment": null,
       "dossierMissionId": "65cd6386-f56d-465d-9aae-5e1c0bffedf0",
       "createdAt": "2026-09-25T14:03:04.470Z",
-      "updatedAt": "2026-09-27T13:45:43.286Z",
+      "updatedAt": "2026-09-27T18:11:18.935Z",
       "parentMissionId": null
     },
     {
@@ -779,12 +779,12 @@
       "createdById": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
       "description": "Ea quibusdam facere \n\nCupidatat repudianda",
       "echeance": "2026-09-28T00:00:00.000Z",
-      "status": "NOUVEAU",
+      "status": "CORBEILLE",
       "previousStatus": null,
       "attachment": null,
       "dossierMissionId": "65cd6386-f56d-465d-9aae-5e1c0bffedf0",
       "createdAt": "2026-09-27T04:20:28.872Z",
-      "updatedAt": "2026-09-27T13:45:43.286Z",
+      "updatedAt": "2026-09-27T18:11:18.935Z",
       "parentMissionId": null
     },
     {
@@ -813,12 +813,12 @@
       "createdById": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
       "description": "Quis labore dignissi\n\nLaudantium ad vero ",
       "echeance": "2014-02-01T00:00:00.000Z",
-      "status": "EN_COURS",
+      "status": "CORBEILLE",
       "previousStatus": "NOUVEAU",
       "attachment": null,
       "dossierMissionId": "b3a00d1c-77a6-4493-b507-bf4214d8d182",
       "createdAt": "2026-09-27T16:19:18.253Z",
-      "updatedAt": "2026-09-27T16:20:02.572Z",
+      "updatedAt": "2026-09-27T18:19:12.738Z",
       "parentMissionId": null
     }
   ],
@@ -832,14 +832,14 @@
       "createdById": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
       "description": "Objet: Sit commodi eum nih\nConsignes: Illo ut magni anim a",
       "echeance": "2027-09-01T00:00:00.000Z",
-      "status": "EN_COURS",
+      "status": "CORBEILLE",
       "previousStatus": "NOUVEAU",
       "attachment": null,
       "adminFeedback": null,
       "managerFeedback": null,
       "dossierTacheId": "65cd6386-f56d-465d-9aae-5e1c0bffedf0",
       "createdAt": "2026-09-25T14:03:47.053Z",
-      "updatedAt": "2026-09-27T04:19:33.723Z"
+      "updatedAt": "2026-09-27T18:11:18.938Z"
     },
     {
       "id": "8125c3c4-16c4-4259-ac1c-bac0155a1591",
@@ -850,14 +850,14 @@
       "createdById": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
       "description": "Objet: Ipsam voluptatum dui\n\nConsignes: Repellendus Quia vo",
       "echeance": "1979-05-27T00:00:00.000Z",
-      "status": "EN_COURS",
+      "status": "CORBEILLE",
       "previousStatus": "NOUVEAU",
       "attachment": null,
       "adminFeedback": null,
       "managerFeedback": null,
       "dossierTacheId": null,
       "createdAt": "2026-09-27T04:21:07.078Z",
-      "updatedAt": "2026-09-27T04:21:20.274Z"
+      "updatedAt": "2026-09-27T18:11:18.938Z"
     },
     {
       "id": "d051eb71-f651-404e-a25e-38968101fd90",
@@ -886,14 +886,14 @@
       "createdById": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
       "description": "Objet: Aut aliquam possimus\n\nConsignes: Quia aut omnis ea ve",
       "echeance": "2016-01-13T00:00:00.000Z",
-      "status": "EN_COURS",
-      "previousStatus": "NOUVEAU",
+      "status": "CORBEILLE",
+      "previousStatus": "EN_COURS",
       "attachment": null,
       "adminFeedback": null,
       "managerFeedback": null,
       "dossierTacheId": "b3a00d1c-77a6-4493-b507-bf4214d8d182",
       "createdAt": "2026-09-27T16:19:46.635Z",
-      "updatedAt": "2026-09-27T16:20:02.553Z"
+      "updatedAt": "2026-09-27T18:19:12.743Z"
     }
   ],
   "documents": [],
@@ -1359,6 +1359,72 @@
       "dossierId": "b3a00d1c-77a6-4493-b507-bf4214d8d182",
       "formulaireId": null,
       "createdAt": "2026-09-27T16:20:17.823Z"
+    },
+    {
+      "id": "2f0cc22a-7eb2-498a-97ae-a254dfb6a8aa",
+      "userId": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
+      "action": "MODIFICATION_DOSSIER",
+      "targetId": "b3a00d1c-77a6-4493-b507-bf4214d8d182",
+      "targetType": "DOSSIER",
+      "details": "Dossier modifié: DOSSIER_CLIENT_TEST_ALPHA_27092026",
+      "dossierId": "b3a00d1c-77a6-4493-b507-bf4214d8d182",
+      "formulaireId": null,
+      "createdAt": "2026-09-27T17:54:51.723Z"
+    },
+    {
+      "id": "cac4d7ce-97a5-48db-8791-bc1986bfffeb",
+      "userId": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
+      "action": "MODIFICATION_TACHE",
+      "targetId": "c7e89007-181a-44dd-b9bc-f2c4edd3845e",
+      "targetType": "TACHE",
+      "details": "Tâche modifiée (Statut: EN_RELECTURE)",
+      "dossierId": "b3a00d1c-77a6-4493-b507-bf4214d8d182",
+      "formulaireId": null,
+      "createdAt": "2026-09-27T17:55:22.314Z"
+    },
+    {
+      "id": "7c87805c-8440-4ce9-a654-1b1aa62de720",
+      "userId": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
+      "action": "SUPPRESSION_DOSSIER",
+      "targetId": "a02ab22b-04ec-4b80-8d8e-6ca126c45ed6",
+      "targetType": "DOSSIER",
+      "details": "Dossier mis en corbeille: DOSSIER_TEST_RESPONSABLE_OPÉRATIONNEL_1_27092026",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-27T18:11:05.409Z"
+    },
+    {
+      "id": "6b4b1710-089b-4d88-a88a-db04552f7bfc",
+      "userId": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
+      "action": "SUPPRESSION_DOSSIER",
+      "targetId": "65cd6386-f56d-465d-9aae-5e1c0bffedf0",
+      "targetType": "DOSSIER",
+      "details": "Dossier mis en corbeille: DOSSIER_CLIENT_TEST_2_25092026",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-27T18:11:18.964Z"
+    },
+    {
+      "id": "fdcea9d8-944f-491f-b51a-5ebae12d023a",
+      "userId": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
+      "action": "MODIFICATION_DOSSIER",
+      "targetId": "a02ab22b-04ec-4b80-8d8e-6ca126c45ed6",
+      "targetType": "DOSSIER",
+      "details": "Dossier modifié: DOSSIER_TEST_RESPONSABLE_OPÉRATIONNEL_1_27092026",
+      "dossierId": "a02ab22b-04ec-4b80-8d8e-6ca126c45ed6",
+      "formulaireId": null,
+      "createdAt": "2026-09-27T18:11:46.969Z"
+    },
+    {
+      "id": "4330003b-3ed6-48c9-a265-b02882579257",
+      "userId": "c0f2f22c-361e-471a-a82b-9745281fc4fa",
+      "action": "SUPPRESSION_DOSSIER",
+      "targetId": "b3a00d1c-77a6-4493-b507-bf4214d8d182",
+      "targetType": "DOSSIER",
+      "details": "Dossier mis en corbeille: DOSSIER_CLIENT_TEST_ALPHA_27092026",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-27T18:19:12.755Z"
     }
   ],
   "messagePersonnels": [

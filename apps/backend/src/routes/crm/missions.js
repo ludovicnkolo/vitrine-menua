@@ -217,13 +217,15 @@ router.get("/tasks", async (req, res) => {
     const isSuperAdm = req.user.role === "Super-administrateur";
     if (status && status !== "all") {
       where.AND.push({ status: status });
+    } else {
+      where.AND.push({ status: { not: "CORBEILLE" } });
     }
 
     if (!isSuperAdm) {
       if (status === "BLOQUE") {
         where.AND.push({ id: "unauthorized_so_return_empty" });
       } else if (!status || status === "all") {
-        where.AND.push({ status: { not: "BLOQUE" } });
+        where.AND.push({ status: { notIn: ["BLOQUE", "CORBEILLE"] } });
       }
       
       // Le dossier parent ne doit pas être bloqué
@@ -339,6 +341,17 @@ router.post("/tasks", async (req, res) => {
     const creatorId = await resolveCreatorId(req);
     const reference = await generateReference("mission", "MSN");
 
+    let parsedEcheance = null;
+    if (echeance) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      parsedEcheance = new Date(echeance);
+      parsedEcheance.setHours(0, 0, 0, 0);
+      if (parsedEcheance < today) {
+        return res.status(400).json({ error: "La date d'échéance ne peut pas être antérieure à aujourd'hui." });
+      }
+    }
+
     const task = await prisma.mission.create({
       data: {
         reference,
@@ -348,7 +361,7 @@ router.post("/tasks", async (req, res) => {
         relecteurId,
         createdById: creatorId,
         status: "NOUVEAU",
-        echeance: echeance ? new Date(echeance) : null,
+        echeance: parsedEcheance,
         attachment,
         ...(parentMissionId && { parentMissionId }),
         ...(dossierMissionId && { dossierMissionId }),
@@ -577,8 +590,27 @@ router.patch("/tasks/:id", async (req, res) => {
     const dataToUpdate = {};
     if (description !== undefined) dataToUpdate.description = description;
     if (attachment !== undefined) dataToUpdate.attachment = attachment;
-    if (echeance !== undefined)
-      dataToUpdate.echeance = echeance ? new Date(echeance) : null;
+    
+    if (echeance !== undefined) {
+      if (echeance) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const parsedEcheance = new Date(echeance);
+        parsedEcheance.setHours(0, 0, 0, 0);
+
+        const currentEcheance = currentMissionForAuth.echeance ? new Date(currentMissionForAuth.echeance) : null;
+        if (currentEcheance) currentEcheance.setHours(0, 0, 0, 0);
+
+        if (!currentEcheance || parsedEcheance.getTime() !== currentEcheance.getTime()) {
+          if (parsedEcheance < today) {
+            return res.status(400).json({ error: "La date d'échéance ne peut pas être antérieure à aujourd'hui." });
+          }
+        }
+        dataToUpdate.echeance = parsedEcheance;
+      } else {
+        dataToUpdate.echeance = null;
+      }
+    }
 
     // Ré-attribution : réservée aux Super-Admin, Admin Tech, Admin et Responsable Op.
     if (
@@ -813,8 +845,14 @@ router.delete("/tasks/:id", async (req, res) => {
         });
     }
 
-    const mission = await prisma.mission.delete({
+    const mission = await prisma.mission.update({
       where: { id: req.params.id },
+      data: { status: "CORBEILLE" },
+    });
+
+    await prisma.tache.updateMany({
+      where: { missionId: req.params.id, status: { not: "CORBEILLE" } },
+      data: { status: "CORBEILLE" },
     });
 
     await logAudit(

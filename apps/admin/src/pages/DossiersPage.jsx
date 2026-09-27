@@ -618,12 +618,10 @@ const DossiersPage = () => {
   };
 
   const handleDeleteDossier = async (dossier) => {
-    if (
-      !window.confirm(
-        `Supprimer le dossier "${dossier.name}" ? Cette action est irréversible.`,
-      )
-    )
+    const message = `Êtes-vous sûr de vouloir supprimer le dossier "${dossier.name}" ?\n\nATTENTION : Cette action supprimera également, de façon hiérarchique, toutes les missions, les tâches et l'arborescence GED (fichiers) associées à ce dossier vers la corbeille.`;
+    if (!(await window.customConfirm(message, "Avertissement de suppression en cascade"))) {
       return;
+    }
     try {
       const token = sessionStorage.getItem("adminToken");
       const res = await fetch(

@@ -228,13 +228,16 @@ router.get("/dossiers", async (req, res) => {
     // ── Filtre BLOQUÉ ─────────────────────────────────────────────────────────
     if (status && status !== "all") {
       where.AND.push({ status: status });
+    } else {
+      // Si "all" ou pas de statut, on exclut au moins la CORBEILLE
+      where.AND.push({ status: { not: "CORBEILLE" } });
     }
 
     if (!canSeeBlocked) {
       if (status === "BLOQUE") {
         where.AND.push({ id: "unauthorized_so_return_empty" });
       } else if (!status || status === "all") {
-        where.AND.push({ status: { not: "BLOQUE" } });
+        where.AND.push({ status: { notIn: ["BLOQUE", "CORBEILLE"] } });
       }
     }
 
@@ -779,8 +782,27 @@ router.delete("/dossiers/:id", async (req, res) => {
       data: { status: "CORBEILLE" },
     });
 
-    // Mettre en corbeille les sous-dossiers récursivement
-    const markSubFoldersAsDeleted = async (parentId) => {
+    // Mettre en corbeille les sous-dossiers récursivement, et leurs missions/tâches
+    const markHierarchyAsDeleted = async (parentId) => {
+      // 1. Mettre en corbeille les missions du dossier
+      await prisma.mission.updateMany({
+        where: { dossierId: parentId, status: { not: "CORBEILLE" } },
+        data: { status: "CORBEILLE" },
+      });
+
+      // 2. Mettre en corbeille les tâches rattachées au dossier ou à ses missions
+      await prisma.tache.updateMany({
+        where: {
+          OR: [
+            { dossierTacheId: parentId },
+            { mission: { dossierId: parentId } }
+          ],
+          status: { not: "CORBEILLE" }
+        },
+        data: { status: "CORBEILLE" },
+      });
+
+      // 3. Récursion sur les sous-dossiers
       const children = await prisma.dossier.findMany({
         where: { parentDossierId: parentId },
         select: { id: true },
@@ -790,10 +812,10 @@ router.delete("/dossiers/:id", async (req, res) => {
           where: { id: child.id },
           data: { status: "CORBEILLE" },
         });
-        await markSubFoldersAsDeleted(child.id);
+        await markHierarchyAsDeleted(child.id);
       }
     };
-    await markSubFoldersAsDeleted(req.params.id);
+    await markHierarchyAsDeleted(req.params.id);
 
     await logAudit(
       req.user?.id,

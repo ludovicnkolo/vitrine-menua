@@ -467,18 +467,19 @@ export default function DocumentsPage() {
     fetchTrash();
   };
 
-  const handleRestoreTrash = async (id) => {
+  const handleRestoreTrash = async (item) => {
     try {
       const token = sessionStorage.getItem("adminToken");
+      const type = item.type || "document";
       const res = await fetch(
-        getSafeApiUrl(`/api/crm/documents/${id}/restore`),
+        getSafeApiUrl(`/api/crm/trash/restore/${type}/${item.id}`),
         {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
         },
       );
       if (res.ok) {
-        window.customAlert("Document restauré avec succès.");
+        window.customAlert(`${item.itemType || "Élément"} restauré avec succès.`);
         fetchTrash();
         fetchDossiers(); // Refresh explorer
       }
@@ -487,17 +488,18 @@ export default function DocumentsPage() {
     }
   };
 
-  const handlePurgeTrash = async (id) => {
+  const handlePurgeTrash = async (item) => {
     if (
       !(await window.customConfirm(
-        "Voulez-vous PURGER ce document ? Il sera définitivement supprimé d'OVH et de la base de données. Action irréversible.",
+        `Voulez-vous PURGER ce(tte) ${item.itemType || "document"} ? Il sera définitivement supprimé. Action irréversible.`,
         "Purge définitive",
       ))
     )
       return;
     try {
       const token = sessionStorage.getItem("adminToken");
-      const res = await fetch(getSafeApiUrl(`/api/crm/documents/${id}/purge`), {
+      const type = item.type || "document";
+      const res = await fetch(getSafeApiUrl(`/api/crm/trash/purge/${type}/${item.id}`), {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -1871,7 +1873,7 @@ export default function DocumentsPage() {
                           color: "var(--text-muted)",
                         }}
                       >
-                        Dossier
+                        Cible
                       </th>
                       <th
                         style={{
@@ -1922,10 +1924,10 @@ export default function DocumentsPage() {
                             whiteSpace: "nowrap",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
+                            textTransform: "capitalize",
                           }}
-                          title={item.dossier?.name}
                         >
-                          {item.dossier?.name || "-"}
+                          {item.itemType === "Document" ? "GED" : item.itemType}
                         </td>
                         <td
                           style={{

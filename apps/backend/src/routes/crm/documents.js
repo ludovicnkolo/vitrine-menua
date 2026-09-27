@@ -236,7 +236,40 @@ router.get("/documents/trash/list", async (req, res) => {
       },
       orderBy: { createdAt: "desc" },
     });
-    res.json(docs);
+
+    const dossiersRaw = await prisma.dossier.findMany({
+      where: { status: "CORBEILLE" },
+      include: { parentDossier: { select: { status: true } } },
+      orderBy: { updatedAt: "desc" },
+    });
+    const dossiers = dossiersRaw.filter(d => !d.parentDossier || d.parentDossier.status !== "CORBEILLE");
+
+    const missionsRaw = await prisma.mission.findMany({
+      where: { status: "CORBEILLE" },
+      include: { dossier: { select: { name: true, status: true } } },
+      orderBy: { updatedAt: "desc" },
+    });
+    const missions = missionsRaw.filter(m => !m.dossier || m.dossier.status !== "CORBEILLE");
+
+    const tachesRaw = await prisma.tache.findMany({
+      where: { status: "CORBEILLE" },
+      include: { mission: { select: { status: true, dossier: { select: { name: true } } } }, dossierTache: { select: { name: true, status: true } } },
+      orderBy: { updatedAt: "desc" },
+    });
+    const taches = tachesRaw.filter(t => {
+      if (t.mission && t.mission.status === "CORBEILLE") return false;
+      if (t.dossierTache && t.dossierTache.status === "CORBEILLE") return false;
+      return true;
+    });
+
+    const trashItems = [
+      ...docs.map(d => ({ ...d, type: "document", itemType: "Document" })),
+      ...dossiers.map(d => ({ ...d, type: "dossier", itemType: "Dossier", createdAt: d.updatedAt })),
+      ...missions.map(m => ({ ...m, type: "mission", itemType: "Mission", name: m.subject || m.description || "Mission sans nom", dossier: { name: m.dossier?.name }, createdAt: m.updatedAt })),
+      ...taches.map(t => ({ ...t, type: "tache", itemType: "Tâche", name: t.description || t.reference || "Tâche sans nom", dossier: { name: t.dossierTache?.name || t.mission?.dossier?.name }, createdAt: t.updatedAt }))
+    ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.json(trashItems);
   } catch (error) {
     console.error(error);
     res
@@ -415,6 +448,59 @@ router.patch("/documents/:id", async (req, res) => {
   }
 });
 
-// --- MESSAGES (FORMULAIRES) ---
+// ─── UNIFIED TRASH RESTORE / PURGE ──────────────────────────────────────────
+
+router.post("/trash/restore/:type/:id", async (req, res) => {
+  try {
+    const { type, id } = req.params;
+    
+    if (type === "document") {
+      await prisma.document.update({ where: { id }, data: { isDeleted: false } });
+    } else if (type === "dossier") {
+      const restoreHierarchy = async (dossierId) => {
+        await prisma.dossier.update({ where: { id: dossierId }, data: { status: "NOUVEAU" } });
+        await prisma.mission.updateMany({ where: { dossierId, status: "CORBEILLE" }, data: { status: "NOUVEAU" } });
+        await prisma.tache.updateMany({ where: { OR: [{ dossierTacheId: dossierId }, { mission: { dossierId } }], status: "CORBEILLE" }, data: { status: "NOUVEAU" } });
+        
+        const children = await prisma.dossier.findMany({ where: { parentDossierId: dossierId, status: "CORBEILLE" }, select: { id: true } });
+        for (const child of children) {
+          await restoreHierarchy(child.id);
+        }
+      };
+      await restoreHierarchy(id);
+    } else if (type === "mission") {
+      await prisma.mission.update({ where: { id }, data: { status: "NOUVEAU" } });
+      await prisma.tache.updateMany({ where: { missionId: id, status: "CORBEILLE" }, data: { status: "NOUVEAU" } });
+    } else if (type === "tache") {
+      await prisma.tache.update({ where: { id }, data: { status: "NOUVEAU" } });
+    }
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erreur lors de la restauration." });
+  }
+});
+
+router.delete("/trash/purge/:type/:id", async (req, res) => {
+  try {
+    const { type, id } = req.params;
+    
+    if (type === "document") {
+      await prisma.document.delete({ where: { id } });
+    } else if (type === "dossier") {
+      await prisma.dossier.delete({ where: { id } }); // Prisma cascade handles the rest
+    } else if (type === "mission") {
+      await prisma.mission.delete({ where: { id } });
+    } else if (type === "tache") {
+      await prisma.tache.delete({ where: { id } });
+    }
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erreur lors de la purge." });
+  }
+});
 
 module.exports = router;

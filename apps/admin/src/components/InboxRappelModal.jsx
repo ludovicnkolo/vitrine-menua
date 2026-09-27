@@ -77,6 +77,7 @@ const InboxRappelModal = ({ rappelModal, setRappelModal, handleUpdateMultiple })
             </label>
             <input
               type="datetime-local"
+              min={new Date().toISOString().slice(0, 16)}
               value={rappelDate}
               onChange={(e) => setRappelDate(e.target.value)}
               style={{

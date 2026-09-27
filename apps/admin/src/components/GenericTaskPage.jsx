@@ -178,8 +178,10 @@ const TaskDropdown = ({
           setOpenMenuId(null);
           if (
             await window.customConfirm(
-              "Voulez-vous vraiment supprimer cette mission ?",
-              "Supprimer la mission",
+              mode === "MISSION" 
+                ? "Êtes-vous sûr de vouloir supprimer cette mission ?\n\nATTENTION : Cette action supprimera également, de façon hiérarchique, toutes les tâches associées vers la corbeille."
+                : "Êtes-vous sûr de vouloir supprimer cette tâche ?\n\nElle sera déplacée vers la corbeille.",
+              mode === "MISSION" ? "Avertissement de suppression de la mission" : "Supprimer la tâche"
             )
           ) {
             try {
@@ -1326,6 +1328,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             <input
               id="edit-task-echeance"
               type="date"
+              min={new Date().toISOString().split("T")[0]}
               value={editFormData.echeance}
               onChange={(e) =>
                 setEditFormData({ ...editFormData, echeance: e.target.value })
@@ -2421,8 +2424,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                           onClick={async () => {
                             if (
                               await window.customConfirm(
-                                "Voulez-vous vraiment supprimer cette mission ?",
-                                "Supprimer la mission",
+                                mode === "MISSION" 
+                                  ? "Êtes-vous sûr de vouloir supprimer cette mission ?\n\nATTENTION : Cette action supprimera également, de façon hiérarchique, toutes les tâches associées vers la corbeille."
+                                  : "Êtes-vous sûr de vouloir supprimer cette tâche ?\n\nElle sera déplacée vers la corbeille.",
+                                mode === "MISSION" ? "Avertissement de suppression de la mission" : "Supprimer la tâche"
                               )
                             ) {
                               try {

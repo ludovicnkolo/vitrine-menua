@@ -218,6 +218,8 @@ router.get("/taches", async (req, res) => {
 
     if (status && status !== "all") {
       where.AND.push({ status: status });
+    } else {
+      where.AND.push({ status: { not: "CORBEILLE" } });
     }
 
     // Filtrage BLOQUE
@@ -225,7 +227,7 @@ router.get("/taches", async (req, res) => {
       if (status === "BLOQUE") {
         where.AND.push({ id: "unauthorized_so_return_empty" });
       } else if (!status || status === "all") {
-        where.AND.push({ status: { not: "BLOQUE" } });
+        where.AND.push({ status: { notIn: ["BLOQUE", "CORBEILLE"] } });
       }
       
       // La mission et le dossier parents ne doivent pas être bloqués
@@ -344,6 +346,17 @@ router.post("/taches", async (req, res) => {
     const creatorId = await resolveCreatorId(req);
     const reference = await generateReference("tache", "TCH");
 
+    let parsedEcheance = null;
+    if (echeance) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      parsedEcheance = new Date(echeance);
+      parsedEcheance.setHours(0, 0, 0, 0);
+      if (parsedEcheance < today) {
+        return res.status(400).json({ error: "La date d'échéance ne peut pas être antérieure à aujourd'hui." });
+      }
+    }
+
     const tacheData = {
       reference,
       description,
@@ -352,7 +365,7 @@ router.post("/taches", async (req, res) => {
       relecteurId,
       createdById: creatorId,
       status: "NOUVEAU",
-      echeance: echeance ? new Date(echeance) : null,
+      echeance: parsedEcheance,
       attachment,
     };
 
@@ -567,7 +580,24 @@ router.patch("/taches/:id", async (req, res) => {
     // Build the data payload
     const dataToUpdate = { ...rest };
     if (echeance !== undefined) {
-      dataToUpdate.echeance = echeance ? new Date(echeance) : null;
+      if (echeance) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const parsedEcheance = new Date(echeance);
+        parsedEcheance.setHours(0, 0, 0, 0);
+
+        const currentEcheance = currentTache.echeance ? new Date(currentTache.echeance) : null;
+        if (currentEcheance) currentEcheance.setHours(0, 0, 0, 0);
+
+        if (!currentEcheance || parsedEcheance.getTime() !== currentEcheance.getTime()) {
+          if (parsedEcheance < today) {
+            return res.status(400).json({ error: "La date d'échéance ne peut pas être antérieure à aujourd'hui." });
+          }
+        }
+        dataToUpdate.echeance = parsedEcheance;
+      } else {
+        dataToUpdate.echeance = null;
+      }
     }
     if (
       assignedToId !== undefined &&
@@ -713,8 +743,9 @@ router.delete("/taches/:id", async (req, res) => {
         });
     }
 
-    const tache = await prisma.tache.delete({
+    const tache = await prisma.tache.update({
       where: { id: req.params.id },
+      data: { status: "CORBEILLE" },
     });
 
     await logAudit(

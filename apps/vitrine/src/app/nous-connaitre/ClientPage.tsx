@@ -87,7 +87,7 @@ export default function NousConnaitrePage() {
                 <p>
                   {formatBrand(t(
                     "MENUA CONSULTING est un cabinet spécialisé dans l’externalisation opérationnelle des fonctions back et middle office.",
-                    "MENUA CONSULTING specialises in the operational outsourcing of back and middle-office functions."
+                    "MENUA CONSULTING specialises in the operational outsourcing of back and middle office functions."
                   ))}
                 </p>
                 <p>
@@ -142,7 +142,7 @@ export default function NousConnaitrePage() {
                 <p>
                   {t(
                     "Cette approche permet aux équipes internes de se concentrer sur les décisions stratégiques, les validations réglementaires et la relation client, tout en sécurisant le traitement opérationnel des activités back et middle office.",
-                    "This enables internal teams to focus on strategic decisions, regulatory approvals and client relationships while ensuring dependable delivery across back and middle-office activities."
+                    "This enables internal teams to focus on strategic decisions, regulatory approvals and client relationships while ensuring dependable delivery across back and middle office activities."
                   )}
                 </p>
               </div>
@@ -333,7 +333,7 @@ export default function NousConnaitrePage() {
                 <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
                   {formatBrand(t(
                     "Elle a fondé MENUA CONSULTING avec l’objectif de proposer aux entreprises un appui opérationnel fiable, structuré et flexible, capable de renforcer l’exécution des fonctions back et middle office tout en respectant les procédures internes de chaque client.",
-                    "She founded MENUA CONSULTING to provide businesses with reliable, structured and flexible operational support that strengthens the delivery of back and middle-office functions while respecting each client’s internal procedures."
+                    "She founded MENUA CONSULTING to provide businesses with reliable, structured and flexible operational support that strengthens the delivery of back and middle office functions while respecting each client’s internal procedures."
                   ))}
                 </p>
                 <p className="text-[#e8e1d7] font-bold leading-relaxed">
@@ -355,12 +355,12 @@ export default function NousConnaitrePage() {
           <div className="w-full lg:w-7/12 bg-[#e8e1d7] px-6 py-10 lg:pt-16 lg:pb-16 lg:pl-20 lg:pr-32 flex flex-col justify-center shadow-xl">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
-              {t("Formations, certifications et expertises", "Training, certifications and expertise")}
+              {t("Formations, certifications et expertises", "Qualifications, certifications and expertise")}
             </h2>
 
             {/* Mobile Image */}
             <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-12 rounded-sm shadow-md overflow-hidden">
-              <img src="/img/connaitre-certifications.webp" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
+              <img src="/img/besoins-meeting.webp" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
             </div>
 
             <div className="space-y-4 text-[#141824] text-[1.05rem] font-light leading-relaxed">
@@ -391,7 +391,7 @@ export default function NousConnaitrePage() {
                 </p>
               </div>
               <div className="mt-12 pt-4 border-t border-[#141824]/10">
-                <p className="font-bold text-[#141824] mb-6">{t("La dirigeante dispose notamment :", "The executive notably holds:")}</p>
+                <p className="font-bold text-[#141824] mb-6">{t("La dirigeante dispose notamment :", "The President holds the following qualifications and areas of expertise:")}</p>
                 <div className="space-y-4 text-[0.95rem] text-[#141824]/80">
                   <div className="flex items-start gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0 mt-[0.45rem]"></div><span className="font-semibold">{t("Certification AMF · Contrôle interne et risques · Finance d'entreprise · Back et middle office", "AMF certification · Internal control and risk · Corporate finance · Back and middle office")}</span></div>
                   <div className="flex items-start gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0 mt-[0.45rem]"></div><span className="font-semibold">{t("Conformité financière · Gestion des risques · Analyse financière · KYC / AML / reporting", "Financial compliance · Risk management · Financial analysis · KYC / AML / CTF and reporting")}</span></div>
@@ -416,7 +416,7 @@ export default function NousConnaitrePage() {
 
           {/* Image (Right Desktop only) */}
           <div className="hidden lg:block w-full lg:w-5/12 h-[300px] lg:h-[450px] shadow-xl">
-            <img src="/img/connaitre-certifications.webp" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
+            <img src="/img/besoins-meeting.webp" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
           </div>
         </div>
       </section>

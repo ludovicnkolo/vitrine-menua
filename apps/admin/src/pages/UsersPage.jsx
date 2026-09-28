@@ -18,6 +18,32 @@ import UserFormFields from "../components/UserFormFields";
 import ClientFormFields from "../components/ClientFormFields";
 import { getStatusBadge, getRoleBadge } from "../utils/helpers";
 
+const AVAILABLE_PERMISSIONS = {
+  MESSAGES_VIEW: "Consulter les messages",
+  MESSAGES_PROCESS: "Traiter les messages",
+  DOSSIERS_MANAGE: "Gérer les dossiers",
+  TACHES_MANAGE: "Créer et gérer les tâches",
+  TACHES_VIEW_ALL: "Consulter toutes les tâches",
+  TACHES_VALIDATE: "Valider les tâches",
+  TACHES_VIEW_ASSIGNED: "Voir ses tâches assignées",
+  TACHES_EDIT_ASSIGNED: "Modifier ses tâches assignées",
+  CLIENTS_MANAGE: "Gérer les clients",
+  USERS_MANAGE: "Gérer les utilisateurs",
+  ROLES_MANAGE: "Gérer les rôles",
+};
+
+const formatPermissions = (perms) => {
+  if (!perms) return "Aucune permission";
+  try {
+    let parsed = typeof perms === "string" ? JSON.parse(perms) : perms;
+    if (!Array.isArray(parsed)) return "Aucune permission";
+    if (parsed.length === 0) return "Aucune permission";
+    return parsed.map((p) => AVAILABLE_PERMISSIONS[p] || p).join(", ");
+  } catch (e) {
+    return perms;
+  }
+};
+
 const UsersPage = ({ forceTab }) => {
   const [tab, setTab] = useState(forceTab || "interne");
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -244,7 +270,7 @@ const UsersPage = ({ forceTab }) => {
   const handleDeleteClient = async (id) => {
     if (
       !(await window.customConfirm(
-        "Voulez-vous vraiment supprimer ce membre externe ?",
+        "Voulez-vous vraiment supprimer ce client ?",
         "Suppression",
       ))
     )
@@ -361,8 +387,15 @@ const UsersPage = ({ forceTab }) => {
           onClick={() => {
             setOpenMenuId(null);
             if (userObj) {
-              if (isExternal) setEditExternal(userObj);
-              else setEditUser(userObj);
+              if (isExternal) {
+                setEditExternal({
+                  ...userObj,
+                  raisonSociale: userObj.entreprise?.raisonSociale || "",
+                  siret: userObj.entreprise?.siret || "",
+                  emailEntreprise: userObj.entreprise?.emailEntreprise || "",
+                  telephoneEntreprise: userObj.entreprise?.telephoneEntreprise || ""
+                });
+              } else setEditUser(userObj);
             }
           }}
         >
@@ -1039,7 +1072,7 @@ const UsersPage = ({ forceTab }) => {
                     color: "var(--text-main)",
                   }}
                 >
-                  {consultUser.role?.permissions || "Aucune permission"}
+                  {formatPermissions(consultUser.role?.permissions)}
                 </div>
               </div>
 
@@ -1094,7 +1127,7 @@ const UsersPage = ({ forceTab }) => {
                       color: "var(--text-muted)",
                     }}
                   >
-                    Formation
+                    Expérience clé
                   </label>
                   <div
                     style={{
@@ -1141,6 +1174,41 @@ const UsersPage = ({ forceTab }) => {
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr",
                   gap: "1rem",
+                  marginTop: "1rem",
+                }}
+              >
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "0.25rem",
+                      fontSize: "0.875rem",
+                      fontWeight: 500,
+                      color: "var(--text-muted)",
+                    }}
+                  >
+                    Langues
+                  </label>
+                  <div
+                    style={{
+                      width: "100%",
+                      padding: "0.5rem",
+                      background: "#F8FAFC",
+                      borderRadius: "4px",
+                      border: "1px solid var(--border)",
+                      minHeight: "38px",
+                    }}
+                  >
+                    {consultUser.langues || "Non renseigné"}
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "1rem",
                 }}
               >
                 <div>
@@ -1167,7 +1235,7 @@ const UsersPage = ({ forceTab }) => {
                       color: "#48BB78",
                     }}
                   >
-                    {consultUser.missionsTerminees || 12}
+                    {consultUser.missionsTerminees ?? 0}
                   </div>
                 </div>
                 <div>
@@ -1194,7 +1262,7 @@ const UsersPage = ({ forceTab }) => {
                       color: "#D97706",
                     }}
                   >
-                    {consultUser.missionsEnCours || 3}
+                    {consultUser.missionsEnCours ?? 0}
                   </div>
                 </div>
               </div>
@@ -1539,11 +1607,11 @@ const UsersPage = ({ forceTab }) => {
               <table>
                 <thead>
                   <tr>
-                    <th style={{ width: "15%" }}>Nom</th>
-                    <th style={{ width: "20%" }}>Email</th>
+                    <th style={{ width: "18%" }}>Société / Nom</th>
+                    <th style={{ width: "18%" }}>Email</th>
                     <th style={{ width: "10%" }}>Type</th>
                     <th style={{ width: "8%" }}>État</th>
-                    <th style={{ width: "22%" }}>Activité</th>
+                    <th style={{ width: "21%" }}>Activité</th>
                     <th style={{ width: "17%" }}>Date de création</th>
                     <th style={{ width: "8%" }}>Actions</th>
                   </tr>
@@ -1552,7 +1620,14 @@ const UsersPage = ({ forceTab }) => {
                   {clients.map((c) => (
                     <tr key={c.id}>
                       <td>
-                        <strong className="truncate-name">{c.name}</strong>
+                        <strong className="truncate-name">
+                          {(c.type === "Société" || c.type === "SOCIETE") ? c.entreprise?.raisonSociale || "N/A" : c.name}
+                        </strong>
+                        {(c.type === "Société" || c.type === "SOCIETE") && (
+                          <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "2px" }}>
+                            Contact : {c.name}
+                          </div>
+                        )}
                       </td>
                       <td>
                         <div
@@ -1591,8 +1666,8 @@ const UsersPage = ({ forceTab }) => {
                                   : "#7E22CE",
                           }}
                         >
-                          {c.type === "SOCIETE"
-                            ? "Entreprise"
+                          {c.type === "SOCIETE" || c.type === "Société"
+                            ? "Société"
                             : c.type === "PARTICULIER"
                               ? "Particulier"
                               : c.type === "ANONYME"
@@ -1619,9 +1694,7 @@ const UsersPage = ({ forceTab }) => {
                       </td>
                       <td>
                         <span style={{ color: "var(--text-muted)" }}>
-                          {c.entreprise?.raisonSociale ||
-                            c.secteurActivite ||
-                            "N/A"}
+                          {c.secteurActivite || "N/A"}
                         </span>
                       </td>
                       <td>

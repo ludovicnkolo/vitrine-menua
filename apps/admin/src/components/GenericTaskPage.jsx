@@ -29,6 +29,21 @@ import FeedbackThread from "../components/FeedbackThread";
 import FeedbackModal from "../components/FeedbackModal";
 import GedExplorer from "../components/GedExplorer";
 
+const TACHE_STATUS_LABELS = {
+  NOUVEAU: "Nouveau",
+  EN_COURS: "En cours",
+  EN_RELECTURE: "En relecture",
+  EN_APPROBATION: "En approbation",
+  APPROUVEE: "Approuvée",
+  A_CORRIGER: "À corriger",
+  BLOQUE: "Bloqué",
+  EN_ATTENTE: "En attente",
+  TERMINE: "Terminé",
+  CORBEILLE: "Corbeille",
+  CLOTURE: "Clôturé",
+  LIVRE: "Livré"
+};
+
 const getSubjectFromTask = (desc) => {
   if (!desc) return "Sans objet";
   const match = desc.match(/Objet: (.*)/);
@@ -552,8 +567,6 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         case "EN_REVUE":
         case "A_CORRIGER":
         case "TERMINE":
-        case "TERMINE":
-        case "ANNULEE":
         case "ANNULEE":
           break;
         default:
@@ -2565,7 +2578,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               }}
             >
               <span style={{ color: "var(--text-muted)", fontWeight: 500 }}>Statut</span>
-              <span style={{ fontWeight: 600 }}>{ALL_LABELS[confirmingStatus] || confirmingStatus}</span>
+              <span style={{ fontWeight: 600 }}>{TACHE_STATUS_LABELS[confirmingStatus] || confirmingStatus}</span>
             </div>
             <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
               <button

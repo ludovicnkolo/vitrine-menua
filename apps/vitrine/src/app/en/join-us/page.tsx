@@ -18,6 +18,11 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://menuaconsulting.com/en/join-us',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Join Us | Menua Consulting",
+    description: "Build your career with Menua Consulting in specialized back and middle office operational functions.",
+  },
 };
 
 export default function Page() {

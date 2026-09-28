@@ -18,6 +18,11 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://menuaconsulting.com/en/news',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: "News & Insights | Menua Consulting",
+    description: "Analyses, benchmarks and publications dedicated to operational challenges.",
+  },
 };
 
 export default function Page() {

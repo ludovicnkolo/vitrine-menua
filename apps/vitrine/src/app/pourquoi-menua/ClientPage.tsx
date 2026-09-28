@@ -97,7 +97,7 @@ export default function PourquoiMenuaPage() {
               <p className="text-[#6e7891] text-[1rem] font-light leading-relaxed mb-4">
                 {formatBrand(t(
                   "Dans des environnements où les délais, la qualité des données, la conformité documentaire et la continuité de service sont essentiels, MENUA CONSULTING apporte un appui structuré aux équipes internes afin de sécuriser le traitement des fonctions back et middle office.",
-                  "In environments where deadlines, data quality, documentary compliance and service continuity are critical, MENUA CONSULTING provides structured support to internal teams to safeguard the processing of back and middle-office functions."
+                  "In environments where deadlines, data quality, documentary compliance and service continuity are critical, MENUA CONSULTING provides structured support to internal teams to safeguard the processing of back and middle office functions."
                 ))}
               </p>
             </div>
@@ -122,7 +122,7 @@ export default function PourquoiMenuaPage() {
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
               {formatBrand(t(
                 "En externalisant certaines fonctions back et middle office avec MENUA CONSULTING, vos équipes peuvent mieux répartir leur charge, renforcer la continuité opérationnelle et structurer le suivi des dossiers.",
-                "By outsourcing selected back and middle-office functions to MENUA CONSULTING, your teams can distribute their workload more effectively, strengthen operational continuity and structure case-handling."
+                "By outsourcing selected back and middle office functions to MENUA CONSULTING, your teams can distribute their workload more effectively, strengthen operational continuity and structure case-handling."
               ))}
             </p>
             <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
@@ -170,7 +170,7 @@ export default function PourquoiMenuaPage() {
             <p className="text-[#e5e9f0] font-light text-[1.1rem] leading-relaxed mb-12">
               {t(
                 "Notre approche 100 % opérationnelle, notre intégration aux organisations clientes et notre capacité d’intervention en français comme en anglais nous permettent d’intervenir dans des environnements exigeants, structurés et ouverts à l’international.",
-                "Our 100% operational focus, seamless integration into client organizations, and bilingual delivery in French and English enable us to operate effectively in demanding, structured, and international environments."
+                "Our 100% operational focus, seamless integration into client organisations, and bilingual delivery in French and English enable us to operate effectively in demanding, structured, and international environments."
               )}
             </p>
           </div>
@@ -188,8 +188,8 @@ export default function PourquoiMenuaPage() {
                 items={[
                   t("spécialisation back et middle office ;", "back and middle office specialization;"),
                   t("approche 100 % opérationnelle ;", "100% operational approach;"),
-                  t("intégration aux organisations clientes ;", "integration into client organizations;"),
-                  t("interventions adaptées aux procédures internes du client ;", "interventions adapted to the client's internal procedures;"),
+                  t("intégration aux organisations clientes ;", "integration into client organisations;"),
+                  t("interventions adaptées aux procédures internes du client ;", "delivery aligned with the client's internal procedures;"),
                   t("exécution fiable et continue ;", "reliable and continuous execution;"),
                   t("suivi structuré des livrables ;", "structured monitoring of deliverables;"),
                   t("mobilisation possible de ressources ou partenaires qualifiés selon les besoins ;", "targeted deployment of qualified resources or partners tailored to project requirements;"),

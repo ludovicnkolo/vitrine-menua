@@ -18,6 +18,11 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://menuaconsulting.com/en/our-solutions',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Our Solutions | Menua Consulting",
+    description: "Operational outsourcing solutions tailored for finance and wealth management institutions.",
+  },
 };
 
 export default function Page() {

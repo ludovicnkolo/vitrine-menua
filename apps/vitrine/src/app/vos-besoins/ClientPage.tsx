@@ -144,7 +144,7 @@ export default function VosBesoinsPage() {
               <div className="absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
-                {t("Notre Intervention", "Our intervention")}
+                {t("Notre Intervention", "How we support you")}
               </h2>
               
               <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
@@ -154,7 +154,7 @@ export default function VosBesoinsPage() {
               <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">
                 {formatBrand(t(
                   "MENUA CONSULTING intervient en appui des équipes financières, comptables, conformité, data, patrimoniales et réglementées sur les fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
-                  "MENUA CONSULTING supports finance, accounting, compliance, data and wealth management teams, as well as teams operating in regulated environments, by providing the rigorous back and middle-office support needed to ensure operational reliability and continuity."
+                  "MENUA CONSULTING supports finance, accounting, compliance, data and wealth management teams, as well as teams operating in regulated environments, by providing the rigorous back and middle office support needed to ensure operational reliability and continuity."
                 ))}
               </p>
               <p className="text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
@@ -289,7 +289,7 @@ export default function VosBesoinsPage() {
           list: [
             t("collecte, classement et contrôle des pièces comptables", "collection, classification and control of accounting documents"),
             t("rapprochements bancaires", "bank reconciliations"),
-            t("lettrage des comptes", "lettering of accounts"),
+            t("lettrage des comptes", "matching and clearing of open items"),
             t("suivi des factures clients et fournisseurs", "monitoring of client and supplier invoices"),
             t("relances administratives liées aux pièces manquantes", "administrative reminders linked to missing documents"),
             t("déclarations de TVA, sous supervision du client", "VAT returns, under client supervision"),
@@ -299,7 +299,7 @@ export default function VosBesoinsPage() {
             t("contrôle de cohérence des données", "data consistency check"),
             t("préparation de fichiers de reporting", "preparation of reporting files"),
             t("consolidation de données comptables et opérationnelles", "consolidation of accounting and operational data"),
-            t("archivage et organisation documentaire", "archiving and documentary organization"),
+            t("archivage et organisation documentaire", "archiving and documentary organisation"),
           ]
         }}
         bgClass="bg-[#f5f7fa]"
@@ -313,7 +313,7 @@ export default function VosBesoinsPage() {
         imgSrc="/img/besoins-cgp.webp"
         imgAlt="Support aux CGP"
         imgFallback="/img/intro-office.webp"
-        containerClass="landscape:px-16 landscape:lg:px-16" title={t("Support aux cabinets de gestion de patrimoine / CGP", "Support to wealth management firms / CGP")}
+        containerClass="landscape:px-16 landscape:lg:px-16" title={t("Support aux cabinets de gestion de patrimoine / CGP", "Support for wealth management firms and financial advisers")}
         intro={formatBrand(t(
           "MENUA CONSULTING accompagne les cabinets de gestion de patrimoine, family offices et structures patrimoniales dans le traitement, la préparation et le suivi administratif des dossiers clients. Les conseils, recommandations, arbitrages et validations demeurent sous la responsabilité des professionnels habilités du client. MENUA CONSULTING intervient uniquement sur la préparation et le suivi opérationnels des dossiers.",
           "MENUA CONSULTING supports wealth management firms, family offices and wealth-management structures in the processing, preparation and administrative monitoring of client files. Advice, recommendations, investment decisions and approvals remain the responsibility of the client’s authorised professionals. MENUA CONSULTING focuses strictly on operational preparation and monitoring."
@@ -353,18 +353,18 @@ export default function VosBesoinsPage() {
         listLabel={t("Besoins couverts :", "You might call on us to manage:")}
         listItems={[
           t("missions ponctuelles de renfort opérationnel", "ad hoc operational reinforcement missions"),
-          t("support administratif financier", "financial administrative support"),
-          t("traitement de dossiers en volume", "volume file processing"),
-          t("classement, archivage et organisation documentaire", "classification, archiving and documentary organization"),
+          t("support administratif financier", "financial and administrative support"),
+          t("traitement de dossiers en volume", "high-volume file processing"),
+          t("classement, archivage et organisation documentaire", "classification, archiving and documentary organisation"),
           t("préparation et mise à jour de fichiers de suivi", "preparation and updating of tracking files"),
-          t("support à la gestion d'opérations transverses", "support to the management of transversal operations"),
+          t("support à la gestion d'opérations transverses", "support for cross-functional operations"),
           t("aide à la formalisation de procédures internes", "help with the formalization of internal procedures"),
           t("aide à la structuration de process opérationnels", "help with the structuring of operational processes"),
           t("suivi de demandes internes ou clients", "monitoring of internal or client requests"),
           t("support en période de surcharge d'activité", "support during periods of overload"),
           t("remplacement ou appui temporaire d'équipe", "replacement or temporary team support"),
           t("coordination entre équipes internes et prestataires externalisés", "coordination between internal teams and outsourced providers"),
-          t("étude de besoins spécifiques non listés dans les rubriques précédentes", "study of specific needs not listed in the previous sections"),
+          t("étude de besoins spécifiques non listés dans les rubriques précédentes", "assessment of specific needs not covered above"),
         ]}
       />
 

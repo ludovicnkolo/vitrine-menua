@@ -155,7 +155,7 @@ export default function ClientPageArticle({ id }: { id: string }) {
           <div className="mt-12 px-4 md:px-12">
             {displayContent && (
               <div 
-                className="prose prose-lg max-w-none text-[#333] font-light leading-relaxed prose-headings:font-bold prose-headings:text-[#141824] prose-headings:uppercase prose-a:text-[#c1a070] prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl prose-img:shadow-md"
+                className="prose prose-lg max-w-none text-[#333] font-light leading-relaxed whitespace-pre-line prose-headings:font-bold prose-headings:text-[#141824] prose-headings:uppercase prose-a:text-[#c1a070] prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl prose-img:shadow-md"
                 dangerouslySetInnerHTML={{ __html: displayContent }}
               />
             )}

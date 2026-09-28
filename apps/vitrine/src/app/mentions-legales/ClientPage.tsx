@@ -71,7 +71,7 @@ export default function MentionsLegales() {
               ))}</p>
               <p className="mb-4">{formatBrand(t(
                 "MENUA CONSULTING réalise des prestations d’externalisation opérationnelle et de support back et middle office au moyen de ressources opérationnelles spécialisées. Les prestations sont exécutées selon le périmètre contractuel, les procédures, les outils, les habilitations et les circuits de validation définis avec le client.",
-                "MENUA CONSULTING provides operational outsourcing and back and middle-office support services using specialized operational resources. Services are performed in accordance with the contractual scope, procedures, systems, authorizations and approval workflows agreed with the client."
+                "MENUA CONSULTING provides operational outsourcing and back and middle office support services using specialized operational resources. Services are performed in accordance with the contractual scope, procedures, systems, authorizations and approval workflows agreed with the client."
               ))}</p>
               <p>{t(
                 "Lorsque le périmètre concerne une activité réglementée, comptable, juridique, fiscale, patrimoniale ou financière, les conseils, décisions, arbitrages, validations et actes réservés restent sous la responsabilité du client ou de ses professionnels habilités.",

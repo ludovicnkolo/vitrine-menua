@@ -18,6 +18,11 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://menuaconsulting.com/en/contact-us',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Contact Us | Menua Consulting",
+    description: "Get in touch with Menua Consulting to discuss your operational delegation needs.",
+  },
 };
 
 export default function Page() {

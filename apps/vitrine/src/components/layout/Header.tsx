@@ -101,7 +101,7 @@ export default function Header() {
       ],
     },
     "pourquoi-menua": {
-      label: t("Pourquoi nous ?", "Why us ?"),
+      label: t("Pourquoi nous ?", "Why us?"),
       href: "/pourquoi-menua",
       links: [
         { label: t("Nos bénéfices", "Our Benefits"), href: "/pourquoi-menua#nos-benefices" },

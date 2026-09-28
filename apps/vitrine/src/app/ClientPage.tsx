@@ -60,6 +60,7 @@ export default function Home() {
                 {t("Externalisation opérationnelle des", "Operational outsourcing")}
                 <span className="hidden xl:inline">{isEN ? "" : " fonctions"}</span>
               </span>
+              {" "}
               <br className="hidden lg:block" />
               <span className="lg:whitespace-nowrap">
                 <span className="xl:hidden">{isEN ? "" : "fonctions "}</span>
@@ -135,7 +136,7 @@ export default function Home() {
                 <p>
                   {formatBrand(t(
                     "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT, data et réglementées pour sécuriser et renforcer l’exécution de leurs fonctions back et middle office. Nous prenons en charge des opérations clairement définies, selon les procédures, les outils, les priorités et les circuits de validation de chaque client.",
-                    "MENUA CONSULTING supports finance, accounting, wealth management, IT and data teams, as well as teams operating in regulated environments, by safeguarding and strengthening the delivery of their back and middle-office functions. We take ownership of clearly defined operations in line with each client’s procedures, tools, priorities and approval workflows."
+                    "MENUA CONSULTING supports finance, accounting, wealth management, IT and data teams, as well as teams operating in regulated environments, by safeguarding and strengthening the delivery of their back and middle office functions. We take ownership of clearly defined operations in line with each client’s procedures, tools, priorities and approval workflows."
                   ))}
                 </p>
               </div>

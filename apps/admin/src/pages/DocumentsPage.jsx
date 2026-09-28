@@ -285,6 +285,32 @@ export default function DocumentsPage() {
     }
   };
 
+  const handleRenameDocument = async (doc) => {
+    const currentName = doc.name;
+    const newName = prompt("Entrez le nouveau nom pour ce document :", currentName);
+    if (!newName || newName === currentName) return;
+
+    try {
+      const token = sessionStorage.getItem("adminToken");
+      const res = await fetch(getSafeApiUrl(`/api/crm/documents/${doc.id}`), {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: newName }),
+      });
+      if (res.ok) {
+        fetchDossiers();
+      } else {
+        const err = await res.json().catch(() => ({}));
+        window.customAlert("Erreur lors du renommage: " + (err.error || res.status));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleDeleteDocument = async (id) => {
     if (
       !(await window.customConfirm(
@@ -880,7 +906,7 @@ export default function DocumentsPage() {
                   {searchFolders.map((folder) => (
                     <div
                       key={folder.id}
-                      onDoubleClick={() =>
+                      onClick={() =>
                         navigateToFromSearch(folder.id, true)
                       }
                       onContextMenu={(e) => {
@@ -957,7 +983,7 @@ export default function DocumentsPage() {
                     return (
                       <div
                         key={doc.id}
-                        onDoubleClick={() => setPreviewFile(doc.url)}
+                        onClick={() => setPreviewFile(doc.url)}
                         onContextMenu={(e) => {
                           e.stopPropagation();
                           handleContextMenu(e, doc, "file");
@@ -1016,7 +1042,7 @@ export default function DocumentsPage() {
             {childFolders.map((folder) => (
               <div
                 key={folder.id}
-                onDoubleClick={() => navigateTo(folder)}
+                onClick={() => navigateTo(folder)}
                 onContextMenu={(e) => {
                   e.stopPropagation();
                   handleContextMenu(e, folder, "folder");
@@ -1074,7 +1100,7 @@ export default function DocumentsPage() {
               return (
                 <div
                   key={doc.id}
-                  onDoubleClick={() => setPreviewFile(doc.url)}
+                  onClick={() => setPreviewFile(doc.url)}
                   onContextMenu={(e) => {
                     e.stopPropagation();
                     handleContextMenu(e, doc, "file");
@@ -1413,6 +1439,39 @@ export default function DocumentsPage() {
                     }
                   >
                     <RefreshCw size={16} /> Remplacer
+                  </button>
+                  <button
+                    onClick={() => {
+                      closeContextMenu();
+                      handleRenameDocument(contextMenu.item);
+                    }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.75rem",
+                      width: "100%",
+                      padding: "0.5rem 1rem",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      textAlign: "left",
+                      fontSize: "0.875rem",
+                      color: "var(--text-main)",
+                    }}
+                    onMouseOver={(e) =>
+                      (e.currentTarget.style.background = "#F1F5F9")
+                    }
+                    onMouseOut={(e) =>
+                      (e.currentTarget.style.background = "transparent")
+                    }
+                    onFocus={(e) =>
+                      (e.currentTarget.style.background = "#F1F5F9")
+                    }
+                    onBlur={(e) =>
+                      (e.currentTarget.style.background = "transparent")
+                    }
+                  >
+                    <Edit size={16} /> Renommer
                   </button>
                   <button
                     onClick={() => {
@@ -1941,7 +2000,7 @@ export default function DocumentsPage() {
                         </td>
                         <td style={{ padding: "1rem", textAlign: "right" }}>
                           <button
-                            onClick={() => handleRestoreTrash(item.id)}
+                            onClick={() => handleRestoreTrash(item)}
                             style={{
                               background: "none",
                               border: "none",
@@ -1954,7 +2013,7 @@ export default function DocumentsPage() {
                             Restaurer
                           </button>
                           <button
-                            onClick={() => handlePurgeTrash(item.id)}
+                            onClick={() => handlePurgeTrash(item)}
                             style={{
                               background: "none",
                               border: "none",

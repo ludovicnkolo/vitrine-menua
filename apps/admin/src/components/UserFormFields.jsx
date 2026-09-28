@@ -156,12 +156,40 @@ const UserFormFields = ({
         </div>
       </div>
 
-      <FormField
-        label="Description profil"
-        type="textarea"
-        value={user.profile}
-        onChange={handleChange("profile")}
-      />
+      <div
+        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}
+      >
+        <FormField
+          label="Description profil"
+          type="textarea"
+          value={user.profile}
+          onChange={handleChange("profile")}
+        />
+        {setSelectedFile && (
+          <div>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "0.25rem",
+                fontSize: "0.875rem",
+                fontWeight: 500,
+              }}
+            >
+              Pièce d'identité
+            </label>
+            <input
+              type="file"
+              onChange={(e) => setSelectedFile(e.target.files[0])}
+              style={{
+                width: "100%",
+                padding: "0.4rem",
+                borderRadius: "4px",
+                border: "1px solid var(--border)",
+              }}
+            />
+          </div>
+        )}
+      </div>
     </>
   );
 };

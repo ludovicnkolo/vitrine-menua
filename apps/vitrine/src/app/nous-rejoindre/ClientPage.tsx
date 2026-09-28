@@ -100,6 +100,10 @@ export default function NousRejoindre() {
       e,
       endpoint: "/api/forms/join",
       lang,
+      onSuccess: () => {
+        setIsOtherSkillChecked(false);
+        setSelectedLanguages([]);
+      },
       setSubmitStatus,
       setIsSubmitting,
       setEmailError,
@@ -171,7 +175,7 @@ export default function NousRejoindre() {
               <p className="text-[#e5e9f0] text-[1.05rem] font-light leading-relaxed">
                 {formatBrand(t(
                   "MENUA CONSULTING recherche des profils autonomes, rigoureux, fiables et organisés, capables d'intervenir à distance sur des fonctions back et middle office, en français ou en anglais, dans le respect de procédures, de délais et de standards de qualité élevés.",
-                  "MENUA CONSULTING is looking for self-sufficient, rigorous, reliable and organised professionals, capable of working remotely on back and middle-office functions (in French or English), while adhering to procedures, deadlines and high quality standards."
+                  "MENUA CONSULTING is looking for self-sufficient, rigorous, reliable and organised professionals, capable of working remotely on back and middle office functions (in French or English), while adhering to procedures, deadlines and high quality standards."
                 ))}
               </p>
             </div>
@@ -193,7 +197,7 @@ export default function NousRejoindre() {
                       name="profileType" 
                       value="individual" 
                       checked={profileType === "individual"} 
-                      onChange={() => setProfileType("individual")}
+                      onChange={() => { setProfileType("individual"); setIsOtherSkillChecked(false); }}
                       className="accent-[#141824] w-5 h-5 cursor-pointer"
                     />
                     <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Particulier", "Individual")}</span>
@@ -205,7 +209,7 @@ export default function NousRejoindre() {
                       name="profileType" 
                       value="company" 
                       checked={profileType === "company"} 
-                      onChange={() => setProfileType("company")}
+                      onChange={() => { setProfileType("company"); setIsOtherSkillChecked(false); }}
                       className="accent-[#141824] w-5 h-5 cursor-pointer"
                     />
                     <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Société", "Company")}</span>
@@ -235,7 +239,7 @@ export default function NousRejoindre() {
                   <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-4 block">
                     {t("Compétences clés", "Key skills")} <span className="text-red-500">*</span>
                   </label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
+                  <div key={profileType} className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
                     {[
                       t("Back et middle office", "Back and middle office"),
                       t("Comptabilité", "Accounting"),

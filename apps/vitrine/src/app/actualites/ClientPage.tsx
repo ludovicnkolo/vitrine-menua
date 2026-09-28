@@ -40,7 +40,7 @@ export default function ActualitesPage() {
   const filters = [
     { key: "TOUTES LES ACTUALITÉS", fr: "TOUTES LES ACTUALITÉS", en: "ALL NEWS" },
     { key: "FINANCE ET COMPTABILITÉ", fr: "FINANCE ET COMPTABILITÉ", en: "FINANCE AND ACCOUNTING" },
-    { key: "BACK ET MIDDLE OFFICE", fr: "BACK ET MIDDLE OFFICE", en: "BACK AND MIDDLE OFFICE" },
+    { key: "BACK ET MIDDLE OFFICE", fr: "BACK ET MIDDLE OFFICE", en: "BACK & MIDDLE OFFICE" },
     { key: "DATA ET REPORTING", fr: "DATA ET REPORTING", en: "DATA AND REPORTING" },
     { key: "RISQUES, CONFORMITÉ ET KYC", fr: "RISQUES, CONFORMITÉ ET KYC", en: "RISK, COMPLIANCE AND KYC" },
     { key: "GESTION DE PATRIMOINE", fr: "GESTION DE PATRIMOINE", en: "WEALTH MANAGEMENT" },
@@ -75,7 +75,7 @@ export default function ActualitesPage() {
             <p className="text-[1.1rem] lg:text-[1.3rem] landscape:text-[1rem] landscape:lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {formatBrand(t(
                 "Analyses, repères et publications consacrés aux enjeux opérationnels des entreprises, cabinets et organisations.",
-                "Analyses, benchmarks and publications dedicated to the operational challenges of companies, firms and organizations."
+                "Analyses, benchmarks and publications dedicated to the operational challenges of companies, firms and organisations."
               ))}
             </p>
             <div className="mt-4">
@@ -238,7 +238,7 @@ export default function ActualitesPage() {
 
               {filteredPubs.length === 0 && publications.length > 0 && (
                 <div className="col-span-full py-12 text-center text-[#6e7891]">
-                  Aucune publication dans cette rubrique pour le moment.
+                  {t("Aucune publication dans cette rubrique pour le moment.", "No publications in this category at the moment.")}
                 </div>
               )}
 

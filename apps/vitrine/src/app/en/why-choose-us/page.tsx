@@ -18,6 +18,11 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://menuaconsulting.com/en/why-choose-us',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Why Choose Menua Consulting? | Menua Consulting",
+    description: "Operational rigor, internal workload control, and business continuity support.",
+  },
 };
 
 export default function Page() {

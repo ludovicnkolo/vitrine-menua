@@ -124,7 +124,7 @@ export default function NosSolutionsPage() {
                 <p className="text-[1.1rem] font-medium">
                   {formatBrand(t(
                     "MENUA CONSULTING conçoit des solutions d’externalisation opérationnelle sur mesure pour accompagner les entreprises, cabinets et organisations dans la gestion de leurs fonctions back et middle office.",
-                    "MENUA CONSULTING designs tailored operational outsourcing arrangements to support businesses, professional firms and other organisations in the management of their back and middle-office functions."
+                    "MENUA CONSULTING designs tailored operational outsourcing arrangements to support businesses, professional firms and other organisations in the management of their back and middle office functions."
                   ))}
                 </p>
                 <p>
@@ -162,7 +162,7 @@ export default function NosSolutionsPage() {
         )}
         listTitle={t("Exemples de besoins :", "Examples of needs:")}
         listItems={[
-          t("surcharge d’activité ou pic de dossiers ;", "a surge in activity or spike in case volumes;"),
+          t("surcharge d’activité ou pic de dossiers ;", "a surge in activity or a spike in case volumes;"),
           t("remplacement temporaire d’un collaborateur absent ;", "temporary cover for absent staff;"),
           t("renfort ponctuel en période de clôture ou de reporting ;", "additional support during closing or reporting periods;"),
           t("traitement accéléré de dossiers en retard ou en attente ;", "accelerated processing for backlogs or pending files;"),
@@ -222,7 +222,7 @@ export default function NosSolutionsPage() {
             <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
               <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Intervention ponctuelle", "Support during transition")}</h4>
               <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
-                {t("sur un volume de dossiers comptables, financiers, patrimoniaux, conformité ou administratifs", "managing a volume of accounting, financial, wealth, compliance or administrative files")}
+                {t("sur un volume de dossiers comptables, financiers, patrimoniaux, conformité ou administratifs", "managing volumes of accounting, financial, wealth-management, compliance or administrative files")}
               </p>
             </div>
             <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">

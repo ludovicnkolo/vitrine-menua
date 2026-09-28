@@ -28,6 +28,15 @@ import ReadOnlyField from "../components/ReadOnlyField";
 import TaskConsultModal from "../components/TaskConsultModal";
 import FilePreviewModal from "../components/FilePreviewModal";
 import GedExplorer, { flattenFolderIds } from "../components/GedExplorer";
+
+const DOSSIER_STATUS_LABELS = {
+  NOUVEAU: "Nouveau",
+  EN_COURS: "En cours",
+  TERMINE: "Terminé",
+  ARCHIVE: "Archivé",
+  BLOQUE: "Bloqué",
+  CORBEILLE: "Corbeille"
+};
 const SearchableDropdown = ({ options, value, onChange, placeholder }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);

@@ -287,9 +287,19 @@ router.get("/users", async (req, res) => {
         lieuResidence: true,
         experienceCle: true,
         langues: true,
+        missionsAssigned: { select: { status: true } },
       },
     });
-    res.json(users);
+
+    const mappedUsers = users.map(u => {
+      const missionsAssigned = u.missionsAssigned || [];
+      const missionsTerminees = missionsAssigned.filter(m => m.status === "TERMINE").length;
+      const missionsEnCours = missionsAssigned.filter(m => m.status !== "TERMINE" && m.status !== "ANNULEE" && m.status !== "CORBEILLE").length;
+      delete u.missionsAssigned;
+      return { ...u, missionsTerminees, missionsEnCours };
+    });
+
+    res.json(mappedUsers);
   } catch (error) {
     console.error(error);
     console.error(error);

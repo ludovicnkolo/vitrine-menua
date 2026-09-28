@@ -482,19 +482,46 @@ router.post("/trash/restore/:type/:id", async (req, res) => {
   }
 });
 
-router.delete("/trash/purge/:type/:id", async (req, res) => {
+router.delete("/trash/purge/:type/:id", authenticateJWT, async (req, res) => {
   try {
     const { type, id } = req.params;
+    let itemName = "";
     
     if (type === "document") {
-      await prisma.document.delete({ where: { id } });
+      const doc = await prisma.document.findUnique({ where: { id } });
+      if (doc) {
+        itemName = doc.name;
+        if (doc.url) {
+          const { deleteFromS3 } = require("../../services/s3Service");
+          try {
+            await deleteFromS3(doc.url);
+          } catch (err) {
+            console.error("Erreur lors de la suppression S3 pendant la purge:", err);
+          }
+        }
+        await prisma.document.delete({ where: { id } });
+      }
     } else if (type === "dossier") {
+      const dossier = await prisma.dossier.findUnique({ where: { id } });
+      if (dossier) itemName = dossier.name;
       await prisma.dossier.delete({ where: { id } }); // Prisma cascade handles the rest
     } else if (type === "mission") {
+      const mission = await prisma.mission.findUnique({ where: { id } });
+      if (mission) itemName = mission.name;
       await prisma.mission.delete({ where: { id } });
     } else if (type === "tache") {
+      const tache = await prisma.tache.findUnique({ where: { id } });
+      if (tache) itemName = tache.title;
       await prisma.tache.delete({ where: { id } });
     }
+    
+    await logAudit(
+      req.user.id,
+      "PURGE_DEFINITIVE",
+      `${type.toUpperCase()}`,
+      `Purge définitive de : ${itemName || id}`,
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress
+    );
     
     res.json({ success: true });
   } catch (error) {

@@ -32,7 +32,7 @@ export default function PolitiqueConfidentialite() {
               <ul className="list-disc pl-6 space-y-4">
                 <li>
                   <strong className="text-[#141824]">{t("Demandes de contact :", "Contact requests:")}</strong>{" "}
-                  {t("identité, société, coordonnées, besoin et éventuel PDF — réponse et suivi de la demande, sur le fondement de l’intérêt légitime et, lorsque nécessaire, de mesures précontractuelles.", "identity, company, contact details, need and potential PDF — response and follow-up to the request, based on legitimate interest and, when necessary, pre-contractual measures.")}
+                  {t("identité, société, coordonnées et informations relatives au besoin — réponse et suivi de la demande, sur le fondement de l’intérêt légitime et, lorsque nécessaire, de mesures précontractuelles.", "identity, company, contact details and information related to the need — response and follow-up to the request, based on legitimate interest and, when necessary, pre-contractual measures.")}
                 </li>
                 <li>
                   <strong className="text-[#141824]">{t("Candidatures :", "Applications:")}</strong>{" "}
@@ -136,7 +136,7 @@ export default function PolitiqueConfidentialite() {
               )}</p>
               <p>{t(
                 "La présente politique peut être mise à jour pour tenir compte des évolutions légales, organisationnelles ou techniques.",
-                "This policy may be updated to reflect legal, organizational or technical developments."
+                "This policy may be updated to reflect legal, organisational or technical developments."
               )}</p>
             </SectionBlock>
 

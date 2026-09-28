@@ -18,6 +18,11 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://menuaconsulting.com/en/your-needs',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Your Needs | Menua Consulting",
+    description: "Tailored operational support for finance, compliance, accounting and wealth management teams.",
+  },
 };
 
 export default function Page() {

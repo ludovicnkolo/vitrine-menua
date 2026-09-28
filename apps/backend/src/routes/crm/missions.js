@@ -447,7 +447,12 @@ router.post("/tasks", async (req, res) => {
         ownerName = (user?.name || "COLLAB").replace(/\s+/g, "_");
       }
 
-      const missionSubFolderName = `Mission-${ownerName}-${dateStr}`;
+      const missionCount = await prisma.mission.count({
+        where: { dossierId: dossierId }
+      });
+      const missionSeq = String(missionCount).padStart(2, "0");
+      const dossierRef = parentDossier?.reference || "dos-xx";
+      const missionSubFolderName = `mis-${missionSeq}_${dossierRef}_${ownerName}`.toLowerCase();
 
       // Vérifier si un dossier du même nom existe déjà dans ce parent
       const existingGedFolder = await prisma.dossier.findFirst({
@@ -456,7 +461,7 @@ router.post("/tasks", async (req, res) => {
 
       if (existingGedFolder) {
         // Utiliser un suffixe unique basé sur la référence de la mission
-        const uniqueName = `${missionSubFolderName}-${task.reference}`;
+        const uniqueName = `${missionSubFolderName}_${task.reference.toLowerCase()}`;
         const gedRef = await generateReference("dossier", "DOS");
         await prisma.dossier.create({
           data: {
@@ -731,19 +736,7 @@ router.patch("/tasks/:id", async (req, res) => {
         });
       }
 
-      if (status === "EN_REVUE") {
-        const unreadyTaches = await prisma.tache.count({
-          where: {
-            missionId: req.params.id,
-            status: { notIn: ["EN_RELECTURE", "EN_APPROBATION", "APPROUVEE", "TERMINE", "TERMINE", "ANNULEE", "ANNULEE"] },
-          },
-        });
-        if (unreadyTaches > 0) {
-          return res.status(400).json({
-            error: "Impossible de passer en revue : toutes les tâches ne sont pas en relecture, approbation ou terminées.",
-          });
-        }
-      }
+
 
       if (status === "TERMINE" || status === "TERMINE") {
         const incompleteTaches = await prisma.tache.count({

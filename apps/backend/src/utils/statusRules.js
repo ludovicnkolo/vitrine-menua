@@ -70,11 +70,7 @@ const validateMissionStatus = (fromStatus, toStatus, role) => {
       check: () => isRespOrAdmin
     },
     EN_COURS: {
-      allowed: ["EN_REVUE", "BLOQUE", "EN_ATTENTE"],
-      check: () => isRespOrAdmin
-    },
-    EN_REVUE: {
-      allowed: ["TERMINE", "EN_COURS"],
+      allowed: ["TERMINE", "BLOQUE", "EN_ATTENTE"],
       check: () => isRespOrAdmin
     },
     BLOQUE: {

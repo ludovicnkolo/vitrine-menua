@@ -13,7 +13,7 @@ const bcrypt = require('bcryptjs');
 
 const prisma = new PrismaClient();
 
-const PASSWORD = '1234567t';
+const PASSWORD = '123456t';
 
 const USERS_TO_CREATE = [
   { roleName: 'Responsable opérationnel', prefix: 'resp.op.recette' },

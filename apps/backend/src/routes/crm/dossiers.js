@@ -499,7 +499,7 @@ router.post("/dossiers", async (req, res) => {
       const created = await tx.dossier.create({
         data: {
           reference,
-          name: `${name}_${reference}`,
+          name: `${reference}_${name}`.toLowerCase(),
           description,
           priority: priority || "NORMAL",
           status: "NOUVEAU",

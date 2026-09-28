@@ -38,10 +38,7 @@ const TACHE_STATUS_LABELS = {
   A_CORRIGER: "À corriger",
   BLOQUE: "Bloqué",
   EN_ATTENTE: "En attente",
-  TERMINE: "Terminé",
-  CORBEILLE: "Corbeille",
-  CLOTURE: "Clôturé",
-  LIVRE: "Livré"
+  TERMINE: "Terminé"
 };
 
 const getSubjectFromTask = (desc) => {
@@ -562,10 +559,9 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
       switch (currentStatus) {
         case "NOUVEAU":
-        case "OUVERT":
         case "EN_COURS":
-        case "EN_REVUE":
-        case "A_CORRIGER":
+          if (isSuperAdmin || isMissionAssigned) allowed.push("TERMINE");
+          break;
         case "TERMINE":
         case "ANNULEE":
           break;

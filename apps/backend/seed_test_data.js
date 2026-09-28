@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 async function main() {
-    const defaultPassword = await bcrypt.hash("1234567t", 10);
+    const defaultPassword = await bcrypt.hash("123456t", 10);
     const roles = await prisma.role.findMany();
 
     console.log("Generating 2 test users per role...");

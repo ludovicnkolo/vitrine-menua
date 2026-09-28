@@ -34,8 +34,7 @@ const DOSSIER_STATUS_LABELS = {
   EN_COURS: "En cours",
   TERMINE: "Terminé",
   ARCHIVE: "Archivé",
-  BLOQUE: "Bloqué",
-  CORBEILLE: "Corbeille"
+  BLOQUE: "Bloqué"
 };
 const SearchableDropdown = ({ options, value, onChange, placeholder }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -184,6 +183,7 @@ const DossiersPage = () => {
   const [magicExpires, setMagicExpires] = useState("7");
   const [magicNote, setMagicNote] = useState("");
   const [generatedMagicUrl, setGeneratedMagicUrl] = useState("");
+  const [magicFiles, setMagicFiles] = useState([]); // fichiers à joindre pour LIVRAISON
 
   useEffect(() => {
     if (createMissionModal && consultDossier) {
@@ -416,6 +416,23 @@ const DossiersPage = () => {
   const handleGenerateMagicLink = async () => {
     try {
       const token = sessionStorage.getItem("adminToken");
+
+      // 1. Si LIVRAISON : uploader les fichiers dans la GED du dossier principal
+      if (magicType === "LIVRAISON" && magicFiles.length > 0) {
+        for (const file of magicFiles) {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("dossierId", consultDossier.id);
+          formData.append("name", file.name);
+          await fetch(getSafeApiUrl("/api/crm/documents"), {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: formData,
+          });
+        }
+      }
+
+      // 2. Générer le lien magique
       const res = await fetch(getSafeApiUrl("/api/magic/generate"), {
         method: "POST",
         headers: {
@@ -431,7 +448,6 @@ const DossiersPage = () => {
       });
       if (res.ok) {
         const data = await res.json();
-        // Since we are building an integrated CRM, we can point it to a specific route in the admin app
         const magicUrl = `${window.location.origin}/magic-drop/${data.data.token}`;
         setGeneratedMagicUrl(magicUrl);
       } else {
@@ -480,9 +496,7 @@ const DossiersPage = () => {
       targetName = newDossierData.generalName.replace(/\s+/g, "_");
     }
 
-    const today = new Date();
-    const dateStr = `${String(today.getDate()).padStart(2, "0")}${String(today.getMonth() + 1).padStart(2, "0")}${today.getFullYear()}`;
-    const generatedName = `Dossier_${targetName}_${dateStr}`.toUpperCase();
+    const generatedName = targetName.toLowerCase();
 
     setIsSubmittingDossier(true);
     const token = sessionStorage.getItem("adminToken");
@@ -1578,6 +1592,7 @@ const DossiersPage = () => {
                   onClick={() => {
                     setShowMagicModal(true);
                     setGeneratedMagicUrl("");
+                    setMagicFiles([]);
                   }}
                   className="btn btn-outline"
                   style={{
@@ -1650,7 +1665,7 @@ const DossiersPage = () => {
               <h3
                 style={{
                   marginTop: 0,
-                  marginBottom: "1.5rem",
+                  marginBottom: "0.75rem",
                   fontSize: "1.25rem",
                 }}
               >
@@ -1658,9 +1673,45 @@ const DossiersPage = () => {
                 {consultDossier.reference || consultDossier.id})
               </h3>
 
+              {/* Destinataire du lien */}
+              {(consultDossier.client?.email || consultDossier.targetUser?.email) && (
+                <div
+                  style={{
+                    marginBottom: "1.5rem",
+                    padding: "0.75rem 1rem",
+                    background: "#EFF6FF",
+                    borderRadius: "8px",
+                    border: "1px solid #BFDBFE",
+                    fontSize: "0.85rem",
+                    color: "#1E40AF",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <span>📧</span>
+                  <span>
+                    Destinataire :{" "}
+                    <strong>
+                      {consultDossier.client?.name ||
+                        consultDossier.targetUser?.name ||
+                        "—"}
+                    </strong>
+                    {" — "}
+                    <a
+                      href={`mailto:${consultDossier.client?.email || consultDossier.targetUser?.email}`}
+                      style={{ color: "#1D4ED8" }}
+                    >
+                      {consultDossier.client?.email || consultDossier.targetUser?.email}
+                    </a>
+                  </span>
+                </div>
+              )}
+
               {!generatedMagicUrl ? (
                 <>
                   <div style={{ marginBottom: "1.5rem" }}>
+
                     <label
                       style={{
                         display: "block",
@@ -1774,6 +1825,80 @@ const DossiersPage = () => {
                         : "Ce message sera affiché au client sur la page de téléchargement."}
                     </small>
                   </div>
+                  {/* Zone d'upload pour LIVRAISON */}
+                  {magicType === "LIVRAISON" && (
+                    <div style={{ marginBottom: "1.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          marginBottom: "0.5rem",
+                          fontWeight: 600,
+                          color: "var(--primary-dark)",
+                        }}
+                      >
+                        📎 Fichiers à mettre à disposition du client
+                      </label>
+                      <div
+                        style={{
+                          border: "2px dashed var(--border)",
+                          borderRadius: "8px",
+                          padding: "1.5rem",
+                          textAlign: "center",
+                          background: "#F8FAFC",
+                          cursor: "pointer",
+                        }}
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          const dropped = Array.from(e.dataTransfer.files);
+                          setMagicFiles((prev) => [...prev, ...dropped]);
+                        }}
+                        onClick={() => document.getElementById("magicFileInput").click()}
+                      >
+                        <input
+                          id="magicFileInput"
+                          type="file"
+                          multiple
+                          style={{ display: "none" }}
+                          onChange={(e) => {
+                            const selected = Array.from(e.target.files);
+                            setMagicFiles((prev) => [...prev, ...selected]);
+                          }}
+                        />
+                        <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "0.85rem" }}>
+                          Glissez vos fichiers ici ou <strong>cliquez pour sélectionner</strong>
+                        </p>
+                      </div>
+                      {magicFiles.length > 0 && (
+                        <ul style={{ marginTop: "0.75rem", padding: "0 0 0 1rem" }}>
+                          {magicFiles.map((f, i) => (
+                            <li
+                              key={i}
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                fontSize: "0.8rem",
+                                padding: "0.25rem 0",
+                              }}
+                            >
+                              <span>📄 {f.name}</span>
+                              <button
+                                type="button"
+                                onClick={() => setMagicFiles((prev) => prev.filter((_, idx) => idx !== i))}
+                                style={{ background: "none", border: "none", color: "var(--danger)", cursor: "pointer", fontSize: "1rem" }}
+                              >
+                                ×
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      <small style={{ color: "var(--text-muted)", display: "block", marginTop: "0.5rem" }}>
+                        Ces fichiers seront stockés dans la GED du dossier et accessibles au client via le lien.
+                      </small>
+                    </div>
+                  )}
                   <div
                     style={{
                       display: "flex",
@@ -1816,14 +1941,24 @@ const DossiersPage = () => {
                   >
                     <p
                       style={{
-                        margin: "0 0 1rem 0",
+                        margin: "0 0 0.5rem 0",
                         color: "#166534",
-                        fontWeight: 500,
+                        fontWeight: 600,
+                        fontSize: "0.95rem",
                       }}
                     >
-                      Lien généré avec succès ! Vous pouvez le copier et
-                      l'envoyer au client.
+                      ✅ Lien généré avec succès !
                     </p>
+                    <p style={{ margin: "0 0 1rem 0", color: "#166534", fontSize: "0.85rem" }}>
+                      {magicType === "LIVRAISON"
+                        ? "Le client peut télécharger les fichiers en ouvrant ce lien."
+                        : "Le client peut déposer ses fichiers en ouvrant ce lien."}
+                    </p>
+
+                    {/* URL client */}
+                    <label style={{ display: "block", marginBottom: "0.35rem", fontWeight: 500, fontSize: "0.85rem", color: "#166534" }}>
+                      🔗 URL à envoyer au client :
+                    </label>
                     <div style={{ display: "flex", gap: "0.5rem" }}>
                       <input
                         type="text"
@@ -1836,6 +1971,7 @@ const DossiersPage = () => {
                           borderRadius: "8px",
                           border: "1px solid #BBF7D0",
                           background: "#FFF",
+                          fontSize: "0.8rem",
                         }}
                       />
                       <button
@@ -1849,7 +1985,13 @@ const DossiersPage = () => {
                         Copier
                       </button>
                     </div>
+                    {magicFiles.length > 0 && (
+                      <p style={{ margin: "0.75rem 0 0 0", fontSize: "0.8rem", color: "#166534" }}>
+                        📦 {magicFiles.length} fichier(s) stocké(s) dans la GED du dossier.
+                      </p>
+                    )}
                   </div>
+
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <button
                       type="button"

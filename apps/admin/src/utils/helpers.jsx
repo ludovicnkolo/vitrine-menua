@@ -95,17 +95,6 @@ function getStatusBadge(status) {
       },
     },
     APPROUVEE: { text: "Approuvée", class: "badge-success" },
-    EN_REVUE: {
-      text: "En revue",
-      style: {
-        backgroundColor: "#FEF3C7",
-        color: "#D97706",
-        padding: "0.25rem 0.6rem",
-        borderRadius: "9999px",
-        fontSize: "0.75rem",
-        fontWeight: 600,
-      },
-    },
     CLOTURE: { text: "Clôturé", class: "badge-success" },
 
     // STATUTS SYSTEMES OU FALLBACKS

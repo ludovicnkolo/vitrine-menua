@@ -35,6 +35,7 @@ model Utilisateur {
   lieuResidence    String?
   experienceCle    String?
   langues          String?
+  formations       String?
   profile          String?
   idCardUrl        String?
   resetToken       String?

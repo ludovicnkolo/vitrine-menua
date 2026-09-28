@@ -201,7 +201,7 @@ const RolesPage = () => {
               style={{
                 display: "block",
                 marginBottom: "0.25rem",
-                fontSize: "0.875rem",
+                
                 fontWeight: 500,
               }}
             >
@@ -227,7 +227,7 @@ const RolesPage = () => {
               style={{
                 display: "block",
                 marginBottom: "0.25rem",
-                fontSize: "0.875rem",
+                
                 fontWeight: 500,
               }}
             >
@@ -304,7 +304,7 @@ const RolesPage = () => {
                         alignItems: "center",
                         gap: "0.5rem",
                         cursor: "pointer",
-                        fontSize: "0.875rem",
+                        
                       }}
                     >
                       <input
@@ -324,7 +324,7 @@ const RolesPage = () => {
               style={{
                 display: "block",
                 marginBottom: "0.25rem",
-                fontSize: "0.875rem",
+                
                 fontWeight: 500,
               }}
             >
@@ -352,7 +352,7 @@ const RolesPage = () => {
               style={{
                 display: "block",
                 marginBottom: "0.25rem",
-                fontSize: "0.875rem",
+                
                 fontWeight: 500,
               }}
             >
@@ -434,7 +434,7 @@ const RolesPage = () => {
                 alignItems: "center",
                 height: "28px",
                 padding: "0 0.75rem",
-                fontSize: "0.875rem",
+                
               }}
             >
               Créer un rôle
@@ -637,7 +637,7 @@ const RolesPage = () => {
                   style={{
                     display: "block",
                     marginBottom: "0.25rem",
-                    fontSize: "0.875rem",
+                    
                     fontWeight: 500,
                     color: "var(--text-muted)",
                   }}
@@ -662,7 +662,7 @@ const RolesPage = () => {
                   style={{
                     display: "block",
                     marginBottom: "0.25rem",
-                    fontSize: "0.875rem",
+                    
                     fontWeight: 500,
                     color: "var(--text-muted)",
                   }}
@@ -695,7 +695,7 @@ const RolesPage = () => {
                   style={{
                     display: "block",
                     marginBottom: "0.25rem",
-                    fontSize: "0.875rem",
+                    
                     fontWeight: 500,
                     color: "var(--text-muted)",
                   }}
@@ -720,7 +720,7 @@ const RolesPage = () => {
                   style={{
                     display: "block",
                     marginBottom: "0.25rem",
-                    fontSize: "0.875rem",
+                    
                     fontWeight: 500,
                     color: "var(--text-muted)",
                   }}

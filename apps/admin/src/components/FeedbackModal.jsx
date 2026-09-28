@@ -158,7 +158,7 @@ const FeedbackModal = ({
                   style={{
                     display: "block",
                     fontWeight: 600,
-                    fontSize: "0.875rem",
+                    
                     cursor: "pointer",
                     marginBottom: "0.25rem",
                     color: "#92400E",
@@ -191,7 +191,7 @@ const FeedbackModal = ({
               display: "block",
               marginBottom: "0.5rem",
               fontWeight: 500,
-              fontSize: "0.875rem",
+              
               color: "var(--text-main)",
             }}
           >

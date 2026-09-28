@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.222Z",
-      "updatedAt": "2026-09-28T16:51:23.107Z"
+      "updatedAt": "2026-09-28T17:57:49.496Z"
     },
     {
       "id": "a41c168d-dc87-4353-8dcb-c71e4109416c",
@@ -16,7 +16,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.242Z",
-      "updatedAt": "2026-09-28T16:51:23.116Z"
+      "updatedAt": "2026-09-28T17:57:49.506Z"
     },
     {
       "id": "7f685243-dda5-4117-a675-d4a7364c7a66",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-09-28T09:31:02.248Z",
-      "updatedAt": "2026-09-28T16:51:23.124Z"
+      "updatedAt": "2026-09-28T17:57:49.514Z"
     },
     {
       "id": "803c6051-c50d-495a-bb21-b6615f1cf0dc",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-09-28T09:31:02.256Z",
-      "updatedAt": "2026-09-28T16:51:23.130Z"
+      "updatedAt": "2026-09-28T17:57:49.525Z"
     },
     {
       "id": "eaa1c720-2a71-493c-a1c0-d14f51051e0f",
@@ -43,28 +43,29 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.269Z",
-      "updatedAt": "2026-09-28T16:51:23.136Z"
+      "updatedAt": "2026-09-28T17:57:49.536Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "2541799f-86de-4071-86c7-7110615bf37b",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$wgwfJViYoXtQfanyVHJbyuNYcpm/XDlXu8NrkdTx1oZB3zbvz.xhK",
+      "password": "$2a$10$1g9MvGahpNY15SNY660tie1pPAGJR868quBxWfznITdquZvQ9emAi",
       "name": "Rosette Fouelefack",
       "roleId": "832d5c59-5fe6-488f-b64a-1bfdc6504152",
       "telephone": "+33659207511",
       "lieuResidence": "Paris, France",
       "experienceCle": "Back & Middle Office Agile, Conformité et gestion des risques patrimoniaux",
       "langues": null,
+      "formations": null,
       "profile": "une expertise en finance, risques et conformité. Elle dirige Menua Consulting, cabinet agile d'appui back/middle office, piloté depuis la France",
       "idCardUrl": null,
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
-      "lastLogin": "2026-09-28T09:33:02.842Z",
+      "lastLogin": "2026-09-28T17:52:49.957Z",
       "createdAt": "2026-09-28T09:31:02.401Z",
-      "updatedAt": "2026-09-28T16:51:23.276Z"
+      "updatedAt": "2026-09-28T17:57:49.731Z"
     },
     {
       "id": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
@@ -76,6 +77,7 @@
       "lieuResidence": "",
       "experienceCle": "",
       "langues": null,
+      "formations": null,
       "profile": "",
       "idCardUrl": null,
       "resetToken": null,
@@ -95,6 +97,7 @@
       "lieuResidence": "",
       "experienceCle": "",
       "langues": null,
+      "formations": null,
       "profile": "",
       "idCardUrl": null,
       "resetToken": null,
@@ -114,6 +117,7 @@
       "lieuResidence": "",
       "experienceCle": "",
       "langues": null,
+      "formations": null,
       "profile": "",
       "idCardUrl": null,
       "resetToken": null,
@@ -133,6 +137,7 @@
       "lieuResidence": "",
       "experienceCle": "",
       "langues": null,
+      "formations": null,
       "profile": "",
       "idCardUrl": null,
       "resetToken": null,
@@ -152,6 +157,7 @@
       "lieuResidence": "",
       "experienceCle": "",
       "langues": null,
+      "formations": null,
       "profile": "",
       "idCardUrl": null,
       "resetToken": null,
@@ -171,6 +177,7 @@
       "lieuResidence": "",
       "experienceCle": "",
       "langues": null,
+      "formations": null,
       "profile": "",
       "idCardUrl": null,
       "resetToken": null,
@@ -190,6 +197,7 @@
       "lieuResidence": "",
       "experienceCle": "",
       "langues": null,
+      "formations": null,
       "profile": "",
       "idCardUrl": null,
       "resetToken": null,
@@ -209,6 +217,7 @@
       "lieuResidence": "",
       "experienceCle": "",
       "langues": null,
+      "formations": null,
       "profile": "",
       "idCardUrl": null,
       "resetToken": null,
@@ -429,9 +438,85 @@
       "pieceJointe": null
     }
   ],
-  "dossiers": [],
-  "missions": [],
-  "taches": [],
+  "dossiers": [
+    {
+      "origin": "CLIENT",
+      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "id": "97bce231-bcd2-4232-bcc7-9569263bfcef",
+      "reference": "DOS-01",
+      "name": "DOSSIER_CLIENT_TEST_ALPHA_28092026_DOS-01",
+      "description": "dfbdjbj",
+      "status": "BLOQUE",
+      "previousStatus": "NOUVEAU",
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": "6fecd730-a32f-4893-98f4-88943fe354dd",
+      "targetUserId": null,
+      "traitantId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "parentDossierId": null,
+      "createdAt": "2026-09-28T17:55:10.181Z",
+      "updatedAt": "2026-09-28T18:01:37.417Z",
+      "isSystem": false
+    },
+    {
+      "origin": "CLIENT",
+      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "id": "2564d837-157b-4099-88fa-7fba645fe576",
+      "reference": "DOS-02",
+      "name": "Mission-ALPHA_CORP-28092026",
+      "description": "Sous-dossier GED auto-généré pour la mission MSN-01",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": "6fecd730-a32f-4893-98f4-88943fe354dd",
+      "targetUserId": null,
+      "traitantId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "parentDossierId": "97bce231-bcd2-4232-bcc7-9569263bfcef",
+      "createdAt": "2026-09-28T18:00:10.649Z",
+      "updatedAt": "2026-09-28T18:00:10.649Z",
+      "isSystem": true
+    }
+  ],
+  "missions": [
+    {
+      "id": "ad0414a4-eb8c-4677-8e81-c5d41e437cd9",
+      "reference": "MSN-01",
+      "dossierId": "97bce231-bcd2-4232-bcc7-9569263bfcef",
+      "assignedToId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "relecteurId": null,
+      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "description": "Consectetur deleniti\n\nEveniet officia qui",
+      "echeance": "2026-09-28T23:00:00.000Z",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "attachment": null,
+      "dossierMissionId": "97bce231-bcd2-4232-bcc7-9569263bfcef",
+      "createdAt": "2026-09-28T18:00:10.524Z",
+      "updatedAt": "2026-09-28T18:00:54.340Z",
+      "parentMissionId": null
+    }
+  ],
+  "taches": [
+    {
+      "id": "c0746ae7-af90-4572-abf4-da49cbd98e6a",
+      "reference": "TCH-01",
+      "missionId": "ad0414a4-eb8c-4677-8e81-c5d41e437cd9",
+      "assignedToId": "abddaf00-28df-4cca-8f1a-fa4c21b5eb2c",
+      "relecteurId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "description": "Objet: Fugit consequuntur \n\nConsignes: Debitis nobis ipsum ",
+      "echeance": "2026-09-29T23:00:00.000Z",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "attachment": null,
+      "adminFeedback": null,
+      "managerFeedback": null,
+      "dossierTacheId": null,
+      "createdAt": "2026-09-28T18:00:54.305Z",
+      "updatedAt": "2026-09-28T18:00:54.305Z"
+    }
+  ],
   "documents": [],
   "auditLogs": [
     {
@@ -444,6 +529,50 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-09-28T10:38:45.275Z"
+    },
+    {
+      "id": "ed618031-7007-45c8-9f71-d75a4c41348f",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_DOSSIER",
+      "targetId": "97bce231-bcd2-4232-bcc7-9569263bfcef",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: DOSSIER_CLIENT_TEST_ALPHA_28092026_DOS-01",
+      "dossierId": "97bce231-bcd2-4232-bcc7-9569263bfcef",
+      "formulaireId": null,
+      "createdAt": "2026-09-28T17:55:10.198Z"
+    },
+    {
+      "id": "8bf06f18-482a-4455-9c96-50de10cefdf6",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_MISSION",
+      "targetId": "ad0414a4-eb8c-4677-8e81-c5d41e437cd9",
+      "targetType": "MISSION",
+      "details": "Mission créée: Consectetur deleniti\n\nEveniet officia qui",
+      "dossierId": "97bce231-bcd2-4232-bcc7-9569263bfcef",
+      "formulaireId": null,
+      "createdAt": "2026-09-28T18:00:10.614Z"
+    },
+    {
+      "id": "73ff3c77-1b11-4e81-a248-c499dfe9bd6e",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_TACHE",
+      "targetId": "c0746ae7-af90-4572-abf4-da49cbd98e6a",
+      "targetType": "TACHE",
+      "details": "Tâche créée: Objet: Fugit consequuntur \n\nConsignes: Debitis nobis ipsum ",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-28T18:00:54.358Z"
+    },
+    {
+      "id": "fd756fe6-a071-4bb3-b2c0-045af2d0d79e",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_DOSSIER",
+      "targetId": "97bce231-bcd2-4232-bcc7-9569263bfcef",
+      "targetType": "DOSSIER",
+      "details": "Dossier modifié: DOSSIER_CLIENT_TEST_ALPHA_28092026_DOS-01",
+      "dossierId": "97bce231-bcd2-4232-bcc7-9569263bfcef",
+      "formulaireId": null,
+      "createdAt": "2026-09-28T18:01:37.432Z"
     }
   ],
   "messagePersonnels": [

@@ -223,7 +223,7 @@ const MagicLinkDropPage = () => {
                 style={{
                   margin: 0,
                   fontWeight: 600,
-                  fontSize: "0.875rem",
+                  
                   color:
                     linkData.type === "ACQUISITION" ? "#9A3412" : "#0369A1",
                   marginBottom: "0.4rem",
@@ -296,7 +296,7 @@ const MagicLinkDropPage = () => {
                       style={{
                         color: "var(--text-muted)",
                         marginBottom: "0.5rem",
-                        fontSize: "0.875rem",
+                        
                       }}
                     >
                       Votre conseiller MENUA attend vos fichiers dans le cadre
@@ -341,7 +341,7 @@ const MagicLinkDropPage = () => {
                           style={{
                             display: "block",
                             marginBottom: "0.5rem",
-                            fontSize: "0.875rem",
+                            
                           }}
                         >
                           Fichiers sélectionnés :
@@ -350,7 +350,7 @@ const MagicLinkDropPage = () => {
                           style={{
                             margin: 0,
                             paddingLeft: "1.5rem",
-                            fontSize: "0.875rem",
+                            
                             color: "var(--text-muted)",
                           }}
                         >
@@ -370,7 +370,7 @@ const MagicLinkDropPage = () => {
                         color: "var(--danger)",
                         marginBottom: "1rem",
                         textAlign: "center",
-                        fontSize: "0.875rem",
+                        
                       }}
                     >
                       {error}

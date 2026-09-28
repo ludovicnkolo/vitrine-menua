@@ -36,7 +36,7 @@ const DetailField = ({ label, value, children }) => (
       style={{
         display: "block",
         marginBottom: "0.25rem",
-        fontSize: "0.875rem",
+        
         fontWeight: 500,
         color: "var(--text-muted)",
       }}
@@ -67,7 +67,7 @@ const InlineDetailField = ({ label, value, children }) => (
       display: "flex",
       alignItems: "flex-start",
       gap: "0.5rem",
-      fontSize: "0.875rem",
+      
     }}
   >
     <span
@@ -929,7 +929,7 @@ const InboxPage = ({ userRole }) => {
           style={{
             display: "block",
             marginBottom: "1rem",
-            fontSize: "0.875rem",
+            
             fontWeight: 500,
             color: "var(--text-muted)",
           }}
@@ -987,7 +987,7 @@ const InboxPage = ({ userRole }) => {
                       padding: "0.5rem 1rem",
                       borderRadius: "8px",
                       border: "1px solid var(--border)",
-                      fontSize: "0.875rem",
+                      
                       outline: "none",
                       background: "#F8FAFC",
                     }}
@@ -1002,7 +1002,7 @@ const InboxPage = ({ userRole }) => {
                     borderRadius: "8px",
                     border: "1px solid var(--border)",
                     background: "#FFF",
-                    fontSize: "0.875rem",
+                    
                     color: "var(--text-main)",
                     outline: "none",
                     cursor: "pointer",
@@ -1016,7 +1016,7 @@ const InboxPage = ({ userRole }) => {
                     borderRadius: "8px",
                     border: "1px solid var(--border)",
                     background: "#FFF",
-                    fontSize: "0.875rem",
+                    
                     color: "var(--text-main)",
                     outline: "none",
                     cursor: "pointer",
@@ -1075,7 +1075,7 @@ const InboxPage = ({ userRole }) => {
                     borderRadius: "8px",
                     border: "1px solid var(--border)",
                     background: "#FFF",
-                    fontSize: "0.875rem",
+                    
                     outline: "none",
                     cursor: "pointer",
                   }}
@@ -1258,7 +1258,7 @@ const InboxPage = ({ userRole }) => {
                             <td>
                               <strong
                                 className="truncate-name"
-                                style={{ fontSize: "0.875rem" }}
+                                style={{  }}
                               >
                                 {col2}
                               </strong>
@@ -1268,7 +1268,7 @@ const InboxPage = ({ userRole }) => {
                                 className="truncate-text"
                                 style={{
                                   color: "var(--text-muted)",
-                                  fontSize: "0.875rem",
+                                  
                                 }}
                               >
                                 {col3}
@@ -1318,7 +1318,7 @@ const InboxPage = ({ userRole }) => {
                             <td
                               style={{
                                 color: "var(--text-muted)",
-                                fontSize: "0.875rem",
+                                
                                 whiteSpace: "nowrap",
                               }}
                             >
@@ -1472,7 +1472,7 @@ const InboxPage = ({ userRole }) => {
                           m.objet,
                           {
                             fontWeight: m.status === "NOUVEAU" ? 600 : 400,
-                            fontSize: "0.875rem",
+                            
                           },
                         ),
                       );
@@ -1581,7 +1581,7 @@ const InboxPage = ({ userRole }) => {
                       {(processMsg.dateRappel || processMsg.dateEntretien) && (
                         <div
                           style={{
-                            fontSize: "0.875rem",
+                            
                             color: "var(--text-main)",
                             marginBottom: "0.25rem",
                           }}
@@ -1598,7 +1598,7 @@ const InboxPage = ({ userRole }) => {
                       {processMsg.noteRappel && (
                         <div
                           style={{
-                            fontSize: "0.875rem",
+                            
                             color: "var(--text-muted)",
                           }}
                         >
@@ -1606,7 +1606,7 @@ const InboxPage = ({ userRole }) => {
                         </div>
                       )}
                       {processMsg.lienVisio && (
-                        <div style={{ fontSize: "0.875rem" }}>
+                        <div style={{  }}>
                           <strong>Lien visio :</strong>{" "}
                           <a
                             href={processMsg.lienVisio}
@@ -2250,7 +2250,7 @@ const InboxPage = ({ userRole }) => {
                     style={{
                       display: "block",
                       marginBottom: "1rem",
-                      fontSize: "0.875rem",
+                      
                       fontWeight: 500,
                       color: "var(--text-muted)",
                     }}
@@ -2601,7 +2601,7 @@ const InboxPage = ({ userRole }) => {
               <p
                 style={{
                   margin: "0.5rem 0 0",
-                  fontSize: "0.875rem",
+                  
                   color: "var(--text-muted)",
                 }}
               >
@@ -2722,7 +2722,7 @@ const InboxPage = ({ userRole }) => {
                         display: "block",
                         marginBottom: "0.5rem",
                         fontWeight: 500,
-                        fontSize: "0.875rem",
+                        
                       }}
                     >
                       Objet de la réponse
@@ -2749,7 +2749,7 @@ const InboxPage = ({ userRole }) => {
                         display: "block",
                         marginBottom: "0.5rem",
                         fontWeight: 500,
-                        fontSize: "0.875rem",
+                        
                       }}
                     >
                       Message
@@ -2781,7 +2781,7 @@ const InboxPage = ({ userRole }) => {
                       display: "block",
                       marginBottom: "0.5rem",
                       fontWeight: 500,
-                      fontSize: "0.875rem",
+                      
                     }}
                   >
                     Dossier associé
@@ -2868,7 +2868,7 @@ const InboxPage = ({ userRole }) => {
                         display: "block",
                         marginBottom: "0.35rem",
                         fontWeight: 500,
-                        fontSize: "0.875rem",
+                        
                       }}
                     >
                       <Paperclip
@@ -2889,7 +2889,7 @@ const InboxPage = ({ userRole }) => {
                         borderRadius: "8px",
                         border: "1px solid var(--border)",
                         background: "#F8FAFC",
-                        fontSize: "0.875rem",
+                        
                       }}
                     />
                     {dossierFile && (
@@ -2921,7 +2921,7 @@ const InboxPage = ({ userRole }) => {
                           display: "block",
                           marginBottom: "0.5rem",
                           fontWeight: 500,
-                          fontSize: "0.875rem",
+                          
                           color: "var(--primary-dark)",
                         }}
                       >
@@ -2952,7 +2952,7 @@ const InboxPage = ({ userRole }) => {
                                   gap: "0.5rem",
                                   cursor: "pointer",
                                   margin: 0,
-                                  fontSize: "0.875rem",
+                                  
                                   fontWeight: 500,
                                   color: "var(--text-main)",
                                 }}
@@ -3015,7 +3015,7 @@ const InboxPage = ({ userRole }) => {
                       display: "block",
                       marginBottom: "0.5rem",
                       fontWeight: 500,
-                      fontSize: "0.875rem",
+                      
                     }}
                   >
                     Pièces jointes
@@ -3039,7 +3039,7 @@ const InboxPage = ({ userRole }) => {
                       }}
                     >
                       <Files size={16} />
-                      <span style={{ fontSize: "0.875rem", fontWeight: 500 }}>
+                      <span style={{  fontWeight: 500 }}>
                         {newTaskFile
                           ? newTaskFile.name
                           : "Joindre un fichier..."}

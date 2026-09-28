@@ -73,7 +73,7 @@ const FeedbackThread = ({ adminFeedback, managerFeedback, currentStatus }) => {
                 alignItems: "center",
                 gap: "0.5rem",
                 fontWeight: 600,
-                fontSize: "0.875rem",
+                
                 color: "#B91C1C",
               }}
             >
@@ -90,7 +90,7 @@ const FeedbackThread = ({ adminFeedback, managerFeedback, currentStatus }) => {
             <div
               style={{
                 padding: "1rem",
-                fontSize: "0.875rem",
+                
                 color: "#1F2937",
                 whiteSpace: "pre-wrap",
                 lineHeight: 1.7,
@@ -134,7 +134,7 @@ const FeedbackThread = ({ adminFeedback, managerFeedback, currentStatus }) => {
                 alignItems: "center",
                 gap: "0.5rem",
                 fontWeight: 600,
-                fontSize: "0.875rem",
+                
                 color: "#6D28D9",
               }}
             >
@@ -151,7 +151,7 @@ const FeedbackThread = ({ adminFeedback, managerFeedback, currentStatus }) => {
             <div
               style={{
                 padding: "1rem",
-                fontSize: "0.875rem",
+                
                 color: "#1F2937",
                 whiteSpace: "pre-wrap",
                 lineHeight: 1.7,

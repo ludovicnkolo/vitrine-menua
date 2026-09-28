@@ -74,7 +74,7 @@ const TaskField = ({
           display: "block",
           marginBottom: "0.5rem",
           fontWeight: 500,
-          fontSize: "0.875rem",
+          
         }}
       >
         {label}
@@ -772,7 +772,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   display: "block",
                   marginBottom: "0.5rem",
                   fontWeight: 500,
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 Objet de la tâche
@@ -807,7 +807,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     display: "block",
                     marginBottom: "0.5rem",
                     fontWeight: 500,
-                    fontSize: "0.875rem",
+                    
                   }}
                 >
                   Assigné à
@@ -849,7 +849,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     display: "block",
                     marginBottom: "0.5rem",
                     fontWeight: 500,
-                    fontSize: "0.875rem",
+                    
                   }}
                 >
                   Relecteur (Contrôleur)
@@ -897,7 +897,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     display: "block",
                     marginBottom: "0.5rem",
                     fontWeight: 500,
-                    fontSize: "0.875rem",
+                    
                   }}
                 >
                   Échéance
@@ -925,7 +925,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     display: "block",
                     marginBottom: "0.5rem",
                     fontWeight: 500,
-                    fontSize: "0.875rem",
+                    
                   }}
                 >
                   Mission associée
@@ -965,7 +965,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                         display: "block",
                         marginBottom: "0.5rem",
                         fontWeight: 600,
-                        fontSize: "0.875rem",
+                        
                         color: "var(--primary-dark)",
                       }}
                     >
@@ -1002,7 +1002,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                             display: "block",
                             marginBottom: "0.5rem",
                             fontWeight: 600,
-                            fontSize: "0.875rem",
+                            
                             color: "var(--primary-dark)",
                           }}
                         >
@@ -1073,7 +1073,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                             <h4
                               style={{
                                 margin: "0 0 0.5rem 0",
-                                fontSize: "0.875rem",
+                                
                                 color: "#0369a1",
                               }}
                             >
@@ -1084,7 +1084,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                               style={{
                                 margin: 0,
                                 paddingLeft: "1.5rem",
-                                fontSize: "0.875rem",
+                                
                                 color: "#0c4a6e",
                               }}
                             >
@@ -1113,7 +1113,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   display: "block",
                   marginBottom: "0.5rem",
                   fontWeight: 500,
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 Message / Consignes
@@ -1226,7 +1226,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   display: "block",
                   marginBottom: "0.5rem",
                   fontWeight: 500,
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 Assigné à
@@ -1281,7 +1281,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   display: "block",
                   marginBottom: "0.5rem",
                   fontWeight: 500,
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 Relecteur
@@ -1335,7 +1335,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 display: "block",
                 marginBottom: "0.5rem",
                 fontWeight: 500,
-                fontSize: "0.875rem",
+                
               }}
             >
               Échéance
@@ -1395,7 +1395,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               <span
                 style={{
                   fontWeight: 500,
-                  fontSize: "0.875rem",
+                  
                   color: "var(--text-main)",
                 }}
               >
@@ -1478,7 +1478,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     >
                       <strong
                         className="truncate-text"
-                        style={{ fontSize: "0.875rem" }}
+                        style={{  }}
                       >
                         {sub.reference || "Sans réf"}
                       </strong>
@@ -1524,7 +1524,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   border: "1px dashed var(--border)",
                   textAlign: "center",
                   color: "var(--text-muted)",
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 Aucune tâche liée pour le moment.
@@ -1698,7 +1698,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   display: "flex",
                   alignItems: "center",
                   gap: "0.5rem",
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 <strong
@@ -1719,7 +1719,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   display: "flex",
                   alignItems: "flex-start",
                   gap: "0.5rem",
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 <strong
@@ -1746,7 +1746,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   display: "flex",
                   alignItems: "center",
                   gap: "0.5rem",
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 <strong
@@ -1772,7 +1772,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     display: "flex",
                     alignItems: "center",
                     gap: "0.5rem",
-                    fontSize: "0.875rem",
+                    
                   }}
                 >
                   <strong
@@ -1797,7 +1797,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                       display: "flex",
                       alignItems: "flex-start",
                       gap: "0.5rem",
-                      fontSize: "0.875rem",
+                      
                     }}
                   >
                     <strong
@@ -1847,7 +1847,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   display: "flex",
                   alignItems: "center",
                   gap: "0.5rem",
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 <strong
@@ -1871,7 +1871,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   display: "flex",
                   alignItems: "center",
                   gap: "0.5rem",
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 <strong
@@ -1895,7 +1895,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   display: "flex",
                   alignItems: "center",
                   gap: "0.5rem",
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 <strong
@@ -1919,7 +1919,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   display: "flex",
                   alignItems: "center",
                   gap: "0.5rem",
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 <strong
@@ -1946,7 +1946,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   display: "flex",
                   alignItems: "center",
                   gap: "0.5rem",
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 <strong
@@ -1979,7 +1979,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                       display: "flex",
                       alignItems: "center",
                       gap: "0.5rem",
-                      fontSize: "0.875rem",
+                      
                     }}
                   >
                     <strong
@@ -2006,7 +2006,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                           borderRadius: "4px",
                           border: "1px solid var(--border)",
                           background: isLocked ? "#F3F4F6" : "#FFF",
-                          fontSize: "0.875rem",
+                          
                           outline: "none",
                           cursor: isLocked ? "not-allowed" : "pointer",
                           minWidth: "140px",
@@ -2030,7 +2030,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                           className="btn btn-primary"
                           style={{
                             padding: "0.4rem 0.8rem",
-                            fontSize: "0.875rem",
+                            
                             display: "flex",
                             alignItems: "center",
                             gap: "0.4rem",
@@ -2073,7 +2073,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 borderRadius: "8px",
                 border: "1px solid var(--border)",
                 whiteSpace: "pre-wrap",
-                fontSize: "0.875rem",
+                
                 color: "var(--text-main)",
                 minHeight: "120px",
               }}
@@ -2337,7 +2337,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     <strong
                       className="truncate-text"
                       style={{
-                        fontSize: "0.875rem",
+                        
                         color: "var(--text-main)",
                         margin: 0,
                       }}
@@ -2350,7 +2350,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                       style={{
                         color: "var(--primary)",
                         fontWeight: 500,
-                        fontSize: "0.875rem",
+                        
                         margin: 0,
                         whiteSpace: "nowrap",
                         overflow: "hidden",
@@ -2372,7 +2372,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   <td style={{ textAlign: "left" }}>
                     <span
                       className="truncate-name"
-                      style={{ fontSize: "0.875rem", margin: 0 }}
+                      style={{  margin: 0 }}
                     >
                       {t.assignedTo?.name || "Non assigné"}
                     </span>
@@ -2384,7 +2384,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                           ? "var(--text-main)"
                           : "var(--danger)",
                         fontWeight: 500,
-                        fontSize: "0.875rem",
+                        
                         margin: 0,
                       }}
                     >
@@ -2400,7 +2400,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     style={{
                       textAlign: "left",
                       color: "var(--text-muted)",
-                      fontSize: "0.875rem",
+                      
                       whiteSpace: "nowrap",
                     }}
                   >
@@ -2512,7 +2512,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           >
             Précédent
           </button>
-          <span style={{ fontSize: "0.875rem", color: "var(--text-muted)" }}>
+          <span style={{  color: "var(--text-muted)" }}>
             Page {page} sur {totalPages}
           </span>
           <button

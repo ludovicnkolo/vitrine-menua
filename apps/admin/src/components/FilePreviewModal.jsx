@@ -133,7 +133,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
                 </button>
                 <span
                   style={{
-                    fontSize: "0.875rem",
+                    
                     minWidth: "40px",
                     textAlign: "center",
                   }}

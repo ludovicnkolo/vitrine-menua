@@ -112,7 +112,7 @@ const SetupPasswordPage = () => {
           <p
             style={{
               color: "var(--text-muted)",
-              fontSize: "0.875rem",
+              
               marginTop: "0.5rem",
             }}
           >
@@ -128,7 +128,7 @@ const SetupPasswordPage = () => {
               padding: "1rem",
               borderRadius: "8px",
               marginBottom: "1rem",
-              fontSize: "0.875rem",
+              
               textAlign: "center",
             }}
           >
@@ -147,7 +147,7 @@ const SetupPasswordPage = () => {
             }}
           >
             <h3 style={{ margin: "0 0 0.5rem 0" }}>Compte activé !</h3>
-            <p style={{ margin: 0, fontSize: "0.875rem" }}>
+            <p style={{ margin: 0,  }}>
               Redirection vers la page de connexion...
             </p>
           </div>
@@ -163,7 +163,7 @@ const SetupPasswordPage = () => {
                   display: "block",
                   marginBottom: "0.5rem",
                   fontWeight: 500,
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 Nouveau mot de passe
@@ -191,7 +191,7 @@ const SetupPasswordPage = () => {
                   display: "block",
                   marginBottom: "0.5rem",
                   fontWeight: 500,
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 Confirmer le mot de passe

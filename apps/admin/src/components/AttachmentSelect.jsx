@@ -3,7 +3,7 @@ import React from "react";
 const AttachmentSelect = ({ files, onPreview }) => {
   if (!files || files.length === 0) {
     return (
-      <span style={{ fontSize: "0.875rem", color: "var(--text-muted)" }}>
+      <span style={{  color: "var(--text-muted)" }}>
         Aucun fichier
       </span>
     );
@@ -22,7 +22,7 @@ const AttachmentSelect = ({ files, onPreview }) => {
 
   if (validFiles.length === 0) {
     return (
-      <span style={{ fontSize: "0.875rem", color: "var(--text-muted)" }}>
+      <span style={{  color: "var(--text-muted)" }}>
         Aucun fichier
       </span>
     );

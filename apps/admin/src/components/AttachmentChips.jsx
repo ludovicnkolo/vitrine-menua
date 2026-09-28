@@ -24,7 +24,7 @@ const AttachmentChips = ({ attachment, onRemove }) => {
             >
               <span
                 style={{
-                  fontSize: "0.875rem",
+                  
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",

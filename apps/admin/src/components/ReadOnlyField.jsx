@@ -8,7 +8,7 @@ const ReadOnlyField = ({ label, value }) => {
           display: "block",
           marginBottom: "0.5rem",
           fontWeight: 500,
-          fontSize: "0.875rem",
+          
         }}
       >
         {label}

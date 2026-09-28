@@ -27,7 +27,7 @@ const TaskConsultModal = ({
             border: "1px dashed var(--border)",
             textAlign: "center",
             color: "var(--text-muted)",
-            fontSize: "0.875rem",
+            
           }}
         >
           Aucun document attaché.
@@ -182,7 +182,7 @@ const TaskConsultModal = ({
                   display: "block",
                   marginBottom: "0.5rem",
                   fontWeight: 500,
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 Statut

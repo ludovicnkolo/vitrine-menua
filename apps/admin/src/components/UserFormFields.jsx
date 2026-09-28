@@ -38,7 +38,7 @@ const UserFormFields = ({
             style={{
               display: "block",
               marginBottom: "0.25rem",
-              fontSize: "0.875rem",
+              
               fontWeight: 500,
             }}
           >
@@ -73,7 +73,7 @@ const UserFormFields = ({
             style={{
               display: "block",
               marginBottom: "0.25rem",
-              fontSize: "0.875rem",
+              
               fontWeight: 500,
             }}
           >
@@ -118,12 +118,23 @@ const UserFormFields = ({
           onChange={handleChange("langues")}
           inputProps={{ placeholder: "Ex: Français, Anglais" }}
         />
+        <FormField
+          label="Formations / Diplômes"
+          value={user.formations}
+          onChange={handleChange("formations")}
+          inputProps={{ placeholder: "Ex: Master Finance" }}
+        />
+      </div>
+
+      <div
+        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}
+      >
         <div>
           <label
             style={{
               display: "block",
               marginBottom: "0.25rem",
-              fontSize: "0.875rem",
+              
               fontWeight: 500,
             }}
           >
@@ -171,7 +182,7 @@ const UserFormFields = ({
               style={{
                 display: "block",
                 marginBottom: "0.25rem",
-                fontSize: "0.875rem",
+                
                 fontWeight: 500,
               }}
             >

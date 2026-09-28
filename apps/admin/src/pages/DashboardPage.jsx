@@ -217,7 +217,7 @@ const DashboardPage = () => {
                 borderRadius: "6px",
                 padding: "0.35rem 0.5rem",
                 outline: "none",
-                fontSize: "0.875rem",
+                
                 color: "var(--text-main)",
               }}
             />
@@ -244,7 +244,7 @@ const DashboardPage = () => {
                 borderRadius: "6px",
                 padding: "0.35rem 0.5rem",
                 outline: "none",
-                fontSize: "0.875rem",
+                
                 color: "var(--text-main)",
               }}
             />
@@ -259,7 +259,7 @@ const DashboardPage = () => {
               border: "none",
               borderRadius: "6px",
               fontWeight: 600,
-              fontSize: "0.875rem",
+              
               cursor: loading ? "not-allowed" : "pointer",
               opacity: loading ? 0.7 : 1,
               display: "flex",

@@ -31,7 +31,7 @@ const FormField = ({
       style={{
         display: "block",
         marginBottom: "0.25rem",
-        fontSize: "0.875rem",
+        
         fontWeight: 500,
       }}
     >

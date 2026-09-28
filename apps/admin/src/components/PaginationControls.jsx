@@ -27,7 +27,7 @@ const PaginationControls = ({ page, totalPages, setPage }) => {
       >
         Précédent
       </button>
-      <span style={{ fontSize: "0.875rem", color: "var(--text-muted)" }}>
+      <span style={{  color: "var(--text-muted)" }}>
         Page {page} sur {totalPages}
       </span>
       <button

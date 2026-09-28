@@ -63,7 +63,7 @@ const UsersPage = ({ forceTab }) => {
         style={{
           display: "block",
           marginBottom: "0.25rem",
-          fontSize: "0.875rem",
+          
           fontWeight: 500,
           color: "var(--text-muted)",
         }}
@@ -501,7 +501,7 @@ const UsersPage = ({ forceTab }) => {
               style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
             >
               {errorMsg && (
-                <div style={{ color: "red", fontSize: "0.875rem" }}>
+                <div style={{ color: "red",  }}>
                   {errorMsg}
                 </div>
               )}
@@ -571,7 +571,7 @@ const UsersPage = ({ forceTab }) => {
               style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
             >
               {errorMsg && (
-                <div style={{ color: "red", fontSize: "0.875rem" }}>
+                <div style={{ color: "red",  }}>
                   {errorMsg}
                 </div>
               )}
@@ -790,7 +790,7 @@ const UsersPage = ({ forceTab }) => {
               style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
             >
               {errorMsg && (
-                <div style={{ color: "red", fontSize: "0.875rem" }}>
+                <div style={{ color: "red",  }}>
                   {errorMsg}
                 </div>
               )}
@@ -861,7 +861,7 @@ const UsersPage = ({ forceTab }) => {
               style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
             >
               {errorMsg && (
-                <div style={{ color: "red", fontSize: "0.875rem" }}>
+                <div style={{ color: "red",  }}>
                   {errorMsg}
                 </div>
               )}
@@ -942,7 +942,7 @@ const UsersPage = ({ forceTab }) => {
                     style={{
                       display: "block",
                       marginBottom: "0.25rem",
-                      fontSize: "0.875rem",
+                      
                       fontWeight: 500,
                       color: "var(--text-muted)",
                     }}
@@ -967,7 +967,7 @@ const UsersPage = ({ forceTab }) => {
                     style={{
                       display: "block",
                       marginBottom: "0.25rem",
-                      fontSize: "0.875rem",
+                      
                       fontWeight: 500,
                       color: "var(--text-muted)",
                     }}
@@ -1001,7 +1001,7 @@ const UsersPage = ({ forceTab }) => {
                     style={{
                       display: "block",
                       marginBottom: "0.25rem",
-                      fontSize: "0.875rem",
+                      
                       fontWeight: 500,
                       color: "var(--text-muted)",
                     }}
@@ -1026,7 +1026,7 @@ const UsersPage = ({ forceTab }) => {
                     style={{
                       display: "block",
                       marginBottom: "0.25rem",
-                      fontSize: "0.875rem",
+                      
                       fontWeight: 500,
                       color: "var(--text-muted)",
                     }}
@@ -1053,7 +1053,7 @@ const UsersPage = ({ forceTab }) => {
                   style={{
                     display: "block",
                     marginBottom: "0.25rem",
-                    fontSize: "0.875rem",
+                    
                     fontWeight: 500,
                     color: "var(--text-muted)",
                   }}
@@ -1068,7 +1068,7 @@ const UsersPage = ({ forceTab }) => {
                     borderRadius: "4px",
                     border: "1px solid var(--border)",
                     minHeight: "38px",
-                    fontSize: "0.875rem",
+                    
                     color: "var(--text-main)",
                   }}
                 >
@@ -1088,7 +1088,7 @@ const UsersPage = ({ forceTab }) => {
                     style={{
                       display: "block",
                       marginBottom: "0.25rem",
-                      fontSize: "0.875rem",
+                      
                       fontWeight: 500,
                       color: "var(--text-muted)",
                     }}
@@ -1122,7 +1122,7 @@ const UsersPage = ({ forceTab }) => {
                     style={{
                       display: "block",
                       marginBottom: "0.25rem",
-                      fontSize: "0.875rem",
+                      
                       fontWeight: 500,
                       color: "var(--text-muted)",
                     }}
@@ -1147,7 +1147,7 @@ const UsersPage = ({ forceTab }) => {
                     style={{
                       display: "block",
                       marginBottom: "0.25rem",
-                      fontSize: "0.875rem",
+                      
                       fontWeight: 500,
                       color: "var(--text-muted)",
                     }}
@@ -1182,7 +1182,7 @@ const UsersPage = ({ forceTab }) => {
                     style={{
                       display: "block",
                       marginBottom: "0.25rem",
-                      fontSize: "0.875rem",
+                      
                       fontWeight: 500,
                       color: "var(--text-muted)",
                     }}
@@ -1216,7 +1216,7 @@ const UsersPage = ({ forceTab }) => {
                     style={{
                       display: "block",
                       marginBottom: "0.25rem",
-                      fontSize: "0.875rem",
+                      
                       fontWeight: 500,
                       color: "var(--text-muted)",
                     }}
@@ -1243,7 +1243,7 @@ const UsersPage = ({ forceTab }) => {
                     style={{
                       display: "block",
                       marginBottom: "0.25rem",
-                      fontSize: "0.875rem",
+                      
                       fontWeight: 500,
                       color: "var(--text-muted)",
                     }}
@@ -1272,7 +1272,7 @@ const UsersPage = ({ forceTab }) => {
                   style={{
                     display: "block",
                     marginBottom: "0.25rem",
-                    fontSize: "0.875rem",
+                    
                     fontWeight: 500,
                     color: "var(--text-muted)",
                   }}
@@ -1298,7 +1298,7 @@ const UsersPage = ({ forceTab }) => {
                   style={{
                     display: "block",
                     marginBottom: "0.25rem",
-                    fontSize: "0.875rem",
+                    
                     fontWeight: 500,
                     color: "var(--text-muted)",
                   }}
@@ -1419,7 +1419,7 @@ const UsersPage = ({ forceTab }) => {
                     lineHeight: 1,
                     width: "fit-content",
                     whiteSpace: "nowrap",
-                    fontSize: "0.875rem",
+                    
                     fontWeight: 500,
                     cursor: "pointer",
                     transition: "all 0.2s",
@@ -1444,7 +1444,7 @@ const UsersPage = ({ forceTab }) => {
                     lineHeight: 1,
                     width: "fit-content",
                     whiteSpace: "nowrap",
-                    fontSize: "0.875rem",
+                    
                     fontWeight: 500,
                     cursor: "pointer",
                     transition: "all 0.2s",
@@ -1464,7 +1464,7 @@ const UsersPage = ({ forceTab }) => {
                   width: "fit-content",
                   whiteSpace: "nowrap",
                   padding: "0 0.75rem",
-                  fontSize: "0.875rem",
+                  
                   height: "28px",
                   lineHeight: 1,
                 }}
@@ -1495,7 +1495,7 @@ const UsersPage = ({ forceTab }) => {
                   width: "fit-content",
                   whiteSpace: "nowrap",
                   padding: "0 0.75rem",
-                  fontSize: "0.875rem",
+                  
                   height: "28px",
                   lineHeight: 1,
                 }}
@@ -1534,7 +1534,7 @@ const UsersPage = ({ forceTab }) => {
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
                             color: "var(--text-muted)",
-                            fontSize: "0.875rem",
+                            
                           }}
                           title={u.email}
                         >
@@ -1559,7 +1559,7 @@ const UsersPage = ({ forceTab }) => {
                       <td
                         style={{
                           color: "var(--text-muted)",
-                          fontSize: "0.875rem",
+                          
                           whiteSpace: "nowrap",
                         }}
                       >
@@ -1637,7 +1637,7 @@ const UsersPage = ({ forceTab }) => {
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
                             color: "var(--text-muted)",
-                            fontSize: "0.875rem",
+                            
                           }}
                           title={c.email}
                         >

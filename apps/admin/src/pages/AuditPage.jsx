@@ -188,7 +188,7 @@ export default function AuditPage() {
                       textAlign: "left",
                       fontWeight: 600,
                       color: "var(--text-muted)",
-                      fontSize: "0.875rem",
+                      
                     }}
                   >
                     Horodatage
@@ -199,7 +199,7 @@ export default function AuditPage() {
                       textAlign: "left",
                       fontWeight: 600,
                       color: "var(--text-muted)",
-                      fontSize: "0.875rem",
+                      
                     }}
                   >
                     Utilisateur
@@ -210,7 +210,7 @@ export default function AuditPage() {
                       textAlign: "left",
                       fontWeight: 600,
                       color: "var(--text-muted)",
-                      fontSize: "0.875rem",
+                      
                     }}
                   >
                     Action
@@ -221,7 +221,7 @@ export default function AuditPage() {
                       textAlign: "left",
                       fontWeight: 600,
                       color: "var(--text-muted)",
-                      fontSize: "0.875rem",
+                      
                     }}
                   >
                     Cible / Détails
@@ -260,7 +260,7 @@ export default function AuditPage() {
                               alignItems: "center",
                               gap: "0.5rem",
                               color: "var(--text-muted)",
-                              fontSize: "0.875rem",
+                              
                             }}
                           >
                             <Clock size={14} />
@@ -301,7 +301,7 @@ export default function AuditPage() {
                                 style={{
                                   fontWeight: 500,
                                   color: "var(--text-main)",
-                                  fontSize: "0.875rem",
+                                  
                                 }}
                               >
                                 {log.user?.name || "Système"}
@@ -345,7 +345,7 @@ export default function AuditPage() {
                               <FileText size={14} color="var(--text-muted)" />
                               <span
                                 style={{
-                                  fontSize: "0.875rem",
+                                  
                                   fontWeight: 500,
                                 }}
                               >
@@ -358,7 +358,7 @@ export default function AuditPage() {
                           )}
                           <div
                             style={{
-                              fontSize: "0.875rem",
+                              
                               color: "var(--text-muted)",
                             }}
                           >

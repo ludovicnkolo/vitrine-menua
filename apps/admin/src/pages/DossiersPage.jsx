@@ -756,7 +756,7 @@ const DossiersPage = () => {
           style={{
             fontWeight: 600,
             color: isLocked ? "#9CA3AF" : "var(--text-main)",
-            fontSize: "0.875rem",
+            
           }}
         >
           Statut :
@@ -777,7 +777,7 @@ const DossiersPage = () => {
             borderRadius: "4px",
             border: "1px solid var(--border)",
             background: isLocked ? "#F3F4F6" : "#FFF",
-            fontSize: "0.875rem",
+            
             outline: "none",
             cursor: isLocked ? "not-allowed" : "pointer",
             minWidth: "150px",
@@ -855,7 +855,7 @@ const DossiersPage = () => {
               display: "flex",
               alignItems: "flex-start",
               gap: "0.5rem",
-              fontSize: "0.875rem",
+              
             }}
           >
             <strong
@@ -901,7 +901,7 @@ const DossiersPage = () => {
               display: "flex",
               alignItems: "center",
               gap: "0.5rem",
-              fontSize: "0.875rem",
+              
             }}
           >
             <strong
@@ -923,7 +923,7 @@ const DossiersPage = () => {
               display: "flex",
               alignItems: "flex-start",
               gap: "0.5rem",
-              fontSize: "0.875rem",
+              
             }}
           >
             <strong
@@ -979,7 +979,7 @@ const DossiersPage = () => {
               display: "flex",
               alignItems: "center",
               gap: "0.5rem",
-              fontSize: "0.875rem",
+              
             }}
           >
             <strong
@@ -1033,7 +1033,7 @@ const DossiersPage = () => {
               display: "flex",
               alignItems: "center",
               gap: "0.5rem",
-              fontSize: "0.875rem",
+              
             }}
           >
             <strong
@@ -1063,40 +1063,12 @@ const DossiersPage = () => {
             </span>
           </div>
 
-          {renderWorkflowButtons(isEdit ? editDossier : dossier) || (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                fontSize: "0.875rem",
-              }}
-            >
-              <strong
-                style={{
-                  color: "var(--text-muted)",
-                  fontWeight: 600,
-                  flexShrink: 0,
-                }}
-              >
-                Statut :
-              </strong>
-              {isEdit ? (
-                <span>
-                  {getStatusBadge(editDossier?.status || dossier.status)}
-                </span>
-              ) : (
-                <span>{getStatusBadge(dossier.status)}</span>
-              )}
-            </div>
-          )}
-
           <div
             style={{
               display: "flex",
               alignItems: "center",
               gap: "0.5rem",
-              fontSize: "0.875rem",
+              
             }}
           >
             <strong
@@ -1118,6 +1090,34 @@ const DossiersPage = () => {
               })}
             </span>
           </div>
+
+          {renderWorkflowButtons(isEdit ? editDossier : dossier) || (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                
+              }}
+            >
+              <strong
+                style={{
+                  color: "var(--text-muted)",
+                  fontWeight: 600,
+                  flexShrink: 0,
+                }}
+              >
+                Statut :
+              </strong>
+              {isEdit ? (
+                <span>
+                  {getStatusBadge(editDossier?.status || dossier.status)}
+                </span>
+              ) : (
+                <span>{getStatusBadge(dossier.status)}</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -1173,7 +1173,7 @@ const DossiersPage = () => {
               >
                 <strong
                   className="truncate-text"
-                  style={{ fontSize: "0.875rem" }}
+                  style={{  }}
                 >
                   {task.subject || `Mission ${task.reference || task.id}`}
                 </strong>
@@ -1217,7 +1217,7 @@ const DossiersPage = () => {
             border: "1px dashed var(--border)",
             textAlign: "center",
             color: "var(--text-muted)",
-            fontSize: "0.875rem",
+            
           }}
         >
           Aucune mission associée pour le moment.
@@ -1283,7 +1283,7 @@ const DossiersPage = () => {
             border: "1px dashed var(--border)",
             textAlign: "center",
             color: "var(--text-muted)",
-            fontSize: "0.875rem",
+            
           }}
         >
           Aucun document attaché.
@@ -1436,7 +1436,7 @@ const DossiersPage = () => {
                   background: "#FFF",
                   borderRadius: "8px",
                   border: "1px solid var(--primary)",
-                  fontSize: "0.875rem",
+                  
                   color: "var(--text-main)",
                   minHeight: "120px",
                   resize: "vertical",
@@ -1453,7 +1453,7 @@ const DossiersPage = () => {
                   borderRadius: "8px",
                   border: "1px solid var(--border)",
                   whiteSpace: "pre-wrap",
-                  fontSize: "0.875rem",
+                  
                   color: "var(--text-main)",
                   minHeight: "120px",
                 }}
@@ -1474,7 +1474,7 @@ const DossiersPage = () => {
                     display: "block",
                     marginBottom: "0.5rem",
                     fontWeight: 600,
-                    fontSize: "0.875rem",
+                    
                     color: "var(--secondary-dark)",
                   }}
                 >
@@ -1520,7 +1520,7 @@ const DossiersPage = () => {
                   background: "#F8FAFC",
                   borderRadius: "8px",
                   border: "1px solid var(--border)",
-                  fontSize: "0.875rem",
+                  
                   display: "none", // Masqué car affiché en double dans l'en-tête du dossier
                 }}
               >
@@ -1666,7 +1666,7 @@ const DossiersPage = () => {
                         display: "block",
                         marginBottom: "0.5rem",
                         fontWeight: 500,
-                        fontSize: "0.875rem",
+                        
                       }}
                     >
                       Type de lien
@@ -1697,7 +1697,7 @@ const DossiersPage = () => {
                         display: "block",
                         marginBottom: "0.5rem",
                         fontWeight: 500,
-                        fontSize: "0.875rem",
+                        
                       }}
                     >
                       Validité (jours)
@@ -1734,7 +1734,7 @@ const DossiersPage = () => {
                         display: "block",
                         marginBottom: "0.5rem",
                         fontWeight: 600,
-                        fontSize: "0.875rem",
+                        
                         color: "var(--primary-dark)",
                       }}
                     >
@@ -1758,7 +1758,7 @@ const DossiersPage = () => {
                         minHeight: "100px",
                         resize: "vertical",
                         fontFamily: "inherit",
-                        fontSize: "0.875rem",
+                        
                         boxSizing: "border-box",
                       }}
                     />
@@ -1925,7 +1925,7 @@ const DossiersPage = () => {
                           display: "block",
                           marginBottom: "0.5rem",
                           fontWeight: 500,
-                          fontSize: "0.875rem",
+                          
                         }}
                       >
                         Objet de la mission *
@@ -1970,7 +1970,7 @@ const DossiersPage = () => {
                                 display: "block",
                                 marginBottom: "0.5rem",
                                 fontWeight: 600,
-                                fontSize: "0.875rem",
+                                
                                 color: "var(--primary-dark)",
                               }}
                             >
@@ -2004,7 +2004,7 @@ const DossiersPage = () => {
                                     display: "block",
                                     marginBottom: "0.5rem",
                                     fontWeight: 600,
-                                    fontSize: "0.875rem",
+                                    
                                     color: "var(--primary-dark)",
                                   }}
                                 >
@@ -2080,7 +2080,7 @@ const DossiersPage = () => {
                                           padding: "0.75rem",
                                           background: "#e0f2fe",
                                           borderRadius: "8px",
-                                          fontSize: "0.875rem",
+                                          
                                           border: "1px solid #bae6fd",
                                           marginTop: "0.5rem",
                                         }}
@@ -2141,7 +2141,7 @@ const DossiersPage = () => {
                             display: "block",
                             marginBottom: "0.5rem",
                             fontWeight: 500,
-                            fontSize: "0.875rem",
+                            
                           }}
                         >
                           Assigner à *
@@ -2178,7 +2178,7 @@ const DossiersPage = () => {
                             display: "block",
                             marginBottom: "0.5rem",
                             fontWeight: 500,
-                            fontSize: "0.875rem",
+                            
                           }}
                         >
                           Échéance *
@@ -2206,7 +2206,7 @@ const DossiersPage = () => {
                           display: "block",
                           marginBottom: "0.5rem",
                           fontWeight: 500,
-                          fontSize: "0.875rem",
+                          
                         }}
                       >
                         Message / Consignes *
@@ -2242,7 +2242,7 @@ const DossiersPage = () => {
                             display: "block",
                             marginBottom: "0.5rem",
                             fontWeight: 500,
-                            fontSize: "0.875rem",
+                            
                             color: "var(--primary-dark)",
                           }}
                         >
@@ -2269,7 +2269,7 @@ const DossiersPage = () => {
                                   display: "flex",
                                   alignItems: "center",
                                   gap: "0.5rem",
-                                  fontSize: "0.875rem",
+                                  
                                   cursor: "pointer",
                                   margin: 0,
                                 }}
@@ -2428,7 +2428,7 @@ const DossiersPage = () => {
                 background: "#FFF",
                 borderRadius: "8px",
                 border: "1px solid var(--primary)",
-                fontSize: "0.875rem",
+                
                 color: "var(--text-main)",
                 minHeight: "120px",
                 resize: "vertical",
@@ -2714,7 +2714,7 @@ const DossiersPage = () => {
                         <div
                           style={{
                             color: "var(--text-muted)",
-                            fontSize: "0.875rem",
+                            
                             textTransform: "capitalize",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
@@ -2749,7 +2749,7 @@ const DossiersPage = () => {
                         style={{
                           color: "var(--text-muted)",
                           whiteSpace: "nowrap",
-                          fontSize: "0.875rem",
+                          
                         }}
                       >
                         {new Date(d.createdAt).toLocaleString("fr-FR", {
@@ -3174,7 +3174,7 @@ const DossiersPage = () => {
                         display: "block",
                         marginBottom: "0.5rem",
                         fontWeight: 500,
-                        fontSize: "0.875rem",
+                        
                       }}
                     >
                       Description *
@@ -3227,7 +3227,7 @@ const DossiersPage = () => {
                         display: "block",
                         marginBottom: "0.5rem",
                         fontWeight: 500,
-                        fontSize: "0.875rem",
+                        
                       }}
                     >
                       Responsable du dossier (Traitant) *

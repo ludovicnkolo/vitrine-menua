@@ -204,7 +204,7 @@ export default function NotificationBell() {
                   padding: "2rem",
                   textAlign: "center",
                   color: "#94a3b8",
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 <Bell

@@ -90,7 +90,7 @@ const LoginPage = ({ onLogin }) => {
                 background: "#FEE2E2",
                 color: "#B91C1C",
                 borderRadius: "8px",
-                fontSize: "0.875rem",
+                
               }}
             >
               {error}
@@ -102,7 +102,7 @@ const LoginPage = ({ onLogin }) => {
               style={{
                 display: "block",
                 marginBottom: "0.25rem",
-                fontSize: "0.875rem",
+                
                 fontWeight: 500,
               }}
             >
@@ -128,7 +128,7 @@ const LoginPage = ({ onLogin }) => {
               style={{
                 display: "block",
                 marginBottom: "0.25rem",
-                fontSize: "0.875rem",
+                
                 fontWeight: 500,
               }}
             >

@@ -636,7 +636,7 @@ export default function DocumentsPage() {
                 padding: "0.6rem 1rem",
                 borderRadius: "0.5rem",
                 fontWeight: 600,
-                fontSize: "0.875rem",
+                
                 border: "none",
                 cursor: "pointer",
               }}
@@ -659,7 +659,7 @@ export default function DocumentsPage() {
                 padding: "0.6rem 1rem",
                 borderRadius: "0.5rem",
                 fontWeight: 600,
-                fontSize: "0.875rem",
+                
                 cursor: "pointer",
               }}
             >
@@ -681,7 +681,7 @@ export default function DocumentsPage() {
                 padding: "0.6rem 1rem",
                 borderRadius: "0.5rem",
                 fontWeight: 600,
-                fontSize: "0.875rem",
+                
                 cursor: "pointer",
               }}
             >
@@ -705,7 +705,7 @@ export default function DocumentsPage() {
               padding: "0.6rem 1rem",
               borderRadius: "0.5rem",
               fontWeight: 600,
-              fontSize: "0.875rem",
+              
               cursor: "pointer",
             }}
             title="Rafraîchir"
@@ -860,7 +860,7 @@ export default function DocumentsPage() {
                     padding: "0.6rem 1.25rem",
                     borderRadius: "0.5rem",
                     fontWeight: 600,
-                    fontSize: "0.875rem",
+                    
                     border: "none",
                     cursor: "pointer",
                   }}
@@ -1179,7 +1179,7 @@ export default function DocumentsPage() {
                   border: "none",
                   cursor: "pointer",
                   textAlign: "left",
-                  fontSize: "0.875rem",
+                  
                   color: "var(--text-main)",
                 }}
                 onMouseOver={(e) =>
@@ -1211,7 +1211,7 @@ export default function DocumentsPage() {
                     border: "none",
                     cursor: "pointer",
                     textAlign: "left",
-                    fontSize: "0.875rem",
+                    
                     color: "var(--text-main)",
                   }}
                   onMouseOver={(e) =>
@@ -1250,7 +1250,7 @@ export default function DocumentsPage() {
                   border: "none",
                   cursor: "pointer",
                   textAlign: "left",
-                  fontSize: "0.875rem",
+                  
                   color: "var(--text-main)",
                 }}
                 onMouseOver={(e) =>
@@ -1285,7 +1285,7 @@ export default function DocumentsPage() {
                       border: "none",
                       cursor: "pointer",
                       textAlign: "left",
-                      fontSize: "0.875rem",
+                      
                       color: "var(--text-main)",
                     }}
                     onMouseOver={(e) =>
@@ -1318,7 +1318,7 @@ export default function DocumentsPage() {
                       border: "none",
                       cursor: "pointer",
                       textAlign: "left",
-                      fontSize: "0.875rem",
+                      
                       color: "var(--danger)",
                     }}
                     onMouseOver={(e) =>
@@ -1358,7 +1358,7 @@ export default function DocumentsPage() {
                   border: "none",
                   cursor: "pointer",
                   textAlign: "left",
-                  fontSize: "0.875rem",
+                  
                   color: "var(--text-main)",
                 }}
                 onMouseOver={(e) =>
@@ -1389,7 +1389,7 @@ export default function DocumentsPage() {
                   border: "none",
                   cursor: "pointer",
                   textAlign: "left",
-                  fontSize: "0.875rem",
+                  
                   color: "var(--text-main)",
                 }}
                 onMouseOver={(e) =>
@@ -1422,7 +1422,7 @@ export default function DocumentsPage() {
                       border: "none",
                       cursor: "pointer",
                       textAlign: "left",
-                      fontSize: "0.875rem",
+                      
                       color: "var(--text-main)",
                     }}
                     onMouseOver={(e) =>
@@ -1455,7 +1455,7 @@ export default function DocumentsPage() {
                       border: "none",
                       cursor: "pointer",
                       textAlign: "left",
-                      fontSize: "0.875rem",
+                      
                       color: "var(--text-main)",
                     }}
                     onMouseOver={(e) =>
@@ -1488,7 +1488,7 @@ export default function DocumentsPage() {
                       border: "none",
                       cursor: "pointer",
                       textAlign: "left",
-                      fontSize: "0.875rem",
+                      
                       color: "var(--danger)",
                     }}
                     onMouseOver={(e) =>
@@ -1570,7 +1570,7 @@ export default function DocumentsPage() {
                     display: "block",
                     marginBottom: "0.5rem",
                     fontWeight: 500,
-                    fontSize: "0.875rem",
+                    
                   }}
                 >
                   Nom du dossier *
@@ -1769,7 +1769,7 @@ export default function DocumentsPage() {
                     display: "block",
                     marginBottom: "0.5rem",
                     fontWeight: 500,
-                    fontSize: "0.875rem",
+                    
                   }}
                 >
                   Nouveau nom *

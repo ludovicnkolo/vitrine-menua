@@ -44,7 +44,7 @@ const GedExplorer = ({
             flexWrap: "wrap",
             gap: "0.5rem",
             marginBottom: "1rem",
-            fontSize: "0.875rem",
+            
             padding: "0.5rem",
             background: "#FFF",
             borderRadius: "4px",
@@ -178,7 +178,7 @@ const GedExplorer = ({
               textAlign: "center",
               padding: "1rem",
               color: "#94a3b8",
-              fontSize: "0.875rem",
+              
             }}
           >
             Ce dossier est vide.

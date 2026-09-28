@@ -287,15 +287,16 @@ router.get("/users", async (req, res) => {
         lieuResidence: true,
         experienceCle: true,
         langues: true,
-        missionsAssigned: { select: { status: true } },
+        formations: true,
+        assignedMissions: { select: { status: true } },
       },
     });
 
     const mappedUsers = users.map(u => {
-      const missionsAssigned = u.missionsAssigned || [];
-      const missionsTerminees = missionsAssigned.filter(m => m.status === "TERMINE").length;
-      const missionsEnCours = missionsAssigned.filter(m => m.status !== "TERMINE" && m.status !== "ANNULEE" && m.status !== "CORBEILLE").length;
-      delete u.missionsAssigned;
+      const assignedMissions = u.assignedMissions || [];
+      const missionsTerminees = assignedMissions.filter(m => m.status === "TERMINE").length;
+      const missionsEnCours = assignedMissions.filter(m => m.status !== "TERMINE" && m.status !== "ANNULEE" && m.status !== "CORBEILLE").length;
+      delete u.assignedMissions;
       return { ...u, missionsTerminees, missionsEnCours };
     });
 
@@ -327,6 +328,7 @@ router.post(
         lieuResidence,
         experienceCle,
         langues,
+        formations,
       } = req.body;
       const bcrypt = require("bcryptjs");
       const crypto = require("node:crypto");
@@ -403,6 +405,7 @@ router.post(
           lieuResidence: lieuResidence || null,
           experienceCle: experienceCle || null,
           langues: langues || null,
+          formations: formations || null,
           profile: profile || "",
           idCardUrl: idCardUrl || null,
           isBlocked: isBlockedDefault,
@@ -469,6 +472,7 @@ router.patch(
         lieuResidence,
         experienceCle,
         langues,
+        formations,
       } = req.body;
 
       if (roleId !== undefined) {
@@ -502,6 +506,7 @@ router.patch(
           ...(lieuResidence !== undefined && { lieuResidence }),
           ...(experienceCle !== undefined && { experienceCle }),
           ...(langues !== undefined && { langues }),
+          ...(formations !== undefined && { formations }),
           ...(idCardUrl !== undefined && { idCardUrl }),
           ...(status && { isBlocked: status === "Inactif" }),
         },

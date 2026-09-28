@@ -803,7 +803,7 @@ const CMSPage = () => {
                       <span
                         style={{
                           color: "var(--text-muted)",
-                          fontSize: "0.875rem",
+                          
                         }}
                       >
                         Aucun email bloqué.
@@ -1260,7 +1260,7 @@ const CMSPage = () => {
                             onChange={(e) =>
                               updateSection(idx, "subtitle", e.target.value)
                             }
-                            style={{ ...inputStyle, fontSize: "0.875rem" }}
+                            style={{ ...inputStyle,  }}
                           />
                         </div>
                         <div style={{ flex: 1 }}>
@@ -1274,7 +1274,7 @@ const CMSPage = () => {
                             onChange={(e) =>
                               updateSection(idx, "subtitle_en", e.target.value)
                             }
-                            style={{ ...inputStyle, fontSize: "0.875rem" }}
+                            style={{ ...inputStyle,  }}
                           />
                         </div>
                       </div>
@@ -1302,7 +1302,7 @@ const CMSPage = () => {
                             style={{
                               ...inputStyle,
                               resize: "vertical",
-                              fontSize: "0.875rem",
+                              
                             }}
                           />
                         </div>
@@ -1320,7 +1320,7 @@ const CMSPage = () => {
                             style={{
                               ...inputStyle,
                               resize: "vertical",
-                              fontSize: "0.875rem",
+                              
                             }}
                           />
                         </div>
@@ -1838,7 +1838,7 @@ const labelStyle = {
   display: "block",
   marginBottom: "0.5rem",
   fontWeight: 500,
-  fontSize: "0.875rem",
+  
   color: "var(--text-main)",
 };
 const inputStyle = {
@@ -1846,7 +1846,7 @@ const inputStyle = {
   padding: "0.75rem",
   borderRadius: "8px",
   border: "1px solid var(--border)",
-  fontSize: "0.875rem",
+  
   outline: "none",
   boxSizing: "border-box",
 };

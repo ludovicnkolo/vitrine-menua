@@ -199,7 +199,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
                   display: "block",
                   marginBottom: "0.5rem",
                   fontWeight: 500,
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 Destinataire (Collaborateur)
@@ -236,7 +236,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
                   display: "block",
                   marginBottom: "0.5rem",
                   fontWeight: 500,
-                  fontSize: "0.875rem",
+                  
                 }}
               >
                 Objet
@@ -267,7 +267,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
                 display: "block",
                 marginBottom: "0.5rem",
                 fontWeight: 500,
-                fontSize: "0.875rem",
+                
               }}
             >
               Contenu du message
@@ -298,7 +298,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
                 display: "block",
                 marginBottom: "0.5rem",
                 fontWeight: 500,
-                fontSize: "0.875rem",
+                
               }}
             >
               Fichier joint (Optionnel)

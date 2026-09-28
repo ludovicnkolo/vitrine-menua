@@ -6,6 +6,7 @@ import {
   getPriorityBadge,
 } from "../utils/helpers";
 import React, { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
   MoreVertical,
   Pencil,
@@ -209,6 +210,7 @@ const TaskDropdown = ({
   );
 };
 const GenericTaskPage = ({ mode = "MISSION" }) => {
+  const { t } = useTranslation();
   const [openMenuId, setOpenMenuId] = useState(null);
   const [consultTask, setConsultTask] = useState(null);
   const [pendingStatus, setPendingStatus] = useState("");
@@ -2196,10 +2198,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               color: "var(--text-main)",
             }}
           >
-            {mode === "MISSION" ? "Missions" : "Tâches"}
+            {mode === "MISSION" ? t("workspace.tabs.missions") : t("workspace.tabs.taches")}
           </h1>
           <p style={{ color: "var(--text-muted)" }}>
-            Attributions internes et ordres de mission
+            {t("task.subtitle")}
           </p>
         </div>
       </div>
@@ -2228,7 +2230,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           />
           <input
             type="text"
-            placeholder="Rechercher par dossier, émetteur ou responsable..."
+            placeholder={t("task.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="input-field"
@@ -2252,7 +2254,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             minWidth: "200px",
           }}
         >
-          <option value="all">Tous les statuts</option>
+          <option value="all">{t("task.allStatuses")}</option>
           {mode === "TACHE" ? (
             <>
               <option value="NOUVEAU">Nouveau</option>
@@ -2280,11 +2282,11 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         <table>
           <thead>
             <tr>
-              <th style={{ width: "10%", textAlign: "left" }}>ID</th>
+              <th style={{ width: "10%", textAlign: "left" }}>{t("task.columns.id")}</th>
               <th style={{ width: "20%", textAlign: "left" }}>
-                {mode === "MISSION" ? "Nom dossier" : "ID Mission"}
+                {mode === "MISSION" ? t("task.columns.missionFolder") : t("task.columns.missionId")}
               </th>
-              <th style={{ width: "20%", textAlign: "left" }}>Affecté à</th>
+              <th style={{ width: "20%", textAlign: "left" }}>{t("task.columns.assignedTo")}</th>
               <th
                 style={{
                   width: "10%",
@@ -2292,11 +2294,11 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   paddingRight: "0.5rem",
                 }}
               >
-                Échéance
+                {t("task.columns.dueDate")}
               </th>
-              <th style={{ width: "15%", textAlign: "center" }}>Statut</th>
-              <th style={{ width: "15%", textAlign: "left" }}>Date</th>
-              <th style={{ width: "10%", textAlign: "center" }}>Actions</th>
+              <th style={{ width: "15%", textAlign: "center" }}>{t("task.columns.status")}</th>
+              <th style={{ width: "15%", textAlign: "left" }}>{t("task.columns.date")}</th>
+              <th style={{ width: "10%", textAlign: "center" }}>{t("task.columns.actions")}</th>
             </tr>
           </thead>
           <tbody>

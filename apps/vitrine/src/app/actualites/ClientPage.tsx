@@ -34,7 +34,7 @@ export default function ActualitesPage() {
 
   const featuredPub = publications.length > 0 ? publications[0] : null;
   const filteredPubs = activeFilter === "TOUTES LES ACTUALITÉS" 
-    ? publications.slice(1) // exclude featured
+    ? publications
     : publications.filter(p => p.category === activeFilter);
 
   const filters = [

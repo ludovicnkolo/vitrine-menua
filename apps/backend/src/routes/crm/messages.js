@@ -636,28 +636,28 @@ router.patch("/messages/:id/status", async (req, res) => {
       lienVisio,
     } = req.body;
 
+    // Charger le message UNE SEULE FOIS au debut pour eviter le bug de scope
+    const existingMsg =
+      (await prisma.messagePersonnel.findUnique({ where: { id } })) ||
+      (await prisma.formulaire.findUnique({ where: { id } }));
+
     const dataToUpdate = {};
     if (status !== undefined) {
-      // ── Gouvernance RBAC & Matrice de Transition ──────────────────────────
       const userRole = req.user.role;
-      const isSuperAdmin = userRole === "Super-administrateur";
-      const isResp = userRole === "Responsable opérationnel";
+      const isSuperAdminRole = userRole === "Super-administrateur";
+      const isResp = userRole === "Responsable operationnel";
       
-      if (!isSuperAdmin && !isResp) {
+      if (!isSuperAdminRole && !isResp) {
         return res.status(403).json({
-          error: "Accès refusé. Seuls le Super-Administrateur et le Responsable opérationnel peuvent modifier le statut d'un message.",
+          error: "Acces refuse. Seuls le Super-Administrateur et le Responsable operationnel peuvent modifier le statut d un message.",
         });
       }
 
-      // Check current message status
-      const msg = await prisma.messagePersonnel.findUnique({ where: { id } }) || 
-                  await prisma.formulaire.findUnique({ where: { id } });
-                  
-      if (msg && msg.status !== status) {
-        const from = msg.status || "NOUVEAU";
-        const currentEtiquette = etiquette !== undefined ? etiquette : msg.etiquette || "";
+      if (existingMsg && existingMsg.status !== status) {
+        const from = existingMsg.status || "NOUVEAU";
+        const currentEtiquette = etiquette !== undefined ? etiquette : existingMsg.etiquette || "";
         let category = "none";
-        const msgType = (msg.type || "").toLowerCase();
+        const msgType = (existingMsg.type || "").toLowerCase();
         if (msgType === "contact" || currentEtiquette === "Contact") category = "contact";
         else if (msgType === "recrutement" || currentEtiquette === "Recrutement") category = "recrutement";
         
@@ -681,19 +681,18 @@ router.patch("/messages/:id/status", async (req, res) => {
         const allowedTransitions = VALID[category]?.[from] || [];
         if (!allowedTransitions.includes(status)) {
           return res.status(400).json({
-            error: `Transition impossible : un message en statut "${from}" ne peut pas passer à "${status}".`,
+            error: `Transition impossible : un message en statut "${from}" ne peut pas passer a "${status}".`,
           });
         }
       }
       
       dataToUpdate.status = status;
       if (priorite === undefined) {
-        dataToUpdate.priorite = "Normal"; // Règle: Dès qu'un statut change, la priorité redevient Normal par défaut
+        dataToUpdate.priorite = "Normal";
       }
     }
     if (etiquette !== undefined) dataToUpdate.etiquette = etiquette;
     if (priorite !== undefined) dataToUpdate.priorite = priorite;
-    // Mise en copie d'un RO — Super-Admin uniquement (vérifié ici côté serveur)
     if (assignedToId !== undefined) {
       if (
         !["Super-administrateur", "Administrateur", "Admin Tech"].includes(
@@ -703,13 +702,13 @@ router.patch("/messages/:id/status", async (req, res) => {
         return res
           .status(403)
           .json({
-            error:
-              "Accès refusé. Seul un Super-Administrateur peut assigner un Responsable Opérationnel.",
+            error: "Acces refuse. Seul un Super-Administrateur peut assigner un Responsable Operationnel.",
           });
       }
       dataToUpdate.assignedToId = assignedToId || null;
     }
-    // Rappel / Entretien
+
+    // Validation dateRappel : uniquement si la date CHANGE
     if (dateRappel !== undefined) {
       if (dateRappel) {
         const today = new Date();
@@ -717,12 +716,12 @@ router.patch("/messages/:id/status", async (req, res) => {
         const parsedDate = new Date(dateRappel);
         parsedDate.setHours(0, 0, 0, 0);
 
-        const currentDate = msg?.dateRappel ? new Date(msg.dateRappel) : null;
+        const currentDate = existingMsg?.dateRappel ? new Date(existingMsg.dateRappel) : null;
         if (currentDate) currentDate.setHours(0, 0, 0, 0);
 
         if (!currentDate || parsedDate.getTime() !== currentDate.getTime()) {
           if (parsedDate < today) {
-            return res.status(400).json({ error: "La date de rappel ne peut pas être antérieure à aujourd'hui." });
+            return res.status(400).json({ error: "La date de rappel ne peut pas etre anterieure a aujourd hui." });
           }
         }
         dataToUpdate.dateRappel = parsedDate;
@@ -732,6 +731,7 @@ router.patch("/messages/:id/status", async (req, res) => {
     }
     if (noteRappel !== undefined) dataToUpdate.noteRappel = noteRappel;
     
+    // Validation dateEntretien : uniquement si la date CHANGE
     if (dateEntretien !== undefined) {
       if (dateEntretien) {
         const today = new Date();
@@ -739,12 +739,12 @@ router.patch("/messages/:id/status", async (req, res) => {
         const parsedDate = new Date(dateEntretien);
         parsedDate.setHours(0, 0, 0, 0);
 
-        const currentDate = msg?.dateEntretien ? new Date(msg.dateEntretien) : null;
+        const currentDate = existingMsg?.dateEntretien ? new Date(existingMsg.dateEntretien) : null;
         if (currentDate) currentDate.setHours(0, 0, 0, 0);
 
         if (!currentDate || parsedDate.getTime() !== currentDate.getTime()) {
           if (parsedDate < today) {
-            return res.status(400).json({ error: "La date d'entretien ne peut pas être antérieure à aujourd'hui." });
+            return res.status(400).json({ error: "La date d entretien ne peut pas etre anterieure a aujourd hui." });
           }
         }
         dataToUpdate.dateEntretien = parsedDate;
@@ -763,63 +763,56 @@ router.patch("/messages/:id/status", async (req, res) => {
           where: { reference: numeroReference },
         });
         if (!entity)
-          return res
-            .status(404)
-            .json({
-              error: `Le Dossier avec la référence "${numeroReference}" n'existe pas.`,
-            });
+          return res.status(404).json({
+            error: `Le Dossier avec la reference "${numeroReference}" n existe pas.`,
+          });
         dataToUpdate.dossierId = entity.id;
       } else if (lieuTraitement === "Mission") {
         const entity = await prisma.mission.findFirst({
           where: { reference: numeroReference },
         });
         if (!entity)
-          return res
-            .status(404)
-            .json({
-              error: `La Mission avec la référence "${numeroReference}" n'existe pas.`,
-            });
+          return res.status(404).json({
+            error: `La Mission avec la reference "${numeroReference}" n existe pas.`,
+          });
         dataToUpdate.missionId = entity.id;
-      } else if (lieuTraitement === "Tâche") {
+      } else if (lieuTraitement === "Tache") {
         const entity = await prisma.tache.findFirst({
           where: { reference: numeroReference },
         });
         if (!entity)
-          return res
-            .status(404)
-            .json({
-              error: `La Tâche avec la référence "${numeroReference}" n'existe pas.`,
-            });
+          return res.status(404).json({
+            error: `La Tache avec la reference "${numeroReference}" n existe pas.`,
+          });
         dataToUpdate.tacheId = entity.id;
       }
     }
 
-    const form = await prisma.formulaire.findUnique({ where: { id } });
-    if (form) {
+    // Appliquer la mise a jour selon le type
+    const isFormulaire = !!(await prisma.formulaire.findUnique({ where: { id } }));
+    if (isFormulaire) {
       const formUpdateData = { ...dataToUpdate };
       if (formUpdateData.priorite !== undefined) {
         formUpdateData.priority = formUpdateData.priorite;
         delete formUpdateData.priorite;
       }
       await prisma.formulaire.update({ where: { id }, data: formUpdateData });
-      // Verbose audit log removed
-      return res.json({ success: true, message: "Statut mis à jour" });
+      return res.json({ success: true, message: "Statut mis a jour" });
     }
-    const msg = await prisma.messagePersonnel.findUnique({ where: { id } });
-    if (msg) {
+    const isPersonnel = !!(await prisma.messagePersonnel.findUnique({ where: { id } }));
+    if (isPersonnel) {
       await prisma.messagePersonnel.update({
         where: { id },
         data: dataToUpdate,
       });
-      // Verbose audit log removed
-      return res.json({ success: true, message: "Statut mis à jour" });
+      return res.json({ success: true, message: "Statut mis a jour" });
     }
-    res.status(404).json({ error: "Message non trouvé" });
+    res.status(404).json({ error: "Message non trouve" });
   } catch (error) {
-    res.status(500).json({ error: "Erreur lors de la mise à jour" });
+    console.error("PATCH /messages/:id/status error:", error);
+    res.status(500).json({ error: "Erreur lors de la mise a jour" });
   }
 });
-
 router.delete("/messages/:id", async (req, res) => {
   try {
     const { id } = req.params;

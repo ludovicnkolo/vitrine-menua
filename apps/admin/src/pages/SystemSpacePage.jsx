@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import AuditPage from "./AuditPage";
 import SpacePageLayout from "../components/SpacePageLayout";
 import i18n from "../i18n";
 
 const SystemSpacePage = ({ userRole }) => {
+  const { t } = useTranslation();
   const [theme, setTheme] = useState(
     localStorage.getItem("adminTheme") || "light",
   );
@@ -19,8 +21,8 @@ const SystemSpacePage = ({ userRole }) => {
     userRole === "Administrateur technique";
 
   const tabs = [
-    ...(canSeeAudit ? [{ id: "audit", label: "Audit" }] : []),
-    { id: "configuration", label: "Configuration" },
+    ...(canSeeAudit ? [{ id: "audit", label: t("systemSpace.audit") }] : []),
+    { id: "configuration", label: t("systemSpace.title") },
   ];
 
   const handleThemeChange = (newTheme) => {
@@ -59,7 +61,7 @@ const SystemSpacePage = ({ userRole }) => {
                   marginBottom: "1.5rem",
                 }}
               >
-                Configuration
+                {t("systemSpace.title")}
               </h1>
 
               <div
@@ -73,7 +75,7 @@ const SystemSpacePage = ({ userRole }) => {
                     color: "var(--text-main)",
                   }}
                 >
-                  Apparence
+                  {t("systemSpace.appearance")}
                 </h3>
                 <div style={{ display: "flex", gap: "1rem" }}>
                   <button
@@ -96,7 +98,7 @@ const SystemSpacePage = ({ userRole }) => {
                     <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
                       ☀️
                     </div>
-                    Mode Clair
+                    {t("systemSpace.lightMode")}
                   </button>
                   <button
                     type="button"
@@ -118,7 +120,7 @@ const SystemSpacePage = ({ userRole }) => {
                     <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
                       🌙
                     </div>
-                    Mode Sombre
+                    {t("systemSpace.darkMode")}
                   </button>
                 </div>
               </div>
@@ -131,10 +133,10 @@ const SystemSpacePage = ({ userRole }) => {
                     color: "var(--text-main)",
                   }}
                 >
-                  Langue / Language
+                  {t("systemSpace.language")}
                 </h3>
                 <p style={{ color: "var(--text-muted)", marginBottom: "1rem" }}>
-                  Sélectionnez la langue de l'interface d'administration.
+                  {t("systemSpace.languageDesc")}
                 </p>
                 <select
                   value={lang}

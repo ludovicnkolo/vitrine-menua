@@ -7,6 +7,7 @@ import {
   extractBlockFromHtml,
 } from "../utils/helpers";
 import React, { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import InboxRappelModal from "../components/InboxRappelModal";
 import {
   MoreVertical,
@@ -132,6 +133,7 @@ const getVerifaliaBadge = (vStatus) => {
 };
 
 const InboxPage = ({ userRole }) => {
+  const { t } = useTranslation();
   const [tab, setTab] = useState(
     userRole === "Collaborateur" || userRole === "Relecteur"
       ? "interne"
@@ -1115,26 +1117,26 @@ const InboxPage = ({ userRole }) => {
                 <table>
                   <thead>
                     <tr>
-                      <th style={{ width: "4%" }}>№</th>
+                      <th style={{ width: "4%" }}>{t("inbox.columns.no")}</th>
                       {(tab === "personnel" ||
                         tab === "contact" ||
                         tab === "recrutement") && (
                         <th style={{ width: "9%", whiteSpace: "nowrap" }}>
-                          Priorité
+                          {t("inbox.columns.priority")}
                         </th>
                       )}
                       <th style={{ width: "10%", whiteSpace: "nowrap" }}>
-                        Statut
+                        {t("inbox.columns.status")}
                       </th>
                       <th style={{ width: tab === "interne" ? "22%" : "18%" }}>
-                        {tab === "interne" ? "Emetteur" : "Nom"}
+                        {tab === "interne" ? "Emetteur" : t("inbox.columns.name")}
                       </th>
                       <th style={{ width: tab === "interne" ? "28%" : "20%" }}>
-                        {tab === "recrutement" ? "E-mail" : "Email"}
+                        {t("inbox.columns.email")}
                       </th>
                       {(tab === "contact" || tab === "recrutement") && (
                         <th style={{ width: "10%", whiteSpace: "nowrap" }}>
-                          Vérification
+                          {t("inbox.columns.verification")}
                         </th>
                       )}
                       <th style={{ width: "10%" }}>
@@ -1142,11 +1144,11 @@ const InboxPage = ({ userRole }) => {
                           ? "Source"
                           : tab === "personnel"
                             ? "Étiquette"
-                            : "Type"}
+                            : t("inbox.columns.type")}
                       </th>
-                      <th style={{ width: "11%" }}>Date</th>
+                      <th style={{ width: "11%" }}>{t("inbox.columns.date")}</th>
                       <th style={{ width: "8%", textAlign: "center" }}>
-                        Actions
+                        {t("inbox.columns.actions")}
                       </th>
                     </tr>
                   </thead>

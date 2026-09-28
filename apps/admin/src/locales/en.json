@@ -11,7 +11,13 @@
     "cms": "CMS",
     "settings": "Settings",
     "audit": "Audit Log",
-    "logout": "Logout"
+    "logout": "Logout",
+    "global": "Global Space",
+    "message": "Message Space",
+    "workspace": "Workspace",
+    "userSpace": "User Space",
+    "systemSpace": "System Space",
+    "websiteSpace": "Website Space"
   },
   "status": {
     "NOUVEAU": "New",
@@ -83,6 +89,9 @@
     "handler": "Handler",
     "noHandler": "-- No handler --",
     "statuses": "Statuses",
+    "subtitle": "Complete management and lifecycle",
+    "folderName": "File name",
+    "owner": "Owner",
     "workflow": {
       "confirm": "Do you want to move this file to the trash?",
       "systemProtected": "This folder is managed automatically by the system.",
@@ -97,7 +106,56 @@
   },
   "task": {
     "title": "Tasks",
-    "new": "New task"
+    "new": "New task",
+    "subtitle": "Internal assignments and mission orders",
+    "searchPlaceholder": "Search by folder, sender or manager...",
+    "allStatuses": "All statuses",
+    "columns": {
+      "id": "ID",
+      "missionFolder": "Folder name",
+      "missionId": "Mission ID",
+      "assignedTo": "Assigned to",
+      "dueDate": "Due date",
+      "status": "Status",
+      "date": "Date",
+      "actions": "Actions"
+    }
+  },
+  "workspace": {
+    "tabs": {
+      "dossiers": "Files",
+      "missions": "Missions",
+      "taches": "Tasks",
+      "ged": "Documents (DMS)"
+    }
+  },
+  "dashboard": {
+    "title": "Control Tower",
+    "subtitle": "Strategic and operational overview",
+    "apply": "Apply",
+    "from": "From",
+    "to": "To",
+    "priorityAlerts": "Priority Alerts",
+    "criticalDeadlines": "Critical Deadlines",
+    "blockedOps": "Blocked Operations",
+    "totalVolume": "Total Volume",
+    "newDeposits": "New Deposits",
+    "urgentMessages": "Urgent client messages",
+    "deadlines24h": "Deadlines within 24h",
+    "waitingClient": "Waiting for client response",
+    "docsLast24h": "Documents in last 24h",
+    "workloadWeather": "Workload Status (Active)",
+    "productionFunnel": "Production Funnel (Period)",
+    "tasks": "task(s)"
+  },
+  "gedPage": {
+    "title": "Trash",
+    "columns": {
+      "target": "Target",
+      "type": "Type",
+      "deletedAt": "Deleted at",
+      "actions": "Actions"
+    }
   },
   "inbox": {
     "title": "Inbox",
@@ -107,8 +165,28 @@
       "personnel": "Personal Emails",
       "interne": "Internal Messages"
     },
+    "columns": {
+      "no": "No",
+      "priority": "Priority",
+      "status": "Status",
+      "name": "Name",
+      "email": "Email",
+      "verification": "Verification",
+      "type": "Type",
+      "date": "Date",
+      "actions": "Actions"
+    },
     "copyRO": "Copy to (Operations Manager)",
     "noRO": "-- No manager --"
+  },
+  "systemSpace": {
+    "title": "Configuration",
+    "appearance": "Appearance",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
+    "language": "Langue / Language",
+    "languageDesc": "Select the administration interface language.",
+    "audit": "Audit"
   },
   "auth": {
     "login": "Login",

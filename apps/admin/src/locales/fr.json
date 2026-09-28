@@ -11,7 +11,13 @@
     "cms": "CMS",
     "settings": "Paramètres",
     "audit": "Journal d'audit",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "global": "Espace global",
+    "message": "Espace message",
+    "workspace": "Espace travail",
+    "userSpace": "Espace utilisateur",
+    "systemSpace": "Espace système",
+    "websiteSpace": "Espace site web"
   },
   "status": {
     "NOUVEAU": "Nouveau",
@@ -83,6 +89,9 @@
     "handler": "Traitant",
     "noHandler": "-- Aucun traitant --",
     "statuses": "Statuts",
+    "subtitle": "Gestion complète et cycle de vie",
+    "folderName": "Nom du dossier",
+    "owner": "Propriétaire",
     "workflow": {
       "confirm": "Voulez-vous mettre ce dossier à la corbeille ?",
       "systemProtected": "Ce dossier est géré automatiquement par le système.",
@@ -97,7 +106,56 @@
   },
   "task": {
     "title": "Tâches",
-    "new": "Nouvelle tâche"
+    "new": "Nouvelle tâche",
+    "subtitle": "Attributions internes et ordres de mission",
+    "searchPlaceholder": "Rechercher par dossier, émetteur ou responsable...",
+    "allStatuses": "Tous les statuts",
+    "columns": {
+      "id": "ID",
+      "missionFolder": "Nom dossier",
+      "missionId": "ID Mission",
+      "assignedTo": "Affecté à",
+      "dueDate": "Échéance",
+      "status": "Statut",
+      "date": "Date",
+      "actions": "Actions"
+    }
+  },
+  "workspace": {
+    "tabs": {
+      "dossiers": "Dossiers",
+      "missions": "Missions",
+      "taches": "Tâches",
+      "ged": "Documents (GED)"
+    }
+  },
+  "dashboard": {
+    "title": "Tour de Contrôle",
+    "subtitle": "Vue d'ensemble stratégique et opérationnelle",
+    "apply": "Appliquer",
+    "from": "Du",
+    "to": "Au",
+    "priorityAlerts": "Alertes Prioritaires",
+    "criticalDeadlines": "Délais Critiques",
+    "blockedOps": "Opérations Bloquées",
+    "totalVolume": "Volume Total",
+    "newDeposits": "Nouveaux Dépôts",
+    "urgentMessages": "Messages clients urgents",
+    "deadlines24h": "Échéances à - de 24h",
+    "waitingClient": "Attente retour client",
+    "docsLast24h": "Documents sur les 24h",
+    "workloadWeather": "Météo de Charge (En cours)",
+    "productionFunnel": "Entonnoir de Production (Période)",
+    "tasks": "tâche(s)"
+  },
+  "gedPage": {
+    "title": "Corbeille",
+    "columns": {
+      "target": "Cible",
+      "type": "Type",
+      "deletedAt": "Supprimé le",
+      "actions": "Actions"
+    }
   },
   "inbox": {
     "title": "Boîte de réception",
@@ -107,8 +165,28 @@
       "personnel": "E-mails personnels",
       "interne": "Messages internes"
     },
+    "columns": {
+      "no": "N°",
+      "priority": "Priorité",
+      "status": "Statut",
+      "name": "Nom",
+      "email": "Email",
+      "verification": "Vérification",
+      "type": "Type",
+      "date": "Date",
+      "actions": "Actions"
+    },
     "copyRO": "Mettre en copie (RO)",
     "noRO": "-- Aucun responsable --"
+  },
+  "systemSpace": {
+    "title": "Configuration",
+    "appearance": "Apparence",
+    "lightMode": "Mode Clair",
+    "darkMode": "Mode Sombre",
+    "language": "Langue / Language",
+    "languageDesc": "Sélectionnez la langue de l'interface d'administration.",
+    "audit": "Audit"
   },
   "auth": {
     "login": "Connexion",

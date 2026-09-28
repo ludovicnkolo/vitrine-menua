@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { getSafeApiUrl } from "../utils/helpers";
 import {
   Folder,
@@ -74,6 +75,7 @@ const getFileIconAndColor = (filename) => {
 };
 
 export default function DocumentsPage() {
+  const { t } = useTranslation();
   const [dossiers, setDossiers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPath, setCurrentPath] = useState([]); // [{id, name}]
@@ -657,7 +659,7 @@ export default function DocumentsPage() {
                 cursor: "pointer",
               }}
             >
-              <Trash size={16} /> Corbeille
+              <Trash size={16} /> {t("gedPage.title")}
             </button>
           )}
           <button
@@ -1804,7 +1806,7 @@ export default function DocumentsPage() {
                   gap: "0.5rem",
                 }}
               >
-                <Trash size={24} color="var(--danger)" /> Corbeille
+                <Trash size={24} color="var(--danger)" /> {t("gedPage.title")}
               </h3>
               <button
                 onClick={() => setShowTrashModal(false)}
@@ -1864,7 +1866,7 @@ export default function DocumentsPage() {
                           color: "var(--text-muted)",
                         }}
                       >
-                        Nom
+                        {t("common.name")}
                       </th>
                       <th
                         style={{
@@ -1873,7 +1875,7 @@ export default function DocumentsPage() {
                           color: "var(--text-muted)",
                         }}
                       >
-                        Cible
+                        {t("gedPage.columns.target")}
                       </th>
                       <th
                         style={{
@@ -1882,7 +1884,7 @@ export default function DocumentsPage() {
                           color: "var(--text-muted)",
                         }}
                       >
-                        Date de suppression
+                        {t("gedPage.columns.deletedAt")}
                       </th>
                       <th
                         style={{
@@ -1892,7 +1894,7 @@ export default function DocumentsPage() {
                           textAlign: "right",
                         }}
                       >
-                        Actions
+                        {t("common.actions")}
                       </th>
                     </tr>
                   </thead>

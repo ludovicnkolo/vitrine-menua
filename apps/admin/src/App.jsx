@@ -324,7 +324,7 @@ function App() {
               className={`nav-item ${location.pathname === "/" ? "active" : ""}`}
             >
               <LayoutDashboard size={20} />
-              Espace global
+              {t("nav.global")}
             </Link>
           )}
 
@@ -334,7 +334,7 @@ function App() {
               className={`nav-item ${location.pathname.includes("/inbox") ? "active" : ""}`}
             >
               <Inbox size={20} />
-              Espace message
+              {t("nav.message")}
             </Link>
           )}
 
@@ -344,7 +344,7 @@ function App() {
               className={`nav-item ${location.pathname.includes("/workspace") ? "active" : ""}`}
             >
               <Files size={20} />
-              Espace travail
+              {t("nav.workspace")}
             </Link>
           )}
 
@@ -354,7 +354,7 @@ function App() {
               className={`nav-item ${location.pathname.includes("/users-space") ? "active" : ""}`}
             >
               <Users size={20} />
-              Espace utilisateur
+              {t("nav.userSpace")}
             </Link>
           )}
 
@@ -364,7 +364,7 @@ function App() {
               className={`nav-item ${location.pathname.includes("/system-space") ? "active" : ""}`}
             >
               <Settings size={20} />
-              Espace système
+              {t("nav.systemSpace")}
             </Link>
           )}
 
@@ -374,7 +374,7 @@ function App() {
               className={`nav-item ${location.pathname.includes("/cms") ? "active" : ""}`}
             >
               <Globe size={20} />
-              Espace site web
+              {t("nav.websiteSpace")}
             </Link>
           )}
         </nav>

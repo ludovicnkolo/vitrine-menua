@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { getSafeApiUrl } from "../utils/helpers";
 import {
   AlertTriangle,
@@ -25,6 +26,7 @@ import {
 } from "recharts";
 
 const DashboardPage = () => {
+  const { t } = useTranslation();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState("");
@@ -172,10 +174,10 @@ const DashboardPage = () => {
               color: "var(--text-main)",
             }}
           >
-            Tour de Contrôle
+            {t("dashboard.title")}
           </h1>
           <p style={{ color: "var(--text-muted)" }}>
-            Vue d'ensemble stratégique et opérationnelle
+            {t("dashboard.subtitle")}
           </p>
         </div>
         <div
@@ -198,7 +200,7 @@ const DashboardPage = () => {
                 fontWeight: 600,
               }}
             >
-              Du
+              {t("dashboard.from")}
             </span>
             <input
               type="date"
@@ -229,7 +231,7 @@ const DashboardPage = () => {
                 fontWeight: 600,
               }}
             >
-              Au
+              {t("dashboard.to")}
             </span>
             <input
               type="date"
@@ -266,7 +268,7 @@ const DashboardPage = () => {
               transition: "opacity 0.2s",
             }}
           >
-            {loading ? "⏳" : "🔍"} Appliquer
+            {loading ? "⏳" : "🔍"} {t("dashboard.apply")}
           </button>
         </div>
       </div>
@@ -293,23 +295,23 @@ const DashboardPage = () => {
             }}
           >
             {renderKPI(
-              "Alertes Prioritaires",
+              t("dashboard.priorityAlerts"),
               stats.alertesPrioritaires,
-              "Messages clients urgents",
+              t("dashboard.urgentMessages"),
               <AlertTriangle size={20} />,
               "#EF4444", // Red
             )}
             {renderKPI(
-              "Délais Critiques",
+              t("dashboard.criticalDeadlines"),
               stats.delaisCritiques,
-              "Échéances à - de 24h",
+              t("dashboard.deadlines24h"),
               <Flame size={20} />,
               "#F97316", // Orange
             )}
             {renderKPI(
-              "Opérations Bloquées",
+              t("dashboard.blockedOps"),
               stats.operationsBloquees,
-              "Attente retour client",
+              t("dashboard.waitingClient"),
               <ShieldAlert size={20} />,
               "#8B5CF6", // Purple
             )}
@@ -334,7 +336,7 @@ const DashboardPage = () => {
                     letterSpacing: "0.05em",
                   }}
                 >
-                  Volume Total
+                  {t("dashboard.totalVolume")}
                 </h3>
                 <div
                   style={{
@@ -347,19 +349,19 @@ const DashboardPage = () => {
                   }}
                 >
                   <div>
-                    Dossiers :{" "}
+                    {t("workspace.tabs.dossiers")} :{" "}
                     <span style={{ fontWeight: 700 }}>
                       {stats.totalDossiers || 0}
                     </span>
                   </div>
                   <div>
-                    Missions :{" "}
+                    {t("workspace.tabs.missions")} :{" "}
                     <span style={{ fontWeight: 700 }}>
                       {stats.totalMissions || 0}
                     </span>
                   </div>
                   <div>
-                    Tâches :{" "}
+                    {t("workspace.tabs.taches")} :{" "}
                     <span style={{ fontWeight: 700 }}>
                       {stats.totalTaches || 0}
                     </span>
@@ -378,9 +380,9 @@ const DashboardPage = () => {
               </div>
             </div>
             {renderKPI(
-              "Nouveaux Dépôts",
+              t("dashboard.newDeposits"),
               stats.nouveauxDepots,
-              "Documents sur les 24h",
+              t("dashboard.docsLast24h"),
               <Inbox size={20} />,
               "#10B981", // Green
             )}
@@ -416,7 +418,7 @@ const DashboardPage = () => {
                     margin: 0,
                   }}
                 >
-                  Météo de Charge (En cours)
+                  {t("dashboard.workloadWeather")}
                 </h3>
               </div>
               <div
@@ -472,7 +474,7 @@ const DashboardPage = () => {
                               color: "var(--text-muted)",
                             }}
                           >
-                            tâche(s)
+                            {t("dashboard.tasks")}
                           </span>
                         </div>
                       </div>
@@ -514,7 +516,7 @@ const DashboardPage = () => {
                     margin: 0,
                   }}
                 >
-                  Entonnoir de Production (Période)
+                  {t("dashboard.productionFunnel")}
                 </h3>
               </div>
               <div style={{ width: "100%", height: 300 }}>

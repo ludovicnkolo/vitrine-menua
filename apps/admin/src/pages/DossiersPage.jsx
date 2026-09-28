@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Search,
   MoreVertical,
@@ -135,6 +136,7 @@ const SearchableDropdown = ({ options, value, onChange, placeholder }) => {
 };
 
 const DossiersPage = () => {
+  const { t } = useTranslation();
   const [openMenuId, setOpenMenuId] = useState(null);
   const [consultDossier, setConsultDossier] = useState(null);
   const [confirmModal, setConfirmModal] = useState({
@@ -2497,7 +2499,7 @@ const DossiersPage = () => {
             Tous les Dossiers
           </h1>
           <p style={{ color: "var(--text-muted)" }}>
-            Gestion complète et cycle de vie
+            {t("dossier.subtitle", "Gestion complète et cycle de vie")}
           </p>
         </div>
         {(currentUser?.role === "Super-administrateur" ||
@@ -2519,7 +2521,7 @@ const DossiersPage = () => {
             className="btn btn-primary"
             style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
           >
-            <Plus size={18} /> Nouveau Dossier
+            <Plus size={18} /> {t("dossier.new")}
           </button>
         )}
       </div>
@@ -2573,7 +2575,7 @@ const DossiersPage = () => {
             minWidth: "150px",
           }}
         >
-          <option value="all">Statut: Tous</option>
+          <option value="all">{t("common.status")}: {t("common.all")}</option>
           <option value="NOUVEAU">Nouveau</option>
           
           <option value="EN_COURS">En cours</option>
@@ -2596,7 +2598,7 @@ const DossiersPage = () => {
             minWidth: "150px",
           }}
         >
-          <option value="all">Origine: Toutes</option>
+          <option value="all">{t("dossier.origin")}: {t("common.all")}</option>
           <option value="CLIENT">Client</option>
           <option value="EQUIPE">Équipe</option>
           <option value="GENERAL">Général</option>
@@ -2606,13 +2608,13 @@ const DossiersPage = () => {
         <table>
           <thead>
             <tr>
-              <th style={{ width: "10%" }}>ID</th>
-              <th style={{ width: "22%" }}>Nom du dossier</th>
-              <th style={{ width: "15%" }}>Origine</th>
-              <th style={{ width: "20%" }}>Propriétaire</th>
-              <th style={{ width: "10%" }}>Statut</th>
-              <th style={{ width: "13%" }}>Date de création</th>
-              <th style={{ width: "10%" }}>Actions</th>
+              <th style={{ width: "10%" }}>{t("common.reference")}</th>
+              <th style={{ width: "22%" }}>{t("dossier.folderName", "Nom du dossier")}</th>
+              <th style={{ width: "15%" }}>{t("dossier.origin")}</th>
+              <th style={{ width: "20%" }}>{t("dossier.owner", "Propriétaire")}</th>
+              <th style={{ width: "10%" }}>{t("common.status")}</th>
+              <th style={{ width: "13%" }}>{t("common.createdAt")}</th>
+              <th style={{ width: "10%" }}>{t("common.actions")}</th>
             </tr>
           </thead>
           <tbody>

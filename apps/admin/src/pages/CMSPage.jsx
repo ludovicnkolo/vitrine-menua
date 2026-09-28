@@ -168,7 +168,16 @@ const CMSPage = () => {
         pub.category_en ||
           (pub.category ? CATEGORY_TRANSLATIONS[pub.category] : ""),
       );
-      setPreviewImage(pub.coverImageUrl || pub.coverImage || "");
+      const vitrineUrl = window.location.hostname === "localhost" ? "http://localhost:3000" : "https://menuaconsulting.com";
+      const formatImageUrl = (url) => {
+        if (!url) return "";
+        if (url.startsWith("/uploads")) return `${vitrineUrl}${url}`;
+        return url;
+      };
+
+      setCoverImage(pub.coverImage || "");
+      setPreviewImage(formatImageUrl(pub.coverImageUrl || pub.coverImage));
+      
       // Parse sections from JSON string if stored as string
       let parsedSections = [];
       if (pub.sections) {
@@ -190,7 +199,7 @@ const CMSPage = () => {
                   text: s.text || "",
                   text_en: enSec?.text || "",
                   imageKey: s.imageKey || "",
-                  imagePreview: s.imageUrl || s.imageKey || "",
+                  imagePreview: formatImageUrl(s.imageUrl || s.imageKey),
                   uploading: false,
                 };
               })

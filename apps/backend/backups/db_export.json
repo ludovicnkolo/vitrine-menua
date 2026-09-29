@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.222Z",
-      "updatedAt": "2026-09-29T17:23:37.724Z"
+      "updatedAt": "2026-09-29T18:00:17.130Z"
     },
     {
       "id": "a41c168d-dc87-4353-8dcb-c71e4109416c",
@@ -16,7 +16,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.242Z",
-      "updatedAt": "2026-09-29T17:23:37.735Z"
+      "updatedAt": "2026-09-29T18:00:17.152Z"
     },
     {
       "id": "7f685243-dda5-4117-a675-d4a7364c7a66",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-09-28T09:31:02.248Z",
-      "updatedAt": "2026-09-29T17:23:37.742Z"
+      "updatedAt": "2026-09-29T18:00:17.209Z"
     },
     {
       "id": "803c6051-c50d-495a-bb21-b6615f1cf0dc",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-09-28T09:31:02.256Z",
-      "updatedAt": "2026-09-29T17:23:37.747Z"
+      "updatedAt": "2026-09-29T18:00:17.233Z"
     },
     {
       "id": "eaa1c720-2a71-493c-a1c0-d14f51051e0f",
@@ -43,14 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.269Z",
-      "updatedAt": "2026-09-29T17:23:37.754Z"
+      "updatedAt": "2026-09-29T18:00:17.249Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "2541799f-86de-4071-86c7-7110615bf37b",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$hJNVbtTvvHmDfLtMzLTPVu7HwcX7Bf02dSN.JnuJWE9DS8xB4EmN.",
+      "password": "$2a$10$POPwBy2XhxspF8Ax1ghpuOR6Opfnb8aqLc8icjEA1tokVhpEjhsa2",
       "name": "Rosette Fouelefack",
       "roleId": "832d5c59-5fe6-488f-b64a-1bfdc6504152",
       "telephone": "+33659207511",
@@ -65,7 +65,7 @@
       "isBlocked": false,
       "lastLogin": "2026-09-29T15:59:02.499Z",
       "createdAt": "2026-09-28T09:31:02.401Z",
-      "updatedAt": "2026-09-29T17:23:37.906Z"
+      "updatedAt": "2026-09-29T18:00:17.550Z"
     },
     {
       "id": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
@@ -737,6 +737,17 @@
       "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
       "formulaireId": null,
       "createdAt": "2026-09-29T17:15:06.090Z"
+    },
+    {
+      "id": "eef4320c-4f71-4b6b-9618-d609d3a09a73",
+      "userId": null,
+      "action": "ACCES_LIEN_MAGIQUE",
+      "targetId": "281eae98-baf1-43b8-968e-d7d914b1162e",
+      "targetType": "MAGIC_LINK",
+      "details": "Accès au lien magique (LIVRAISON) — IP: ::ffff:127.0.0.1",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T17:58:24.761Z"
     }
   ],
   "messagePersonnels": [

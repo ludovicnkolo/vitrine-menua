@@ -465,21 +465,38 @@ const MagicLinkDropPage = () => {
                           </div>
                         </div>
                       </div>
-                      <a
-                        href={doc.downloadUrl}
-                        download
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        type="button"
                         className="btn btn-outline"
                         style={{
                           padding: "0.5rem 1rem",
                           display: "flex",
                           alignItems: "center",
                           gap: "0.5rem",
+                          cursor: "pointer",
+                        }}
+                        onClick={async () => {
+                          // Log the download for traceability
+                          try {
+                            await fetch(getSafeApiUrl(`/api/magic/log-download/${token}`), {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ documentName: doc.name }),
+                            });
+                          } catch (_) {}
+                          // Open/download the file
+                          const a = document.createElement("a");
+                          a.href = doc.downloadUrl;
+                          a.download = doc.name;
+                          a.target = "_blank";
+                          a.rel = "noopener noreferrer";
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
                         }}
                       >
                         <Download size={16} /> Télécharger
-                      </a>
+                      </button>
                     </div>
                   ))}
                 </div>

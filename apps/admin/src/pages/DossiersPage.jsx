@@ -183,7 +183,11 @@ const DossiersPage = () => {
   const [magicExpires, setMagicExpires] = useState("7");
   const [magicNote, setMagicNote] = useState("");
   const [generatedMagicUrl, setGeneratedMagicUrl] = useState("");
+  const [generatedMagicLinkId, setGeneratedMagicLinkId] = useState(null);
   const [magicFiles, setMagicFiles] = useState([]); // fichiers à joindre pour LIVRAISON
+  const [magicEmailRecipient, setMagicEmailRecipient] = useState("");
+  const [magicEmailSending, setMagicEmailSending] = useState(false);
+  const [magicEmailSent, setMagicEmailSent] = useState(false);
 
   useEffect(() => {
     if (createMissionModal && consultDossier) {
@@ -465,6 +469,11 @@ const DossiersPage = () => {
         const data = await res.json();
         const magicUrl = `${window.location.origin}/magic-drop/${data.data.token}`;
         setGeneratedMagicUrl(magicUrl);
+        setGeneratedMagicLinkId(data.data.id);
+        // Pré-remplir l'email avec celui du client si disponible
+        const clientEmail = consultDossier?.client?.email || "";
+        setMagicEmailRecipient(clientEmail);
+        setMagicEmailSent(false);
       } else {
         window.customAlert("Erreur lors de la génération du lien.");
       }
@@ -2005,6 +2014,50 @@ const DossiersPage = () => {
                         📦 {magicFiles.length} fichier(s) stocké(s) dans la GED du dossier.
                       </p>
                     )}
+
+                    {/* ── Envoi par email ── */}
+                    <div style={{ marginTop: "1.5rem", padding: "1rem", background: "#fff", border: "1px solid #E2E8F0", borderRadius: "8px" }}>
+                      <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 600, fontSize: "0.85rem", color: "#141824" }}>
+                        ✉️ Envoyer le lien directement par email
+                      </label>
+                      {magicEmailSent ? (
+                        <p style={{ color: "#166534", fontSize: "0.85rem", margin: 0 }}>✅ Email envoyé avec succès !</p>
+                      ) : (
+                        <div style={{ display: "flex", gap: "0.5rem" }}>
+                          <input
+                            type="email"
+                            value={magicEmailRecipient}
+                            onChange={(e) => setMagicEmailRecipient(e.target.value)}
+                            placeholder="email@client.com"
+                            className="input-field"
+                            style={{ flex: 1, padding: "0.65rem", borderRadius: "8px", border: "1px solid var(--border)", fontSize: "0.85rem" }}
+                          />
+                          <button
+                            type="button"
+                            disabled={magicEmailSending || !magicEmailRecipient.trim()}
+                            onClick={async () => {
+                              if (!generatedMagicLinkId || !magicEmailRecipient.trim()) return;
+                              setMagicEmailSending(true);
+                              try {
+                                const token = sessionStorage.getItem("adminToken");
+                                const r = await fetch(getSafeApiUrl(`/api/magic/send-email/${generatedMagicLinkId}`), {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                                  body: JSON.stringify({ recipientEmail: magicEmailRecipient.trim(), magicUrl: generatedMagicUrl }),
+                                });
+                                if (r.ok) { setMagicEmailSent(true); }
+                                else { window.customAlert("Erreur lors de l'envoi de l'email."); }
+                              } catch { window.customAlert("Erreur réseau."); }
+                              finally { setMagicEmailSending(false); }
+                            }}
+                            className="btn btn-primary"
+                            style={{ whiteSpace: "nowrap" }}
+                          >
+                            {magicEmailSending ? "Envoi..." : "Envoyer"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div style={{ display: "flex", justifyContent: "center" }}>

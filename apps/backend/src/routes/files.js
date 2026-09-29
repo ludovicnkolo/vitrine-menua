@@ -22,11 +22,11 @@ const storage = multer.memoryStorage();
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 5000000,
+    fileSize: 200 * 1024 * 1024, // 200MB — supporte les rapports, livrables et dossiers volumineux
     files: 1,
     fields: 10,
     fieldSize: 1024 * 1024,
-  }, // Limite stricte pour éviter les DoS
+  },
 });
 
 // Route POST : Upload sécurisé d'un fichier dans un bucket

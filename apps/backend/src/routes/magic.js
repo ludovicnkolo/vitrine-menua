@@ -10,11 +10,12 @@ const router = express.Router();
 const prisma = new PrismaClient();
 const { logAudit } = require("../utils/audit");
 const { notify } = require("../utils/notify");
+const { transporter } = require("../utils/mailer");
 
 // Multer in memory for S3 upload
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB max per file
+  limits: { fileSize: 200 * 1024 * 1024 }, // 200MB max per file
 });
 
 // ─── ADMIN ROUTES ────────────────────────────────────────────────────────────
@@ -206,10 +207,132 @@ router.get("/verify/:token", async (req, res) => {
       data.documents = docsWithUrls;
     }
 
+    // ── Traçabilité : log l'accès au lien ───────────────────────────────────
+    try {
+      await logAudit(
+        null,
+        "ACCES_LIEN_MAGIQUE",
+        magicLink.id,
+        "MAGIC_LINK",
+        `Accès au lien magique (${magicLink.type}) — IP: ${req.ip || "inconnue"}`,
+        magicLink.dossierId,
+      );
+    } catch (_) {}
+
     res.json({ success: true, data });
   } catch (error) {
     console.error("Erreur vérification lien magique:", error);
     res.status(500).json({ success: false, error: "Erreur serveur." });
+  }
+});
+
+// ─── Log download via Magic Link ─────────────────────────────────────────────
+router.post("/log-download/:token", async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { documentName } = req.body;
+    const magicLink = await prisma.lienMagique.findUnique({ where: { token } });
+    if (!magicLink) return res.status(404).json({ success: false });
+
+    await logAudit(
+      null,
+      "TELECHARGEMENT_DOCUMENT_MAGIQUE",
+      magicLink.id,
+      "MAGIC_LINK",
+      `Téléchargement via lien magique : "${documentName || "inconnu"}" — IP: ${req.ip || "inconnue"}`,
+      magicLink.dossierId,
+    );
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Erreur log téléchargement:", error);
+    res.status(500).json({ success: false });
+  }
+});
+
+// ─── Send Magic Link by email ─────────────────────────────────────────────────
+router.post("/send-email/:id", authenticateJWT, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { recipientEmail, magicUrl } = req.body;
+
+    if (!recipientEmail || !magicUrl) {
+      return res.status(400).json({ success: false, error: "Email et URL requis." });
+    }
+
+    const magicLink = await prisma.lienMagique.findUnique({
+      where: { id },
+      include: { dossier: { include: { client: true } } },
+    });
+    if (!magicLink) {
+      return res.status(404).json({ success: false, error: "Lien introuvable." });
+    }
+
+    const isLivraison = magicLink.type === "LIVRAISON";
+    const dossierRef = magicLink.dossier?.reference || "votre dossier";
+    const expiresAt = new Date(magicLink.expiresAt).toLocaleDateString("fr-FR");
+
+    const subject = isLivraison
+      ? `Menua Consulting – Documents mis à votre disposition (Réf. ${dossierRef})`
+      : `Menua Consulting – Demande de documents (Réf. ${dossierRef})`;
+
+    const actionLabel = isLivraison
+      ? "Accéder à mes documents"
+      : "Déposer mes documents";
+
+    const bodyText = isLivraison
+      ? `Bonjour,\n\nMenua Consulting met à votre disposition des documents dans le cadre de votre dossier (Réf. ${dossierRef}).\n\nVeuillez cliquer sur le lien ci-dessous pour y accéder :\n${magicUrl}\n\nCe lien est valable jusqu'au ${expiresAt}.\n\nCordialement,\nMenua Consulting`
+      : `Bonjour,\n\nMenua Consulting vous invite à déposer des documents dans le cadre de votre dossier (Réf. ${dossierRef}).\n\nVeuillez cliquer sur le lien ci-dessous pour effectuer votre dépôt :\n${magicUrl}\n\nCe lien est valable jusqu'au ${expiresAt}.${magicLink.note ? "\n\nMessage de votre conseiller :\n" + magicLink.note : ""}\n\nCordialement,\nMenua Consulting`;
+
+    const bodyHtml = `
+<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+<body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:0">
+  <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:40px 20px">
+    <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+      <tr><td style="background:#141824;padding:28px 40px;text-align:center">
+        <span style="color:#fff;font-size:22px;font-weight:700;letter-spacing:1px">Menua Consulting</span>
+      </td></tr>
+      <tr><td style="padding:36px 40px">
+        <p style="color:#141824;font-size:16px;margin:0 0 16px">Bonjour,</p>
+        <p style="color:#555;font-size:15px;line-height:1.6;margin:0 0 24px">
+          ${isLivraison
+            ? `Menua Consulting met à votre disposition des documents dans le cadre de votre dossier <strong>(Réf. ${dossierRef})</strong>.`
+            : `Menua Consulting vous invite à déposer des documents dans le cadre de votre dossier <strong>(Réf. ${dossierRef})</strong>.`
+          }
+        </p>
+        ${magicLink.note ? `<div style="background:#f8fafc;border-left:4px solid #141824;padding:14px 18px;margin:0 0 24px;border-radius:4px"><p style="margin:0;color:#141824;font-size:14px;line-height:1.6">${magicLink.note.replace(/\n/g, "<br>")}</p></div>` : ""}
+        <div style="text-align:center;margin:32px 0">
+          <a href="${magicUrl}" style="background:#141824;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:15px;display:inline-block">${actionLabel}</a>
+        </div>
+        <p style="color:#999;font-size:13px;margin:0">Ce lien est valable jusqu'au <strong>${expiresAt}</strong>. Si vous n'êtes pas à l'origine de cette demande, veuillez ignorer cet e-mail.</p>
+      </td></tr>
+      <tr><td style="background:#f8fafc;padding:16px 40px;text-align:center">
+        <p style="color:#999;font-size:12px;margin:0">© Menua Consulting · contact@menuaconsulting.com</p>
+      </td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`;
+
+    await transporter.sendMail({
+      from: `"Menua Consulting" <${process.env.SMTP_USER}>`,
+      to: recipientEmail,
+      subject,
+      text: bodyText,
+      html: bodyHtml,
+    });
+
+    await logAudit(
+      req.user.id,
+      "ENVOI_EMAIL_LIEN_MAGIQUE",
+      magicLink.id,
+      "MAGIC_LINK",
+      `Lien magique (${magicLink.type}) envoyé par email à ${recipientEmail}`,
+      magicLink.dossierId,
+    );
+
+    res.json({ success: true, message: "Email envoyé avec succès." });
+  } catch (error) {
+    console.error("Erreur envoi email lien magique:", error);
+    res.status(500).json({ success: false, error: "Erreur lors de l'envoi de l'email." });
   }
 });
 

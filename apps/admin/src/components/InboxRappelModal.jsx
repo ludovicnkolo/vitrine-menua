@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const InboxRappelModal = ({ rappelModal, setRappelModal, handleUpdateMultiple }) => {
   const [rappelDate, setRappelDate] = useState('');
   const [rappelNote, setRappelNote] = useState('');
   const [entretienLien, setEntretienLien] = useState('');
+
+  // Réinitialiser les champs quand la modale s'ouvre
+  useEffect(() => {
+    if (rappelModal) {
+      setRappelDate('');
+      setRappelNote('');
+      setEntretienLien('');
+    }
+  }, [rappelModal]);
 
   if (!rappelModal) return null;
 

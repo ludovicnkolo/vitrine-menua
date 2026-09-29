@@ -143,7 +143,7 @@ export default function NousRejoindre() {
       </section>
 
       {/* ── CONTENT SECTION (Laplace Styling) ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[5.75rem] landscape:pt-8 landscape:lg:pt-[5.75rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-48">
+      <section className="relative w-full bg-white pt-8 md:pt-[4.75rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-48">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 flex flex-col lg:flex-row gap-12 lg:gap-16">
 
           {/* Left Column (Profiles) */}

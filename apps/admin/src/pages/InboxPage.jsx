@@ -134,11 +134,20 @@ const getVerifaliaBadge = (vStatus) => {
 
 const InboxPage = ({ userRole }) => {
   const { t } = useTranslation();
-  const [tab, setTab] = useState(
-    userRole === "Collaborateur" || userRole === "Relecteur"
-      ? "interne"
-      : "contact",
-  );
+  const storageKey = `active_tab_${window.location.pathname}`;
+  const [tab, setTab] = useState(() => {
+    const defaultTab =
+      userRole === "Collaborateur" || userRole === "Relecteur"
+        ? "interne"
+        : "contact";
+    const saved = sessionStorage.getItem(storageKey);
+    return saved || defaultTab;
+  });
+
+  const handleTabChange = (newTab) => {
+    setTab(newTab);
+    sessionStorage.setItem(storageKey, newTab);
+  };
   const [filterTraite, setFilterTraite] = useState("all");
   const [filterDate, setFilterDate] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -692,7 +701,11 @@ const InboxPage = ({ userRole }) => {
         "PATCH",
         pendingChanges,
       );
-      if (!res.ok) throw new Error("Erreur de mise à jour");
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        console.error("[handleSaveAll] Erreur serveur:", res.status, errBody);
+        throw new Error(errBody.error || "Erreur de mise à jour");
+      }
       showToast("Modifications enregistrées avec succès.", "success");
       const updated = { ...processMsg, ...pendingChanges };
       setProcessMsg(updated);
@@ -700,7 +713,7 @@ const InboxPage = ({ userRole }) => {
       setPendingChanges({});
       setShowSaveConfirm(false);
     } catch (err) {
-      console.error(err);
+      console.error("[handleSaveAll] Exception:", err);
       showToast("Impossible de sauvegarder les modifications.", "error");
       setShowSaveConfirm(false);
     }
@@ -865,7 +878,8 @@ const InboxPage = ({ userRole }) => {
         case "DISCUSSION": return withCurrent(["A_RAPPELER", "SANS_SUITE", "GAGNE"]);
         case "SANS_SUITE": return withCurrent(["DISCUSSION"]);
         case "GAGNE": return withCurrent([]);
-        default: return make(["NOUVEAU", "A_RAPPELER", "DISCUSSION", "SANS_SUITE"]);
+        // Statut hors pipeline (ex: EN_ATTENTE) : on propose les statuts de départ du pipeline
+        default: return make([currentStatus, "NOUVEAU", "A_RAPPELER", "DISCUSSION", "SANS_SUITE"]);
       }
     } else if (category === "recrutement") {
       switch(currentStatus) {
@@ -874,7 +888,8 @@ const InboxPage = ({ userRole }) => {
         case "ENTRETIEN": return withCurrent(["A_RAPPELER", "RETENU", "REFUSE"]);
         case "RETENU": return withCurrent([]);
         case "REFUSE": return withCurrent([]);
-        default: return make(["NOUVEAU", "A_RAPPELER", "ENTRETIEN"]);
+        // Statut hors pipeline (ex: EN_ATTENTE) : on propose les statuts de départ du pipeline
+        default: return make([currentStatus, "NOUVEAU", "A_RAPPELER", "ENTRETIEN"]);
       }
     } else { 
       // Aucun pipeline défini pour "Général" ou "Interne"
@@ -965,7 +980,7 @@ const InboxPage = ({ userRole }) => {
                     ]
               }
               activeTab={tab}
-              onTabChange={setTab}
+              onTabChange={handleTabChange}
             />
             {tab !== "interne" && (
               <div

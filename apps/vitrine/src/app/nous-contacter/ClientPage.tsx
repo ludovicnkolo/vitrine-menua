@@ -81,7 +81,7 @@ export default function NousContacter() {
       </section>
 
       {/* ── CONTENT SECTION (Laplace Styling) ── */}
-      <section className="relative w-full bg-white pt-8 md:pt-[2.75rem] landscape:pt-8 landscape:lg:pt-[2.75rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-48">
+      <section className="relative w-full bg-white pt-8 md:pt-[4.75rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-48">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12">
           {/* BREADCRUMB */}
           <div className="w-full mb-8 md:mb-4">

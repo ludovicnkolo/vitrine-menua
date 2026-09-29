@@ -102,7 +102,7 @@ export default function ActualitesPage() {
       </div>
 
       {/* ── 6.2 À LA UNE (Dark Section) ── */}
-      <section id="articles" className="relative w-full bg-[#141824] pt-12 md:pt-[5.75rem] pb-16 md:pb-24 scroll-mt-20">
+      <section id="articles" className="relative w-full bg-[#141824] pt-8 md:pt-[4.75rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="mb-12">
@@ -169,7 +169,7 @@ export default function ActualitesPage() {
       </section>
 
       {/* ── 6.3 ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24">
+      <section className="relative w-full bg-white pt-12 md:pt-[8rem] pb-16 md:pb-24">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
           <div>
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
@@ -248,7 +248,7 @@ export default function ActualitesPage() {
       </section>
 
       {/* ── LINKEDIN BANNER ── */}
-      <section id="linkedin" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
+      <section id="linkedin" className="relative w-full bg-white pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-5xl mx-auto bg-[#141824] p-8 md:p-12 shadow-2xl border-t-4 border-t-[#e8e1d7] flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-6">
             <div className="w-16 h-16 rounded-md border border-[#e8e1d7]/30 flex items-center justify-center shrink-0">

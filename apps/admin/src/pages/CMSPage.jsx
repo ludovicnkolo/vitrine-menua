@@ -50,7 +50,16 @@ const CMSPage = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingPub, setEditingPub] = useState(null);
-  const [tab, setTab] = useState("publication");
+  const storageKey = `active_tab_${window.location.pathname}`;
+  const [tab, setTab] = useState(() => {
+    const saved = sessionStorage.getItem(storageKey);
+    return saved || "publication";
+  });
+
+  const handleTabChange = (newTab) => {
+    setTab(newTab);
+    sessionStorage.setItem(storageKey, newTab);
+  };
 
   // Form states
   const [formLang, setFormLang] = useState("FR");
@@ -72,6 +81,10 @@ const CMSPage = () => {
     message: "",
     onConfirm: null,
     type: "warning",
+  });
+  const [saveOptionsModal, setSaveOptionsModal] = useState({
+    isOpen: false,
+    isPreview: false,
   });
 
   // Paramètres Formulaires State
@@ -470,7 +483,7 @@ const CMSPage = () => {
             { id: "parametrage", label: "Paramétrage du site" },
           ]}
           activeTab={tab}
-          onTabChange={setTab}
+          onTabChange={handleTabChange}
         />
       </div>
 
@@ -1435,15 +1448,7 @@ const CMSPage = () => {
                   <div style={{ flex: 1 }}></div>
                   <button
                     type="button"
-                    onClick={() => handleSaveAction("BROUILLON", false)}
-                    className="btn btn-outline"
-                    style={{ fontWeight: 600 }}
-                  >
-                    Enregistrer comme brouillon
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleSaveAction("BROUILLON", true)}
+                    onClick={() => setSaveOptionsModal({ isOpen: true, isPreview: true })}
                     className="btn btn-primary"
                     style={{
                       fontWeight: 600,
@@ -1461,63 +1466,18 @@ const CMSPage = () => {
                     />{" "}
                     Aperçu
                   </button>
-                  {status === "PUBLIE" ? (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setConfirmModal({
-                          isOpen: true,
-                          title: "Dépublier l'article",
-                          type: "warning",
-                          message:
-                            "Voulez-vous vraiment dépublier cet article ? Il repassera en brouillon.",
-                          onConfirm: () => {
-                            setConfirmModal((prev) => ({
-                              ...prev,
-                              isOpen: false,
-                            }));
-                            handleSaveAction("BROUILLON", false);
-                          },
-                        })
-                      }
-                      className="btn btn-primary"
-                      style={{
-                        fontWeight: 600,
-                        background: "#f59e0b",
-                        borderColor: "#f59e0b",
-                      }}
-                    >
-                      Dépublier (Brouillon)
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setConfirmModal({
-                          isOpen: true,
-                          title: "Publier sur le site",
-                          type: "info",
-                          message:
-                            "Voulez-vous vraiment publier cette actualité ? Elle sera visible immédiatement sur le site public.",
-                          onConfirm: () => {
-                            setConfirmModal((prev) => ({
-                              ...prev,
-                              isOpen: false,
-                            }));
-                            handleSaveAction("PUBLIE", false);
-                          },
-                        })
-                      }
-                      className="btn btn-primary"
-                      style={{
-                        fontWeight: 600,
-                        background: "#10B981",
-                        borderColor: "#10B981",
-                      }}
-                    >
-                      Publier sur le site
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setSaveOptionsModal({ isOpen: true, isPreview: false })}
+                    className="btn btn-primary"
+                    style={{
+                      fontWeight: 600,
+                      background: "#10B981",
+                      borderColor: "#10B981",
+                    }}
+                  >
+                    Enregistrer
+                  </button>
                 </div>
               </form>
             </div>
@@ -1838,6 +1798,96 @@ const CMSPage = () => {
         onConfirm={confirmModal.onConfirm}
         onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
       />
+
+      {/* Save Options Modal */}
+      {saveOptionsModal.isOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.5)",
+            zIndex: 3000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              background: "white",
+              padding: "2rem",
+              borderRadius: "12px",
+              width: "400px",
+              maxWidth: "90%",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+            }}
+          >
+            <h3 style={{ marginTop: 0, marginBottom: "1rem" }}>
+              Enregistrer l'actualité
+            </h3>
+            <p style={{ color: "var(--text-muted)", marginBottom: "2rem" }}>
+              Voulez-vous enregistrer cette actualité en tant que brouillon (non
+              visible publiquement) ou la publier directement sur le site ?
+            </p>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  setSaveOptionsModal({ isOpen: false, isPreview: false });
+                  handleSaveAction("PUBLIE", saveOptionsModal.isPreview);
+                }}
+                className="btn btn-primary"
+                style={{
+                  width: "100%",
+                  padding: "0.8rem",
+                  fontWeight: 600,
+                  background: "#10B981",
+                  borderColor: "#10B981",
+                }}
+              >
+                Publier sur le site
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSaveOptionsModal({ isOpen: false, isPreview: false });
+                  handleSaveAction("BROUILLON", saveOptionsModal.isPreview);
+                }}
+                className="btn btn-outline"
+                style={{ width: "100%", padding: "0.8rem", fontWeight: 600 }}
+              >
+                Enregistrer comme brouillon
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setSaveOptionsModal({ isOpen: false, isPreview: false })
+                }
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: "var(--text-muted)",
+                  padding: "0.5rem",
+                  cursor: "pointer",
+                  marginTop: "0.5rem",
+                  fontWeight: 600
+                }}
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

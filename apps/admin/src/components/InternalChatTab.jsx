@@ -268,6 +268,8 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                     background:
                       selectedContact?.email === conv.contact.email
                         ? "#E2E8F0"
+                        : conv.unreadCount > 0
+                        ? "#FEF9C3"
                         : "transparent",
                     display: "flex",
                     alignItems: "center",
@@ -302,7 +304,8 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                     >
                       <span
                         style={{
-                          fontWeight: 600,
+                          fontWeight: conv.unreadCount > 0 ? 700 : 600,
+                          color: conv.unreadCount > 0 ? "#854D0E" : "inherit",
                           fontSize: "0.95rem",
                           whiteSpace: "nowrap",
                           overflow: "hidden",
@@ -332,7 +335,8 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                       <span
                         style={{
                           fontSize: "0.85rem",
-                          color: "var(--text-muted)",
+                          color: conv.unreadCount > 0 ? "#854D0E" : "var(--text-muted)",
+                          fontWeight: conv.unreadCount > 0 ? 600 : 400,
                           whiteSpace: "nowrap",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
@@ -340,6 +344,20 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                       >
                         {conv.lastMessage.bodyText || "Document joint"}
                       </span>
+                      {conv.unreadCount > 0 && (
+                        <span
+                          style={{
+                            background: "#EAB308",
+                            color: "white",
+                            fontSize: "0.7rem",
+                            fontWeight: "bold",
+                            padding: "0.1rem 0.4rem",
+                            borderRadius: "10px",
+                          }}
+                        >
+                          {conv.unreadCount} non consulté(s)
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

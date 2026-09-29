@@ -384,16 +384,17 @@ model Publication {
 
 // ─── LIENS MAGIQUES (Acquisition & Livraison) ────────────────────────────────
 model LienMagique {
-  id          String   @id @default(uuid())
-  token       String   @unique @default(uuid())
-  type        String   // "ACQUISITION" (Client upload) ou "LIVRAISON" (Client download)
-  dossierId   String
-  dossier     Dossier  @relation(fields: [dossierId], references: [id], onDelete: Cascade)
-  createdBy   String   // id de l'utilisateur qui a généré le lien
-  expiresAt   DateTime
-  isUsed      Boolean  @default(false)
-  note        String?  // Message/instructions optionnel(les) pour le client
-  createdAt   DateTime @default(now())
+  id                   String   @id @default(uuid())
+  token                String   @unique @default(uuid())
+  type                 String   // "ACQUISITION" (Client upload) ou "LIVRAISON" (Client download)
+  dossierId            String
+  dossier              Dossier  @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+  createdBy            String   // id de l'utilisateur qui a généré le lien
+  expiresAt            DateTime
+  isUsed               Boolean  @default(false)
+  note                 String?  // Message/instructions optionnel(les) pour le client
+  attachedDocumentIds  String?  // JSON array of document IDs for LIVRAISON type
+  createdAt            DateTime @default(now())
 }
 
 

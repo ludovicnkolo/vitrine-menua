@@ -96,21 +96,23 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 2 : INTRO (Overlapping Laplace style) ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[5.75rem] pb-16 md:pb-24">
+      <section className="relative w-full bg-white pt-12 md:pt-20 pb-16 md:pb-24">
         <div className="laplace-container portrait:sm:px-10 relative landscape:px-16 landscape:lg:px-16">
-          <div className="flex flex-col lg:flex-row items-center">
+          <div className="flex flex-col lg:flex-row lg:items-stretch">
             {/* Left Image (Desktop only) */}
-            <div className="hidden lg:block w-full lg:w-4/12 lg:h-[420px] z-20 relative shrink-0">
-              <img 
-                src="/img/accueil-intro.webp" 
-                alt="Intro" 
-                className="w-full h-full object-cover" 
-                onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} 
-              />
+            <div className="hidden lg:block w-full lg:w-5/12 z-20 relative shrink-0">
+              <div className="lg:absolute lg:inset-0 w-full h-full">
+                <img 
+                  src="/img/accueil-intro.webp" 
+                  alt="Intro" 
+                  className="w-full h-full object-cover shadow-xl" 
+                  onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} 
+                />
+              </div>
             </div>
             
             {/* Right Overlapping Beige Box */}
-            <div className="w-full lg:w-10/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pr-20 landscape:lg:pr-20 lg:pl-32 landscape:lg:pl-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-ml-24">
+            <div className="w-full lg:w-10/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pr-20 landscape:lg:pr-20 lg:pl-32 landscape:lg:pl-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-ml-24 lg:translate-y-12">
               {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
               <div className="absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#e8e1d7] rounded-sm shadow-xl -z-10" />
 
@@ -213,7 +215,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 4 : VOS BESOINS (Light section with image overlap) ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24">
+      <section className="relative w-full bg-white pt-12 md:pt-[8rem] pb-16 md:pb-24">
         <div className="laplace-container portrait:sm:px-10 relative landscape:px-16 landscape:lg:px-16">
           <div className="flex flex-col lg:flex-row-reverse items-center">
             

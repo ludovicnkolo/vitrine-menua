@@ -229,7 +229,7 @@ router.post("/messages/interne", authenticateJWT, async (req, res) => {
         objet: objet,
         bodyText: bodyText,
         attachment: attachment,
-        status: "NOUVEAU",
+        status: "NON_CONSULTE",
         dossierId: dossierId || null,
         missionId: missionId || null,
         tacheId: tacheId || null,
@@ -298,16 +298,14 @@ router.get(
             lastMessage: m,
             unreadCount:
               m.email === otherUserEmail &&
-              m.status !== "Lu" &&
-              m.status !== "TERMINE"
+              (m.status === "NON_CONSULTE" || m.status === "NOUVEAU")
                 ? 1
                 : 0,
           };
         } else {
           if (
             m.email === otherUserEmail &&
-            m.status !== "Lu" &&
-            m.status !== "TERMINE"
+            (m.status === "NON_CONSULTE" || m.status === "NOUVEAU")
           ) {
             conversationsMap[otherUserEmail].unreadCount += 1;
           }
@@ -343,6 +341,19 @@ router.get(
         where: { email: contactEmail },
       });
       const contactId = contactUser?.id;
+
+      // Marquer les messages comme consultés
+      await prisma.messagePersonnel.updateMany({
+        where: {
+          type: "INTERNE",
+          email: contactEmail,
+          assignedToId: currentUserId,
+          status: { in: ["NON_CONSULTE", "NOUVEAU"] },
+        },
+        data: {
+          status: "CONSULTE",
+        },
+      });
 
       const messages = await prisma.messagePersonnel.findMany({
         where: {
@@ -637,6 +648,7 @@ router.patch("/messages/:id/status", async (req, res) => {
     } = req.body;
 
     // Charger le message UNE SEULE FOIS au debut pour eviter le bug de scope
+    console.log("[PATCH status] id:", id, "body:", JSON.stringify(req.body));
     const existingMsg =
       (await prisma.messagePersonnel.findUnique({ where: { id } })) ||
       (await prisma.formulaire.findUnique({ where: { id } }));
@@ -678,11 +690,15 @@ router.patch("/messages/:id/status", async (req, res) => {
           }
         };
 
-        const allowedTransitions = VALID[category]?.[from] || [];
-        if (!allowedTransitions.includes(status)) {
-          return res.status(400).json({
-            error: `Transition impossible : un message en statut "${from}" ne peut pas passer a "${status}".`,
-          });
+        if (category !== "none") {
+          // Si le statut actuel n'est pas dans le pipeline (ex: EN_ATTENTE),
+          // on autorise la transition vers n'importe quel statut du pipeline.
+          const allowedTransitions = VALID[category]?.[from];
+          if (allowedTransitions !== undefined && !allowedTransitions.includes(status)) {
+            return res.status(400).json({
+              error: `Transition impossible : un message en statut "${from}" ne peut pas passer a "${status}".`,
+            });
+          }
         }
       }
       
@@ -711,20 +727,24 @@ router.patch("/messages/:id/status", async (req, res) => {
     // Validation dateRappel : uniquement si la date CHANGE
     if (dateRappel !== undefined) {
       if (dateRappel) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        // Normaliser les deux dates sur minuit UTC pour eviter les problemes de timezone
+        const todayUTC = new Date();
+        todayUTC.setUTCHours(0, 0, 0, 0);
         const parsedDate = new Date(dateRappel);
-        parsedDate.setHours(0, 0, 0, 0);
+        if (isNaN(parsedDate.getTime())) {
+          return res.status(400).json({ error: "Format de date invalide pour le rappel." });
+        }
+        parsedDate.setUTCHours(0, 0, 0, 0);
 
         const currentDate = existingMsg?.dateRappel ? new Date(existingMsg.dateRappel) : null;
-        if (currentDate) currentDate.setHours(0, 0, 0, 0);
+        if (currentDate) currentDate.setUTCHours(0, 0, 0, 0);
 
         if (!currentDate || parsedDate.getTime() !== currentDate.getTime()) {
-          if (parsedDate < today) {
+          if (parsedDate < todayUTC) {
             return res.status(400).json({ error: "La date de rappel ne peut pas etre anterieure a aujourd hui." });
           }
         }
-        dataToUpdate.dateRappel = parsedDate;
+        dataToUpdate.dateRappel = new Date(dateRappel);
       } else {
         dataToUpdate.dateRappel = null;
       }
@@ -734,20 +754,23 @@ router.patch("/messages/:id/status", async (req, res) => {
     // Validation dateEntretien : uniquement si la date CHANGE
     if (dateEntretien !== undefined) {
       if (dateEntretien) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const todayUTC = new Date();
+        todayUTC.setUTCHours(0, 0, 0, 0);
         const parsedDate = new Date(dateEntretien);
-        parsedDate.setHours(0, 0, 0, 0);
+        if (isNaN(parsedDate.getTime())) {
+          return res.status(400).json({ error: "Format de date invalide pour l entretien." });
+        }
+        parsedDate.setUTCHours(0, 0, 0, 0);
 
         const currentDate = existingMsg?.dateEntretien ? new Date(existingMsg.dateEntretien) : null;
-        if (currentDate) currentDate.setHours(0, 0, 0, 0);
+        if (currentDate) currentDate.setUTCHours(0, 0, 0, 0);
 
         if (!currentDate || parsedDate.getTime() !== currentDate.getTime()) {
-          if (parsedDate < today) {
+          if (parsedDate < todayUTC) {
             return res.status(400).json({ error: "La date d entretien ne peut pas etre anterieure a aujourd hui." });
           }
         }
-        dataToUpdate.dateEntretien = parsedDate;
+        dataToUpdate.dateEntretien = new Date(dateEntretien);
       } else {
         dataToUpdate.dateEntretien = null;
       }
@@ -789,13 +812,17 @@ router.patch("/messages/:id/status", async (req, res) => {
     }
 
     // Appliquer la mise a jour selon le type
+    console.log("[PATCH status] dataToUpdate:", JSON.stringify(dataToUpdate));
     const isFormulaire = !!(await prisma.formulaire.findUnique({ where: { id } }));
     if (isFormulaire) {
       const formUpdateData = { ...dataToUpdate };
+      // Formulaire n'a pas de champ "priorite" mais "priority"
       if (formUpdateData.priorite !== undefined) {
         formUpdateData.priority = formUpdateData.priorite;
         delete formUpdateData.priorite;
       }
+      // Formulaire n'a pas de champ "etiquette" — on le supprime
+      delete formUpdateData.etiquette;
       await prisma.formulaire.update({ where: { id }, data: formUpdateData });
       return res.json({ success: true, message: "Statut mis a jour" });
     }
@@ -809,7 +836,8 @@ router.patch("/messages/:id/status", async (req, res) => {
     }
     res.status(404).json({ error: "Message non trouve" });
   } catch (error) {
-    console.error("PATCH /messages/:id/status error:", error);
+    console.error("PATCH /messages/:id/status error:", error.message, error.code);
+    console.error("  dataToUpdate dump:", JSON.stringify(error.meta || {}));
     res.status(500).json({ error: "Erreur lors de la mise a jour" });
   }
 });

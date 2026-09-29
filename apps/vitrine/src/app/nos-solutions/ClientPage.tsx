@@ -8,7 +8,7 @@ import BulletList from "@/components/BulletList";
 
 const SolutionSection = ({ id, title, intro, desc, isReversed, listTitle, listItems, bgClass, topDecoClass, titleDecoClass, borderClass, zIndexClass = "z-10" }: any) => {
   return (
-    <section id={id} className={`relative w-full py-24 scroll-mt-20 overflow-hidden ${bgClass}`}>
+    <section id={id} className={`relative w-full pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20 overflow-hidden ${bgClass}`}>
       {topDecoClass && <div className={topDecoClass} />}
       <div className={`laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 relative ${zIndexClass} max-w-7xl mx-auto flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-16 lg:gap-24 items-center`}>
         <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-4 lg:-translate-y-10">
@@ -81,7 +81,7 @@ export default function NosSolutionsPage() {
       </section>
 
       {/* ── 4.2 INTRODUCTION ── */}
-      <section className="relative w-full bg-white pt-8 md:pt-[2.75rem] pb-16 md:pb-24 scroll-mt-20">
+      <section className="relative w-full bg-white pt-8 md:pt-[4.75rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10 relative z-10 landscape:px-16 landscape:lg:px-16">
           {/* BREADCRUMB */}
           <div className="w-full mb-8 md:mb-4">
@@ -91,19 +91,21 @@ export default function NosSolutionsPage() {
               <span>{t("Nos solutions", "Our solutions")}</span>
             </p>
           </div>
-          <div className="flex flex-col lg:flex-row items-center lg:items-start">
+          <div className="flex flex-col lg:flex-row lg:items-stretch">
             {/* Left Image (Desktop only) */}
-            <div className="hidden lg:block w-full lg:w-4/12 lg:h-[350px] lg:-mt-12 z-20 relative shrink-0">
-              <img 
-                src="/img/solutions_3.webp" 
-                alt="Nos solutions" 
-                className="w-full h-full object-cover shadow-xl" 
-                onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} 
-              />
+            <div className="hidden lg:block w-full lg:w-5/12 z-20 relative shrink-0">
+              <div className="lg:absolute lg:inset-0 w-full h-full">
+                <img 
+                  src="/img/solutions_3.webp" 
+                  alt="Nos solutions" 
+                  className="w-full h-full object-cover shadow-xl" 
+                  onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} 
+                />
+              </div>
             </div>
             
             {/* Right Overlapping Box */}
-            <div className="w-full lg:w-10/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pr-20 landscape:lg:pr-20 lg:pl-32 landscape:lg:pl-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-ml-24">
+            <div className="w-full lg:w-10/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pr-20 landscape:lg:pr-20 lg:pl-32 landscape:lg:pl-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-ml-24 lg:translate-y-12">
               {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
               <div className="absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
@@ -302,7 +304,7 @@ export default function NosSolutionsPage() {
       />
 
       {/* ── 4.7 LANGUES & 4.8 BON A SAVOIR ── */}
-      <section id="langues" className="relative w-full bg-white pt-12 md:pt-[5.25rem] landscape:pt-8 landscape:lg:pt-[5.25rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-48 scroll-mt-20">
+      <section id="langues" className="relative w-full bg-white pt-12 md:pt-[8rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-48 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 landscape:grid-cols-2 gap-12 landscape:gap-8 lg:gap-16">
             

@@ -44,7 +44,7 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ── 2.2 MENUA CONSULTING (Overlapping style, image left) ── */}
-      <section id="presentation-du-cabinet" className="relative w-full bg-white pt-12 md:pt-[5.75rem] pb-16 md:pb-24 scroll-mt-20">
+      <section id="presentation-du-cabinet" className="relative w-full bg-white pt-8 md:pt-[4.75rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10  landscape:px-16 relative z-10">
           {/* BREADCRUMB */}
           <div className="w-full mb-8 md:mb-4">
@@ -238,7 +238,7 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ── 2.5 NOTRE MÉTHODOLOGIE (Beige Section) ── */}
-      <section id="notre-methodologie" className="relative w-full bg-[#e8e1d7] pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
+      <section id="notre-methodologie" className="relative w-full bg-[#e8e1d7] pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10  landscape:px-16 landscape:lg:px-16">
           <div className="text-center mb-20 ">
             <div className="inline-block text-left">
@@ -293,7 +293,7 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ── 2.6 NOTRE ÉQUIPE ── */}
-      <section id="notre-equipe" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
+      <section id="notre-equipe" className="relative w-full bg-white pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10  landscape:px-16 landscape:lg:px-16 max-w-4xl mx-auto text-center">
           <div className="inline-block text-left mb-10">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
@@ -349,24 +349,33 @@ export default function NousConnaitrePage() {
       </section>
 
       {/* ── 2.7 ACCRÉDITATIONS ET NOTRE ÉQUIPE ── */}
-      <section id="certifications" className="relative w-full bg-white pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container portrait:sm:px-10  landscape:px-16 landscape:lg:px-16 flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
-          {/* Beige block with list (Left) */}
-          <div className="w-full lg:w-7/12 bg-[#e8e1d7] px-6 py-10 lg:pt-16 lg:pb-16 lg:pl-20 lg:pr-32 flex flex-col justify-center shadow-xl">
-            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
-              {t("Formations, certifications et expertises", "Qualifications, certifications and expertise")}
-            </h2>
-
-            {/* Mobile Image */}
-            <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-12 rounded-sm shadow-md overflow-hidden">
-              <img src="/img/besoins-meeting.webp" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
+      <section id="certifications" className="relative w-full bg-white pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20">
+        <div className="laplace-container portrait:sm:px-10 relative z-10 landscape:px-16 landscape:lg:px-16">
+          <div className="flex flex-col lg:flex-row-reverse items-center">
+            {/* Image (Right Desktop only) */}
+            <div className="hidden lg:block w-full lg:w-6/12 h-[300px] lg:h-[450px] z-20 relative shrink-0">
+              <img src="/img/conforme.jpg" alt="Accréditations" className="w-full h-full object-cover object-bottom shadow-xl" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
             </div>
+
+            {/* Beige block with list (Left) */}
+            <div className="w-full lg:w-7/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pl-20 landscape:lg:pl-20 lg:pr-32 landscape:lg:pr-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-mr-24">
+              {/* Absolute background */}
+              <div className="absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#e8e1d7] rounded-sm shadow-xl -z-10" />
+
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+              <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
+                {t("Formations, certifications et expertises", "Qualifications, certifications and expertise")}
+              </h2>
+
+              {/* Mobile Image */}
+              <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-12 rounded-sm shadow-md overflow-hidden">
+                <img src="/img/conforme.jpg" alt="Accréditations" className="w-full h-full object-cover object-bottom" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
+              </div>
 
             <div className="space-y-4 text-[#141824] text-[1.05rem] font-light leading-relaxed">
               <p>
                 {formatBrand(t(
-                  "MENUA CONSULTING intervient dans des environnements soumis à des exigences élevées en matière de conformité, de qualité et de traçabilité.",
+                  "Menua Consulting intervient dans des environnements soumis à des exigences élevées en matière de conformité, de qualité et de traçabilité.",
                   "MENUA CONSULTING works in environments with demanding compliance, quality and traceability requirements."
                 ))}
               </p>
@@ -385,7 +394,7 @@ export default function NousConnaitrePage() {
               <div className="bg-white/40 border-l-4 border-[#141824] p-5 my-2 shadow-sm">
                 <p className="font-bold text-[#141824] text-[1rem]">
                   {formatBrand(t(
-                    "MENUA CONSULTING n’exerce pas d’activité réglementée en son nom propre. Le cabinet intervient en support opérationnel, dans le cadre des procédures, agréments et validations propres à ses clients.",
+                    "Menua Consulting n’exerce pas d’activité réglementée en son nom propre. Le cabinet intervient en support opérationnel, dans le cadre des procédures, agréments et validations propres à ses clients.",
                     "MENUA CONSULTING does not carry out regulated activities in its own name. It provides operational support within the procedures, permissions, regulatory approvals, controls and validation frameworks of its clients."
                   ))}
                 </p>
@@ -414,9 +423,6 @@ export default function NousConnaitrePage() {
             </div>
           </div>
 
-          {/* Image (Right Desktop only) */}
-          <div className="hidden lg:block w-full lg:w-5/12 h-[300px] lg:h-[450px] shadow-xl">
-            <img src="/img/besoins-meeting.webp" alt="Accréditations" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
           </div>
         </div>
       </section>

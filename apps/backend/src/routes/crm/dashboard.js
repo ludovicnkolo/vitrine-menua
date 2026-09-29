@@ -239,7 +239,7 @@ router.get("/dashboard-stats", async (req, res) => {
       where: whereUrgentsForm,
     });
 
-    const whereUrgentsMsg = { priorite: { in: ["URGENT", "Urgent"] } };
+    const whereUrgentsMsg = { priorite: { in: ["URGENT", "Urgent"] }, isDeleted: false };
     if (isFiltered)
       whereUrgentsMsg.createdAt = { gte: startPeriod, lte: endPeriod };
     const urgentsMessages = await prisma.messagePersonnel.count({
@@ -247,7 +247,7 @@ router.get("/dashboard-stats", async (req, res) => {
     });
     const alertesPrioritaires = urgentsFormulaires + urgentsMessages;
 
-    const whereTachesCrit = { status: { notIn: ["TERMINE", "ARCHIVE"] } };
+    const whereTachesCrit = { status: { notIn: ["TERMINE", "ARCHIVE", "CORBEILLE"] } };
     if (isFiltered) {
       whereTachesCrit.echeance = { gte: startPeriod, lte: endPeriod };
     } else {
@@ -269,15 +269,24 @@ router.get("/dashboard-stats", async (req, res) => {
     const operationsBloquees = tachesEnAttente;
 
     // Volume Total (Dossiers + Missions + Tâches)
-    const whereTotal = {};
-    if (isFiltered) whereTotal.createdAt = { gte: startPeriod, lte: endPeriod };
-    const totalDossiers = await prisma.dossier.count({ where: whereTotal });
-    const totalMissions = await prisma.mission.count({ where: whereTotal });
-    const totalTaches = await prisma.tache.count({ where: whereTotal });
+    const whereTotalDossiers = { status: { not: "CORBEILLE" }, parentDossierId: null };
+    const whereTotalMissions = { status: { not: "CORBEILLE" } };
+    const whereTotalTaches = { status: { not: "CORBEILLE" } };
+    
+    if (isFiltered) {
+      const dateFilter = { gte: startPeriod, lte: endPeriod };
+      whereTotalDossiers.createdAt = dateFilter;
+      whereTotalMissions.createdAt = dateFilter;
+      whereTotalTaches.createdAt = dateFilter;
+    }
+    
+    const totalDossiers = await prisma.dossier.count({ where: whereTotalDossiers });
+    const totalMissions = await prisma.mission.count({ where: whereTotalMissions });
+    const totalTaches = await prisma.tache.count({ where: whereTotalTaches });
     const volumeTotal = totalDossiers + totalMissions + totalTaches;
 
     // 3. Flux d'Acquisition (Lien Magique)
-    const whereDepots = {};
+    const whereDepots = { isDeleted: false };
     if (isFiltered) {
       whereDepots.createdAt = { gte: startPeriod, lte: endPeriod };
     } else {
@@ -318,12 +327,13 @@ router.get("/dashboard-stats", async (req, res) => {
     const messagesTraitesPeriode = await prisma.messagePersonnel.count({
       where: {
         status: { not: "NOUVEAU" },
+        isDeleted: false,
         createdAt: { gte: startPeriod, lte: endPeriod },
       },
     });
 
     const missionsDemarreesPeriode = await prisma.mission.count({
-      where: { createdAt: { gte: startPeriod, lte: endPeriod } },
+      where: { status: { not: "CORBEILLE" }, createdAt: { gte: startPeriod, lte: endPeriod } },
     });
     const tachesCompleteesPeriode = await prisma.tache.count({
       where: {
@@ -334,6 +344,7 @@ router.get("/dashboard-stats", async (req, res) => {
     const dossiersCloturesPeriode = await prisma.dossier.count({
       where: {
         status: "CLOTURE",
+        parentDossierId: null,
         updatedAt: { gte: startPeriod, lte: endPeriod },
       },
     });

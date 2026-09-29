@@ -22,7 +22,7 @@ const upload = multer({
 // Create a new Magic Link
 router.post("/generate", authenticateJWT, async (req, res) => {
   try {
-    const { dossierId, type, expiresInDays = 7, note } = req.body;
+    const { dossierId, type, expiresInDays = 7, note, attachedDocumentIds } = req.body;
 
     if (!dossierId || !type) {
       return res
@@ -40,6 +40,9 @@ router.post("/generate", authenticateJWT, async (req, res) => {
         createdBy: req.user.id,
         expiresAt,
         note: note || null,
+        attachedDocumentIds: attachedDocumentIds
+          ? JSON.stringify(attachedDocumentIds)
+          : null,
       },
     });
 
@@ -168,11 +171,23 @@ router.get("/verify/:token", async (req, res) => {
       documents: [],
     };
 
-    // If LIVRAISON, generate presigned URLs for documents attached to this dossier
+    // If LIVRAISON, generate presigned URLs for documents attached to this link only
     if (magicLink.type === "LIVRAISON") {
-      const activeDocs = magicLink.dossier.documents.filter(
-        (d) => !d.isDeleted,
-      );
+      let allowedIds = null;
+      if (magicLink.attachedDocumentIds) {
+        try {
+          allowedIds = JSON.parse(magicLink.attachedDocumentIds);
+        } catch (_) {}
+      }
+
+      const activeDocs = magicLink.dossier.documents.filter((d) => {
+        if (d.isDeleted) return false;
+        if (allowedIds && allowedIds.length > 0) {
+          return allowedIds.includes(d.id);
+        }
+        // Fallback si pas d'IDs enregistrés : ne rien montrer
+        return false;
+      });
       const docsWithUrls = await Promise.all(
         activeDocs.map(async (doc) => {
           // If it's an S3 object (no path traversal ./), we generate a presigned URL

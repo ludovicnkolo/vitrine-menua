@@ -335,12 +335,12 @@ export default function Header() {
                 </div>
               ))}
 
-              <div className="border-b border-[#e8e1d7]/50">
+              <div className="border-b border-[#e8e1d7]/50 lg:hidden">
                 <Link href="/nous-rejoindre" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors">
                   {t("Nous rejoindre", "Join Us")}
                 </Link>
               </div>
-              <div className="border-b border-[#e8e1d7]/50">
+              <div className="border-b border-[#e8e1d7]/50 lg:hidden">
                 <Link href="/nous-contacter" onClick={() => setIsMobileMenuOpen(false)} className="flex py-3 text-[1.1rem] font-bold text-[#141824] hover:text-[#6e7891] transition-colors">
                   {t("Nous contacter", "Contact Us")}
                 </Link>

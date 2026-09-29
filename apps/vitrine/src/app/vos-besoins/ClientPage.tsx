@@ -10,7 +10,7 @@ import BulletList from "@/components/BulletList";
 const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items, reversed = false, bgClass = "bg-[#f5f7fa]", cardBg = "bg-white", containerClass = "" }: any) => {
   const isReversed = reversed;
   return (
-    <section id={id} className={`relative w-full ${bgClass} pt-12 md:pt-[5.25rem] pb-16 md:pb-24 scroll-mt-20`}>
+    <section id={id} className={`relative w-full ${bgClass} pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20`}>
       <div className="laplace-container portrait:sm:px-10 relative z-10 landscape:px-16 landscape:lg:px-16">
         <div className={`flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center`}>
           
@@ -46,10 +46,10 @@ const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items,
 
 /** Section sombre asymétrique : texte narratif + card de liste */
 const DarkNeedSection = ({ id, bgClass, topDecoClass, titleDecoClass, title, intro, disclaimer, listLabel, listItems, borderClass }: any) => (
-  <section id={id} className={`relative w-full ${bgClass} pt-28 md:pt-[14.25rem] pb-16 md:pb-24 scroll-mt-20 overflow-hidden`}>
+  <section id={id} className={`relative w-full ${bgClass} pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20 overflow-hidden`}>
     {topDecoClass && <div className={topDecoClass} />}
     <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
-      <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-16 lg:-translate-y-36">
+      <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-4 lg:-translate-y-10">
         <div className={`w-16 h-[3px] mb-5 ${titleDecoClass}`} />
         <h2 className={`${bgClass.includes("bg-[#141824]") ? "text-white" : "text-[#141824]"} text-[1.3rem] md:text-[1.5rem] font-bold uppercase mb-8 leading-tight`}>
           {title}
@@ -118,7 +118,7 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ── 3.2 INTRODUCTION ── */}
-      <section className="relative w-full bg-white pt-8 md:pt-[2.75rem] pb-16 md:pb-24 scroll-mt-20">
+      <section className="relative w-full bg-white pt-8 md:pt-[4.75rem] pb-16 md:pb-24 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10 relative z-10 landscape:px-16 landscape:lg:px-16">
           <div className="w-full mb-8 md:mb-4">
             <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">

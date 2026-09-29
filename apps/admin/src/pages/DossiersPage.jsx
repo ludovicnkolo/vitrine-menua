@@ -417,18 +417,29 @@ const DossiersPage = () => {
     try {
       const token = sessionStorage.getItem("adminToken");
 
-      // 1. Si LIVRAISON : uploader les fichiers dans la GED du dossier principal
+      // 1. Si LIVRAISON : uploader les fichiers dans la GED du dossier principal via S3
+      const attachedDocumentIds = [];
       if (magicType === "LIVRAISON" && magicFiles.length > 0) {
         for (const file of magicFiles) {
           const formData = new FormData();
-          formData.append("file", file);
+          formData.append("bucket", "ged");
           formData.append("dossierId", consultDossier.id);
           formData.append("name", file.name);
-          await fetch(getSafeApiUrl("/api/crm/documents"), {
-            method: "POST",
-            headers: { Authorization: `Bearer ${token}` },
-            body: formData,
-          });
+          formData.append("file", file);
+          const uploadRes = await fetch(
+            getSafeApiUrl("/api/files/upload-and-attach"),
+            {
+              method: "POST",
+              headers: { Authorization: `Bearer ${token}` },
+              body: formData,
+            },
+          );
+          if (uploadRes.ok) {
+            const uploadData = await uploadRes.json();
+            if (uploadData.document?.id) {
+              attachedDocumentIds.push(uploadData.document.id);
+            }
+          }
         }
       }
 
@@ -444,6 +455,10 @@ const DossiersPage = () => {
           type: magicType,
           expiresInDays: magicExpires,
           note: magicNote.trim() || null,
+          attachedDocumentIds:
+            magicType === "LIVRAISON" && attachedDocumentIds.length > 0
+              ? attachedDocumentIds
+              : undefined,
         }),
       });
       if (res.ok) {
@@ -1660,7 +1675,13 @@ const DossiersPage = () => {
           >
             <div
               className="card"
-              style={{ width: "90%", maxWidth: "500px", padding: "2rem" }}
+              style={{
+                width: "90%",
+                maxWidth: "500px",
+                padding: "2rem",
+                maxHeight: "90vh",
+                overflowY: "auto"
+              }}
             >
               <h3
                 style={{
@@ -1692,15 +1713,9 @@ const DossiersPage = () => {
                   <span>📧</span>
                   <span>
                     Destinataire :{" "}
-                    <strong>
-                      {consultDossier.client?.name ||
-                        consultDossier.targetUser?.name ||
-                        "—"}
-                    </strong>
-                    {" — "}
                     <a
                       href={`mailto:${consultDossier.client?.email || consultDossier.targetUser?.email}`}
-                      style={{ color: "#1D4ED8" }}
+                      style={{ color: "#1D4ED8", fontWeight: 600 }}
                     >
                       {consultDossier.client?.email || consultDossier.targetUser?.email}
                     </a>

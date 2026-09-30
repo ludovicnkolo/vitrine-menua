@@ -8,7 +8,7 @@ import { formatBrand } from "@/utils/formatBrand";
 export default function ActualitesPage() {
   const { lang, t } = useLanguage();
   const isEN = lang === 'EN';
-  
+
   const displayTitle = (pub: any) => (isEN && pub.title_en) ? pub.title_en : pub.title;
   const displayContent = (pub: any) => (isEN && pub.contentHtml_en) ? pub.contentHtml_en : pub.contentHtml;
   const displayCategory = (pub: any) => (isEN && pub.category_en) ? pub.category_en : pub.category;
@@ -33,7 +33,7 @@ export default function ActualitesPage() {
   }, []);
 
   const featuredPub = publications.length > 0 ? publications[0] : null;
-  const filteredPubs = activeFilter === "TOUTES LES ACTUALITÉS" 
+  const filteredPubs = activeFilter === "TOUTES LES ACTUALITÉS"
     ? publications
     : publications.filter(p => p.category === activeFilter);
 
@@ -55,14 +55,14 @@ export default function ActualitesPage() {
 
   return (
     <main className="flex flex-col w-full min-h-screen bg-white">
-      
+
       {/* ── 6.1 INTRODUCTION (Full BleedHero) ─*/}
       <section className="relative w-full min-h-screen portrait:sm:min-h-0 portrait:sm:h-[70svh] flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="/img/accueil-actus.webp" 
-            alt="Actualités et Veille" 
-            className="w-full h-full object-cover" 
+          <img
+            src="/img/accueil-actus.webp"
+            alt="Actualités et Veille"
+            className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
@@ -88,29 +88,27 @@ export default function ActualitesPage() {
         </div>
       </section>
 
-      {/* ── SEPARATION BLANC AVEC BREADCRUMB ── */}
-      <div className="w-full h-8 md:h-[5.75rem] bg-white relative">
-        <div className="laplace-container portrait:sm:px-10 max-w-6xl mx-auto relative h-full">
-          <div className="absolute top-2 md:top-4 left-6 md:left-12 lg:left-0 z-50">
-            <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
-              <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
-              <span className="mx-2">/</span>
-              <span>{t("Actualités", "News")}</span>
-            </p>
-          </div>
+      {/* ── ESPACE BLANC UNIVERSEL + BREADCRUMB ── */}
+      <div className="w-full h-32 lg:h-40 bg-white flex items-center">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 w-full">
+          <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase">
+            <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
+            <span className="mx-2">/</span>
+            <span>{t("Actualités", "News")}</span>
+          </p>
         </div>
       </div>
 
       {/* ── 6.2 À LA UNE (Dark Section) ── */}
-      <section id="articles" className="relative w-full bg-[#141824] pt-8 md:pt-[4.75rem] pb-16 md:pb-24 scroll-mt-20">
+      <section id="articles" className="relative w-full bg-[#141824] py-16 lg:py-20 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
+
           {/* Section Header */}
           <div className="mb-12">
             <div className="w-16 h-[3px] bg-white mb-5"></div>
             <h2 className="text-white text-[1.2rem] font-bold uppercase tracking-widest mb-3">
               {t("À la une", "Featured")}
             </h2>
-
           </div>
 
           {/* Featured Card */}
@@ -128,7 +126,7 @@ export default function ActualitesPage() {
                   </div>
                 )}
               </div>
-              
+
               <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white group-hover:bg-[#141824] transition-colors duration-300">
                 <p className="text-[#6e7891] group-hover:text-white/70 text-[0.8rem] font-medium tracking-wide mb-3 transition-colors duration-300">
                   {featuredPub.publishedAt ? formatDate(featuredPub.publishedAt) : formatDate(featuredPub.createdAt)}
@@ -139,10 +137,10 @@ export default function ActualitesPage() {
                 <p className="text-[#6e7891] group-hover:text-white/70 text-[1.1rem] font-light leading-relaxed mb-8 transition-colors duration-300 line-clamp-4">
                   {displayContent(featuredPub) ? displayContent(featuredPub).replace(/<[^>]+>/g, "").substring(0, 150) + "..." : "Découvrez notre nouvelle publication et l'analyse détaillée de nos experts métier sur ce sujet."}
                 </p>
-                
+
                 <div className="flex justify-end mt-auto">
                   <a href={`/actualites/${featuredPub.id}`} className="inline-flex items-center gap-2 text-[#141824] group-hover:text-white font-bold tracking-wider uppercase text-[0.7rem] transition-colors duration-300">
-                    {t("LIRE L'ARTICLE", "READ ARTICLE")} 
+                    {t("LIRE L'ARTICLE", "READ ARTICLE")}
                     <span className="w-6 h-[1px] bg-[#141824] group-hover:bg-white group-hover:w-10 transition-all duration-300"></span>
                     <ChevronRight size={14} className="-ml-2 group-hover:text-white transition-colors duration-300" />
                   </a>
@@ -152,9 +150,9 @@ export default function ActualitesPage() {
           ) : (
             <div className="bg-white border border-[#e8e1d7] flex flex-col md:flex-row w-full group hover:border-[#141824] transition-all duration-300">
               <div className="w-full md:w-1/2 h-[250px] md:h-auto overflow-hidden bg-[#f5f7fa] flex items-center justify-center">
-                 <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-xl">MENUA CONSULTING</span>
+                <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-xl">MENUA CONSULTING</span>
               </div>
-              
+
               <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white group-hover:bg-[#141824] transition-colors duration-300">
                 <p className="text-[#6e7891] group-hover:text-white/70 text-[1.1rem] font-light leading-relaxed transition-colors duration-300">
                   {formatBrand(t(
@@ -169,7 +167,7 @@ export default function ActualitesPage() {
       </section>
 
       {/* ── 6.3 ACTUALITÉS FINANCIÈRES ET RÉGLEMENTAIRES ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[8rem] pb-16 md:pb-24">
+      <section className="relative w-full bg-white py-16 lg:py-20">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
           <div>
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
@@ -182,14 +180,13 @@ export default function ActualitesPage() {
             {/* Filters */}
             <div className="flex flex-wrap gap-2 md:gap-4 mb-12">
               {filters.map((filter) => (
-                <button type="button" 
+                <button type="button"
                   key={filter.key}
                   onClick={() => setActiveFilter(filter.key)}
-                  className={`px-4 py-2 text-[0.7rem] font-bold tracking-widest uppercase transition-colors border ${
-                    activeFilter === filter.key 
-                      ? "bg-[#141824] text-white border-[#141824]" 
+                  className={`px-4 py-2 text-[0.7rem] font-bold tracking-widest uppercase transition-colors border ${activeFilter === filter.key
+                      ? "bg-[#141824] text-white border-[#141824]"
                       : "bg-white text-[#141824] border-[#e8e1d7] hover:border-[#141824]"
-                  }`}
+                    }`}
                 >
                   {t(filter.fr, filter.en)}
                 </button>
@@ -204,10 +201,10 @@ export default function ActualitesPage() {
                   <div className="h-[200px] overflow-hidden bg-[#f5f7fa] relative flex items-center justify-center">
                     {pub.coverImageUrl ? (
                       <>
-                        <img 
-                          src={pub.coverImageUrl} 
-                          alt={displayTitle(pub)} 
-                          className="block w-full h-full min-w-full max-w-none object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#f5f7fa]" 
+                        <img
+                          src={pub.coverImageUrl}
+                          alt={displayTitle(pub)}
+                          className="block w-full h-full min-w-full max-w-none object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#f5f7fa]"
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                         <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-sm z-0">MENUA CONSULTING</span>
@@ -248,8 +245,8 @@ export default function ActualitesPage() {
       </section>
 
       {/* ── LINKEDIN BANNER ── */}
-      <section id="linkedin" className="relative w-full bg-white pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-5xl mx-auto bg-[#141824] p-8 md:p-12 shadow-2xl border-t-4 border-t-[#e8e1d7] flex flex-col md:flex-row items-center justify-between gap-8">
+      <section id="linkedin" className="relative w-full bg-[#141824] py-8 lg:py-10 scroll-mt-20 border-t-4 border-t-[#e8e1d7]">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-6">
             <div className="w-16 h-16 rounded-md border border-[#e8e1d7]/30 flex items-center justify-center shrink-0">
               <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
@@ -268,17 +265,14 @@ export default function ActualitesPage() {
             </div>
           </div>
           <div className="shrink-0 text-center md:text-right mt-4 md:mt-0">
-
             <a href="https://www.linkedin.com/company/menua-consulting/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[0.85rem] font-bold justify-end hover:text-[#e8e1d7] transition-colors group">
-              {t("RETROUVEZ-NOUS SUR LINKEDIN", "FIND US ON LINKEDIN")} 
+              {t("RETROUVEZ-NOUS SUR LINKEDIN", "FIND US ON LINKEDIN")}
               <span className="w-8 h-[1px] bg-white group-hover:w-12 transition-all duration-300"></span>
               <ChevronRight size={18} className="-ml-2" />
             </a>
           </div>
         </div>
       </section>
-
-
 
     </main>
   );

@@ -43,84 +43,86 @@ export default function NousConnaitrePage() {
         </div>
       </section>
 
-      {/* ── 2.2 MENUA CONSULTING (Overlapping style, image left) ── */}
-      <section id="presentation-du-cabinet" className="relative w-full bg-white pt-8 md:pt-[4.75rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container portrait:sm:px-10  landscape:px-16 relative z-10">
+      {/* ── 2.2 MENUA CONSULTING (Overlapping style, image right) ── */}
+      <section id="presentation-du-cabinet" className="relative w-full bg-white py-16 lg:py-20 scroll-mt-20">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16">
           {/* BREADCRUMB */}
-          <div className="w-full mb-8 md:mb-4">
+          <div className="w-full mb-8 md:mb-12">
             <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
               <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
               <span className="mx-2">/</span>
               <span>{t("Nous connaître", "About us")}</span>
             </p>
           </div>
-          <div className="flex flex-col lg:flex-row-reverse items-center">
+          <div className="flex flex-col lg:flex-row-reverse lg:items-center">
 
-            {/* Right Image (Desktop only) */}
-            <div className="hidden lg:block w-full lg:w-4/12 lg:h-[420px] z-20 relative shrink-0">
-              <img
-                src="/img/connaitre_2.webp"
-                alt="Cabinet"
-                className="w-full h-full object-cover object-center shadow-xl"
-              />
-            </div>
-
-            {/* Left Overlapping Grey Box */}
-            <div className="w-full lg:w-10/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pl-20 landscape:lg:pl-20 lg:pr-32 landscape:lg:pr-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-mr-24">
-              {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
-              <div className="absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
-
-              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
-                {t("MENUA CONSULTING", "MENUA CONSULTING")}
-              </h2>
-
-              {/* Mobile Image (Visible only on mobile) */}
-              <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
+            {/* Right Image */}
+            <div className="hidden lg:flex w-5/12 shrink-0 z-20 items-center justify-start">
+              <div className="w-[85%] lg:h-[420px] relative overflow-hidden shadow-xl">
                 <img
                   src="/img/connaitre_2.webp"
                   alt="Cabinet"
                   className="w-full h-full object-cover object-center"
                 />
               </div>
-              <div className="space-y-4 text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
-                <p>
-                  {formatBrand(t(
-                    "MENUA CONSULTING est un cabinet spécialisé dans l’externalisation opérationnelle des fonctions back et middle office.",
-                    "MENUA CONSULTING specialises in the operational outsourcing of back and middle office functions."
-                  ))}
-                </p>
-                <p>
-                  {t(
-                    "Nous accompagnons les entreprises, les cabinets et les organisations qui souhaitent fiabiliser leurs opérations, sécuriser leurs processus et assurer la continuité de leurs activités quotidiennes.",
-                    "We support businesses, professional firms and other organisations seeking to improve operational reliability, strengthen their processes and maintain continuity across day-to-day activities."
-                  )}
-                </p>
-                <p>
-                  {t(
-                    "Notre intervention s’adresse notamment aux équipes financières, comptables, patrimoniales, IT, data et réglementées, ainsi qu’aux cabinets de gestion de patrimoine à la recherche d’un support opérationnel structuré et fiable.",
-                    "Our services are designed in particular for finance, accounting, IT and data teams, teams operating in regulated environments, and wealth management firms seeking structured and dependable operational support."
-                  )}
-                </p>
-                <p>
-                  {formatBrand(t(
-                    "MENUA CONSULTING adopte une posture résolument exécutante. Nos clients définissent leurs besoins, leurs procédures, leurs priorités et leurs circuits de validation. Nous prenons ensuite en charge la réalisation opérationnelle des tâches confiées, dans le respect de leurs instructions, avec rigueur, confidentialité et traçabilité.",
-                    "MENUA CONSULTING takes a firmly delivery-focused approach while maintaining a close working relationship with each client. Our clients define their requirements, procedures, priorities and approval workflows. We then carry out the assigned activities with rigour, confidentiality and traceability, under the appropriate level of supervision whenever required."
-                  ))}
-                </p>
-              </div>
-              <div className="flex justify-end mt-8">
-                <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-4 py-2 border border-[#141824] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-[#141824] hover:text-white transition-colors group">
-                  {t("Présenter votre besoin", "Tell us about your requirements")}
-                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
+            </div>
+
+            {/* Left Card */}
+            <div className="w-full lg:w-8/12 lg:-mr-16 z-10 flex items-center">
+              <div className="w-full bg-[#f5f7fa] shadow-xl px-6 portrait:sm:px-10 lg:pl-14 lg:pr-28 py-10 lg:py-14">
+                <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+                <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
+                  {t("MENUA CONSULTING", "MENUA CONSULTING")}
+                </h2>
+
+                {/* Mobile Image */}
+                <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
+                  <img
+                    src="/img/connaitre_2.webp"
+                    alt="Cabinet"
+                    className="w-full h-full object-cover object-center"
+                  />
+                </div>
+                
+                <div className="space-y-4 text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
+                  <p>
+                    {formatBrand(t(
+                      "MENUA CONSULTING est un cabinet spécialisé dans l’externalisation opérationnelle des fonctions back et middle office.",
+                      "MENUA CONSULTING specialises in the operational outsourcing of back and middle office functions."
+                    ))}
+                  </p>
+                  <p>
+                    {t(
+                      "Nous accompagnons les entreprises, les cabinets et les organisations qui souhaitent fiabiliser leurs opérations, sécuriser leurs processus et assurer la continuité de leurs activités quotidiennes.",
+                      "We support businesses, professional firms and other organisations seeking to improve operational reliability, strengthen their processes and maintain continuity across day-to-day activities."
+                    )}
+                  </p>
+                  <p>
+                    {t(
+                      "Notre intervention s’adresse notamment aux équipes financières, comptables, patrimoniales, IT, data et réglementées, ainsi qu’aux cabinets de gestion de patrimoine à la recherche d’un support opérationnel structuré et fiable.",
+                      "Our services are designed in particular for finance, accounting, IT and data teams, teams operating in regulated environments, and wealth management firms seeking structured and dependable operational support."
+                    )}
+                  </p>
+                  <p>
+                    {formatBrand(t(
+                      "MENUA CONSULTING adopte une posture résolument exécutante. Nos clients définissent leurs besoins, leurs procédures, leurs priorités et leurs circuits de validation. Nous prenons ensuite en charge la réalisation opérationnelle des tâches confiées, dans le respect de leurs instructions, avec rigueur, confidentialité et traçabilité.",
+                      "MENUA CONSULTING takes a firmly delivery-focused approach while maintaining a close working relationship with each client. Our clients define their requirements, procedures, priorities and approval workflows. We then carry out the assigned activities with rigour, confidentiality and traceability, under the appropriate level of supervision whenever required."
+                    ))}
+                  </p>
+                </div>
+                <div className="flex justify-end mt-8">
+                  <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-4 py-2 border border-[#141824] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-[#141824] hover:text-white transition-colors group">
+                    {t("Présenter votre besoin", "Tell us about your requirements")}
+                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* 2.3 Notre Expertise */}
-        <div id="notre-expertise" className="laplace-container portrait:sm:px-10  landscape:px-16 landscape:lg:px-16 mt-20 lg:mt-32 scroll-mt-20">
+        <div id="notre-expertise" className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16 mt-16 lg:mt-20 scroll-mt-20">
           <div className="w-full flex flex-col lg:flex-row gap-12 lg:gap-16">
             {/* Left Col: Spacer */}
             <div className="hidden lg:block lg:w-4/12"></div>
@@ -135,7 +137,7 @@ export default function NousConnaitrePage() {
               <div className="space-y-6 text-[#6e7891] text-[1.05rem] md:text-[1.1rem] font-light leading-relaxed">
                 <p>
                   {formatBrand(t(
-                    "MENUA CONSULTING accompagne les entreprises, cabinets et organisations dans l’externalisation de leurs fonctions back et middle office en français et en anglais, afin de renforcer la fiabilité de leurs opérations, d’optimiser leurs ressources et de garantir la continuité de leurs activités.",
+                    "MENUA CONSULTING accompagne les entreprises, cabinets et organisations dans l’externalisation de leurs fonctions back et middle office en français et en anglais, afin de renforcer la fiabilité de leurs opérations, d’optimiser leurs ressources et de garantir la continuity de leurs activités.",
                     "MENUA CONSULTING supports its clients in both French and English through a responsive, collaborative working relationship. We help improve operational reliability, make better use of internal resources and maintain business continuity."
                   ))}
                 </p>
@@ -149,10 +151,14 @@ export default function NousConnaitrePage() {
             </div>
           </div>
         </div>
+      </section>
 
-        {/* 2.4 Notre approche */}
-        <div id="notre-approche" className="laplace-container portrait:sm:px-10  landscape:px-16 landscape:lg:px-16 mt-16 lg:mt-32 scroll-mt-20">
-          <div className="w-full border-t border-[#141824]/10 pt-16 lg:pt-24 flex flex-col lg:flex-row gap-12 lg:gap-16">
+
+
+      {/* 2.4 Notre approche */}
+      <section id="notre-approche" className="relative w-full bg-white pb-16 lg:pb-20 pt-0 scroll-mt-20">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16">
+          <div className="w-full flex flex-col lg:flex-row gap-12 lg:gap-16">
 
             {/* Left Col: Title & Intro */}
             <div className="w-full lg:w-4/12">
@@ -165,7 +171,7 @@ export default function NousConnaitrePage() {
               </p>
 
               {/* Mobile Image */}
-              <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 rounded-sm shadow-md overflow-hidden">
+              <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[280px] portrait:sm:h-[320px] my-6 rounded-sm shadow-md overflow-hidden">
                 <img
                   src="/img/connaitre-approche.webp"
                   alt="Notre approche"
@@ -237,13 +243,15 @@ export default function NousConnaitrePage() {
         </div>
       </section>
 
+
+
       {/* ── 2.5 NOTRE MÉTHODOLOGIE (Beige Section) ── */}
-      <section id="notre-methodologie" className="relative w-full bg-[#e8e1d7] pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container portrait:sm:px-10  landscape:px-16 landscape:lg:px-16">
-          <div className="text-center mb-20 ">
+      <section id="notre-methodologie" className="relative w-full bg-[#e8e1d7] py-16 lg:py-20 scroll-mt-20">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16">
+          <div className="text-center mb-16 lg:mb-20">
             <div className="inline-block text-left">
-              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[#141824] text-[1.3rem] md:text-[1.5rem] font-bold mb-6 uppercase tracking-wider">{t("Notre méthodologie", "Our methodology")}</h2>
+              <div className="w-16 h-[3px] bg-[#141824] mb-5 mx-auto" />
+              <h2 className="text-[#141824] text-[1.3rem] md:text-[1.5rem] font-bold mb-6 uppercase tracking-wider text-center">{t("Notre méthodologie", "Our methodology")}</h2>
             </div>
           </div>
 
@@ -292,11 +300,13 @@ export default function NousConnaitrePage() {
         </div>
       </section>
 
+
+
       {/* ── 2.6 NOTRE ÉQUIPE ── */}
-      <section id="notre-equipe" className="relative w-full bg-white pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container portrait:sm:px-10  landscape:px-16 landscape:lg:px-16 max-w-4xl mx-auto text-center">
-          <div className="inline-block text-left mb-10">
-            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+      <section id="notre-equipe" className="relative w-full bg-white py-16 lg:py-20 scroll-mt-20">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16 max-w-4xl mx-auto text-center">
+          <div className="inline-block text-left mb-10 text-center">
+            <div className="w-16 h-[3px] bg-[#141824] mb-5 mx-auto" />
             <h2 className="mb-4 text-[#141824] text-[1.3rem] md:text-[1.5rem] font-bold uppercase tracking-wider">{t("Notre équipe", "Our team")}</h2>
             <p className="text-[#141824] font-bold tracking-widest uppercase text-[0.85rem] mb-6 opacity-70">
               {t("Une direction impliquée au plus près des opérations.", "Leadership closely involved in operational delivery.")}
@@ -307,7 +317,7 @@ export default function NousConnaitrePage() {
             <h3 className="text-[1.6rem] font-semibold mb-8 text-white">{t("La dirigeante", "Founder and President")}</h3>
 
             <div className="flex flex-col md:flex-row gap-10 items-start">
-              {/* Discreet Photo */}
+              {/* Photo */}
               <div className="shrink-0 flex flex-col items-center mx-auto md:mx-0">
                 <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-[3px] border-[#e8e1d7]/40 bg-[#141824] mb-4">
                   <img
@@ -325,7 +335,7 @@ export default function NousConnaitrePage() {
                 </span>
               </div>
 
-              {/* Text content (main focus) */}
+              {/* Text content */}
               <div className="flex-1">
                 <p className="text-[#e5e9f0] font-light leading-relaxed mb-6">
                   {t("Rosette Fouelefack dispose d’une expérience en finance, gestion des risques, conformité, appui aux environnements patrimoniaux et opérations back ", "Rosette Fouelefack has experience across finance, risk management, compliance, wealth-management environments and back ")}<span className="font-sans font-medium">&amp;</span>{t(" middle office, acquise au sein d’organisations bancaires et d’acteurs financiers réglementés.", " middle-office operations, gained within banking institutions and regulated financial entities.")}
@@ -348,86 +358,81 @@ export default function NousConnaitrePage() {
         </div>
       </section>
 
+
+
       {/* ── 2.7 ACCRÉDITATIONS ET NOTRE ÉQUIPE ── */}
-      <section id="certifications" className="relative w-full bg-white pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20">
+      <section id="certifications" className="relative w-full bg-white pb-16 lg:pb-20 pt-0 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10 relative z-10 landscape:px-16 landscape:lg:px-16">
-          <div className="flex flex-col lg:flex-row-reverse items-center">
+          <div className="flex flex-col lg:flex-row-reverse lg:items-center">
+            
             {/* Image (Right Desktop only) */}
-            <div className="hidden lg:block w-full lg:w-6/12 h-[300px] lg:h-[450px] z-20 relative shrink-0">
-              <img src="/img/conforme.jpg" alt="Accréditations" className="w-full h-full object-cover object-bottom shadow-xl" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
+            <div className="hidden lg:flex w-5/12 shrink-0 z-20 items-center justify-start">
+              <div className="w-[85%] lg:h-[450px] relative overflow-hidden shadow-xl">
+                <img src="/img/conforme.jpg" alt="Accréditations" className="w-full h-full object-cover object-bottom" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
+              </div>
             </div>
 
             {/* Beige block with list (Left) */}
-            <div className="w-full lg:w-7/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pl-20 landscape:lg:pl-20 lg:pr-32 landscape:lg:pr-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-mr-24">
-              {/* Absolute background */}
-              <div className="absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#e8e1d7] rounded-sm shadow-xl -z-10" />
+            <div className="w-full lg:w-8/12 lg:-mr-16 z-10 flex items-center">
+              <div className="w-full bg-[#e8e1d7] shadow-xl px-6 portrait:sm:px-10 lg:pl-14 lg:pr-28 py-10 lg:py-14 border border-[#e8e1d7] border-t-4 border-t-[#141824]">
+                <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+                <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
+                  {t("Formations, certifications et expertises", "Qualifications, certifications and expertise")}
+                </h2>
 
-              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
-                {t("Formations, certifications et expertises", "Qualifications, certifications and expertise")}
-              </h2>
-
-              {/* Mobile Image */}
-              <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-12 rounded-sm shadow-md overflow-hidden">
-                <img src="/img/conforme.jpg" alt="Accréditations" className="w-full h-full object-cover object-bottom" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
-              </div>
-
-            <div className="space-y-4 text-[#141824] text-[1.05rem] font-light leading-relaxed">
-              <p>
-                {formatBrand(t(
-                  "Menua Consulting intervient dans des environnements soumis à des exigences élevées en matière de conformité, de qualité et de traçabilité.",
-                  "MENUA CONSULTING works in environments with demanding compliance, quality and traceability requirements."
-                ))}
-              </p>
-              <p>
-                {t(
-                  "Pour répondre à des besoins spécifiques, le cabinet peut également s’appuyer sur un réseau de partenaires qualifiés, notamment sur des sujets liés aux métiers de la comptabilité, de la data, du reporting et du pilotage de gestion.",
-                  "Depending on the scope, the firm can draw on relevant capabilities in accounting, data, reporting and performance management."
-                )}
-              </p>
-              <p>
-                {t(
-                  "Cette organisation permet de proposer une réponse flexible et adaptée, tout en conservant un cadre de suivi clair, une exigence de confidentialité et une qualité d’exécution conforme aux attentes du client.",
-                  "This structure ensures a flexible and tailored response while maintaining clear oversight, strict confidentiality and execution quality that meets client expectations."
-                )}
-              </p>
-              <div className="bg-white/40 border-l-4 border-[#141824] p-5 my-2 shadow-sm">
-                <p className="font-bold text-[#141824] text-[1rem]">
-                  {formatBrand(t(
-                    "Menua Consulting n’exerce pas d’activité réglementée en son nom propre. Le cabinet intervient en support opérationnel, dans le cadre des procédures, agréments et validations propres à ses clients.",
-                    "MENUA CONSULTING does not carry out regulated activities in its own name. It provides operational support within the procedures, permissions, regulatory approvals, controls and validation frameworks of its clients."
-                  ))}
-                </p>
-              </div>
-              <div className="mt-12 pt-4 border-t border-[#141824]/10">
-                <p className="font-bold text-[#141824] mb-6">{t("La dirigeante dispose notamment :", "The President holds the following qualifications and areas of expertise:")}</p>
-                <div className="space-y-4 text-[0.95rem] text-[#141824]/80">
-                  <div className="flex items-start gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0 mt-[0.45rem]"></div><span className="font-semibold">{t("Certification AMF · Contrôle interne et risques · Finance d'entreprise · Back et middle office", "AMF certification · Internal control and risk · Corporate finance · Back and middle office")}</span></div>
-                  <div className="flex items-start gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0 mt-[0.45rem]"></div><span className="font-semibold">{t("Conformité financière · Gestion des risques · Analyse financière · KYC / AML / reporting", "Financial compliance · Risk management · Financial analysis · KYC / AML / CTF and reporting")}</span></div>
-
-
-
-
-
-
+                {/* Mobile Image */}
+                <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
+                  <img src="/img/conforme.jpg" alt="Accréditations" className="w-full h-full object-cover object-bottom" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
                 </div>
-              </div>
 
-              <div className="mt-12 text-right">
-                <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                  {t("Présenter votre besoin", "Tell us about your requirements")}
-                  <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
-                  <ChevronRight size={18} className="-ml-2" />
-                </Link>
+                <div className="space-y-4 text-[#141824] text-[1.05rem] font-light leading-relaxed">
+                  <p>
+                    {formatBrand(t(
+                      "Menua Consulting intervient dans des environnements soumis à des exigences élevées en matière de conformité, de qualité et de traçabilité.",
+                      "MENUA CONSULTING works in environments with demanding compliance, quality and traceability requirements."
+                    ))}
+                  </p>
+                  <p>
+                    {t(
+                      "Pour répondre à des besoins spécifiques, le cabinet peut également s’appuyer sur un réseau de partenaires qualifiés, notamment sur des sujets liés aux métiers de la comptabilité, de la data, du reporting et du pilotage de gestion.",
+                      "Depending on the scope, the firm can draw on relevant capabilities in accounting, data, reporting and performance management."
+                    )}
+                  </p>
+                  <p>
+                    {t(
+                      "Cette organisation permet de proposer une réponse flexible et adaptée, tout en conservant un cadre de suivi clair, une exigence de confidentialité et une qualité d’exécution conforme aux attentes du client.",
+                      "This structure ensures a flexible and tailored response while maintaining clear oversight, strict confidentiality and execution quality that meets client expectations."
+                    )}
+                  </p>
+                  <div className="bg-white/40 border-l-4 border-[#141824] p-5 my-2 shadow-sm">
+                    <p className="font-bold text-[#141824] text-[1rem]">
+                      {formatBrand(t(
+                        "Menua Consulting n’exerce pas d’activité réglementée en son nom propre. Le cabinet intervient en support opérationnel, dans le cadre des procédures, agréments et validations propres à ses clients.",
+                        "MENUA CONSULTING does not carry out regulated activities in its own name. It provides operational support within the procedures, permissions, regulatory approvals, controls and validation frameworks of its clients."
+                      ))}
+                    </p>
+                  </div>
+                  <div className="mt-12 pt-4 border-t border-[#141824]/10">
+                    <p className="font-bold text-[#141824] mb-6">{t("La dirigeante dispose notamment :", "The President holds the following qualifications and areas of expertise:")}</p>
+                    <div className="space-y-4 text-[0.95rem] text-[#141824]/80">
+                      <div className="flex items-start gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0 mt-[0.45rem]"></div><span className="font-semibold">{t("Certification AMF · Contrôle interne et risques · Finance d'entreprise · Back et middle office", "AMF certification · Internal control and risk · Corporate finance · Back and middle office")}</span></div>
+                      <div className="flex items-start gap-2"><div className="w-1.5 h-1.5 bg-[#141824] rounded-full shrink-0 mt-[0.45rem]"></div><span className="font-semibold">{t("Conformité financière · Gestion des risques · Analyse financière · KYC / AML / reporting", "Financial compliance · Risk management · Financial analysis · KYC / AML / CTF and reporting")}</span></div>
+                    </div>
+                  </div>
+
+                  <div className="mt-12 text-right">
+                    <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
+                      {t("Présenter votre besoin", "Tell us about your requirements")}
+                      <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+                      <ChevronRight size={18} className="-ml-2" />
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-
-          </div>
         </div>
       </section>
-
-
 
     </main>
   );

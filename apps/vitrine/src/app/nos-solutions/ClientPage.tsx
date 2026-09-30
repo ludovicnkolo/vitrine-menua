@@ -8,10 +8,10 @@ import BulletList from "@/components/BulletList";
 
 const SolutionSection = ({ id, title, intro, desc, isReversed, listTitle, listItems, bgClass, topDecoClass, titleDecoClass, borderClass, zIndexClass = "z-10" }: any) => {
   return (
-    <section id={id} className={`relative w-full pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20 overflow-hidden ${bgClass}`}>
+    <section id={id} className={`relative w-full py-16 lg:py-20 scroll-mt-20 overflow-hidden ${bgClass}`}>
       {topDecoClass && <div className={topDecoClass} />}
-      <div className={`laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 relative ${zIndexClass} max-w-7xl mx-auto flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-16 lg:gap-24 items-center`}>
-        <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-4 lg:-translate-y-10">
+      <div className={`laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 relative ${zIndexClass} max-w-[1200px] mx-auto flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-16 lg:gap-24 items-center`}>
+        <div className="w-full lg:w-5/12 flex flex-col justify-center">
           <div className={`w-16 h-[3px] mb-5 ${titleDecoClass}`} />
           <h2 className={`${bgClass.includes('bg-[#141824]') ? 'text-white' : 'text-[#141824]'} text-[1.3rem] md:text-[1.5rem] font-bold uppercase mb-8 leading-tight`}>
             {title}
@@ -81,20 +81,21 @@ export default function NosSolutionsPage() {
       </section>
 
       {/* ── 4.2 INTRODUCTION ── */}
-      <section className="relative w-full bg-white pt-8 md:pt-[4.75rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container portrait:sm:px-10 relative z-10 landscape:px-16 landscape:lg:px-16">
+      <section className="relative w-full bg-white py-16 lg:py-20 scroll-mt-20">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16">
           {/* BREADCRUMB */}
-          <div className="w-full mb-8 md:mb-4">
+          <div className="w-full mb-8 md:mb-12">
             <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
               <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
               <span className="mx-2">/</span>
               <span>{t("Nos solutions", "Our solutions")}</span>
             </p>
           </div>
-          <div className="flex flex-col lg:flex-row lg:items-stretch">
-            {/* Left Image (Desktop only) */}
-            <div className="hidden lg:block w-full lg:w-5/12 z-20 relative shrink-0">
-              <div className="lg:absolute lg:inset-0 w-full h-full">
+          <div className="flex flex-col lg:flex-row lg:items-center">
+            
+            {/* Left Image */}
+            <div className="hidden lg:flex w-5/12 shrink-0 z-20 items-center justify-end">
+              <div className="w-[85%] lg:h-[520px] relative overflow-hidden shadow-xl">
                 <img 
                   src="/img/solutions_3.webp" 
                   alt="Nos solutions" 
@@ -104,37 +105,38 @@ export default function NosSolutionsPage() {
               </div>
             </div>
             
-            {/* Right Overlapping Box */}
-            <div className="w-full lg:w-10/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pr-20 landscape:lg:pr-20 lg:pl-32 landscape:lg:pl-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-ml-24 lg:translate-y-12">
-              {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
-              <div className="absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
-              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <div className="leading-relaxed text-[#6e7891] text-[1rem] font-light mb-8 space-y-6">
-                <h2 className="text-[#141824] font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
-                  {t("Une approche sur mesure", "A tailored approach")}
-                </h2>
-                {/* Mobile Image (Visible only on mobile) */}
-                <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
-                  <img
-                    src="/img/solutions_3.webp"
-                    alt="Nos solutions"
-                    className="w-full h-full object-cover object-center"
-                    onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
-                  />
+            {/* Right Card */}
+            <div className="w-full lg:w-8/12 lg:-ml-16 z-10 flex items-center">
+              <div className="w-full bg-[#e8e1d7] shadow-xl px-6 portrait:sm:px-10 lg:pr-14 lg:pl-28 py-10 lg:py-14 border-t-4 border-t-[#141824]">
+                <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+                <div className="leading-relaxed text-[#6e7891] text-[1rem] font-light mb-8 space-y-6">
+                  <h2 className="text-[#141824] font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
+                    {t("Une approche sur mesure", "A tailored approach")}
+                  </h2>
+                  
+                  {/* Mobile Image */}
+                  <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
+                    <img
+                      src="/img/solutions_3.webp"
+                      alt="Nos solutions"
+                      className="w-full h-full object-cover object-center"
+                      onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
+                    />
+                  </div>
+                  
+                  <p className="text-[1.1rem] font-medium">
+                    {formatBrand(t(
+                      "MENUA CONSULTING conçoit des solutions d’externalisation opérationnelle sur mesure pour accompagner les entreprises, cabinets et organisations dans la gestion de leurs fonctions back et middle office.",
+                      "MENUA CONSULTING designs tailored operational outsourcing arrangements to support businesses, professional firms and other organisations in the management of their back and middle office functions."
+                    ))}
+                  </p>
+                  <p>
+                    {t(
+                      "Nos interventions peuvent répondre à un besoin ponctuel, à une surcharge d’activité, à un volume important de dossiers ou à une organisation récurrente nécessitant continuité, rigueur et fiabilité.",
+                      "Our services can address a one-off need, a spike in activity, high case volumes, or an ongoing requirement where continuity, rigour and reliability are essential."
+                    )}
+                  </p>
                 </div>
-                
-                <p className="text-[1.1rem] font-medium">
-                  {formatBrand(t(
-                    "MENUA CONSULTING conçoit des solutions d’externalisation opérationnelle sur mesure pour accompagner les entreprises, cabinets et organisations dans la gestion de leurs fonctions back et middle office.",
-                    "MENUA CONSULTING designs tailored operational outsourcing arrangements to support businesses, professional firms and other organisations in the management of their back and middle office functions."
-                  ))}
-                </p>
-                <p>
-                  {t(
-                    "Nos interventions peuvent répondre à un besoin ponctuel, à une surcharge d’activité, à un volume important de dossiers ou à une organisation récurrente nécessitant continuité, rigueur et fiabilité.",
-                    "Our services can address a one-off need, a spike in activity, high case volumes, or an ongoing requirement where continuity, rigour and reliability are essential."
-                  )}
-                </p>
               </div>
             </div>
           </div>
@@ -142,8 +144,7 @@ export default function NosSolutionsPage() {
         </div>
       </section>
 
-      {/* ── SEPARATOR ── */}
-      <div className="w-full h-8 md:h-16 bg-white"></div>
+
 
       {/* ── 4.3 URGENCE ── */}
       <SolutionSection 
@@ -172,16 +173,15 @@ export default function NosSolutionsPage() {
         ]}
       />
 
-      {/* ── SEPARATOR ── */}
-      <div className="w-full h-8 md:h-16 bg-white"></div>
+
 
       {/* ── 4.4 DURÉE (Notre approche layout) ── */}
-      <section id="duree" className="w-full bg-white scroll-mt-20">
-        <div className="laplace-container portrait:sm:px-10 pb-16 lg:pb-24 landscape:px-16 landscape:lg:px-16">
-          <div className="w-full bg-[#f5f7fa] rounded-sm pt-12 landscape:pt-8 landscape:lg:pt-16 pb-12 landscape:pb-8 landscape:lg:pb-16 px-6 landscape:px-10 landscape:lg:px-6 lg:pl-32 lg:pr-20 flex flex-col lg:flex-row landscape:flex-row gap-12 landscape:gap-8 landscape:lg:gap-16 relative z-10">
+      <section id="duree" className="w-full bg-white py-16 lg:py-20 scroll-mt-20">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16">
+          <div className="w-full bg-[#f5f7fa] rounded-sm py-12 px-6 lg:px-12 flex flex-col lg:flex-row gap-12 lg:gap-16 relative z-10">
           
           {/* Left Col: Title & Intro */}
-          <div className="w-full lg:w-4/12 landscape:w-5/12 landscape:lg:w-4/12">
+          <div className="w-full lg:w-4/12">
             <div className="w-16 h-[3px] bg-[#141824] mb-5" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
               {t("Durée", "Flexibility")}
@@ -194,7 +194,7 @@ export default function NosSolutionsPage() {
             </p>
             
             {/* Mobile Image */}
-            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 rounded-sm shadow-md overflow-hidden">
+            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[280px] portrait:sm:h-[320px] my-6 rounded-sm shadow-md overflow-hidden">
               <img src="/img/solutions_2.webp" alt="Durée" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
             </div>
             <div className="w-full aspect-[4/5] rounded-sm overflow-hidden shadow-lg hidden lg:block">
@@ -208,7 +208,7 @@ export default function NosSolutionsPage() {
           </div>
 
           {/* Right Col: Pillars */}
-          <div className="w-full lg:w-8/12 landscape:w-7/12 landscape:lg:w-8/12 grid grid-cols-1 md:grid-cols-2 landscape:grid-cols-2 gap-8 landscape:gap-4 landscape:lg:gap-8">
+          <div className="w-full lg:w-8/12 grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
               <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Mission courte", "One-off engagement")}</h4>
               <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
@@ -245,6 +245,7 @@ export default function NosSolutionsPage() {
         </div>
       </section>
 
+
       {/* ── 4.5 VOLUME ── */}
       <SolutionSection 
         id="volume"
@@ -272,8 +273,9 @@ export default function NosSolutionsPage() {
         ]}
       />
 
-      {/* ── SEPARATION BLANC ── */}
-      <div className="w-full h-8 md:h-[5.25rem] bg-white"></div>
+
+      {/* ── ESPACE BLANC UNIVERSEL ── */}
+      <div className="w-full h-16 lg:h-20 bg-white"></div>
 
       {/* ── 4.6 MODE D'ORGANISATION ── */}
       <SolutionSection 
@@ -304,9 +306,9 @@ export default function NosSolutionsPage() {
       />
 
       {/* ── 4.7 LANGUES & 4.8 BON A SAVOIR ── */}
-      <section id="langues" className="relative w-full bg-white pt-12 md:pt-[8rem] pb-16 md:pb-24 landscape:pb-8 landscape:lg:pb-48 scroll-mt-20">
+      <section id="langues" className="relative w-full bg-white py-16 lg:py-20 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 landscape:grid-cols-2 gap-12 landscape:gap-8 lg:gap-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
             
             {/* Langues Card */}
             <div className="bg-[#141824] p-10 lg:p-12 shadow-xl border-t-4 border-t-[#e8e1d7] flex flex-col justify-center">
@@ -333,9 +335,6 @@ export default function NosSolutionsPage() {
           </div>
         </div>
       </section>
-
-      {/* ── SEPARATOR ── */}
-      <div className="w-full h-8 md:h-16 bg-white"></div>
 
     </main>
   );

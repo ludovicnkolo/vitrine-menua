@@ -8,7 +8,7 @@ import { formatBrand } from "@/utils/formatBrand";
 export default function Home() {
   const { lang, t } = useLanguage();
   const isEN = lang === 'EN';
-  
+
   const displayTitle = (pub: any) => (isEN && pub.title_en) ? pub.title_en : pub.title;
   const displayContent = (pub: any) => (isEN && pub.contentHtml_en) ? pub.contentHtml_en : pub.contentHtml;
   const displayCategory = (pub: any) => (isEN && pub.category_en) ? pub.category_en : pub.category;
@@ -40,19 +40,19 @@ export default function Home() {
 
   return (
     <main className="flex flex-col w-full min-h-screen">
-      
+
       {/* ── SECTION 1 : HERO ── */}
       <section className="relative w-full min-h-screen portrait:sm:min-h-0 portrait:sm:h-[70svh] flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="/img/hero-paris.webp" 
-            alt="Paris Aerial" 
+          <img
+            src="/img/hero-paris.webp"
+            alt="Paris Aerial"
             className="w-full h-full object-cover object-[75%_center] md:object-[80%_center] lg:object-center"
-            onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} 
+            onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }}
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
-        
+
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 relative z-10 pt-40 md:pt-48 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-28 portrait:sm:pb-20 landscape:pb-24 lg:pb-10 landscape:lg:pb-40 xl:pb-16 mt-8 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
           <div className="max-w-4xl lg:max-w-6xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-4 landscape:ml-6 landscape:lg:-ml-4">
             <h1 className="text-white text-[1.25rem] portrait:sm:text-[1.5rem] md:text-[2.5rem] portrait:md:text-[1.65rem] landscape:text-[1.25rem] landscape:lg:text-[1.88rem] xl:text-[2.75rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
@@ -72,7 +72,7 @@ export default function Home() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
             <p className="text-[1.1rem] lg:text-[1.3rem] landscape:text-[1rem] landscape:lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {t(
-                "Nous sécurisons l’exécution de vos opérations afin de permettre à vos équipes de se concentrer sur leurs décisions stratégiques, leurs validations et leur relation client.",
+                "Nous sécurisons l'exécution de vos opérations afin de permettre à vos équipes de se concentrer sur leurs décisions stratégiques, leurs validations et leur relation client.",
                 "We work alongside your teams to safeguard day-to-day operations, so they can focus on strategic decisions, approvals and client relationships."
               )}
             </p>
@@ -95,132 +95,124 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── SECTION 2 : INTRO (Overlapping Laplace style) ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-20 pb-16 md:pb-24">
-        <div className="laplace-container portrait:sm:px-10 relative landscape:px-16 landscape:lg:px-16">
-          <div className="flex flex-col lg:flex-row lg:items-stretch">
-            {/* Left Image (Desktop only) */}
-            <div className="hidden lg:block w-full lg:w-5/12 z-20 relative shrink-0">
-              <div className="lg:absolute lg:inset-0 w-full h-full">
-                <img 
-                  src="/img/accueil-intro.webp" 
-                  alt="Intro" 
-                  className="w-full h-full object-cover shadow-xl" 
-                  onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} 
+      {/* ── SECTION 2 : INTRO ── */}
+      {/* Contained rectangle: image + card live in ONE parent div → no overflow into neighbours */}
+      <section className="relative w-full bg-white pt-28 lg:pt-36 pb-16 lg:pb-20">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16">
+          <div className="flex flex-col lg:flex-row lg:items-center">
+
+            {/* Image — desktop left half */}
+            <div className="hidden lg:flex w-5/12 shrink-0 z-20 items-center justify-end">
+              <div className="w-[85%] lg:h-[360px] relative overflow-hidden shadow-xl">
+                <img
+                  src="/img/accueil-intro.webp"
+                  alt="Intro"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
                 />
               </div>
             </div>
-            
-            {/* Right Overlapping Beige Box */}
-            <div className="w-full lg:w-10/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pr-20 landscape:lg:pr-20 lg:pl-32 landscape:lg:pl-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-ml-24 lg:translate-y-12">
-              {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
-              <div className="absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#e8e1d7] rounded-sm shadow-xl -z-10" />
 
-              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <div className="leading-relaxed text-[#141824] text-[1.1rem] md:text-[1.2rem] font-light mb-8 space-y-6">
-                <h2 className="font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
-                  {t(
-                    "Externalisation back et middle office",
-                    "Back and middle-office outsourcing"
-                  )}
-                </h2>
+            {/* Card — overlaps image with -ml-16, but stays inside the rectangle */}
+            <div className="w-full lg:w-8/12 lg:-ml-16 z-10 flex items-center">
+              <div className="w-full bg-[#e8e1d7] shadow-xl px-6 portrait:sm:px-10 lg:pr-14 lg:pl-28 py-10 lg:py-14">
+                <div className="w-16 h-[3px] bg-[#141824] mb-5"></div>
 
-                {/* Mobile Image (Visible only on mobile) */}
-                <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
-                  <img 
-                    src="/img/accueil-intro.webp" 
-                    alt="Intro" 
-                    className="w-full h-full object-cover" 
-                    onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} 
+                {/* Mobile Image */}
+                <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
+                  <img
+                    src="/img/accueil-intro.webp"
+                    alt="Intro"
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
                   />
                 </div>
 
-                <p>
-                  {formatBrand(t(
-                    "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT, data et réglementées pour sécuriser et renforcer l’exécution de leurs fonctions back et middle office. Nous prenons en charge des opérations clairement définies, selon les procédures, les outils, les priorités et les circuits de validation de chaque client.",
-                    "MENUA CONSULTING supports finance, accounting, wealth management, IT and data teams, as well as teams operating in regulated environments, by safeguarding and strengthening the delivery of their back and middle office functions. We take ownership of clearly defined operations in line with each client’s procedures, tools, priorities and approval workflows."
-                  ))}
-                </p>
-              </div>
-              <div className="flex justify-end mt-8">
-                <Link href="/nous-connaitre" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                  {t("Nous connaître", "About us")} 
-                  <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
-                  <ChevronRight size={18} className="-ml-2" />
-                </Link>
+                <div className="leading-relaxed text-[#141824] text-[1.1rem] md:text-[1.2rem] font-light mb-8 space-y-6">
+                  <h2 className="font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
+                    {t("Externalisation back et middle office", "Back and middle-office outsourcing")}
+                  </h2>
+                  <p>
+                    {formatBrand(t(
+                      "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT, data et réglementées pour sécuriser et renforcer l'exécution de leurs fonctions back et middle office. Nous prenons en charge des opérations clairement définies, selon les procédures, les outils, les priorités et les circuits de validation de chaque client.",
+                      "MENUA CONSULTING supports finance, accounting, wealth management, IT and data teams, as well as teams operating in regulated environments, by safeguarding and strengthening the delivery of their back and middle office functions. We take ownership of clearly defined operations in line with each client's procedures, tools, priorities and approval workflows."
+                    ))}
+                  </p>
+                </div>
+
+                <div className="flex justify-end">
+                  <Link href="/nous-connaitre" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
+                    {t("Nous connaître", "About us")}
+                    <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+                    <ChevronRight size={18} className="-ml-2" />
+                  </Link>
+                </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>
 
       {/* ── SECTION 3 : POURQUOI MENUA (Dark Navy block) ── */}
-      <section className="relative w-full bg-[#141824] text-white pt-12 md:pt-[9.25rem] pb-16 md:pb-24">
+      <section className="relative w-full bg-[#141824] text-white pt-16 lg:pt-20 pb-16 lg:pb-20">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-[1200px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
-          
+
           {/* Left Column: Narrative */}
-          <div className="w-full md:w-5/12 md:-translate-y-16">
-            <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
+          <div className="w-full md:w-5/12">
+            <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5"></div>
             <h2 className="text-white text-[1.3rem] md:text-[1.5rem] font-bold mb-6 uppercase tracking-wider">
               {t("Pourquoi MENUA CONSULTING ?", "Why choose us?")}
             </h2>
             <p className="text-[1.1rem] text-[#e5e9f0] font-light leading-relaxed mb-8">
               {formatBrand(t(
-                "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants, avec une approche structurée, traçable et adaptée à leurs contraintes.",
+                "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d'exécution opérationnelle exigeants, avec une approche structurée, traçable et adaptée à leurs contraintes.",
                 "MENUA CONSULTING works closely with organisations facing demanding operational challenges, providing structured, traceable support tailored to their environment and priorities."
               ))}
             </p>
           </div>
-          
+
           {/* Right Column: 4 Assets in a Grid */}
           <div className="w-full md:w-7/12 flex flex-col">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-12">
-               <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
-                  <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Spécialisation", "Specialisation")}</h3>
-                  <p className="text-white/80 font-light text-[1.05rem]">{t("Back et Middle Office", "Back and middle office")}</p>
-               </div>
-               <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
-                  <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Exécution", "Delivery")}</h3>
-                  <p className="text-white/80 font-light text-[1.05rem]">{t("Approche 100 % opérationnelle", "A firmly delivery-focused approach")}</p>
-               </div>
-               <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
-                  <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Fiabilité", "Reliability")}</h3>
-                  <p className="text-white/80 font-light text-[1.05rem]">{t("Continuité et qualité de service", "Business continuity and consistent service quality")}</p>
-               </div>
-               <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
-                  <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Bilingue", "Bilingual capability")}</h3>
-                  <p className="text-white/80 font-light text-[1.05rem]">{t("Français et anglais", "French and English")}</p>
-                </div>
+              <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
+                <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Spécialisation", "Specialisation")}</h3>
+                <p className="text-white/80 font-light text-[1.05rem]">{t("Back et Middle Office", "Back and middle office")}</p>
+              </div>
+              <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
+                <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Exécution", "Delivery")}</h3>
+                <p className="text-white/80 font-light text-[1.05rem]">{t("Approche 100 % opérationnelle", "A firmly delivery-focused approach")}</p>
+              </div>
+              <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
+                <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Fiabilité", "Reliability")}</h3>
+                <p className="text-white/80 font-light text-[1.05rem]">{t("Continuité et qualité de service", "Business continuity and consistent service quality")}</p>
+              </div>
+              <div className="border-l-2 border-[#e8e1d7]/30 pl-6">
+                <h3 className="text-[#e8e1d7] font-semibold text-[1.3rem] mb-2">{t("Bilingue", "Bilingual capability")}</h3>
+                <p className="text-white/80 font-light text-[1.05rem]">{t("Français et anglais", "French and English")}</p>
+              </div>
             </div>
-            
-            <div className="hidden md:flex justify-end mt-auto translate-y-12">
+
+            <div className="flex justify-end mt-8">
               <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                 {t("Nos atouts et engagements", "Our strengths and commitments")} 
-                 <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
-                 <ChevronRight size={18} className="-ml-2" />
-               </Link>
+                {t("Nos atouts et engagements", "Our strengths and commitments")}
+                <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
+                <ChevronRight size={18} className="-ml-2" />
+              </Link>
             </div>
-          </div>
-          
-          {/* Mobile Button */}
-          <div className="mt-8 md:hidden flex justify-end">
-            <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-               {t("Nos atouts et engagements", "Our strengths and commitments")} 
-               <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
-               <ChevronRight size={18} className="-ml-2" />
-             </Link>
           </div>
 
         </div>
       </section>
 
-      {/* ── SECTION 4 : VOS BESOINS (Light section with image overlap) ── */}
-      <section className="relative w-full bg-white pt-12 md:pt-[8rem] pb-16 md:pb-24">
-        <div className="laplace-container portrait:sm:px-10 relative landscape:px-16 landscape:lg:px-16">
-          <div className="flex flex-col lg:flex-row-reverse items-center">
-            
-            {/* Right Image (Desktop only) */}
-            <div className="hidden lg:block w-full lg:w-4/12 lg:h-[360px] z-20 relative shrink-0">
+      {/* ── SECTION 4 : VOS BESOINS ── */}
+      {/* Contained rectangle: card + image live in ONE parent div → no overflow */}
+      <section className="relative w-full bg-white py-16 lg:py-20">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16">
+          <div className="flex flex-col lg:flex-row-reverse lg:items-center">
+
+            {/* Image — desktop right half */}
+            <div className="hidden lg:block w-4/12 lg:h-[360px] shrink-0 relative overflow-hidden shadow-xl z-20">
               <img
                 src="/img/besoins-meeting.webp"
                 alt="Vos besoins"
@@ -229,74 +221,75 @@ export default function Home() {
               />
             </div>
 
-            {/* Left Overlapping Grey Box */}
-            <div className="w-full lg:w-10/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pl-20 landscape:lg:pl-20 lg:pr-32 landscape:lg:pr-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-mr-24">
-              {/* Absolute background: drops down on mobile so title is on white and image overlaps it */}
-              <div className="absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
+            {/* Card — overlaps image with -mr-16, stays inside the rectangle */}
+            <div className="w-full lg:w-9/12 lg:-mr-16 z-10 flex items-center">
+              <div className="w-full bg-[#f5f7fa] shadow-xl px-6 portrait:sm:px-10 lg:pl-14 lg:pr-28 py-10 lg:py-14">
+                <div className="w-16 h-[3px] bg-[#141824] mb-5"></div>
+                <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
+                  {t("Vos besoins", "Operational needs")}
+                </h2>
 
-              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
-                {t("Vos besoins", "Operational needs")}
-              </h2>
+                {/* Mobile Image */}
+                <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
+                  <img
+                    src="/img/besoins-meeting.webp"
+                    alt="Vos besoins"
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
+                  />
+                </div>
 
-              {/* Mobile Image (Visible only on mobile) */}
-              <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
-                <img
-                  src="/img/besoins-meeting.webp"
-                  alt="Vos besoins"
-                  className="w-full h-full object-cover"
-                  onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
-                />
-              </div>
-              <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-10">
-                {formatBrand(t(
-                  "Un appui opérationnel adapté aux équipes financières, comptables, patrimoniales, IT, data et réglementées, pour traiter les opérations qui exigent rigueur, continuité et fiabilité.",
-                  "Structured operational support for finance, accounting, wealth management, IT and data teams, as well as teams operating in regulated environments, where activities require rigour, continuity and reliable execution."
-                ))}
-              </p>
+                <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-10">
+                  {formatBrand(t(
+                    "Un appui opérationnel adapté aux équipes financières, comptables, patrimoniales, IT, data et réglementées, pour traiter les opérations qui exigent rigueur, continuité et fiabilité.",
+                    "Structured operational support for finance, accounting, wealth management, IT and data teams, as well as teams operating in regulated environments, where activities require rigour, continuity and reliable execution."
+                  ))}
+                </p>
 
-              {/* 3 need items */}
-              <div className="flex flex-col md:flex-row gap-6 md:gap-0 mb-10 border-t border-[#e8e1d7] pt-8">
-                {[
-                  { title: t("Finance et Reporting", "Finance and reporting"), desc: t("Production, structuration et fiabilisation de reportings financiers...", "Production, structuring and reliability of financial reports..."), href: "/vos-besoins#finance-reporting" },
-                  { title: t("Risques et Conformité", "Risk and compliance"), desc: t("Appui opérationnel aux équipes risques et conformité dans le traitement...", "Operational support for risk and compliance teams in processing..."), href: "/vos-besoins#risques-conformite" },
-                  { title: t("Support Comptable et Data", "Accounting and data support"), desc: t("Appui opérationnel aux équipes comptables, administratives et data...", "Operational support for accounting, administrative and data teams..."), href: "/vos-besoins#support-comptable-data" },
-                ].map((item, i, arr) => (
-                  <Link key={item.href} href={item.href} className={`flex flex-col gap-2 group flex-1 pr-6 ${i < arr.length - 1 ? "md:border-r border-[#e8e1d7] md:mr-6" : ""}`}>
-                    <h3 className="text-[#141824] font-semibold text-[1rem] group-hover:text-[#6e7891] transition-colors">{item.title}</h3>
-                    <p className="text-[#6e7891] text-[0.85rem] font-light leading-snug flex-grow">{item.desc}</p>
-                    <span className="inline-flex items-center gap-1 text-[#141824] text-[0.75rem] font-bold uppercase tracking-wider mt-2 group-hover:gap-2 transition-all">
-                      {t("Découvrir", "Discover")} <ArrowRight size={14} />
-                    </span>
+                {/* 3 need items */}
+                <div className="flex flex-col md:flex-row gap-6 md:gap-0 mb-10 border-t border-[#e8e1d7] pt-8">
+                  {[
+                    { title: t("Finance et Reporting", "Finance and reporting"), desc: t("Production, structuration et fiabilisation de reportings financiers...", "Production, structuring and reliability of financial reports..."), href: "/vos-besoins#finance-reporting" },
+                    { title: t("Risques et Conformité", "Risk and compliance"), desc: t("Appui opérationnel aux équipes risques et conformité dans le traitement...", "Operational support for risk and compliance teams in processing..."), href: "/vos-besoins#risques-conformite" },
+                    { title: t("Support Comptable et Data", "Accounting and data support"), desc: t("Appui opérationnel aux équipes comptables, administratives et data...", "Operational support for accounting, administrative and data teams..."), href: "/vos-besoins#support-comptable-data" },
+                  ].map((item, i, arr) => (
+                    <Link key={item.href} href={item.href} className={`flex flex-col gap-2 group flex-1 pr-6 ${i < arr.length - 1 ? "md:border-r border-[#e8e1d7] md:mr-6" : ""}`}>
+                      <h3 className="text-[#141824] font-semibold text-[1rem] group-hover:text-[#6e7891] transition-colors">{item.title}</h3>
+                      <p className="text-[#6e7891] text-[0.85rem] font-light leading-snug flex-grow">{item.desc}</p>
+                      <span className="inline-flex items-center gap-1 text-[#141824] text-[0.75rem] font-bold uppercase tracking-wider mt-2 group-hover:gap-2 transition-all">
+                        {t("Découvrir", "Discover")} <ArrowRight size={14} />
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="flex justify-end">
+                  <Link href="/vos-besoins" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
+                    {t("Voir tous vos besoins", "Explore your needs")}
+                    <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+                    <ChevronRight size={18} className="-ml-2" />
                   </Link>
-                ))}
-              </div>
-
-              <div className="flex justify-end mt-4">
-                <Link href="/vos-besoins" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                  {t("Voir tous vos besoins", "Explore your needs")} 
-                  <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
-                  <ChevronRight size={18} className="-ml-2" />
-                </Link>
+                </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 5 : NOS SOLUTIONS (Beige Minimal Section) ── */}
-      <section className="relative w-full bg-[#e8e1d7] pt-12 md:pt-[9.25rem] pb-16 md:pb-24">
+      {/* ── SECTION 5 : NOS SOLUTIONS (Beige) ── */}
+      <section className="relative w-full bg-[#e8e1d7] pt-16 lg:pt-20 pb-16 lg:pb-20">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-[1200px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
-          
+
           {/* Left Column: Narrative */}
-          <div className="w-full md:w-5/12 md:-translate-y-16">
-            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+          <div className="w-full md:w-5/12">
+            <div className="w-16 h-[3px] bg-[#141824] mb-5"></div>
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
               {t("Nos solutions", "Our engagement models")}
             </h2>
             <p className="text-[#141824] text-[1.1rem] font-light leading-relaxed mb-8">
               {t(
-                "Nous concevons des dispositifs d’externalisation sur mesure, adaptés à vos contraintes d’urgence, de durée, de volume et d’organisation.",
+                "Nous concevons des dispositifs d'externalisation sur mesure, adaptés à vos contraintes d'urgence, de durée, de volume et d'organisation.",
                 "We design tailored operational outsourcing arrangements around your requirements for speed, duration, volume and delivery model."
               )}
             </p>
@@ -305,56 +298,47 @@ export default function Home() {
           {/* Right Column: 4 constraints in a 2x2 grid */}
           <div className="w-full md:w-7/12 flex flex-col">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-12">
-               <div className="border-l-2 border-[#141824]/30 pl-6">
-                  <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Urgence", "Urgent requirements")}</h3>
-                  <p className="text-[#141824]/70 font-light text-[1.05rem]">{t("Réactivité", "Responsiveness")}</p>
-               </div>
-               <div className="border-l-2 border-[#141824]/30 pl-6">
-                  <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Durée", "Duration")}</h3>
-                  <p className="text-[#141824]/70 font-light text-[1.05rem]">{t("Flexibilité", "Flexibility")}</p>
-               </div>
-               <div className="border-l-2 border-[#141824]/30 pl-6">
-                  <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Volume", "Volume")}</h3>
-                  <p className="text-[#141824]/70 font-light text-[1.05rem]">{t("Agilité", "Scalability")}</p>
-               </div>
-                <div className="border-l-2 border-[#141824]/30 pl-6">
-                   <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Format", "Delivery model")}</h3>
-                   <p className="text-[#141824]/70 font-light text-[1.05rem]">{t("Sur mesure", "Tailored")}</p>
-                </div>
+              <div className="border-l-2 border-[#141824]/30 pl-6">
+                <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Urgence", "Urgent requirements")}</h3>
+                <p className="text-[#141824]/70 font-light text-[1.05rem]">{t("Réactivité", "Responsiveness")}</p>
+              </div>
+              <div className="border-l-2 border-[#141824]/30 pl-6">
+                <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Durée", "Duration")}</h3>
+                <p className="text-[#141824]/70 font-light text-[1.05rem]">{t("Flexibilité", "Flexibility")}</p>
+              </div>
+              <div className="border-l-2 border-[#141824]/30 pl-6">
+                <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Volume", "Volume")}</h3>
+                <p className="text-[#141824]/70 font-light text-[1.05rem]">{t("Agilité", "Scalability")}</p>
+              </div>
+              <div className="border-l-2 border-[#141824]/30 pl-6">
+                <h3 className="text-[#141824] font-semibold text-[1.3rem] mb-2">{t("Format", "Delivery model")}</h3>
+                <p className="text-[#141824]/70 font-light text-[1.05rem]">{t("Sur mesure", "Tailored")}</p>
+              </div>
             </div>
-            
-            <div className="hidden md:flex justify-end mt-auto translate-y-12">
+
+            <div className="flex justify-end mt-8">
               <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                 {t("Découvrir nos solutions", "Explore our solutions")} 
-                 <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
-                 <ChevronRight size={18} className="-ml-2" />
-               </Link>
+                {t("Découvrir nos solutions", "Explore our solutions")}
+                <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+                <ChevronRight size={18} className="-ml-2" />
+              </Link>
             </div>
-          </div>
-          
-          {/* Mobile Button */}
-          <div className="mt-8 md:hidden flex justify-end">
-            <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-               {t("Découvrir nos solutions", "Explore our solutions")} 
-               <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
-               <ChevronRight size={18} className="-ml-2" />
-             </Link>
           </div>
 
         </div>
       </section>
 
-      {/* ── SEPARATION BLANC ── */}
-      <div className="w-full h-8 md:h-[5.25rem] bg-white"></div>
+      {/* ── ESPACE BLANC UNIVERSEL ── */}
+      <div className="w-full h-16 lg:h-20 bg-white"></div>
 
       {/* ── SECTION 6 : ACTUALITÉS (3 article cards) ── */}
-      <section className="relative w-full bg-[#141824] pt-12 md:pt-[5.25rem] pb-16 md:pb-24">
+      <section className="relative w-full bg-[#141824] pt-16 lg:pt-20 pb-16 lg:pb-20">
         <div className="laplace-container portrait:sm:px-10">
-          
+
           {/* Header */}
           <div className="text-center mb-14">
             <div className="inline-block text-left max-w-2xl">
-              <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
+              <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5"></div>
               <h2 className="text-[1.3rem] md:text-[1.5rem] text-white font-bold mb-4 uppercase tracking-wider">
                 {t("Actualités et Veille", "Insights")}
               </h2>
@@ -365,7 +349,6 @@ export default function Home() {
                 )}
               </p>
             </div>
-
           </div>
 
           {publications.length > 0 ? (
@@ -375,10 +358,10 @@ export default function Home() {
                   <div className="h-[180px] overflow-hidden bg-[#1a1f2e] flex items-center justify-center relative">
                     {pub.coverImageUrl ? (
                       <>
-                        <img 
-                          src={pub.coverImageUrl} 
-                          alt={displayTitle(pub)} 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#1a1f2e]" 
+                        <img
+                          src={pub.coverImageUrl}
+                          alt={displayTitle(pub)}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#1a1f2e]"
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                         <span className="text-[#e8e1d7]/20 font-bold tracking-widest uppercase text-lg z-0">MENUA CONSULTING</span>
@@ -420,7 +403,7 @@ export default function Home() {
                 <div className="flex flex-col flex-grow p-6 border-t border-[#e8e1d7]/20">
                   <p className="text-white/70 text-[0.85rem] font-light leading-relaxed flex-grow mb-6">
                     {formatBrand(t(
-                      "Cette rubrique accueillera prochainement les analyses et publications de MENUA CONSULTING consacrées aux évolutions opérationnelles, aux méthodes de travail, à la fiabilisation des processus et à la continuité d’activité.",
+                      "Cette rubrique accueillera prochainement les analyses et publications de MENUA CONSULTING consacrées aux évolutions opérationnelles, aux méthodes de travail, à la fiabilisation des processus et à la continuité d'activité.",
                       "This section will soon host MENUA CONSULTING's analyses and publications dedicated to operational developments, working methods, process reliability and business continuity."
                     ))}
                   </p>
@@ -435,7 +418,7 @@ export default function Home() {
           {publications.length > 0 && (
             <div className="flex justify-end mt-4">
               <Link href="/actualites" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                {t("Voir toutes nos actualités", "Browse all publications")} 
+                {t("Voir toutes nos actualités", "Browse all publications")}
                 <span className="w-8 h-[1px] bg-white group-hover:w-12 transition-all duration-300"></span>
                 <ChevronRight size={18} className="-ml-2" />
               </Link>
@@ -444,8 +427,6 @@ export default function Home() {
 
         </div>
       </section>
-
-
 
     </main>
   );

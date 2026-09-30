@@ -7,16 +7,16 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.222Z",
-      "updatedAt": "2026-09-29T18:00:17.130Z"
+      "updatedAt": "2026-09-30T23:01:37.032Z"
     },
     {
       "id": "a41c168d-dc87-4353-8dcb-c71e4109416c",
       "name": "Responsable opérationnel",
       "description": "Pilote le flux métier quotidien. Peut gérer les clients, créer et assigner des missions, suivre l'évolution, mais n'a pas accès aux paramètres du système.",
-      "status": "Actif",
+      "status": "Inactif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.242Z",
-      "updatedAt": "2026-09-29T18:00:17.152Z"
+      "updatedAt": "2026-09-30T23:01:37.059Z"
     },
     {
       "id": "7f685243-dda5-4117-a675-d4a7364c7a66",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-09-28T09:31:02.248Z",
-      "updatedAt": "2026-09-29T18:00:17.209Z"
+      "updatedAt": "2026-09-30T23:01:37.068Z"
     },
     {
       "id": "803c6051-c50d-495a-bb21-b6615f1cf0dc",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-09-28T09:31:02.256Z",
-      "updatedAt": "2026-09-29T18:00:17.233Z"
+      "updatedAt": "2026-09-30T23:01:37.076Z"
     },
     {
       "id": "eaa1c720-2a71-493c-a1c0-d14f51051e0f",
@@ -43,14 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.269Z",
-      "updatedAt": "2026-09-29T18:00:17.249Z"
+      "updatedAt": "2026-09-30T23:01:37.085Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "2541799f-86de-4071-86c7-7110615bf37b",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$POPwBy2XhxspF8Ax1ghpuOR6Opfnb8aqLc8icjEA1tokVhpEjhsa2",
+      "password": "$2a$10$hxKx025CoVRgM49Mv8xU/uUpOzv11.MzQS6/0lzxjqgzXnkOVKPLC",
       "name": "Rosette Fouelefack",
       "roleId": "832d5c59-5fe6-488f-b64a-1bfdc6504152",
       "telephone": "+33659207511",
@@ -63,9 +63,9 @@
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
-      "lastLogin": "2026-09-29T15:59:02.499Z",
+      "lastLogin": "2026-09-30T23:09:09.622Z",
       "createdAt": "2026-09-28T09:31:02.401Z",
-      "updatedAt": "2026-09-29T18:00:17.550Z"
+      "updatedAt": "2026-09-30T23:09:09.623Z"
     },
     {
       "id": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
@@ -83,9 +83,9 @@
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
-      "lastLogin": null,
+      "lastLogin": "2026-09-29T20:19:09.447Z",
       "createdAt": "2026-09-28T09:32:23.212Z",
-      "updatedAt": "2026-09-28T09:32:23.212Z"
+      "updatedAt": "2026-09-29T20:19:09.448Z"
     },
     {
       "id": "db7be20d-5eee-4acc-872b-f47bdac08ec3",
@@ -379,12 +379,12 @@
       "nomPrenom": "Mollie Thomas",
       "email": "ledurmarc045@gmail.com",
       "telephone": "+1 (774) 973-6916",
-      "priority": "Normal",
+      "priority": "Urgent",
       "description": "Blanditiis excepturi",
       "raisonSocial": null,
       "objet": "Demande de contact",
       "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de client</strong> : <span>Particulier</span><br/>\n        \n        <strong>Nom complet</strong> : <span>Mollie Thomas</span><br/>\n        <strong>Email</strong> : <span>ledurmarc045@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (774) 973-6916</span>\n      </div>\n      <strong>Besoins identifiés</strong> : <div><ul><li>Finance et reporting</li><li>Autre besoin opérationnel</li></ul></div><br/>\n      <strong>Description du besoin</strong> : <div>\n      Blanditiis excepturi\n      </div>\n    ",
-      "status": "A_RAPPELER",
+      "status": "SANS_SUITE",
       "isAnonyme": true,
       "verifaliaJobId": null,
       "verifaliaStatus": "COMPLETED_VALID",
@@ -397,7 +397,7 @@
       "assignedToId": null,
       "receivedAt": "2026-09-28T09:35:46.866Z",
       "createdAt": "2026-09-28T09:35:46.866Z",
-      "updatedAt": "2026-09-29T12:08:46.809Z",
+      "updatedAt": "2026-09-29T20:23:09.359Z",
       "dateRappel": "2028-02-11T23:00:00.000Z",
       "noteRappel": "dvs",
       "dateEntretien": null,
@@ -536,6 +536,66 @@
       "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
       "missionId": null,
       "createdAt": "2026-09-29T17:15:06.041Z",
+      "isDeleted": false
+    },
+    {
+      "id": "5375db4a-775d-4781-8081-40b3cc113b79",
+      "name": "CRM cahier de charge.pdf",
+      "url": "ged/1790705065695-c7af226a7cb8bf03-CRM_cahier_de_charge.pdf",
+      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "missionId": null,
+      "createdAt": "2026-09-29T18:04:28.865Z",
+      "isDeleted": false
+    },
+    {
+      "id": "5565e68f-9536-4573-8d38-f9890951da50",
+      "name": "CRM cahier de charge.pdf",
+      "url": "ged/1790705068606-fa0954861a643580-CRM_cahier_de_charge.pdf",
+      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "missionId": null,
+      "createdAt": "2026-09-29T18:04:29.711Z",
+      "isDeleted": false
+    },
+    {
+      "id": "31609a25-8b24-4945-98cd-75e908dec66b",
+      "name": "crm.pdf",
+      "url": "ged/1790705069832-4888a7c26e8fbd56-crm.pdf",
+      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "missionId": null,
+      "createdAt": "2026-09-29T18:04:30.800Z",
+      "isDeleted": false
+    },
+    {
+      "id": "68fdffaa-e66f-4e5c-b145-2483993d6e1e",
+      "name": "crm.pdf",
+      "url": "ged/1790705068970-6fd5dfb03f493808-crm.pdf",
+      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "missionId": null,
+      "createdAt": "2026-09-29T18:04:31.718Z",
+      "isDeleted": false
+    },
+    {
+      "id": "4df55853-f186-4309-9858-a53b76b84666",
+      "name": "CRM cahier de charge.pdf",
+      "url": "ged/1790705070060-05565a33f9e775df-CRM_cahier_de_charge.pdf",
+      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "missionId": null,
+      "createdAt": "2026-09-29T18:04:31.829Z",
+      "isDeleted": false
+    },
+    {
+      "id": "5368e7ab-8edd-4dca-a59d-e24ba524834d",
+      "name": "yuihbv.pdf",
+      "url": "ged/1790705071985-f250f6d85d8b0d1a-crm.pdf",
+      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "missionId": null,
+      "createdAt": "2026-09-29T18:04:33.136Z",
       "isDeleted": false
     }
   ],
@@ -748,6 +808,259 @@
       "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
       "formulaireId": null,
       "createdAt": "2026-09-29T17:58:24.761Z"
+    },
+    {
+      "id": "fc805ede-f14e-48a4-952d-e00e7377aa96",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "AJOUT_DOCUMENT",
+      "targetId": "5375db4a-775d-4781-8081-40b3cc113b79",
+      "targetType": "DOCUMENT",
+      "details": "Document rattaché (atomique): CRM cahier de charge.pdf",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T18:04:28.886Z"
+    },
+    {
+      "id": "a89cb098-c959-4268-904b-dfdd5ca4f42d",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "AJOUT_DOCUMENT",
+      "targetId": "5565e68f-9536-4573-8d38-f9890951da50",
+      "targetType": "DOCUMENT",
+      "details": "Document rattaché (atomique): CRM cahier de charge.pdf",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T18:04:29.728Z"
+    },
+    {
+      "id": "2cb38763-f797-4382-b7e9-109b0daa4d0c",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "AJOUT_DOCUMENT",
+      "targetId": "31609a25-8b24-4945-98cd-75e908dec66b",
+      "targetType": "DOCUMENT",
+      "details": "Document rattaché (atomique): crm.pdf",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T18:04:30.826Z"
+    },
+    {
+      "id": "50043ad3-9876-455a-bf8c-4bf24eb432b0",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_LIEN_MAGIQUE",
+      "targetId": "550cb5d0-31c1-4249-8c3d-aca25ec7eaa2",
+      "targetType": "MAGIC_LINK",
+      "details": "Lien magique (LIVRAISON) généré pour le dossier",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T18:04:30.976Z"
+    },
+    {
+      "id": "e6e1a06d-cb1a-47e0-a050-0ad24da6a85d",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "AJOUT_DOCUMENT",
+      "targetId": "68fdffaa-e66f-4e5c-b145-2483993d6e1e",
+      "targetType": "DOCUMENT",
+      "details": "Document rattaché (atomique): crm.pdf",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T18:04:31.738Z"
+    },
+    {
+      "id": "fe4fbed8-8335-4317-997b-fb5fdb2c0b52",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_LIEN_MAGIQUE",
+      "targetId": "bfe7fb96-fb7f-469e-9165-cc1b2adfdda5",
+      "targetType": "MAGIC_LINK",
+      "details": "Lien magique (LIVRAISON) généré pour le dossier",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T18:04:31.829Z"
+    },
+    {
+      "id": "44a1eebc-34f0-4b17-b13f-db1634a3c143",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "AJOUT_DOCUMENT",
+      "targetId": "4df55853-f186-4309-9858-a53b76b84666",
+      "targetType": "DOCUMENT",
+      "details": "Document rattaché (atomique): CRM cahier de charge.pdf",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T18:04:31.867Z"
+    },
+    {
+      "id": "c5d25cca-253c-4bfa-9d93-c7a2d1cec5ab",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "AJOUT_DOCUMENT",
+      "targetId": "5368e7ab-8edd-4dca-a59d-e24ba524834d",
+      "targetType": "DOCUMENT",
+      "details": "Document rattaché (atomique): crm.pdf",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T18:04:33.162Z"
+    },
+    {
+      "id": "ac3d69ef-c432-4ce0-8d88-4eb10419064c",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_LIEN_MAGIQUE",
+      "targetId": "2d004b1b-ac5e-4167-b135-6609dd184cc4",
+      "targetType": "MAGIC_LINK",
+      "details": "Lien magique (LIVRAISON) généré pour le dossier",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T18:04:33.272Z"
+    },
+    {
+      "id": "f91a7a0a-0d3c-42b6-9d25-e6f68e01fe89",
+      "userId": null,
+      "action": "ACCES_LIEN_MAGIQUE",
+      "targetId": "2d004b1b-ac5e-4167-b135-6609dd184cc4",
+      "targetType": "MAGIC_LINK",
+      "details": "Accès au lien magique (LIVRAISON) — IP: ::ffff:127.0.0.1",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T18:04:44.547Z"
+    },
+    {
+      "id": "cc2e06ae-fe62-4e01-a40f-387bf00160dc",
+      "userId": null,
+      "action": "ACCES_LIEN_MAGIQUE",
+      "targetId": "2d004b1b-ac5e-4167-b135-6609dd184cc4",
+      "targetType": "MAGIC_LINK",
+      "details": "Accès au lien magique (LIVRAISON) — IP: ::ffff:127.0.0.1",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T18:04:44.591Z"
+    },
+    {
+      "id": "a48bfab0-446d-40f6-aaae-6ebf0053451e",
+      "userId": null,
+      "action": "TELECHARGEMENT_DOCUMENT_MAGIQUE",
+      "targetId": "2d004b1b-ac5e-4167-b135-6609dd184cc4",
+      "targetType": "MAGIC_LINK",
+      "details": "Téléchargement via lien magique : \"CRM cahier de charge.pdf\" — IP: ::ffff:127.0.0.1",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T18:04:46.829Z"
+    },
+    {
+      "id": "d3a77523-420a-4ebb-a258-4eab5bfece84",
+      "userId": null,
+      "action": "TELECHARGEMENT_DOCUMENT_MAGIQUE",
+      "targetId": "2d004b1b-ac5e-4167-b135-6609dd184cc4",
+      "targetType": "MAGIC_LINK",
+      "details": "Téléchargement via lien magique : \"crm.pdf\" — IP: ::ffff:127.0.0.1",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T18:04:58.313Z"
+    },
+    {
+      "id": "f1023a5e-bf4a-4a65-90cd-2f7e7a9362d5",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "RENOMMAGE_DOCUMENT",
+      "targetId": "5368e7ab-8edd-4dca-a59d-e24ba524834d",
+      "targetType": "DOCUMENT",
+      "details": "Document renommé: crm.pdf → yuihbv",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T19:52:04.193Z"
+    },
+    {
+      "id": "b8c6caeb-a7d5-4194-8fb2-c4ec7cc9007b",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "RENOMMAGE_DOCUMENT",
+      "targetId": "5368e7ab-8edd-4dca-a59d-e24ba524834d",
+      "targetType": "DOCUMENT",
+      "details": "Document renommé: yuihbv → yuihbv.pdf",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T19:52:21.932Z"
+    },
+    {
+      "id": "7f66e713-d89b-49a9-bf4b-38d9a50a5bef",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-29T20:18:49.344Z"
+    },
+    {
+      "id": "a7b8b286-a062-42e1-99f0-d1c798e5f353",
+      "userId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-29T20:19:09.461Z"
+    },
+    {
+      "id": "bd4ab175-6a09-40c7-8d5b-28a24ca1b169",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_ROLE",
+      "targetId": "a41c168d-dc87-4353-8dcb-c71e4109416c",
+      "targetType": "ROLE",
+      "details": "Rôle modifié : Responsable opérationnel",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-29T20:33:17.425Z"
+    },
+    {
+      "id": "0a28f25c-0ff0-4833-b794-a0eb6413e866",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_ROLE",
+      "targetId": "a41c168d-dc87-4353-8dcb-c71e4109416c",
+      "targetType": "ROLE",
+      "details": "Rôle modifié : Responsable opérationnel",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-29T20:33:28.766Z"
+    },
+    {
+      "id": "4f1a7a96-cc8d-4556-95c1-9d7eec1982a4",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_ROLE",
+      "targetId": "a41c168d-dc87-4353-8dcb-c71e4109416c",
+      "targetType": "ROLE",
+      "details": "Rôle modifié : Responsable opérationnel",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-29T20:34:46.781Z"
+    },
+    {
+      "id": "5b6438e0-131f-478e-a7bf-8306dfa93640",
+      "userId": null,
+      "action": "TELECHARGEMENT_DOCUMENT_MAGIQUE",
+      "targetId": "2d004b1b-ac5e-4167-b135-6609dd184cc4",
+      "targetType": "MAGIC_LINK",
+      "details": "Téléchargement via lien magique : \"CRM cahier de charge.pdf\" — IP: ::ffff:127.0.0.1",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-09-29T20:42:04.765Z"
+    },
+    {
+      "id": "d2c87ad3-52b4-4fc4-8ab5-03000042db8c",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-30T08:09:57.938Z"
+    },
+    {
+      "id": "b890abbb-d5e2-4ab5-adb1-0229f98e1abd",
+      "userId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "action": "DECONNEXION",
+      "targetId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-09-30T08:22:44.834Z"
     }
   ],
   "messagePersonnels": [
@@ -2249,6 +2562,106 @@
       "dossierId": null,
       "missionId": null,
       "assignedToId": null,
+      "tacheId": null
+    },
+    {
+      "id": "b67d17f7-a931-4a26-a5fc-a2cf93813b81",
+      "messageId": "bddbec9f-b020-436f-8732-b46fe4f71c01",
+      "type": "INTERNE",
+      "subType": "Message direct",
+      "status": "CONSULTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "Message Interne",
+      "bodyText": "salut",
+      "attachment": null,
+      "etiquette": null,
+      "priorite": "Normal",
+      "isDeleted": false,
+      "createdAt": "2026-09-29T20:15:04.022Z",
+      "receivedAt": "2026-09-29T20:15:04.022Z",
+      "dateRappel": null,
+      "noteRappel": null,
+      "dateEntretien": null,
+      "lienVisio": null,
+      "dossierId": null,
+      "missionId": null,
+      "assignedToId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "tacheId": null
+    },
+    {
+      "id": "af590426-2e7c-47cd-b6c3-390eaf053daf",
+      "messageId": "0bb5731d-e4ec-457e-b437-220110fde5ea",
+      "type": "INTERNE",
+      "subType": "Message direct",
+      "status": "CONSULTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "Message Interne",
+      "bodyText": "comment tu vas ?",
+      "attachment": null,
+      "etiquette": null,
+      "priorite": "Normal",
+      "isDeleted": false,
+      "createdAt": "2026-09-29T20:15:12.438Z",
+      "receivedAt": "2026-09-29T20:15:12.438Z",
+      "dateRappel": null,
+      "noteRappel": null,
+      "dateEntretien": null,
+      "lienVisio": null,
+      "dossierId": null,
+      "missionId": null,
+      "assignedToId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "tacheId": null
+    },
+    {
+      "id": "9a43d21d-36e9-4127-8e0e-9b020fa2835c",
+      "messageId": "15c15d94-80d9-4fc8-87bb-94e48bc11c24",
+      "type": "INTERNE",
+      "subType": "Message direct",
+      "status": "CONSULTE",
+      "nomPrenom": "Responsable opérationnel 1",
+      "email": "resp.op.recette1@menua.fr",
+      "objet": "Message Interne",
+      "bodyText": "bonjour Madame comment allez vous ?",
+      "attachment": null,
+      "etiquette": null,
+      "priorite": "Normal",
+      "isDeleted": false,
+      "createdAt": "2026-09-29T20:19:42.979Z",
+      "receivedAt": "2026-09-29T20:19:42.979Z",
+      "dateRappel": null,
+      "noteRappel": null,
+      "dateEntretien": null,
+      "lienVisio": null,
+      "dossierId": null,
+      "missionId": null,
+      "assignedToId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "tacheId": null
+    },
+    {
+      "id": "c1737f5e-8097-4bdf-b710-2346ecc611ec",
+      "messageId": "21c4e9d3-f312-4136-b973-017b109f8f79",
+      "type": "INTERNE",
+      "subType": "Message direct",
+      "status": "CONSULTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "Message Interne",
+      "bodyText": "je vais bien merci et vous ?",
+      "attachment": null,
+      "etiquette": null,
+      "priorite": "Normal",
+      "isDeleted": false,
+      "createdAt": "2026-09-29T20:20:11.580Z",
+      "receivedAt": "2026-09-29T20:20:11.580Z",
+      "dateRappel": null,
+      "noteRappel": null,
+      "dateEntretien": null,
+      "lienVisio": null,
+      "dossierId": null,
+      "missionId": null,
+      "assignedToId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
       "tacheId": null
     }
   ]

@@ -10,32 +10,32 @@ import BulletList from "@/components/BulletList";
 const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items, reversed = false, bgClass = "bg-[#f5f7fa]", cardBg = "bg-white", containerClass = "" }: any) => {
   const isReversed = reversed;
   return (
-    <section id={id} className={`relative w-full ${bgClass} pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20`}>
-      <div className="laplace-container portrait:sm:px-10 relative z-10 landscape:px-16 landscape:lg:px-16">
-        <div className={`flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center`}>
-          
+    <section id={id} className={`relative w-full ${bgClass} py-16 lg:py-20 scroll-mt-20`}>
+      <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16">
+        <div className={`flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} lg:items-center`}>
+
           {/* Image */}
-          <div className="hidden lg:block w-full lg:w-6/12 lg:h-[400px] z-20 relative shrink-0">
-            <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover object-center shadow-xl" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
+          <div className={`hidden lg:flex w-5/12 shrink-0 z-20 items-center ${isReversed ? 'justify-start' : 'justify-end'}`}>
+            <div className="w-[85%] lg:h-[400px] relative overflow-hidden shadow-xl">
+              <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover object-center" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
+            </div>
           </div>
 
           {/* Text Box */}
-          <div className={`w-full lg:w-7/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 ${isReversed ? 'lg:pl-20 landscape:lg:pl-20 lg:pr-32 landscape:lg:pr-32 lg:-mr-24' : 'lg:pr-20 landscape:lg:pr-20 lg:pl-32 landscape:lg:pl-32 lg:-ml-24'} lg:pt-16 lg:pb-16 relative z-30 lg:z-10 ${containerClass}`}>
-            
-            {/* Absolute background */}
-            <div className={`absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 ${cardBg} rounded-sm shadow-xl border border-[#e8e1d7] border-t-4 border-t-[#141824] -z-10`} />
+          <div className={`w-full lg:w-8/12 ${isReversed ? 'lg:-mr-16' : 'lg:-ml-16'} z-10 flex items-center ${containerClass}`}>
+            <div className={`w-full ${cardBg} shadow-xl px-6 portrait:sm:px-10 py-10 lg:py-14 ${isReversed ? 'lg:pl-14 lg:pr-28' : 'lg:pr-14 lg:pl-28'}`}>
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+              <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{title}</h2>
 
-            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{title}</h2>
-            
-            {/* Mobile Image */}
-            <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-12 rounded-sm shadow-md overflow-hidden">
-              <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover object-center" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
+              {/* Mobile Image */}
+              <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
+                <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover object-center" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
+              </div>
+
+              <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">{intro}</p>
+              <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{items.label}</h4>
+              <BulletList items={items.list} />
             </div>
-
-            <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">{intro}</p>
-            <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{items.label}</h4>
-            <BulletList items={items.list} />
           </div>
 
         </div>
@@ -46,10 +46,10 @@ const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items,
 
 /** Section sombre asymétrique : texte narratif + card de liste */
 const DarkNeedSection = ({ id, bgClass, topDecoClass, titleDecoClass, title, intro, disclaimer, listLabel, listItems, borderClass }: any) => (
-  <section id={id} className={`relative w-full ${bgClass} pt-12 md:pt-[8rem] pb-16 md:pb-24 scroll-mt-20 overflow-hidden`}>
+  <section id={id} className={`relative w-full ${bgClass} py-16 lg:py-20 scroll-mt-20 overflow-hidden`}>
     {topDecoClass && <div className={topDecoClass} />}
-    <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
-      <div className="w-full lg:w-5/12 flex flex-col justify-center -translate-y-4 lg:-translate-y-10">
+    <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 relative z-10 max-w-[1200px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+      <div className="w-full lg:w-5/12 flex flex-col justify-center">
         <div className={`w-16 h-[3px] mb-5 ${titleDecoClass}`} />
         <h2 className={`${bgClass.includes("bg-[#141824]") ? "text-white" : "text-[#141824]"} text-[1.3rem] md:text-[1.5rem] font-bold uppercase mb-8 leading-tight`}>
           {title}
@@ -66,11 +66,11 @@ const DarkNeedSection = ({ id, bgClass, topDecoClass, titleDecoClass, title, int
       <div className="w-full lg:w-7/12 relative">
         <div className={`relative bg-white p-10 lg:p-14 shadow-2xl border ${borderClass}`}>
           <h4 className="text-center text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">{listLabel}</h4>
-          <BulletList 
-            gridCols="grid-cols-1 md:grid-cols-2" 
-            gapX="gap-x-8" gapY="gap-y-6" 
+          <BulletList
+            gridCols="grid-cols-1 md:grid-cols-2"
+            gapX="gap-x-8" gapY="gap-y-6"
             fontWeight="font-medium"
-            items={listItems} 
+            items={listItems}
           />
         </div>
       </div>
@@ -83,15 +83,15 @@ export default function VosBesoinsPage() {
 
   return (
     <main className="flex flex-col w-full min-h-screen">
-      
+
       {/* ── 3.1 HERO ── */}
       <section className="relative w-full min-h-screen portrait:sm:min-h-0 portrait:sm:h-[70svh] flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="/img/besoins-hero.webp" 
-            alt="Hero Vos Besoins" 
-            className="w-full h-full object-cover object-[center_35%]" 
-            onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} 
+          <img
+            src="/img/besoins-hero.webp"
+            alt="Hero Vos Besoins"
+            className="w-full h-full object-cover object-[center_35%]"
+            onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
@@ -118,57 +118,61 @@ export default function VosBesoinsPage() {
       </section>
 
       {/* ── 3.2 INTRODUCTION ── */}
-      <section className="relative w-full bg-white pt-8 md:pt-[4.75rem] pb-16 md:pb-24 scroll-mt-20">
-        <div className="laplace-container portrait:sm:px-10 relative z-10 landscape:px-16 landscape:lg:px-16">
-          <div className="w-full mb-8 md:mb-4">
+      <section className="relative w-full bg-white py-16 lg:py-20 scroll-mt-20">
+        <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16">
+          <div className="w-full mb-8 md:mb-12">
             <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
               <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
               <span className="mx-2">/</span>
               <span>{t("Vos besoins", "Your needs")}</span>
             </p>
           </div>
-          <div className="flex flex-col lg:flex-row-reverse items-center">
-            
-            {/* Right Image (Desktop only) */}
-            <div className="hidden lg:block w-full lg:w-6/12 lg:h-[400px] z-20 relative shrink-0">
-              <img
-                src="/img/besoins-intro.webp"
-                alt="Vos besoins"
-                className="w-full h-full object-cover object-center shadow-xl"
-                onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
-              />
+          <div className="flex flex-col lg:flex-row-reverse lg:items-center">
+
+            {/* Right Image */}
+            <div className="hidden lg:flex w-5/12 shrink-0 z-20 items-center justify-start">
+              <div className="w-[85%] lg:h-[400px] relative overflow-hidden shadow-xl">
+                <img
+                  src="/img/besoins-intro.webp"
+                  alt="Vos besoins"
+                  className="w-full h-full object-cover object-center"
+                  onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
+                />
+              </div>
             </div>
 
-            {/* Left Overlapping Grey Box */}
-            <div className="w-full lg:w-7/12 px-6 portrait:sm:px-10 landscape:px-32 landscape:lg:px-0 py-10 lg:px-12 lg:pl-20 landscape:lg:pl-20 lg:pr-32 landscape:lg:pr-32 lg:pt-16 lg:pb-16 relative z-30 lg:z-10 lg:-mr-24">
-              <div className="absolute left-0 right-0 portrait:sm:left-2 portrait:sm:right-2 landscape:left-16 landscape:right-16 lg:left-0 lg:right-0 landscape:lg:left-0 landscape:lg:right-0 bottom-0 top-[220px] landscape:top-[320px] lg:top-0 landscape:lg:top-0 bg-[#f5f7fa] rounded-sm shadow-xl -z-10" />
-              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-              <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
-                {t("Notre Intervention", "How we support you")}
-              </h2>
-              
-              <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] landscape:w-[calc(100%-4rem)] landscape:ml-8 h-[280px] portrait:sm:h-[320px] landscape:h-[320px] my-6 landscape:mt-6 landscape:mb-16 z-20 relative shadow-md">
-                <img src="/img/besoins-intro.webp" alt="Vos besoins" className="w-full h-full object-cover object-center" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
-              </div>
-              
-              <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">
-                {formatBrand(t(
-                  "MENUA CONSULTING intervient en appui des équipes financières, comptables, conformité, data, patrimoniales et réglementées sur les fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
-                  "MENUA CONSULTING supports finance, accounting, compliance, data and wealth management teams, as well as teams operating in regulated environments, by providing the rigorous back and middle office support needed to ensure operational reliability and continuity."
-                ))}
-              </p>
-              <p className="text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
-                {t(
-                  "Nos interventions s'adaptent aux besoins ponctuels, récurrents ou volumineux : traitement de dossiers, contrôle documentaire, reporting, suivi opérationnel, mise à jour de données, préparation de livrables ou renfort temporaire d'équipes.",
-                  "Our services are designed to meet one-off, recurring or high-volume requirements. This includes file processing, document review, reporting, operational monitoring, data updates, deliverable preparation and temporary team reinforcement."
-                )}
-              </p>
-              <div className="mt-8">
-                <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                  {t("Présenter votre besoin", "Tell us about your requirements")} 
-                  <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
-                  <ChevronRight size={18} className="-ml-2" />
-                </Link>
+            {/* Left Box */}
+            <div className="w-full lg:w-8/12 lg:-mr-16 z-10 flex items-center">
+              <div className="w-full bg-[#f5f7fa] shadow-xl px-6 portrait:sm:px-10 lg:pl-14 lg:pr-28 py-10 lg:py-14 border border-[#e8e1d7] border-t-4 border-t-[#141824]">
+                <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+                <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
+                  {t("Notre Intervention", "How we support you")}
+                </h2>
+
+                {/* Mobile Image */}
+                <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
+                  <img src="/img/besoins-intro.webp" alt="Vos besoins" className="w-full h-full object-cover object-center" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
+                </div>
+
+                <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">
+                  {formatBrand(t(
+                    "MENUA CONSULTING intervient en appui des équipes financières, comptables, conformité, data, patrimoniales et réglementées sur les fonctions back et middle office nécessitant rigueur, continuité et fiabilité opérationnelle.",
+                    "MENUA CONSULTING supports finance, accounting, compliance, data and wealth management teams, as well as teams operating in regulated environments, by providing the rigorous back and middle office support needed to ensure operational reliability and continuity."
+                  ))}
+                </p>
+                <p className="text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
+                  {t(
+                    "Nos interventions s'adaptent aux besoins ponctuels, récurrents ou volumineux : traitement de dossiers, contrôle documentaire, reporting, suivi opérationnel, mise à jour de données, préparation de livrables ou renfort temporaire d'équipes.",
+                    "Our services are designed to meet one-off, recurring or high-volume requirements. This includes file processing, document review, reporting, operational monitoring, data updates, deliverable preparation and temporary team reinforcement."
+                  )}
+                </p>
+                <div className="mt-8">
+                  <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
+                    {t("Présenter votre besoin", "Tell us about your requirements")}
+                    <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+                    <ChevronRight size={18} className="-ml-2" />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -270,8 +274,9 @@ export default function VosBesoinsPage() {
         ]}
       />
 
-      {/* ── SEPARATION BLANC ── */}
-      <div className="w-full h-8 md:h-[5.25rem] bg-white"></div>
+
+      {/* ── ESPACE BLANC UNIVERSEL ── */}
+      <div className="w-full h-16 lg:h-20 bg-white"></div>
 
       {/* ── 3.6 SUPPORT COMPTABLE & DATA ── */}
       <NeedCardSection
@@ -313,7 +318,7 @@ export default function VosBesoinsPage() {
         imgSrc="/img/besoins-cgp.webp"
         imgAlt="Support aux CGP"
         imgFallback="/img/intro-office.webp"
-        containerClass="landscape:px-16 landscape:lg:px-16" title={t("Support aux cabinets de gestion de patrimoine / CGP", "Support for wealth management firms and financial advisers")}
+        title={t("Support aux cabinets de gestion de patrimoine / CGP", "Support for wealth management firms and financial advisers")}
         intro={formatBrand(t(
           "MENUA CONSULTING accompagne les cabinets de gestion de patrimoine, family offices et structures patrimoniales dans le traitement, la préparation et le suivi administratif des dossiers clients. Les conseils, recommandations, arbitrages et validations demeurent sous la responsabilité des professionnels habilités du client. MENUA CONSULTING intervient uniquement sur la préparation et le suivi opérationnels des dossiers.",
           "MENUA CONSULTING supports wealth management firms, family offices and wealth-management structures in the processing, preparation and administrative monitoring of client files. Advice, recommendations, investment decisions and approvals remain the responsibility of the client’s authorised professionals. MENUA CONSULTING focuses strictly on operational preparation and monitoring."
@@ -371,5 +376,3 @@ export default function VosBesoinsPage() {
     </main>
   );
 }
-
-

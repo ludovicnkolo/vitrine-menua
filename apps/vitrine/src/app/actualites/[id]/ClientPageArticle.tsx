@@ -125,7 +125,7 @@ export default function ClientPageArticle({ id }: { id: string }) {
           {/* Image couverture */}
           <div className="w-full h-[350px] md:h-[450px] bg-[#1a1f2e] relative overflow-hidden">
             {publication.coverImageUrl ? (
-               <img src={publication.coverImageUrl} alt={displayTitle} className="w-full h-full object-cover opacity-95" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+               <img src={publication.coverImageUrl} alt={displayTitle} className="w-full h-full object-cover opacity-95" />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
                 <span className="text-white/10 font-bold tracking-[0.2em] uppercase text-2xl md:text-4xl text-center">MENUA CONSULTING</span>
@@ -180,7 +180,6 @@ export default function ClientPageArticle({ id }: { id: string }) {
                           src={sec.imageUrl || sec.imageKey}
                           alt={sec.subtitle || `Section ${idx + 1}`}
                           className="w-full max-h-[420px] object-cover"
-                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                       </div>
                     )}

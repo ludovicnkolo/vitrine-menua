@@ -12,19 +12,6 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit for images
 });
-
-// ── Génère une URL permanente et publique pour une image CMS stockée sur OVH S3 ──
-// Les images CMS sont publiques : pas besoin d'URL présignée qui expire.
-// Format OVH : https://<bucket>.<endpoint-sans-https>/<key>
-function getCmsPublicUrl(key) {
-  if (!key) return null;
-  if (key.startsWith("http") || key.startsWith("/")) return key; // Déjà une URL ou un chemin local
-  const endpoint = (process.env.S3_ENDPOINT || "https://s3.eu-west-par.io.cloud.ovh.net/")
-    .replace(/\/+$/, "") // Enlève le slash final
-    .replace(/^https?:\/\//, ""); // Enlève le protocole
-  const bucket = process.env.S3_BUCKET || "menua-ged-prod";
-  return `https://${bucket}.${endpoint}/${key}`;
-}
 // ── Paramètres des formulaires ──
 const fs = require("node:fs");
 const path = require("node:path");
@@ -78,16 +65,14 @@ router.get("/", authenticateJWT, async (req, res) => {
     const pubsWithUrl = await Promise.all(
       publications.map(async (pub) => {
         let imageUrl = pub.coverImage;
-        if (imageUrl && !imageUrl.startsWith("http") && !imageUrl.startsWith("/")) {
-          try {
-            // URL présignée pour l'admin (protégé par JWT) — valide 1h
-            imageUrl = await getPresignedUrl(imageUrl, 3600, true);
-          } catch (_) {
-            // Fallback : essayer l'URL publique OVH
-            imageUrl = getCmsPublicUrl(pub.coverImage);
-          }
+        if (
+          imageUrl &&
+          !imageUrl.startsWith("http") &&
+          !imageUrl.startsWith("/")
+        ) {
+          imageUrl = await getPresignedUrl(imageUrl, 3600, true); // 1 hour for admin view
         }
-        // Sections images
+        // Presign section images
         let parsedSections = [];
         if (pub.sections) {
           try {
@@ -95,12 +80,12 @@ router.get("/", authenticateJWT, async (req, res) => {
             parsedSections = await Promise.all(
               secs.map(async (s) => {
                 let sImageUrl = s.imageKey;
-                if (sImageUrl && !sImageUrl.startsWith("http") && !sImageUrl.startsWith("/")) {
-                  try {
-                    sImageUrl = await getPresignedUrl(sImageUrl, 3600, true);
-                  } catch (_) {
-                    sImageUrl = getCmsPublicUrl(s.imageKey);
-                  }
+                if (
+                  sImageUrl &&
+                  !sImageUrl.startsWith("http") &&
+                  !sImageUrl.startsWith("/")
+                ) {
+                  sImageUrl = await getPresignedUrl(sImageUrl, 3600, true);
                 }
                 return { ...s, imageUrl: sImageUrl };
               }),
@@ -269,22 +254,55 @@ router.get("/public", async (req, res) => {
       orderBy: { publishedAt: "desc" },
     });
 
-    const pubsWithUrl = publications.map((pub) => {
-      // URL permanente publique (jamais d'expiration)
-      const imageUrl = getCmsPublicUrl(pub.coverImage);
-      // Sections images
-      let parsedSections = [];
-      if (pub.sections) {
-        try {
-          const secs = JSON.parse(pub.sections);
-          parsedSections = secs.map((s) => ({
-            ...s,
-            imageUrl: getCmsPublicUrl(s.imageKey),
-          }));
-        } catch (_) {}
-      }
-      return { ...pub, coverImageUrl: imageUrl, sections: parsedSections };
-    });
+    const pubsWithUrl = await Promise.all(
+      publications.map(async (pub) => {
+        let imageUrl = pub.coverImage;
+        if (
+          imageUrl &&
+          !imageUrl.startsWith("http") &&
+          !imageUrl.startsWith("/")
+        ) {
+          try {
+            imageUrl = await getPresignedUrl(imageUrl, 24 * 3600, true);
+          } catch (presignErr) {
+            console.warn(
+              `[CMS] Impossible de générer l'URL présignée pour ${imageUrl}:`,
+              presignErr.message,
+            );
+            imageUrl = null; // graceful fallback
+          }
+        }
+        // Presign section images
+        let parsedSections = [];
+        if (pub.sections) {
+          try {
+            const secs = JSON.parse(pub.sections);
+            parsedSections = await Promise.all(
+              secs.map(async (s) => {
+                let sImageUrl = s.imageKey;
+                if (
+                  sImageUrl &&
+                  !sImageUrl.startsWith("http") &&
+                  !sImageUrl.startsWith("/")
+                ) {
+                  try {
+                    sImageUrl = await getPresignedUrl(
+                      sImageUrl,
+                      24 * 3600,
+                      true,
+                    );
+                  } catch (_) {
+                    sImageUrl = null;
+                  }
+                }
+                return { ...s, imageUrl: sImageUrl };
+              }),
+            );
+          } catch (_) {}
+        }
+        return { ...pub, coverImageUrl: imageUrl, sections: parsedSections };
+      }),
+    );
 
     res.json({ success: true, data: pubsWithUrl });
   } catch (error) {
@@ -310,18 +328,41 @@ router.get("/public/:id", async (req, res) => {
         .json({ success: false, error: "Publication introuvable." });
     }
 
-    // URL permanente publique (jamais d'expiration)
-    const imageUrl = getCmsPublicUrl(pub.coverImage);
+    let imageUrl = pub.coverImage;
+    if (imageUrl && !imageUrl.startsWith("http") && !imageUrl.startsWith("/")) {
+      try {
+        imageUrl = await getPresignedUrl(imageUrl, 24 * 3600, true);
+      } catch (presignErr) {
+        console.warn(
+          `[CMS] Impossible de générer l'URL présignée pour ${imageUrl}:`,
+          presignErr.message,
+        );
+        imageUrl = null;
+      }
+    }
 
-    // Sections images — URLs permanentes
+    // Presign section images
     let parsedSections = [];
     if (pub.sections) {
       try {
         const secs = JSON.parse(pub.sections);
-        parsedSections = secs.map((s) => ({
-          ...s,
-          imageUrl: getCmsPublicUrl(s.imageKey),
-        }));
+        parsedSections = await Promise.all(
+          secs.map(async (s) => {
+            let sImageUrl = s.imageKey;
+            if (
+              sImageUrl &&
+              !sImageUrl.startsWith("http") &&
+              !sImageUrl.startsWith("/")
+            ) {
+              try {
+                sImageUrl = await getPresignedUrl(sImageUrl, 24 * 3600, true);
+              } catch (_) {
+                sImageUrl = null;
+              }
+            }
+            return { ...s, imageUrl: sImageUrl };
+          }),
+        );
       } catch (_) {}
     }
 
@@ -352,19 +393,8 @@ router.post(
       const s3Key = `cms/images/${randomUUID()}-${safeName}`;
 
       try {
-        // Upload l'image avec ACL public-read pour permettre les URLs permanentes
-        const { PutObjectCommand } = require("@aws-sdk/client-s3");
-        const { s3Client } = require("../services/s3Service");
-        const putCmd = new PutObjectCommand({
-          Bucket: process.env.S3_BUCKET || "menua-ged-prod",
-          Key: s3Key,
-          Body: req.file.buffer,
-          ContentType: req.file.mimetype,
-          ACL: "public-read", // Rend l'image accessible publiquement via URL permanente
-        });
-        await s3Client.send(putCmd);
-        // Retourner la clé S3 (sera convertie en URL publique à l'affichage)
-        res.json({ success: true, url: s3Key, publicUrl: getCmsPublicUrl(s3Key) });
+        await uploadToS3(req.file.buffer, s3Key, req.file.mimetype);
+        res.json({ success: true, url: s3Key });
       } catch (s3Error) {
         console.warn(
           "[CMS] OVH S3 indisponible, fallback stockage local:",

@@ -299,7 +299,6 @@ export default function AuditPage() {
                             <div>
                               <div
                                 style={{
-                                  fontWeight: 500,
                                   color: "var(--text-main)",
                                   
                                 }}
@@ -320,12 +319,7 @@ export default function AuditPage() {
                         <td style={{ padding: "1rem 1.5rem" }}>
                           <span
                             style={{
-                              background: colors.bg,
                               color: colors.color,
-                              padding: "0.25rem 0.75rem",
-                              borderRadius: "99px",
-                              fontSize: "0.75rem",
-                              fontWeight: 600,
                               letterSpacing: "0.5px",
                             }}
                           >
@@ -346,7 +340,7 @@ export default function AuditPage() {
                               <span
                                 style={{
                                   
-                                  fontWeight: 500,
+                                  
                                 }}
                               >
                                 {log.targetType}{" "}

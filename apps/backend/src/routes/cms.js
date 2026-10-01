@@ -315,10 +315,36 @@ router.get("/public", async (req, res) => {
 router.get("/public/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const pub = await prisma.publication.findUnique({
-      where: { id },
-      include: { author: { select: { name: true } } },
-    });
+    
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    
+    let pub;
+    if (isUUID) {
+      pub = await prisma.publication.findUnique({
+        where: { id },
+        include: { author: { select: { name: true } } },
+      });
+    } else {
+      const allPubs = await prisma.publication.findMany({
+        include: { author: { select: { name: true } } },
+      });
+      
+      const generateSlug = (title) => {
+        if (!title) return "";
+        return title
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)+/g, "");
+      };
+      
+      pub = allPubs.find(p => {
+        const slugFr = generateSlug(p.title);
+        const slugEn = generateSlug(p.title_en || p.title);
+        return slugFr === id || slugEn === id;
+      });
+    }
 
     const isPreview = req.query.preview === "true";
 

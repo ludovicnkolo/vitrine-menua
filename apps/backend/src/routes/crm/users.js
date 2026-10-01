@@ -279,7 +279,6 @@ router.get("/users", async (req, res) => {
         roleId: true,
         role: true,
         profile: true,
-        idCardUrl: true,
         isBlocked: true,
         lastLogin: true,
         createdAt: true,
@@ -323,7 +322,6 @@ router.post(
         education,
         status,
         profile,
-        idCardUrl,
         telephone,
         lieuResidence,
         experienceCle,
@@ -333,10 +331,10 @@ router.post(
       const bcrypt = require("bcryptjs");
       const crypto = require("node:crypto");
 
-      if (!name || !email) {
+      if (!name || !email || !telephone || !roleId || !lieuResidence || !experienceCle || !langues) {
         return res
           .status(400)
-          .json({ error: "Le nom et l'email sont obligatoires." });
+          .json({ error: "Les champs Nom, Email, Téléphone, Rôle, Lieu de résidence, Expérience clé et Langues sont obligatoires." });
       }
 
       if (roleId) {
@@ -407,7 +405,6 @@ router.post(
           langues: langues || null,
           formations: formations || null,
           profile: profile || "",
-          idCardUrl: idCardUrl || null,
           isBlocked: isBlockedDefault,
         },
       });
@@ -467,7 +464,6 @@ router.patch(
         roleId,
         profile,
         status,
-        idCardUrl,
         telephone,
         lieuResidence,
         experienceCle,
@@ -507,7 +503,6 @@ router.patch(
           ...(experienceCle !== undefined && { experienceCle }),
           ...(langues !== undefined && { langues }),
           ...(formations !== undefined && { formations }),
-          ...(idCardUrl !== undefined && { idCardUrl }),
           ...(status && { isBlocked: status === "Inactif" }),
         },
       });

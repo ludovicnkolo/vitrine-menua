@@ -559,20 +559,13 @@ const CMSPage = () => {
                   filteredPubs.map((pub) => (
                     <tr key={pub.id}>
                       <td>
-                        <strong>{pub.title}</strong>
+                        <span>{pub.title}</span>
                       </td>
                       <td>{pub.author?.name || "Inconnu"}</td>
                       <td>
                         <span
                           style={{
-                            padding: "0.25rem 0.5rem",
-                            borderRadius: "4px",
-                            fontSize: "0.75rem",
-                            fontWeight: 600,
-                            background:
-                              pub.status === "PUBLIE" ? "#DCFCE7" : "#F1F5F9",
-                            color:
-                              pub.status === "PUBLIE" ? "#166534" : "#475569",
+                            color: pub.status === "PUBLIE" ? "var(--success)" : "var(--text-muted)",
                           }}
                         >
                           {pub.status === "PUBLIE" ? "PUBLIÉ" : "BROUILLON"}

@@ -118,7 +118,7 @@ const UsersPage = ({ forceTab }) => {
     emailEntreprise: "",
     telephoneEntreprise: "",
   });
-  const [selectedFile, setSelectedFile] = useState(null);
+
   const [rolesList, setRolesList] = useState([]);
 
   const fetchData = async () => {
@@ -159,20 +159,16 @@ const UsersPage = ({ forceTab }) => {
     setLoading(true);
     setErrorMsg(null);
     try {
-      const uploadedUrl = await uploadFile(selectedFile, "users_id_cards");
       const res = await fetch(getSafeApiUrl(url), {
         method,
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + sessionStorage.getItem("adminToken"),
         },
-        body: JSON.stringify(
-          uploadedUrl ? { ...payload, idCardUrl: uploadedUrl } : payload,
-        ),
+        body: JSON.stringify(payload),
       });
       if (res.ok) {
         onSuccess();
-        setSelectedFile(null);
         fetchData();
       } else {
         // Read the actual API error message
@@ -191,8 +187,8 @@ const UsersPage = ({ forceTab }) => {
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
-    if (!newUser.name || !newUser.email)
-      return setErrorMsg("Veuillez remplir le nom et l'email au minimum.");
+    if (!newUser.name || !newUser.email || !newUser.telephone || !newUser.roleId || !newUser.lieuResidence || !newUser.experienceCle || !newUser.langues)
+      return setErrorMsg("Veuillez remplir tous les champs obligatoires (marqués d'un astérisque rouge).");
     await submitApiRequest(
       "/api/crm/users",
       "POST",
@@ -799,7 +795,6 @@ const UsersPage = ({ forceTab }) => {
                 setUser={setNewUser}
                 rolesList={rolesList}
                 isEdit={false}
-                setSelectedFile={setSelectedFile}
               />
 
               <div
@@ -870,7 +865,6 @@ const UsersPage = ({ forceTab }) => {
                 setUser={setEditUser}
                 rolesList={rolesList}
                 isEdit={true}
-                setSelectedFile={setSelectedFile}
               />
 
               <div
@@ -1522,9 +1516,9 @@ const UsersPage = ({ forceTab }) => {
                   {users.map((u) => (
                     <tr key={u.id}>
                       <td>
-                        <strong className="truncate-name" style={{}}>
+                        <span className="truncate-name" style={{}}>
                           {u.name}
-                        </strong>
+                        </span>
                       </td>
                       <td>
                         <div
@@ -1550,7 +1544,6 @@ const UsersPage = ({ forceTab }) => {
                             color: !u.isBlocked
                               ? "var(--success)"
                               : "var(--danger)",
-                            fontWeight: 500,
                           }}
                         >
                           {!u.isBlocked ? "Actif" : "Inactif"}
@@ -1620,9 +1613,9 @@ const UsersPage = ({ forceTab }) => {
                   {clients.map((c) => (
                     <tr key={c.id}>
                       <td>
-                        <strong className="truncate-name">
+                        <span className="truncate-name">
                           {(c.type === "Société" || c.type === "SOCIETE") ? c.entreprise?.raisonSociale || "N/A" : c.name}
-                        </strong>
+                        </span>
                         {(c.type === "Société" || c.type === "SOCIETE") && (
                           <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "2px" }}>
                             Contact : {c.name}
@@ -1647,17 +1640,6 @@ const UsersPage = ({ forceTab }) => {
                       <td style={{ textAlign: "center" }}>
                         <span
                           style={{
-                            display: "inline-block",
-                            padding: "0.25rem 0.75rem",
-                            borderRadius: "9999px",
-                            fontSize: "0.75rem",
-                            fontWeight: 600,
-                            backgroundColor:
-                              c.type === "Société" || c.type === "SOCIETE"
-                                ? "#EFF6FF"
-                                : c.type === "Anonyme" || c.type === "ANONYME"
-                                  ? "#F1F5F9"
-                                  : "#F3E8FF",
                             color:
                               c.type === "Société" || c.type === "SOCIETE"
                                 ? "#1D4ED8"
@@ -1678,15 +1660,7 @@ const UsersPage = ({ forceTab }) => {
                       <td style={{ textAlign: "center" }}>
                         <span
                           style={{
-                            display: "inline-block",
-                            padding: "0.2rem 0.6rem",
-                            borderRadius: "9999px",
-                            fontSize: "0.75rem",
-                            fontWeight: 600,
-                            backgroundColor: !c.isBlocked
-                              ? "#DCFCE7"
-                              : "#FEE2E2",
-                            color: !c.isBlocked ? "#166534" : "#B91C1C",
+                            color: !c.isBlocked ? "var(--success)" : "var(--danger)",
                           }}
                         >
                           {!c.isBlocked ? "Actif" : "Inactif"}

@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.222Z",
-      "updatedAt": "2026-10-01T00:48:57.943Z"
+      "updatedAt": "2026-10-01T17:32:10.778Z"
     },
     {
       "id": "a41c168d-dc87-4353-8dcb-c71e4109416c",
@@ -16,7 +16,7 @@
       "status": "Inactif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.242Z",
-      "updatedAt": "2026-10-01T00:48:57.969Z"
+      "updatedAt": "2026-10-01T17:32:10.785Z"
     },
     {
       "id": "7f685243-dda5-4117-a675-d4a7364c7a66",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-09-28T09:31:02.248Z",
-      "updatedAt": "2026-10-01T00:48:57.981Z"
+      "updatedAt": "2026-10-01T17:32:10.792Z"
     },
     {
       "id": "803c6051-c50d-495a-bb21-b6615f1cf0dc",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-09-28T09:31:02.256Z",
-      "updatedAt": "2026-10-01T00:48:57.991Z"
+      "updatedAt": "2026-10-01T17:32:10.799Z"
     },
     {
       "id": "eaa1c720-2a71-493c-a1c0-d14f51051e0f",
@@ -43,29 +43,29 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.269Z",
-      "updatedAt": "2026-10-01T00:48:58.007Z"
+      "updatedAt": "2026-10-01T17:32:10.808Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "2541799f-86de-4071-86c7-7110615bf37b",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$tfmALwypiCgwsR6M4TTfI.3a4d2498WoVMvT2.sV0oDz/eHWMFojG",
+      "password": "$2a$10$uIQH8x93fWGbv4jvJUqu2O4FoxRGLl6oqFsf24e0DEfcdVa/myj4W",
       "name": "Rosette Fouelefack",
       "roleId": "832d5c59-5fe6-488f-b64a-1bfdc6504152",
       "telephone": "+33659207511",
       "lieuResidence": "Paris, France",
       "experienceCle": "Back & Middle Office Agile, Conformité et gestion des risques patrimoniaux",
-      "langues": null,
+      "langues": "Anglais, Coréen",
       "formations": null,
       "profile": "une expertise en finance, risques et conformité. Elle dirige Menua Consulting, cabinet agile d'appui back/middle office, piloté depuis la France",
       "idCardUrl": null,
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
-      "lastLogin": "2026-09-30T23:09:09.622Z",
+      "lastLogin": "2026-10-01T17:19:29.655Z",
       "createdAt": "2026-09-28T09:31:02.401Z",
-      "updatedAt": "2026-10-01T00:48:58.363Z"
+      "updatedAt": "2026-10-01T17:32:10.973Z"
     },
     {
       "id": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
@@ -122,10 +122,10 @@
       "idCardUrl": null,
       "resetToken": null,
       "resetTokenExpiry": null,
-      "isBlocked": false,
+      "isBlocked": true,
       "lastLogin": null,
       "createdAt": "2026-09-28T09:32:23.227Z",
-      "updatedAt": "2026-09-28T09:32:23.227Z"
+      "updatedAt": "2026-10-01T13:26:29.073Z"
     },
     {
       "id": "524db786-ff0b-42a2-8d2a-ee0adac87e83",
@@ -1061,6 +1061,39 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-09-30T08:22:44.834Z"
+    },
+    {
+      "id": "5cf10301-05c9-4914-ac4a-e096ce74dff2",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_UTILISATEUR",
+      "targetId": "91860bc8-7a0e-4244-ae93-0761cf6f9db2",
+      "targetType": "USER",
+      "details": "Utilisateur modifié : Relecteur 1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-01T13:26:29.090Z"
+    },
+    {
+      "id": "27fbbc00-2a5e-43d1-9aa1-8e7fdace4079",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_UTILISATEUR",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Utilisateur modifié : Rosette Fouelefack",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-01T13:47:30.067Z"
+    },
+    {
+      "id": "9dba5e5c-4f95-4057-b3b8-682f93cd6cee",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-01T15:37:09.389Z"
     }
   ],
   "messagePersonnels": [

@@ -310,7 +310,7 @@ router.get("/dashboard-stats", async (req, res) => {
     const userTaches = await prisma.tache.findMany({
       where: {
         assignedToId: { in: activeUsers.map((u) => u.id) },
-        status: "EN_COURS",
+        status: { notIn: ["TERMINE", "ARCHIVE", "CORBEILLE", "CLOTURE", "APPROUVEE", "ANNULEE"] },
       },
       select: { assignedToId: true },
     });

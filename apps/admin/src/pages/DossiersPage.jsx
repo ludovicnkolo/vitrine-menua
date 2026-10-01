@@ -2913,12 +2913,12 @@ const DossiersPage = () => {
                         </div>
                       </td>
                       <td>
-                        <strong
+                        <span
                           className="truncate-name"
                           style={{ color: "var(--text-main)" }}
                         >
                           {d.name}
-                        </strong>
+                        </span>
                       </td>
                       <td>
                         <div

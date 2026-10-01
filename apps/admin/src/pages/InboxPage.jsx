@@ -1238,18 +1238,27 @@ const InboxPage = ({ userRole }) => {
                               tab === "recrutement") && (
                               <td>
                                 <span
-                                  style={{
-                                    padding: "0.25rem 0.5rem",
-                                    borderRadius: "4px",
-                                    fontSize: "0.72rem",
-                                    fontWeight: 600,
-                                    background: getPriorityBadge(
-                                      m.priorite || "Normal",
-                                    ).bg,
-                                    color: getPriorityBadge(
-                                      m.priorite || "Normal",
-                                    ).color,
-                                  }}
+                                  style={
+                                    tab === "message"
+                                      ? {
+                                          padding: "0.25rem 0.5rem",
+                                          borderRadius: "4px",
+                                          fontSize: "0.72rem",
+                                          fontWeight: 400,
+                                          background: getPriorityBadge(
+                                            m.priorite || "Normal"
+                                          ).bg,
+                                          color: getPriorityBadge(
+                                            m.priorite || "Normal"
+                                          ).color,
+                                        }
+                                      : {
+                                          
+                                          color: getPriorityBadge(
+                                            m.priorite || "Normal"
+                                          ).color,
+                                        }
+                                  }
                                 >
                                   {m.priorite || "Normal"}
                                 </span>
@@ -1257,26 +1266,33 @@ const InboxPage = ({ userRole }) => {
                             )}
                             <td>
                               <span
-                                style={{
-                                  padding: "0.25rem 0.5rem",
-                                  borderRadius: "4px",
-                                  fontSize: "0.72rem",
-                                  fontWeight: 600,
-                                  background: getStatusBadge(m.status).bg,
-                                  color: getStatusBadge(m.status).color,
-                                  whiteSpace: "nowrap",
-                                }}
+                                style={
+                                  tab === "message"
+                                    ? {
+                                        padding: "0.25rem 0.5rem",
+                                        borderRadius: "4px",
+                                        fontSize: "0.72rem",
+                                        fontWeight: 400,
+                                        background: getStatusBadge(m.status).bg,
+                                        color: getStatusBadge(m.status).color,
+                                        whiteSpace: "nowrap",
+                                      }
+                                    : {
+                                        
+                                        color: getStatusBadge(m.status).color,
+                                      }
+                                }
                               >
                                 {getDisplayStatus(m.status)}
                               </span>
                             </td>
                             <td>
-                              <strong
+                              <span
                                 className="truncate-name"
                                 style={{  }}
                               >
                                 {col2}
-                              </strong>
+                              </span>
                             </td>
                             <td>
                               <span
@@ -1297,16 +1313,23 @@ const InboxPage = ({ userRole }) => {
                                   );
                                   return (
                                     <span
-                                      style={{
-                                        padding: "0.25rem 0.5rem",
-                                        borderRadius: "4px",
-                                        fontSize: "0.72rem",
-                                        fontWeight: 600,
-                                        background: vb.bg,
-                                        color: vb.color,
-                                        whiteSpace: "nowrap",
-                                        display: "inline-block",
-                                      }}
+                                      style={
+                                        tab === "message"
+                                          ? {
+                                              padding: "0.25rem 0.5rem",
+                                              borderRadius: "4px",
+                                              fontSize: "0.72rem",
+                                              fontWeight: 400,
+                                              background: vb.bg,
+                                              color: vb.color,
+                                              whiteSpace: "nowrap",
+                                              display: "inline-block",
+                                            }
+                                          : {
+                                              
+                                              color: vb.color,
+                                            }
+                                      }
                                     >
                                       {vb.text}
                                     </span>
@@ -1316,14 +1339,21 @@ const InboxPage = ({ userRole }) => {
                             )}
                             <td>
                               <span
-                                style={{
-                                  padding: "0.25rem 0.5rem",
-                                  borderRadius: "4px",
-                                  fontSize: "0.72rem",
-                                  fontWeight: 600,
-                                  background: typeBadgeBg,
-                                  color: typeBadgeColor,
-                                }}
+                                style={
+                                  tab === "message"
+                                    ? {
+                                        padding: "0.25rem 0.5rem",
+                                        borderRadius: "4px",
+                                        fontSize: "0.72rem",
+                                        fontWeight: 400,
+                                        background: typeBadgeBg,
+                                        color: typeBadgeColor,
+                                      }
+                                    : {
+                                        
+                                        color: typeBadgeColor,
+                                      }
+                                }
                               >
                                 {tab === "personnel"
                                   ? m.etiquette || "Général"

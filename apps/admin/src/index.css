@@ -102,7 +102,7 @@ body {
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .badge-new { background: #EBF8FF; color: #3182CE; }
@@ -204,16 +204,21 @@ table {
   table-layout: fixed;
 }
 
+th {
+  font-size: 0.75rem !important;
+}
+
+td {
+  font-size: 0.95rem !important;
+}
+
 th, td {
   padding: 0.5rem 1rem;
   text-align: center;
   border-bottom: 1px solid var(--border);
-  font-size: 0.75rem !important;
 }
 
-td * {
-  font-size: 0.75rem !important;
-}
+
 
 th {
   background: #F8FAFC;

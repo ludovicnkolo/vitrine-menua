@@ -4,6 +4,7 @@ import Link from "@/components/Link";
 import { ArrowRight, Globe, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
+import { generateSlug } from "@/utils/slug";
 
 export default function Home() {
   const { lang, t } = useLanguage();
@@ -354,7 +355,7 @@ export default function Home() {
           {publications.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               {publications.map((pub) => (
-                <Link key={pub.id} href={`/actualites/${pub.id}`} className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300">
+                <Link key={pub.id} href={`/actualites/${generateSlug(displayTitle(pub), pub.id)}`} className="group flex flex-col bg-white/5 border border-[#e8e1d7]/20 hover:bg-white/10 transition-all duration-300">
                   <div className="h-[180px] overflow-hidden bg-[#1a1f2e] flex items-center justify-center relative">
                     {pub.coverImageUrl ? (
                       <>

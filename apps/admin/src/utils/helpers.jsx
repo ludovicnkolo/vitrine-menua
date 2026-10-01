@@ -18,7 +18,7 @@ function getStatusBadge(status) {
         padding: "0.25rem 0.6rem",
         borderRadius: "9999px",
         fontSize: "0.75rem",
-        fontWeight: 600,
+        fontWeight: 400,
       },
     },
     TERMINE: { text: "Terminé", class: "badge-success" },
@@ -30,7 +30,7 @@ function getStatusBadge(status) {
         padding: "0.25rem 0.6rem",
         borderRadius: "9999px",
         fontSize: "0.75rem",
-        fontWeight: 600,
+        fontWeight: 400,
       },
     },
     ANNULEE: {
@@ -41,7 +41,7 @@ function getStatusBadge(status) {
         padding: "0.25rem 0.6rem",
         borderRadius: "9999px",
         fontSize: "0.75rem",
-        fontWeight: 600,
+        fontWeight: 400,
       },
     },
 
@@ -55,7 +55,7 @@ function getStatusBadge(status) {
         padding: "0.25rem 0.6rem",
         borderRadius: "9999px",
         fontSize: "0.75rem",
-        fontWeight: 600,
+        fontWeight: 400,
       },
     },
     FINALISER: {
@@ -66,7 +66,7 @@ function getStatusBadge(status) {
         padding: "0.25rem 0.6rem",
         borderRadius: "9999px",
         fontSize: "0.75rem",
-        fontWeight: 600,
+        fontWeight: 400,
       },
     },
     REATTRIBUE: { text: "Réattribuée", class: "badge-warning" },
@@ -80,7 +80,7 @@ function getStatusBadge(status) {
         padding: "0.25rem 0.6rem",
         borderRadius: "9999px",
         fontSize: "0.75rem",
-        fontWeight: 600,
+        fontWeight: 400,
       },
     },
     EN_APPROBATION: {
@@ -91,7 +91,7 @@ function getStatusBadge(status) {
         padding: "0.25rem 0.6rem",
         borderRadius: "9999px",
         fontSize: "0.75rem",
-        fontWeight: 600,
+        fontWeight: 400,
       },
     },
     APPROUVEE: { text: "Approuvée", class: "badge-success" },
@@ -124,7 +124,7 @@ function getPriorityBadge(priority) {
           alignItems: "center",
           gap: "4px",
           color: "var(--danger)",
-          fontWeight: 600,
+          fontWeight: 400,
         }}
       >
         <AlertCircle size={14} /> Urgent
@@ -137,7 +137,7 @@ function getPriorityBadge(priority) {
           alignItems: "center",
           gap: "4px",
           color: "var(--success)",
-          fontWeight: 600,
+          fontWeight: 400,
         }}
       >
         <CheckCircle size={14} /> Normal
@@ -150,7 +150,7 @@ function getPriorityBadge(priority) {
           alignItems: "center",
           gap: "4px",
           color: "var(--text-muted)",
-          fontWeight: 600,
+          fontWeight: 400,
         }}
       >
         <Clock size={14} /> Faible
@@ -161,29 +161,9 @@ function getPriorityBadge(priority) {
 }
 
 function getRoleBadge(role) {
-  const map = {
-    "Super-administrateur": {
-      text: "Super-administrateur",
-      bg: "#4C1D95",
-      color: "#FFF",
-    },
-    "Responsable opérationnel": {
-      text: "Responsable opérationnel",
-      bg: "#DD6B20",
-      color: "#FFF",
-    },
-    Relecteur: { text: "Relecteur", bg: "#805AD5", color: "#FFF" },
-    Collaborateur: { text: "Collaborateur", bg: "#319795", color: "#FFF" },
-    "Administrateur technique": {
-      text: "Administrateur technique",
-      bg: "#718096",
-      color: "#FFF",
-    },
-  };
-  const s = map[role] || { text: role, bg: "#718096", color: "#FFF" };
   return (
-    <span className="badge" style={{ backgroundColor: s.bg, color: s.color }}>
-      {s.text}
+    <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
+      {role}
     </span>
   );
 }

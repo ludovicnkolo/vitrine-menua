@@ -116,7 +116,10 @@ export default function ActualitesPage() {
             <div className="bg-white border border-[#e8e1d7] flex flex-col md:flex-row w-full group hover:border-[#141824] transition-all duration-300">
               <div className="w-full md:w-1/2 h-[250px] md:h-[400px] overflow-hidden bg-[#f5f7fa] flex items-center justify-center relative">
                 {featuredPub.coverImageUrl ? (
-                  <img src={featuredPub.coverImageUrl} alt={displayTitle(featuredPub)} className="block w-full h-full min-w-full max-w-none object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <>
+                    <img src={featuredPub.coverImageUrl} alt={displayTitle(featuredPub)} className="block w-full h-full min-w-full max-w-none object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#f5f7fa]" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                    <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-xl z-0">MENUA CONSULTING</span>
+                  </>
                 ) : (
                   <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-xl">MENUA CONSULTING</span>
                 )}

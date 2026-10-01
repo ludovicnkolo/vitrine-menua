@@ -166,6 +166,23 @@ const CMSPage = () => {
     if (tab === "parametrage") fetchFormSettings();
   }, [tab]);
 
+  // ── Convertit une clé S3 ou un chemin local en URL affichable ──────────────
+  const formatImageUrl = (url) => {
+    if (!url) return "";
+    if (url.startsWith("http")) return url; // Déjà une URL complète (S3 public ou présignée)
+    if (url.startsWith("/uploads")) {
+      // Fallback local : pointer vers la vitrine
+      const vitrineUrl = window.location.hostname === "localhost"
+        ? "http://localhost:3000"
+        : "https://menuaconsulting.com";
+      return `${vitrineUrl}${url}`;
+    }
+    // Clé S3 brute (ex: cms/images/uuid-fichier.jpg) → construire l'URL publique OVH
+    const endpoint = "s3.eu-west-par.io.cloud.ovh.net";
+    const bucket = "menua-ged-prod";
+    return `https://${bucket}.${endpoint}/${url}`;
+  };
+
   const openModal = (pub = null) => {
     setFormLang("FR");
     if (pub) {
@@ -181,16 +198,9 @@ const CMSPage = () => {
         pub.category_en ||
           (pub.category ? CATEGORY_TRANSLATIONS[pub.category] : ""),
       );
-      const vitrineUrl = window.location.hostname === "localhost" ? "http://localhost:3000" : "https://menuaconsulting.com";
-      const formatImageUrl = (url) => {
-        if (!url) return "";
-        if (url.startsWith("/uploads")) return `${vitrineUrl}${url}`;
-        return url;
-      };
-
       setCoverImage(pub.coverImage || "");
       setPreviewImage(formatImageUrl(pub.coverImageUrl || pub.coverImage));
-      
+
       // Parse sections from JSON string if stored as string
       let parsedSections = [];
       if (pub.sections) {
@@ -333,6 +343,7 @@ const CMSPage = () => {
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    const previousPreview = previewImage; // Sauvegarder pour restaurer en cas d'erreur
     setPreviewImage(URL.createObjectURL(file));
     setUploadingImg(true);
     const formData = new FormData();
@@ -346,20 +357,18 @@ const CMSPage = () => {
       });
       const data = await res.json();
       if (data.success) {
-        setCoverImage(data.url);
+        setCoverImage(data.url); // Clé S3 brute sauvegardée en base
+        // Utiliser l'URL publique permanente pour la prévisualisation
+        if (data.publicUrl) setPreviewImage(data.publicUrl);
         showToast("Image uploadée avec succès");
       } else {
         showToast("Erreur lors de l'upload.", "error");
-        setPreviewImage(
-          coverImage ? (coverImage.startsWith("http") ? coverImage : "") : "",
-        );
+        setPreviewImage(previousPreview); // Restaurer l'image précédente
       }
     } catch (err) {
       console.error(err);
       showToast("Erreur réseau.", "error");
-      setPreviewImage(
-        coverImage ? (coverImage.startsWith("http") ? coverImage : "") : "",
-      );
+      setPreviewImage(previousPreview); // Restaurer l'image précédente
     } finally {
       setUploadingImg(false);
     }

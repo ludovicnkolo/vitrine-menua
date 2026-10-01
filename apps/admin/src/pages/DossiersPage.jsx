@@ -2902,7 +2902,7 @@ const DossiersPage = () => {
                         <div
                           style={{
                             whiteSpace: "nowrap",
-                            fontWeight: 500,
+                            fontWeight: 400,
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             maxWidth: "90px",

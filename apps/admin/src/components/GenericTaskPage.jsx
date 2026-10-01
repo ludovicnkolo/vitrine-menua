@@ -2330,22 +2330,23 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               return (
                 <tr key={t.id} className={isExpired(t) ? "row-expired" : ""}>
                   <td style={{ textAlign: "left" }}>
-                    <strong
+                    <span
                       className="truncate-text"
                       style={{
                         
                         color: "var(--text-main)",
                         margin: 0,
+                        fontWeight: 400,
                       }}
                     >
                       {t.reference || t.id.slice(0, 8)}
-                    </strong>
+                    </span>
                   </td>
                   <td style={{ textAlign: "left" }}>
                     <div
                       style={{
                         color: "var(--primary)",
-                        fontWeight: 500,
+                        fontWeight: 400,
                         
                         margin: 0,
                         whiteSpace: "nowrap",
@@ -2379,7 +2380,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                         color: t.echeance
                           ? "var(--text-main)"
                           : "var(--danger)",
-                        fontWeight: 500,
+                        fontWeight: 400,
                         
                         margin: 0,
                       }}

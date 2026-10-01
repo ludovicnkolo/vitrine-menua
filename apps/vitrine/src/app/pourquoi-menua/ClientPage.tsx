@@ -59,7 +59,7 @@ export default function PourquoiMenuaPage() {
 
           <div className="flex flex-col lg:flex-row-reverse lg:items-center">
             {/* Right Image */}
-            <div className="hidden lg:block w-5/12 lg:h-[520px] shrink-0 relative overflow-hidden shadow-xl z-20">
+            <div className="hidden lg:block w-5/12 lg:h-[360px] shrink-0 relative z-30 shadow-xl overflow-hidden">
               <img
                 src="/img/pourquoi_2.webp"
                 alt="Pourquoi Menua"
@@ -69,8 +69,8 @@ export default function PourquoiMenuaPage() {
             </div>
 
             {/* Left Card */}
-            <div className="w-full lg:w-8/12 lg:-mr-16 z-10 flex items-center">
-              <div className="w-full bg-[#e8e1d7] shadow-xl px-6 portrait:sm:px-10 lg:pl-14 lg:pr-28 py-10 lg:py-14 border-t-4 border-t-[#141824]">
+            <div className="w-full lg:w-8/12 lg:-mr-16 flex items-center z-10">
+              <div className="w-full bg-[#e8e1d7] shadow-xl px-6 portrait:sm:px-10 lg:pl-14 lg:pr-28 py-10 lg:py-14">
                 <div className="w-16 h-[3px] bg-[#141824] mb-5" />
                 <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
                   {t("Notre Vision", "Our vision")}
@@ -109,13 +109,13 @@ export default function PourquoiMenuaPage() {
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16">
           <div className="flex flex-col lg:flex-row lg:items-center">
             {/* Image (Left Desktop only) */}
-            <div className="hidden lg:block w-5/12 lg:h-[550px] shrink-0 relative overflow-hidden shadow-xl z-20">
+            <div className="hidden lg:block w-5/12 lg:h-[360px] shrink-0 relative z-30 shadow-xl overflow-hidden">
               <img src="/img/benefices.webp" alt="Bénéfices" className="w-full h-full object-cover object-[80%_center]" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
             </div>
 
             {/* Text Box (Right) */}
-            <div className="w-full lg:w-8/12 lg:-ml-16 z-10 flex items-center">
-              <div className="w-full bg-white shadow-xl px-6 portrait:sm:px-10 lg:pr-14 lg:pl-28 py-10 lg:py-14 border border-[#e8e1d7] border-t-4 border-t-[#141824]">
+            <div className="w-full lg:w-8/12 lg:-ml-16 flex items-center z-10">
+              <div className="w-full bg-white shadow-xl px-6 portrait:sm:px-10 lg:pr-14 lg:pl-28 py-10 lg:py-14 border border-[#e8e1d7]">
                 <div className="w-16 h-[3px] bg-[#141824] mb-5" />
                 <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{t("Bénéfices", "Benefits")}</h2>
               
@@ -218,7 +218,7 @@ export default function PourquoiMenuaPage() {
           <div className="flex flex-col lg:flex-row-reverse lg:items-center">
             
             {/* Right Image */}
-            <div className="hidden lg:block w-5/12 lg:h-[480px] shrink-0 relative overflow-hidden shadow-xl z-20">
+            <div className="hidden lg:block w-5/12 lg:h-[360px] shrink-0 relative z-30 shadow-xl overflow-hidden">
               <img
                 src="/img/pourquoi_4.webp"
                 alt="Engagements"
@@ -228,8 +228,8 @@ export default function PourquoiMenuaPage() {
             </div>
 
             {/* Left Box */}
-            <div className="w-full lg:w-8/12 lg:-mr-16 z-10 flex items-center">
-              <div className="w-full bg-white shadow-xl px-6 portrait:sm:px-10 lg:pl-14 lg:pr-28 py-10 lg:py-14 border border-[#e8e1d7] border-t-4 border-t-[#141824]">
+            <div className="w-full lg:w-8/12 lg:-mr-16 flex items-center z-10">
+              <div className="w-full bg-white shadow-xl px-6 portrait:sm:px-10 lg:pl-14 lg:pr-28 py-10 lg:py-14 border border-[#e8e1d7]">
                 <div className="w-16 h-[3px] bg-[#141824] mb-5" />
                 <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
                   {t("Nos engagements", "Our commitments")}
@@ -282,7 +282,7 @@ export default function PourquoiMenuaPage() {
       {/* ── 5.6 UNE RELATION FONDÉE SUR LA CONFIANCE ── */}
       <section className="relative w-full bg-white py-16 lg:py-20 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-[1200px] mx-auto text-center">
-          <div className="bg-[#e8e1d7] p-10 landscape:p-8 landscape:lg:p-16 md:p-16 shadow-xl border-t-4 border-[#141824]">
+          <div className="bg-[#e8e1d7] p-10 landscape:p-8 landscape:lg:p-16 md:p-16 shadow-xl">
             <div className="w-16 h-[3px] bg-[#141824] mb-5 mx-auto" />
             <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{t("Une relation fondée sur la confiance", "A relationship based on trust")}</h2>
             <p className="text-[#141824]/80 font-medium text-[1.1rem] leading-relaxed mb-6">

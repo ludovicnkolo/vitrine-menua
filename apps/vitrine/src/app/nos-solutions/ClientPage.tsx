@@ -94,8 +94,8 @@ export default function NosSolutionsPage() {
           <div className="flex flex-col lg:flex-row lg:items-center">
             
             {/* Left Image */}
-            <div className="hidden lg:flex w-5/12 shrink-0 z-20 items-center justify-end">
-              <div className="w-[85%] lg:h-[520px] relative overflow-hidden shadow-xl">
+            <div className="hidden lg:flex w-5/12 shrink-0 z-30 relative items-center justify-end">
+              <div className="w-[85%] lg:h-[360px] relative overflow-hidden shadow-xl">
                 <img 
                   src="/img/solutions_3.webp" 
                   alt="Nos solutions" 
@@ -106,8 +106,8 @@ export default function NosSolutionsPage() {
             </div>
             
             {/* Right Card */}
-            <div className="w-full lg:w-8/12 lg:-ml-16 z-10 flex items-center">
-              <div className="w-full bg-[#e8e1d7] shadow-xl px-6 portrait:sm:px-10 lg:pr-14 lg:pl-28 py-10 lg:py-14 border-t-4 border-t-[#141824]">
+            <div className="w-full lg:w-8/12 lg:-ml-16 flex items-center z-10">
+              <div className="w-full bg-[#e8e1d7] shadow-xl px-6 portrait:sm:px-10 lg:pr-14 lg:pl-28 py-10 lg:py-14">
                 <div className="w-16 h-[3px] bg-[#141824] mb-5" />
                 <div className="leading-relaxed text-[#6e7891] text-[1rem] font-light mb-8 space-y-6">
                   <h2 className="text-[#141824] font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
@@ -283,7 +283,7 @@ export default function NosSolutionsPage() {
         bgClass="bg-[#e8e1d7]"
         topDecoClass="absolute top-0 right-0 w-1/2 h-full bg-[#e0d8cd] skew-x-[-10deg] origin-bottom-right hidden lg:block"
         titleDecoClass="bg-[#141824]"
-        borderClass="border-[#e8e1d7] border-t-8 border-t-[#141824]"
+        borderClass="border-[#e8e1d7]"
         isReversed={false}
         title={t("Mode d’organisation", "Delivery model")}
         intro={formatBrand(t(
@@ -322,7 +322,7 @@ export default function NosSolutionsPage() {
             </div>
 
             {/* Bon à savoir Card */}
-            <div className="bg-white p-10 lg:p-12 shadow-xl border border-[#e8e1d7] border-t-4 border-t-[#141824] flex flex-col justify-center">
+            <div className="bg-white p-10 lg:p-12 shadow-xl border border-[#e8e1d7] flex flex-col justify-center">
               <h3 className="text-[#141824] font-bold text-[1.5rem] mb-6">{t("Bon à savoir", "Good to know")}</h3>
               <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed">
                 {formatBrand(t(

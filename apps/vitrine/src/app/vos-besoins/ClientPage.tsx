@@ -15,14 +15,14 @@ const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items,
         <div className={`flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} lg:items-center`}>
 
           {/* Image */}
-          <div className={`hidden lg:flex w-5/12 shrink-0 z-20 items-center ${isReversed ? 'justify-start' : 'justify-end'}`}>
-            <div className="w-[85%] lg:h-[400px] relative overflow-hidden shadow-xl">
+          <div className={`hidden lg:flex w-5/12 shrink-0 z-30 relative items-center ${isReversed ? 'justify-start' : 'justify-end'}`}>
+            <div className="w-[85%] lg:h-[360px] relative overflow-hidden shadow-xl">
               <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover object-center" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
             </div>
           </div>
 
           {/* Text Box */}
-          <div className={`w-full lg:w-8/12 ${isReversed ? 'lg:-mr-16' : 'lg:-ml-16'} z-10 flex items-center ${containerClass}`}>
+          <div className={`w-full lg:w-8/12 ${isReversed ? 'lg:-mr-16' : 'lg:-ml-16'} flex items-center z-10 ${containerClass}`}>
             <div className={`w-full ${cardBg} shadow-xl px-6 portrait:sm:px-10 py-10 lg:py-14 ${isReversed ? 'lg:pl-14 lg:pr-28' : 'lg:pr-14 lg:pl-28'}`}>
               <div className="w-16 h-[3px] bg-[#141824] mb-5" />
               <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{title}</h2>
@@ -130,8 +130,8 @@ export default function VosBesoinsPage() {
           <div className="flex flex-col lg:flex-row-reverse lg:items-center">
 
             {/* Right Image */}
-            <div className="hidden lg:flex w-5/12 shrink-0 z-20 items-center justify-start">
-              <div className="w-[85%] lg:h-[400px] relative overflow-hidden shadow-xl">
+            <div className="hidden lg:flex w-5/12 shrink-0 z-30 relative items-center justify-start">
+              <div className="w-[85%] lg:h-[360px] relative overflow-hidden shadow-xl">
                 <img
                   src="/img/besoins-intro.webp"
                   alt="Vos besoins"
@@ -142,8 +142,8 @@ export default function VosBesoinsPage() {
             </div>
 
             {/* Left Box */}
-            <div className="w-full lg:w-8/12 lg:-mr-16 z-10 flex items-center">
-              <div className="w-full bg-[#f5f7fa] shadow-xl px-6 portrait:sm:px-10 lg:pl-14 lg:pr-28 py-10 lg:py-14 border border-[#e8e1d7] border-t-4 border-t-[#141824]">
+            <div className="w-full lg:w-8/12 lg:-mr-16 flex items-center z-10">
+              <div className="w-full bg-[#f5f7fa] shadow-xl px-6 portrait:sm:px-10 lg:pl-14 lg:pr-28 py-10 lg:py-14 border border-[#e8e1d7]">
                 <div className="w-16 h-[3px] bg-[#141824] mb-5" />
                 <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold mb-6 uppercase tracking-wider">
                   {t("Notre Intervention", "How we support you")}
@@ -349,7 +349,7 @@ export default function VosBesoinsPage() {
         bgClass="bg-[#e8e1d7]"
         topDecoClass="absolute top-0 right-0 w-1/2 h-full bg-[#e0d8cd] skew-x-[-10deg] origin-bottom-right hidden lg:block"
         titleDecoClass="bg-[#141824]"
-        borderClass="border border-[#e8e1d7] border-t-8 border-t-[#141824]"
+        borderClass="border border-[#e8e1d7]"
         title={t("Autres besoins opérationnels", "Other operational needs")}
         intro={formatBrand(t(
           "MENUA CONSULTING peut également intervenir sur des besoins opérationnels ponctuels, transverses ou spécifiques ne relevant pas exclusivement d'une fonction financière, comptable, conformité, patrimoniale ou data. Cette flexibilité permet d'accompagner les organisations en période de surcharge, de transition, de réorganisation ou de besoin temporaire de renfort.",

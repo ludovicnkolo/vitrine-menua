@@ -42,7 +42,11 @@ export default function ClientPageArticle({ id }: { id: string }) {
         const preview = params.get('preview');
         const queryStr = preview === 'true' ? '?preview=true' : '';
         
-        const res = await fetch(`/api/cms/public/${id}${queryStr}`);
+        // L'id peut être un UUID brut, ou un slug suivi d'un UUID (ex: mon-titre-1234-abcd...)
+        const uuidMatch = id.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
+        const actualId = uuidMatch ? uuidMatch[0] : id;
+        
+        const res = await fetch(`/api/cms/public/${actualId}${queryStr}`);
         const data = await res.json();
         if (data.success) {
           setPublication(data.data);

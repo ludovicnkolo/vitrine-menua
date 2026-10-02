@@ -23,7 +23,7 @@ export default function NousConnaitrePage() {
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
         <div className="laplace-container portrait:sm:px-10  landscape:px-16 relative z-10 pt-56 md:pt-72 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-28 portrait:sm:pb-20 landscape:pb-24 lg:pb-10 landscape:lg:pb-40 xl:pb-16 mt-16 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
-          <div className="max-w-4xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-4 landscape:ml-6 landscape:lg:-ml-4">
+          <div className="max-w-4xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-12 landscape:ml-6 landscape:lg:-ml-12">
             <h1 className="text-white text-[1.25rem] portrait:sm:text-[1.5rem] md:text-[2.5rem] portrait:md:text-[1.8rem] landscape:text-[1.25rem] landscape:lg:text-[1.88rem] xl:text-[2.75rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               {t("Nous connaître", "About us")}
             </h1>
@@ -34,9 +34,9 @@ export default function NousConnaitrePage() {
               {t(" middle office.", " middle-office support.")}
             </p>
             <div className="mt-4">
-              <Link href="#notre-approche" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
-                {t("Découvrir notre approche", "Discover our approach")}
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              <Link href="#notre-approche" className="inline-flex items-center gap-2 text-left px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
+                <span className="max-w-[16ch] sm:max-w-none">{t("Découvrir notre approche", "Discover our approach")}</span>
+                <ArrowRight size={14} className="shrink-0 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>
@@ -111,9 +111,9 @@ export default function NousConnaitrePage() {
                   </p>
                 </div>
                 <div className="flex justify-end mt-8">
-                  <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-4 py-2 border border-[#141824] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-[#141824] hover:text-white transition-colors group">
-                    {t("Présenter votre besoin", "Tell us about your requirements")}
-                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-left px-4 py-2 border border-[#141824] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-[#141824] hover:text-white transition-colors group">
+                    <span className="max-w-[16ch] sm:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
+                    <ArrowRight size={14} className="shrink-0 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               </div>
@@ -290,9 +290,9 @@ export default function NousConnaitrePage() {
             ))}
           </div>
 
-          <div className="mt-8 text-right">
-            <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-              {t("Présenter votre besoin", "Tell us about your requirements")}
+          <div className="mt-8 text-right sm:text-left">
+            <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right sm:text-left">
+              <span className="max-w-[16ch] sm:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
               <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
               <ChevronRight size={18} className="-ml-2" />
             </Link>
@@ -420,9 +420,9 @@ export default function NousConnaitrePage() {
                     </div>
                   </div>
 
-                  <div className="mt-12 text-right">
-                    <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                      {t("Présenter votre besoin", "Tell us about your requirements")}
+                  <div className="mt-12 text-right sm:text-left">
+                    <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right sm:text-left">
+                      <span className="max-w-[16ch] sm:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
                       <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                       <ChevronRight size={18} className="-ml-2" />
                     </Link>

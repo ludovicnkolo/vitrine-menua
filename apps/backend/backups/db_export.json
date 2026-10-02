@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.222Z",
-      "updatedAt": "2026-10-01T17:32:10.778Z"
+      "updatedAt": "2026-10-02T15:27:24.878Z"
     },
     {
       "id": "a41c168d-dc87-4353-8dcb-c71e4109416c",
@@ -16,7 +16,7 @@
       "status": "Inactif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.242Z",
-      "updatedAt": "2026-10-01T17:32:10.785Z"
+      "updatedAt": "2026-10-02T15:27:24.899Z"
     },
     {
       "id": "7f685243-dda5-4117-a675-d4a7364c7a66",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-09-28T09:31:02.248Z",
-      "updatedAt": "2026-10-01T17:32:10.792Z"
+      "updatedAt": "2026-10-02T15:27:24.914Z"
     },
     {
       "id": "803c6051-c50d-495a-bb21-b6615f1cf0dc",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-09-28T09:31:02.256Z",
-      "updatedAt": "2026-10-01T17:32:10.799Z"
+      "updatedAt": "2026-10-02T15:27:24.925Z"
     },
     {
       "id": "eaa1c720-2a71-493c-a1c0-d14f51051e0f",
@@ -43,14 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.269Z",
-      "updatedAt": "2026-10-01T17:32:10.808Z"
+      "updatedAt": "2026-10-02T15:27:24.935Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "2541799f-86de-4071-86c7-7110615bf37b",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$uIQH8x93fWGbv4jvJUqu2O4FoxRGLl6oqFsf24e0DEfcdVa/myj4W",
+      "password": "$2a$10$Ugl8u8Xx7ifZsA0DCNXyAuaLf7QqNL9XchLJxXarGPbMmk3JlrloO",
       "name": "Rosette Fouelefack",
       "roleId": "832d5c59-5fe6-488f-b64a-1bfdc6504152",
       "telephone": "+33659207511",
@@ -63,9 +63,9 @@
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
-      "lastLogin": "2026-10-01T17:19:29.655Z",
+      "lastLogin": "2026-10-02T15:28:28.714Z",
       "createdAt": "2026-09-28T09:31:02.401Z",
-      "updatedAt": "2026-10-01T17:32:10.973Z"
+      "updatedAt": "2026-10-02T15:28:28.715Z"
     },
     {
       "id": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
@@ -1094,6 +1094,17 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-10-01T15:37:09.389Z"
+    },
+    {
+      "id": "41a1ee2a-8beb-4519-a8d4-2bad54d804fb",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-02T08:33:18.231Z"
     }
   ],
   "messagePersonnels": [
@@ -2695,6 +2706,31 @@
       "dossierId": null,
       "missionId": null,
       "assignedToId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "tacheId": null
+    },
+    {
+      "id": "7b81b0cc-8471-44e6-82da-c578717597de",
+      "messageId": "<CALd=wZ6AG7JGVO9OVNcSZ7P3RytUaJQ2bqpDV2YhGfVXqVkJDg@mail.gmail.com>",
+      "type": "PERSONNEL",
+      "subType": "Indéfini",
+      "status": "EN_ATTENTE",
+      "nomPrenom": "Mehdi Mejdi",
+      "email": "mehdi.mejri.bis@gmail.com",
+      "objet": "BIGTECH Africa 2026 ( Externalisation Comptable d Europe Francophone vers Tunisie )",
+      "bodyText": " Bonjour,\n\nJ ai travaille depuis Mars 2024 à Dec 2025 comme Commercial sur Externalisation\nComptable de La France vers la Tunisie avec le partenaire Expert Comptable\ndu moment, Comptabilité Française et la je cherche un nouveau Partenaire\npour la campagne qui commence a partir de Septembre 2026, SI intéressé,\nappeler moi du Lun au Ven de 10h a 19h sur le 52 785 346 ou\nmehdi.mejri.bis@gmail.com\n\nCordialement\n\nMehdi MEJRI\n",
+      "attachment": "formulaires/1790955660205-e7d9c74f150bf00e-MEJRI_MEHDI_Cv.pdf,formulaires/1790955662047-4a25b0eeac77c069-MEJRI_MEJRI_ENG_Cv.pdf",
+      "etiquette": null,
+      "priorite": "Normal",
+      "isDeleted": false,
+      "createdAt": "2026-09-30T21:05:32.000Z",
+      "receivedAt": "2026-09-30T21:05:32.000Z",
+      "dateRappel": null,
+      "noteRappel": null,
+      "dateEntretien": null,
+      "lienVisio": null,
+      "dossierId": null,
+      "missionId": null,
+      "assignedToId": null,
       "tacheId": null
     }
   ]

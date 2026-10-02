@@ -65,7 +65,7 @@ export default function NousContacter() {
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 relative z-10 pt-56 md:pt-72 landscape:pt-24 landscape:lg:pt-72 pb-20 portrait:sm:pb-16 landscape:pb-10 landscape:lg:pb-44 xl:pb-20 mt-16 landscape:mt-0 landscape:lg:mt-16">
-          <div className="max-w-4xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-4 landscape:ml-6 landscape:lg:-ml-4">
+          <div className="max-w-4xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-12 landscape:ml-6 landscape:lg:-ml-12">
             <h1 className="text-white text-[1.25rem] portrait:sm:text-[1.5rem] md:text-[2.5rem] portrait:md:text-[1.8rem] landscape:text-[1.25rem] landscape:lg:text-[1.88rem] xl:text-[2.75rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               {t("Nous contacter", "Contact us")}
             </h1>
@@ -119,7 +119,7 @@ export default function NousContacter() {
                   <div className="w-14 h-14 rounded-full bg-[#e8e1d7]/30 text-[#141824] flex items-center justify-center shrink-0">
                     <Mail size={24} />
                   </div>
-                  <a href="mailto:contact@menuaconsulting.com" className="text-[#141824] text-[1.05rem] font-bold hover:text-[#a0aabf] transition-colors">contact@menuaconsulting.com</a>
+                  <a href="mailto:contact@menuaconsulting.com" className="text-[#141824] text-[1.05rem] font-bold hover:text-[#a0aabf] transition-colors break-all">contact@menuaconsulting.com</a>
                 </div>
               </div>
             </div>

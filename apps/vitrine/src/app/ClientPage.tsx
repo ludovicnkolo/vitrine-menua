@@ -55,7 +55,7 @@ export default function Home() {
         </div>
 
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 relative z-10 pt-40 md:pt-48 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-28 portrait:sm:pb-20 landscape:pb-24 lg:pb-10 landscape:lg:pb-40 xl:pb-16 mt-8 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
-          <div className="max-w-4xl lg:max-w-6xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-4 landscape:ml-6 landscape:lg:-ml-4">
+          <div className="max-w-4xl lg:max-w-6xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-12 landscape:ml-6 landscape:lg:-ml-12">
             <h1 className="text-white text-[1.25rem] portrait:sm:text-[1.5rem] md:text-[2.5rem] portrait:md:text-[1.65rem] landscape:text-[1.25rem] landscape:lg:text-[1.88rem] xl:text-[2.75rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               <span className="lg:whitespace-nowrap">
                 {t("Externalisation opérationnelle des", "Operational outsourcing")}
@@ -87,9 +87,9 @@ export default function Home() {
               </p>
             </div>
             <div className="mt-4">
-              <Link href="/nous-contacter" className="inline-flex items-center gap-2 px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
-                {t("Présenter votre besoin", "Tell us about your requirements")}
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-left px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
+                <span className="max-w-[16ch] sm:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
+                <ArrowRight size={14} className="shrink-0 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>
@@ -118,6 +118,9 @@ export default function Home() {
             <div className="w-full lg:w-8/12 lg:-ml-16 z-10 flex items-center">
               <div className="w-full bg-[#e8e1d7] shadow-xl px-6 portrait:sm:px-10 lg:pr-14 lg:pl-28 py-10 lg:py-14">
                 <div className="w-16 h-[3px] bg-[#141824] mb-5"></div>
+                <h2 className="font-bold text-[1.3rem] md:text-[1.5rem] text-[#141824] leading-tight mb-6 uppercase tracking-wider">
+                  {t("Externalisation back et middle office", "Back and middle-office outsourcing")}
+                </h2>
 
                 {/* Mobile Image */}
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
@@ -130,9 +133,6 @@ export default function Home() {
                 </div>
 
                 <div className="leading-relaxed text-[#141824] text-[1.1rem] md:text-[1.2rem] font-light mb-8 space-y-6">
-                  <h2 className="font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
-                    {t("Externalisation back et middle office", "Back and middle-office outsourcing")}
-                  </h2>
                   <p>
                     {formatBrand(t(
                       "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT, data et réglementées pour sécuriser et renforcer l'exécution de leurs fonctions back et middle office. Nous prenons en charge des opérations clairement définies, selon les procédures, les outils, les priorités et les circuits de validation de chaque client.",
@@ -142,8 +142,8 @@ export default function Home() {
                 </div>
 
                 <div className="flex justify-end">
-                  <Link href="/nous-connaitre" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                    {t("Nous connaître", "About us")}
+                  <Link href="/nous-connaitre" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right sm:text-left">
+                    <span className="max-w-[16ch] sm:max-w-none">{t("Nous connaître", "About us")}</span>
                     <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                     <ChevronRight size={18} className="-ml-2" />
                   </Link>
@@ -195,8 +195,8 @@ export default function Home() {
             </div>
 
             <div className="flex justify-end mt-8">
-              <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                {t("Nos atouts et engagements", "Our strengths and commitments")}
+              <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right sm:text-left">
+                <span className="max-w-[16ch] sm:max-w-none">{t("Nos atouts et engagements", "Our strengths and commitments")}</span>
                 <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
                 <ChevronRight size={18} className="-ml-2" />
               </Link>
@@ -265,8 +265,8 @@ export default function Home() {
                 </div>
 
                 <div className="flex justify-end">
-                  <Link href="/vos-besoins" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                    {t("Voir tous vos besoins", "Explore your needs")}
+                  <Link href="/vos-besoins" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right sm:text-left">
+                    <span className="max-w-[16ch] sm:max-w-none">{t("Voir tous vos besoins", "Explore your needs")}</span>
                     <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                     <ChevronRight size={18} className="-ml-2" />
                   </Link>
@@ -318,8 +318,8 @@ export default function Home() {
             </div>
 
             <div className="flex justify-end mt-8">
-              <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                {t("Découvrir nos solutions", "Explore our solutions")}
+              <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right sm:text-left">
+                <span className="max-w-[16ch] sm:max-w-none">{t("Découvrir nos solutions", "Explore our solutions")}</span>
                 <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                 <ChevronRight size={18} className="-ml-2" />
               </Link>
@@ -418,8 +418,8 @@ export default function Home() {
 
           {publications.length > 0 && (
             <div className="flex justify-end mt-4">
-              <Link href="/actualites" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group">
-                {t("Voir toutes nos actualités", "Browse all publications")}
+              <Link href="/actualites" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right sm:text-left">
+                <span className="max-w-[16ch] sm:max-w-none">{t("Voir toutes nos actualités", "Browse all publications")}</span>
                 <span className="w-8 h-[1px] bg-white group-hover:w-12 transition-all duration-300"></span>
                 <ChevronRight size={18} className="-ml-2" />
               </Link>

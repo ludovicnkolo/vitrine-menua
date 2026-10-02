@@ -8,6 +8,8 @@ import {
   Inbox,
   LogOut,
   Globe,
+  Menu,
+  X,
 } from "lucide-react";
 import { getSafeApiUrl } from "./utils/helpers";
 import { useTranslation } from "react-i18next";
@@ -53,6 +55,11 @@ function App() {
     const saved = sessionStorage.getItem("adminUser");
     return saved ? JSON.parse(saved) : null;
   });
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (localStorage.getItem("adminTheme") === "dark") {
@@ -278,43 +285,48 @@ function App() {
   return (
     <div className="app-layout">
       <GlobalAlerts />
+      
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
+        <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+      )}
+
       {/* Sidebar */}
-      <aside
-        style={{
-          width: 250,
-          backgroundColor: "var(--primary)",
-          color: "white",
-          display: "flex",
-          flexDirection: "column",
-          height: "100vh",
-          flexShrink: 0,
-        }}
-      >
-        <div className="sidebar-header">
-          <div
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              background: "var(--secondary)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "var(--primary)",
-              fontWeight: "bold",
-            }}
-          >
-            M
+      <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        <div className="sidebar-header" style={{ justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <div
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 8,
+                background: "var(--secondary)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "var(--primary)",
+                fontWeight: "bold",
+              }}
+            >
+              M
+            </div>
+            <span
+              style={{
+                fontWeight: 600,
+                fontSize: "1.1rem",
+                letterSpacing: "-0.5px",
+              }}
+            >
+              MENUA CRM
+            </span>
           </div>
-          <span
-            style={{
-              fontWeight: 600,
-              fontSize: "1.1rem",
-              letterSpacing: "-0.5px",
-            }}
+          <button 
+            className="sidebar-close-btn" 
+            onClick={() => setIsSidebarOpen(false)}
+            style={{ background: "none", border: "none", color: "white", cursor: "pointer" }}
           >
-            MENUA CRM
-          </span>
+            <X size={24} />
+          </button>
         </div>
         {/* Nav compacte — hauteur naturelle, ne grandit pas */}
         <nav style={{ padding: "1rem 0", flex: "0 0 auto" }}>
@@ -443,9 +455,10 @@ function App() {
       <main className="main-content">
         {/* Top bar with notification bell */}
         <div
+          className="topbar-header"
           style={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             alignItems: "center",
             padding: "0.75rem 1.5rem 0",
             position: "sticky",
@@ -455,7 +468,12 @@ function App() {
             borderBottom: "1px solid transparent",
           }}
         >
-          <NotificationBell />
+          <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(true)}>
+            <Menu size={24} />
+          </button>
+          <div style={{ marginLeft: "auto" }}>
+            <NotificationBell />
+          </div>
         </div>
         <div className="page-content">
           <Routes>

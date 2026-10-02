@@ -1149,18 +1149,13 @@ const InboxPage = ({ userRole }) => {
                       <th style={{ width: tab === "interne" ? "28%" : "20%" }}>
                         {t("inbox.columns.email")}
                       </th>
-                      {(tab === "contact" || tab === "recrutement") && (
-                        <th style={{ width: "10%", whiteSpace: "nowrap" }}>
-                          {t("inbox.columns.verification")}
+                      {(tab !== "personnel") && (
+                        <th style={{ width: "10%" }}>
+                          {tab === "interne"
+                            ? "Source"
+                            : t("inbox.columns.type")}
                         </th>
                       )}
-                      <th style={{ width: "10%" }}>
-                        {tab === "interne"
-                          ? "Source"
-                          : tab === "personnel"
-                            ? "Étiquette"
-                            : t("inbox.columns.type")}
-                      </th>
                       <th style={{ width: "11%" }}>{t("inbox.columns.date")}</th>
                       <th style={{ width: "8%", textAlign: "center" }}>
                         {t("inbox.columns.actions")}
@@ -1305,61 +1300,29 @@ const InboxPage = ({ userRole }) => {
                                 {col3}
                               </span>
                             </td>
-                            {(tab === "contact" || tab === "recrutement") && (
+                            {(tab !== "personnel") && (
                               <td>
-                                {(() => {
-                                  const vb = getVerifaliaBadge(
-                                    m.verifaliaStatus,
-                                  );
-                                  return (
-                                    <span
-                                      style={
-                                        tab === "message"
-                                          ? {
-                                              padding: "0.25rem 0.5rem",
-                                              borderRadius: "4px",
-                                              fontSize: "0.72rem",
-                                              fontWeight: 400,
-                                              background: vb.bg,
-                                              color: vb.color,
-                                              whiteSpace: "nowrap",
-                                              display: "inline-block",
-                                            }
-                                          : {
-                                              
-                                              color: vb.color,
-                                            }
-                                      }
-                                    >
-                                      {vb.text}
-                                    </span>
-                                  );
-                                })()}
+                                <span
+                                  style={
+                                    tab === "message"
+                                      ? {
+                                          padding: "0.25rem 0.5rem",
+                                          borderRadius: "4px",
+                                          fontSize: "0.72rem",
+                                          fontWeight: 400,
+                                          background: typeBadgeBg,
+                                          color: typeBadgeColor,
+                                        }
+                                      : {
+                                          
+                                          color: typeBadgeColor,
+                                        }
+                                  }
+                                >
+                                  {typeBadgeText}
+                                </span>
                               </td>
                             )}
-                            <td>
-                              <span
-                                style={
-                                  tab === "message"
-                                    ? {
-                                        padding: "0.25rem 0.5rem",
-                                        borderRadius: "4px",
-                                        fontSize: "0.72rem",
-                                        fontWeight: 400,
-                                        background: typeBadgeBg,
-                                        color: typeBadgeColor,
-                                      }
-                                    : {
-                                        
-                                        color: typeBadgeColor,
-                                      }
-                                }
-                              >
-                                {tab === "personnel"
-                                  ? m.etiquette || "Général"
-                                  : typeBadgeText}
-                              </span>
-                            </td>
                             <td
                               style={{
                                 color: "var(--text-muted)",

@@ -244,6 +244,11 @@ export default function AuditPage() {
                   </tr>
                 ) : (
                   filteredLogs.map((log) => {
+                    const formatStr = (str) => {
+                      if (!str) return "";
+                      const formatted = String(str).replace(/_/g, " ").toLowerCase();
+                      return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+                    };
                     const colors = getActionColor(log.action);
                     return (
                       <tr
@@ -253,7 +258,7 @@ export default function AuditPage() {
                           transition: "background 0.2s",
                         }}
                       >
-                        <td style={{ padding: "1rem 1.5rem" }}>
+                        <td style={{ padding: "1rem 1.5rem", textAlign: "left" }}>
                           <div
                             style={{
                               display: "flex",
@@ -274,7 +279,7 @@ export default function AuditPage() {
                             })}
                           </div>
                         </td>
-                        <td style={{ padding: "1rem 1.5rem" }}>
+                        <td style={{ padding: "1rem 1.5rem", textAlign: "left" }}>
                           <div
                             style={{
                               display: "flex",
@@ -316,17 +321,16 @@ export default function AuditPage() {
                             </div>
                           </div>
                         </td>
-                        <td style={{ padding: "1rem 1.5rem" }}>
+                        <td style={{ padding: "1rem 1.5rem", textAlign: "left" }}>
                           <span
                             style={{
                               color: colors.color,
-                              letterSpacing: "0.5px",
                             }}
                           >
-                            {log.action}
+                            {formatStr(log.action)}
                           </span>
                         </td>
-                        <td style={{ padding: "1rem 1.5rem" }}>
+                        <td style={{ padding: "1rem 1.5rem", textAlign: "left" }}>
                           {log.targetType && (
                             <div
                               style={{
@@ -343,9 +347,9 @@ export default function AuditPage() {
                                   
                                 }}
                               >
-                                {log.targetType}{" "}
+                                {formatStr(log.targetType)}{" "}
                                 {log.targetId
-                                  ? `(#${log.targetId.split("-")[0].toUpperCase()})`
+                                  ? `(#${log.targetId.split("-")[0].toLowerCase()})`
                                   : ""}
                               </span>
                             </div>

@@ -6,7 +6,8 @@ import { formatBrand } from "@/utils/formatBrand";
 import { ArrowRight, ChevronRight } from "lucide-react";
 
 export default function NousConnaitrePage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const isEN = lang === 'EN';
 
   return (
     <main className="flex flex-col w-full min-h-screen">
@@ -35,7 +36,13 @@ export default function NousConnaitrePage() {
             </p>
             <div className="mt-4">
               <Link href="#notre-approche" className="inline-flex items-center gap-2 text-left px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
-                <span className="max-w-[16ch] sm:max-w-none">{t("Découvrir notre approche", "Discover our approach")}</span>
+                <span className={`hidden xl:!inline ${!isEN ? 'sm:inline' : 'sm:hidden'}`}>
+                  {t("Découvrir notre approche", "Discover our approach")}
+                </span>
+                <span className={`flex flex-col items-start xl:!hidden ${!isEN ? 'sm:hidden' : 'sm:flex'}`}>
+                  <span>{t("Découvrir notre", "Discover our")}</span>
+                  <span>{t("approche", "approach")}</span>
+                </span>
                 <ArrowRight size={14} className="shrink-0 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -83,7 +90,7 @@ export default function NousConnaitrePage() {
                     className="w-full h-full object-cover object-center"
                   />
                 </div>
-                
+
                 <div className="space-y-4 text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
                   <p>
                     {formatBrand(t(
@@ -110,10 +117,11 @@ export default function NousConnaitrePage() {
                     ))}
                   </p>
                 </div>
-                <div className="flex justify-end mt-8">
-                  <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-left px-4 py-2 border border-[#141824] text-[#141824] uppercase tracking-wider text-[0.95rem] font-bold hover:bg-[#141824] hover:text-white transition-colors group">
-                    <span className="max-w-[16ch] sm:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
-                    <ArrowRight size={14} className="shrink-0 group-hover:translate-x-1 transition-transform" />
+                <div className="mt-8 flex justify-end">
+                  <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right">
+                    <span className="max-w-[16ch] portrait:sm:max-w-[24ch] landscape:max-w-[22ch] xl:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
+                    <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
+                    <ChevronRight size={18} className="-ml-2" />
                   </Link>
                 </div>
               </div>
@@ -290,9 +298,9 @@ export default function NousConnaitrePage() {
             ))}
           </div>
 
-          <div className="mt-8 text-right sm:text-left">
-            <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right sm:text-left">
-              <span className="max-w-[16ch] sm:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
+          <div className="mt-8 flex justify-end">
+            <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right">
+              <span className="max-w-[16ch] portrait:sm:max-w-[24ch] landscape:max-w-[22ch] xl:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
               <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
               <ChevronRight size={18} className="-ml-2" />
             </Link>
@@ -364,7 +372,7 @@ export default function NousConnaitrePage() {
       <section id="certifications" className="relative w-full bg-white pb-16 lg:pb-20 pt-0 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10 relative z-10 landscape:px-16 landscape:lg:px-16">
           <div className="flex flex-col lg:flex-row-reverse lg:items-center">
-            
+
             {/* Image (Right Desktop only) */}
             <div className="hidden lg:flex w-5/12 shrink-0 z-20 items-center justify-start">
               <div className="w-[85%] lg:h-[450px] relative overflow-hidden shadow-xl">
@@ -420,9 +428,9 @@ export default function NousConnaitrePage() {
                     </div>
                   </div>
 
-                  <div className="mt-12 text-right sm:text-left">
-                    <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right sm:text-left">
-                      <span className="max-w-[16ch] sm:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
+                  <div className="mt-12 flex justify-end">
+                    <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right">
+                      <span className="max-w-[16ch] portrait:sm:max-w-[24ch] landscape:max-w-[22ch] xl:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
                       <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                       <ChevronRight size={18} className="-ml-2" />
                     </Link>

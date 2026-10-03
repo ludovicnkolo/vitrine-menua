@@ -28,7 +28,7 @@ const SolutionSection = ({ id, title, intro, desc, isReversed, listTitle, listIt
             <h4 className="text-center text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
               {listTitle}
             </h4>
-            <BulletList 
+            <BulletList
               gridCols="grid-cols-1 md:grid-cols-2"
               gapX="gap-x-8" gapY="gap-y-6"
               fontWeight="font-medium"
@@ -42,19 +42,20 @@ const SolutionSection = ({ id, title, intro, desc, isReversed, listTitle, listIt
 };
 
 export default function NosSolutionsPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const isEN = lang === 'EN';
 
   return (
     <main className="flex flex-col w-full min-h-screen">
-      
+
       {/* ── 4.1 HERO ── */}
       <section className="relative w-full min-h-screen portrait:sm:min-h-0 portrait:sm:h-[70svh] flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="/img/solutions-hero.webp" 
-            alt="Nos solutions" 
-            className="w-full h-full object-cover object-[center_35%]" 
-            onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} 
+          <img
+            src="/img/solutions-hero.webp"
+            alt="Nos solutions"
+            className="w-full h-full object-cover object-[center_35%]"
+            onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
@@ -72,7 +73,13 @@ export default function NosSolutionsPage() {
             </p>
             <div className="mt-4">
               <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-left px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
-                <span className="max-w-[16ch] sm:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
+                <span className={`hidden xl:!inline ${!isEN ? 'sm:inline' : 'sm:hidden'}`}>
+                  {t("Présenter votre besoin", "Tell us about your requirements")}
+                </span>
+                <span className={`flex flex-col items-start xl:!hidden ${!isEN ? 'sm:hidden' : 'sm:flex'}`}>
+                  <span>{t("Présenter votre", "Tell us about your")}</span>
+                  <span>{t("besoin", "requirements")}</span>
+                </span>
                 <ArrowRight size={14} className="shrink-0 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -92,19 +99,19 @@ export default function NosSolutionsPage() {
             </p>
           </div>
           <div className="flex flex-col lg:flex-row lg:items-center">
-            
+
             {/* Left Image */}
             <div className="hidden lg:flex w-5/12 shrink-0 z-30 relative items-center justify-end">
               <div className="w-[85%] lg:h-[360px] relative overflow-hidden shadow-xl">
-                <img 
-                  src="/img/solutions_3.webp" 
-                  alt="Nos solutions" 
-                  className="w-full h-full object-cover shadow-xl" 
-                  onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} 
+                <img
+                  src="/img/solutions_3.webp"
+                  alt="Nos solutions"
+                  className="w-full h-full object-cover shadow-xl"
+                  onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                 />
               </div>
             </div>
-            
+
             {/* Right Card */}
             <div className="w-full lg:w-8/12 lg:-ml-16 flex items-center z-10">
               <div className="w-full bg-[#e8e1d7] shadow-xl px-6 portrait:sm:px-10 lg:pr-14 lg:pl-28 py-10 lg:py-14">
@@ -113,7 +120,7 @@ export default function NosSolutionsPage() {
                   <h2 className="text-[#141824] font-bold text-[1.3rem] md:text-[1.5rem] leading-tight mb-4 uppercase tracking-wider">
                     {t("Une approche sur mesure", "A tailored approach")}
                   </h2>
-                  
+
                   {/* Mobile Image */}
                   <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                     <img
@@ -123,7 +130,7 @@ export default function NosSolutionsPage() {
                       onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                     />
                   </div>
-                  
+
                   <p className="text-[1.1rem] font-medium">
                     {formatBrand(t(
                       "MENUA CONSULTING conçoit des solutions d’externalisation opérationnelle sur mesure pour accompagner les entreprises, cabinets et organisations dans la gestion de leurs fonctions back et middle office.",
@@ -147,7 +154,7 @@ export default function NosSolutionsPage() {
 
 
       {/* ── 4.3 URGENCE ── */}
-      <SolutionSection 
+      <SolutionSection
         id="urgence"
         bgClass="bg-[#141824]"
         topDecoClass="absolute top-0 right-0 w-1/2 h-full bg-[#1a1f2e] skew-x-[-10deg] origin-bottom-right hidden lg:block"
@@ -179,75 +186,75 @@ export default function NosSolutionsPage() {
       <section id="duree" className="w-full bg-white py-16 lg:py-20 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16">
           <div className="w-full bg-[#f5f7fa] rounded-sm py-12 px-6 lg:px-12 flex flex-col lg:flex-row gap-12 lg:gap-16 relative z-10">
-          
-          {/* Left Col: Title & Intro */}
-          <div className="w-full lg:w-4/12">
-            <div className="w-16 h-[3px] bg-[#141824] mb-5" />
-            <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
-              {t("Durée", "Flexibility")}
-            </h2>
-            <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
-              {formatBrand(t("MENUA CONSULTING propose des formats d’intervention flexibles, adaptés aussi bien aux missions courtes qu’aux besoins récurrents.", "MENUA CONSULTING offers flexible support arrangements adapted to short missions as well as recurring needs."))}
-            </p>
-            <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
-              {t("La durée de la mission est définie selon le périmètre, les volumes à traiter, les objectifs attendus et les contraintes propres à l’organisation du client.", "Our support arrangements adjust to the length of your requirement, whether for a specific, time-bound engagement or for an ongoing operational partnership.")}
-            </p>
-            
-            {/* Mobile Image */}
-            <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[280px] portrait:sm:h-[320px] my-6 rounded-sm shadow-md overflow-hidden">
-              <img src="/img/solutions_2.webp" alt="Durée" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
-            </div>
-            <div className="w-full aspect-[4/5] rounded-sm overflow-hidden shadow-lg hidden lg:block">
-              <img 
-                src="/img/solutions_2.webp" 
-                alt="Durée" 
-                className="w-full h-full object-cover" 
-                onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} 
-              />
-            </div>
-          </div>
 
-          {/* Right Col: Pillars */}
-          <div className="w-full lg:w-8/12 grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Mission courte", "One-off engagement")}</h4>
-              <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
-                {t("pour traiter un besoin identifié sur une période limitée", "to address a specific need over a limited period")}
+            {/* Left Col: Title & Intro */}
+            <div className="w-full lg:w-4/12">
+              <div className="w-16 h-[3px] bg-[#141824] mb-5" />
+              <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">
+                {t("Durée", "Flexibility")}
+              </h2>
+              <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
+                {formatBrand(t("MENUA CONSULTING propose des formats d’intervention flexibles, adaptés aussi bien aux missions courtes qu’aux besoins récurrents.", "MENUA CONSULTING offers flexible support arrangements adapted to short missions as well as recurring needs."))}
               </p>
-            </div>
-            <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Mission longue", "Long-term partnership")}</h4>
-              <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
-                {t("pour accompagner la gestion d’un portefeuille de dossiers", "to support the ongoing management of a portfolio of files")}
+              <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
+                {t("La durée de la mission est définie selon le périmètre, les volumes à traiter, les objectifs attendus et les contraintes propres à l’organisation du client.", "Our support arrangements adjust to the length of your requirement, whether for a specific, time-bound engagement or for an ongoing operational partnership.")}
               </p>
-            </div>
-            <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Intervention ponctuelle", "Support during transition")}</h4>
-              <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
-                {t("sur un volume de dossiers comptables, financiers, patrimoniaux, conformité ou administratifs", "managing volumes of accounting, financial, wealth-management, compliance or administrative files")}
-              </p>
-            </div>
-            <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Externalisation récurrente", "Recurring outsourcing")}</h4>
-              <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
-                {t("pour confier durablement tout ou partie de certaines activités opérationnelles", "to entrust all or part of certain operational activities on a long-term basis")}
-              </p>
+
+              {/* Mobile Image */}
+              <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[280px] portrait:sm:h-[320px] my-6 rounded-sm shadow-md overflow-hidden">
+                <img src="/img/solutions_2.webp" alt="Durée" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
+              </div>
+              <div className="w-full aspect-[4/5] rounded-sm overflow-hidden shadow-lg hidden lg:block">
+                <img
+                  src="/img/solutions_2.webp"
+                  alt="Durée"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
+                />
+              </div>
             </div>
 
-            <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm md:col-span-1">
-              <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Ajustement du dispositif", "Adjustable arrangements")}</h4>
-              <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
-                {t("selon l’évolution de la charge et des priorités du client", "adapting to changes in the client’s workload and priorities")}
-              </p>
+            {/* Right Col: Pillars */}
+            <div className="w-full lg:w-8/12 grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
+                <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Mission courte", "One-off engagement")}</h4>
+                <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
+                  {t("pour traiter un besoin identifié sur une période limitée", "to address a specific need over a limited period")}
+                </p>
+              </div>
+              <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
+                <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Mission longue", "Long-term partnership")}</h4>
+                <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
+                  {t("pour accompagner la gestion d’un portefeuille de dossiers", "to support the ongoing management of a portfolio of files")}
+                </p>
+              </div>
+              <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
+                <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Intervention ponctuelle", "Support during transition")}</h4>
+                <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
+                  {t("sur un volume de dossiers comptables, financiers, patrimoniaux, conformité ou administratifs", "managing volumes of accounting, financial, wealth-management, compliance or administrative files")}
+                </p>
+              </div>
+              <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
+                <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Externalisation récurrente", "Recurring outsourcing")}</h4>
+                <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
+                  {t("pour confier durablement tout ou partie de certaines activités opérationnelles", "to entrust all or part of certain operational activities on a long-term basis")}
+                </p>
+              </div>
+
+              <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm md:col-span-1">
+                <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Ajustement du dispositif", "Adjustable arrangements")}</h4>
+                <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
+                  {t("selon l’évolution de la charge et des priorités du client", "adapting to changes in the client’s workload and priorities")}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
         </div>
       </section>
 
 
       {/* ── 4.5 VOLUME ── */}
-      <SolutionSection 
+      <SolutionSection
         id="volume"
         bgClass="bg-[#141824]"
         topDecoClass="absolute top-0 left-0 w-1/2 h-full bg-[#1a1f2e] skew-x-[10deg] origin-bottom-left hidden lg:block"
@@ -278,7 +285,7 @@ export default function NosSolutionsPage() {
       <div className="w-full h-16 lg:h-20 bg-white"></div>
 
       {/* ── 4.6 MODE D'ORGANISATION ── */}
-      <SolutionSection 
+      <SolutionSection
         id="organisation"
         bgClass="bg-[#e8e1d7]"
         topDecoClass="absolute top-0 right-0 w-1/2 h-full bg-[#e0d8cd] skew-x-[-10deg] origin-bottom-right hidden lg:block"
@@ -309,7 +316,7 @@ export default function NosSolutionsPage() {
       <section id="langues" className="relative w-full bg-white py-16 lg:py-20 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
-            
+
             {/* Langues Card */}
             <div className="bg-[#141824] p-10 lg:p-12 shadow-xl border-t-4 border-t-[#e8e1d7] flex flex-col justify-center">
               <h3 className="text-white font-bold text-[1.5rem] mb-6">{t("Langues", "Languages")}</h3>

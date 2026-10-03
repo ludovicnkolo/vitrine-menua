@@ -79,7 +79,8 @@ const DarkNeedSection = ({ id, bgClass, topDecoClass, titleDecoClass, title, int
 );
 
 export default function VosBesoinsPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const isEN = lang === 'EN';
 
   return (
     <main className="flex flex-col w-full min-h-screen">
@@ -109,7 +110,13 @@ export default function VosBesoinsPage() {
             </p>
             <div className="mt-4">
               <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-left px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
-                <span className="max-w-[16ch] sm:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
+                <span className={`hidden xl:!inline ${!isEN ? 'sm:inline' : 'sm:hidden'}`}>
+                  {t("Présenter votre besoin", "Tell us about your requirements")}
+                </span>
+                <span className={`flex flex-col items-start xl:!hidden ${!isEN ? 'sm:hidden' : 'sm:flex'}`}>
+                  <span>{t("Présenter votre", "Tell us about your")}</span>
+                  <span>{t("besoin", "requirements")}</span>
+                </span>
                 <ArrowRight size={14} className="shrink-0 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -166,9 +173,9 @@ export default function VosBesoinsPage() {
                     "Our services are designed to meet one-off, recurring or high-volume requirements. This includes file processing, document review, reporting, operational monitoring, data updates, deliverable preparation and temporary team reinforcement."
                   )}
                 </p>
-                <div className="mt-8 text-right sm:text-left">
-                  <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right sm:text-left">
-                    <span className="max-w-[16ch] sm:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
+                <div className="mt-8 flex justify-end">
+                  <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right">
+                    <span className="max-w-[16ch] portrait:sm:max-w-[24ch] landscape:max-w-[22ch] xl:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
                     <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                     <ChevronRight size={18} className="-ml-2" />
                   </Link>

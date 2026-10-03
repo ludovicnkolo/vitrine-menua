@@ -83,7 +83,13 @@ export default function ActualitesPage() {
             </p>
             <div className="mt-4">
               <Link href="#articles" className="inline-flex items-center gap-2 text-left px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
-                <span className="max-w-[16ch] sm:max-w-none">{t("Découvrir nos articles", "Discover our articles")}</span>
+                <span className={`hidden xl:!inline ${!isEN ? 'sm:inline' : 'sm:hidden'}`}>
+                  {t("Découvrir nos articles", "Discover our articles")}
+                </span>
+                <span className={`flex flex-col items-start xl:!hidden ${!isEN ? 'sm:hidden' : 'sm:flex'}`}>
+                  <span>{t("Découvrir nos", "Discover our")}</span>
+                  <span>{t("articles", "articles")}</span>
+                </span>
                 <ArrowRight size={14} className="shrink-0 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -190,8 +196,8 @@ export default function ActualitesPage() {
                   key={filter.key}
                   onClick={() => setActiveFilter(filter.key)}
                   className={`px-4 py-2 text-[0.7rem] font-bold tracking-widest uppercase transition-colors border ${activeFilter === filter.key
-                      ? "bg-[#141824] text-white border-[#141824]"
-                      : "bg-white text-[#141824] border-[#e8e1d7] hover:border-[#141824]"
+                    ? "bg-[#141824] text-white border-[#141824]"
+                    : "bg-white text-[#141824] border-[#e8e1d7] hover:border-[#141824]"
                     }`}
                 >
                   {t(filter.fr, filter.en)}

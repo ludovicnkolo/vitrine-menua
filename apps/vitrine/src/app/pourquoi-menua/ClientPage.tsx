@@ -7,19 +7,20 @@ import { ArrowRight } from "lucide-react";
 import BulletList from "@/components/BulletList";
 
 export default function PourquoiMenuaPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const isEN = lang === 'EN';
 
   return (
     <main className="flex flex-col w-full min-h-screen">
-      
+
       {/* ── 5.1 HERO ── */}
       <section className="relative w-full min-h-screen portrait:sm:min-h-0 portrait:sm:h-[70svh] flex flex-col justify-end overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="/img/pourquoi-hero.webp" 
-            alt="Pourquoi Menua Consulting" 
-            className="w-full h-full object-cover object-[center_35%]" 
-            onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} 
+          <img
+            src="/img/pourquoi-hero.webp"
+            alt="Pourquoi Menua Consulting"
+            className="w-full h-full object-cover object-[center_35%]"
+            onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
         </div>
@@ -37,7 +38,13 @@ export default function PourquoiMenuaPage() {
             </p>
             <div className="mt-4">
               <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-left px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
-                <span className="max-w-[16ch] sm:max-w-none">{t("Présenter votre besoin", "Submit your need")}</span>
+                <span className={`hidden xl:!inline ${!isEN ? 'sm:inline' : 'sm:hidden'}`}>
+                  {t("Présenter votre besoin", "Submit your need")}
+                </span>
+                <span className={`flex flex-col items-start xl:!hidden ${!isEN ? 'sm:hidden' : 'sm:flex'}`}>
+                  <span>{t("Présenter votre", "Submit your")}</span>
+                  <span>{t("besoin", "need")}</span>
+                </span>
                 <ArrowRight size={14} className="shrink-0 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -85,7 +92,7 @@ export default function PourquoiMenuaPage() {
                     onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                   />
                 </div>
-                
+
                 <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">
                   {formatBrand(t(
                     "MENUA CONSULTING accompagne les organisations confrontées à des enjeux d’exécution opérationnelle exigeants.",
@@ -118,36 +125,36 @@ export default function PourquoiMenuaPage() {
               <div className="w-full bg-white shadow-xl px-6 portrait:sm:px-10 lg:pr-14 lg:pl-28 py-10 lg:py-14 border border-[#e8e1d7]">
                 <div className="w-16 h-[3px] bg-[#141824] mb-5" />
                 <h2 className="text-[1.3rem] md:text-[1.5rem] text-[#141824] font-bold uppercase mb-8 leading-tight">{t("Bénéfices", "Benefits")}</h2>
-              
-              {/* Mobile Image */}
-              <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
-                <img src="/img/benefices.webp" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
-              </div>
-              <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
-                {formatBrand(t(
-                  "En externalisant certaines fonctions back et middle office avec MENUA CONSULTING, vos équipes peuvent mieux répartir leur charge, renforcer la continuité opérationnelle et structurer le suivi des dossiers.",
-                  "By outsourcing selected back and middle office functions to MENUA CONSULTING, your teams can distribute their workload more effectively, strengthen operational continuity and structure case-handling."
-                ))}
-              </p>
-              <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
-                {t(
-                  "Cette organisation contribue à la maîtrise des traitements, à la qualité de service et à la fidélisation des clients.",
-                  "This approach supports tighter processing controls, enhanced service quality and stronger client retention."
-                )}
-              </p>
-              <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6 text-center">{t("Bénéfices clés :", "Key benefits:")}</h4>
-              <BulletList items={[
-                t("gain de temps", "Time savings"),
-                t("meilleure maîtrise de la charge interne", "Tighter control over internal workload"),
-                t("productivité renforcée", "Enhanced productivity"),
-                t("meilleure continuité opérationnelle", "Improved operational continuity"),
-                t("fiabilité accrue des traitements", "Greater processing reliability"),
-                t("meilleure absorption des pics d’activité", "Better absorption of activity spikes"),
-                t("suivi plus structuré des dossiers", "More structured file monitoring"),
-                t("amélioration de la qualité de service", "Improved service quality"),
-                t("contribution à la fidélisation de vos clients", "Contribution to client retention"),
-                t("contribution à la continuité de l’activité", "Contribution to business continuity")
-              ]} />
+
+                {/* Mobile Image */}
+                <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
+                  <img src="/img/benefices.webp" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
+                </div>
+                <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
+                  {formatBrand(t(
+                    "En externalisant certaines fonctions back et middle office avec MENUA CONSULTING, vos équipes peuvent mieux répartir leur charge, renforcer la continuité opérationnelle et structurer le suivi des dossiers.",
+                    "By outsourcing selected back and middle office functions to MENUA CONSULTING, your teams can distribute their workload more effectively, strengthen operational continuity and structure case-handling."
+                  ))}
+                </p>
+                <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">
+                  {t(
+                    "Cette organisation contribue à la maîtrise des traitements, à la qualité de service et à la fidélisation des clients.",
+                    "This approach supports tighter processing controls, enhanced service quality and stronger client retention."
+                  )}
+                </p>
+                <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6 text-center">{t("Bénéfices clés :", "Key benefits:")}</h4>
+                <BulletList items={[
+                  t("gain de temps", "Time savings"),
+                  t("meilleure maîtrise de la charge interne", "Tighter control over internal workload"),
+                  t("productivité renforcée", "Enhanced productivity"),
+                  t("meilleure continuité opérationnelle", "Improved operational continuity"),
+                  t("fiabilité accrue des traitements", "Greater processing reliability"),
+                  t("meilleure absorption des pics d’activité", "Better absorption of activity spikes"),
+                  t("suivi plus structuré des dossiers", "More structured file monitoring"),
+                  t("amélioration de la qualité de service", "Improved service quality"),
+                  t("contribution à la fidélisation de vos clients", "Contribution to client retention"),
+                  t("contribution à la continuité de l’activité", "Contribution to business continuity")
+                ]} />
               </div>
             </div>
           </div>
@@ -160,9 +167,9 @@ export default function PourquoiMenuaPage() {
       <section id="notre-differenciation" className="relative w-full bg-[#141824] py-16 lg:py-20 scroll-mt-20 overflow-hidden">
         {/* Subtle geometric accent background on the left */}
         <div className="absolute top-0 left-0 w-1/2 h-full bg-[#1a1f2e] skew-x-[10deg] origin-bottom-left hidden lg:block" />
-        
+
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-12 relative z-10 max-w-[1200px] mx-auto flex flex-col lg:flex-row-reverse gap-16 lg:gap-24 items-center">
-          
+
           {/* Narrative (Right side visually) */}
           <div className="w-full lg:w-5/12 flex flex-col justify-center">
             <div className="w-16 h-[3px] bg-[#e8e1d7] mb-5" />
@@ -189,7 +196,7 @@ export default function PourquoiMenuaPage() {
               <h4 className="text-[#141824] font-bold text-[1.1rem] uppercase tracking-widest mb-8">
                 {t("Nos différences :", "Our differences:")}
               </h4>
-              <BulletList 
+              <BulletList
                 gridCols="grid-cols-1 md:grid-cols-2"
                 gapX="gap-x-8" gapY="gap-y-6"
                 fontWeight="font-medium"
@@ -216,7 +223,7 @@ export default function PourquoiMenuaPage() {
       <section id="nos-engagements" className="relative w-full bg-[#f5f7fa] py-16 lg:py-20 scroll-mt-20">
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 landscape:lg:px-16">
           <div className="flex flex-col lg:flex-row-reverse lg:items-center">
-            
+
             {/* Right Image */}
             <div className="hidden lg:block w-5/12 lg:h-[360px] shrink-0 relative z-30 shadow-xl overflow-hidden">
               <img
@@ -244,7 +251,7 @@ export default function PourquoiMenuaPage() {
                     onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                   />
                 </div>
-                
+
                 <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
                   {formatBrand(t(
                     "MENUA CONSULTING s’engage sur l’essentiel : la qualité des livrables, le respect des délais, la traçabilité des opérations et une communication claire avec vos équipes.",
@@ -257,9 +264,9 @@ export default function PourquoiMenuaPage() {
                     "Our services rely on four-eyes review, structured workflows, appropriately trained resources, and strict adherence to your operational, quality and regulatory requirements."
                   )}
                 </p>
-                
+
                 <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{t("Nos engagements :", "Our commitments:")}</h4>
-                <BulletList 
+                <BulletList
                   gridCols="grid-cols-1"
                   gapY="space-y-3"
                   items={[

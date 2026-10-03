@@ -55,7 +55,7 @@ export default function Home() {
         </div>
 
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 relative z-10 pt-40 md:pt-48 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-28 portrait:sm:pb-20 landscape:pb-24 lg:pb-10 landscape:lg:pb-40 xl:pb-16 mt-8 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
-          <div className="max-w-4xl lg:max-w-6xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-12 landscape:ml-6 landscape:lg:-ml-12">
+          <div className="max-w-4xl lg:max-w-6xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-12 landscape:ml-6 landscape:lg:-ml-4">
             <h1 className="text-white text-[1.25rem] portrait:sm:text-[1.5rem] md:text-[2.5rem] portrait:md:text-[1.65rem] landscape:text-[1.25rem] landscape:lg:text-[1.88rem] xl:text-[2.75rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               <span className="lg:whitespace-nowrap">
                 {t("Externalisation opérationnelle des", "Operational outsourcing")}

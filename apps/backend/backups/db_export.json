@@ -63,9 +63,9 @@
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
-      "lastLogin": "2026-10-02T16:11:03.508Z",
+      "lastLogin": "2026-10-03T18:01:48.269Z",
       "createdAt": "2026-09-28T09:31:02.401Z",
-      "updatedAt": "2026-10-02T16:11:03.510Z"
+      "updatedAt": "2026-10-03T18:01:48.271Z"
     },
     {
       "id": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
@@ -83,9 +83,9 @@
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
-      "lastLogin": "2026-09-29T20:19:09.447Z",
+      "lastLogin": "2026-10-03T18:12:09.047Z",
       "createdAt": "2026-09-28T09:32:23.212Z",
-      "updatedAt": "2026-09-29T20:19:09.448Z"
+      "updatedAt": "2026-10-03T18:12:09.048Z"
     },
     {
       "id": "db7be20d-5eee-4acc-872b-f47bdac08ec3",
@@ -113,19 +113,19 @@
       "password": "$2a$10$aWwK9BDJt6jr8CsoNgSj7enTY1Hhln7oDY7eTzT.KL1.ql0J1Osca",
       "name": "Relecteur 1",
       "roleId": "7f685243-dda5-4117-a675-d4a7364c7a66",
-      "telephone": "",
-      "lieuResidence": "",
-      "experienceCle": "",
+      "telephone": "6575947393",
+      "lieuResidence": "svnfngk",
+      "experienceCle": "bjbgb",
       "langues": null,
       "formations": null,
       "profile": "",
       "idCardUrl": null,
       "resetToken": null,
       "resetTokenExpiry": null,
-      "isBlocked": true,
-      "lastLogin": null,
+      "isBlocked": false,
+      "lastLogin": "2026-10-03T18:02:56.651Z",
       "createdAt": "2026-09-28T09:32:23.227Z",
-      "updatedAt": "2026-10-01T13:26:29.073Z"
+      "updatedAt": "2026-10-03T18:02:56.652Z"
     },
     {
       "id": "524db786-ff0b-42a2-8d2a-ee0adac87e83",
@@ -163,9 +163,9 @@
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
-      "lastLogin": null,
+      "lastLogin": "2026-10-03T18:17:06.023Z",
       "createdAt": "2026-09-28T09:32:23.245Z",
-      "updatedAt": "2026-09-28T09:32:23.245Z"
+      "updatedAt": "2026-10-03T18:17:06.024Z"
     },
     {
       "id": "d26d5cf9-7ee5-4945-9995-8f00dd0da58b",
@@ -203,9 +203,9 @@
       "resetToken": null,
       "resetTokenExpiry": null,
       "isBlocked": false,
-      "lastLogin": null,
+      "lastLogin": "2026-10-03T18:19:24.495Z",
       "createdAt": "2026-09-28T09:32:23.259Z",
-      "updatedAt": "2026-09-28T09:32:23.259Z"
+      "updatedAt": "2026-10-03T18:19:24.496Z"
     },
     {
       "id": "00c17065-1701-4012-89fb-c93a669ce5d1",
@@ -283,12 +283,12 @@
       "nomPrenom": "Chaney Schneider",
       "email": "ludovicnkolo01@gmail.com",
       "telephone": "+1 (271) 777-5839",
-      "priority": "NORMAL",
+      "priority": "Normal",
       "description": "Aperiam recusandae ",
       "raisonSocial": null,
       "objet": "Demande de collaboration",
       "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de profil</strong> : <span>Particulier</span><br/>\n        \n        <strong>Nom complet</strong> : <span>Schneider Chaney</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (271) 777-5839</span><br/>\n        <strong>Expérience</strong> : <span>Moins de 2 ans</span><br/>\n        <strong>Langues</strong> : <span>Anglais, Coréen</span><br/>\n        <strong>Localisation</strong> : <span>Sunt in exercitation</span><br/>\n        <strong>Disponibilité</strong> : <span>Immédiate</span><br/>\n        <strong>LinkedIn / Portfolio</strong> : <span><a href=\"https://www.tixuz.us\" style=\"color: #141824;\">https://www.tixuz.us</a></span>\n      </div>\n      <strong>Compétences clés</strong> : <div><ul><li>Back et middle office</li><li>Comptabilité</li></ul></div><br/>\n      <strong>Message / Motivations</strong> : <div>\n      Aperiam recusandae \n      </div>\n    ",
-      "status": "NOUVEAU",
+      "status": "RETENU",
       "isAnonyme": true,
       "verifaliaJobId": null,
       "verifaliaStatus": "COMPLETED_VALID",
@@ -301,11 +301,11 @@
       "assignedToId": null,
       "receivedAt": "2026-09-28T09:33:59.247Z",
       "createdAt": "2026-09-28T09:33:59.247Z",
-      "updatedAt": "2026-09-28T09:33:59.247Z",
+      "updatedAt": "2026-10-03T15:31:51.824Z",
       "dateRappel": null,
       "noteRappel": null,
-      "dateEntretien": null,
-      "lienVisio": null
+      "dateEntretien": "2026-10-14T11:45:00.000Z",
+      "lienVisio": "https://www.kinigne.cm"
     },
     {
       "id": "a79b4675-e161-4c70-a8c5-0602b466af43",
@@ -320,7 +320,7 @@
       "raisonSocial": " d vjdbv",
       "objet": "Demande de collaboration",
       "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de profil</strong> : <span>Entreprise (B2B)</span><br/>\n        <strong>Société</strong> : <span> d vjdbv</span><br/>\n        <strong>Nom complet</strong> : <span>Mullen Davis</span><br/>\n        <strong>Email</strong> : <span>ledurmarc045@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (687) 613-9315</span><br/>\n        <strong>Expérience</strong> : <span>Plus de 10 ans</span><br/>\n        <strong>Langues</strong> : <span>Anglais, Coréen</span><br/>\n        <strong>Localisation</strong> : <span>Duis voluptate saepe</span><br/>\n        <strong>Disponibilité</strong> : <span>Immédiate</span><br/>\n        <strong>LinkedIn / Portfolio</strong> : <span><a href=\"https://www.tydygibov.ca\" style=\"color: #141824;\">https://www.tydygibov.ca</a></span>\n      </div>\n      <strong>Compétences clés</strong> : <div><ul><li>Support opérationnel CGP</li></ul></div><br/>\n      <strong>Message / Motivations</strong> : <div>\n      Officia voluptas exc\n      </div>\n    ",
-      "status": "ENTRETIEN",
+      "status": "REFUSE",
       "isAnonyme": true,
       "verifaliaJobId": null,
       "verifaliaStatus": "COMPLETED_VALID",
@@ -333,7 +333,7 @@
       "assignedToId": null,
       "receivedAt": "2026-09-28T09:34:26.176Z",
       "createdAt": "2026-09-28T09:34:26.176Z",
-      "updatedAt": "2026-09-29T12:09:07.677Z",
+      "updatedAt": "2026-10-03T15:20:35.051Z",
       "dateRappel": "2026-09-29T23:00:00.000Z",
       "noteRappel": " partenaire important",
       "dateEntretien": "2028-02-11T23:00:00.000Z",
@@ -486,14 +486,14 @@
       "assignedToId": "2541799f-86de-4071-86c7-7110615bf37b",
       "relecteurId": null,
       "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
-      "description": "Illum ad et pariatu\n\nAmet non maiores ir",
-      "echeance": "2026-09-29T23:00:00.000Z",
+      "description": "Objet: Illum ad et pariatu\nConsignes: Amet non maiores ir",
+      "echeance": "2026-10-14T23:00:00.000Z",
       "status": "NOUVEAU",
       "previousStatus": "NOUVEAU",
       "attachment": null,
       "dossierMissionId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
       "createdAt": "2026-09-28T22:12:41.536Z",
-      "updatedAt": "2026-09-29T16:37:21.556Z",
+      "updatedAt": "2026-10-03T15:28:51.833Z",
       "parentMissionId": null
     }
   ],
@@ -502,11 +502,11 @@
       "id": "4ee68f10-8f26-40bc-aecb-786ab1856458",
       "reference": "TCH-02",
       "missionId": "e8f3e132-c4ba-49a3-8b4f-be2311767f1f",
-      "assignedToId": "d26d5cf9-7ee5-4945-9995-8f00dd0da58b",
+      "assignedToId": "abddaf00-28df-4cca-8f1a-fa4c21b5eb2c",
       "relecteurId": "db7be20d-5eee-4acc-872b-f47bdac08ec3",
       "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
-      "description": "Objet: Excepteur sunt inven\n\nConsignes: Consequuntur labore ",
-      "echeance": "2026-09-29T23:00:00.000Z",
+      "description": "Objet: Excepteur sunt inven\nConsignes: Consequuntur labore ",
+      "echeance": "2026-10-19T23:00:00.000Z",
       "status": "NOUVEAU",
       "previousStatus": "NOUVEAU",
       "attachment": null,
@@ -514,7 +514,7 @@
       "managerFeedback": null,
       "dossierTacheId": null,
       "createdAt": "2026-09-28T22:14:20.399Z",
-      "updatedAt": "2026-09-29T16:37:21.562Z"
+      "updatedAt": "2026-10-03T18:36:41.777Z"
     }
   ],
   "documents": [
@@ -1105,6 +1105,193 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-10-02T08:33:18.231Z"
+    },
+    {
+      "id": "8b692a76-bf8e-464f-a3bd-9f1eb4eda98a",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T09:37:48.615Z"
+    },
+    {
+      "id": "55ecb00b-d89c-46b7-afd2-af6ae32764c5",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T10:18:13.056Z"
+    },
+    {
+      "id": "fbd79811-e897-48d1-aa82-6d60c88a7b18",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_TACHE",
+      "targetId": "4ee68f10-8f26-40bc-aecb-786ab1856458",
+      "targetType": "TACHE",
+      "details": "Tâche modifiée (Statut: NOUVEAU)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T15:27:05.747Z"
+    },
+    {
+      "id": "00deb7ed-9c80-4766-82ca-fb55b4b144c3",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_MISSION",
+      "targetId": "e8f3e132-c4ba-49a3-8b4f-be2311767f1f",
+      "targetType": "MISSION",
+      "details": "Mission modifiée (Statut: NOUVEAU)",
+      "dossierId": "f82c9322-4d40-4d2f-9a0c-4f4f7e427244",
+      "formulaireId": null,
+      "createdAt": "2026-10-03T15:28:51.852Z"
+    },
+    {
+      "id": "898f1d93-77a4-4012-8ca3-8d8214a6a338",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T16:46:52.344Z"
+    },
+    {
+      "id": "206eb9eb-a532-4329-9827-7326225b3e94",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_UTILISATEUR",
+      "targetId": "91860bc8-7a0e-4244-ae93-0761cf6f9db2",
+      "targetType": "USER",
+      "details": "Utilisateur modifié : Relecteur 1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T18:02:49.240Z"
+    },
+    {
+      "id": "45ad5e2d-a76d-4293-8bea-df23c9483189",
+      "userId": "91860bc8-7a0e-4244-ae93-0761cf6f9db2",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "91860bc8-7a0e-4244-ae93-0761cf6f9db2",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T18:02:56.663Z"
+    },
+    {
+      "id": "382f3eb3-f0b7-41fe-9632-d7b425fb1534",
+      "userId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T18:12:09.054Z"
+    },
+    {
+      "id": "3c1baf17-350c-4243-8eb3-adb3fa838e05",
+      "userId": "abddaf00-28df-4cca-8f1a-fa4c21b5eb2c",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "abddaf00-28df-4cca-8f1a-fa4c21b5eb2c",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T18:17:06.034Z"
+    },
+    {
+      "id": "776da802-384c-4e05-a9a4-529378481453",
+      "userId": "a54d43bc-2232-46f5-a2c1-2856859c4aa2",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "a54d43bc-2232-46f5-a2c1-2856859c4aa2",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T18:19:24.505Z"
+    },
+    {
+      "id": "509f996a-df54-4d5f-8cf0-b9553d690d9c",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_TACHE",
+      "targetId": "4ee68f10-8f26-40bc-aecb-786ab1856458",
+      "targetType": "TACHE",
+      "details": "Tâche modifiée (Statut: NOUVEAU)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T18:33:19.848Z"
+    },
+    {
+      "id": "4622422c-ffea-45ac-b24b-695b1425e867",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_TACHE",
+      "targetId": "4ee68f10-8f26-40bc-aecb-786ab1856458",
+      "targetType": "TACHE",
+      "details": "Tâche modifiée (Statut: NOUVEAU)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T18:36:41.800Z"
+    },
+    {
+      "id": "ef96590d-15f3-4479-baff-b162da2ab244",
+      "userId": "91860bc8-7a0e-4244-ae93-0761cf6f9db2",
+      "action": "DECONNEXION",
+      "targetId": "91860bc8-7a0e-4244-ae93-0761cf6f9db2",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T19:11:21.720Z"
+    },
+    {
+      "id": "bd304bd7-ca14-495a-8548-6cb76ce3445f",
+      "userId": "a54d43bc-2232-46f5-a2c1-2856859c4aa2",
+      "action": "DECONNEXION",
+      "targetId": "a54d43bc-2232-46f5-a2c1-2856859c4aa2",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T19:21:33.436Z"
+    },
+    {
+      "id": "6c747e8b-309a-481c-b37e-621606ec40b1",
+      "userId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "action": "DECONNEXION",
+      "targetId": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T19:34:02.209Z"
+    },
+    {
+      "id": "1f9589ac-2031-4839-8685-e7576db8c2ad",
+      "userId": "abddaf00-28df-4cca-8f1a-fa4c21b5eb2c",
+      "action": "DECONNEXION",
+      "targetId": "abddaf00-28df-4cca-8f1a-fa4c21b5eb2c",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T19:37:32.955Z"
+    },
+    {
+      "id": "8010f8c7-75ed-4fdc-8cf1-02d525f799d9",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-03T20:16:57.452Z"
     }
   ],
   "messagePersonnels": [

@@ -66,5 +66,9 @@
   "ERROR_FORM_DISABLED": {
     "fr": "Ce formulaire est temporairement indisponible.",
     "en": "This form is temporarily unavailable."
+  },
+  "ERROR_INVALID_CAPTCHA": {
+    "fr": "La vérification de sécurité a échoué.",
+    "en": "Security verification failed."
   }
 }

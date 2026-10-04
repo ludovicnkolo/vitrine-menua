@@ -165,7 +165,7 @@ const InboxPage = ({ userRole }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createTaskModal, setCreateTaskModal] = useState(false);
-  const [deleteMsg, setDeleteMsg] = useState(null);
+
   const [newTaskFile, setNewTaskFile] = useState(null);
   const [isNewDossier, setIsNewDossier] = useState(true);
   const [dossierFile, setDossierFile] = useState(null);
@@ -761,22 +761,25 @@ const InboxPage = ({ userRole }) => {
     }
   };
 
-  const confirmDelete = async () => {
-    if (!deleteMsg) return;
-    try {
-      const res = await apiFetch(
-        `/api/crm/messages/${encodeURIComponent(deleteMsg.id)}`,
-        "DELETE",
-      );
-
-      if (!res.ok) throw new Error("Erreur lors de la suppression");
-
-      showToast("Message supprimé avec succès.", "success");
-      setDeleteMsg(null);
-      fetchMessages();
-    } catch (err) {
-      console.error(err);
-      showToast("Impossible de supprimer le message.", "error");
+  const handleDeleteMessage = async (msgToDelete) => {
+    if (
+      await window.customConfirm(
+        `Êtes-vous sûr de vouloir supprimer le message de ${msgToDelete.nomPrenom} ?\n\nCette action est irréversible.`,
+        "Confirmer la suppression"
+      )
+    ) {
+      try {
+        const res = await apiFetch(
+          `/api/crm/messages/${encodeURIComponent(msgToDelete.id)}`,
+          "DELETE",
+        );
+        if (!res.ok) throw new Error("Erreur lors de la suppression");
+        showToast("Message supprimé avec succès.", "success");
+        fetchMessages();
+      } catch (err) {
+        console.error(err);
+        showToast("Impossible de supprimer le message.", "error");
+      }
     }
   };
 
@@ -806,7 +809,7 @@ const InboxPage = ({ userRole }) => {
           className="dropdown-item danger"
           onClick={() => {
             setOpenMenuId(null);
-            setDeleteMsg(m);
+            handleDeleteMessage(m);
           }}
         >
           <Trash size={14} /> Supprimer
@@ -1357,7 +1360,7 @@ const InboxPage = ({ userRole }) => {
                                 </button>
                                 <button
                                   type="button"
-                                  onClick={() => setDeleteMsg(m)}
+                                  onClick={() => handleDeleteMessage(m)}
                                   style={{
                                     background: "none",
                                     border: "none",
@@ -3110,80 +3113,7 @@ const InboxPage = ({ userRole }) => {
         onClose={() => setPreviewFile(null)}
       />
 
-      {/* Delete Confirmation Modal */}
-      {deleteMsg && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              background: "#FFF",
-              padding: "2rem",
-              borderRadius: "8px",
-              width: "90%",
-              maxWidth: "400px",
-              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-            }}
-          >
-            <h3
-              style={{
-                marginTop: 0,
-                marginBottom: "1rem",
-                color: "var(--text-main)",
-                fontSize: "1.25rem",
-              }}
-            >
-              Confirmer la suppression
-            </h3>
-            <p
-              style={{
-                color: "var(--text-muted)",
-                marginBottom: "1.5rem",
-                lineHeight: 1.5,
-              }}
-            >
-              Êtes-vous sûr de vouloir supprimer le message de{" "}
-              <strong>{deleteMsg.nomPrenom}</strong> ?<br />
-              <br />
-              Cette action est irréversible.
-            </p>
-            <div
-              style={{
-                display: "flex",
-                gap: "1rem",
-                justifyContent: "flex-end",
-              }}
-            >
-              <button
-                type="button"
-                className="btn btn-outline"
-                onClick={() => setDeleteMsg(null)}
-              >
-                Annuler
-              </button>
-              <button
-                type="button"
-                className="btn btn-primary"
-                style={{ backgroundColor: "#DC2626", borderColor: "#DC2626" }}
-                onClick={confirmDelete}
-              >
-                Supprimer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* Assign Confirmation Modal */}
       {assignMsg && (

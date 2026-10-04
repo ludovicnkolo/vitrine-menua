@@ -565,7 +565,6 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       switch (currentStatus) {
         case "NOUVEAU":
         case "EN_COURS":
-          if (canManageMission) allowed.push("TERMINE");
           break;
         case "TERMINE":
         case "ANNULEE":

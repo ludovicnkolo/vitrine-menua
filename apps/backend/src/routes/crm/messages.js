@@ -701,14 +701,28 @@ router.patch("/messages/:id/status", async (req, res) => {
           }
         }
       }
-      
       dataToUpdate.status = status;
-      if (priorite === undefined) {
+    }
+    if (etiquette !== undefined) dataToUpdate.etiquette = etiquette;
+    
+    const finalStatus = status !== undefined ? status : existingMsg.status;
+    const definitiveStatuses = ["SANS_SUITE", "GAGNE", "RETENU", "REFUSE", "TRAITE", "CLOTURE", "TERMINE", "ARCHIVE"];
+    
+    if (priorite !== undefined) {
+      if (definitiveStatuses.includes(finalStatus) && priorite === "Urgente") {
+        return res.status(400).json({ error: "Un statut définitif n'accepte pas la priorité Urgente." });
+      }
+      dataToUpdate.priorite = priorite;
+    } else if (status !== undefined) {
+      // Si on change le statut sans préciser de priorité
+      if (definitiveStatuses.includes(status) && existingMsg.priorite === "Urgente") {
+        // Redescendre automatiquement la priorité si le message passe en statut définitif
+        dataToUpdate.priorite = "Normal";
+      } else if (status !== existingMsg.status) {
+        // Reset classique de la priorité lors d'un changement de statut
         dataToUpdate.priorite = "Normal";
       }
     }
-    if (etiquette !== undefined) dataToUpdate.etiquette = etiquette;
-    if (priorite !== undefined) dataToUpdate.priorite = priorite;
     if (assignedToId !== undefined) {
       if (
         !["Super-administrateur", "Administrateur", "Admin Tech"].includes(

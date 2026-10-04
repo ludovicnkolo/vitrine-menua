@@ -247,7 +247,7 @@ router.get("/dashboard-stats", async (req, res) => {
     });
     const alertesPrioritaires = urgentsFormulaires + urgentsMessages;
 
-    const whereTachesCrit = { status: { notIn: ["TERMINE", "ARCHIVE", "CORBEILLE"] } };
+    const whereTachesCrit = { status: { notIn: ["TERMINE", "ARCHIVE", "CORBEILLE"] }, echeance: { not: null } };
     if (isFiltered) {
       whereTachesCrit.echeance = { gte: startPeriod, lte: endPeriod };
     } else {
@@ -257,7 +257,21 @@ router.get("/dashboard-stats", async (req, res) => {
       where: whereTachesCrit,
     });
 
-    const delaisCritiques = tachesCritiques;
+    const whereMissionsCrit = { 
+      status: { notIn: ["TERMINE", "ANNULEE", "CORBEILLE"] },
+      echeance: { not: null },
+      taches: { none: {} } // Seulement les missions sans tâches
+    };
+    if (isFiltered) {
+      whereMissionsCrit.echeance = { gte: startPeriod, lte: endPeriod };
+    } else {
+      whereMissionsCrit.echeance = { lte: twentyFourHoursFromNow };
+    }
+    const missionsCritiques = await prisma.mission.count({
+      where: whereMissionsCrit
+    });
+
+    const delaisCritiques = tachesCritiques + missionsCritiques;
 
     // 2. Santé des Opérations (Détection des goulots)
     const whereTachesAttente = { status: "EN_ATTENTE" };

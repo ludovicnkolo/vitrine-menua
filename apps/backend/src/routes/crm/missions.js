@@ -274,7 +274,13 @@ router.get("/tasks", async (req, res) => {
           include: { assignedTo: true, createdBy: true },
         },
         taches: {
-          include: { assignedTo: true, createdBy: true },
+          include: { 
+            assignedTo: true, 
+            createdBy: true,
+            mission: {
+              include: { dossier: { select: { traitantId: true } } }
+            }
+          },
         },
       },
     });
@@ -348,7 +354,7 @@ router.post("/tasks", async (req, res) => {
       parsedEcheance = new Date(echeance);
       parsedEcheance.setHours(0, 0, 0, 0);
       if (parsedEcheance < today) {
-        return res.status(400).json({ error: "La date d'échéance ne peut pas être antérieure à aujourd'hui." });
+        return res.status(400).json({ error: "La date d'échéance d'une mission ne peut pas être antérieure à aujourd'hui." });
       }
     }
 
@@ -608,7 +614,18 @@ router.patch("/tasks/:id", async (req, res) => {
 
         if (!currentEcheance || parsedEcheance.getTime() !== currentEcheance.getTime()) {
           if (parsedEcheance < today) {
-            return res.status(400).json({ error: "La date d'échéance ne peut pas être antérieure à aujourd'hui." });
+            return res.status(400).json({ error: "La date d'échéance d'une mission ne peut pas être antérieure à aujourd'hui." });
+          }
+          const taskWithMaxEcheance = await prisma.tache.findFirst({
+            where: { missionId: req.params.id, echeance: { not: null } },
+            orderBy: { echeance: "desc" }
+          });
+          if (taskWithMaxEcheance && taskWithMaxEcheance.echeance) {
+            const maxTaskEcheance = new Date(taskWithMaxEcheance.echeance);
+            maxTaskEcheance.setHours(0, 0, 0, 0);
+            if (parsedEcheance < maxTaskEcheance) {
+              return res.status(400).json({ error: `La date d'échéance de la mission ne peut pas être antérieure à celle de ses tâches (${maxTaskEcheance.toLocaleDateString("fr-FR")}).` });
+            }
           }
         }
         dataToUpdate.echeance = parsedEcheance;
@@ -679,6 +696,8 @@ router.patch("/tasks/:id", async (req, res) => {
 
       // ── Règles Spécifiques de Mission ─────────────────────────────────────
       const isAssigned = currentMissionForAuth.assignedToId === userId;
+      const isDossierResp = currentMissionForAuth.dossier?.traitantId === userId;
+      const canManageMission = isSA || isAssigned || isDossierResp;
       let allowed = false;
 
       // Auto states that cannot be manually set
@@ -695,8 +714,8 @@ router.patch("/tasks/:id", async (req, res) => {
         }
         allowed = true;
       } else if (from === "EN_ATTENTE") {
-        if (!isSA && !isAssigned) {
-          return res.status(403).json({ error: "Accès refusé. Seul l'assigné ou le Super-Admin peut lever l'attente." });
+        if (!canManageMission) {
+          return res.status(403).json({ error: "Accès refusé. Seul l'assigné, le responsable du dossier ou le Super-Admin peut lever l'attente." });
         }
         if (to === "BLOQUE") {
           if (!isSA) return res.status(403).json({ error: "Seul un Super-Admin peut bloquer." });
@@ -716,14 +735,14 @@ router.patch("/tasks/:id", async (req, res) => {
         } 
         // Target is EN_ATTENTE
         else if (to === "EN_ATTENTE") {
-          if (!isSA && !isAssigned) {
+          if (!canManageMission) {
              return res.status(403).json({ error: "Accès refusé pour mettre en attente." });
           }
           allowed = true;
         }
         // Target is ANNULEE
         else if (to === "ANNULEE" || to === "ANNULEE") {
-          if (!isSA && !isAssigned) {
+          if (!canManageMission) {
              return res.status(403).json({ error: "Accès refusé pour annuler." });
           }
           allowed = true;
@@ -766,6 +785,11 @@ router.patch("/tasks/:id", async (req, res) => {
       where: { id: req.params.id },
       data: dataToUpdate,
     });
+
+    if (dataToUpdate.status === "EN_ATTENTE") {
+      const { cascadePauseMission } = require("../../utils/statusCascade");
+      await cascadePauseMission(task.id);
+    }
 
     // ── Notifications Zero-Trust ────────────────────────────────────────────
     if (

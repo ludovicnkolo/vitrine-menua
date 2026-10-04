@@ -727,6 +727,11 @@ router.patch("/dossiers/:id", async (req, res) => {
       data: updateData,
     });
 
+    if (updateData.status === "EN_ATTENTE") {
+      const { cascadePauseDossier } = require("../../utils/statusCascade");
+      await cascadePauseDossier(dossier.id);
+    }
+
     await logAudit(
       req.user?.id,
       "MODIFICATION_DOSSIER",

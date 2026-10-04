@@ -149,7 +149,7 @@ export default function Home() {
 
                 <div className="flex justify-end">
                   <Link href="/nous-connaitre" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right">
-                    <span className="max-w-[16ch] portrait:sm:max-w-[24ch] landscape:max-w-[22ch] xl:max-w-none">{t("Nous connaître", "About us")}</span>
+                    <span className="max-w-[18ch] portrait:sm:max-w-[24ch] landscape:max-lg:max-w-[21ch] landscape:lg:max-w-[22ch] xl:max-w-none">{t("Nous connaître", "About us")}</span>
                     <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                     <ChevronRight size={18} className="-ml-2" />
                   </Link>
@@ -202,7 +202,7 @@ export default function Home() {
 
             <div className="flex justify-end mt-8">
               <Link href="/pourquoi-menua" className="inline-flex items-center gap-2 text-[#e8e1d7] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right">
-                <span className="max-w-[16ch] portrait:sm:max-w-[24ch] landscape:max-w-[22ch] xl:max-w-none">{t("Nos atouts et engagements", "Our strengths and commitments")}</span>
+                <span className="max-w-[18ch] portrait:sm:max-w-[24ch] landscape:max-lg:max-w-[21ch] landscape:lg:max-w-[22ch] xl:max-w-none">{t("Nos atouts et engagements", "Our strengths and commitments")}</span>
                 <span className="w-8 h-[1px] bg-[#e8e1d7] group-hover:w-12 transition-all duration-300"></span>
                 <ChevronRight size={18} className="-ml-2" />
               </Link>
@@ -272,7 +272,7 @@ export default function Home() {
 
                 <div className="flex justify-end">
                   <Link href="/vos-besoins" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right">
-                    <span className="max-w-[16ch] portrait:sm:max-w-[24ch] landscape:max-w-[22ch] xl:max-w-none">{t("Voir tous vos besoins", "Explore your needs")}</span>
+                    <span className="max-w-[18ch] portrait:sm:max-w-[24ch] landscape:max-lg:max-w-[21ch] landscape:lg:max-w-[22ch] xl:max-w-none">{t("Voir tous vos besoins", "Explore your needs")}</span>
                     <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                     <ChevronRight size={18} className="-ml-2" />
                   </Link>
@@ -325,7 +325,7 @@ export default function Home() {
 
             <div className="flex justify-end mt-8">
               <Link href="/nos-solutions" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right">
-                <span className="max-w-[16ch] portrait:sm:max-w-[24ch] landscape:max-w-[22ch] xl:max-w-none">{t("Découvrir nos solutions", "Explore our solutions")}</span>
+                <span className="max-w-[18ch] portrait:sm:max-w-[24ch] landscape:max-lg:max-w-[21ch] landscape:lg:max-w-[22ch] xl:max-w-none">{t("Découvrir nos solutions", "Explore our solutions")}</span>
                 <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                 <ChevronRight size={18} className="-ml-2" />
               </Link>
@@ -425,7 +425,7 @@ export default function Home() {
           {publications.length > 0 && (
             <div className="flex justify-end mt-4">
               <Link href="/actualites" className="inline-flex items-center gap-2 text-white uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right">
-                <span className="max-w-[16ch] portrait:sm:max-w-[24ch] landscape:max-w-[22ch] xl:max-w-none">{t("Voir toutes nos actualités", "Browse all publications")}</span>
+                <span className="max-w-[18ch] portrait:sm:max-w-[24ch] landscape:max-lg:max-w-[21ch] landscape:lg:max-w-[22ch] xl:max-w-none">{t("Voir toutes nos actualités", "Browse all publications")}</span>
                 <span className="w-8 h-[1px] bg-white group-hover:w-12 transition-all duration-300"></span>
                 <ChevronRight size={18} className="-ml-2" />
               </Link>

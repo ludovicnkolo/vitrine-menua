@@ -175,7 +175,7 @@ export default function VosBesoinsPage() {
                 </p>
                 <div className="mt-8 flex justify-end">
                   <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right">
-                    <span className="max-w-[16ch] portrait:sm:max-w-[24ch] landscape:max-w-[22ch] xl:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
+                    <span className="max-w-[18ch] portrait:sm:max-w-[24ch] landscape:max-lg:max-w-[21ch] landscape:lg:max-w-[22ch] xl:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
                     <span className="w-8 h-[1px] bg-[#141824] group-hover:w-12 transition-all duration-300"></span>
                     <ChevronRight size={18} className="-ml-2" />
                   </Link>

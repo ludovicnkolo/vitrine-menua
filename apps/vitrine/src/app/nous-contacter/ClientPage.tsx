@@ -124,9 +124,9 @@ export default function NousContacter() {
               </div>
             </div>
 
-            <div className="bg-[#141824] text-white p-10 landscape:px-6 landscape:py-2 shadow-xl border-t-4 border-t-[#e8e1d7] text-center">
-              <h3 className="text-[1.4rem] font-semibold mb-6 landscape:mb-2 leading-snug">{t("Retrouvez nos analyses et publications.", "Find our analyses and publications.")}</h3>
-              <p className="text-[#e5e9f0] mb-8 landscape:mb-4 font-light text-[1.05rem]">
+            <div className="bg-[#141824] text-white p-10 portrait:max-sm:px-6 portrait:max-sm:py-4 landscape:px-6 landscape:py-2 shadow-xl border-t-4 border-t-[#e8e1d7] text-center">
+              <h3 className="text-[1.4rem] font-semibold mb-6 portrait:max-sm:mb-2 landscape:mb-2 leading-snug">{t("Retrouvez nos analyses et publications.", "Find our analyses and publications.")}</h3>
+              <p className="text-[#e5e9f0] mb-8 portrait:max-sm:mb-3 landscape:mb-4 font-light text-[1.05rem]">
                 {t("Suivez notre actualité professionnelle sur LinkedIn.", "Follow our professional news on LinkedIn.")}
               </p>
               <a href="https://linkedin.com/company/menua-consulting" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full bg-[#e8e1d7] text-[#141824] px-8 py-4 font-bold uppercase tracking-wider text-[0.85rem] hover:bg-white transition-colors duration-300">

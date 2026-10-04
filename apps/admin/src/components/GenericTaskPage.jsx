@@ -480,6 +480,9 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           ["BLOQUE", "EN_ATTENTE"].includes(taskObj.mission?.dossier?.status)
         );
 
+      const isDossierResp = taskObj && (taskObj.mission?.dossier?.traitantId === currentUser?.id || taskObj.dossierTache?.traitantId === currentUser?.id);
+      const canManageTaskAdmin = isSuperAdmin || isRelecteurAssigned || isMissionResp || isDossierResp;
+
       if (isParentLocked) return lockedOnCurrent();
 
       if (currentStatus === "BLOQUE") {
@@ -490,7 +493,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       }
 
       if (currentStatus === "EN_ATTENTE") {
-        if (isSuperAdmin || isRelecteurAssigned || isMissionResp || isAssigned) {
+        if (canManageTaskAdmin || isAssigned) {
           return withCurrent([taskObj?.previousStatus || "EN_COURS"]);
         }
         return lockedOnCurrent();
@@ -499,7 +502,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       const allowed = [];
       if (isSuperAdmin) allowed.push("BLOQUE");
 
-      if (isSuperAdmin || isRelecteurAssigned || isMissionResp) {
+      if (canManageTaskAdmin) {
         allowed.push("EN_ATTENTE");
       }
 
@@ -531,6 +534,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     } else {
       // MISSION
       const isMissionAssigned = taskObj && taskObj.assignedToId === currentUser?.id;
+      const isDossierResp = taskObj && taskObj.dossier?.traitantId === currentUser?.id;
+      const canManageMission = isSuperAdmin || isMissionAssigned || isDossierResp;
 
       const isParentLocked = taskObj && ["BLOQUE", "EN_ATTENTE"].includes(taskObj.dossier?.status);
 
@@ -544,7 +549,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       }
 
       if (currentStatus === "EN_ATTENTE") {
-        if (isSuperAdmin || isMissionAssigned) {
+        if (canManageMission) {
           return withCurrent([taskObj?.previousStatus || "EN_COURS"]);
         }
         return lockedOnCurrent();
@@ -553,14 +558,14 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       const allowed = [];
       if (isSuperAdmin) allowed.push("BLOQUE");
 
-      if (isSuperAdmin || isMissionAssigned) {
+      if (canManageMission) {
         allowed.push("EN_ATTENTE", "ANNULEE");
       }
 
       switch (currentStatus) {
         case "NOUVEAU":
         case "EN_COURS":
-          if (isSuperAdmin || isMissionAssigned) allowed.push("TERMINE");
+          if (canManageMission) allowed.push("TERMINE");
           break;
         case "TERMINE":
         case "ANNULEE":
@@ -700,7 +705,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         setSelectedAuthorizedTacheIds([]);
         fetchData();
       } else {
-        setErrorMsg("Erreur lors de la création de la tâche.");
+        const errorData = await res.json().catch(() => ({}));
+        setErrorMsg(errorData.error || "Erreur lors de la création de la tâche.");
       }
     } catch (e) {
       console.error("Erreur de connexion:", e);
@@ -901,7 +907,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 <input
                   id="new-task-echeance"
                   type="date"
-                  min={new Date().toISOString().split("T")[0]}
+                  max={consultTask?.echeance ? new Date(consultTask.echeance).toISOString().split("T")[0] : undefined}
                   value={newTaskEcheance}
                   onChange={(e) => setNewTaskEcheance(e.target.value)}
                   className="input-field"
@@ -1339,7 +1345,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             <input
               id="edit-task-echeance"
               type="date"
-              min={new Date().toISOString().split("T")[0]}
+              max={mode === "TACHE" && editTask?.mission?.echeance ? new Date(editTask.mission.echeance).toISOString().split("T")[0] : undefined}
               value={editFormData.echeance}
               onChange={(e) =>
                 setEditFormData({ ...editFormData, echeance: e.target.value })

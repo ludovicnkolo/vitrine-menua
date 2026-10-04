@@ -263,7 +263,7 @@ router.get("/taches", async (req, res) => {
       take: limit,
       include: {
         mission: {
-          include: { dossier: { select: { name: true, reference: true, status: true } } },
+          include: { dossier: { select: { name: true, reference: true, status: true, traitantId: true } } },
         },
         dossierTache: { include: { subDossiers: true } },
         authorizedDossiers: { include: { subDossiers: true } },
@@ -352,8 +352,19 @@ router.post("/taches", async (req, res) => {
       today.setHours(0, 0, 0, 0);
       parsedEcheance = new Date(echeance);
       parsedEcheance.setHours(0, 0, 0, 0);
-      if (parsedEcheance < today) {
-        return res.status(400).json({ error: "La date d'échéance ne peut pas être antérieure à aujourd'hui." });
+
+      if (missionId) {
+        const parentMission = await prisma.mission.findUnique({
+          where: { id: missionId },
+          select: { echeance: true }
+        });
+        if (parentMission && parentMission.echeance) {
+          const parentEcheance = new Date(parentMission.echeance);
+          parentEcheance.setHours(0, 0, 0, 0);
+          if (parsedEcheance > parentEcheance) {
+            return res.status(400).json({ error: "L'échéance de la tâche ne peut pas dépasser l'échéance de la mission parente." });
+          }
+        }
       }
     }
 
@@ -514,6 +525,8 @@ router.patch("/taches/:id", async (req, res) => {
       const isAssigned = currentTache.assignedToId === userId;
       const isRelecteurAssigned = currentTache.relecteurId === userId;
       const isMissionResp = currentTache.mission?.assignedToId === userId;
+      const isDossierResp = currentTache.mission?.dossier?.traitantId === userId || currentTache.dossierTache?.traitantId === userId;
+      const canManageTaskAdmin = isSA || isRelecteurAssigned || isMissionResp || isDossierResp;
 
       if (from === "BLOQUE") {
         if (!isSA) {
@@ -524,8 +537,8 @@ router.patch("/taches/:id", async (req, res) => {
         }
         allowed = true;
       } else if (from === "EN_ATTENTE") {
-        if (!isSA && !isRelecteurAssigned && !isMissionResp) {
-          return res.status(403).json({ error: "Accès refusé. Seul le relecteur, le responsable de mission ou le Super-Admin peut lever l'attente." });
+        if (!canManageTaskAdmin && !isAssigned) {
+          return res.status(403).json({ error: "Accès refusé. Seul l'assigné, le relecteur, le responsable de mission/dossier ou le Super-Admin peut lever l'attente." });
         }
         if (to === "BLOQUE") {
           if (!isSA) return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut bloquer une tâche." });
@@ -540,8 +553,8 @@ router.patch("/taches/:id", async (req, res) => {
           if (!isSA) return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut bloquer une tâche." });
           allowed = true;
         } else if (to === "EN_ATTENTE") {
-          if (!isSA && !isRelecteurAssigned && !isMissionResp) {
-            return res.status(403).json({ error: "Accès refusé. Seul le relecteur, le responsable de mission ou le Super-Admin peut mettre en attente." });
+          if (!canManageTaskAdmin) {
+            return res.status(403).json({ error: "Accès refusé. Seul le relecteur, le responsable de mission/dossier ou le Super-Admin peut mettre en attente." });
           }
           allowed = true;
         } else {
@@ -590,8 +603,18 @@ router.patch("/taches/:id", async (req, res) => {
         if (currentEcheance) currentEcheance.setHours(0, 0, 0, 0);
 
         if (!currentEcheance || parsedEcheance.getTime() !== currentEcheance.getTime()) {
-          if (parsedEcheance < today) {
-            return res.status(400).json({ error: "La date d'échéance ne peut pas être antérieure à aujourd'hui." });
+          if (currentTache.missionId) {
+            const parentMission = await prisma.mission.findUnique({
+              where: { id: currentTache.missionId },
+              select: { echeance: true }
+            });
+            if (parentMission && parentMission.echeance) {
+              const parentEcheance = new Date(parentMission.echeance);
+              parentEcheance.setHours(0, 0, 0, 0);
+              if (parsedEcheance > parentEcheance) {
+                return res.status(400).json({ error: "L'échéance de la tâche ne peut pas dépasser l'échéance de la mission parente." });
+              }
+            }
           }
         }
         dataToUpdate.echeance = parsedEcheance;

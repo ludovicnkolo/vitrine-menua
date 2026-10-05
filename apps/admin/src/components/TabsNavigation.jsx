@@ -1,6 +1,9 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const TabsNavigation = ({ tabs, activeTab, onTabChange }) => {
+  const { t } = useTranslation();
+
   return (
     <div
       style={{
@@ -9,34 +12,44 @@ const TabsNavigation = ({ tabs, activeTab, onTabChange }) => {
         marginBottom: "1.5rem",
       }}
     >
-      {tabs.map((t) => (
-        <button
-          type="button"
-          key={t.id}
-          onClick={() => onTabChange(t.id)}
-          style={{
-            background: activeTab === t.id ? "#0F172A" : "#FFF",
-            color: activeTab === t.id ? "#FFF" : "#334155",
-            border:
-              activeTab === t.id
-                ? "1px solid #0F172A"
-                : "1px solid #E2E8F0",
-            padding: "0.6rem 1.5rem",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontWeight: 600,
-            transition: "all 0.2s",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "42px",
-            fontSize: "0.95rem",
-            boxShadow: activeTab === t.id ? "0 2px 4px rgba(15, 23, 42, 0.15)" : "none",
-          }}
-        >
-          {t.label}
-        </button>
-      ))}
+      {tabs.map((tabItem) => {
+        const translatedLabel = t(
+          tabItem.labelKey || `tabs.${tabItem.id}`,
+          { defaultValue: tabItem.label }
+        );
+
+        return (
+          <button
+            type="button"
+            key={tabItem.id}
+            onClick={() => onTabChange(tabItem.id)}
+            style={{
+              background: activeTab === tabItem.id ? "#0F172A" : "#FFF",
+              color: activeTab === tabItem.id ? "#FFF" : "#334155",
+              border:
+                activeTab === tabItem.id
+                  ? "1px solid #0F172A"
+                  : "1px solid #E2E8F0",
+              padding: "0.6rem 1.5rem",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: 600,
+              transition: "all 0.2s",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "42px",
+              fontSize: "0.95rem",
+              boxShadow:
+                activeTab === tabItem.id
+                  ? "0 2px 4px rgba(15, 23, 42, 0.15)"
+                  : "none",
+            }}
+          >
+            {translatedLabel}
+          </button>
+        );
+      })}
     </div>
   );
 };

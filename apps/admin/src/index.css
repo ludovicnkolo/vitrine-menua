@@ -218,9 +218,14 @@ th, td {
   padding: 0.65rem 0.85rem;
   text-align: center;
   border-bottom: 1px solid var(--border);
-  overflow: hidden;
-  text-overflow: ellipsis;
   vertical-align: middle;
+}
+
+td:last-child,
+th:last-child,
+.table-actions-cell,
+td.table-actions {
+  overflow: visible !important;
 }
 
 .table-date-cell, .col-date {

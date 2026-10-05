@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Plus,
   Search,
@@ -49,6 +50,7 @@ const CATEGORY_TRANSLATIONS = {
 };
 
 const CMSPage = () => {
+  const { t } = useTranslation();
   const [publications, setPublications] = useState([]);
   const _adminUser = (() => {
     try {
@@ -591,10 +593,10 @@ const CMSPage = () => {
                   margin: "0 0 0.25rem 0",
                 }}
               >
-                Espace Site Web — Gestion des Publications
+                {t("cms.title", "Espace Site Web — Gestion des Publications")}
               </h1>
               <p style={{ color: "#64748B", margin: 0, fontSize: "0.85rem" }}>
-                Pilotez les actualités, articles et contenus diffusés publiquement sur le site officiel
+                {t("cms.subtitle", "Pilotez les actualités, articles et contenus diffusés publiquement sur le site officiel")}
               </p>
             </div>
             {isSuperAdmin && (
@@ -616,7 +618,7 @@ const CMSPage = () => {
                   transition: "background 0.2s",
                 }}
               >
-                + Nouvelle Actualité
+                {t("cms.newPost", "+ Nouvelle Actualité")}
               </button>
             )}
           </div>
@@ -648,7 +650,7 @@ const CMSPage = () => {
               />
               <input
                 type="text"
-                placeholder="Rechercher par titre, auteur, mot-clé..."
+                placeholder={t("cms.searchPlaceholder", "Rechercher par titre, auteur, mot-clé...")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
@@ -677,9 +679,9 @@ const CMSPage = () => {
                 outline: "none",
               }}
             >
-              <option value="all">Tous les statuts</option>
-              <option value="PUBLIE">PUBLIÉ</option>
-              <option value="BROUILLON">BROUILLON</option>
+              <option value="all">{t("common.allStatuses", "Tous les statuts")}</option>
+              <option value="PUBLIE">{t("status.PUBLIE", "PUBLIÉ")}</option>
+              <option value="BROUILLON">{t("status.BROUILLON", "BROUILLON")}</option>
             </select>
 
             <select
@@ -696,7 +698,7 @@ const CMSPage = () => {
                 outline: "none",
               }}
             >
-              <option value="all">Toutes les catégories</option>
+              <option value="all">{t("cms.allCategories", "Toutes les catégories")}</option>
               {CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
                   {cat}
@@ -722,7 +724,7 @@ const CMSPage = () => {
               }}
             >
               <span style={{ fontSize: "0.7rem" }}>🟢</span>
-              {onlineCount} Actualité{onlineCount > 1 ? "s" : ""} en ligne
+              {t("cms.onlineCount", { count: onlineCount, defaultValue: `${onlineCount} Actualité${onlineCount > 1 ? "s" : ""} en ligne` })}
             </div>
           </div>
 
@@ -752,7 +754,7 @@ const CMSPage = () => {
                         width: "36%",
                       }}
                     >
-                      Titre de l'actualité
+                      {t("cms.columns.title", "Titre de l'actualité")}
                     </th>
                     <th
                       style={{
@@ -766,7 +768,7 @@ const CMSPage = () => {
                         width: "20%",
                       }}
                     >
-                      Auteur
+                      {t("cms.columns.author", "Auteur")}
                     </th>
                     <th
                       style={{
@@ -780,7 +782,7 @@ const CMSPage = () => {
                         width: "15%",
                       }}
                     >
-                      Statut
+                      {t("cms.columns.status", "Statut")}
                     </th>
                     <th
                       className="table-date-cell"
@@ -795,7 +797,7 @@ const CMSPage = () => {
                         width: "190px",
                       }}
                     >
-                      Date de publication
+                      {t("cms.columns.publishedAt", "Date de publication")}
                     </th>
                     <th
                       style={{
@@ -809,7 +811,7 @@ const CMSPage = () => {
                         width: "90px",
                       }}
                     >
-                      Actions
+                      {t("cms.columns.actions", "Actions")}
                     </th>
                   </tr>
                 </thead>
@@ -825,7 +827,7 @@ const CMSPage = () => {
                           fontSize: "0.9rem",
                         }}
                       >
-                        Chargement des actualités...
+                        {t("common.loading", "Chargement des actualités...")}
                       </td>
                     </tr>
                   ) : filteredPubs.length === 0 ? (
@@ -839,7 +841,7 @@ const CMSPage = () => {
                           fontSize: "0.9rem",
                         }}
                       >
-                        Aucune actualité trouvée.
+                        {t("common.noResult", "Aucune actualité trouvée.")}
                       </td>
                     </tr>
                   ) : (
@@ -897,7 +899,7 @@ const CMSPage = () => {
                                   className="truncate-name"
                                   style={{ fontSize: "0.75rem", color: "#64748B", marginTop: "2px", maxWidth: "100%" }}
                                 >
-                                  Catégorie : {pub.category || "Organisation et Externalisation"} • Langues : FR | EN
+                                  {t("cms.category", "Catégorie :")} {pub.category || "Organisation et Externalisation"} • {t("cms.languages", "Langues :")} FR | EN
                                 </div>
                               </div>
                             </div>
@@ -950,7 +952,7 @@ const CMSPage = () => {
                               }}
                             >
                               <span style={{ fontSize: "0.65rem" }}>●</span>
-                              {pub.status === "PUBLIE" ? "PUBLIÉ" : "BROUILLON"}
+                              {pub.status === "PUBLIE" ? t("status.PUBLIE", "PUBLIÉ") : t("status.BROUILLON", "BROUILLON")}
                             </span>
                           </td>
 
@@ -969,7 +971,7 @@ const CMSPage = () => {
                               <button
                                 type="button"
                                 onClick={() => openModal(pub)}
-                                title="Modifier"
+                                title={t("common.edit", "Modifier")}
                                 style={{
                                   width: "32px",
                                   height: "32px",
@@ -990,7 +992,7 @@ const CMSPage = () => {
                                 <button
                                   type="button"
                                   onClick={() => handleDelete(pub.id)}
-                                  title="Supprimer"
+                                  title={t("common.delete", "Supprimer")}
                                   style={{
                                     width: "32px",
                                     height: "32px",
@@ -1017,7 +1019,7 @@ const CMSPage = () => {
                                       : "https://menuaconsulting.com";
                                   window.open(`${vitrineUrl}/actualites/${pub.id}?preview=true`, "_blank");
                                 }}
-                                title="Voir"
+                                title={t("common.view", "Voir")}
                                 style={{
                                   width: "32px",
                                   height: "32px",
@@ -1052,7 +1054,7 @@ const CMSPage = () => {
                 fontSize: "0.82rem",
               }}
             >
-              Fin des articles publiés sur le portail.
+              {t("cms.endOfArticles", "Fin des articles publiés sur le portail.")}
             </div>
 
             <div
@@ -1064,7 +1066,7 @@ const CMSPage = () => {
                 color: "#94A3B8",
               }}
             >
-              Affichage de {filteredPubs.length} actualité{filteredPubs.length !== 1 ? "s" : ""}
+              {t("cms.displayCount", { count: filteredPubs.length, defaultValue: `Affichage de ${filteredPubs.length} actualité${filteredPubs.length !== 1 ? "s" : ""}` })}
             </div>
           </div>
         </>
@@ -1085,16 +1087,16 @@ const CMSPage = () => {
                 margin: "0 0 0.25rem 0",
               }}
             >
-              Paramètres des formulaires du site
+              {t("cms.formSettingsTitle", "Paramètres des formulaires du site")}
             </h1>
             <p style={{ fontSize: "0.82rem", color: "#64748B", margin: 0 }}>
-              Contrôlez l'ouverture des formulaires en ligne et la sécurité anti-spam
+              {t("cms.formSettingsSub", "Contrôlez l'ouverture des formulaires en ligne et la sécurité anti-spam")}
             </p>
           </div>
 
           {loadingSettings ? (
             <div style={{ padding: "3rem", textAlign: "center", color: "#64748B" }}>
-              Chargement des paramètres...
+              {t("common.loading", "Chargement des paramètres...")}
             </div>
           ) : (
             <div>
@@ -1119,10 +1121,10 @@ const CMSPage = () => {
                   }}
                 >
                   <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
-                    Formulaire de Contact Public
+                    {t("cms.contactCardTitle", "Formulaire de Contact Public")}
                   </h3>
                   <p style={{ margin: "0 0 1rem 0", fontSize: "0.78rem", color: "#64748B" }}>
-                    Permet aux visiteurs d'envoyer des demandes de devis et d'informations
+                    {t("cms.contactCardSub", "Permet aux visiteurs d'envoyer des demandes de devis et d'informations")}
                   </p>
 
                   <label
@@ -1148,11 +1150,11 @@ const CMSPage = () => {
                     <div>
                       <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#15803D" }}>
                         {formSettings.contactFormEnabled
-                          ? "Activé (Accepte les soumissions)"
-                          : "Désactivé (Bloque les soumissions)"}
+                          ? t("cms.contactEnabled", "Activé (Accepte les soumissions)")
+                          : t("cms.contactDisabled", "Désactivé (Bloque les soumissions)")}
                       </div>
                       <div style={{ fontSize: "0.75rem", color: "#16A34A", marginTop: "2px" }}>
-                        Le formulaire est actuellement ouvert et opérationnel sur le site
+                        {t("cms.contactOpen", "Le formulaire est actuellement ouvert et opérationnel sur le site")}
                       </div>
                     </div>
                   </label>
@@ -1170,10 +1172,10 @@ const CMSPage = () => {
                   }}
                 >
                   <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
-                    Formulaire Recrutement (Carrières)
+                    {t("cms.recruitmentCardTitle", "Formulaire Recrutement (Carrières)")}
                   </h3>
                   <p style={{ margin: "0 0 1rem 0", fontSize: "0.78rem", color: "#64748B" }}>
-                    Permet aux candidats de déposer leur CV et lettre de motivation
+                    {t("cms.recruitmentCardSub", "Permet aux candidats de déposer leur CV et lettre de motivation")}
                   </p>
 
                   <label
@@ -1199,11 +1201,11 @@ const CMSPage = () => {
                     <div>
                       <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#15803D" }}>
                         {formSettings.recrutementFormEnabled
-                          ? "Activé (Accepte les candidatures)"
-                          : "Désactivé (Bloque les candidatures)"}
+                          ? t("cms.recruitmentEnabled", "Activé (Accepte les candidatures)")
+                          : t("cms.recruitmentDisabled", "Désactivé (Bloque les candidatures)")}
                       </div>
                       <div style={{ fontSize: "0.75rem", color: "#16A34A", marginTop: "2px" }}>
-                        Les soumissions de CV sont transmises au vivier de talents
+                        {t("cms.recruitmentActiveSub", "Les soumissions de CV sont transmises au vivier de talents")}
                       </div>
                     </div>
                   </label>
@@ -1224,11 +1226,11 @@ const CMSPage = () => {
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.4rem" }}>
                   <span style={{ fontSize: "1rem" }}>🛑</span>
                   <h3 style={{ margin: 0, fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
-                    Adresses Email bloquées (Protection Anti-Spam)
+                    {t("cms.antiSpamTitle", "Adresses Email bloquées (Protection Anti-Spam)")}
                   </h3>
                 </div>
                 <p style={{ margin: "0 0 1.25rem 0", fontSize: "0.8rem", color: "#64748B" }}>
-                  Les adresses répertoriées ici ne peuvent pas soumettre de formulaires de contact ou de candidatures
+                  {t("cms.antiSpamSub", "Les adresses répertoriées ici ne peuvent pas soumettre de formulaires de contact ou de candidatures")}
                 </p>
 
                 <div style={{ height: "1px", background: "#F1F5F9", marginBottom: "1.25rem" }} />
@@ -1242,7 +1244,7 @@ const CMSPage = () => {
                     marginBottom: "0.5rem",
                   }}
                 >
-                  Ajouter une nouvelle adresse indésirable :
+                  {t("cms.addBlacklistLabel", "Ajouter une nouvelle adresse indésirable :")}
                 </label>
                 <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.25rem" }}>
                   <input
@@ -1292,16 +1294,16 @@ const CMSPage = () => {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    + Ajouter
+                    {t("cms.addBlacklistBtn", "+ Ajouter")}
                   </button>
                 </div>
 
                 <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#374151", marginBottom: "0.5rem" }}>
-                  Adresses actuellement bloquées ({formSettings.blacklistedEmails?.length || 0} adresse{(formSettings.blacklistedEmails?.length || 0) !== 1 ? "s" : ""} active{(formSettings.blacklistedEmails?.length || 0) !== 1 ? "s" : ""}) :
+                  {t("cms.blockedCount", { count: formSettings.blacklistedEmails?.length || 0, defaultValue: `Adresses actuellement bloquées (${formSettings.blacklistedEmails?.length || 0} active(s)) :` })}
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
                   {(formSettings.blacklistedEmails?.length === 0 || !formSettings.blacklistedEmails) && (
-                    <span style={{ color: "#94A3B8", fontSize: "0.82rem" }}>Aucun email bloqué.</span>
+                    <span style={{ color: "#94A3B8", fontSize: "0.82rem" }}>{t("cms.noBlockedEmail", "Aucun email bloqué.")}</span>
                   )}
                   {formSettings.blacklistedEmails?.map((email) => (
                     <div
@@ -1355,7 +1357,7 @@ const CMSPage = () => {
                 }}
               >
                 <span style={{ fontSize: "0.82rem", color: "#64748B" }}>
-                  Toute modification des formulaires prend effet immédiatement sur le site public.
+                  {t("cms.settingsNotice", "Toute modification des formulaires prend effet immédiatement sur le site public.")}
                 </span>
                 <button
                   type="button"
@@ -1371,7 +1373,7 @@ const CMSPage = () => {
                     cursor: "pointer",
                   }}
                 >
-                  Enregistrer les paramètres
+                  {t("cms.saveSettingsBtn", "Enregistrer les paramètres")}
                 </button>
               </div>
             </div>

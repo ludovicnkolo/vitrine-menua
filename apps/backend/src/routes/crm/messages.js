@@ -463,7 +463,12 @@ router.get("/messages", async (req, res) => {
         contact: f.contact,
         recrutement: f.recrutement,
         verifaliaStatus: f.verifaliaStatus,
-        priorite: f.priority,
+        priorite:
+          f.priority && f.priority.toUpperCase() === "URGENT"
+            ? "Urgent"
+            : f.priority && f.priority.toUpperCase() === "PRIORITAIRE"
+            ? "Prioritaire"
+            : "Normal",
         dateRappel: f.dateRappel,
         noteRappel: f.noteRappel,
         dateEntretien: f.dateEntretien,
@@ -545,7 +550,14 @@ router.get("/messages", async (req, res) => {
         subType: e.subType || "Indéfini",
         attachment: e.attachment,
         etiquette: e.etiquette,
-        priorite: e.priorite,
+        priorite:
+          e.priorite && e.priorite.toUpperCase() === "URGENT"
+            ? "Urgent"
+            : e.priorite && (e.priorite.toUpperCase() === "PRIORITAIRE" || e.priorite.toUpperCase() === "HAUTE")
+            ? "Prioritaire"
+            : e.priorite && (e.priorite.toUpperCase() === "FAIBLE" || e.priorite.toUpperCase() === "BASSE")
+            ? "Faible"
+            : "Normal",
         createdAt: e.createdAt,
         dossierId: e.dossierId,
         missionId: e.missionId,

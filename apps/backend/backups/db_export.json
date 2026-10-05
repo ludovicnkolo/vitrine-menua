@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.222Z",
-      "updatedAt": "2026-10-05T12:44:12.535Z"
+      "updatedAt": "2026-10-05T17:59:24.658Z"
     },
     {
       "id": "a41c168d-dc87-4353-8dcb-c71e4109416c",
@@ -16,7 +16,7 @@
       "status": "Inactif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.242Z",
-      "updatedAt": "2026-10-05T12:44:12.545Z"
+      "updatedAt": "2026-10-05T17:59:24.669Z"
     },
     {
       "id": "7f685243-dda5-4117-a675-d4a7364c7a66",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-09-28T09:31:02.248Z",
-      "updatedAt": "2026-10-05T12:44:12.552Z"
+      "updatedAt": "2026-10-05T17:59:24.695Z"
     },
     {
       "id": "803c6051-c50d-495a-bb21-b6615f1cf0dc",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-09-28T09:31:02.256Z",
-      "updatedAt": "2026-10-05T12:44:12.558Z"
+      "updatedAt": "2026-10-05T17:59:24.717Z"
     },
     {
       "id": "eaa1c720-2a71-493c-a1c0-d14f51051e0f",
@@ -43,14 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.269Z",
-      "updatedAt": "2026-10-05T12:44:12.565Z"
+      "updatedAt": "2026-10-05T17:59:24.743Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "2541799f-86de-4071-86c7-7110615bf37b",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$vGqhF8MmK8f7UveZfgElGO0HchzAeTTWUn3Tv0W/mMAE04F/XNKHK",
+      "password": "$2a$10$YjKhU8s9B5LdAg7UgEMP2uUMLHA/j1GyXEsv8PdLJmYNVMcF7u/1m",
       "name": "Rosette Fouelefack",
       "roleId": "832d5c59-5fe6-488f-b64a-1bfdc6504152",
       "telephone": "+33659207511",
@@ -66,7 +66,7 @@
       "status": "Invitation envoyée",
       "lastLogin": "2026-10-05T12:17:36.238Z",
       "createdAt": "2026-09-28T09:31:02.401Z",
-      "updatedAt": "2026-10-05T12:44:12.736Z"
+      "updatedAt": "2026-10-05T17:59:25.046Z"
     },
     {
       "id": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
@@ -652,7 +652,7 @@
       "reference": "DOS-04",
       "name": "dos-04_ipsum_voluptas_aut_h_wfbqfbiuwrfiur_fwbqfibiuwr_qjbwjifwbef_dwbe",
       "description": "adcc",
-      "status": "NOUVEAU",
+      "status": "CORBEILLE",
       "previousStatus": null,
       "priority": "NORMAL",
       "categorie": null,
@@ -661,7 +661,7 @@
       "traitantId": "2541799f-86de-4071-86c7-7110615bf37b",
       "parentDossierId": null,
       "createdAt": "2026-10-05T17:33:59.433Z",
-      "updatedAt": "2026-10-05T17:33:59.433Z",
+      "updatedAt": "2026-10-05T17:55:27.410Z",
       "isSystem": false
     }
   ],
@@ -697,7 +697,7 @@
       "attachment": null,
       "dossierMissionId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
       "createdAt": "2026-10-04T07:19:12.397Z",
-      "updatedAt": "2026-10-04T07:19:12.397Z",
+      "updatedAt": "2026-10-05T17:55:46.537Z",
       "parentMissionId": null
     }
   ],
@@ -737,6 +737,24 @@
       "dossierTacheId": null,
       "createdAt": "2026-10-04T07:21:09.393Z",
       "updatedAt": "2026-10-04T17:21:18.480Z"
+    },
+    {
+      "id": "21e2c674-8d0d-423f-89d7-906f61e18111",
+      "reference": "TCH-03",
+      "missionId": "d90f426c-477a-4191-a3c5-49710fc487c0",
+      "assignedToId": "db7be20d-5eee-4acc-872b-f47bdac08ec3",
+      "relecteurId": "6de51cd0-085b-4f83-8597-9e2218a2c12b",
+      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "description": "Objet: Omnis enim at aut mi\n\nConsignes: Et magni sint non si",
+      "echeance": "1987-10-13T23:00:00.000Z",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "attachment": null,
+      "adminFeedback": null,
+      "managerFeedback": null,
+      "dossierTacheId": null,
+      "createdAt": "2026-10-05T17:55:46.523Z",
+      "updatedAt": "2026-10-05T17:55:46.523Z"
     }
   ],
   "documents": [],
@@ -2170,6 +2188,28 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-10-05T17:44:28.997Z"
+    },
+    {
+      "id": "6213f27d-ca79-4a59-a635-264baeb7cbca",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "SUPPRESSION_DOSSIER",
+      "targetId": "494fafdf-e7c0-4f1b-8cba-a77526d7dd75",
+      "targetType": "DOSSIER",
+      "details": "Dossier mis en corbeille: dos-04_ipsum_voluptas_aut_h_wfbqfbiuwrfiur_fwbqfibiuwr_qjbwjifwbef_dwbe",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-05T17:55:27.425Z"
+    },
+    {
+      "id": "653411cd-ac24-4d74-b3ba-9b346b6ad918",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_TACHE",
+      "targetId": "21e2c674-8d0d-423f-89d7-906f61e18111",
+      "targetType": "TACHE",
+      "details": "Tâche créée: Objet: Omnis enim at aut mi\n\nConsignes: Et magni sint non si",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-05T17:55:46.547Z"
     }
   ],
   "messagePersonnels": [

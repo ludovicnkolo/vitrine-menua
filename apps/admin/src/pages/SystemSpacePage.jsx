@@ -72,10 +72,10 @@ const SystemSpacePage = ({ userRole }) => {
                     margin: "0 0 0.25rem 0",
                   }}
                 >
-                  Configuration de la Plateforme
+                  {t("systemSpace.title", "Configuration de la Plateforme")}
                 </h1>
                 <p style={{ color: "#64748B", margin: 0, fontSize: "0.85rem" }}>
-                  Personnalisez l'environnement de travail, les préférences d'affichage et la localisation
+                  {t("systemSpace.subtitle", "Personnalisez l'environnement de travail, les préférences d'affichage et la localisation")}
                 </p>
               </div>
 
@@ -106,10 +106,10 @@ const SystemSpacePage = ({ userRole }) => {
                       color: "#0F172A",
                     }}
                   >
-                    Apparence de l'interface
+                    {t("systemSpace.appearance", "Apparence de l'interface")}
                   </h3>
                   <p style={{ margin: "0 0 1.25rem 0", fontSize: "0.8rem", color: "#64748B" }}>
-                    Choisissez le thème d'affichage adapté à votre confort visuel
+                    {t("systemSpace.appearanceDesc", "Choisissez le thème d'affichage adapté à votre confort visuel")}
                   </p>
 
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
@@ -159,7 +159,7 @@ const SystemSpacePage = ({ userRole }) => {
                         <Sun size={28} />
                       </div>
                       <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0F172A" }}>
-                        Mode Clair
+                        {t("systemSpace.lightMode", "Mode Clair")}
                       </div>
                       <div
                         style={{
@@ -169,7 +169,7 @@ const SystemSpacePage = ({ userRole }) => {
                           lineHeight: 1.3,
                         }}
                       >
-                        Recommandé pour un usage de jour en forte luminosité
+                        {t("systemSpace.lightModeDesc", "Recommandé pour un usage de jour en forte luminosité")}
                       </div>
                     </div>
 
@@ -219,7 +219,7 @@ const SystemSpacePage = ({ userRole }) => {
                         <Moon size={28} />
                       </div>
                       <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0F172A" }}>
-                        Mode Sombre
+                        {t("systemSpace.darkMode", "Mode Sombre")}
                       </div>
                       <div
                         style={{
@@ -229,7 +229,7 @@ const SystemSpacePage = ({ userRole }) => {
                           lineHeight: 1.3,
                         }}
                       >
-                        Idéal pour réduire la fatigue oculaire et en environnement sombre
+                        {t("systemSpace.darkModeDesc", "Idéal pour réduire la fatigue oculaire et en environnement sombre")}
                       </div>
                     </div>
                   </div>
@@ -253,10 +253,10 @@ const SystemSpacePage = ({ userRole }) => {
                       color: "#0F172A",
                     }}
                   >
-                    Langue / Language
+                    {t("systemSpace.language", "Langue / Language")}
                   </h3>
                   <p style={{ margin: "0 0 1.25rem 0", fontSize: "0.8rem", color: "#64748B" }}>
-                    Sélectionnez la langue principale de l'interface d'administration
+                    {t("systemSpace.languageDesc", "Sélectionnez la langue principale de l'interface d'administration")}
                   </p>
 
                   <label
@@ -268,7 +268,7 @@ const SystemSpacePage = ({ userRole }) => {
                       marginBottom: "0.5rem",
                     }}
                   >
-                    Langue d'affichage du portail (Select interactif) :
+                    {t("systemSpace.languageSelect", "Langue d'affichage du portail (Select interactif) :")}
                   </label>
 
                   {/* Dropdown Container */}
@@ -308,8 +308,8 @@ const SystemSpacePage = ({ userRole }) => {
                         appearance: "none",
                       }}
                     >
-                      <option value="fr">Français (France) - Langue par défaut</option>
-                      <option value="en">English (US) - Second language</option>
+                      <option value="fr">{t("systemSpace.frenchOption", "Français (France) - Langue par défaut")}</option>
+                      <option value="en">{t("systemSpace.englishOption", "English (US) - Second language")}</option>
                     </select>
                     <ChevronDown
                       size={18}
@@ -325,7 +325,7 @@ const SystemSpacePage = ({ userRole }) => {
                   </div>
 
                   <div style={{ fontSize: "0.78rem", color: "#64748B", marginBottom: "0.4rem" }}>
-                    Options disponibles dans la liste déroulante :
+                    {t("systemSpace.availableOptions", "Options disponibles dans la liste déroulante :")}
                   </div>
                   <div style={{ display: "flex", gap: "0.5rem" }}>
                     <button
@@ -379,12 +379,12 @@ const SystemSpacePage = ({ userRole }) => {
                 }}
               >
                 <div style={{ fontSize: "0.82rem", color: "#64748B" }}>
-                  Info : Les modifications des paramètres généraux sont appliquées immédiatement pour votre session.
+                  {t("systemSpace.infoNotice", "Info : Les modifications des paramètres généraux sont appliquées immédiatement pour votre session.")}
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                   {savedFeedback && (
                     <span style={{ fontSize: "0.82rem", color: "#16A34A", fontWeight: 600 }}>
-                      ✓ Préférences enregistrées
+                      {t("systemSpace.preferencesSaved", "✓ Préférences enregistrées")}
                     </span>
                   )}
                   <button
@@ -401,7 +401,7 @@ const SystemSpacePage = ({ userRole }) => {
                       cursor: "pointer",
                     }}
                   >
-                    Enregistrer les préférences
+                    {t("systemSpace.savePreferences", "Enregistrer les préférences")}
                   </button>
                 </div>
               </div>

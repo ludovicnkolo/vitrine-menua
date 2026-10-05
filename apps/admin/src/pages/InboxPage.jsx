@@ -123,21 +123,21 @@ const InlineDetailField = ({ label, value, children }) => (
   </div>
 );
 
-const getDisplayStatus = (status) => {
-  if (!status) return "Nouveau";
-  const s = status.toUpperCase();
-  if (s === "CLASSE" || s === "CLASSÉ") return "Classé";
-  if (s === "TRAITE" || s === "TRAITÉ") return "Traité";
-  if (s === "NOUVEAU") return "Nouveau";
-  if (s === "A_RAPPELER") return "À rappeler";
-  if (s === "DISCUSSION") return "Discussion";
-  if (s === "SANS_SUITE") return "Sans suite";
-  if (s === "GAGNE") return "Gagné";
-  if (s === "ENTRETIEN") return "Entretien";
-  if (s === "RETENU") return "Retenu";
-  if (s === "REFUSE") return "Refusé";
-  if (s === "EN_ATTENTE") return "En attente";
-  return s;
+const getDisplayStatus = (status, t) => {
+  if (!status) return t ? t("status.NOUVEAU", "Nouveau") : "Nouveau";
+  const s = String(status).toUpperCase();
+  if (s === "CLASSE" || s === "CLASSÉ") return t ? t("status.CLASSE", "Classé") : "Classé";
+  if (s === "TRAITE" || s === "TRAITÉ") return t ? t("status.TRAITE", "Traité") : "Traité";
+  if (s === "NOUVEAU") return t ? t("status.NOUVEAU", "Nouveau") : "Nouveau";
+  if (s === "A_RAPPELER") return t ? t("status.A_RAPPELER", "À rappeler") : "À rappeler";
+  if (s === "DISCUSSION") return t ? t("status.DISCUSSION", "Discussion") : "Discussion";
+  if (s === "SANS_SUITE") return t ? t("status.SANS_SUITE", "Sans suite") : "Sans suite";
+  if (s === "GAGNE") return t ? t("status.GAGNE", "Gagné") : "Gagné";
+  if (s === "ENTRETIEN") return t ? t("status.ENTRETIEN", "Entretien") : "Entretien";
+  if (s === "RETENU") return t ? t("status.RETENU", "Retenu") : "Retenu";
+  if (s === "REFUSE") return t ? t("status.REFUSE", "Refusé") : "Refusé";
+  if (s === "EN_ATTENTE") return t ? t("status.EN_ATTENTE", "En attente") : "En attente";
+  return t ? t(`status.${s}`, s) : s;
 };
 
 const getStatusBadge = (status) => {
@@ -170,6 +170,26 @@ const getVerifaliaBadge = (vStatus) => {
     return { text: "Invalide", bg: "#FEE2E2", color: "#991B1B" };
   }
   return { text: "À vérifier", bg: "#FEF3C7", color: "#92400E" };
+};
+
+const formatPriority = (p, t) => {
+  if (!p) return t ? t("priority.NORMAL", "Normal") : "Normal";
+  const s = String(p).trim().toUpperCase();
+  if (s === "URGENT" || s === "URGENTE") return t ? t("priority.URGENT", "Urgent") : "Urgent";
+  if (s === "PRIORITAIRE" || s === "HAUTE" || s === "ELEVE" || s === "ELEVEE") return t ? t("priority.PRIORITAIRE", "Prioritaire") : "Prioritaire";
+  if (s === "FAIBLE" || s === "BASSE") return t ? t("priority.FAIBLE", "Faible") : "Faible";
+  if (s === "NORMAL" || s === "NORMALE") return t ? t("priority.NORMAL", "Normal") : "Normal";
+  const title = p.charAt(0).toUpperCase() + p.slice(1).toLowerCase();
+  return t ? t(`priority.${s}`, title) : title;
+};
+
+const getPriorityBadge = (p) => {
+  const norm = formatPriority(p);
+  if (norm === "Urgent")
+    return { bg: "#FEE2E2", color: "#DC2626" }; // Red
+  if (norm === "Prioritaire")
+    return { bg: "#FEF3C7", color: "#D97706" }; // Orange
+  return { bg: "#DCFCE7", color: "#166534" }; // Green for Normal
 };
 
 const InboxPage = ({ userRole }) => {
@@ -1095,43 +1115,43 @@ const InboxPage = ({ userRole }) => {
                     minWidth: "150px",
                   }}
                 >
-                  <option value="all">Tous les statuts</option>
+                  <option value="all">{t("common.allStatuses", "Tous les statuts")}</option>
                   {tab === "contact" && (
                     <>
-                      <option value="NOUVEAU">Nouveau</option>
-                      <option value="A_RAPPELER">&Agrave; rappeler</option>
-                      <option value="DISCUSSION">Discussion</option>
-                      <option value="SANS_SUITE">Sans suite</option>
-                      <option value="GAGNE">Gagn&eacute;</option>
+                      <option value="NOUVEAU">{t("status.NOUVEAU", "Nouveau")}</option>
+                      <option value="A_RAPPELER">{t("status.A_RAPPELER", "À rappeler")}</option>
+                      <option value="DISCUSSION">{t("status.DISCUSSION", "Discussion")}</option>
+                      <option value="SANS_SUITE">{t("status.SANS_SUITE", "Sans suite")}</option>
+                      <option value="GAGNE">{t("status.GAGNE", "Gagné")}</option>
                     </>
                   )}
                   {tab === "recrutement" && (
                     <>
-                      <option value="NOUVEAU">Nouveau</option>
-                      <option value="A_RAPPELER">&Agrave; rappeler</option>
-                      <option value="ENTRETIEN">Entretien</option>
-                      <option value="RETENU">Retenu</option>
-                      <option value="REFUSE">Refus&eacute;</option>
+                      <option value="NOUVEAU">{t("status.NOUVEAU", "Nouveau")}</option>
+                      <option value="A_RAPPELER">{t("status.A_RAPPELER", "À rappeler")}</option>
+                      <option value="ENTRETIEN">{t("status.ENTRETIEN", "Entretien")}</option>
+                      <option value="RETENU">{t("status.RETENU", "Retenu")}</option>
+                      <option value="REFUSE">{t("status.REFUSE", "Refusé")}</option>
                     </>
                   )}
                   {tab === "personnel" && (
                     <>
-                      <option value="NOUVEAU">Nouveau</option>
-                      <option value="A_RAPPELER">&Agrave; rappeler</option>
-                      <option value="ENTRETIEN">Entretien</option>
-                      <option value="DISCUSSION">Discussion</option>
-                      <option value="GAGNE">Gagn&eacute;</option>
-                      <option value="RETENU">Retenu</option>
-                      <option value="REFUSE">Refus&eacute;</option>
-                      <option value="SANS_SUITE">Sans suite</option>
+                      <option value="NOUVEAU">{t("status.NOUVEAU", "Nouveau")}</option>
+                      <option value="A_RAPPELER">{t("status.A_RAPPELER", "À rappeler")}</option>
+                      <option value="ENTRETIEN">{t("status.ENTRETIEN", "Entretien")}</option>
+                      <option value="DISCUSSION">{t("status.DISCUSSION", "Discussion")}</option>
+                      <option value="GAGNE">{t("status.GAGNE", "Gagné")}</option>
+                      <option value="RETENU">{t("status.RETENU", "Retenu")}</option>
+                      <option value="REFUSE">{t("status.REFUSE", "Refusé")}</option>
+                      <option value="SANS_SUITE">{t("status.SANS_SUITE", "Sans suite")}</option>
                     </>
                   )}
                   {tab === "interne" && (
                     <>
-                      <option value="NOUVEAU">Nouveau</option>
-                      <option value="A_RAPPELER">&Agrave; rappeler</option>
-                      <option value="TRAITE">Trait&eacute;</option>
-                      <option value="CLASSE">Class&eacute; sans suite</option>
+                      <option value="NOUVEAU">{t("status.NOUVEAU", "Nouveau")}</option>
+                      <option value="A_RAPPELER">{t("status.A_RAPPELER", "À rappeler")}</option>
+                      <option value="TRAITE">{t("status.TRAITE", "Traité")}</option>
+                      <option value="CLASSE">{t("status.CLASSE", "Classé sans suite")}</option>
                     </>
                   )}
                 </select>
@@ -1152,9 +1172,9 @@ const InboxPage = ({ userRole }) => {
                     cursor: "pointer",
                   }}
                 >
-                  <option value={12}>12 par page</option>
-                  <option value={25}>25 par page</option>
-                  <option value={50}>50 par page</option>
+                  <option value={12}>{t("common.perPage", { count: 12, defaultValue: "12 par page" })}</option>
+                  <option value={25}>{t("common.perPage", { count: 25, defaultValue: "25 par page" })}</option>
+                  <option value={50}>{t("common.perPage", { count: 50, defaultValue: "50 par page" })}</option>
                 </select>
 
                 {tab === "personnel" && (currentUser?.role?.name === "Super-administrateur" || currentUser?.role === "Super-administrateur") && (
@@ -1189,30 +1209,30 @@ const InboxPage = ({ userRole }) => {
                 <table style={{ tableLayout: "fixed", width: "100%" }}>
                   <thead>
                     <tr>
-                      <th style={{ width: "5%" }}>{t("inbox.columns.no")}</th>
+                      <th style={{ width: "50px" }}>{t("inbox.columns.no")}</th>
                       {(tab === "personnel" ||
                         tab === "contact" ||
                         tab === "recrutement") && (
-                        <th style={{ width: "9%", whiteSpace: "nowrap" }}>
+                        <th style={{ width: "110px", whiteSpace: "nowrap" }}>
                           {t("inbox.columns.priority")}
                         </th>
                       )}
-                      <th style={{ width: (tab === "personnel" || tab === "contact" || tab === "recrutement") ? "10%" : "12%", whiteSpace: "nowrap" }}>
+                      <th style={{ width: (tab === "personnel" || tab === "contact" || tab === "recrutement") ? "120px" : "130px", whiteSpace: "nowrap" }}>
                         {t("inbox.columns.status")}
                       </th>
-                      <th style={{ width: tab === "personnel" ? "24%" : "20%" }}>
+                      <th style={{ width: tab === "personnel" ? "28%" : "22%" }}>
                         {t("inbox.columns.name")}
                       </th>
-                      <th style={{ width: tab === "personnel" ? "26%" : "22%" }}>
+                      <th style={{ width: tab === "personnel" ? "30%" : "24%" }}>
                         {t("inbox.columns.email")}
                       </th>
                       {(tab !== "personnel") && (
-                        <th style={{ width: "10%" }}>
+                        <th style={{ width: "120px", whiteSpace: "nowrap" }}>
                           {t("inbox.columns.type")}
                         </th>
                       )}
-                      <th className="table-date-cell" style={{ width: "160px" }}>{t("inbox.columns.date")}</th>
-                      <th style={{ width: "80px", textAlign: "center" }}>
+                      <th className="table-date-cell" style={{ width: "165px" }}>{t("inbox.columns.date")}</th>
+                      <th style={{ width: "95px", textAlign: "center", whiteSpace: "nowrap" }}>
                         {t("inbox.columns.actions")}
                       </th>
                     </tr>
@@ -1226,19 +1246,11 @@ const InboxPage = ({ userRole }) => {
                               colSpan="10"
                               style={{ textAlign: "center", padding: "2rem" }}
                             >
-                              Chargement des messages...
+                              {t("common.loading", "Chargement des messages...")}
                             </td>
                           </tr>
                         );
                       }
-
-                      const getPriorityBadge = (p) => {
-                        if (p === "Urgent")
-                          return { bg: "#FEE2E2", color: "#DC2626" }; // Red
-                        if (p === "Prioritaire")
-                          return { bg: "#FEF3C7", color: "#D97706" }; // Orange
-                        return { bg: "#DCFCE7", color: "#166534" }; // Green for Normal
-                      };
 
                       const renderMessageRow = (
                         m,
@@ -1286,7 +1298,7 @@ const InboxPage = ({ userRole }) => {
                             {(tab === "personnel" ||
                               tab === "contact" ||
                               tab === "recrutement") && (
-                              <td>
+                              <td style={{ whiteSpace: "nowrap" }}>
                                 <span
                                   style={
                                     tab === "message"
@@ -1296,21 +1308,21 @@ const InboxPage = ({ userRole }) => {
                                           fontSize: "0.72rem",
                                           fontWeight: 400,
                                           background: getPriorityBadge(
-                                            m.priorite || "Normal"
+                                            m.priorite
                                           ).bg,
                                           color: getPriorityBadge(
-                                            m.priorite || "Normal"
+                                            m.priorite
                                           ).color,
                                         }
                                       : {
-                                          
                                           color: getPriorityBadge(
-                                            m.priorite || "Normal"
+                                            m.priorite
                                           ).color,
+                                          fontWeight: 500,
                                         }
                                   }
                                 >
-                                  {m.priorite || "Normal"}
+                                  {formatPriority(m.priorite, t)}
                                 </span>
                               </td>
                             )}
@@ -1333,7 +1345,7 @@ const InboxPage = ({ userRole }) => {
                                       }
                                 }
                               >
-                                {getDisplayStatus(m.status)}
+                                {getDisplayStatus(m.status, t)}
                               </span>
                             </td>
                             <td>
@@ -1440,8 +1452,8 @@ const InboxPage = ({ userRole }) => {
                             m.nomPrenom,
                             m.email,
                             m.statusSubmitter === "SOCIETE"
-                              ? "Entreprise"
-                              : "Particulier",
+                              ? t("inbox.type.company", "Entreprise")
+                              : t("inbox.type.individual", "Particulier"),
                             "#E0E7FF",
                             "#4F46E5",
                           ),
@@ -1456,8 +1468,8 @@ const InboxPage = ({ userRole }) => {
                             m.nomPrenom,
                             m.email,
                             m.statusSubmitter === "SOCIETE"
-                              ? "Entreprise"
-                              : "Particulier",
+                              ? t("inbox.type.company", "Entreprise")
+                              : t("inbox.type.individual", "Particulier"),
                             "#FEF3C7",
                             "#D97706",
                           ),
@@ -2023,7 +2035,7 @@ const InboxPage = ({ userRole }) => {
                             value={
                               pendingChanges.priorite !== undefined
                                 ? pendingChanges.priorite
-                                : processMsg.priorite || "Urgent"
+                                : formatPriority(processMsg.priorite)
                             }
                             onChange={(e) =>
                               setPendingChange("priorite", e.target.value)
@@ -2033,9 +2045,9 @@ const InboxPage = ({ userRole }) => {
                               padding: "0.5rem 0.75rem",
                               borderRadius: "6px",
                               border: `1px solid ${
-                                (pendingChanges.priorite || processMsg.priorite) === "Urgent"
+                                formatPriority(pendingChanges.priorite !== undefined ? pendingChanges.priorite : processMsg.priorite) === "Urgent"
                                   ? "#EF4444"
-                                  : (pendingChanges.priorite || processMsg.priorite) === "Prioritaire"
+                                  : formatPriority(pendingChanges.priorite !== undefined ? pendingChanges.priorite : processMsg.priorite) === "Prioritaire"
                                   ? "#F59E0B"
                                   : "#CBD5E1"
                               }`,
@@ -2044,7 +2056,7 @@ const InboxPage = ({ userRole }) => {
                               fontWeight: 700,
                               fontSize: "0.85rem",
                               color:
-                                (pendingChanges.priorite || processMsg.priorite) === "Urgent"
+                                formatPriority(pendingChanges.priorite !== undefined ? pendingChanges.priorite : processMsg.priorite) === "Urgent"
                                   ? "#EF4444"
                                   : "#0F172A",
                               cursor: "pointer",
@@ -2364,7 +2376,7 @@ const InboxPage = ({ userRole }) => {
                             value={
                               pendingChanges.priorite !== undefined
                                 ? pendingChanges.priorite
-                                : processMsg.priorite || "Normal"
+                                : formatPriority(processMsg.priorite)
                             }
                             onChange={(e) =>
                               setPendingChange("priorite", e.target.value)
@@ -2516,7 +2528,7 @@ const InboxPage = ({ userRole }) => {
                                 value={
                                   pendingChanges.priorite !== undefined
                                     ? pendingChanges.priorite
-                                    : processMsg.priorite || "Normal"
+                                    : formatPriority(processMsg.priorite)
                                 }
                                 onChange={(e) =>
                                   setPendingChange("priorite", e.target.value)

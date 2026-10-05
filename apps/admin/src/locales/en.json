@@ -19,9 +19,28 @@
     "systemSpace": "System Space",
     "websiteSpace": "Website Space"
   },
+  "tabs": {
+    "equipe": "Team",
+    "client": "Clients",
+    "role": "Roles",
+    "contact": "Contact",
+    "recrutement": "Recruitment",
+    "interne": "Internal",
+    "personnel": "Email Inbox",
+    "publication": "Publications",
+    "settings": "Site Settings",
+    "parametrage": "Site Settings",
+    "audit": "Audit Log",
+    "config": "Configuration",
+    "configuration": "Configuration",
+    "dossiers": "Files",
+    "missions": "Missions",
+    "taches": "Tasks",
+    "ged": "Documents (DMS)",
+    "corbeille": "Trash"
+  },
   "status": {
     "NOUVEAU": "New",
-    
     "EN_COURS": "In Progress",
     "EN_ATTENTE": "On Hold",
     "TERMINE": "Completed",
@@ -30,11 +49,27 @@
     "BLOQUE": "Blocked",
     "ANNULEE": "Cancelled",
     "CORBEILLE": "Trash",
-
-    
     "A_CORRIGER": "To Correct",
-    "TERMINE": "Completed",
-    "ANNULEE": "Cancelled"
+    "ACTIF": "Active",
+    "INACTIF": "Inactive",
+    "GAGNE": "Won",
+    "PERDU": "Lost",
+    "DISCUSSION": "Discussion",
+    "ENTRETIEN": "Interview",
+    "RETENU": "Accepted",
+    "REFUSE": "Rejected",
+    "SANS_SUITE": "No follow-up",
+    "CLASSE": "Filed",
+    "TRAITE": "Processed",
+    "A_RAPPELER": "Call back",
+    "PUBLIE": "Published",
+    "BROUILLON": "Draft"
+  },
+  "priority": {
+    "NORMAL": "Normal",
+    "URGENT": "Urgent",
+    "PRIORITAIRE": "Priority",
+    "FAIBLE": "Low"
   },
   "origin": {
     "CLIENT": "Client",
@@ -45,7 +80,19 @@
     "Super-administrateur": "Super Administrator",
     "Responsable opérationnel": "Operations Manager",
     "Collaborateur": "Collaborator",
-    "Relecteur": "Reviewer"
+    "Relecteur": "Reviewer",
+    "Administrateur technique": "Technical Administrator"
+  },
+  "roles": {
+    "title": "Roles",
+    "createRole": "Create a role",
+    "permissions": "Permissions",
+    "users": "Users",
+    "members": "{{count}} member",
+    "members_plural": "{{count}} members",
+    "permCount": "permission",
+    "permCount_plural": "permissions",
+    "noPermission": "No permissions"
   },
   "common": {
     "save": "Save",
@@ -61,6 +108,8 @@
     "noResult": "No results",
     "status": "Status",
     "all": "All",
+    "allStatuses": "All statuses",
+    "allRoles": "All roles",
     "create": "Create",
     "add": "Add",
     "actions": "Actions",
@@ -80,90 +129,129 @@
     "createdAt": "Created at",
     "updatedAt": "Updated at",
     "dueDate": "Due date",
-    "language": "Language"
-  },
-  "dossier": {
-    "title": "Files",
-    "new": "New file",
-    "origin": "Origin",
-    "handler": "Handler",
-    "noHandler": "-- No handler --",
-    "statuses": "Statuses",
-    "subtitle": "Complete management and lifecycle",
-    "folderName": "File name",
-    "owner": "Owner",
-    "workflow": {
-      "confirm": "Do you want to move this file to the trash?",
-      "systemProtected": "This folder is managed automatically by the system.",
-      "rootProtected": "This main folder cannot be deleted from the DMS."
-    }
-  },
-  "mission": {
-    "title": "Missions",
-    "new": "New mission",
-    "subject": "Mission subject",
-    "folder": "Mission folder"
-  },
-  "task": {
-    "title": "Tasks",
-    "new": "New task",
-    "subtitle": "Internal assignments and mission orders",
-    "searchPlaceholder": "Search by folder, sender or manager...",
-    "allStatuses": "All statuses",
-    "columns": {
-      "id": "ID",
-      "missionFolder": "Folder name",
-      "missionId": "Mission ID",
-      "assignedTo": "Assigned to",
-      "dueDate": "Due date",
-      "status": "Status",
-      "date": "Date",
-      "actions": "Actions"
-    }
-  },
-  "workspace": {
-    "tabs": {
-      "dossiers": "Files",
-      "missions": "Missions",
-      "taches": "Tasks",
-      "ged": "Documents (DMS)"
-    }
+    "language": "Language",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {{current}} of {{total}}",
+    "perPage": "{{count}} per page",
+    "neverConnected": "Never logged in",
+    "active": "Active",
+    "inactive": "Inactive"
   },
   "dashboard": {
     "title": "Control Tower",
-    "subtitle": "Strategic and operational overview",
-    "apply": "Apply",
+    "subtitle": "Strategic and operational overview in real-time",
+    "period": "Period:",
     "from": "From",
     "to": "To",
+    "apply": "Apply",
     "priorityAlerts": "Priority Alerts",
-    "criticalDeadlines": "Critical Deadlines",
-    "blockedOps": "Blocked Operations",
-    "totalVolume": "Total Volume",
-    "newDeposits": "New Deposits",
     "urgentMessages": "Urgent client messages",
+    "criticalDeadlines": "Critical Deadlines",
     "deadlines24h": "Deadlines within 24h",
+    "blockedOps": "Blocked Operations",
     "waitingClient": "Waiting for client response",
+    "totalVolume": "Total Volume",
+    "volumeSub": "Files: {{d}} • Missions: {{m}} • Tasks: {{t}}",
+    "newDeposits": "New Deposits",
     "docsLast24h": "Documents in last 24h",
     "workloadWeather": "Workload Status (Active)",
+    "workloadSub": "Operational workload distribution by collaborator and role",
+    "available": "Available",
+    "inActivity": "Active",
+    "overloaded": "Overloaded",
+    "tasks": "task(s)",
     "productionFunnel": "Production Funnel (Period)",
-    "tasks": "task(s)"
+    "funnelSub": "Volume progress flow from client intake to completion",
+    "cumulativeView": "Cumulative view",
+    "detailedView": "Detailed view",
+    "processedMessages": "Processed Messages",
+    "processedMessagesSub": "Qualified requests & forms",
+    "startedMissions": "Started Missions",
+    "startedMissionsSub": "Active operational missions",
+    "completedTasks": "Completed Tasks",
+    "completedTasksSub": "Validated and reviewed deliverables",
+    "closedDossiers": "Closed Files",
+    "closedDossiersSub": "Finalized and archived services"
   },
-  "gedPage": {
-    "title": "Trash",
+  "users": {
+    "title": "User Space",
+    "addMember": "Add a Member",
+    "addClient": "Add a Client",
+    "searchPlaceholder": "Search by name, email or role...",
+    "searchClientPlaceholder": "Search by name, email or sector...",
+    "neverConnected": "Never logged in",
+    "contactPrefix": "Contact:",
+    "types": {
+      "company": "Company",
+      "individual": "Individual",
+      "anonymous": "Anonymous"
+    },
     "columns": {
-      "target": "Target",
+      "name": "Name",
+      "companyOrName": "Company / Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "state": "Status",
+      "activity": "Activity",
+      "lastLogin": "Last Login",
+      "createdAt": "Created At",
       "type": "Type",
-      "deletedAt": "Deleted at",
       "actions": "Actions"
     }
   },
+  "cms": {
+    "title": "Website Space — Publication Management",
+    "subtitle": "Manage news, articles and content published publicly on the official website",
+    "newPost": "+ New Post",
+    "searchPlaceholder": "Search by title, author, keyword...",
+    "allCategories": "All categories",
+    "onlineCount": "{{count}} Post(s) online",
+    "category": "Category:",
+    "languages": "Languages:",
+    "endOfArticles": "End of articles published on the portal.",
+    "displayCount": "Showing {{count}} post(s)",
+    "columns": {
+      "title": "Post Title",
+      "author": "Author",
+      "status": "Status",
+      "publishedAt": "Publication Date",
+      "actions": "Actions"
+    },
+    "formSettingsTitle": "Website Form Settings",
+    "formSettingsSub": "Control online form openings and anti-spam security",
+    "contactCardTitle": "Public Contact Form",
+    "contactCardSub": "Allows visitors to send quote and information requests",
+    "contactEnabled": "Enabled (Accepts submissions)",
+    "contactDisabled": "Disabled (Blocks submissions)",
+    "contactOpen": "The form is currently open and operational on the site",
+    "recruitmentCardTitle": "Recruitment Form (Careers)",
+    "recruitmentCardSub": "Allows applicants to submit their CV and cover letter",
+    "recruitmentEnabled": "Enabled (Accepts applications)",
+    "recruitmentDisabled": "Disabled (Blocks applications)",
+    "recruitmentActiveSub": "CV submissions are forwarded to the talent pool",
+    "antiSpamTitle": "Blocked Email Addresses (Anti-Spam Protection)",
+    "antiSpamSub": "Listed addresses cannot submit contact forms or applications",
+    "addBlacklistLabel": "Add a new unwanted address:",
+    "addBlacklistBtn": "+ Add",
+    "blockedCount": "Currently blocked addresses ({{count}} active):",
+    "noBlockedEmail": "No blocked emails.",
+    "settingsNotice": "Any changes to forms take effect immediately on the public website.",
+    "saveSettingsBtn": "Save Settings"
+  },
   "inbox": {
     "title": "Inbox",
+    "searchPlaceholder": "Search by name or email...",
+    "type": {
+      "company": "Company",
+      "individual": "Individual"
+    },
     "tabs": {
-      "contact": "Contact Forms",
+      "contact": "Contact",
       "recrutement": "Recruitment",
-      "personnel": "Personal Emails",
-      "interne": "Internal Messages"
+      "personnel": "Email Inbox",
+      "interne": "Internal"
     },
     "columns": {
       "no": "No",
@@ -180,13 +268,23 @@
     "noRO": "-- No manager --"
   },
   "systemSpace": {
-    "title": "Configuration",
-    "appearance": "Appearance",
+    "title": "Platform Settings",
+    "subtitle": "Customize the workspace, display preferences and localization",
+    "appearance": "Interface Appearance",
+    "appearanceDesc": "Choose the display theme suitable for your visual comfort",
     "lightMode": "Light Mode",
+    "lightModeDesc": "Recommended for daytime use in bright light",
     "darkMode": "Dark Mode",
+    "darkModeDesc": "Ideal for reducing eye strain in dark environments",
     "language": "Langue / Language",
-    "languageDesc": "Select the administration interface language.",
-    "audit": "Audit"
+    "languageDesc": "Select the primary language for the administration interface",
+    "languageSelect": "Portal display language (Interactive select):",
+    "availableOptions": "Options available in dropdown list:",
+    "savePreferences": "Save Preferences",
+    "infoNotice": "Info: General settings changes are applied immediately for your session.",
+    "preferencesSaved": "✓ Preferences saved",
+    "frenchOption": "Français (France) - Langue par défaut",
+    "englishOption": "English (US) - Second language"
   },
   "auth": {
     "login": "Login",

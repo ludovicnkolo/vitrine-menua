@@ -1,5 +1,6 @@
 import { getSafeApiUrl } from "../utils/helpers";
 import React, { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { MoreVertical, Pencil, Eye, Trash, Check, AlertTriangle } from "lucide-react";
 import ActionDropdown from "../components/ActionDropdown";
 import { getStatusBadge } from "../utils/helpers";
@@ -13,6 +14,7 @@ const getRoleInitials = (name) => {
 };
 
 const RolesPage = () => {
+  const { t } = useTranslation();
   const [roles, setRoles] = useState([]);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [showRoleModal, setShowRoleModal] = useState(false);
@@ -146,7 +148,7 @@ const RolesPage = () => {
             setOpenMenuId(null);
           }}
         >
-          <Eye size={14} /> Consulter
+          <Eye size={14} /> {t("common.view", "Consulter")}
         </button>
         <button
           type="button"
@@ -161,7 +163,7 @@ const RolesPage = () => {
             setOpenMenuId(null);
           }}
         >
-          <Pencil size={14} /> Modifier
+          <Pencil size={14} /> {t("common.edit", "Modifier")}
         </button>
         <button
           type="button"
@@ -171,7 +173,7 @@ const RolesPage = () => {
             setOpenMenuId(null);
           }}
         >
-          <Trash size={14} /> Supprimer
+          <Trash size={14} /> {t("common.delete", "Supprimer")}
         </button>
       </ActionDropdown>
     );
@@ -196,7 +198,7 @@ const RolesPage = () => {
             className="btn btn-outline"
             style={{ padding: "0.5rem 1rem", color: "var(--text-main)" }}
           >
-            ← Retour
+            {t("common.back", "← Retour")}
           </button>
           <h2 style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600 }}>
             {title}
@@ -430,7 +432,7 @@ const RolesPage = () => {
                 color: "var(--text-main)",
               }}
             >
-              Rôles
+              {t("roles.title", "Rôles")}
             </h1>
             <button
               type="button"
@@ -445,7 +447,7 @@ const RolesPage = () => {
                 
               }}
             >
-              Créer un rôle
+              {t("roles.createRole", "Créer un rôle")}
             </button>
           </div>
 
@@ -454,11 +456,11 @@ const RolesPage = () => {
               <table style={{ tableLayout: "fixed", width: "100%" }}>
                 <thead>
                   <tr>
-                    <th style={{ width: "24%", textAlign: "left", paddingLeft: "1.25rem" }}>Rôle</th>
-                    <th style={{ width: "36%" }}>Permissions</th>
-                    <th style={{ width: "14%" }}>Statut</th>
-                    <th style={{ width: "14%" }}>Utilisateurs</th>
-                    <th style={{ width: "12%" }}>Actions</th>
+                    <th style={{ width: "24%", textAlign: "left", paddingLeft: "1.25rem" }}>{t("users.columns.role", "Rôle")}</th>
+                    <th style={{ width: "36%" }}>{t("roles.permissions", "Permissions")}</th>
+                    <th style={{ width: "14%" }}>{t("users.columns.status", "Statut")}</th>
+                    <th style={{ width: "14%" }}>{t("roles.users", "Utilisateurs")}</th>
+                    <th style={{ width: "12%" }}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -476,11 +478,14 @@ const RolesPage = () => {
                               const arr = JSON.parse(r.permissions);
                               return (
                                 arr.length +
-                                " permission" +
-                                (arr.length > 1 ? "s" : "")
+                                " " +
+                                t("roles.permCount", {
+                                  count: arr.length,
+                                  defaultValue: "permission" + (arr.length > 1 ? "s" : ""),
+                                })
                               );
                             } catch {
-                              return "Aucune permission";
+                              return t("roles.noPermission", "Aucune permission");
                             }
                           })()}
                         </span>
@@ -491,15 +496,15 @@ const RolesPage = () => {
                             color: r.status === "Inactif" ? "var(--danger)" : "var(--success)",
                           }}
                         >
-                          {r.status || "Actif"}
+                          {r.status === "Inactif" ? t("common.inactive", "Inactif") : t("common.active", "Actif")}
                         </span>
                       </td>
                       <td>
                         <span style={{ color: "#1D4ED8" }}>
-                          {r.users} membre{r.users !== 1 ? "s" : ""}
+                          {t("roles.members", { count: r.users, defaultValue: `${r.users} membre${r.users !== 1 ? "s" : ""}` })}
                         </span>
                       </td>
-                      <td>
+                      <td style={{ overflow: "visible" }}>
                         <div
                           style={{
                             display: "flex",

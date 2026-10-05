@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const PaginationControls = ({ page, totalPages, setPage }) => {
+  const { t } = useTranslation();
   if (totalPages < 1) return null;
 
   return (
@@ -25,10 +27,10 @@ const PaginationControls = ({ page, totalPages, setPage }) => {
           cursor: page === 1 ? "not-allowed" : "pointer",
         }}
       >
-        Précédent
+        {t("common.prev", "Précédent")}
       </button>
-      <span style={{  color: "var(--text-muted)" }}>
-        Page {page} sur {totalPages}
+      <span style={{ color: "var(--text-muted)" }}>
+        {t("common.pageOf", { current: page, total: totalPages, defaultValue: `Page ${page} sur ${totalPages}` })}
       </span>
       <button
         type="button"
@@ -42,7 +44,7 @@ const PaginationControls = ({ page, totalPages, setPage }) => {
           cursor: page >= totalPages ? "not-allowed" : "pointer",
         }}
       >
-        Suivant
+        {t("common.next", "Suivant")}
       </button>
     </div>
   );

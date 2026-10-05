@@ -1,5 +1,6 @@
 import { getSafeApiUrl, uploadFile, formatDate } from "../utils/helpers";
 import React, { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
   MoreVertical,
   Search,
@@ -80,6 +81,7 @@ const getUserInitials = (name) => {
 };
 
 const UsersPage = ({ forceTab }) => {
+  const { t } = useTranslation();
   const [tab, setTab] = useState(forceTab || "interne");
   const [openMenuId, setOpenMenuId] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -554,7 +556,7 @@ const UsersPage = ({ forceTab }) => {
             }
           }}
         >
-          <Eye size={14} /> Consulter
+          <Eye size={14} /> {t("common.view", "Consulter")}
         </button>
         <button
           type="button"
@@ -576,7 +578,7 @@ const UsersPage = ({ forceTab }) => {
             }
           }}
         >
-          <Pencil size={14} /> Modifier
+          <Pencil size={14} /> {t("common.edit", "Modifier")}
         </button>
         {userObj?.role?.name !== "Super-administrateur" && (
           <button
@@ -590,7 +592,7 @@ const UsersPage = ({ forceTab }) => {
               }
             }}
           >
-            <Trash size={14} /> Supprimer
+            <Trash size={14} /> {t("common.delete", "Supprimer")}
           </button>
         )}
       </ActionDropdown>
@@ -2530,7 +2532,7 @@ const UsersPage = ({ forceTab }) => {
                   lineHeight: 1,
                 }}
               >
-                {tab === "interne" ? "Ajouter un Membre" : "Ajouter un Client"}
+                {tab === "interne" ? t("users.addMember", "Ajouter un Membre") : t("users.addClient", "Ajouter un Client")}
               </button>
             </div>
           )}
@@ -2558,7 +2560,7 @@ const UsersPage = ({ forceTab }) => {
               />
               <input
                 type="text"
-                placeholder={tab === "interne" ? "Rechercher par nom, email ou rôle..." : "Rechercher par nom, email ou secteur..."}
+                placeholder={tab === "interne" ? t("users.searchPlaceholder", "Rechercher par nom, email ou rôle...") : t("users.searchClientPlaceholder", "Rechercher par nom, email ou secteur...")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
@@ -2584,9 +2586,9 @@ const UsersPage = ({ forceTab }) => {
                 minWidth: "150px",
               }}
             >
-              <option value="all">Tous les statuts</option>
-              <option value="actif">Actif</option>
-              <option value="inactif">Inactif</option>
+              <option value="all">{t("common.allStatuses", "Tous les statuts")}</option>
+              <option value="actif">{t("common.active", "Actif")}</option>
+              <option value="inactif">{t("common.inactive", "Inactif")}</option>
             </select>
           </div>
 
@@ -2595,12 +2597,12 @@ const UsersPage = ({ forceTab }) => {
               <table style={{ tableLayout: "fixed", width: "100%" }}>
                 <thead>
                   <tr>
-                    <th style={{ textAlign: "left", paddingLeft: "1.25rem" }}>Nom</th>
-                    <th style={{ width: "220px" }}>Email</th>
-                    <th style={{ width: "180px" }}>Rôle</th>
-                    <th style={{ width: "100px" }}>Statut</th>
-                    <th className="table-date-cell" style={{ width: "165px" }}>Dernière Connexion</th>
-                    <th style={{ width: "70px" }}>Actions</th>
+                    <th style={{ textAlign: "left", paddingLeft: "1.25rem" }}>{t("users.columns.name", "Nom")}</th>
+                    <th style={{ width: "220px" }}>{t("users.columns.email", "Email")}</th>
+                    <th style={{ width: "180px" }}>{t("users.columns.role", "Rôle")}</th>
+                    <th style={{ width: "100px" }}>{t("users.columns.status", "Statut")}</th>
+                    <th className="table-date-cell" style={{ width: "165px" }}>{t("users.columns.lastLogin", "Dernière Connexion")}</th>
+                    <th style={{ width: "70px" }}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2646,7 +2648,7 @@ const UsersPage = ({ forceTab }) => {
                               : "var(--danger)",
                           }}
                         >
-                          {!u.isBlocked ? "Actif" : "Inactif"}
+                          {!u.isBlocked ? t("common.active", "Actif") : t("common.inactive", "Inactif")}
                         </span>
                       </td>
                       <td
@@ -2659,9 +2661,9 @@ const UsersPage = ({ forceTab }) => {
                       >
                         {u.lastLogin
                           ? formatDate(u.lastLogin)
-                          : "Jamais connecté"}
+                          : t("users.neverConnected", "Jamais connecté")}
                       </td>
-                      <td>
+                      <td style={{ overflow: "visible" }}>
                         <div
                           style={{
                             display: "flex",
@@ -2701,13 +2703,13 @@ const UsersPage = ({ forceTab }) => {
               <table style={{ tableLayout: "fixed", width: "100%" }}>
                 <thead>
                   <tr>
-                    <th style={{ textAlign: "left", paddingLeft: "1.25rem" }}>Société / Nom</th>
-                    <th style={{ width: "200px" }}>Email</th>
-                    <th style={{ width: "100px" }}>Type</th>
-                    <th style={{ width: "90px" }}>État</th>
-                    <th style={{ width: "180px" }}>Activité</th>
-                    <th className="table-date-cell" style={{ width: "155px" }}>Date de création</th>
-                    <th style={{ width: "70px" }}>Actions</th>
+                    <th style={{ textAlign: "left", paddingLeft: "1.25rem" }}>{t("users.columns.name", "Société / Nom")}</th>
+                    <th style={{ width: "200px" }}>{t("users.columns.email", "Email")}</th>
+                    <th style={{ width: "100px" }}>{t("users.columns.type", "Type")}</th>
+                    <th style={{ width: "90px" }}>{t("users.columns.status", "État")}</th>
+                    <th style={{ width: "180px" }}>{t("users.columns.activity", "Activité")}</th>
+                    <th className="table-date-cell" style={{ width: "155px" }}>{t("users.columns.createdAt", "Date de création")}</th>
+                    <th style={{ width: "70px" }}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2738,9 +2740,9 @@ const UsersPage = ({ forceTab }) => {
                           <div
                             className="truncate-name"
                             style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "2px", maxWidth: "100%" }}
-                            title={`Contact : ${c.name}`}
+                            title={`${t("users.contactPrefix", "Contact :")} ${c.name}`}
                           >
-                            Contact : {c.name}
+                            {t("users.contactPrefix", "Contact :")} {c.name}
                           </div>
                         )}
                       </td>
@@ -2768,12 +2770,12 @@ const UsersPage = ({ forceTab }) => {
                           }}
                         >
                           {c.type === "SOCIETE" || c.type === "Société"
-                            ? "Société"
+                            ? t("users.types.company", "Société")
                             : c.type === "PARTICULIER"
-                              ? "Particulier"
+                              ? t("users.types.individual", "Particulier")
                               : c.type === "ANONYME"
-                                ? "Anonyme"
-                                : c.type || "Particulier"}
+                                ? t("users.types.anonymous", "Anonyme")
+                                : c.type || t("users.types.individual", "Particulier")}
                         </span>
                       </td>
                       <td style={{ textAlign: "center" }}>
@@ -2782,7 +2784,7 @@ const UsersPage = ({ forceTab }) => {
                             color: !c.isBlocked ? "var(--success)" : "var(--danger)",
                           }}
                         >
-                          {!c.isBlocked ? "Actif" : "Inactif"}
+                          {!c.isBlocked ? t("common.active", "Actif") : t("common.inactive", "Inactif")}
                         </span>
                       </td>
                       <td>
@@ -2799,7 +2801,7 @@ const UsersPage = ({ forceTab }) => {
                           {c.createdAt ? formatDate(c.createdAt) : "N/A"}
                         </span>
                       </td>
-                      <td>
+                      <td style={{ overflow: "visible" }}>
                         <div
                           style={{
                             display: "flex",

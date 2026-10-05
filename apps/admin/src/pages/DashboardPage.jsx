@@ -185,10 +185,10 @@ const DashboardPage = () => {
               margin: "0 0 0.25rem 0",
             }}
           >
-            Tour de Contrôle
+            {t("dashboard.title", "Tour de Contrôle")}
           </h1>
           <p style={{ color: "#64748B", margin: 0, fontSize: "0.85rem" }}>
-            Vue d'ensemble stratégique et opérationnelle en temps réel
+            {t("dashboard.subtitle", "Vue d'ensemble stratégique et opérationnelle en temps réel")}
           </p>
         </div>
 
@@ -206,7 +206,7 @@ const DashboardPage = () => {
           }}
         >
           <span style={{ fontSize: "0.82rem", color: "#64748B", fontWeight: 500 }}>
-            Période :
+            {t("dashboard.period", "Période :")}
           </span>
 
           {/* Date start */}
@@ -221,7 +221,7 @@ const DashboardPage = () => {
               background: "#FFF",
             }}
           >
-            <span style={{ fontSize: "0.78rem", color: "#64748B" }}>Du</span>
+            <span style={{ fontSize: "0.78rem", color: "#64748B" }}>{t("dashboard.from", "Du")}</span>
             <input
               type="date"
               value={startDate}
@@ -252,7 +252,7 @@ const DashboardPage = () => {
               background: "#FFF",
             }}
           >
-            <span style={{ fontSize: "0.78rem", color: "#64748B" }}>Au</span>
+            <span style={{ fontSize: "0.78rem", color: "#64748B" }}>{t("dashboard.to", "Au")}</span>
             <input
               type="date"
               value={endDate}
@@ -286,7 +286,7 @@ const DashboardPage = () => {
               marginLeft: "0.25rem",
             }}
           >
-            Appliquer
+            {t("dashboard.apply", "Appliquer")}
           </button>
         </div>
       </div>
@@ -321,7 +321,7 @@ const DashboardPage = () => {
                 textTransform: "uppercase",
               }}
             >
-              Alertes prioritaires
+              {t("dashboard.priorityAlerts", "Alertes prioritaires")}
             </span>
             <div
               style={{
@@ -345,7 +345,7 @@ const DashboardPage = () => {
             {alertesCount}
           </div>
           <div style={{ fontSize: "0.74rem", color: "#64748B" }}>
-            Messages clients urgents
+            {t("dashboard.urgentMessages", "Messages clients urgents")}
           </div>
         </div>
 
@@ -370,7 +370,7 @@ const DashboardPage = () => {
                 textTransform: "uppercase",
               }}
             >
-              Délais critiques
+              {t("dashboard.criticalDeadlines", "Délais critiques")}
             </span>
             <div
               style={{
@@ -394,7 +394,7 @@ const DashboardPage = () => {
             {delaisCount}
           </div>
           <div style={{ fontSize: "0.74rem", color: "#64748B" }}>
-            Échéances à - de 24h
+            {t("dashboard.deadlines24h", "Échéances à - de 24h")}
           </div>
         </div>
 
@@ -419,7 +419,7 @@ const DashboardPage = () => {
                 textTransform: "uppercase",
               }}
             >
-              Opérations bloquées
+              {t("dashboard.blockedOps", "Opérations bloquées")}
             </span>
             <div
               style={{
@@ -443,7 +443,7 @@ const DashboardPage = () => {
             {bloqueesCount}
           </div>
           <div style={{ fontSize: "0.74rem", color: "#64748B" }}>
-            Attente retour client
+            {t("dashboard.waitingClient", "Attente retour client")}
           </div>
         </div>
 
@@ -468,7 +468,7 @@ const DashboardPage = () => {
                 textTransform: "uppercase",
               }}
             >
-              Volume total
+              {t("dashboard.totalVolume", "Volume total")}
             </span>
             <div
               style={{
@@ -492,7 +492,11 @@ const DashboardPage = () => {
             {volumeTotal}
           </div>
           <div style={{ fontSize: "0.74rem", color: "#64748B", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-            Dossiers: {totalDossiers} • Missions: {totalMissions} • Tâches: {totalTaches}
+            {t("dashboard.volumeSub", "Dossiers: {{d}} • Missions: {{m}} • Tâches: {{t}}", {
+              d: totalDossiers,
+              m: totalMissions,
+              t: totalTaches,
+            })}
           </div>
         </div>
 
@@ -517,7 +521,7 @@ const DashboardPage = () => {
                 textTransform: "uppercase",
               }}
             >
-              Nouveaux dépôts
+              {t("dashboard.newDeposits", "Nouveaux dépôts")}
             </span>
             <div
               style={{
@@ -541,7 +545,7 @@ const DashboardPage = () => {
             {nouveauxDepots}
           </div>
           <div style={{ fontSize: "0.74rem", color: "#64748B" }}>
-            Documents sur les 24h
+            {t("dashboard.docsLast24h", "Documents sur les 24h")}
           </div>
         </div>
       </div>
@@ -579,10 +583,10 @@ const DashboardPage = () => {
           >
             <div>
               <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "1rem", fontWeight: 700, color: "#0F172A" }}>
-                Météo de Charge (En cours)
+                {t("dashboard.workloadWeather", "Météo de Charge (En cours)")}
               </h3>
               <p style={{ margin: 0, fontSize: "0.78rem", color: "#64748B" }}>
-                Répartition de la charge opérationnelle par collaborateur et rôle
+                {t("dashboard.workloadSub", "Répartition de la charge opérationnelle par collaborateur et rôle")}
               </p>
             </div>
             <select
@@ -599,10 +603,10 @@ const DashboardPage = () => {
                 outline: "none",
               }}
             >
-              <option value="all">Tous les rôles</option>
-              <option value="responsable">Responsable</option>
-              <option value="relecteur">Relecteur</option>
-              <option value="collaborateur">Collaborateur</option>
+              <option value="all">{t("common.allRoles", "Tous les rôles")}</option>
+              <option value="responsable">{t("role.Responsable opérationnel", "Responsable")}</option>
+              <option value="relecteur">{t("role.Relecteur", "Relecteur")}</option>
+              <option value="collaborateur">{t("role.Collaborateur", "Collaborateur")}</option>
             </select>
           </div>
 
@@ -653,7 +657,7 @@ const DashboardPage = () => {
                         {collab.name}
                       </div>
                       <div style={{ fontSize: "0.72rem", color: "#64748B", marginTop: "1px" }}>
-                        Rôle : {collab.role || collab.roleCategory || "Production"}
+                        {t("common.role", "Rôle")} : {t(`role.${collab.role || collab.roleCategory}`, collab.role || collab.roleCategory || "Production")}
                       </div>
                     </div>
                   </div>
@@ -674,7 +678,7 @@ const DashboardPage = () => {
                           gap: "0.3rem",
                         }}
                       >
-                        <span style={{ fontSize: "0.65rem" }}>●</span> En activité
+                        <span style={{ fontSize: "0.65rem" }}>●</span> {t("dashboard.inActivity", "En activité")}
                       </span>
                     ) : (
                       <span
@@ -690,7 +694,7 @@ const DashboardPage = () => {
                           gap: "0.3rem",
                         }}
                       >
-                        <span style={{ fontSize: "0.65rem" }}>●</span> Disponible
+                        <span style={{ fontSize: "0.65rem" }}>●</span> {t("dashboard.available", "Disponible")}
                       </span>
                     )}
 
@@ -705,7 +709,7 @@ const DashboardPage = () => {
                         fontWeight: 600,
                       }}
                     >
-                      {count} tâche(s)
+                      {count} {t("dashboard.tasks", "tâche(s)")}
                     </span>
                   </div>
                 </div>
@@ -738,10 +742,10 @@ const DashboardPage = () => {
           >
             <div>
               <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "1rem", fontWeight: 700, color: "#0F172A" }}>
-                Entonnoir de Production (Période)
+                {t("dashboard.productionFunnel", "Entonnoir de Production (Période)")}
               </h3>
               <p style={{ margin: 0, fontSize: "0.78rem", color: "#64748B" }}>
-                Flux d'avancement des volumes du traitement client à la clôture
+                {t("dashboard.funnelSub", "Flux d'avancement des volumes du traitement client à la clôture")}
               </p>
             </div>
             <select
@@ -758,8 +762,8 @@ const DashboardPage = () => {
                 outline: "none",
               }}
             >
-              <option value="cumulee">Vue cumulée</option>
-              <option value="mensuelle">Vue mensuelle</option>
+              <option value="cumulee">{t("dashboard.cumulativeView", "Vue cumulée")}</option>
+              <option value="mensuelle">{t("dashboard.detailedView", "Vue détaillée")}</option>
             </select>
           </div>
 
@@ -768,10 +772,10 @@ const DashboardPage = () => {
             {/* 1. Messages Traités */}
             <div>
               <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
-                Messages Traités
+                {t("dashboard.processedMessages", "Messages Traités")}
               </div>
               <div style={{ fontSize: "0.72rem", color: "#64748B", marginBottom: "0.35rem" }}>
-                Demandes & formulaires qualifiés
+                {t("dashboard.processedMessagesSub", "Demandes & formulaires qualifiés")}
               </div>
               <div
                 style={{
@@ -806,10 +810,10 @@ const DashboardPage = () => {
             {/* 2. Missions Démarrées */}
             <div>
               <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
-                Missions Démarrées
+                {t("dashboard.startedMissions", "Missions Démarrées")}
               </div>
               <div style={{ fontSize: "0.72rem", color: "#64748B", marginBottom: "0.35rem" }}>
-                Missions opérationnelles en cours
+                {t("dashboard.startedMissionsSub", "Missions opérationnelles en cours")}
               </div>
               <div
                 style={{
@@ -844,10 +848,10 @@ const DashboardPage = () => {
             {/* 3. Tâches Terminées */}
             <div>
               <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
-                Tâches Terminées
+                {t("dashboard.completedTasks", "Tâches Terminées")}
               </div>
               <div style={{ fontSize: "0.72rem", color: "#64748B", marginBottom: "0.35rem" }}>
-                Livrables validés et contrôlés
+                {t("dashboard.completedTasksSub", "Livrables validés et contrôlés")}
               </div>
               <div
                 style={{
@@ -882,10 +886,10 @@ const DashboardPage = () => {
             {/* 4. Dossiers Clôturés */}
             <div>
               <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
-                Dossiers Clôturés
+                {t("dashboard.closedDossiers", "Dossiers Clôturés")}
               </div>
               <div style={{ fontSize: "0.72rem", color: "#64748B", marginBottom: "0.35rem" }}>
-                Projets archivés avec succès
+                {t("dashboard.closedDossiersSub", "Prestations finalisées et archivées")}
               </div>
               <div
                 style={{

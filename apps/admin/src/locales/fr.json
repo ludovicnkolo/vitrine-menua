@@ -19,9 +19,28 @@
     "systemSpace": "Espace système",
     "websiteSpace": "Espace site web"
   },
+  "tabs": {
+    "equipe": "Équipe",
+    "client": "Client",
+    "role": "Rôle",
+    "contact": "Contact",
+    "recrutement": "Recrutement",
+    "interne": "Interne",
+    "personnel": "Boîte e-mail",
+    "publication": "Publication",
+    "settings": "Paramétrage Du Site",
+    "parametrage": "Paramétrage Du Site",
+    "audit": "Audit",
+    "config": "Configuration",
+    "configuration": "Configuration",
+    "dossiers": "Dossiers",
+    "missions": "Missions",
+    "taches": "Tâches",
+    "ged": "Documents (GED)",
+    "corbeille": "Corbeille"
+  },
   "status": {
     "NOUVEAU": "Nouveau",
-    
     "EN_COURS": "En cours",
     "EN_ATTENTE": "En attente",
     "TERMINE": "Terminé",
@@ -30,11 +49,27 @@
     "BLOQUE": "Bloqué",
     "ANNULEE": "Annulé",
     "CORBEILLE": "Corbeille",
-
-    
     "A_CORRIGER": "À corriger",
-    "TERMINE": "Terminée",
-    "ANNULEE": "Annulée"
+    "ACTIF": "Actif",
+    "INACTIF": "Inactif",
+    "GAGNE": "Gagné",
+    "PERDU": "Perdu",
+    "DISCUSSION": "Discussion",
+    "ENTRETIEN": "Entretien",
+    "RETENU": "Retenu",
+    "REFUSE": "Refusé",
+    "SANS_SUITE": "Sans suite",
+    "CLASSE": "Classé",
+    "TRAITE": "Traité",
+    "A_RAPPELER": "À rappeler",
+    "PUBLIE": "Publié",
+    "BROUILLON": "Brouillon"
+  },
+  "priority": {
+    "NORMAL": "Normal",
+    "URGENT": "Urgent",
+    "PRIORITAIRE": "Prioritaire",
+    "FAIBLE": "Faible"
   },
   "origin": {
     "CLIENT": "Client",
@@ -45,7 +80,19 @@
     "Super-administrateur": "Super-Administrateur",
     "Responsable opérationnel": "Responsable Opérationnel",
     "Collaborateur": "Collaborateur",
-    "Relecteur": "Relecteur"
+    "Relecteur": "Relecteur",
+    "Administrateur technique": "Administrateur technique"
+  },
+  "roles": {
+    "title": "Rôles",
+    "createRole": "Créer un rôle",
+    "permissions": "Permissions",
+    "users": "Utilisateurs",
+    "members": "{{count}} membre",
+    "members_plural": "{{count}} membres",
+    "permCount": "permission",
+    "permCount_plural": "permissions",
+    "noPermission": "Aucune permission"
   },
   "common": {
     "save": "Enregistrer",
@@ -61,6 +108,8 @@
     "noResult": "Aucun résultat",
     "status": "Statut",
     "all": "Tous",
+    "allStatuses": "Tous les statuts",
+    "allRoles": "Tous les rôles",
     "create": "Créer",
     "add": "Ajouter",
     "actions": "Actions",
@@ -80,90 +129,129 @@
     "createdAt": "Créé le",
     "updatedAt": "Modifié le",
     "dueDate": "Échéance",
-    "language": "Langue"
-  },
-  "dossier": {
-    "title": "Dossiers",
-    "new": "Nouveau dossier",
-    "origin": "Origine",
-    "handler": "Traitant",
-    "noHandler": "-- Aucun traitant --",
-    "statuses": "Statuts",
-    "subtitle": "Gestion complète et cycle de vie",
-    "folderName": "Nom du dossier",
-    "owner": "Propriétaire",
-    "workflow": {
-      "confirm": "Voulez-vous mettre ce dossier à la corbeille ?",
-      "systemProtected": "Ce dossier est géré automatiquement par le système.",
-      "rootProtected": "Ce dossier principal ne peut pas être supprimé depuis la GED."
-    }
-  },
-  "mission": {
-    "title": "Missions",
-    "new": "Nouvelle mission",
-    "subject": "Objet de la mission",
-    "folder": "Dossier mission"
-  },
-  "task": {
-    "title": "Tâches",
-    "new": "Nouvelle tâche",
-    "subtitle": "Attributions internes et ordres de mission",
-    "searchPlaceholder": "Rechercher par dossier, émetteur ou responsable...",
-    "allStatuses": "Tous les statuts",
-    "columns": {
-      "id": "ID",
-      "missionFolder": "Nom dossier",
-      "missionId": "ID Mission",
-      "assignedTo": "Affecté à",
-      "dueDate": "Échéance",
-      "status": "Statut",
-      "date": "Date",
-      "actions": "Actions"
-    }
-  },
-  "workspace": {
-    "tabs": {
-      "dossiers": "Dossiers",
-      "missions": "Missions",
-      "taches": "Tâches",
-      "ged": "Documents (GED)"
-    }
+    "language": "Langue",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "pageOf": "Page {{current}} sur {{total}}",
+    "perPage": "{{count}} par page",
+    "neverConnected": "Jamais connecté",
+    "active": "Actif",
+    "inactive": "Inactif"
   },
   "dashboard": {
     "title": "Tour de Contrôle",
-    "subtitle": "Vue d'ensemble stratégique et opérationnelle",
-    "apply": "Appliquer",
+    "subtitle": "Vue d'ensemble stratégique et opérationnelle en temps réel",
+    "period": "Période :",
     "from": "Du",
     "to": "Au",
+    "apply": "Appliquer",
     "priorityAlerts": "Alertes Prioritaires",
-    "criticalDeadlines": "Délais Critiques",
-    "blockedOps": "Opérations Bloquées",
-    "totalVolume": "Volume Total",
-    "newDeposits": "Nouveaux Dépôts",
     "urgentMessages": "Messages clients urgents",
+    "criticalDeadlines": "Délais Critiques",
     "deadlines24h": "Échéances à - de 24h",
+    "blockedOps": "Opérations Bloquées",
     "waitingClient": "Attente retour client",
+    "totalVolume": "Volume Total",
+    "volumeSub": "Dossiers: {{d}} • Missions: {{m}} • Tâches: {{t}}",
+    "newDeposits": "Nouveaux Dépôts",
     "docsLast24h": "Documents sur les 24h",
     "workloadWeather": "Météo de Charge (En cours)",
+    "workloadSub": "Répartition de la charge opérationnelle par collaborateur et rôle",
+    "available": "Disponible",
+    "inActivity": "En activité",
+    "overloaded": "Surchargé",
+    "tasks": "tâche(s)",
     "productionFunnel": "Entonnoir de Production (Période)",
-    "tasks": "tâche(s)"
+    "funnelSub": "Flux d'avancement des volumes du traitement client à la clôture",
+    "cumulativeView": "Vue cumulée",
+    "detailedView": "Vue détaillée",
+    "processedMessages": "Messages Traités",
+    "processedMessagesSub": "Demandes & formulaires qualifiés",
+    "startedMissions": "Missions Démarrées",
+    "startedMissionsSub": "Missions opérationnelles en cours",
+    "completedTasks": "Tâches Terminées",
+    "completedTasksSub": "Livrables validés et contrôlés",
+    "closedDossiers": "Dossiers Clôturés",
+    "closedDossiersSub": "Prestations finalisées et archivées"
   },
-  "gedPage": {
-    "title": "Corbeille",
+  "users": {
+    "title": "Espace Utilisateur",
+    "addMember": "Ajouter un Membre",
+    "addClient": "Ajouter un Client",
+    "searchPlaceholder": "Rechercher par nom, email ou rôle...",
+    "searchClientPlaceholder": "Rechercher par nom, email ou secteur...",
+    "neverConnected": "Jamais connecté",
+    "contactPrefix": "Contact :",
+    "types": {
+      "company": "Société",
+      "individual": "Particulier",
+      "anonymous": "Anonyme"
+    },
     "columns": {
-      "target": "Cible",
+      "name": "Nom",
+      "companyOrName": "Société / Nom",
+      "email": "Email",
+      "role": "Rôle",
+      "status": "Statut",
+      "state": "État",
+      "activity": "Activité",
+      "lastLogin": "Dernière connexion",
+      "createdAt": "Date de création",
       "type": "Type",
-      "deletedAt": "Supprimé le",
       "actions": "Actions"
     }
   },
+  "cms": {
+    "title": "Espace Site Web — Gestion des Publications",
+    "subtitle": "Pilotez les actualités, articles et contenus diffusés publiquement sur le site officiel",
+    "newPost": "+ Nouvelle Actualité",
+    "searchPlaceholder": "Rechercher par titre, auteur, mot-clé...",
+    "allCategories": "Toutes les catégories",
+    "onlineCount": "{{count}} Actualité(s) en ligne",
+    "category": "Catégorie :",
+    "languages": "Langues :",
+    "endOfArticles": "Fin des articles publiés sur le portail.",
+    "displayCount": "Affichage de {{count}} actualité(s)",
+    "columns": {
+      "title": "Titre de l'actualité",
+      "author": "Auteur",
+      "status": "Statut",
+      "publishedAt": "Date de publication",
+      "actions": "Actions"
+    },
+    "formSettingsTitle": "Paramètres des formulaires du site",
+    "formSettingsSub": "Contrôlez l'ouverture des formulaires en ligne et la sécurité anti-spam",
+    "contactCardTitle": "Formulaire de Contact Public",
+    "contactCardSub": "Permet aux visiteurs d'envoyer des demandes de devis et d'informations",
+    "contactEnabled": "Activé (Accepte les soumissions)",
+    "contactDisabled": "Désactivé (Bloque les soumissions)",
+    "contactOpen": "Le formulaire est actuellement ouvert et opérationnel sur le site",
+    "recruitmentCardTitle": "Formulaire Recrutement (Carrières)",
+    "recruitmentCardSub": "Permet aux candidats de déposer leur CV et lettre de motivation",
+    "recruitmentEnabled": "Activé (Accepte les candidatures)",
+    "recruitmentDisabled": "Désactivé (Bloque les candidatures)",
+    "recruitmentActiveSub": "Les soumissions de CV sont transmises au vivier de talents",
+    "antiSpamTitle": "Adresses Email bloquées (Protection Anti-Spam)",
+    "antiSpamSub": "Les adresses répertoriées ici ne peuvent pas soumettre de formulaires de contact ou de candidatures",
+    "addBlacklistLabel": "Ajouter une nouvelle adresse indésirable :",
+    "addBlacklistBtn": "+ Ajouter",
+    "blockedCount": "Adresses actuellement bloquées ({{count}} active(s)) :",
+    "noBlockedEmail": "Aucun email bloqué.",
+    "settingsNotice": "Toute modification des formulaires prend effet immédiatement sur le site public.",
+    "saveSettingsBtn": "Enregistrer les paramètres"
+  },
   "inbox": {
     "title": "Boîte de réception",
+    "searchPlaceholder": "Rechercher par nom ou email...",
+    "type": {
+      "company": "Entreprise",
+      "individual": "Particulier"
+    },
     "tabs": {
-      "contact": "Formulaires Contact",
+      "contact": "Contact",
       "recrutement": "Recrutement",
-      "personnel": "E-mails personnels",
-      "interne": "Messages internes"
+      "personnel": "Boîte e-mail",
+      "interne": "Interne"
     },
     "columns": {
       "no": "N°",
@@ -180,13 +268,23 @@
     "noRO": "-- Aucun responsable --"
   },
   "systemSpace": {
-    "title": "Configuration",
-    "appearance": "Apparence",
+    "title": "Configuration de la Plateforme",
+    "subtitle": "Personnalisez l'environnement de travail, les préférences d'affichage et la localisation",
+    "appearance": "Apparence de l'interface",
+    "appearanceDesc": "Choisissez le thème d'affichage adapté à votre confort visuel",
     "lightMode": "Mode Clair",
+    "lightModeDesc": "Recommandé pour un usage de jour en forte luminosité",
     "darkMode": "Mode Sombre",
+    "darkModeDesc": "Idéal pour réduire la fatigue oculaire et en environnement sombre",
     "language": "Langue / Language",
-    "languageDesc": "Sélectionnez la langue de l'interface d'administration.",
-    "audit": "Audit"
+    "languageDesc": "Sélectionnez la langue principale de l'interface d'administration",
+    "languageSelect": "Langue d'affichage du portail (Select interactif) :",
+    "availableOptions": "Options disponibles dans la liste déroulante :",
+    "savePreferences": "Enregistrer les préférences",
+    "infoNotice": "Info : Les modifications des paramètres généraux sont appliquées immédiatement pour votre session.",
+    "preferencesSaved": "✓ Préférences enregistrées",
+    "frenchOption": "Français (France) - Langue par défaut",
+    "englishOption": "English (US) - Second language"
   },
   "auth": {
     "login": "Connexion",

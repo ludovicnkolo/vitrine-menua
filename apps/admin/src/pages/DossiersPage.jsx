@@ -3287,13 +3287,13 @@ const DossiersPage = () => {
         <table style={{ tableLayout: "fixed", width: "100%" }}>
           <thead>
             <tr>
-              <th style={{ width: "85px" }}>{t("common.reference", "Référence")}</th>
-              <th style={{ textAlign: "left", paddingLeft: "1.25rem" }}>{t("dossier.folderName", "Nom du dossier")}</th>
-              <th style={{ width: "115px" }}>{t("dossier.origin", "Origine")}</th>
-              <th style={{ width: "180px" }}>{t("dossier.owner", "Propriétaire")}</th>
-              <th style={{ width: "110px" }}>{t("common.status", "Statut")}</th>
-              <th className="table-date-cell" style={{ width: "165px" }}>{t("common.createdAt", "Date de création")}</th>
-              <th style={{ width: "70px" }}>{t("common.actions", "Actions")}</th>
+              <th style={{ width: "110px", textAlign: "center" }}>{t("common.reference", "Référence")}</th>
+              <th style={{ width: "28%", textAlign: "left", paddingLeft: "1.25rem" }}>{t("dossier.folderName", "Nom du dossier")}</th>
+              <th style={{ width: "120px", textAlign: "center" }}>{t("dossier.origin", "Origine")}</th>
+              <th style={{ width: "24%", textAlign: "center" }}>{t("dossier.owner", "Propriétaire")}</th>
+              <th style={{ width: "120px", textAlign: "center" }}>{t("common.status", "Statut")}</th>
+              <th className="table-date-cell" style={{ width: "165px", textAlign: "center" }}>{t("common.createdAt", "Date de création")}</th>
+              <th style={{ width: "80px", textAlign: "center" }}>{t("common.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -3358,7 +3358,7 @@ const DossiersPage = () => {
                       key={d.id}
                       className={isExpired(d) ? "row-expired" : ""}
                     >
-                      <td>
+                      <td style={{ textAlign: "center" }}>
                         <div
                           className="truncate-name"
                           style={{
@@ -3384,7 +3384,7 @@ const DossiersPage = () => {
                           {d.name}
                         </span>
                       </td>
-                      <td>
+                      <td style={{ textAlign: "center" }}>
                         <div
                           className="truncate-name"
                           style={{
@@ -3399,7 +3399,7 @@ const DossiersPage = () => {
                           {dOrigin}
                         </div>
                       </td>
-                      <td>
+                      <td style={{ textAlign: "center" }}>
                         <div
                           className="truncate-name"
                           style={{
@@ -3412,7 +3412,7 @@ const DossiersPage = () => {
                           {dOwner}
                         </div>
                       </td>
-                      <td>
+                      <td style={{ textAlign: "center" }}>
                         <div style={{ display: "inline-flex", justifyContent: "center" }}>
                           {getStatusBadge(d.status)}
                         </div>
@@ -3435,7 +3435,7 @@ const DossiersPage = () => {
                           minute: "2-digit",
                         })}
                       </td>
-                      <td>
+                      <td style={{ textAlign: "center" }}>
                         <div
                           style={{
                             display: "flex",

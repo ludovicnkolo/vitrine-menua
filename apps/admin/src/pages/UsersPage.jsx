@@ -2601,12 +2601,12 @@ const UsersPage = ({ forceTab }) => {
               <table style={{ tableLayout: "fixed", width: "100%" }}>
                 <thead>
                   <tr>
-                    <th style={{ textAlign: "left", paddingLeft: "1.25rem" }}>{t("users.columns.name", "Nom")}</th>
-                    <th style={{ width: "220px" }}>{t("users.columns.email", "Email")}</th>
-                    <th style={{ width: "180px" }}>{t("users.columns.role", "Rôle")}</th>
-                    <th style={{ width: "100px" }}>{t("users.columns.status", "Statut")}</th>
-                    <th className="table-date-cell" style={{ width: "165px" }}>{t("users.columns.lastLogin", "Dernière Connexion")}</th>
-                    <th style={{ width: "70px" }}>{t("common.actions", "Actions")}</th>
+                    <th style={{ textAlign: "left", paddingLeft: "1.25rem", width: "24%" }}>{t("users.columns.name", "Nom")}</th>
+                    <th style={{ width: "26%" }}>{t("users.columns.email", "Email")}</th>
+                    <th style={{ width: "20%" }}>{t("users.columns.role", "Rôle")}</th>
+                    <th style={{ width: "110px", textAlign: "center" }}>{t("users.columns.status", "Statut")}</th>
+                    <th className="table-date-cell" style={{ width: "165px", textAlign: "center" }}>{t("users.columns.lastLogin", "Dernière Connexion")}</th>
+                    <th style={{ width: "80px", textAlign: "center" }}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2708,13 +2708,13 @@ const UsersPage = ({ forceTab }) => {
               <table style={{ tableLayout: "fixed", width: "100%" }}>
                 <thead>
                   <tr>
-                    <th style={{ textAlign: "left", paddingLeft: "1.25rem" }}>{t("users.columns.name", "Société / Nom")}</th>
-                    <th style={{ width: "200px" }}>{t("users.columns.email", "Email")}</th>
-                    <th style={{ width: "100px" }}>{t("users.columns.type", "Type")}</th>
-                    <th style={{ width: "90px" }}>{t("users.columns.status", "État")}</th>
-                    <th style={{ width: "180px" }}>{t("users.columns.activity", "Activité")}</th>
-                    <th className="table-date-cell" style={{ width: "155px" }}>{t("users.columns.createdAt", "Date de création")}</th>
-                    <th style={{ width: "70px" }}>{t("common.actions", "Actions")}</th>
+                    <th style={{ textAlign: "left", paddingLeft: "1.25rem", width: "22%" }}>{t("users.columns.name", "Société / Nom")}</th>
+                    <th style={{ width: "24%" }}>{t("users.columns.email", "Email")}</th>
+                    <th style={{ width: "110px", textAlign: "center" }}>{t("users.columns.type", "Type")}</th>
+                    <th style={{ width: "100px", textAlign: "center" }}>{t("users.columns.status", "État")}</th>
+                    <th style={{ width: "18%" }}>{t("users.columns.activity", "Activité")}</th>
+                    <th className="table-date-cell" style={{ width: "165px", textAlign: "center" }}>{t("users.columns.createdAt", "Date de création")}</th>
+                    <th style={{ width: "80px", textAlign: "center" }}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2801,7 +2801,7 @@ const UsersPage = ({ forceTab }) => {
                           {c.secteurActivite || "N/A"}
                         </div>
                       </td>
-                      <td className="table-date-cell" style={{ textAlign: "center", width: "155px" }}>
+                      <td className="table-date-cell" style={{ textAlign: "center", width: "165px" }}>
                         <span style={{ color: "var(--text-muted)" }}>
                           {c.createdAt ? formatDate(c.createdAt) : "N/A"}
                         </span>

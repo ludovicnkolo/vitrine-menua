@@ -2453,24 +2453,23 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         <table style={{ tableLayout: "fixed", width: "100%" }}>
           <thead>
             <tr>
-              <th style={{ width: "85px", textAlign: "left" }}>{t("task.columns.id", "ID")}</th>
-              <th style={{ textAlign: "left" }}>
+              <th style={{ width: "110px", textAlign: "left", paddingLeft: "1.25rem" }}>{t("task.columns.id", "ID")}</th>
+              <th style={{ width: "26%", textAlign: "left" }}>
                 {mode === "MISSION" ? t("task.columns.missionFolder", "Dossier / Mission") : t("task.columns.missionId", "Mission")}
               </th>
-              <th style={{ width: "170px", textAlign: "left" }}>{t("task.columns.assignedTo", "Assigné à")}</th>
+              <th style={{ width: "22%", textAlign: "left" }}>{t("task.columns.assignedTo", "Assigné à")}</th>
               <th
                 className="table-date-cell"
                 style={{
-                  width: "125px",
-                  textAlign: "right",
-                  paddingRight: "0.5rem",
+                  width: "135px",
+                  textAlign: "center",
                 }}
               >
                 {t("task.columns.dueDate", "Échéance")}
               </th>
-              <th style={{ width: "115px", textAlign: "center" }}>{t("task.columns.status", "Statut")}</th>
-              <th className="table-date-cell" style={{ width: "155px", textAlign: "left" }}>{t("task.columns.date", "Date de création")}</th>
-              <th style={{ width: "70px", textAlign: "center" }}>{t("task.columns.actions", "Actions")}</th>
+              <th style={{ width: "120px", textAlign: "center" }}>{t("task.columns.status", "Statut")}</th>
+              <th className="table-date-cell" style={{ width: "165px", textAlign: "center" }}>{t("task.columns.date", "Date de création")}</th>
+              <th style={{ width: "80px", textAlign: "center" }}>{t("task.columns.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -2492,7 +2491,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               };
               return (
                 <tr key={t.id} className={isExpired(t) ? "row-expired" : ""}>
-                  <td style={{ textAlign: "left" }}>
+                  <td style={{ textAlign: "left", paddingLeft: "1.25rem" }}>
                     <div
                       className="truncate-name"
                       style={{
@@ -2536,7 +2535,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                       {t.assignedTo?.name || "Non assigné"}
                     </div>
                   </td>
-                  <td className="table-date-cell" style={{ textAlign: "right", paddingRight: "0.5rem", width: "125px" }}>
+                  <td className="table-date-cell" style={{ textAlign: "center" }}>
                     <span
                       style={{
                         color: t.echeance
@@ -2551,15 +2550,14 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                         : "Aucune"}
                     </span>
                   </td>
-                  <td style={{ textAlign: "right", paddingRight: "1rem" }}>
+                  <td style={{ textAlign: "center" }}>
                     {getStatusBadge(t.status)}
                   </td>
                   <td
                     className="table-date-cell"
                     style={{
-                      textAlign: "left",
+                      textAlign: "center",
                       color: "var(--text-muted)",
-                      width: "155px",
                     }}
                   >
                     {formatDate(t.createdAt)}

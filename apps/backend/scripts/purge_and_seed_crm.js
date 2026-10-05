@@ -5,7 +5,8 @@
  * 1. Conserve le Super-Administrateur et réinitialise son mot de passe à "123456@w".
  * 2. Conserve 100% des publications du CMS (offres d'emploi, articles de blog, etc.).
  * 3. Supprime tous les autres éléments (Dossiers, Missions, Tâches, Documents, Clients, Formulaires, Messages, Logs, Liens Magiques, Notifications).
- * 4. Crée automatiquement un membre interne complet pour CHAQUE rôle avec tous les champs requis et le mot de passe universel "123456@w".
+ * 4. Crée exactement 2 membres internes par rôle opérationnel (2 Collaborateurs, 2 Relecteurs, 2 Techniciens, 2 Responsables Opérationnels)
+ *    avec le numéro devant leur nom (ex: "1 - Collaborateur", "2 - Collaborateur"), tous les champs requis remplis, et le mot de passe "123456@w".
  * 
  * Usage : node scripts/purge_and_seed_crm.js
  */
@@ -54,57 +55,113 @@ const DEFAULT_ROLES = [
   }
 ];
 
-const ROLE_TEMPLATES = {
-  'Responsable opérationnel': {
-    name: 'Responsable Opérationnel',
-    email: 'resp.op@menua.local',
+// Configuration des 2 membres par rôle opérationnel avec numéro devant le nom
+const MEMBERS_TO_SEED = [
+  // ─── 2 RESPONSABLES OPÉRATIONNELS ───
+  {
+    roleName: 'Responsable opérationnel',
+    name: '1 - Responsable Opérationnel',
+    email: 'resp.op1@menua.local',
     telephone: '+237 690 00 00 01',
     lieuResidence: 'Douala, Cameroun',
-    experienceCle: '7 ans en gestion de projets financiers et audit organisationnel',
+    experienceCle: '8 ans en direction de projets financiers, cadrage stratégique et audit organisationnel',
     langues: 'Français, Anglais',
-    formations: 'Master Audit & Contrôle de Gestion (ESSEC / HEC)',
-    profile: 'Pilotage opérationnel, cadrage de dossiers et supervision des équipes terrain.'
+    formations: 'Master 2 Audit & Contrôle de Gestion (ESSEC / HEC)',
+    profile: 'Supervision des missions, cadrage des dossiers clients et pilotage opérationnel.'
   },
-  'Relecteur': {
-    name: 'Relecteur Conformité',
-    email: 'relecteur@menua.local',
+  {
+    roleName: 'Responsable opérationnel',
+    name: '2 - Responsable Opérationnel',
+    email: 'resp.op2@menua.local',
     telephone: '+237 690 00 00 02',
     lieuResidence: 'Yaoundé, Cameroun',
-    experienceCle: '6 ans en relecture critique, contrôle de conformité et droit des affaires',
+    experienceCle: '6 ans en coordination opérationnelle, affectation des tâches et gestion de portefeuille',
     langues: 'Français, Anglais',
-    formations: 'Master 2 Droit des Affaires & Fiscalité',
-    profile: 'Revue juridique, contrôle de qualité des livrables et validation avant livraison client.'
+    formations: 'Master en Management de Projets & Stratégie Financière',
+    profile: 'Planification des affectations, validation des jalons et suivi des livrables.'
   },
-  'Collaborateur': {
-    name: 'Collaborateur Opérationnel',
-    email: 'collaborateur@menua.local',
+
+  // ─── 2 RELECTEURS ───
+  {
+    roleName: 'Relecteur',
+    name: '1 - Relecteur',
+    email: 'relecteur1@menua.local',
     telephone: '+237 690 00 00 03',
-    lieuResidence: 'Douala, Cameroun',
-    experienceCle: '4 ans en comptabilité générale, tenue des livres et reporting KYC',
+    lieuResidence: 'Yaoundé, Cameroun',
+    experienceCle: '7 ans en audit de conformité réglementaire, droit des affaires et contrôle qualité',
     langues: 'Français, Anglais',
-    formations: 'Licence Pro Comptabilité & Gestion des Organisations',
-    profile: 'Exécution rigoureuse des tâches, rédaction des rapports et collecte de pièces comptables.'
+    formations: 'Master 2 Droit des Affaires & Fiscalité Internationale',
+    profile: 'Contrôle qualité approfondi, vérification de conformité et validation finale des tâches.'
   },
-  'Administrateur technique': {
-    name: 'Administrateur Technique',
-    email: 'admin.tech@menua.local',
+  {
+    roleName: 'Relecteur',
+    name: '2 - Relecteur',
+    email: 'relecteur2@menua.local',
     telephone: '+237 690 00 00 04',
+    lieuResidence: 'Douala, Cameroun',
+    experienceCle: '5 ans en expertise comptable révisée et relecture critique de rapports financiers',
+    langues: 'Français, Anglais',
+    formations: 'Diplôme Supérieur de Comptabilité et Gestion (DSCG)',
+    profile: 'Relecture critique, certification des analyses et validation des fiches de synthèse.'
+  },
+
+  // ─── 2 COLLABORATEURS ───
+  {
+    roleName: 'Collaborateur',
+    name: '1 - Collaborateur',
+    email: 'collaborateur1@menua.local',
+    telephone: '+237 690 00 00 05',
+    lieuResidence: 'Douala, Cameroun',
+    experienceCle: '4 ans en comptabilité générale, révision des comptes et tenue des livres',
+    langues: 'Français, Anglais',
+    formations: 'Licence Pro Comptabilité & Finance d\'Entreprise',
+    profile: 'Exécution rigoureuse des tâches assignées, collecte et traitement des pièces comptables.'
+  },
+  {
+    roleName: 'Collaborateur',
+    name: '2 - Collaborateur',
+    email: 'collaborateur2@menua.local',
+    telephone: '+237 690 00 00 06',
+    lieuResidence: 'Bafoussam, Cameroun',
+    experienceCle: '3 ans en gestion administrative, assistance opérationnelle et reporting client',
+    langues: 'Français, Anglais',
+    formations: 'Licence en Sciences de Gestion & Économie',
+    profile: 'Traitement des dossiers opérationnels, saisie de données et reporting terrain régulier.'
+  },
+
+  // ─── 2 TECHNICIENS (ADMINISTRATEURS TECHNIQUES) ───
+  {
+    roleName: 'Administrateur technique',
+    name: '1 - Administrateur Technique',
+    email: 'admin.tech1@menua.local',
+    telephone: '+237 690 00 00 07',
     lieuResidence: 'Paris, France',
-    experienceCle: '5 ans en administration système, sécurité des données et gestion cloud',
+    experienceCle: '6 ans en administration systèmes d\'information, sécurité réseau et infrastructure cloud',
     langues: 'Français, Anglais',
     formations: 'Ingénieur en Systèmes d\'Information & Cybersécurité',
-    profile: 'Maintenance de l\'infrastructure CRM, gestion des rôles et contrôle des accès techniques.'
+    profile: 'Gestion des accès informatiques, attribution des rôles et sécurité de la plateforme.'
+  },
+  {
+    roleName: 'Administrateur technique',
+    name: '2 - Administrateur Technique',
+    email: 'admin.tech2@menua.local',
+    telephone: '+237 690 00 00 08',
+    lieuResidence: 'Douala, Cameroun',
+    experienceCle: '4 ans en maintenance informatique, support technique et intégration d\'outils CRM',
+    langues: 'Français, Anglais',
+    formations: 'Licence Pro Réseaux Télécoms & Administration Systèmes',
+    profile: 'Support technique utilisateurs, paramétrage des comptes et monitoring de conformité.'
   }
-};
+];
 
 async function main() {
   console.log('═══════════════════════════════════════════════════════════════════');
-  console.log('🚀 DÉMARRAGE DE LA PURGE SÉLECTIVE & RE-GÉNÉRATION DU CRM MENUA');
+  console.log('🚀 DÉMARRAGE DE LA PURGE SÉLECTIVE & CRÉATION DES 8 MEMBRES DU CRM');
   console.log('═══════════════════════════════════════════════════════════════════\n');
 
   // 1. Initialiser / Vérifier les rôles par défaut
   console.log('1️⃣  Vérification des rôles système...');
-  let superAdminRole = null;
+  const roleMap = {};
   for (const r of DEFAULT_ROLES) {
     let role = await prisma.role.findUnique({ where: { name: r.name } });
     if (!role) {
@@ -118,10 +175,10 @@ async function main() {
       });
       console.log(`   + Rôle créé : ${role.name}`);
     }
-    if (r.name === 'Super-administrateur') {
-      superAdminRole = role;
-    }
+    roleMap[role.name] = role;
   }
+
+  const superAdminRole = roleMap['Super-administrateur'];
 
   // 2. Trouver ou Créer le Super-Administrateur à préserver
   console.log('\n2️⃣  Localisation du Super-Administrateur...');
@@ -147,7 +204,7 @@ async function main() {
         email: 'r.fouelefack@menuaconsulting.com',
         password: hashedUniversalPassword,
         roleId: superAdminRole.id,
-        telephone: '+237 690 00 00 00',
+        telephone: '+237690000000',
         lieuResidence: 'Douala, Cameroun',
         experienceCle: 'Direction Générale & Associée Principale - 15 ans d\'expérience',
         langues: 'Français, Anglais',
@@ -227,54 +284,43 @@ async function main() {
   });
   console.log(`   ✓ Utilisateurs supprimés : ${countUsersDeleted.count}`);
 
-  // 6. Création d'un utilisateur interne complet par rôle
-  console.log('\n6️⃣  Création des utilisateurs internes avec tous les champs requis...');
+  // 6. Création des 8 utilisateurs internes (2 par rôle avec numéro devant leur nom)
+  console.log('\n6️⃣  Création des 8 utilisateurs internes avec numéro devant leur nom...');
   
-  const allRoles = await prisma.role.findMany();
   const createdUsers = [];
 
-  let phoneIndex = 1;
-  for (const role of allRoles) {
-    if (role.name === 'Super-administrateur') continue; // Déjà présent
-
-    const template = ROLE_TEMPLATES[role.name] || {
-      name: `Membre ${role.name}`,
-      email: `${role.name.toLowerCase().replace(/[^a-z0-9]/g, '.')}@menua.local`,
-      telephone: `+237 690 00 00 ${String(phoneIndex).padStart(2, '0')}`,
-      lieuResidence: 'Douala, Cameroun',
-      experienceCle: `4 ans d'expérience dans les fonctions de ${role.name}`,
-      langues: 'Français, Anglais',
-      formations: 'Diplôme d\'Enseignement Supérieur Spécialisé',
-      profile: `Collaborateur qualifié au poste de ${role.name}`
-    };
-
-    phoneIndex++;
+  for (const member of MEMBERS_TO_SEED) {
+    const role = roleMap[member.roleName];
+    if (!role) {
+      console.error(`   ❌ Rôle introuvable : ${member.roleName}`);
+      continue;
+    }
 
     const newUser = await prisma.utilisateur.create({
       data: {
-        name: template.name,
-        email: template.email.toLowerCase().trim(),
+        name: member.name,
+        email: member.email.toLowerCase().trim(),
         password: hashedUniversalPassword,
         roleId: role.id,
-        telephone: template.telephone.replace(/\s/g, ''),
-        lieuResidence: template.lieuResidence,
-        experienceCle: template.experienceCle,
-        langues: template.langues,
-        formations: template.formations,
-        profile: template.profile,
+        telephone: member.telephone.replace(/\s/g, ''),
+        lieuResidence: member.lieuResidence,
+        experienceCle: member.experienceCle,
+        langues: member.langues,
+        formations: member.formations,
+        profile: member.profile,
         status: 'Actif',
         isBlocked: false
       }
     });
 
     createdUsers.push({
-      role: role.name,
+      role: member.roleName,
       name: newUser.name,
       email: newUser.email,
-      telephone: template.telephone
+      telephone: member.telephone
     });
 
-    console.log(`   + [${role.name}] ${newUser.name} (${newUser.email}) - Téléphone: ${template.telephone}`);
+    console.log(`   + [${member.roleName}] ${newUser.name} (${newUser.email}) - Tél: ${member.telephone}`);
   }
 
   // 7. Vérification de l'intégrité des publications
@@ -283,10 +329,10 @@ async function main() {
   console.log('\n═══════════════════════════════════════════════════════════════════');
   console.log('🎉 OPÉRATION TERMINÉE AVEC SUCCÈS !');
   console.log('═══════════════════════════════════════════════════════════════════');
-  console.log(`📁 Publications CMS conservées : ${pubCountAfter} (inchangées)`);
-  console.log(`🔑 Mot de passe universel défini pour tous les comptes : ${UNIVERSAL_PASSWORD}\n`);
+  console.log(`📁 Publications CMS conservées : ${pubCountAfter} (intactes)`);
+  console.log(`🔑 Mot de passe universel : ${UNIVERSAL_PASSWORD}\n`);
 
-  console.log('📋 COMPTES DISPONIBLES POUR LA CONNEXION :');
+  console.log('📋 COMPTES CRÉÉS DANS LE CRM :');
   console.log('───────────────────────────────────────────────────────────────────');
   console.log(`• Super-administrateur :`);
   console.log(`  - Nom   : ${superAdmin.name}`);

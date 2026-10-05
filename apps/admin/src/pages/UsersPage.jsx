@@ -73,10 +73,11 @@ const getParsedPermissionsList = (perms) => {
 
 const getUserInitials = (name) => {
   if (!name) return "U";
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
-  const first = parts[0][0];
-  const second = parts[1] && isNaN(parts[1]) ? parts[1][0] : parts[parts.length - 1][0];
+  const cleanedParts = name.trim().split(/\s+/).filter((p) => p !== "-" && p !== "–" && p !== "—" && p !== ".");
+  if (cleanedParts.length === 0) return "U";
+  if (cleanedParts.length === 1) return cleanedParts[0].substring(0, 2).toUpperCase();
+  const first = cleanedParts[0][0];
+  const second = cleanedParts[1] ? cleanedParts[1][0] : cleanedParts[cleanedParts.length - 1][0];
   return (first + second).toUpperCase();
 };
 

@@ -524,7 +524,11 @@ const UsersPage = ({ forceTab }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        !event.target.closest(".action-menu-trigger")
+      ) {
         setOpenMenuId(null);
       }
     };
@@ -533,9 +537,9 @@ const UsersPage = ({ forceTab }) => {
   }, []);
 
   const toggleMenu = (e, id) => {
+    e.preventDefault();
     e.stopPropagation();
-    if (openMenuId === id) setOpenMenuId(null);
-    else setOpenMenuId(id);
+    setOpenMenuId((prev) => (prev === id ? null : id));
   };
 
   const renderDropdown = (id, userObj = null, isExternal = false) => {
@@ -2663,7 +2667,7 @@ const UsersPage = ({ forceTab }) => {
                           ? formatDate(u.lastLogin)
                           : t("users.neverConnected", "Jamais connecté")}
                       </td>
-                      <td style={{ overflow: "visible" }}>
+                      <td style={{ overflow: "visible", position: "relative", zIndex: openMenuId === u.id ? 1000 : 1 }}>
                         <div
                           style={{
                             display: "flex",
@@ -2674,9 +2678,10 @@ const UsersPage = ({ forceTab }) => {
                           <div style={{ position: "relative" }}>
                             <button
                               type="button"
+                              className="action-menu-trigger"
                               onClick={(e) => toggleMenu(e, u.id)}
                               style={{
-                                background: "transparent",
+                                background: openMenuId === u.id ? "#E2E8F0" : "transparent",
                                 border: "1px solid #E2E8F0",
                                 borderRadius: "8px",
                                 width: "32px",
@@ -2801,7 +2806,7 @@ const UsersPage = ({ forceTab }) => {
                           {c.createdAt ? formatDate(c.createdAt) : "N/A"}
                         </span>
                       </td>
-                      <td style={{ overflow: "visible" }}>
+                      <td style={{ overflow: "visible", position: "relative", zIndex: openMenuId === c.id ? 1000 : 1 }}>
                         <div
                           style={{
                             display: "flex",
@@ -2812,9 +2817,10 @@ const UsersPage = ({ forceTab }) => {
                           <div style={{ position: "relative" }}>
                             <button
                               type="button"
+                              className="action-menu-trigger"
                               onClick={(e) => toggleMenu(e, c.id)}
                               style={{
-                                background: "transparent",
+                                background: openMenuId === c.id ? "#E2E8F0" : "transparent",
                                 border: "1px solid #E2E8F0",
                                 borderRadius: "8px",
                                 width: "32px",

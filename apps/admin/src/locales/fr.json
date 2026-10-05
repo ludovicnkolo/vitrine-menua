@@ -37,7 +37,40 @@
     "missions": "Missions",
     "taches": "Tâches",
     "ged": "Documents (GED)",
+    "documents": "Documents (GED)",
     "corbeille": "Corbeille"
+  },
+  "workspace": {
+    "title": "Espace Travail",
+    "tabs": {
+      "dossiers": "Dossiers",
+      "missions": "Missions",
+      "taches": "Tâches",
+      "ged": "Documents (GED)",
+      "documents": "Documents (GED)"
+    }
+  },
+  "dossier": {
+    "subtitle": "Gestion complète et cycle de vie",
+    "new": "Nouveau Dossier",
+    "origin": "Origine",
+    "owner": "Propriétaire",
+    "folderName": "Nom du dossier"
+  },
+  "task": {
+    "subtitle": "Suivi opérationnel et gestion des tâches",
+    "searchPlaceholder": "Rechercher par référence, responsable...",
+    "allStatuses": "Tous les statuts",
+    "columns": {
+      "id": "ID",
+      "missionFolder": "Dossier / Mission",
+      "missionId": "Mission",
+      "assignedTo": "Assigné à",
+      "dueDate": "Échéance",
+      "status": "Statut",
+      "date": "Date de création",
+      "actions": "Actions"
+    }
   },
   "status": {
     "NOUVEAU": "Nouveau",

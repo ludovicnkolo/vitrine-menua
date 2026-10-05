@@ -37,7 +37,40 @@
     "missions": "Missions",
     "taches": "Tasks",
     "ged": "Documents (DMS)",
+    "documents": "Documents (DMS)",
     "corbeille": "Trash"
+  },
+  "workspace": {
+    "title": "Workspace",
+    "tabs": {
+      "dossiers": "Files",
+      "missions": "Missions",
+      "taches": "Tasks",
+      "ged": "Documents (DMS)",
+      "documents": "Documents (DMS)"
+    }
+  },
+  "dossier": {
+    "subtitle": "Complete management and lifecycle",
+    "new": "New Folder",
+    "origin": "Origin",
+    "owner": "Owner",
+    "folderName": "Folder Name"
+  },
+  "task": {
+    "subtitle": "Operational management and task tracking",
+    "searchPlaceholder": "Search by reference, assignee...",
+    "allStatuses": "All statuses",
+    "columns": {
+      "id": "ID",
+      "missionFolder": "Folder / Mission",
+      "missionId": "Mission",
+      "assignedTo": "Assigned to",
+      "dueDate": "Due date",
+      "status": "Status",
+      "date": "Creation Date",
+      "actions": "Actions"
+    }
   },
   "status": {
     "NOUVEAU": "New",

@@ -96,7 +96,11 @@ const RolesPage = () => {
     fetchData();
 
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        !event.target.closest(".action-menu-trigger")
+      ) {
         setOpenMenuId(null);
       }
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -108,9 +112,9 @@ const RolesPage = () => {
   }, []);
 
   const toggleMenu = (e, id) => {
+    e.preventDefault();
     e.stopPropagation();
-    if (openMenuId === id) setOpenMenuId(null);
-    else setOpenMenuId(id);
+    setOpenMenuId((prev) => (prev === id ? null : id));
   };
 
   const handleDeleteRole = async () => {
@@ -504,7 +508,7 @@ const RolesPage = () => {
                           {t("roles.members", { count: r.users, defaultValue: `${r.users} membre${r.users !== 1 ? "s" : ""}` })}
                         </span>
                       </td>
-                      <td style={{ overflow: "visible" }}>
+                      <td style={{ overflow: "visible", position: "relative", zIndex: openMenuId === r.id ? 1000 : 1 }}>
                         <div
                           style={{
                             display: "flex",
@@ -515,9 +519,10 @@ const RolesPage = () => {
                           <div style={{ position: "relative" }}>
                             <button
                               type="button"
+                              className="action-menu-trigger"
                               onClick={(e) => toggleMenu(e, r.id)}
                               style={{
-                                background: "transparent",
+                                background: openMenuId === r.id ? "#E2E8F0" : "transparent",
                                 border: "1px solid #E2E8F0",
                                 borderRadius: "8px",
                                 width: "32px",

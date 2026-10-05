@@ -12,11 +12,11 @@ const WorkspacePage = ({ userRole }) => {
 
   const tabs = [];
   if (!isCollaborateur) {
-    tabs.push({ id: "dossiers", label: t("workspace.tabs.dossiers") });
-    tabs.push({ id: "missions", label: t("workspace.tabs.missions") });
+    tabs.push({ id: "dossiers", label: t("workspace.tabs.dossiers", "Dossiers"), labelKey: "workspace.tabs.dossiers" });
+    tabs.push({ id: "missions", label: t("workspace.tabs.missions", "Missions"), labelKey: "workspace.tabs.missions" });
   }
-  tabs.push({ id: "taches", label: t("workspace.tabs.taches") });
-  tabs.push({ id: "documents", label: t("workspace.tabs.ged") });
+  tabs.push({ id: "taches", label: t("workspace.tabs.taches", "Tâches"), labelKey: "workspace.tabs.taches" });
+  tabs.push({ id: "documents", label: t("workspace.tabs.ged", "Documents (GED)"), labelKey: "workspace.tabs.ged" });
 
   return (
     <SpacePageLayout

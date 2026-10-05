@@ -2369,10 +2369,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               color: "var(--text-main)",
             }}
           >
-            {mode === "MISSION" ? t("workspace.tabs.missions") : t("workspace.tabs.taches")}
+            {mode === "MISSION" ? t("workspace.tabs.missions", "Missions") : t("workspace.tabs.taches", "Tâches")}
           </h1>
           <p style={{ color: "var(--text-muted)" }}>
-            {t("task.subtitle")}
+            {t("task.subtitle", "Suivi opérationnel et gestion des tâches")}
           </p>
         </div>
       </div>
@@ -2401,7 +2401,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           />
           <input
             type="text"
-            placeholder={t("task.searchPlaceholder")}
+            placeholder={t("task.searchPlaceholder", "Rechercher par référence, responsable...")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="input-field"
@@ -2425,7 +2425,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             minWidth: "200px",
           }}
         >
-          <option value="all">{t("task.allStatuses")}</option>
+          <option value="all">{t("task.allStatuses", "Tous les statuts")}</option>
           {mode === "TACHE" ? (
             <>
               <option value="NOUVEAU">Nouveau</option>
@@ -2453,11 +2453,11 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         <table style={{ tableLayout: "fixed", width: "100%" }}>
           <thead>
             <tr>
-              <th style={{ width: "85px", textAlign: "left" }}>{t("task.columns.id")}</th>
+              <th style={{ width: "85px", textAlign: "left" }}>{t("task.columns.id", "ID")}</th>
               <th style={{ textAlign: "left" }}>
-                {mode === "MISSION" ? t("task.columns.missionFolder") : t("task.columns.missionId")}
+                {mode === "MISSION" ? t("task.columns.missionFolder", "Dossier / Mission") : t("task.columns.missionId", "Mission")}
               </th>
-              <th style={{ width: "170px", textAlign: "left" }}>{t("task.columns.assignedTo")}</th>
+              <th style={{ width: "170px", textAlign: "left" }}>{t("task.columns.assignedTo", "Assigné à")}</th>
               <th
                 className="table-date-cell"
                 style={{
@@ -2466,11 +2466,11 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   paddingRight: "0.5rem",
                 }}
               >
-                {t("task.columns.dueDate")}
+                {t("task.columns.dueDate", "Échéance")}
               </th>
-              <th style={{ width: "115px", textAlign: "center" }}>{t("task.columns.status")}</th>
-              <th className="table-date-cell" style={{ width: "155px", textAlign: "left" }}>{t("task.columns.date")}</th>
-              <th style={{ width: "70px", textAlign: "center" }}>{t("task.columns.actions")}</th>
+              <th style={{ width: "115px", textAlign: "center" }}>{t("task.columns.status", "Statut")}</th>
+              <th className="table-date-cell" style={{ width: "155px", textAlign: "left" }}>{t("task.columns.date", "Date de création")}</th>
+              <th style={{ width: "70px", textAlign: "center" }}>{t("task.columns.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>

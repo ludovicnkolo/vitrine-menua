@@ -3200,7 +3200,7 @@ const DossiersPage = () => {
             className="btn btn-primary"
             style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
           >
-            <Plus size={18} /> {t("dossier.new")}
+            <Plus size={18} /> {t("dossier.new", "Nouveau Dossier")}
           </button>
         )}
       </div>
@@ -3254,7 +3254,7 @@ const DossiersPage = () => {
             minWidth: "150px",
           }}
         >
-          <option value="all">{t("common.status")}: {t("common.all")}</option>
+          <option value="all">{t("common.status", "Statut")}: {t("common.all", "Tous")}</option>
           <option value="NOUVEAU">Nouveau</option>
           
           <option value="EN_COURS">En cours</option>
@@ -3277,7 +3277,7 @@ const DossiersPage = () => {
             minWidth: "150px",
           }}
         >
-          <option value="all">{t("dossier.origin")}: {t("common.all")}</option>
+          <option value="all">{t("dossier.origin", "Origine")}: {t("common.all", "Tous")}</option>
           <option value="CLIENT">Client</option>
           <option value="EQUIPE">Équipe</option>
           <option value="GENERAL">Général</option>
@@ -3287,13 +3287,13 @@ const DossiersPage = () => {
         <table style={{ tableLayout: "fixed", width: "100%" }}>
           <thead>
             <tr>
-              <th style={{ width: "85px" }}>{t("common.reference")}</th>
+              <th style={{ width: "85px" }}>{t("common.reference", "Référence")}</th>
               <th style={{ textAlign: "left", paddingLeft: "1.25rem" }}>{t("dossier.folderName", "Nom du dossier")}</th>
-              <th style={{ width: "115px" }}>{t("dossier.origin")}</th>
+              <th style={{ width: "115px" }}>{t("dossier.origin", "Origine")}</th>
               <th style={{ width: "180px" }}>{t("dossier.owner", "Propriétaire")}</th>
-              <th style={{ width: "110px" }}>{t("common.status")}</th>
-              <th className="table-date-cell" style={{ width: "165px" }}>{t("common.createdAt")}</th>
-              <th style={{ width: "70px" }}>{t("common.actions")}</th>
+              <th style={{ width: "110px" }}>{t("common.status", "Statut")}</th>
+              <th className="table-date-cell" style={{ width: "165px" }}>{t("common.createdAt", "Date de création")}</th>
+              <th style={{ width: "70px" }}>{t("common.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>

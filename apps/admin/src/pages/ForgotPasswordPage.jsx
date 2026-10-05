@@ -26,7 +26,7 @@ const ForgotPasswordPage = () => {
       });
       const data = await res.json();
       if (data.success) {
-        setSuccessMessage("Code de vérification envoyé à votre adresse email.");
+        setSuccessMessage(""); // We don't show the big green alert for sending OTP
         setResetStep(2);
       } else {
         setError(data.error || "Erreur lors de la demande");

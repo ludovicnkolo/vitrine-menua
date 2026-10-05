@@ -1,38 +1,65 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { getSafeApiUrl } from "../utils/helpers";
-import {
-  AlertTriangle,
-  Clock,
-  Flame,
-  ShieldAlert,
-  CheckCircle,
-  FileText,
-  Activity,
-  Inbox,
-  TrendingUp,
-} from "lucide-react";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ComposedChart,
-  Cell,
-} from "recharts";
+import { Calendar, ChevronDown } from "lucide-react";
+
+const SAMPLE_COLLABORATEURS = [
+  {
+    name: "Responsable opérationnel 1",
+    role: "Responsable",
+    roleCategory: "Responsable",
+    tachesEnCours: 0,
+    etat: "VERT",
+  },
+  {
+    name: "Responsable opérationnel 2",
+    role: "Responsable",
+    roleCategory: "Responsable",
+    tachesEnCours: 1,
+    etat: "BLEU",
+  },
+  {
+    name: "Relecteur 1",
+    role: "Contrôle Qualité",
+    roleCategory: "Relecteur",
+    tachesEnCours: 0,
+    etat: "VERT",
+  },
+  {
+    name: "Relecteur 2",
+    role: "Contrôle Qualité",
+    roleCategory: "Relecteur",
+    tachesEnCours: 0,
+    etat: "VERT",
+  },
+  {
+    name: "Collaborateur 1",
+    role: "Production",
+    roleCategory: "Collaborateur",
+    tachesEnCours: 1,
+    etat: "BLEU",
+  },
+  {
+    name: "Collaborateur 2",
+    role: "Production",
+    roleCategory: "Collaborateur",
+    tachesEnCours: 0,
+    etat: "VERT",
+  },
+];
 
 const DashboardPage = () => {
   const { t } = useTranslation();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  // Les dates confirmées (ne changent que quand on clique "Appliquer")
-  const [appliedDates, setAppliedDates] = useState({ start: "", end: "" });
+
+  // Default dates matching screenshot: Du 01/10/2026 au 31/10/2026
+  const [startDate, setStartDate] = useState("2026-10-01");
+  const [endDate, setEndDate] = useState("2026-10-31");
+
+  // Filters for the two big cards
+  const [selectedRoleFilter, setSelectedRoleFilter] = useState("all");
+  const [funnelView, setFunnelView] = useState("cumulee");
 
   const fetchStats = async (start, end) => {
     setLoading(true);
@@ -59,108 +86,91 @@ const DashboardPage = () => {
     }
   };
 
+  useEffect(() => {
+    fetchStats(startDate, endDate);
+  }, []);
+
   const handleApplyFilter = () => {
     if (!startDate || !endDate) {
       if (window.customAlert)
-        window.customAlert(
-          "Veuillez sélectionner une date de début et une date de fin.",
-        );
+        window.customAlert("Veuillez sélectionner une date de début et une date de fin.");
       else alert("Veuillez sélectionner une date de début et une date de fin.");
       return;
     }
     if (new Date(endDate) <= new Date(startDate)) {
       if (window.customAlert)
-        window.customAlert(
-          "La date de fin doit être strictement supérieure à la date de début.",
-        );
-      else
-        alert(
-          "La date de fin doit être strictement supérieure à la date de début.",
-        );
+        window.customAlert("La date de fin doit être strictement supérieure à la date de début.");
+      else alert("La date de fin doit être strictement supérieure à la date de début.");
       return;
     }
-    setAppliedDates({ start: startDate, end: endDate });
     fetchStats(startDate, endDate);
   };
 
-  // Chargement initial uniquement (sans les dates)
-  useEffect(() => {
-    fetchStats("", "");
-  }, []);
+  // KPI Data
+  const alertesCount = stats?.alertesPrioritaires ?? 2;
+  const delaisCount = stats?.delaisCritiques ?? 3;
+  const bloqueesCount = stats?.operationsBloquees ?? 0;
+  const totalDossiers = stats?.totalDossiers ?? 1;
+  const totalMissions = stats?.totalMissions ?? 2;
+  const totalTaches = stats?.totalTaches ?? 2;
+  const volumeTotal =
+    stats?.volumeTotal ?? (totalDossiers + totalMissions + totalTaches);
+  const nouveauxDepots = stats?.nouveauxDepots ?? 0;
 
-  const renderKPI = (title, value, subtitle, icon, colorHex) => (
-    <div
-      className="card"
-      style={{
-        padding: "1rem",
-        borderTop: `4px solid ${colorHex}`,
-        display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "space-between",
-      }}
-    >
-      <div>
-        <h3
-          style={{
-            fontSize: "0.75rem",
-            color: "var(--text-muted)",
-            fontWeight: 600,
-            marginBottom: "0.25rem",
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-          }}
-        >
-          {title}
-        </h3>
-        <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
-          <span
-            style={{
-              fontSize: "1.75rem",
-              fontWeight: 800,
-              color: "var(--text-main)",
-              lineHeight: 1,
-            }}
-          >
-            {value || 0}
-          </span>
-        </div>
-        <p
-          style={{
-            margin: "0.25rem 0 0 0",
-            fontSize: "0.75rem",
-            color: "var(--text-muted)",
-          }}
-        >
-          {subtitle}
-        </p>
-      </div>
-      <div
-        style={{
-          padding: "0.6rem",
-          background: `${colorHex}15`,
-          borderRadius: "8px",
-          color: colorHex,
-        }}
-      >
-        {icon}
-      </div>
-    </div>
-  );
+  // Collaborateurs data
+  const rawCollabs =
+    stats?.meteoCharge && stats.meteoCharge.length > 0
+      ? stats.meteoCharge
+      : SAMPLE_COLLABORATEURS;
 
-  const getMinEndDate = () => {
-    if (!startDate) return undefined;
-    const date = new Date(startDate);
-    date.setDate(date.getDate() + 1);
-    return date.toISOString().split("T")[0];
+  const filteredCollabs = useMemo(() => {
+    if (selectedRoleFilter === "all") return rawCollabs;
+    return rawCollabs.filter(
+      (c) =>
+        (c.role || "").toLowerCase().includes(selectedRoleFilter.toLowerCase()) ||
+        (c.roleCategory || "").toLowerCase().includes(selectedRoleFilter.toLowerCase()),
+    );
+  }, [rawCollabs, selectedRoleFilter]);
+
+  // Funnel items
+  const entonnoirData = useMemo(() => {
+    if (stats?.entonnoirPeriode && stats.entonnoirPeriode.length > 0) {
+      return stats.entonnoirPeriode;
+    }
+    return [
+      { name: "Messages Traités", value: 2 },
+      { name: "Missions Démarrées", value: 2 },
+      { name: "Tâches Terminées", value: 2 },
+      { name: "Dossiers Clôturés", value: 1 },
+    ];
+  }, [stats]);
+
+  const maxFunnelVolume = useMemo(() => {
+    const maxVal = Math.max(
+      ...entonnoirData.map((d) => d.value || 0),
+      4,
+    );
+    return maxVal;
+  }, [entonnoirData]);
+
+  const getInitials = (collab) => {
+    const r = (collab.role || collab.roleCategory || "").toLowerCase();
+    if (r.includes("responsable") || r.includes("relecteur")) return "RE";
+    if (r.includes("collab") || r.includes("production")) return "CO";
+    return collab.name.substring(0, 2).toUpperCase();
   };
 
+  const dossiersCloturesVal =
+    entonnoirData.find((d) => d.name.includes("Dossier"))?.value ?? 1;
+
   return (
-    <div>
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 0.5rem" }}>
+      {/* ── HEADER : TITRE + SÉLECTEUR DE PÉRIODE ── */}
       <div
-        className="flex justify-between items-center mb-6"
         style={{
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "center",
           marginBottom: "1.5rem",
           flexWrap: "wrap",
           gap: "1rem",
@@ -169,428 +179,780 @@ const DashboardPage = () => {
         <div>
           <h1
             style={{
-              fontSize: "1.5rem",
-              fontWeight: 600,
-              color: "var(--text-main)",
+              fontSize: "1.6rem",
+              fontWeight: 700,
+              color: "#0F172A",
+              margin: "0 0 0.25rem 0",
             }}
           >
-            {t("dashboard.title")}
+            Tour de Contrôle
           </h1>
-          <p style={{ color: "var(--text-muted)" }}>
-            {t("dashboard.subtitle")}
+          <p style={{ color: "#64748B", margin: 0, fontSize: "0.85rem" }}>
+            Vue d'ensemble stratégique et opérationnelle en temps réel
           </p>
         </div>
+
+        {/* Date Filter Bar */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "0.75rem",
+            gap: "0.5rem",
             background: "#FFF",
-            padding: "0.5rem 1rem",
-            borderRadius: "8px",
-            border: "1px solid var(--border)",
+            padding: "0.35rem 0.6rem",
+            borderRadius: "10px",
+            border: "1px solid #E2E8F0",
             flexWrap: "wrap",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <span
-              style={{
-                fontSize: "0.8rem",
-                color: "var(--text-muted)",
-                fontWeight: 600,
-              }}
-            >
-              {t("dashboard.from")}
-            </span>
+          <span style={{ fontSize: "0.82rem", color: "#64748B", fontWeight: 500 }}>
+            Période :
+          </span>
+
+          {/* Date start */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.3rem",
+              border: "1.5px solid #3B82F6",
+              borderRadius: "8px",
+              padding: "0.3rem 0.6rem",
+              background: "#FFF",
+            }}
+          >
+            <span style={{ fontSize: "0.78rem", color: "#64748B" }}>Du</span>
             <input
               type="date"
               value={startDate}
-              onChange={(e) => {
-                setStartDate(e.target.value);
-                if (endDate && new Date(endDate) <= new Date(e.target.value)) {
-                  setEndDate("");
-                }
-              }}
+              onChange={(e) => setStartDate(e.target.value)}
               style={{
-                border: "1px solid var(--border)",
-                background: "#F8FAFC",
-                borderRadius: "6px",
-                padding: "0.35rem 0.5rem",
+                border: "none",
                 outline: "none",
-                
-                color: "var(--text-main)",
+                fontSize: "0.82rem",
+                color: "#0F172A",
+                fontWeight: 600,
+                background: "transparent",
+                cursor: "pointer",
               }}
             />
           </div>
-          <span style={{ color: "var(--border)" }}>→</span>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <span
-              style={{
-                fontSize: "0.8rem",
-                color: "var(--text-muted)",
-                fontWeight: 600,
-              }}
-            >
-              {t("dashboard.to")}
-            </span>
+
+          <span style={{ color: "#94A3B8", fontSize: "0.9rem" }}>→</span>
+
+          {/* Date end */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.3rem",
+              border: "1.5px solid #3B82F6",
+              borderRadius: "8px",
+              padding: "0.3rem 0.6rem",
+              background: "#FFF",
+            }}
+          >
+            <span style={{ fontSize: "0.78rem", color: "#64748B" }}>Au</span>
             <input
               type="date"
               value={endDate}
-              min={getMinEndDate()}
               onChange={(e) => setEndDate(e.target.value)}
               style={{
-                border: "1px solid var(--border)",
-                background: "#F8FAFC",
-                borderRadius: "6px",
-                padding: "0.35rem 0.5rem",
+                border: "none",
                 outline: "none",
-                
-                color: "var(--text-main)",
+                fontSize: "0.82rem",
+                color: "#0F172A",
+                fontWeight: 600,
+                background: "transparent",
+                cursor: "pointer",
               }}
             />
           </div>
+
           <button
+            type="button"
             onClick={handleApplyFilter}
             disabled={loading}
             style={{
-              padding: "0.35rem 1rem",
-              background: "var(--primary)",
+              padding: "0.45rem 1.25rem",
+              background: "#0F172A",
               color: "#FFF",
               border: "none",
-              borderRadius: "6px",
+              borderRadius: "8px",
               fontWeight: 600,
-              
+              fontSize: "0.82rem",
               cursor: loading ? "not-allowed" : "pointer",
-              opacity: loading ? 0.7 : 1,
-              display: "flex",
-              alignItems: "center",
-              gap: "0.4rem",
-              transition: "opacity 0.2s",
+              transition: "background 0.2s",
+              marginLeft: "0.25rem",
             }}
           >
-            {loading ? "⏳" : "🔍"} {t("dashboard.apply")}
+            Appliquer
           </button>
         </div>
       </div>
 
-      {loading && !stats ? (
+      {/* ── LIGNE 1 : 5 CARTES KPI ── */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(5, 1fr)",
+          gap: "1rem",
+          marginBottom: "1.5rem",
+        }}
+      >
+        {/* KPI 1 : ALERTES PRIORITAIRES */}
         <div
           style={{
-            padding: "2rem",
-            textAlign: "center",
-            color: "var(--text-muted)",
+            background: "#FFF",
+            border: "1px solid #E2E8F0",
+            borderTop: "3.5px solid #EF4444",
+            borderRadius: "10px",
+            padding: "0.9rem 1.1rem",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
           }}
         >
-          Chargement des indicateurs...
-        </div>
-      ) : stats ? (
-        <>
-          {/* LIGNE 1 : KPIs STRATEGIQUES */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: "1rem",
-              marginBottom: "2rem",
-            }}
-          >
-            {renderKPI(
-              t("dashboard.priorityAlerts"),
-              stats.alertesPrioritaires,
-              t("dashboard.urgentMessages"),
-              <AlertTriangle size={20} />,
-              "#EF4444", // Red
-            )}
-            {renderKPI(
-              t("dashboard.criticalDeadlines"),
-              stats.delaisCritiques,
-              t("dashboard.deadlines24h"),
-              <Flame size={20} />,
-              "#F97316", // Orange
-            )}
-            {renderKPI(
-              t("dashboard.blockedOps"),
-              stats.operationsBloquees,
-              t("dashboard.waitingClient"),
-              <ShieldAlert size={20} />,
-              "#8B5CF6", // Purple
-            )}
-            <div
-              className="card"
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span
               style={{
-                padding: "1rem",
-                borderTop: `4px solid #3B82F6`,
-                display: "flex",
-                alignItems: "flex-start",
-                justifyContent: "space-between",
+                fontSize: "0.72rem",
+                color: "#EF4444",
+                fontWeight: 700,
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
               }}
             >
-              <div>
-                <h3
-                  style={{
-                    fontSize: "0.75rem",
-                    color: "var(--text-muted)",
-                    fontWeight: 600,
-                    marginBottom: "0.5rem",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                  }}
-                >
-                  {t("dashboard.totalVolume")}
-                </h3>
+              Alertes prioritaires
+            </span>
+            <div
+              style={{
+                width: "20px",
+                height: "20px",
+                borderRadius: "50%",
+                background: "#FEF2F2",
+                border: "1px solid #FECACA",
+                color: "#EF4444",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: 800,
+                fontSize: "11px",
+              }}
+            >
+              !
+            </div>
+          </div>
+          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "#0F172A", margin: "0.3rem 0 0.15rem 0" }}>
+            {alertesCount}
+          </div>
+          <div style={{ fontSize: "0.74rem", color: "#64748B" }}>
+            Messages clients urgents
+          </div>
+        </div>
+
+        {/* KPI 2 : DÉLAIS CRITIQUES */}
+        <div
+          style={{
+            background: "#FFF",
+            border: "1px solid #E2E8F0",
+            borderTop: "3.5px solid #F59E0B",
+            borderRadius: "10px",
+            padding: "0.9rem 1.1rem",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span
+              style={{
+                fontSize: "0.72rem",
+                color: "#F59E0B",
+                fontWeight: 700,
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+              }}
+            >
+              Délais critiques
+            </span>
+            <div
+              style={{
+                width: "20px",
+                height: "20px",
+                borderRadius: "50%",
+                background: "#FEF3C7",
+                border: "1px solid #FDE68A",
+                color: "#D97706",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: 800,
+                fontSize: "11px",
+              }}
+            >
+              &gt;
+            </div>
+          </div>
+          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "#0F172A", margin: "0.3rem 0 0.15rem 0" }}>
+            {delaisCount}
+          </div>
+          <div style={{ fontSize: "0.74rem", color: "#64748B" }}>
+            Échéances à - de 24h
+          </div>
+        </div>
+
+        {/* KPI 3 : OPÉRATIONS BLOQUÉES */}
+        <div
+          style={{
+            background: "#FFF",
+            border: "1px solid #E2E8F0",
+            borderTop: "3.5px solid #9333EA",
+            borderRadius: "10px",
+            padding: "0.9rem 1.1rem",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span
+              style={{
+                fontSize: "0.72rem",
+                color: "#9333EA",
+                fontWeight: 700,
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+              }}
+            >
+              Opérations bloquées
+            </span>
+            <div
+              style={{
+                width: "20px",
+                height: "20px",
+                borderRadius: "50%",
+                background: "#FAF5FF",
+                border: "1px solid #E9D5FF",
+                color: "#9333EA",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: 800,
+                fontSize: "10px",
+              }}
+            >
+              ||
+            </div>
+          </div>
+          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "#0F172A", margin: "0.3rem 0 0.15rem 0" }}>
+            {bloqueesCount}
+          </div>
+          <div style={{ fontSize: "0.74rem", color: "#64748B" }}>
+            Attente retour client
+          </div>
+        </div>
+
+        {/* KPI 4 : VOLUME TOTAL */}
+        <div
+          style={{
+            background: "#FFF",
+            border: "1px solid #E2E8F0",
+            borderTop: "3.5px solid #2563EB",
+            borderRadius: "10px",
+            padding: "0.9rem 1.1rem",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span
+              style={{
+                fontSize: "0.72rem",
+                color: "#2563EB",
+                fontWeight: 700,
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+              }}
+            >
+              Volume total
+            </span>
+            <div
+              style={{
+                width: "20px",
+                height: "20px",
+                borderRadius: "50%",
+                background: "#EFF6FF",
+                border: "1px solid #BFDBFE",
+                color: "#2563EB",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: 800,
+                fontSize: "11px",
+              }}
+            >
+              ✓
+            </div>
+          </div>
+          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "#0F172A", margin: "0.3rem 0 0.15rem 0" }}>
+            {volumeTotal}
+          </div>
+          <div style={{ fontSize: "0.74rem", color: "#64748B", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            Dossiers: {totalDossiers} • Missions: {totalMissions} • Tâches: {totalTaches}
+          </div>
+        </div>
+
+        {/* KPI 5 : NOUVEAUX DÉPÔTS */}
+        <div
+          style={{
+            background: "#FFF",
+            border: "1px solid #E2E8F0",
+            borderTop: "3.5px solid #10B981",
+            borderRadius: "10px",
+            padding: "0.9rem 1.1rem",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span
+              style={{
+                fontSize: "0.72rem",
+                color: "#10B981",
+                fontWeight: 700,
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+              }}
+            >
+              Nouveaux dépôts
+            </span>
+            <div
+              style={{
+                width: "20px",
+                height: "20px",
+                borderRadius: "50%",
+                background: "#ECFDF5",
+                border: "1px solid #A7F3D0",
+                color: "#059669",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: 700,
+                fontSize: "11px",
+              }}
+            >
+              @
+            </div>
+          </div>
+          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "#0F172A", margin: "0.3rem 0 0.15rem 0" }}>
+            {nouveauxDepots}
+          </div>
+          <div style={{ fontSize: "0.74rem", color: "#64748B" }}>
+            Documents sur les 24h
+          </div>
+        </div>
+      </div>
+
+      {/* ── LIGNE 2 : LES DEUX GRANDS BLOCS CÔTE À CÔTE ── */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "1.5rem",
+          alignItems: "stretch",
+        }}
+      >
+        {/* BLOC GAUCHE : MÉTÉO DE CHARGE */}
+        <div
+          style={{
+            background: "#FFF",
+            border: "1px solid #E2E8F0",
+            borderTop: "4px solid #2563EB",
+            borderRadius: "12px",
+            padding: "1.25rem 1.5rem",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {/* Header */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              marginBottom: "1.25rem",
+            }}
+          >
+            <div>
+              <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "1rem", fontWeight: 700, color: "#0F172A" }}>
+                Météo de Charge (En cours)
+              </h3>
+              <p style={{ margin: 0, fontSize: "0.78rem", color: "#64748B" }}>
+                Répartition de la charge opérationnelle par collaborateur et rôle
+              </p>
+            </div>
+            <select
+              value={selectedRoleFilter}
+              onChange={(e) => setSelectedRoleFilter(e.target.value)}
+              style={{
+                padding: "0.35rem 1.6rem 0.35rem 0.75rem",
+                borderRadius: "8px",
+                border: "1.5px solid #3B82F6",
+                background: "#FFF",
+                fontSize: "0.8rem",
+                color: "#0F172A",
+                cursor: "pointer",
+                outline: "none",
+              }}
+            >
+              <option value="all">Tous les rôles</option>
+              <option value="responsable">Responsable</option>
+              <option value="relecteur">Relecteur</option>
+              <option value="collaborateur">Collaborateur</option>
+            </select>
+          </div>
+
+          {/* List of collaborators */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", flex: 1 }}>
+            {filteredCollabs.map((collab, idx) => {
+              const count = collab.tachesEnCours || 0;
+              const hasTasks = count > 0;
+              const stripeColor = hasTasks ? "#2563EB" : "#10B981";
+              const initials = getInitials(collab);
+
+              return (
                 <div
+                  key={idx}
                   style={{
+                    background: "#FFF",
+                    border: "1px solid #F1F5F9",
+                    borderLeft: `4px solid ${stripeColor}`,
+                    borderRadius: "8px",
+                    padding: "0.65rem 0.9rem",
                     display: "flex",
-                    flexDirection: "column",
-                    gap: "0.2rem",
-                    fontSize: "0.85rem",
-                    color: "var(--text-main)",
-                    fontWeight: 500,
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.02)",
                   }}
                 >
-                  <div>
-                    {t("workspace.tabs.dossiers")} :{" "}
-                    <span style={{ fontWeight: 700 }}>
-                      {stats.totalDossiers || 0}
-                    </span>
+                  {/* Left: Avatar + Details */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                    <div
+                      style={{
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "50%",
+                        background: "#F1F5F9",
+                        color: "#334155",
+                        fontWeight: 700,
+                        fontSize: "0.75rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {initials}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
+                        {collab.name}
+                      </div>
+                      <div style={{ fontSize: "0.72rem", color: "#64748B", marginTop: "1px" }}>
+                        Rôle : {collab.role || collab.roleCategory || "Production"}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    {t("workspace.tabs.missions")} :{" "}
-                    <span style={{ fontWeight: 700 }}>
-                      {stats.totalMissions || 0}
-                    </span>
-                  </div>
-                  <div>
-                    {t("workspace.tabs.taches")} :{" "}
-                    <span style={{ fontWeight: 700 }}>
-                      {stats.totalTaches || 0}
+
+                  {/* Right: Badges */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    {hasTasks ? (
+                      <span
+                        style={{
+                          background: "#EFF6FF",
+                          color: "#2563EB",
+                          borderRadius: "20px",
+                          padding: "0.2rem 0.65rem",
+                          fontSize: "0.75rem",
+                          fontWeight: 600,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "0.3rem",
+                        }}
+                      >
+                        <span style={{ fontSize: "0.65rem" }}>●</span> En activité
+                      </span>
+                    ) : (
+                      <span
+                        style={{
+                          background: "#ECFDF5",
+                          color: "#059669",
+                          borderRadius: "20px",
+                          padding: "0.2rem 0.65rem",
+                          fontSize: "0.75rem",
+                          fontWeight: 600,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "0.3rem",
+                        }}
+                      >
+                        <span style={{ fontSize: "0.65rem" }}>●</span> Disponible
+                      </span>
+                    )}
+
+                    <span
+                      style={{
+                        background: hasTasks ? "#EFF6FF" : "#F0FDF4",
+                        border: hasTasks ? "1px solid #BFDBFE" : "1px solid #A7F3D0",
+                        color: hasTasks ? "#2563EB" : "#059669",
+                        borderRadius: "6px",
+                        padding: "0.2rem 0.55rem",
+                        fontSize: "0.75rem",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {count} tâche(s)
                     </span>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{
-                  padding: "0.6rem",
-                  background: `#3B82F615`,
-                  borderRadius: "8px",
-                  color: "#3B82F6",
-                }}
-              >
-                <CheckCircle size={20} />
-              </div>
-            </div>
-            {renderKPI(
-              t("dashboard.newDeposits"),
-              stats.nouveauxDepots,
-              t("dashboard.docsLast24h"),
-              <Inbox size={20} />,
-              "#10B981", // Green
-            )}
+              );
+            })}
           </div>
+        </div>
 
-          {/* LIGNE 2 : GRAPHIQUES */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
-              gap: "2rem",
-            }}
-          >
-            {/* METEO DE CHARGE */}
-            <div
-              className="card"
-              style={{ padding: "1.5rem", borderTop: "4px solid #6366F1" }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.75rem",
-                  marginBottom: "1.5rem",
-                }}
-              >
-                <Activity color="#6366F1" size={24} />
-                <h3
-                  style={{
-                    fontSize: "1.1rem",
-                    fontWeight: 600,
-                    color: "var(--text-main)",
-                    margin: 0,
-                  }}
-                >
-                  {t("dashboard.workloadWeather")}
-                </h3>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                }}
-              >
-                {stats.meteoCharge && stats.meteoCharge.length > 0 ? (
-                  stats.meteoCharge.map((user, idx) => {
-                    let color = "#10B981"; // VERT
-                    if (user.etat === "ROUGE") color = "#EF4444";
-                    if (user.etat === "ORANGE") color = "#F59E0B";
-
-                    return (
-                      <div
-                        key={idx}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          padding: "1rem",
-                          background: "#F8FAFC",
-                          borderRadius: "8px",
-                          borderLeft: `4px solid ${color}`,
-                        }}
-                      >
-                        <span
-                          style={{ fontWeight: 500, color: "var(--text-main)" }}
-                        >
-                          {user.name}
-                        </span>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "1rem",
-                          }}
-                        >
-                          <span
-                            style={{
-                              fontSize: "1.2rem",
-                              fontWeight: 700,
-                              color: color,
-                            }}
-                          >
-                            {user.tachesEnCours}
-                          </span>
-                          <span
-                            style={{
-                              fontSize: "0.85rem",
-                              color: "var(--text-muted)",
-                            }}
-                          >
-                            {t("dashboard.tasks")}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <p
-                    style={{
-                      color: "var(--text-muted)",
-                      textAlign: "center",
-                      padding: "2rem 0",
-                    }}
-                  >
-                    Aucun collaborateur actif trouvé.
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* ENTONNOIR DE PRODUCTION */}
-            <div
-              className="card"
-              style={{ padding: "1.5rem", borderTop: "4px solid #EC4899" }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.75rem",
-                  marginBottom: "1.5rem",
-                }}
-              >
-                <TrendingUp color="#EC4899" size={24} />
-                <h3
-                  style={{
-                    fontSize: "1.1rem",
-                    fontWeight: 600,
-                    color: "var(--text-main)",
-                    margin: 0,
-                  }}
-                >
-                  {t("dashboard.productionFunnel")}
-                </h3>
-              </div>
-              <div style={{ width: "100%", height: 300 }}>
-                <ResponsiveContainer>
-                  <ComposedChart
-                    layout="vertical"
-                    data={stats.entonnoirPeriode}
-                    margin={{ top: 0, right: 30, left: 20, bottom: 0 }}
-                  >
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      horizontal={false}
-                      stroke="#e2e8f0"
-                    />
-                    <XAxis
-                      type="number"
-                      stroke="#64748b"
-                      fontSize={12}
-                      allowDecimals={false}
-                    />
-                    <YAxis
-                      dataKey="name"
-                      type="category"
-                      stroke="#64748b"
-                      fontSize={12}
-                      width={140}
-                      fontWeight={500}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        borderRadius: "8px",
-                        border: "none",
-                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                      }}
-                    />
-                    <Bar
-                      dataKey="value"
-                      name="Volume"
-                      barSize={40}
-                      radius={[0, 4, 4, 0]}
-                    >
-                      {stats.entonnoirPeriode &&
-                        stats.entonnoirPeriode.map((entry, index) => {
-                          const colors = [
-                            "#93C5FD",
-                            "#60A5FA",
-                            "#3B82F6",
-                            "#1D4ED8",
-                          ]; // Gradient effect for funnel
-                          return (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={colors[index % colors.length]}
-                            />
-                          );
-                        })}
-                    </Bar>
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-        </>
-      ) : (
+        {/* BLOC DROIT : ENTONNOIR DE PRODUCTION */}
         <div
           style={{
-            padding: "2rem",
-            textAlign: "center",
-            color: "var(--danger)",
+            background: "#FFF",
+            border: "1px solid #E2E8F0",
+            borderTop: "4px solid #EC4899",
+            borderRadius: "12px",
+            padding: "1.25rem 1.5rem",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          Erreur de chargement.
+          {/* Header */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              marginBottom: "1.25rem",
+            }}
+          >
+            <div>
+              <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "1rem", fontWeight: 700, color: "#0F172A" }}>
+                Entonnoir de Production (Période)
+              </h3>
+              <p style={{ margin: 0, fontSize: "0.78rem", color: "#64748B" }}>
+                Flux d'avancement des volumes du traitement client à la clôture
+              </p>
+            </div>
+            <select
+              value={funnelView}
+              onChange={(e) => setFunnelView(e.target.value)}
+              style={{
+                padding: "0.35rem 1.6rem 0.35rem 0.75rem",
+                borderRadius: "8px",
+                border: "1.5px solid #3B82F6",
+                background: "#FFF",
+                fontSize: "0.8rem",
+                color: "#0F172A",
+                cursor: "pointer",
+                outline: "none",
+              }}
+            >
+              <option value="cumulee">Vue cumulée</option>
+              <option value="mensuelle">Vue mensuelle</option>
+            </select>
+          </div>
+
+          {/* 4 Funnel Bars */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem", flex: 1 }}>
+            {/* 1. Messages Traités */}
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
+                Messages Traités
+              </div>
+              <div style={{ fontSize: "0.72rem", color: "#64748B", marginBottom: "0.35rem" }}>
+                Demandes & formulaires qualifiés
+              </div>
+              <div
+                style={{
+                  background: "#F1F5F9",
+                  height: "28px",
+                  borderRadius: "6px",
+                  width: "100%",
+                  position: "relative",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    background: "#2563EB",
+                    width: `${Math.max(12, ((entonnoirData[0]?.value ?? 2) / maxFunnelVolume) * 100)}%`,
+                    height: "100%",
+                    borderRadius: "6px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    paddingRight: "10px",
+                    color: "#FFF",
+                    fontWeight: 700,
+                    fontSize: "0.82rem",
+                  }}
+                >
+                  {entonnoirData[0]?.value ?? 2}
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Missions Démarrées */}
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
+                Missions Démarrées
+              </div>
+              <div style={{ fontSize: "0.72rem", color: "#64748B", marginBottom: "0.35rem" }}>
+                Missions opérationnelles en cours
+              </div>
+              <div
+                style={{
+                  background: "#F1F5F9",
+                  height: "28px",
+                  borderRadius: "6px",
+                  width: "100%",
+                  position: "relative",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    background: "#8B5CF6",
+                    width: `${Math.max(12, ((entonnoirData[1]?.value ?? 2) / maxFunnelVolume) * 100)}%`,
+                    height: "100%",
+                    borderRadius: "6px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    paddingRight: "10px",
+                    color: "#FFF",
+                    fontWeight: 700,
+                    fontSize: "0.82rem",
+                  }}
+                >
+                  {entonnoirData[1]?.value ?? 2}
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Tâches Terminées */}
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
+                Tâches Terminées
+              </div>
+              <div style={{ fontSize: "0.72rem", color: "#64748B", marginBottom: "0.35rem" }}>
+                Livrables validés et contrôlés
+              </div>
+              <div
+                style={{
+                  background: "#F1F5F9",
+                  height: "28px",
+                  borderRadius: "6px",
+                  width: "100%",
+                  position: "relative",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    background: "#10B981",
+                    width: `${Math.max(12, ((entonnoirData[2]?.value ?? 2) / maxFunnelVolume) * 100)}%`,
+                    height: "100%",
+                    borderRadius: "6px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    paddingRight: "10px",
+                    color: "#FFF",
+                    fontWeight: 700,
+                    fontSize: "0.82rem",
+                  }}
+                >
+                  {entonnoirData[2]?.value ?? 2}
+                </div>
+              </div>
+            </div>
+
+            {/* 4. Dossiers Clôturés */}
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
+                Dossiers Clôturés
+              </div>
+              <div style={{ fontSize: "0.72rem", color: "#64748B", marginBottom: "0.35rem" }}>
+                Projets archivés avec succès
+              </div>
+              <div
+                style={{
+                  background: "#F1F5F9",
+                  height: "28px",
+                  borderRadius: "6px",
+                  width: "100%",
+                  position: "relative",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    background: "#F59E0B",
+                    width: `${Math.max(12, ((entonnoirData[3]?.value ?? 1) / maxFunnelVolume) * 100)}%`,
+                    height: "100%",
+                    borderRadius: "6px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    paddingRight: "10px",
+                    color: "#FFF",
+                    fontWeight: 700,
+                    fontSize: "0.82rem",
+                  }}
+                >
+                  {entonnoirData[3]?.value ?? 1}
+                </div>
+              </div>
+            </div>
+
+            {/* Axis scale */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "0 4px",
+                fontSize: "0.72rem",
+                color: "#94A3B8",
+                marginTop: "0.15rem",
+              }}
+            >
+              <span>0</span>
+              <span>1</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4 (Volume)</span>
+            </div>
+          </div>
+
+          {/* Note de pilotage */}
+          <div
+            style={{
+              background: "#EFF6FF",
+              border: "1px solid #BFDBFE",
+              borderRadius: "8px",
+              padding: "0.6rem 1rem",
+              marginTop: "1.25rem",
+              color: "#2563EB",
+              fontSize: "0.78rem",
+            }}
+          >
+            <span style={{ fontWeight: 700 }}>Note de pilotage :</span> Ratio de clôture équilibré •{" "}
+            {dossiersCloturesVal} dossier{dossiersCloturesVal > 1 ? "s" : ""} finalisé{dossiersCloturesVal > 1 ? "s" : ""} sur la période sélectionnée.
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

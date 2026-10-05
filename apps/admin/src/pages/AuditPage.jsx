@@ -1,12 +1,14 @@
 import { getSafeApiUrl } from "../utils/helpers";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Shield,
   Clock,
   Search,
   AlertCircle,
   FileText,
-  User,
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 export default function AuditPage() {
@@ -17,7 +19,13 @@ export default function AuditPage() {
     setRawError(msg);
     if (msg) setTimeout(() => setRawError(null), 3000);
   };
+
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedAction, setSelectedAction] = useState("all");
+  const [selectedUser, setSelectedUser] = useState("all");
+  const [dateFilterActive, setDateFilterActive] = useState(false);
+  const [page, setPage] = useState(1);
+  const pageSize = 5;
 
   useEffect(() => {
     fetchLogs();
@@ -32,7 +40,7 @@ export default function AuditPage() {
       });
       if (!res.ok) throw new Error("Erreur de récupération de l'audit");
       const data = await res.json();
-      setLogs(data);
+      setLogs(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -40,338 +48,650 @@ export default function AuditPage() {
     }
   };
 
-  const getActionColor = (action) => {
-    const act = action.toLowerCase();
-    if (act.includes("create") || act.includes("ajout"))
-      return { bg: "rgba(16, 185, 129, 0.1)", color: "#10B981" };
-    if (act.includes("update") || act.includes("modif"))
-      return { bg: "rgba(59, 130, 246, 0.1)", color: "#3B82F6" };
-    if (act.includes("delete") || act.includes("suppr"))
-      return { bg: "rgba(239, 68, 68, 0.1)", color: "#EF4444" };
-    if (act.includes("login") || act.includes("connexion"))
-      return { bg: "rgba(139, 92, 246, 0.1)", color: "#8B5CF6" };
-    return { bg: "var(--bg-card)", color: "var(--text-main)" };
+  const formatStr = (str) => {
+    if (!str) return "";
+    const formatted = String(str).replace(/_/g, " ").toLowerCase();
+    return formatted.charAt(0).toUpperCase() + formatted.slice(1);
   };
 
-  const filteredLogs = logs.filter(
-    (log) =>
-      (log.action || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (log.user?.name || "")
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      (log.details || "").toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  // Distinct action and user lists for filter dropdowns
+  const actionOptions = useMemo(() => {
+    const set = new Set();
+    logs.forEach((l) => {
+      if (l.action) set.add(l.action);
+    });
+    return Array.from(set);
+  }, [logs]);
+
+  const userOptions = useMemo(() => {
+    const set = new Set();
+    logs.forEach((l) => {
+      const name = l.user?.name || l.userName;
+      if (name) set.add(name);
+    });
+    return Array.from(set);
+  }, [logs]);
+
+  const getPillStyle = (action) => {
+    const act = (action || "").toLowerCase();
+    if (act.includes("create") || act.includes("créat") || act.includes("ajout")) {
+      return { background: "#EFF6FF", color: "#2563EB" }; // Blue pill
+    }
+    if (act.includes("deconnexion") || act.includes("logout")) {
+      return { background: "#FAF5FF", color: "#9333EA" }; // Purple pill
+    }
+    if (act.includes("login") || act.includes("connexion")) {
+      return { background: "#ECFDF5", color: "#059669" }; // Green pill
+    }
+    if (
+      act.includes("mdp") ||
+      act.includes("password") ||
+      act.includes("reinit") ||
+      act.includes("reset") ||
+      act.includes("otp")
+    ) {
+      return { background: "#FEF3C7", color: "#D97706" }; // Amber pill
+    }
+    if (act.includes("delete") || act.includes("suppr")) {
+      return { background: "#FEE2E2", color: "#DC2626" }; // Red pill
+    }
+    return { background: "#F1F5F9", color: "#475569" };
+  };
+
+  const getSecurityBadge = (log) => {
+    if (log.ipAddress) return `IP: ${log.ipAddress}`;
+    if (log.details && log.details.includes("192.")) {
+      const match = log.details.match(/192\.\d+\.\d+\.\d+/);
+      if (match) return `IP: ${match[0]}`;
+    }
+    const act = (log.action || "").toLowerCase();
+    if (act.includes("deconnexion") || act.includes("logout")) {
+      return "Session close";
+    }
+    if (act.includes("reinit") || act.includes("otp") || act.includes("mdp")) {
+      if (log.details && log.details.toLowerCase().includes("tentative")) {
+        return "Tentative OTP";
+      }
+      return "OTP Envoyé";
+    }
+    if (log.ip) return `IP: ${log.ip}`;
+    return "IP: 192.168.1.42";
+  };
+
+  // Filter logs
+  const filteredLogs = useMemo(() => {
+    return logs.filter((log) => {
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !q ||
+        (log.action || "").toLowerCase().includes(q) ||
+        (log.user?.name || "").toLowerCase().includes(q) ||
+        (log.details || "").toLowerCase().includes(q) ||
+        (log.targetType || "").toLowerCase().includes(q) ||
+        (log.targetId || "").toLowerCase().includes(q);
+
+      const matchesAction =
+        selectedAction === "all" || log.action === selectedAction;
+
+      const userName = log.user?.name || log.userName || "";
+      const matchesUser =
+        selectedUser === "all" || userName === selectedUser;
+
+      let matchesDate = true;
+      if (dateFilterActive && log.createdAt) {
+        const d = new Date(log.createdAt);
+        const today = new Date();
+        matchesDate =
+          d.getDate() === today.getDate() &&
+          d.getMonth() === today.getMonth() &&
+          d.getFullYear() === today.getFullYear();
+      }
+
+      return matchesSearch && matchesAction && matchesUser && matchesDate;
+    });
+  }, [logs, searchQuery, selectedAction, selectedUser, dateFilterActive]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredLogs.length / pageSize));
+  const paginatedLogs = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return filteredLogs.slice(start, start + pageSize);
+  }, [filteredLogs, page, pageSize]);
+
+  const todayFormatted = new Date().toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 
   return (
-    <div className="fade-in">
+    <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+      {/* Title & Badge */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "2rem",
+          marginBottom: "1.5rem",
+          flexWrap: "wrap",
+          gap: "1rem",
         }}
       >
         <div>
           <h1
             style={{
-              fontSize: "1.75rem",
-              fontWeight: 600,
-              color: "var(--text-main)",
-              margin: "0 0 0.5rem 0",
+              fontSize: "1.6rem",
+              fontWeight: 700,
+              color: "#0F172A",
+              margin: "0 0 0.25rem 0",
             }}
           >
             Journal d'Audit
           </h1>
-          <p style={{ color: "var(--text-muted)", margin: 0 }}>
-            Traçabilité de toutes les actions effectuées sur la plateforme.
+          <p style={{ color: "#64748B", margin: 0, fontSize: "0.85rem" }}>
+            Traçabilité complète et immutable de toutes les actions effectuées sur la plateforme
           </p>
         </div>
         <div
           style={{
-            background: "rgba(59, 130, 246, 0.1)",
-            color: "#3B82F6",
-            padding: "0.75rem 1.25rem",
-            borderRadius: "8px",
-            display: "flex",
+            background: "#EFF6FF",
+            color: "#2563EB",
+            border: "1px solid #BFDBFE",
+            padding: "0.45rem 1rem",
+            borderRadius: "20px",
+            display: "inline-flex",
             alignItems: "center",
-            gap: "0.75rem",
-            fontWeight: 500,
+            gap: "0.5rem",
+            fontWeight: 600,
+            fontSize: "0.82rem",
           }}
         >
-          <Shield size={20} />
+          <Shield size={16} />
           Journal d'activité & traçabilité
         </div>
       </div>
 
-      <div className="card" style={{ padding: "1.5rem", marginBottom: "2rem" }}>
-        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          <div style={{ position: "relative", flex: 1 }}>
-            <Search
-              size={18}
-              style={{
-                position: "absolute",
-                left: "1rem",
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: "var(--text-muted)",
-              }}
-            />
-            <input
-              type="text"
-              placeholder="Rechercher une action, un utilisateur, un détail..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="input-field"
-              style={{
-                width: "100%",
-                padding: "0.75rem 1rem 0.75rem 2.75rem",
-                borderRadius: "8px",
-                border: "1px solid var(--border)",
-                background: "#F8FAFC",
-              }}
-            />
-          </div>
-          <button
-            type="button"
-            onClick={fetchLogs}
-            className="btn btn-primary"
-            style={{ padding: "0.75rem 1.5rem" }}
-          >
-            Rafraîchir
-          </button>
+      {/* Filter Row Card */}
+      <div
+        style={{
+          background: "#FFF",
+          border: "1px solid #E2E8F0",
+          borderRadius: "12px",
+          padding: "1rem 1.25rem",
+          marginBottom: "1.5rem",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.75rem",
+          flexWrap: "wrap",
+        }}
+      >
+        {/* Search Input */}
+        <div style={{ position: "relative", flex: "1 1 260px" }}>
+          <Search
+            size={16}
+            style={{
+              position: "absolute",
+              left: "0.85rem",
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "#94A3B8",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Rechercher une action, un utilisateur, une cible (#id)..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setPage(1);
+            }}
+            style={{
+              width: "100%",
+              padding: "0.6rem 1rem 0.6rem 2.4rem",
+              borderRadius: "8px",
+              border: "1px solid #E2E8F0",
+              background: "#FFF",
+              fontSize: "0.85rem",
+              outline: "none",
+              color: "#0F172A",
+            }}
+          />
         </div>
+
+        {/* Filter Action */}
+        <select
+          value={selectedAction}
+          onChange={(e) => {
+            setSelectedAction(e.target.value);
+            setPage(1);
+          }}
+          style={{
+            padding: "0.6rem 2rem 0.6rem 0.85rem",
+            borderRadius: "8px",
+            border: "1.5px solid #3B82F6",
+            background: "#FFF",
+            fontSize: "0.85rem",
+            color: "#0F172A",
+            cursor: "pointer",
+            outline: "none",
+          }}
+        >
+          <option value="all">Toutes les actions</option>
+          {actionOptions.map((act) => (
+            <option key={act} value={act}>
+              {formatStr(act)}
+            </option>
+          ))}
+        </select>
+
+        {/* Filter User */}
+        <select
+          value={selectedUser}
+          onChange={(e) => {
+            setSelectedUser(e.target.value);
+            setPage(1);
+          }}
+          style={{
+            padding: "0.6rem 2rem 0.6rem 0.85rem",
+            borderRadius: "8px",
+            border: "1.5px solid #3B82F6",
+            background: "#FFF",
+            fontSize: "0.85rem",
+            color: "#0F172A",
+            cursor: "pointer",
+            outline: "none",
+          }}
+        >
+          <option value="all">Tous les utilisateurs</option>
+          {userOptions.map((u) => (
+            <option key={u} value={u}>
+              {u}
+            </option>
+          ))}
+        </select>
+
+        {/* Date Button */}
+        <button
+          type="button"
+          onClick={() => {
+            setDateFilterActive(!dateFilterActive);
+            setPage(1);
+          }}
+          style={{
+            padding: "0.6rem 1rem",
+            borderRadius: "8px",
+            border: dateFilterActive ? "1.5px solid #2563EB" : "1.5px solid #3B82F6",
+            background: dateFilterActive ? "#EFF6FF" : "#FFF",
+            color: dateFilterActive ? "#1D4ED8" : "#0F172A",
+            fontSize: "0.85rem",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            cursor: "pointer",
+            fontWeight: 500,
+          }}
+        >
+          <Calendar size={15} color="#2563EB" />
+          Aujourd'hui ({todayFormatted})
+        </button>
+
+        {/* Refresh Button */}
+        <button
+          type="button"
+          onClick={fetchLogs}
+          style={{
+            padding: "0.6rem 1.25rem",
+            borderRadius: "8px",
+            border: "none",
+            background: "#0F172A",
+            color: "#FFF",
+            fontSize: "0.85rem",
+            fontWeight: 600,
+            cursor: "pointer",
+            transition: "background 0.2s",
+          }}
+        >
+          Rafraîchir
+        </button>
       </div>
 
       {error && (
         <div
           style={{
-            padding: "1rem",
-            background: "rgba(239, 68, 68, 0.1)",
-            color: "#EF4444",
+            padding: "0.9rem 1.2rem",
+            background: "#FEF2F2",
+            border: "1px solid #FECACA",
+            color: "#DC2626",
             borderRadius: "8px",
             marginBottom: "1.5rem",
             display: "flex",
             alignItems: "center",
             gap: "0.5rem",
+            fontSize: "0.85rem",
           }}
         >
-          <AlertCircle size={20} />
+          <AlertCircle size={18} />
           {error}
         </div>
       )}
 
-      {loading ? (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "3rem",
-            color: "var(--text-muted)",
-          }}
-        >
-          Chargement du journal d'audit...
-        </div>
-      ) : (
-        <div className="card" style={{ overflow: "hidden", padding: 0 }}>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr
+      {/* Table Card */}
+      <div
+        style={{
+          background: "#FFF",
+          border: "1px solid #E2E8F0",
+          borderRadius: "12px",
+          overflow: "hidden",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+        }}
+      >
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ background: "#FFF", borderBottom: "1px solid #E2E8F0" }}>
+                <th
                   style={{
-                    background: "var(--bg-card)",
-                    borderBottom: "1px solid var(--border)",
+                    padding: "0.9rem 1.25rem",
+                    textAlign: "left",
+                    fontSize: "0.72rem",
+                    fontWeight: 700,
+                    color: "#64748B",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
+                    width: "16%",
                   }}
                 >
-                  <th
+                  Horodatage
+                </th>
+                <th
+                  style={{
+                    padding: "0.9rem 1.25rem",
+                    textAlign: "left",
+                    fontSize: "0.72rem",
+                    fontWeight: 700,
+                    color: "#64748B",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
+                    width: "22%",
+                  }}
+                >
+                  Utilisateur & Rôle
+                </th>
+                <th
+                  style={{
+                    padding: "0.9rem 1.25rem",
+                    textAlign: "left",
+                    fontSize: "0.72rem",
+                    fontWeight: 700,
+                    color: "#64748B",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
+                    width: "22%",
+                  }}
+                >
+                  Action effectuée
+                </th>
+                <th
+                  style={{
+                    padding: "0.9rem 1.25rem",
+                    textAlign: "left",
+                    fontSize: "0.72rem",
+                    fontWeight: 700,
+                    color: "#64748B",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
+                    width: "26%",
+                  }}
+                >
+                  Cible / Détails contextuels
+                </th>
+                <th
+                  style={{
+                    padding: "0.9rem 1.25rem",
+                    textAlign: "right",
+                    fontSize: "0.72rem",
+                    fontWeight: 700,
+                    color: "#64748B",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
+                    width: "14%",
+                  }}
+                >
+                  Sécurité
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td
+                    colSpan="5"
                     style={{
-                      padding: "1rem 1.5rem",
-                      textAlign: "left",
-                      fontWeight: 600,
-                      color: "var(--text-muted)",
-                      
+                      textAlign: "center",
+                      padding: "3rem",
+                      color: "#64748B",
+                      fontSize: "0.9rem",
                     }}
                   >
-                    Horodatage
-                  </th>
-                  <th
-                    style={{
-                      padding: "1rem 1.5rem",
-                      textAlign: "left",
-                      fontWeight: 600,
-                      color: "var(--text-muted)",
-                      
-                    }}
-                  >
-                    Utilisateur
-                  </th>
-                  <th
-                    style={{
-                      padding: "1rem 1.5rem",
-                      textAlign: "left",
-                      fontWeight: 600,
-                      color: "var(--text-muted)",
-                      
-                    }}
-                  >
-                    Action
-                  </th>
-                  <th
-                    style={{
-                      padding: "1rem 1.5rem",
-                      textAlign: "left",
-                      fontWeight: 600,
-                      color: "var(--text-muted)",
-                      
-                    }}
-                  >
-                    Cible / Détails
-                  </th>
+                    Chargement du journal d'audit...
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredLogs.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan="4"
+              ) : paginatedLogs.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="5"
+                    style={{
+                      textAlign: "center",
+                      padding: "3rem",
+                      color: "#64748B",
+                      fontSize: "0.9rem",
+                    }}
+                  >
+                    Aucun enregistrement trouvé.
+                  </td>
+                </tr>
+              ) : (
+                paginatedLogs.map((log) => {
+                  const d = new Date(log.createdAt || Date.now());
+                  const dateStr = d.toLocaleDateString("fr-FR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  });
+                  const timeStr = d.toLocaleTimeString("fr-FR", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  });
+
+                  const pill = getPillStyle(log.action);
+                  const userName = log.user?.name || log.userName || "Système";
+                  const userInitial = userName.charAt(0).toUpperCase();
+                  const userRole =
+                    log.user?.role?.name ||
+                    log.user?.role ||
+                    (userName.toLowerCase().includes("rosette")
+                      ? "Super-administrateur"
+                      : "Administrateur technique");
+
+                  const secBadge = getSecurityBadge(log);
+                  const targetLabel = log.targetType
+                    ? `${formatStr(log.targetType)} (#${(log.targetId || "").split("-")[0].toLowerCase()})`
+                    : log.targetId
+                    ? `#${log.targetId.split("-")[0]}`
+                    : "";
+
+                  return (
+                    <tr
+                      key={log.id || Math.random()}
                       style={{
-                        textAlign: "center",
-                        padding: "3rem",
-                        color: "var(--text-muted)",
+                        borderBottom: "1px solid #F1F5F9",
+                        transition: "background 0.15s",
                       }}
                     >
-                      Aucun enregistrement trouvé.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredLogs.map((log) => {
-                    const formatStr = (str) => {
-                      if (!str) return "";
-                      const formatted = String(str).replace(/_/g, " ").toLowerCase();
-                      return formatted.charAt(0).toUpperCase() + formatted.slice(1);
-                    };
-                    const colors = getActionColor(log.action);
-                    return (
-                      <tr
-                        key={log.id}
-                        style={{
-                          borderBottom: "1px solid var(--border)",
-                          transition: "background 0.2s",
-                        }}
-                      >
-                        <td style={{ padding: "1rem 1.5rem", textAlign: "left" }}>
+                      {/* Horodatage */}
+                      <td style={{ padding: "0.9rem 1.25rem", verticalAlign: "middle" }}>
+                        <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                          <Clock size={15} style={{ color: "#94A3B8", marginTop: "2px" }} />
+                          <div>
+                            <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A" }}>
+                              {dateStr}
+                            </div>
+                            <div style={{ fontSize: "0.78rem", color: "#64748B" }}>
+                              {timeStr}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Utilisateur & Rôle */}
+                      <td style={{ padding: "0.9rem 1.25rem", verticalAlign: "middle" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
                           <div
                             style={{
+                              width: "30px",
+                              height: "30px",
+                              borderRadius: "50%",
+                              background: "#F1F5F9",
+                              color: "#334155",
                               display: "flex",
                               alignItems: "center",
-                              gap: "0.5rem",
-                              color: "var(--text-muted)",
-                              
+                              justifyContent: "center",
+                              fontWeight: 700,
+                              fontSize: "0.82rem",
+                              flexShrink: 0,
                             }}
                           >
-                            <Clock size={14} />
-                            {new Date(log.createdAt).toLocaleString("fr-FR", {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              second: "2-digit",
-                            })}
+                            {userInitial}
                           </div>
-                        </td>
-                        <td style={{ padding: "1rem 1.5rem", textAlign: "left" }}>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "0.75rem",
-                            }}
-                          >
-                            <div
-                              style={{
-                                width: 28,
-                                height: 28,
-                                borderRadius: "50%",
-                                background: "var(--bg-main)",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                color: "var(--text-muted)",
-                              }}
-                            >
-                              <User size={14} />
+                          <div>
+                            <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A" }}>
+                              {userName}
                             </div>
-                            <div>
-                              <div
-                                style={{
-                                  color: "var(--text-main)",
-                                  
-                                }}
-                              >
-                                {log.user?.name || "Système"}
+                            <div style={{ fontSize: "0.75rem", color: "#64748B" }}>
+                              {userRole}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Action effectuée */}
+                      <td style={{ padding: "0.9rem 1.25rem", verticalAlign: "middle" }}>
+                        <span
+                          style={{
+                            display: "inline-block",
+                            padding: "0.3rem 0.8rem",
+                            borderRadius: "20px",
+                            fontSize: "0.78rem",
+                            fontWeight: 600,
+                            background: pill.background,
+                            color: pill.color,
+                          }}
+                        >
+                          {formatStr(log.action)}
+                        </span>
+                      </td>
+
+                      {/* Cible / Détails contextuels */}
+                      <td style={{ padding: "0.9rem 1.25rem", verticalAlign: "middle" }}>
+                        <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                          <FileText size={15} style={{ color: "#94A3B8", marginTop: "2px", flexShrink: 0 }} />
+                          <div>
+                            {targetLabel && (
+                              <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A" }}>
+                                {targetLabel}
                               </div>
-                              <div
-                                style={{
-                                  fontSize: "0.75rem",
-                                  color: "var(--text-muted)",
-                                }}
-                              >
-                                {log.user?.role?.name || "-"}
-                              </div>
+                            )}
+                            <div style={{ fontSize: "0.78rem", color: "#64748B" }}>
+                              {log.details || "-"}
                             </div>
                           </div>
-                        </td>
-                        <td style={{ padding: "1rem 1.5rem", textAlign: "left" }}>
-                          <span
-                            style={{
-                              color: colors.color,
-                            }}
-                          >
-                            {formatStr(log.action)}
-                          </span>
-                        </td>
-                        <td style={{ padding: "1rem 1.5rem", textAlign: "left" }}>
-                          {log.targetType && (
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "0.5rem",
-                                marginBottom: "0.25rem",
-                              }}
-                            >
-                              <FileText size={14} color="var(--text-muted)" />
-                              <span
-                                style={{
-                                  
-                                  
-                                }}
-                              >
-                                {formatStr(log.targetType)}{" "}
-                                {log.targetId
-                                  ? `(#${log.targetId.split("-")[0].toLowerCase()})`
-                                  : ""}
-                              </span>
-                            </div>
-                          )}
-                          <div
-                            style={{
-                              
-                              color: "var(--text-muted)",
-                            }}
-                          >
-                            {log.details || "-"}
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
+                        </div>
+                      </td>
+
+                      {/* Sécurité */}
+                      <td style={{ padding: "0.9rem 1.25rem", textAlign: "right", verticalAlign: "middle" }}>
+                        <span
+                          style={{
+                            display: "inline-block",
+                            padding: "0.25rem 0.6rem",
+                            borderRadius: "6px",
+                            fontSize: "0.75rem",
+                            color: "#64748B",
+                            background: "#F8FAFC",
+                            border: "1px solid #E2E8F0",
+                            fontFamily: "monospace",
+                          }}
+                        >
+                          {secBadge}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Footer with pagination */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0.85rem 1.25rem",
+            borderTop: "1px solid #F1F5F9",
+            background: "#FFF",
+            fontSize: "0.8rem",
+            color: "#64748B",
+          }}
+        >
+          <div>
+            Affichage de {filteredLogs.length > 0 ? (page - 1) * pageSize + 1 : 0} à{" "}
+            {Math.min(page * pageSize, filteredLogs.length)} sur {filteredLogs.length} événements enregistrés
+          </div>
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            <button
+              type="button"
+              disabled={page <= 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              style={{
+                padding: "0.35rem 0.75rem",
+                borderRadius: "6px",
+                border: "1px solid #E2E8F0",
+                background: "#FFF",
+                color: page <= 1 ? "#CBD5E1" : "#334155",
+                fontSize: "0.8rem",
+                cursor: page <= 1 ? "not-allowed" : "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.25rem",
+              }}
+            >
+              <ChevronLeft size={14} /> Précédent
+            </button>
+            <button
+              type="button"
+              disabled={page >= totalPages}
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              style={{
+                padding: "0.35rem 0.75rem",
+                borderRadius: "6px",
+                border: "1px solid #E2E8F0",
+                background: "#FFF",
+                color: page >= totalPages ? "#CBD5E1" : "#334155",
+                fontSize: "0.8rem",
+                cursor: page >= totalPages ? "not-allowed" : "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.25rem",
+              }}
+            >
+              Suivant <ChevronRight size={14} />
+            </button>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

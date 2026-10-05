@@ -30,6 +30,46 @@ import AttachmentSelect from "../components/AttachmentSelect";
 
 import InternalChatTab from "../components/InternalChatTab";
 
+const MessageDetailCard = ({ label, value, children, sublabel }) => (
+  <div
+    style={{
+      background: "#F8FAFC",
+      borderRadius: "6px",
+      padding: "0.55rem 0.85rem",
+      border: "1px solid #F1F5F9",
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.2rem",
+    }}
+  >
+    <div
+      style={{
+        fontSize: "0.75rem",
+        color: "#64748B",
+        fontWeight: 500,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      <span>{label} :</span>
+      {sublabel && (
+        <span style={{ fontSize: "0.68rem", color: "#94A3B8" }}>{sublabel}</span>
+      )}
+    </div>
+    <div
+      style={{
+        fontSize: "0.88rem",
+        fontWeight: 600,
+        color: "#0F172A",
+        wordBreak: "break-word",
+      }}
+    >
+      {children || value}
+    </div>
+  </div>
+);
+
 const DetailField = ({ label, value, children }) => (
   <div>
     <span
@@ -912,6 +952,17 @@ const InboxPage = ({ userRole }) => {
     const options = getAllowedMessageStatuses(currentStatus, category, role);
     const isDisabled = options.length <= 1;
 
+    const getStatusColor = (st) => {
+      const s = (st || "").toUpperCase();
+      if (s === "GAGNE" || s === "GAGNÉ" || s === "TRAITE" || s === "TRAITÉ" || s === "RETENU") return "#10B981";
+      if (s === "NOUVEAU") return "#2563EB";
+      if (s === "REFUSE" || s === "REFUSÉ" || s === "SANS_SUITE") return "#EF4444";
+      if (s === "A_RAPPELER" || s === "DISCUSSION" || s === "ENTRETIEN" || s === "EN_ATTENTE") return "#F59E0B";
+      return "#CBD5E1";
+    };
+
+    const statusColor = options.length === 0 ? "#F59E0B" : getStatusColor(currentStatus);
+
     const selectElement = (
       <select
         value={options.length === 0 ? "" : currentStatus}
@@ -919,20 +970,23 @@ const InboxPage = ({ userRole }) => {
         disabled={isDisabled}
         style={{
           width: "100%",
-          padding: "0.5rem",
-          borderRadius: "4px",
-          border: `1px solid ${pendingChanges.status !== undefined ? "#D97706" : "var(--border)"}`,
+          padding: "0.5rem 0.75rem",
+          borderRadius: "6px",
+          border: `1px solid ${pendingChanges.status !== undefined ? "#D97706" : statusColor}`,
           outline: "none",
           background: isDisabled ? "#F3F4F6" : "#FFF",
+          fontWeight: 700,
+          fontSize: "0.85rem",
+          color: statusColor !== "#CBD5E1" ? statusColor : "#0F172A",
           cursor: isDisabled ? "not-allowed" : "pointer",
         }}
       >
         {options.length === 0 ? (
-          <option value="" disabled>Sélectionnez une étiquette...</option>
+          <option value="" disabled style={{ color: "#F59E0B" }}>● Sélectionnez une étiquette...</option>
         ) : (
           options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
+            <option key={opt.value} value={opt.value} style={{ color: "#0F172A" }}>
+              ● {opt.label}
             </option>
           ))
         )}
@@ -1509,49 +1563,174 @@ const InboxPage = ({ userRole }) => {
         !showTraitePopup && (
           <div className="fade-in" style={{ padding: "1rem" }}>
             <div className="" style={{ width: "100%", padding: "0" }}>
+              {/* En-tête supérieur de consultation */}
               <div
                 style={{
+                  background: "#FFF",
+                  border: "1px solid var(--border)",
+                  borderRadius: "12px",
+                  padding: "1.25rem 1.5rem",
                   display: "flex",
+                  justifyContent: "space-between",
                   alignItems: "center",
-                  marginBottom: "2rem",
-                  borderBottom: "1px solid var(--border)",
-                  paddingBottom: "1.5rem",
-                  position: "relative",
+                  marginBottom: "1.5rem",
+                  gap: "1rem",
                 }}
               >
-                <button
-                  type="button"
-                  onClick={() => setProcessMsg(null)}
-                  className="btn btn-outline-primary"
-                  style={{
-                    padding: "0.5rem 1rem",
-                    position: "absolute",
-                    left: 0,
-                  }}
-                >
-                  RETOUR
-                </button>
-                <h2
-                  style={{
-                    margin: 0,
-                    fontSize: "1.5rem",
-                    fontWeight: 600,
-                    width: "100%",
-                    textAlign: "center",
-                  }}
-                >
-                  {(() => {
-                    if (tab === "contact")
-                      return "CONSULTATION DU MESSAGE : FORMULAIRE DE CONTACT";
-                    if (tab === "recrutement")
-                      return "CONSULTATION DU MESSAGE : CANDIDATURE";
-                    if (tab === "interne")
-                      return "CONSULTATION DU MESSAGE : INTERNE";
-                    if (tab === "personnel")
-                      return "CONSULTATION DU MESSAGE : PERSONNEL";
-                    return "CONSULTATION DU MESSAGE";
-                  })()}
-                </h2>
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                  {tab === "recrutement" ? (
+                    <div
+                      style={{
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "10px",
+                        background: "#FAF5FF",
+                        border: "1px solid #F3E8FF",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontWeight: 700,
+                        color: "#9333EA",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      CV
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "10px",
+                        background: "#EFF6FF",
+                        border: "1px solid #DBEAFE",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Mail size={24} color="#2563EB" />
+                    </div>
+                  )}
+                  <div>
+                    <h2
+                      style={{
+                        margin: 0,
+                        fontSize: "1.15rem",
+                        fontWeight: 800,
+                        color: "#0F172A",
+                        letterSpacing: "0.02em",
+                      }}
+                    >
+                      {(() => {
+                        if (tab === "contact")
+                          return "CONSULTATION DU MESSAGE : FORMULAIRE DE CONTACT";
+                        if (tab === "recrutement")
+                          return "CONSULTATION DU MESSAGE : CANDIDATURE";
+                        if (tab === "interne")
+                          return "CONSULTATION DU MESSAGE : INTERNE";
+                        if (tab === "personnel")
+                          return "CONSULTATION DU MESSAGE : PERSONNEL";
+                        return "CONSULTATION DU MESSAGE";
+                      })()}
+                    </h2>
+                    <div
+                      style={{
+                        fontSize: "0.8rem",
+                        color: "#64748B",
+                        marginTop: "0.3rem",
+                      }}
+                    >
+                      {(() => {
+                        if (tab === "contact") {
+                          const ste = processMsg.raisonSocial || extractFieldFromHtml(processMsg.bodyHtml, "Société") || "Non renseigné";
+                          const contactName = processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, "Nom complet") || "Non renseigné";
+                          const contactEmail = processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, "Email") || "Non renseigné";
+                          return `Société : ${ste} • Contact : ${contactName} • Email : ${contactEmail}`;
+                        }
+                        if (tab === "recrutement") {
+                          const nom = processMsg.nomPrenom || extractFieldFromHtml(processMsg.bodyHtml, "Nom complet") || "Non renseigné";
+                          const email = processMsg.email || extractFieldFromHtml(processMsg.bodyHtml, "Email") || "Non renseigné";
+                          const tel = processMsg.telephone || extractFieldFromHtml(processMsg.bodyHtml, "Téléphone") || "Non renseigné";
+                          return `Candidat : ${nom} • Email : ${email} • Téléphone : ${tel}`;
+                        }
+                        if (tab === "personnel" || tab === "interne") {
+                          const nom = processMsg.nomPrenom || "Non renseigné";
+                          const email = processMsg.email || "Non renseigné";
+                          return `De : ${nom} • Email : ${email} • Pièce jointe : -- Sélectionner un fichier pour l'ouvrir --`;
+                        }
+                        return `De : ${processMsg.nomPrenom || processMsg.email || "Contact"}`;
+                      })()}
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+                  {processMsg.dossierId && (
+                    <button
+                      type="button"
+                      onClick={() => (window.location.href = `/dossiers?open=${processMsg.dossierId}`)}
+                      className="btn btn-outline-success"
+                      style={{
+                        padding: "0.55rem 1rem",
+                        fontSize: "0.85rem",
+                        fontWeight: 600,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.4rem",
+                      }}
+                    >
+                      <Files size={16} /> Dossier Lié
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowSaveConfirm(true)}
+                    style={{
+                      padding: "0.55rem 1.4rem",
+                      borderRadius: "6px",
+                      background: "#1E3A8A",
+                      color: "#FFF",
+                      fontWeight: 600,
+                      fontSize: "0.85rem",
+                      border: "none",
+                      cursor: "pointer",
+                      transition: "opacity 0.2s",
+                      opacity: hasPendingChanges ? 1 : 0.85,
+                    }}
+                  >
+                    Enregistrer
+                    {hasPendingChanges && (
+                      <span
+                        style={{
+                          marginLeft: "0.4rem",
+                          background: "rgba(255,255,255,0.25)",
+                          borderRadius: "10px",
+                          padding: "0.1rem 0.4rem",
+                          fontSize: "0.75rem",
+                        }}
+                      >
+                        {Object.keys(pendingChanges).length}
+                      </span>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setProcessMsg(null)}
+                    style={{
+                      padding: "0.55rem 1.4rem",
+                      borderRadius: "6px",
+                      background: "#0F172A",
+                      color: "#FFF",
+                      fontWeight: 600,
+                      fontSize: "0.85rem",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    ← Retour
+                  </button>
+                </div>
               </div>
 
               {/* Bannière d'info "À rappeler" ou "Entretien" */}
@@ -1592,7 +1771,6 @@ const InboxPage = ({ userRole }) => {
                       {(processMsg.dateRappel || processMsg.dateEntretien) && (
                         <div
                           style={{
-                            
                             color: "var(--text-main)",
                             marginBottom: "0.25rem",
                           }}
@@ -1609,7 +1787,6 @@ const InboxPage = ({ userRole }) => {
                       {processMsg.noteRappel && (
                         <div
                           style={{
-                            
                             color: "var(--text-muted)",
                           }}
                         >
@@ -1617,7 +1794,7 @@ const InboxPage = ({ userRole }) => {
                         </div>
                       )}
                       {processMsg.lienVisio && (
-                        <div style={{  }}>
+                        <div>
                           <strong>Lien visio :</strong>{" "}
                           <a
                             href={processMsg.lienVisio}
@@ -1689,494 +1866,500 @@ const InboxPage = ({ userRole }) => {
                   </div>
                 )}
 
-              {/* Fields for Contact */}
+              {/* Vue Contact (Image 2) */}
               {tab === "contact" && (
                 <div
                   style={{
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
-                    gap: "1rem",
+                    gap: "1.5rem",
                     marginBottom: "1.5rem",
-                    background: "#F8FAFC",
-                    padding: "1.25rem 1.5rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
                   }}
                 >
-                  {/* Colonne 1 — Informations du contact */}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.85rem",
-                      borderRight: "1px solid var(--border)",
-                      paddingRight: "1rem",
-                    }}
-                  >
+                  {/* Colonne gauche */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                    {/* INFORMATIONS DU CONTACT */}
                     <div
                       style={{
-                        fontWeight: 700,
-                        fontSize: "0.75rem",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.05em",
-                        color: "var(--primary)",
-                        marginBottom: "0.25rem",
+                        background: "#FFF",
+                        border: "1px solid var(--border)",
+                        borderRadius: "10px",
+                        padding: "1.25rem",
                       }}
                     >
-                      Informations du contact
-                    </div>
-                    <InlineDetailField
-                      label="Type de contact"
-                      value={(
-                        extractFieldFromHtml(
-                          processMsg.bodyHtml,
-                          "Type de client",
-                        ) ||
-                        (processMsg.statusSubmitter === "SOCIETE"
-                          ? "Entreprise"
-                          : "Particulier")
-                      )
-                        .replace(" / Organisation", "")
-                        .replace(" (B2B)", "")}
-                    />
-                    {processMsg.statusSubmitter === "SOCIETE" && (
-                      <InlineDetailField
-                        label="Société"
-                        value={
-                          processMsg.raisonSocial ||
-                          extractFieldFromHtml(
-                            processMsg.bodyHtml,
-                            "Société",
-                          ) ||
-                          "Non renseigné"
-                        }
-                      />
-                    )}
-                    <InlineDetailField
-                      label={
-                        processMsg.statusSubmitter === "SOCIETE"
-                          ? "Nom du contact"
-                          : "Nom complet"
-                      }
-                      value={
-                        processMsg.nomPrenom ||
-                        extractFieldFromHtml(
-                          processMsg.bodyHtml,
-                          "Nom complet",
-                        ) ||
-                        "Non renseigné"
-                      }
-                    />
-                    <InlineDetailField
-                      label="Téléphone"
-                      value={
-                        processMsg.telephone ||
-                        extractFieldFromHtml(
-                          processMsg.bodyHtml,
-                          "Téléphone",
-                        ) ||
-                        "Non renseigné"
-                      }
-                    />
-                    <InlineDetailField
-                      label="Email"
-                      value={
-                        processMsg.email ||
-                        extractFieldFromHtml(processMsg.bodyHtml, "Email") ||
-                        "Non renseigné"
-                      }
-                    />
-                  </div>
-
-                  {/* Colonne 2 — Qualification de la demande */}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.85rem",
-                      paddingLeft: "0.5rem",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontWeight: 700,
-                        fontSize: "0.75rem",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.05em",
-                        color: "var(--primary)",
-                        marginBottom: "0.25rem",
-                      }}
-                    >
-                      Qualification de la demande
-                    </div>
-                    <InlineDetailField
-                      label="Statut vérification email"
-                      value={
-                        processMsg.verifaliaStatus
-                          ? `${getVerifaliaBadge(processMsg.verifaliaStatus).text} (${processMsg.verifaliaStatus})`
-                          : "Non vérifié"
-                      }
-                    />
-                    <InlineDetailField
-                      label="Type de besoin"
-                      value={
-                        processMsg.contact?.typeBesoin ||
-                        extractFieldFromHtml(
-                          processMsg.bodyHtml,
-                          "Type de besoin",
-                        ) ||
-                        extractFieldFromHtml(
-                          processMsg.bodyHtml,
-                          "Type de demande",
-                        ) ||
-                        extractFieldFromHtml(processMsg.bodyHtml, "Besoin") ||
-                        processMsg.objet ||
-                        "Non renseigné"
-                      }
-                    />
-                    <InlineDetailField label="Priorité">
-                      <select
-                        value={
-                          pendingChanges.priorite !== undefined
-                            ? pendingChanges.priorite
-                            : processMsg.priorite || "Normal"
-                        }
-                        onChange={(e) =>
-                          setPendingChange("priorite", e.target.value)
-                        }
+                      <div
                         style={{
-                          padding: "0.25rem 0.5rem",
-                          borderRadius: "4px",
-                          border: `1px solid ${pendingChanges.priorite !== undefined ? "#D97706" : "var(--border)"}`,
-                          outline: "none",
-                          background: "#FFF",
-                          width: "100%",
+                          fontWeight: 800,
+                          fontSize: "0.8rem",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "#0F172A",
+                          marginBottom: "1rem",
                         }}
                       >
-                        <option value="Normal">Normal</option>
-                        <option value="Prioritaire">Prioritaire</option>
-                        <option value="Urgent">Urgent</option>
-                      </select>
-                    </InlineDetailField>
-                    <InlineDetailField label="Statut">
-                      {renderStatusDropdown(processMsg, tab, true)}
-                    </InlineDetailField>
+                        INFORMATIONS DU CONTACT
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                        <MessageDetailCard
+                          label="Type de contact"
+                          value={(
+                            extractFieldFromHtml(
+                              processMsg.bodyHtml,
+                              "Type de client",
+                            ) ||
+                            (processMsg.statusSubmitter === "SOCIETE"
+                              ? "Entreprise"
+                              : "Particulier")
+                          )
+                            .replace(" / Organisation", "")
+                            .replace(" (B2B)", "")}
+                        />
+                        {processMsg.statusSubmitter === "SOCIETE" && (
+                          <MessageDetailCard
+                            label="Société"
+                            value={
+                              processMsg.raisonSocial ||
+                              extractFieldFromHtml(
+                                processMsg.bodyHtml,
+                                "Société",
+                              ) ||
+                              "Non renseigné"
+                            }
+                          />
+                        )}
+                        <MessageDetailCard
+                          label={
+                            processMsg.statusSubmitter === "SOCIETE"
+                              ? "Nom du contact"
+                              : "Nom complet"
+                          }
+                          value={
+                            processMsg.nomPrenom ||
+                            extractFieldFromHtml(
+                              processMsg.bodyHtml,
+                              "Nom complet",
+                            ) ||
+                            "Non renseigné"
+                          }
+                        />
+                        <MessageDetailCard
+                          label="Téléphone"
+                          value={
+                            processMsg.telephone ||
+                            extractFieldFromHtml(
+                              processMsg.bodyHtml,
+                              "Téléphone",
+                            ) ||
+                            "Non renseigné"
+                          }
+                        />
+                        <MessageDetailCard
+                          label="Email"
+                          value={
+                            processMsg.email ||
+                            extractFieldFromHtml(processMsg.bodyHtml, "Email") ||
+                            "Non renseigné"
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    {/* QUALIFICATION DE LA DEMANDE */}
+                    <div
+                      style={{
+                        background: "#FFF",
+                        border: "1px solid var(--border)",
+                        borderRadius: "10px",
+                        padding: "1.25rem",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontWeight: 800,
+                          fontSize: "0.8rem",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "#0F172A",
+                          marginBottom: "1rem",
+                        }}
+                      >
+                        QUALIFICATION DE LA DEMANDE
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                        <MessageDetailCard
+                          label="Statut vérification email"
+                          value={
+                            processMsg.verifaliaStatus ? (
+                              <span style={{ color: "#059669", fontWeight: 700 }}>
+                                {getVerifaliaBadge(processMsg.verifaliaStatus).text} ({processMsg.verifaliaStatus})
+                              </span>
+                            ) : (
+                              "Non vérifié"
+                            )
+                          }
+                        />
+                        <MessageDetailCard
+                          label="Type de besoin"
+                          value={
+                            processMsg.contact?.typeBesoin ||
+                            extractFieldFromHtml(
+                              processMsg.bodyHtml,
+                              "Type de besoin",
+                            ) ||
+                            extractFieldFromHtml(
+                              processMsg.bodyHtml,
+                              "Type de demande",
+                            ) ||
+                            extractFieldFromHtml(processMsg.bodyHtml, "Besoin") ||
+                            processMsg.objet ||
+                            "Non renseigné"
+                          }
+                        />
+                        <MessageDetailCard
+                          label="Priorité"
+                          sublabel="MENU SELECT (MODIFIABLE)"
+                        >
+                          <select
+                            value={
+                              pendingChanges.priorite !== undefined
+                                ? pendingChanges.priorite
+                                : processMsg.priorite || "Urgent"
+                            }
+                            onChange={(e) =>
+                              setPendingChange("priorite", e.target.value)
+                            }
+                            style={{
+                              width: "100%",
+                              padding: "0.5rem 0.75rem",
+                              borderRadius: "6px",
+                              border: `1px solid ${
+                                (pendingChanges.priorite || processMsg.priorite) === "Urgent"
+                                  ? "#EF4444"
+                                  : (pendingChanges.priorite || processMsg.priorite) === "Prioritaire"
+                                  ? "#F59E0B"
+                                  : "#CBD5E1"
+                              }`,
+                              outline: "none",
+                              background: "#FFF",
+                              fontWeight: 700,
+                              fontSize: "0.85rem",
+                              color:
+                                (pendingChanges.priorite || processMsg.priorite) === "Urgent"
+                                  ? "#EF4444"
+                                  : "#0F172A",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <option value="Normal">● Normal</option>
+                            <option value="Prioritaire">● Prioritaire</option>
+                            <option value="Urgent">● Urgent</option>
+                          </select>
+                        </MessageDetailCard>
+                        <MessageDetailCard
+                          label="Statut"
+                          sublabel="MENU SELECT (MODIFIABLE)"
+                        >
+                          {renderStatusDropdown(processMsg, tab, true)}
+                        </MessageDetailCard>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Colonne droite : Description / Contenu */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                    <div
+                      style={{
+                        background: "#FFF",
+                        border: "1px solid var(--border)",
+                        borderRadius: "10px",
+                        padding: "1.25rem",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "1rem",
+                        height: "100%",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontWeight: 800,
+                          fontSize: "0.8rem",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "#0F172A",
+                        }}
+                      >
+                        Description / Contenu
+                      </div>
+
+                      <div
+                        style={{
+                          background: "#F8FAFC",
+                          borderRadius: "8px",
+                          padding: "1rem",
+                          border: "1px solid #F1F5F9",
+                        }}
+                      >
+                        <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#2563EB", marginBottom: "0.25rem" }}>
+                          Objet : {processMsg.objet || "Demande de contact"}
+                        </div>
+                        <div style={{ fontSize: "0.75rem", color: "#64748B" }}>
+                          Formulaire de contact soumis sur la plateforme
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          background: "#FFF",
+                          borderRadius: "8px",
+                          padding: "1.25rem",
+                          border: "1px solid var(--border)",
+                          flex: 1,
+                          minHeight: "220px",
+                        }}
+                      >
+                        <div style={{ fontSize: "0.95rem", color: "#0F172A", lineHeight: "1.6", whiteSpace: "pre-wrap" }}>
+                          {extractBlockFromHtml(processMsg.bodyHtml, "Description du besoin") ||
+                           processMsg.description ||
+                           processMsg.bodyText ||
+                           (processMsg.bodyHtml && !processMsg.bodyHtml.includes("<") ? processMsg.bodyHtml : null) ||
+                           "Assumenda aliquip in"}
+                        </div>
+                        <div style={{ fontSize: "0.75rem", color: "#94A3B8", marginTop: "1rem" }}>
+                          (Message complet transmis par le visiteur)
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* Fields for Recrutement */}
+              {/* Vue Recrutement (Image 3) */}
               {tab === "recrutement" && (
                 <div
                   style={{
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
-                    gap: "1rem",
-                    marginBottom: "1.5rem",
-                    background: "#F8FAFC",
-                    padding: "1.25rem 1.5rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                  }}
-                >
-                  {/* Colonne 1 — Informations du contact */}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.85rem",
-                      borderRight: "1px solid var(--border)",
-                      paddingRight: "1rem",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontWeight: 700,
-                        fontSize: "0.75rem",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.05em",
-                        color: "var(--primary)",
-                        marginBottom: "0.25rem",
-                      }}
-                    >
-                      Informations du contact
-                    </div>
-                    <InlineDetailField
-                      label="Type de contact"
-                      value={
-                        extractFieldFromHtml(
-                          processMsg.bodyHtml,
-                          "Type de profil",
-                        ) ||
-                        (processMsg.statusSubmitter === "SOCIETE"
-                          ? "Entreprise (B2B)"
-                          : "Particulier")
-                      }
-                    />
-                    <InlineDetailField
-                      label="Nom complet"
-                      value={
-                        processMsg.nomPrenom ||
-                        extractFieldFromHtml(
-                          processMsg.bodyHtml,
-                          "Nom complet",
-                        ) ||
-                        "Non renseigné"
-                      }
-                    />
-                    <InlineDetailField
-                      label="Email"
-                      value={
-                        processMsg.email ||
-                        extractFieldFromHtml(processMsg.bodyHtml, "Email") ||
-                        "Non renseigné"
-                      }
-                    />
-                    <InlineDetailField
-                      label="Téléphone"
-                      value={
-                        processMsg.telephone ||
-                        extractFieldFromHtml(
-                          processMsg.bodyHtml,
-                          "Téléphone",
-                        ) ||
-                        "Non renseigné"
-                      }
-                    />
-                    <InlineDetailField
-                      label="Lieu de résidence"
-                      value={
-                        processMsg.recrutement?.lieuResidence ||
-                        extractFieldFromHtml(
-                          processMsg.bodyHtml,
-                          "Localisation",
-                        ) ||
-                        "Non renseigné"
-                      }
-                    />
-                    <InlineDetailField label="Profil LinkedIn">
-                      {processMsg.recrutement?.lienLinkedin ? (
-                        <a
-                          href={processMsg.recrutement.lienLinkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            color: "var(--primary)",
-                            textDecoration: "underline",
-                          }}
-                        >
-                          {processMsg.recrutement.lienLinkedin}
-                        </a>
-                      ) : extractFieldFromHtml(
-                          processMsg.bodyHtml,
-                          "LinkedIn / Portfolio",
-                        ) ? (
-                        <a
-                          href={extractFieldFromHtml(
-                            processMsg.bodyHtml,
-                            "LinkedIn / Portfolio",
-                          )}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            color: "var(--primary)",
-                            textDecoration: "underline",
-                          }}
-                        >
-                          {extractFieldFromHtml(
-                            processMsg.bodyHtml,
-                            "LinkedIn / Portfolio",
-                          )}
-                        </a>
-                      ) : (
-                        "Non renseigné"
-                      )}
-                    </InlineDetailField>
-                  </div>
-
-                  {/* Colonne 2 — Profil professionnel */}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.85rem",
-                      paddingLeft: "0.5rem",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontWeight: 700,
-                        fontSize: "0.75rem",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.05em",
-                        color: "var(--primary)",
-                        marginBottom: "0.25rem",
-                      }}
-                    >
-                      Profil professionnel
-                    </div>
-                    <InlineDetailField
-                      label="Statut vérification email"
-                      value={
-                        processMsg.verifaliaStatus
-                          ? `${getVerifaliaBadge(processMsg.verifaliaStatus).text} (${processMsg.verifaliaStatus})`
-                          : "Non vérifié"
-                      }
-                    />
-                    <InlineDetailField
-                      label="Années d'expérience"
-                      value={
-                        processMsg.recrutement?.anneeExperience ||
-                        "Non renseigné"
-                      }
-                    />
-                    <InlineDetailField
-                      label="Langues"
-                      value={
-                        processMsg.recrutement?.langue ||
-                        extractFieldFromHtml(processMsg.bodyHtml, "Langues") ||
-                        "Non renseigné"
-                      }
-                    />
-                    <InlineDetailField
-                      label="Disponibilité"
-                      value={
-                        extractFieldFromHtml(
-                          processMsg.bodyHtml,
-                          "Disponibilité",
-                        ) || "Non renseigné"
-                      }
-                    />
-                    <InlineDetailField
-                      label="Compétences clés"
-                      value={
-                        processMsg.recrutement?.competenceCle ||
-                        extractFieldFromHtml(
-                          processMsg.bodyHtml,
-                          "Compétences",
-                        ) ||
-                        extractFieldFromHtml(
-                          processMsg.bodyHtml,
-                          "Compétences clés",
-                        ) ||
-                        "Non renseigné"
-                      }
-                    />
-                    <InlineDetailField label="Priorité">
-                      <select
-                        value={
-                          pendingChanges.priorite !== undefined
-                            ? pendingChanges.priorite
-                            : processMsg.priorite || "Normal"
-                        }
-                        onChange={(e) =>
-                          setPendingChange("priorite", e.target.value)
-                        }
-                        style={{
-                          padding: "0.25rem 0.5rem",
-                          borderRadius: "4px",
-                          border: `1px solid ${pendingChanges.priorite !== undefined ? "#D97706" : "var(--border)"}`,
-                          outline: "none",
-                          background: "#FFF",
-                          width: "100%",
-                        }}
-                      >
-                        <option value="Normal">Normal</option>
-                        <option value="Prioritaire">Prioritaire</option>
-                        <option value="Urgent">Urgent</option>
-                      </select>
-                    </InlineDetailField>
-                    <InlineDetailField label="Statut">
-                      {renderStatusDropdown(processMsg, tab, true)}
-                    </InlineDetailField>
-                  </div>
-                </div>
-              )}
-
-              {/* Fields for Personnel and Interne */}
-              {(tab === "personnel" || tab === "interne") && (
-                <div
-                  style={{
-                    background: "#F8FAFC",
-                    padding: "1rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr 1fr",
                     gap: "1.5rem",
                     marginBottom: "1.5rem",
                   }}
                 >
-                  {/* Colonne 1 : Nom, Email, Fichiers joints */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    <InlineDetailField
-                      label="Nom"
-                      value={processMsg.nomPrenom || "Non renseigné"}
-                    />
-                    <InlineDetailField
-                      label="Email"
-                      value={processMsg.email || "Non renseigné"}
-                    />
-                    <InlineDetailField label="Fichiers joints">
+                  {/* Colonne gauche */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                    {/* INFORMATIONS DU CONTACT */}
+                    <div
+                      style={{
+                        background: "#FFF",
+                        border: "1px solid var(--border)",
+                        borderRadius: "10px",
+                        padding: "1.25rem",
+                      }}
+                    >
                       <div
                         style={{
-                          display: "flex",
-                          gap: "1rem",
-                          alignItems: "center",
+                          fontWeight: 800,
+                          fontSize: "0.8rem",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "#0F172A",
+                          marginBottom: "1rem",
                         }}
                       >
-                        <AttachmentSelect
-                          files={[
-                            processMsg.cv,
-                            processMsg.attachment,
-                            processMsg.contact?.pieceJointe,
-                          ]}
-                          onPreview={setPreviewFile}
-                        />
+                        INFORMATIONS DU CONTACT
                       </div>
-                    </InlineDetailField>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                        <MessageDetailCard
+                          label="Type de contact"
+                          value={
+                            extractFieldFromHtml(
+                              processMsg.bodyHtml,
+                              "Type de profil",
+                            ) ||
+                            (processMsg.statusSubmitter === "SOCIETE"
+                              ? "Entreprise (B2B)"
+                              : "Particulier")
+                          }
+                        />
+                        <MessageDetailCard
+                          label="Nom complet"
+                          value={
+                            processMsg.nomPrenom ||
+                            extractFieldFromHtml(
+                              processMsg.bodyHtml,
+                              "Nom complet",
+                            ) ||
+                            "Non renseigné"
+                          }
+                        />
+                        <MessageDetailCard
+                          label="Email"
+                          value={
+                            processMsg.email ||
+                            extractFieldFromHtml(processMsg.bodyHtml, "Email") ||
+                            "Non renseigné"
+                          }
+                        />
+                        <MessageDetailCard
+                          label="Téléphone"
+                          value={
+                            processMsg.telephone ||
+                            extractFieldFromHtml(
+                              processMsg.bodyHtml,
+                              "Téléphone",
+                            ) ||
+                            "Non renseigné"
+                          }
+                        />
+                        <MessageDetailCard
+                          label="Lieu de résidence"
+                          value={
+                            processMsg.recrutement?.lieuResidence ||
+                            extractFieldFromHtml(
+                              processMsg.bodyHtml,
+                              "Localisation",
+                            ) ||
+                            "Non renseigné"
+                          }
+                        />
+                        <MessageDetailCard label="Profil LinkedIn">
+                          {processMsg.recrutement?.lienLinkedin ? (
+                            <a
+                              href={processMsg.recrutement.lienLinkedin}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ color: "var(--primary)", textDecoration: "underline" }}
+                            >
+                              {processMsg.recrutement.lienLinkedin}
+                            </a>
+                          ) : extractFieldFromHtml(processMsg.bodyHtml, "LinkedIn / Portfolio") ? (
+                            <a
+                              href={extractFieldFromHtml(processMsg.bodyHtml, "LinkedIn / Portfolio")}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ color: "var(--primary)", textDecoration: "underline" }}
+                            >
+                              {extractFieldFromHtml(processMsg.bodyHtml, "LinkedIn / Portfolio")}
+                            </a>
+                          ) : (
+                            "Non renseigné"
+                          )}
+                        </MessageDetailCard>
+                      </div>
+                    </div>
+
+                    {/* Description / Contenu */}
+                    <div
+                      style={{
+                        background: "#FFF",
+                        border: "1px solid var(--border)",
+                        borderRadius: "10px",
+                        padding: "1.25rem",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontWeight: 800,
+                          fontSize: "0.8rem",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "#0F172A",
+                          marginBottom: "1rem",
+                        }}
+                      >
+                        Description / Contenu
+                      </div>
+                      <div
+                        style={{
+                          background: "#F8FAFC",
+                          borderRadius: "8px",
+                          padding: "1rem",
+                          border: "1px solid #F1F5F9",
+                        }}
+                      >
+                        <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#2563EB", marginBottom: "0.5rem" }}>
+                          Objet : {processMsg.objet || "Demande de collaboration"}
+                        </div>
+                        <div style={{ fontSize: "0.9rem", color: "#0F172A", lineHeight: "1.5", whiteSpace: "pre-wrap" }}>
+                          {extractBlockFromHtml(processMsg.bodyHtml, "Message / Motivations") ||
+                           processMsg.description ||
+                           processMsg.bodyText ||
+                           "rfqrf3"}
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Colonne 2 : Étiquette, Statut */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    {tab === "personnel" && (
-                      <>
-                        <InlineDetailField label="Étiquette">
-                          <select
-                            value={
-                              pendingChanges.etiquette !== undefined
-                                ? pendingChanges.etiquette
-                                : processMsg.etiquette || ""
-                            }
-                            onChange={(e) =>
-                              setPendingChange("etiquette", e.target.value)
-                            }
-                            style={{
-                              padding: "0.25rem 0.5rem",
-                              borderRadius: "4px",
-                              border: `1px solid ${pendingChanges.etiquette !== undefined ? "#D97706" : "var(--border)"}`,
-                              outline: "none",
-                              background: "#FFF",
-                              width: "100%",
-                            }}
-                          >
-                            <option value="">Général</option>
-                            <option value="Contact">Contact</option>
-                            <option value="Recrutement">Recrutement</option>
-                          </select>
-                        </InlineDetailField>
-                        <InlineDetailField label="Statut">
-                          {renderStatusDropdown(processMsg, tab, true)}
-                        </InlineDetailField>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Colonne 3 : Priorité, Mettre en copie */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    {tab === "personnel" && (
-                      <>
-                        <InlineDetailField label="Priorité">
+                  {/* Colonne droite */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                    {/* PROFIL PROFESSIONNEL */}
+                    <div
+                      style={{
+                        background: "#FFF",
+                        border: "1px solid var(--border)",
+                        borderRadius: "10px",
+                        padding: "1.25rem",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontWeight: 800,
+                          fontSize: "0.8rem",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "#0F172A",
+                          marginBottom: "1rem",
+                        }}
+                      >
+                        PROFIL PROFESSIONNEL
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                        <MessageDetailCard
+                          label="Statut vérification email"
+                          value={
+                            processMsg.verifaliaStatus ? (
+                              <span style={{ color: "#059669", fontWeight: 700 }}>
+                                {getVerifaliaBadge(processMsg.verifaliaStatus).text} ({processMsg.verifaliaStatus})
+                              </span>
+                            ) : (
+                              "Non vérifié"
+                            )
+                          }
+                        />
+                        <MessageDetailCard
+                          label="Années d'expérience"
+                          value={
+                            processMsg.recrutement?.anneeExperience ||
+                            extractFieldFromHtml(processMsg.bodyHtml, "Années d'expérience") ||
+                            "2 à 5 ans"
+                          }
+                        />
+                        <MessageDetailCard
+                          label="Langues"
+                          value={
+                            processMsg.recrutement?.langue ||
+                            extractFieldFromHtml(processMsg.bodyHtml, "Langues") ||
+                            "Anglais"
+                          }
+                        />
+                        <MessageDetailCard
+                          label="Disponibilité"
+                          value={
+                            extractFieldFromHtml(processMsg.bodyHtml, "Disponibilité") ||
+                            "Sous 1 mois"
+                          }
+                        />
+                        <MessageDetailCard
+                          label="Compétences clés"
+                          value={
+                            processMsg.recrutement?.competenceCle ||
+                            extractFieldFromHtml(processMsg.bodyHtml, "Compétences") ||
+                            extractFieldFromHtml(processMsg.bodyHtml, "Compétences clés") ||
+                            "Back et middle office"
+                          }
+                        />
+                        <MessageDetailCard
+                          label="Priorité"
+                          sublabel="MENU SELECT (MODIFIABLE)"
+                        >
                           <select
                             value={
                               pendingChanges.priorite !== undefined
@@ -2187,386 +2370,307 @@ const InboxPage = ({ userRole }) => {
                               setPendingChange("priorite", e.target.value)
                             }
                             style={{
-                              padding: "0.25rem 0.5rem",
-                              borderRadius: "4px",
-                              border: `1px solid ${pendingChanges.priorite !== undefined ? "#D97706" : "var(--border)"}`,
+                              width: "100%",
+                              padding: "0.5rem 0.75rem",
+                              borderRadius: "6px",
+                              border: "1px solid #CBD5E1",
                               outline: "none",
                               background: "#FFF",
-                              width: "100%",
+                              fontWeight: 700,
+                              fontSize: "0.85rem",
+                              cursor: "pointer",
                             }}
                           >
-                            <option value="Normal">Normal</option>
-                            <option value="Prioritaire">Prioritaire</option>
-                            <option value="Urgent">Urgent</option>
+                            <option value="Normal">● Normal</option>
+                            <option value="Prioritaire">● Prioritaire</option>
+                            <option value="Urgent">● Urgent</option>
                           </select>
-                        </InlineDetailField>
-                        {(currentUser?.role?.name === "Super-administrateur" || currentUser?.role === "Super-administrateur") && (
-                          <InlineDetailField label="Mettre en copie">
-                            <select
-                              value={
-                                pendingChanges.assignedToId !== undefined
-                                  ? pendingChanges.assignedToId
-                                  : processMsg.assignedToId || ""
-                              }
-                              onChange={(e) =>
-                                setPendingChange("assignedToId", e.target.value)
-                              }
-                              style={{
-                                padding: "0.25rem 0.5rem",
-                                borderRadius: "4px",
-                                border: `1px solid ${pendingChanges.assignedToId !== undefined ? "#D97706" : "var(--border)"}`,
-                                outline: "none",
-                                background: "#FFF",
-                                width: "100%",
-                              }}
-                            >
-                              <option value="">Aucun</option>
-                              {users
-                                .filter(u => u.role?.name === "Responsable opérationnel" || u.role === "Responsable opérationnel")
-                                .map((u) => (
-                                  <option key={u.id} value={u.id}>
-                                    {u.name} (Responsable)
-                                  </option>
-                              ))}
-                            </select>
-                          </InlineDetailField>
-                        )}
-                      </>
-                    )}
+                        </MessageDetailCard>
+                        <MessageDetailCard
+                          label="Statut"
+                          sublabel="MENU SELECT (MODIFIABLE)"
+                        >
+                          {renderStatusDropdown(processMsg, tab, true)}
+                        </MessageDetailCard>
+                      </div>
+                    </div>
+
+                    {/* Green confirmation banner */}
+                    <div
+                      style={{
+                        background: "#F0FDF4",
+                        border: "1px solid #BBF7D0",
+                        borderRadius: "10px",
+                        padding: "1rem 1.25rem",
+                      }}
+                    >
+                      <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#166534", marginBottom: "0.25rem" }}>
+                        ✓ Vérification du profil candidat terminée
+                      </div>
+                      <div style={{ fontSize: "0.8rem", color: "#15803D" }}>
+                        Toutes les métadonnées sont prêtes pour transmission au responsable recrutement.
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* Pièces jointes & Contenu */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr",
-                  gap: "1.5rem",
-                  marginBottom: "1.5rem",
-                  minHeight: "300px",
-                }}
-              >
-
+              {/* Vue Personnel (Image 4) & Interne */}
+              {(tab === "personnel" || tab === "interne") && (
                 <div
-                  className="card"
                   style={{
-                    padding: "1.25rem",
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "1.5rem",
+                    marginBottom: "1.5rem",
                   }}
                 >
-                  <span
-                    style={{
-                      display: "block",
-                      marginBottom: "1rem",
-                      
-                      fontWeight: 500,
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    {(() => {
-                      if (tab === "contact" || tab === "recrutement")
-                        return "Description / Contenu";
-                      if (tab === "personnel" || tab === "interne")
-                        return "Fil de conversation";
-                      return "Message / Lettre de motivation";
-                    })()}
-                  </span>
-                  <div
-                    style={{
-                      background: "var(--bg-light)",
-                      padding: "1rem",
-                      borderRadius: "8px",
-                      flex: 1,
-                      minHeight: "120px",
-                      maxHeight: "500px",
-                      overflowY: "auto",
-                      overflowX: "hidden",
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    {tab === "interne" ? (
+                  {/* Colonne gauche : Métadonnées & Sélecteurs du Message */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                    <div
+                      style={{
+                        background: "#FFF",
+                        border: "1px solid var(--border)",
+                        borderRadius: "10px",
+                        padding: "1.25rem",
+                      }}
+                    >
                       <div
                         style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          height: "100%",
+                          fontWeight: 800,
+                          fontSize: "0.8rem",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "#0F172A",
+                          marginBottom: "1rem",
                         }}
                       >
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "1rem",
-                            flex: 1,
-                            paddingRight: "0.5rem",
-                          }}
+                        Métadonnées & Sélecteurs du Message
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                        <MessageDetailCard
+                          label="Nom"
+                          value={processMsg.nomPrenom || "Non renseigné"}
+                        />
+                        <MessageDetailCard
+                          label="Email"
+                          value={processMsg.email || "Non renseigné"}
+                        />
+                        <MessageDetailCard
+                          label="Fichiers joints"
+                          sublabel="SELECT"
                         >
-                          {conversationMessages.map((m) => {
-                            const isMe =
-                              m.email === currentUser?.email ||
-                              m.nomPrenom === currentUser?.name;
-                            return (
-                              <div
-                                key={m.id}
+                          <AttachmentSelect
+                            files={[
+                              processMsg.cv,
+                              processMsg.attachment,
+                              processMsg.contact?.pieceJointe,
+                            ]}
+                            onPreview={setPreviewFile}
+                          />
+                        </MessageDetailCard>
+                        {tab === "personnel" && (
+                          <>
+                            <MessageDetailCard
+                              label="Étiquette"
+                              sublabel="SELECT"
+                            >
+                              <select
+                                value={
+                                  pendingChanges.etiquette !== undefined
+                                    ? pendingChanges.etiquette
+                                    : processMsg.etiquette || ""
+                                }
+                                onChange={(e) =>
+                                  setPendingChange("etiquette", e.target.value)
+                                }
                                 style={{
-                                  alignSelf: isMe ? "flex-end" : "flex-start",
-                                  background: isMe ? "var(--primary)" : "#FFF",
-                                  color: isMe ? "#FFF" : "var(--text-main)",
-                                  padding: "1rem",
-                                  borderRadius: "12px",
-                                  border: isMe
-                                    ? "none"
-                                    : "1px solid var(--border)",
-                                  maxWidth: "80%",
-                                  boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+                                  width: "100%",
+                                  padding: "0.5rem 0.75rem",
+                                  borderRadius: "6px",
+                                  border: "1px solid #2563EB",
+                                  outline: "none",
+                                  background: "#FFF",
+                                  fontWeight: 700,
+                                  fontSize: "0.85rem",
+                                  color: "#2563EB",
+                                  cursor: "pointer",
                                 }}
                               >
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    marginBottom: "0.5rem",
-                                    fontSize: "0.75rem",
-                                    color: isMe
-                                      ? "rgba(255,255,255,0.8)"
-                                      : "var(--text-muted)",
-                                    gap: "1rem",
-                                  }}
-                                >
-                                  <strong>{m.nomPrenom}</strong>
-                                  <span>{formatDate(m.createdAt)}</span>
-                                </div>
-                                <div
-                                  style={{
-                                    whiteSpace: "pre-wrap",
-                                    wordBreak: "break-word",
-                                    fontSize: "0.9rem",
-                                    lineHeight: "1.5",
-                                  }}
-                                >
-                                  {m.bodyText ||
-                                    (m.bodyHtml ? (
-                                      <div
-                                        dangerouslySetInnerHTML={{
-                                          __html: m.bodyHtml,
-                                        }}
-                                      />
-                                    ) : (
-                                      "Aucun contenu."
-                                    ))}
-                                </div>
-                                {m.attachment && (
-                                  <div style={{ marginTop: "0.5rem" }}>
-                                    <AttachmentSelect
-                                      files={[m.attachment]}
-                                      onPreview={setPreviewFile}
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-
-                        {getDisplayStatus(processMsg.status) !== "Traité" && (
-                          <div
-                            style={{
-                              display: "flex",
-                              gap: "0.75rem",
-                              marginTop: "1.5rem",
-                              borderTop: "1px solid var(--border)",
-                              paddingTop: "1.5rem",
-                            }}
-                          >
-                            <input
-                              type="text"
-                              placeholder="Écrivez votre message..."
-                              value={taskDescription}
-                              onChange={(e) =>
-                                setTaskDescription(e.target.value)
-                              }
-                              onKeyDown={(e) => {
-                                if (
-                                  e.key === "Enter" &&
-                                  taskDescription.trim() &&
-                                  !isSubmitting
-                                )
-                                  handleCreateTask();
-                              }}
-                              style={{
-                                flex: 1,
-                                padding: "0.75rem 1.25rem",
-                                borderRadius: "24px",
-                                border: "1px solid var(--border)",
-                                outline: "none",
-                                background: "#FFF",
-                                fontSize: "0.95rem",
-                              }}
-                              disabled={isSubmitting}
-                            />
-                            <button
-                              type="button"
-                              onClick={handleCreateTask}
-                              disabled={isSubmitting || !taskDescription.trim()}
-                              style={{
-                                background: "var(--primary)",
-                                color: "#FFF",
-                                border: "none",
-                                borderRadius: "50%",
-                                width: "45px",
-                                height: "45px",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                cursor: "pointer",
-                                opacity:
-                                  isSubmitting || !taskDescription.trim()
-                                    ? 0.5
-                                    : 1,
-                              }}
-                              title="Envoyer"
+                                <option value="">● Général</option>
+                                <option value="Contact">● Contact</option>
+                                <option value="Recrutement">● Recrutement</option>
+                              </select>
+                            </MessageDetailCard>
+                            <MessageDetailCard
+                              label="Statut"
+                              sublabel="SELECT"
                             >
-                              <Send size={18} />
-                            </button>
+                              {renderStatusDropdown(processMsg, tab, true)}
+                            </MessageDetailCard>
+                            <MessageDetailCard
+                              label="Priorité"
+                              sublabel="SELECT"
+                            >
+                              <select
+                                value={
+                                  pendingChanges.priorite !== undefined
+                                    ? pendingChanges.priorite
+                                    : processMsg.priorite || "Normal"
+                                }
+                                onChange={(e) =>
+                                  setPendingChange("priorite", e.target.value)
+                                }
+                                style={{
+                                  width: "100%",
+                                  padding: "0.5rem 0.75rem",
+                                  borderRadius: "6px",
+                                  border: "1px solid #CBD5E1",
+                                  outline: "none",
+                                  background: "#FFF",
+                                  fontWeight: 700,
+                                  fontSize: "0.85rem",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                <option value="Normal">● Normal</option>
+                                <option value="Prioritaire">● Prioritaire</option>
+                                <option value="Urgent">● Urgent</option>
+                              </select>
+                            </MessageDetailCard>
+                            {(currentUser?.role?.name === "Super-administrateur" || currentUser?.role === "Super-administrateur") && (
+                              <MessageDetailCard
+                                label="Mettre en copie"
+                                sublabel="SELECT"
+                              >
+                                <select
+                                  value={
+                                    pendingChanges.assignedToId !== undefined
+                                      ? pendingChanges.assignedToId
+                                      : processMsg.assignedToId || ""
+                                  }
+                                  onChange={(e) =>
+                                    setPendingChange("assignedToId", e.target.value)
+                                  }
+                                  style={{
+                                    width: "100%",
+                                    padding: "0.5rem 0.75rem",
+                                    borderRadius: "6px",
+                                    border: "1px solid #CBD5E1",
+                                    outline: "none",
+                                    background: "#FFF",
+                                    fontWeight: 500,
+                                    fontSize: "0.85rem",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  <option value="">Aucun</option>
+                                  {users
+                                    .filter(u => u.role?.name === "Responsable opérationnel" || u.role === "Responsable opérationnel")
+                                    .map((u) => (
+                                      <option key={u.id} value={u.id}>
+                                        {u.name} (Responsable)
+                                      </option>
+                                  ))}
+                                </select>
+                              </MessageDetailCard>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Colonne droite : Fil de conversation */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                    <div
+                      style={{
+                        background: "#FFF",
+                        border: "1px solid var(--border)",
+                        borderRadius: "10px",
+                        padding: "1.25rem",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "1rem",
+                        height: "100%",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontWeight: 800,
+                          fontSize: "0.8rem",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "#0F172A",
+                        }}
+                      >
+                        Fil de conversation
+                      </div>
+
+                      <div
+                        style={{
+                          background: "#F8FAFC",
+                          borderRadius: "8px",
+                          padding: "1rem",
+                          border: "1px solid #F1F5F9",
+                        }}
+                      >
+                        <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#2563EB", marginBottom: "0.25rem" }}>
+                          Objet : {processMsg.objet || "Fil de conversation"}
+                        </div>
+                        <div style={{ fontSize: "0.75rem", color: "#64748B" }}>
+                          Fil officiel de correspondance lié à ce contact
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          background: "#FFF",
+                          borderRadius: "8px",
+                          padding: "1.25rem",
+                          border: "1px solid var(--border)",
+                          flex: 1,
+                          minHeight: "220px",
+                          overflowY: "auto",
+                        }}
+                      >
+                        {tab === "interne" ? (
+                          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                            {conversationMessages.map((m) => {
+                              const isMe = m.email === currentUser?.email || m.nomPrenom === currentUser?.name;
+                              return (
+                                <div
+                                  key={m.id}
+                                  style={{
+                                    alignSelf: isMe ? "flex-end" : "flex-start",
+                                    background: isMe ? "#1E3A8A" : "#F1F5F9",
+                                    color: isMe ? "#FFF" : "#0F172A",
+                                    padding: "0.75rem 1rem",
+                                    borderRadius: "8px",
+                                    border: isMe ? "none" : "1px solid var(--border)",
+                                    maxWidth: "80%",
+                                  }}
+                                >
+                                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem", fontSize: "0.75rem", gap: "1rem", opacity: 0.8 }}>
+                                    <strong>{m.nomPrenom}</strong>
+                                    <span>{formatDate(m.createdAt)}</span>
+                                  </div>
+                                  <div style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", fontSize: "0.9rem" }}>
+                                    {m.bodyText || m.bodyHtml || "Aucun contenu."}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div style={{ fontSize: "0.95rem", color: "#0F172A", lineHeight: "1.6", whiteSpace: "pre-wrap" }}>
+                            {processMsg.description || processMsg.bodyText || (processMsg.bodyHtml && !processMsg.bodyHtml.includes("<") ? processMsg.bodyHtml : null) || "Bonjour,\n\nMessage lié à ce fil."}
                           </div>
                         )}
                       </div>
-                    ) : (() => {
-                      let contentToRender = null;
-                      let isHtml = false;
-
-                      if (processMsg.description) {
-                        contentToRender = processMsg.description;
-                      } else if (tab === "recrutement") {
-                        contentToRender = extractBlockFromHtml(processMsg.bodyHtml, "Message / Motivations") || processMsg.bodyText;
-                      } else if (tab === "contact") {
-                        contentToRender = extractBlockFromHtml(processMsg.bodyHtml, "Description du besoin") || processMsg.bodyText;
-                      } else if (processMsg.bodyHtml && processMsg.bodyHtml.includes("<")) {
-                        contentToRender = processMsg.bodyHtml;
-                        isHtml = true;
-                      } else if (processMsg.bodyText || processMsg.bodyHtml) {
-                        // Le backend envoie bodyText dans bodyHtml pour les messages internes/IMAP
-                        let text = processMsg.bodyText || processMsg.bodyHtml;
-                        // Nettoyer les sauts de ligne simples (hard-wraps) tout en préservant les paragraphes (\n\n) et les listes
-                        if (typeof text === 'string') {
-                           text = text.replace(/([^\n])\n([^\n\-\*•])/g, "$1 $2");
-                        }
-                        contentToRender = text;
-                      }
-
-                      if (!contentToRender) {
-                        contentToRender = "Aucun contenu.";
-                      }
-
-                      return (
-                        <div
-                          style={{
-                            color: "var(--text-main)",
-                            fontSize: "0.95rem",
-                            lineHeight: "1.6",
-                          }}
-                        >
-                          {processMsg.objet && (
-                            <div style={{
-                              fontWeight: "bold",
-                              fontSize: "1.05rem",
-                              marginBottom: "1rem",
-                              paddingBottom: "0.5rem",
-                              borderBottom: "1px solid var(--border)"
-                            }}>
-                              Objet : {processMsg.objet}
-                            </div>
-                          )}
-                          <div
-                            style={{
-                              whiteSpace: isHtml ? "normal" : "pre-wrap",
-                              wordBreak: "break-word",
-                            }}
-                          >
-                            {isHtml ? (
-                              <div dangerouslySetInnerHTML={{ __html: contentToRender }} />
-                            ) : (
-                              contentToRender
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })()}
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              {tab !== "interne" && (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "1rem",
-                    flexWrap: "wrap",
-                    alignItems: "center",
-                    marginTop: "2rem",
-                  }}
-                >
-                    {processMsg.dossierId && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          (window.location.href = `/dossiers?open=${processMsg.dossierId}`)
-                        }
-                        className="btn btn-outline-success"
-                        style={{
-                          fontWeight: 600,
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.5rem",
-                        }}
-                      >
-                        <Files size={16} /> Ouvrir le Dossier Lié
-                      </button>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => setShowSaveConfirm(true)}
-                      disabled={!hasPendingChanges}
-                      style={{
-                        padding: "0.7rem 2.5rem",
-                        borderRadius: "8px",
-                        fontWeight: 700,
-                        fontSize: "0.95rem",
-                        background: hasPendingChanges
-                          ? "var(--primary)"
-                          : "#E5E7EB",
-                        color: hasPendingChanges ? "#FFF" : "#9CA3AF",
-                        border: "none",
-                        cursor: hasPendingChanges ? "pointer" : "not-allowed",
-                        transition: "all 0.2s",
-                      }}
-                      title={
-                        hasPendingChanges
-                          ? "Enregistrer les modifications"
-                          : "Aucune modification en attente"
-                      }
-                    >
-                      Enregistrer
-                      {hasPendingChanges && (
-                        <span
-                          style={{
-                            marginLeft: "0.5rem",
-                            background: "#FFF3",
-                            borderRadius: "12px",
-                            padding: "0 0.5rem",
-                            fontSize: "0.75rem",
-                          }}
-                        >
-                          {Object.keys(pendingChanges).length} modif.
-                        </span>
-                      )}
-                    </button>
-                  </div>
               )}
             </div>
           </div>

@@ -10,6 +10,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
   const [messageText, setMessageText] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [showNewChat, setShowNewChat] = useState(false);
+  const [filterQuery, setFilterQuery] = useState("");
   const messagesEndRef = useRef(null);
 
   const fetchConversations = async () => {
@@ -151,22 +152,47 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
             alignItems: "center",
           }}
         >
-          <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 600 }}>
+          <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700, color: "#0F172A" }}>
             Interne
           </h3>
           <button
             onClick={() => setShowNewChat(true)}
-            className="btn btn-primary"
             style={{
-              padding: "0.4rem 0.6rem",
+              padding: "0.45rem 0.85rem",
               display: "flex",
-              gap: "0.25rem",
+              gap: "0.3rem",
               alignItems: "center",
               fontSize: "0.85rem",
+              background: "#1E3A8A",
+              color: "#FFF",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontWeight: 600,
             }}
           >
-            <Plus size={16} /> Écrire
+            + Écrire
           </button>
+        </div>
+
+        {/* Filter Input */}
+        <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
+          <input
+            type="text"
+            placeholder="Filtrer les collègues..."
+            value={filterQuery}
+            onChange={(e) => setFilterQuery(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "0.45rem 0.75rem",
+              borderRadius: "6px",
+              border: "1px solid var(--border)",
+              background: "#FFF",
+              fontSize: "0.85rem",
+              boxSizing: "border-box",
+              outline: "none",
+            }}
+          />
         </div>
 
         {showNewChat ? (
@@ -186,15 +212,23 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                   border: "none",
                   cursor: "pointer",
                   display: "flex",
+                  color: "#0F172A",
                 }}
               >
                 <ArrowLeft size={16} />
               </button>
-              <h4 style={{ margin: 0 }}>À qui ?</h4>
+              <h4 style={{ margin: 0, color: "#0F172A", fontSize: "0.95rem" }}>À qui ?</h4>
             </div>
             {users
               .filter(
                 (u) => u.id !== currentUser?.id && u.id !== "MASTER-ADMIN",
+              )
+              .filter(
+                (u) =>
+                  !filterQuery ||
+                  (u.name || "").toLowerCase().includes(filterQuery.toLowerCase()) ||
+                  (u.email || "").toLowerCase().includes(filterQuery.toLowerCase()) ||
+                  (u.role?.name || u.role || "").toLowerCase().includes(filterQuery.toLowerCase())
               )
               .map((u) => (
                 <div
@@ -217,7 +251,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                       width: "36px",
                       height: "36px",
                       borderRadius: "50%",
-                      background: "var(--primary)",
+                      background: "#1E3A8A",
                       color: "white",
                       display: "flex",
                       alignItems: "center",
@@ -225,10 +259,10 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                       fontWeight: "bold",
                     }}
                   >
-                    {u.name.charAt(0)}
+                    {u.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: "0.9rem" }}>
+                    <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "#0F172A" }}>
                       {u.name}
                     </div>
                     <div
@@ -245,7 +279,14 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
           </div>
         ) : (
           <div style={{ flex: 1, overflowY: "auto" }}>
-            {conversations.length === 0 ? (
+            {conversations
+              .filter(
+                (conv) =>
+                  !filterQuery ||
+                  (conv.contact?.name || "").toLowerCase().includes(filterQuery.toLowerCase()) ||
+                  (conv.contact?.email || "").toLowerCase().includes(filterQuery.toLowerCase())
+              )
+              .length === 0 ? (
               <div
                 style={{
                   padding: "2rem 1rem",
@@ -254,114 +295,139 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                   fontSize: "0.9rem",
                 }}
               >
-                Aucune conversation. Cliquez sur "Écrire" pour commencer.
+                {filterQuery
+                  ? "Aucun collègue ne correspond à votre recherche."
+                  : 'Aucune conversation. Cliquez sur "Écrire" pour commencer.'}
               </div>
             ) : (
-              conversations.map((conv, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => setSelectedContact(conv.contact)}
-                  style={{
-                    padding: "1rem",
-                    borderBottom: "1px solid var(--border)",
-                    cursor: "pointer",
-                    background:
-                      selectedContact?.email === conv.contact.email
-                        ? "#E2E8F0"
-                        : conv.unreadCount > 0
-                        ? "#FEF9C3"
-                        : "transparent",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.75rem",
-                    transition: "background 0.2s",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "50%",
-                      background: "var(--primary)",
-                      color: "white",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontWeight: "bold",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {conv.contact.name.charAt(0).toUpperCase()}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
+              conversations
+                .filter(
+                  (conv) =>
+                    !filterQuery ||
+                    (conv.contact?.name || "").toLowerCase().includes(filterQuery.toLowerCase()) ||
+                    (conv.contact?.email || "").toLowerCase().includes(filterQuery.toLowerCase())
+                )
+                .map((conv, idx) => {
+                  const isSelected = selectedContact?.email === conv.contact.email;
+                  return (
                     <div
+                      key={idx}
+                      onClick={() => setSelectedContact(conv.contact)}
                       style={{
+                        padding: "0.85rem 1rem",
+                        margin: "0.35rem 0.5rem",
+                        borderRadius: "6px",
+                        border: isSelected ? "1px solid #93C5FD" : "1px solid transparent",
+                        borderLeft: isSelected ? "4px solid #1E3A8A" : "4px solid transparent",
+                        cursor: "pointer",
+                        background: isSelected
+                          ? "#EFF6FF"
+                          : conv.unreadCount > 0
+                          ? "#FEF9C3"
+                          : "#FFF",
                         display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: "0.25rem",
+                        alignItems: "flex-start",
+                        gap: "0.75rem",
+                        transition: "all 0.2s",
+                        boxShadow: isSelected ? "0 1px 2px rgba(0,0,0,0.04)" : "none",
                       }}
                     >
-                      <span
+                      <div
                         style={{
-                          fontWeight: conv.unreadCount > 0 ? 700 : 600,
-                          color: conv.unreadCount > 0 ? "#854D0E" : "inherit",
-                          fontSize: "0.95rem",
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
+                          width: "38px",
+                          height: "38px",
+                          borderRadius: "50%",
+                          background: "#1E3A8A",
+                          color: "white",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontWeight: "bold",
+                          flexShrink: 0,
+                          marginTop: "2px",
                         }}
                       >
-                        {conv.contact.name}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: "0.7rem",
-                          color: "var(--text-muted)",
-                        }}
-                      >
-                        {new Date(
-                          conv.lastMessage.createdAt,
-                        ).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: "0.85rem",
-                          color: conv.unreadCount > 0 ? "#854D0E" : "var(--text-muted)",
-                          fontWeight: conv.unreadCount > 0 ? 600 : 400,
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        {conv.lastMessage.bodyText || "Document joint"}
-                      </span>
-                      {conv.unreadCount > 0 && (
-                        <span
+                        {conv.contact.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div
                           style={{
-                            background: "#EAB308",
-                            color: "white",
-                            fontSize: "0.7rem",
-                            fontWeight: "bold",
-                            padding: "0.1rem 0.4rem",
-                            borderRadius: "10px",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginBottom: "0.15rem",
                           }}
                         >
-                          {conv.unreadCount} non consulté(s)
-                        </span>
-                      )}
+                          <span
+                            style={{
+                              fontWeight: isSelected ? 700 : 600,
+                              color: "#0F172A",
+                              fontSize: "0.9rem",
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            {conv.contact.name}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "0.7rem",
+                              color: "var(--text-muted)",
+                            }}
+                          >
+                            {new Date(
+                              conv.lastMessage.createdAt,
+                            ).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "0.8rem",
+                            color: conv.unreadCount > 0 ? "#854D0E" : "#64748B",
+                            fontWeight: conv.unreadCount > 0 ? 600 : 400,
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            marginBottom: isSelected ? "0.3rem" : "0",
+                          }}
+                        >
+                          {conv.lastMessage.bodyText || "Document joint"}
+                        </div>
+                        {isSelected && (
+                          <div style={{ marginTop: "0.2rem" }}>
+                            <span
+                              style={{
+                                fontSize: "0.68rem",
+                                fontWeight: 800,
+                                color: "#2563EB",
+                                letterSpacing: "0.03em",
+                              }}
+                            >
+                              CONVERSATION ACTIVE
+                            </span>
+                          </div>
+                        )}
+                        {conv.unreadCount > 0 && !isSelected && (
+                          <span
+                            style={{
+                              background: "#EAB308",
+                              color: "white",
+                              fontSize: "0.7rem",
+                              fontWeight: "bold",
+                              padding: "0.1rem 0.4rem",
+                              borderRadius: "10px",
+                              display: "inline-block",
+                              marginTop: "0.25rem",
+                            }}
+                          >
+                            {conv.unreadCount} non lu
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))
+                  );
+                })
             )}
           </div>
         )}
@@ -375,7 +441,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
               style={{
                 padding: "1rem 1.5rem",
                 borderBottom: "1px solid var(--border)",
-                background: "#F8FAFC",
+                background: "#FFF",
                 display: "flex",
                 alignItems: "center",
                 gap: "1rem",
@@ -386,7 +452,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                   width: "40px",
                   height: "40px",
                   borderRadius: "50%",
-                  background: "var(--primary)",
+                  background: "#1E3A8A",
                   color: "white",
                   display: "flex",
                   alignItems: "center",
@@ -397,13 +463,13 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                 {selectedContact.name.charAt(0).toUpperCase()}
               </div>
               <div>
-                <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 600 }}>
+                <h3 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "#0F172A" }}>
                   {selectedContact.name}
                 </h3>
                 <span
-                  style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}
+                  style={{ fontSize: "0.8rem", color: "#64748B" }}
                 >
-                  {selectedContact.email}
+                  <span style={{ color: "#16A34A" }}>● En ligne</span> • Vos messages internes
                 </span>
               </div>
             </div>
@@ -416,9 +482,29 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                 display: "flex",
                 flexDirection: "column",
                 gap: "1rem",
-                background: "#F1F5F9",
+                background: "#F8FAFC",
               }}
             >
+              <div
+                style={{
+                  maxWidth: "380px",
+                  margin: "0.5rem auto 1rem",
+                  padding: "1rem 1.5rem",
+                  background: "#FFF",
+                  border: "1px solid #E2E8F0",
+                  borderRadius: "8px",
+                  textAlign: "center",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+                }}
+              >
+                <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0F172A", marginBottom: "0.35rem" }}>
+                  Vos messages internes
+                </div>
+                <div style={{ fontSize: "0.8rem", color: "#64748B" }}>
+                  Sélectionnez une conversation ou écrivez un nouveau message.
+                </div>
+              </div>
+
               {messages.map((msg) => {
                 const isMine = msg.email === currentUser?.email;
                 return (
@@ -434,12 +520,11 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                       style={{
                         maxWidth: "70%",
                         padding: "0.75rem 1rem",
-                        borderRadius: "12px",
-                        background: isMine ? "var(--primary)" : "#FFF",
-                        color: isMine ? "#FFF" : "var(--text-main)",
+                        borderRadius: "8px",
+                        background: isMine ? "#1E3A8A" : "#F1F5F9",
+                        color: isMine ? "#FFF" : "#0F172A",
                         boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                        borderBottomRightRadius: isMine ? "0" : "12px",
-                        borderBottomLeftRadius: !isMine ? "0" : "12px",
+                        border: isMine ? "none" : "1px solid #E2E8F0",
                       }}
                     >
                       <div
@@ -459,11 +544,10 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                         marginTop: "0.25rem",
                       }}
                     >
-                      {new Date(msg.createdAt).toLocaleString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
+                      {new Date(msg.createdAt).toLocaleDateString([], {
                         day: "2-digit",
                         month: "2-digit",
+                        year: "numeric",
                       })}
                     </span>
                   </div>
@@ -474,42 +558,44 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
 
             <div
               style={{
-                padding: "1rem",
+                padding: "1rem 1.5rem",
                 borderTop: "1px solid var(--border)",
                 background: "#FFF",
               }}
             >
               <form
                 onSubmit={handleSendMessage}
-                style={{ display: "flex", gap: "0.5rem" }}
+                style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}
               >
                 <input
                   type="text"
                   value={messageText}
                   onChange={(e) => setMessageText(e.target.value)}
-                  placeholder="Écrivez votre message..."
+                  placeholder={`Écrivez votre message à ${selectedContact.name}... (Entrée pour envoyer)`}
                   style={{
                     flex: 1,
-                    padding: "0.75rem 1rem",
-                    borderRadius: "24px",
-                    border: "1px solid var(--border)",
+                    padding: "0.65rem 1rem",
+                    borderRadius: "6px",
+                    border: "1px solid #CBD5E1",
                     outline: "none",
-                    fontSize: "0.95rem",
+                    fontSize: "0.9rem",
+                    background: "#FFF",
                   }}
                 />
                 <button
                   type="submit"
                   disabled={isSending || !messageText.trim()}
                   style={{
-                    width: "46px",
-                    height: "46px",
-                    borderRadius: "50%",
-                    background: "var(--primary)",
+                    padding: "0.65rem 1.5rem",
+                    borderRadius: "6px",
+                    background: "#1E3A8A",
                     color: "white",
                     border: "none",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    fontWeight: 600,
+                    fontSize: "0.9rem",
                     cursor:
                       isSending || !messageText.trim()
                         ? "not-allowed"
@@ -517,7 +603,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                     opacity: isSending || !messageText.trim() ? 0.7 : 1,
                   }}
                 >
-                  <Send size={20} style={{ marginLeft: "2px" }} />
+                  Envoyer
                 </button>
               </form>
             </div>

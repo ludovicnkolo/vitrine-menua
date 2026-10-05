@@ -19,6 +19,8 @@ import {
   FileText,
   Check,
   CheckSquare,
+  Target,
+  Paperclip,
 } from "lucide-react";
 import ActionDropdown from "../components/ActionDropdown";
 import FilePreviewModal from "../components/FilePreviewModal";
@@ -1565,64 +1567,210 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   }
 
   if (consultTask) {
-    return (
-      <div className="fade-in" style={{ width: "100%", padding: "0" }}>
-        <div
+    const subj = getSubjectFromTask(consultTask.description);
+    const msg = getMessageFromTask(consultTask.description);
+
+    const dossierAssociated =
+      mode === "MISSION"
+        ? consultTask.dossier?.name
+          ? `${consultTask.dossier.name} (${consultTask.dossier.reference || "DOS-" + consultTask.dossier.id})`
+          : consultTask.dossierId || "-"
+        : consultTask.mission?.reference || consultTask.missionId || "-";
+
+    const createdByName = consultTask.createdBy?.name || "Système";
+    const createdByRole = consultTask.createdBy?.role?.name || "-";
+
+    const assignedToName = consultTask.assignedTo?.name || "Non assigné";
+    const assignedToRole = consultTask.assignedTo?.role?.name || "-";
+
+    const relecteurName = consultTask.relecteur?.name
+      ? `${consultTask.relecteur.name} (${consultTask.relecteur.role?.name || "-"})`
+      : "Non assigné (-)";
+
+    const createdAtFormatted = new Date(consultTask.createdAt).toLocaleString(
+      "fr-FR",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    );
+
+    const echeanceFormatted = consultTask.echeance
+      ? new Date(consultTask.echeance).toLocaleDateString("fr-FR")
+      : "Non définie";
+
+    const canEditTask =
+      (currentUser?.role === "Super-administrateur" ||
+        currentUser?.role?.name === "Super-administrateur" ||
+        currentUser?.role === "Responsable opérationnel" ||
+        currentUser?.role?.name === "Responsable opérationnel") &&
+      !(
+        (consultTask?.status === "EN_FINALISATION" ||
+          consultTask?.status === "EN_CONTROLE" ||
+          consultTask?.status === "TERMINE") &&
+        !(
+          currentUser?.role === "Relecteur" ||
+          currentUser?.role?.name === "Relecteur" ||
+          currentUser?.role === "Responsable opérationnel" ||
+          currentUser?.role?.name === "Responsable opérationnel" ||
+          currentUser?.role === "Super-administrateur" ||
+          currentUser?.role?.name === "Super-administrateur"
+        )
+      ) &&
+      !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.status) &&
+      !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.mission?.status) &&
+      !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.dossier?.status) &&
+      !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.mission?.dossier?.status);
+
+    const role = currentUser?.role?.name || currentUser?.role || "";
+    const statusOptions = getAllowedStatuses(
+      consultTask.status || "NOUVEAU",
+      role,
+      mode,
+      consultTask
+    );
+    const isStatusLocked = statusOptions.length === 1;
+
+    const renderTaskPillBadge = (status) => {
+      const s = String(status || "NOUVEAU").toUpperCase();
+      const map = {
+        NOUVEAU: { text: "Nouveau", bg: "#EFF6FF", color: "#2563EB", dot: "#2563EB" },
+        EN_COURS: { text: "En cours", bg: "#FEF3C7", color: "#B45309", dot: "#D97706" },
+        EN_RELECTURE: { text: "En relecture", bg: "#FAF5FF", color: "#7E22CE", dot: "#9333EA" },
+        EN_APPROBATION: { text: "En approbation", bg: "#FAF5FF", color: "#7E22CE", dot: "#9333EA" },
+        VERIFIER: { text: "À vérifier", bg: "#FEF9C3", color: "#854D0E", dot: "#CA8A04" },
+        A_CORRIGER: { text: "À corriger", bg: "#FEE2E2", color: "#DC2626", dot: "#DC2626" },
+        APPROUVEE: { text: "Approuvée", bg: "#DCFCE7", color: "#166534", dot: "#16A34A" },
+        TERMINE: { text: "Terminé", bg: "#DCFCE7", color: "#166534", dot: "#16A34A" },
+        ARCHIVE: { text: "Archivé", bg: "#F1F5F9", color: "#475569", dot: "#64748B" },
+        BLOQUE: { text: "Bloqué", bg: "#FEE2E2", color: "#DC2626", dot: "#DC2626" },
+        EN_ATTENTE: { text: "En attente", bg: "#FEF9C3", color: "#854D0E", dot: "#CA8A04" },
+      };
+      const c = map[s] || { text: s, bg: "#F1F5F9", color: "#475569", dot: "#64748B" };
+      return (
+        <span
           style={{
-            display: "flex",
+            display: "inline-flex",
             alignItems: "center",
-            gap: "1rem",
-            marginBottom: "2rem",
-            borderBottom: "1px solid var(--border)",
-            paddingBottom: "1.5rem",
-            flexWrap: "wrap",
+            gap: "0.35rem",
+            background: c.bg,
+            color: c.color,
+            fontSize: "0.75rem",
+            fontWeight: 600,
+            padding: "0.2rem 0.65rem",
+            borderRadius: "9999px",
           }}
         >
-          <button
-            type="button"
-            onClick={() => {
-              setConsultTask(null);
-              setTaskFile(null);
-            }}
-            className="btn btn-outline"
-            style={{ padding: "0.5rem 1rem" }}
-          >
-            ← Retour
-          </button>
-          <h2
-            style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600, flex: 1 }}
-          >
-            {mode === "MISSION"
-              ? "Consultation mission :"
-              : "Consultation tâche :"}{" "}
-            {consultTask.reference || consultTask.id}
-          </h2>
+          <span style={{ fontSize: "0.75rem", color: c.dot }}>●</span>
+          {c.text}
+        </span>
+      );
+    };
 
+    return (
+      <div className="fade-in" style={{ width: "100%", padding: "0" }}>
+        {/* Header Card conforming to Screenshots 2 & 3 */}
+        <div
+          style={{
+            background: "#FFF",
+            border: "1px solid var(--border)",
+            borderRadius: "12px",
+            padding: "1.25rem 1.5rem",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "1.5rem",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+            flexWrap: "wrap",
+            gap: "1rem",
+          }}
+        >
+          {/* Left info with colored icon */}
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                borderRadius: "10px",
+                background: mode === "MISSION" ? "#ECFDF5" : "#FAF5FF",
+                border: `1px solid ${mode === "MISSION" ? "#A7F3D0" : "#F3E8FF"}`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              {mode === "MISSION" ? (
+                <Target size={24} color="#059669" />
+              ) : (
+                <CheckSquare size={24} color="#9333EA" />
+              )}
+            </div>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+                <h2
+                  style={{
+                    margin: 0,
+                    fontSize: "1.35rem",
+                    fontWeight: 700,
+                    color: "#0F172A",
+                  }}
+                >
+                  {mode === "MISSION" ? "Consultation mission :" : "Consultation tâche :"}{" "}
+                  {consultTask.reference || consultTask.id}
+                </h2>
+                {renderTaskPillBadge(consultTask.status)}
+              </div>
+              <div
+                style={{
+                  fontSize: "0.8rem",
+                  color: "#64748B",
+                  marginTop: "0.25rem",
+                }}
+              >
+                Nom : {consultTask.reference || consultTask.id} • Objet : {subj || "-"} •{" "}
+                {mode === "MISSION"
+                  ? `Dossier associé : ${dossierAssociated}`
+                  : `Mission Liée : ${dossierAssociated}`}
+              </div>
+            </div>
+          </div>
 
+          {/* Right Action buttons */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+            {mode === "MISSION" &&
+              !["TERMINE", "ARCHIVE", "BLOQUE", "EN_ATTENTE"].includes(consultTask.status) &&
+              !["BLOQUE", "EN_ATTENTE"].includes(consultTask.dossier?.status) &&
+              (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
+                <button
+                  type="button"
+                  onClick={() => setCreateTaskModal(true)}
+                  style={{
+                    background: "#1E3A8A",
+                    border: "none",
+                    color: "#FFF",
+                    padding: "0.55rem 1.1rem",
+                    borderRadius: "8px",
+                    fontWeight: 600,
+                    fontSize: "0.85rem",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.4rem",
+                  }}
+                >
+                  + Créer une tâche
+                </button>
+              )}
 
-          {(currentUser?.role === "Super-administrateur" ||
-            currentUser?.role?.name === "Super-administrateur" ||
-            currentUser?.role === "Responsable opérationnel" ||
-            currentUser?.role?.name === "Responsable opérationnel") &&
-            !(
-              (consultTask?.status === "EN_FINALISATION" ||
-                consultTask?.status === "EN_CONTROLE" ||
-                consultTask?.status === "TERMINE") &&
-              !(
-                currentUser?.role === "Relecteur" ||
-                currentUser?.role?.name === "Relecteur" ||
-                currentUser?.role === "Responsable opérationnel" ||
-                currentUser?.role?.name === "Responsable opérationnel" ||
-                currentUser?.role === "Super-administrateur" ||
-                currentUser?.role?.name === "Super-administrateur"
-              )
-            ) && !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.status) && !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.mission?.status) && !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.dossier?.status) && !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.mission?.dossier?.status) && (
+            {canEditTask && (
               <button
                 type="button"
                 onClick={() => {
                   setEditTask(consultTask);
-                  const subj = getSubjectFromTask(consultTask.description);
-                  const msg = getMessageFromTask(consultTask.description);
                   setEditFormData({
                     subject: subj,
                     message: msg,
@@ -1636,508 +1784,521 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   });
                   setConsultTask(null);
                 }}
-                className="btn btn-outline"
                 style={{
-                  padding: "0.5rem 1rem",
-                  borderColor: "#D97706",
+                  background: "#FFF",
+                  border: "1px solid #F59E0B",
                   color: "#D97706",
+                  padding: "0.55rem 1rem",
+                  borderRadius: "8px",
+                  fontWeight: 600,
+                  fontSize: "0.85rem",
+                  cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   gap: "0.4rem",
                 }}
               >
-                <Pencil size={16} /> Modifier
+                <Pencil size={15} /> Modifier
               </button>
             )}
-        </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "1rem",
-            marginBottom: "1.5rem",
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-              marginBottom: "1.5rem",
-              background: "#F8FAFC",
-              padding: "1.25rem 1.5rem",
-              borderRadius: "8px",
-              border: "1px solid var(--border)",
-            }}
-          >
-            {/* Colonne 1 — Identification */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.85rem",
-                borderRight: "1px solid var(--border)",
-                paddingRight: "1rem",
-              }}
-            >
-              <div
-                style={{
-                  fontWeight: 700,
-                  fontSize: "0.75rem",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: "var(--primary)",
-                  marginBottom: "0.25rem",
-                }}
-              >
-                Identification{" "}
-                {mode === "MISSION" ? "de la mission" : "de la tâche"}
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  
-                }}
-              >
-                <strong
-                  style={{
-                    color: "var(--text-muted)",
-                    fontWeight: 600,
-                    minWidth: "130px",
-                  }}
-                >
-                  Nom :
-                </strong>
-                <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
-                  {consultTask.reference || consultTask.id}
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: "0.5rem",
-                  
-                }}
-              >
-                <strong
-                  style={{
-                    color: "var(--text-muted)",
-                    fontWeight: 600,
-                    minWidth: "130px",
-                  }}
-                >
-                  Objet :
-                </strong>
-                <span
-                  style={{
-                    fontWeight: 500,
-                    color: "var(--text-main)",
-                    flex: 1,
-                  }}
-                >
-                  {getSubjectFromTask(consultTask.description)}
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  
-                }}
-              >
-                <strong
-                  style={{
-                    color: "var(--text-muted)",
-                    fontWeight: 600,
-                    minWidth: "130px",
-                  }}
-                >
-                  {mode === "MISSION" ? "Dossier associé :" : "Mission Liée :"}
-                </strong>
-                <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
-                  {mode === "MISSION"
-                    ? consultTask.dossier?.name
-                      ? `${consultTask.dossier.name} (${consultTask.dossier.reference || "DOS-" + consultTask.dossier.id})`
-                      : consultTask.dossierId
-                    : consultTask.mission?.reference || consultTask.missionId}
-                </span>
-              </div>
-              {mode !== "MISSION" && consultTask.dossierTache && (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    
-                  }}
-                >
-                  <strong
-                    style={{
-                      color: "var(--text-muted)",
-                      fontWeight: 600,
-                      minWidth: "130px",
-                    }}
-                  >
-                    Dossier tâche :
-                  </strong>
-                  <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
-                    {consultTask.dossierTache.name}
-                  </span>
-                </div>
-              )}
-              {mode !== "MISSION" &&
-                consultTask.authorizedDossiers &&
-                consultTask.authorizedDossiers.length > 0 && (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: "0.5rem",
-                      
-                    }}
-                  >
-                    <strong
-                      style={{
-                        color: "var(--text-muted)",
-                        fontWeight: 600,
-                        minWidth: "130px",
-                      }}
-                    >
-                      Dossiers autorisés :
-                    </strong>
-                    <span
-                      style={{ fontWeight: 500, color: "var(--text-main)" }}
-                    >
-                      {consultTask.authorizedDossiers
-                        .map((d) => d.name)
-                        .join(", ")}
-                    </span>
-                  </div>
-                )}
-            </div>
-
-            {/* Colonne 2 — Gestion */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.85rem",
-                paddingLeft: "0.5rem",
-              }}
-            >
-              <div
-                style={{
-                  fontWeight: 700,
-                  fontSize: "0.75rem",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: "var(--secondary-dark)",
-                  marginBottom: "0.25rem",
-                }}
-              >
-                Gestion {mode === "MISSION" ? "de la mission" : "de la tâche"}
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  
-                }}
-              >
-                <strong
-                  style={{
-                    color: "var(--text-muted)",
-                    fontWeight: 600,
-                    minWidth: "130px",
-                  }}
-                >
-                  Créé par :
-                </strong>
-                <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
-                  {consultTask.createdBy?.name || "Système"}{" "}
-                  <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>
-                    ({consultTask.createdBy?.role?.name || "-"})
-                  </span>
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  
-                }}
-              >
-                <strong
-                  style={{
-                    color: "var(--text-muted)",
-                    fontWeight: 600,
-                    minWidth: "130px",
-                  }}
-                >
-                  Assigné à :
-                </strong>
-                <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
-                  {consultTask.assignedTo?.name || "Non assigné"}{" "}
-                  <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>
-                    ({consultTask.assignedTo?.role?.name || "-"})
-                  </span>
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  
-                }}
-              >
-                <strong
-                  style={{
-                    color: "var(--text-muted)",
-                    fontWeight: 600,
-                    minWidth: "130px",
-                  }}
-                >
-                  Relecteur :
-                </strong>
-                <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
-                  {consultTask.relecteur?.name || "Non assigné"}{" "}
-                  <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>
-                    ({consultTask.relecteur?.role?.name || "-"})
-                  </span>
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  
-                }}
-              >
-                <strong
-                  style={{
-                    color: "var(--text-muted)",
-                    fontWeight: 600,
-                    minWidth: "130px",
-                  }}
-                >
-                  Date de création :
-                </strong>
-                <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
-                  {new Date(consultTask.createdAt).toLocaleString("fr-FR", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  
-                }}
-              >
-                <strong
-                  style={{
-                    color: "var(--text-muted)",
-                    fontWeight: 600,
-                    minWidth: "130px",
-                  }}
-                >
-                  Échéance :
-                </strong>
-                <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
-                  {consultTask.echeance
-                    ? new Date(consultTask.echeance).toLocaleDateString("fr-FR")
-                    : "Non définie"}
-                </span>
-              </div>
-              {(() => {
-                const role = currentUser?.role?.name || currentUser?.role || "";
-                const options = getAllowedStatuses(
-                  consultTask.status || "NOUVEAU",
-                  role,
-                  mode,
-                  consultTask
-                );
-                const isLocked = options.length === 1;
-                return (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                      
-                    }}
-                  >
-                    <strong
-                      style={{
-                        color: "var(--text-muted)",
-                        fontWeight: 600,
-                        minWidth: "130px",
-                      }}
-                    >
-                      Statut :
-                    </strong>
-                    <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                      <select
-                        value={pendingStatus || consultTask.status || "NOUVEAU"}
-                        onChange={(e) => setPendingStatus(e.target.value)}
-                        disabled={isLocked}
-                        title={
-                          isLocked
-                            ? "Aucune transition disponible pour votre rôle"
-                            : "Changer le statut"
-                        }
-                        style={{
-                          padding: "0.4rem 0.6rem",
-                          borderRadius: "4px",
-                          border: "1px solid var(--border)",
-                          background: isLocked ? "#F3F4F6" : "#FFF",
-                          
-                          outline: "none",
-                          cursor: isLocked ? "not-allowed" : "pointer",
-                          minWidth: "140px",
-                        }}
-                      >
-                        {options.map((opt) => (
-                          <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </option>
-                        ))}
-                      </select>
-
-                      {!isLocked && pendingStatus && pendingStatus !== consultTask.status && (
-                        <button
-                          type="button"
-                          onClick={async () => {
-                            if (await window.customConfirm(`Vous allez enregistrer 1 modification(s) sur cette ${mode === "MISSION" ? "mission" : "tâche"}.\n\nStatut : ${pendingStatus}`, "Confirmer l'enregistrement")) {
-                              handleWorkflowAction(consultTask.id, pendingStatus);
-                            }
-                          }}
-                          className="btn btn-primary"
-                          style={{
-                            padding: "0.4rem 0.75rem",
-                            fontSize: "0.75rem",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.25rem",
-                          }}
-                        >
-                          <CheckSquare size={14} /> Enregistrer
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })()}
-            </div>
-          </div>
-
-          <div
-            style={{
-              borderTop: "1px solid var(--border)",
-              paddingTop: "1.5rem",
-            }}
-          >
-            <h4
-              style={{
-                margin: "0 0 1rem 0",
-                fontSize: "1rem",
-                fontWeight: 600,
-              }}
-            >
-              Consignes / Description
-            </h4>
-            <div
-              style={{
-                padding: "1.5rem",
-                background: "#F8FAFC",
-                borderRadius: "8px",
-                border: "1px solid var(--border)",
-                whiteSpace: "pre-wrap",
-                
-                color: "var(--text-main)",
-                minHeight: "120px",
-              }}
-            >
-              {getMessageFromTask(consultTask.description) || (
-                <span style={{ color: "var(--text-muted)" }}>
-                  Aucune consigne fournie.
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Fil de corrections — visible selon le rôle et le statut */}
-          <FeedbackThread
-            adminFeedback={consultTask.adminFeedback}
-            managerFeedback={consultTask.managerFeedback}
-            currentStatus={consultTask.status}
-          />
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            marginTop: "1.5rem",
-            marginBottom: "1.5rem",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              gap: "1rem",
-              flexWrap: "wrap",
-              justifyContent: "flex-end",
-              flex: 1,
-            }}
-          >
             <button
               type="button"
               onClick={() => {
                 setConsultTask(null);
                 setTaskFile(null);
               }}
-              className="btn btn-outline"
+              style={{
+                background: "#0F172A",
+                border: "none",
+                color: "#FFF",
+                padding: "0.55rem 1.1rem",
+                borderRadius: "8px",
+                fontWeight: 600,
+                fontSize: "0.85rem",
+                cursor: "pointer",
+              }}
             >
-              Retour
+              ← Retour
             </button>
+          </div>
+        </div>
 
-            {mode === "MISSION" &&
-              !["TERMINE", "ARCHIVE", "BLOQUE", "EN_ATTENTE"].includes(consultTask.status) &&
-              !["BLOQUE", "EN_ATTENTE"].includes(consultTask.dossier?.status) &&
-              (isSuperAdmin ||
-                consultTask.assignedToId === currentUser?.id) && (
-                <button
-                  type="button"
-                  onClick={() => setCreateTaskModal(true)}
-                  className="btn btn-outline"
+        {/* Two-Column Grid Conforming to Screenshots 2 & 3 */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1.1fr",
+            gap: "1.5rem",
+            alignItems: "start",
+          }}
+        >
+          {/* Left Column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+            {/* Card 1: IDENTIFICATION */}
+            <div
+              style={{
+                background: "#FFF",
+                border: "1px solid var(--border)",
+                borderRadius: "12px",
+                padding: "1.5rem",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: "0.85rem",
+                  letterSpacing: "0.05em",
+                  textTransform: "uppercase",
+                  color: "#0F172A",
+                  marginBottom: "1.25rem",
+                }}
+              >
+                {mode === "MISSION"
+                  ? "Identification de la mission"
+                  : "Identification de la tâche"}
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                {/* Nom */}
+                <div
                   style={{
-                    borderColor: "var(--primary)",
-                    color: "var(--primary)",
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
                   }}
                 >
-                  Créer une tâche
-                </button>
-              )}
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    Nom :
+                  </div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    {consultTask.reference || consultTask.id}
+                  </div>
+                </div>
+
+                {/* Objet */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    Objet :
+                  </div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A", wordBreak: "break-word" }}>
+                    {subj || "-"}
+                  </div>
+                </div>
+
+                {/* Dossier associé / Mission Liée */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    {mode === "MISSION" ? "Dossier associé :" : "Mission Liée :"}
+                  </div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    {dossierAssociated}
+                  </div>
+                </div>
+
+                {/* Optional Dossier Tâche for Task */}
+                {mode !== "MISSION" && consultTask.dossierTache && (
+                  <div
+                    style={{
+                      background: "#F8FAFC",
+                      border: "1px solid #F1F5F9",
+                      borderRadius: "8px",
+                      padding: "0.75rem 1rem",
+                    }}
+                  >
+                    <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                      Dossier tâche :
+                    </div>
+                    <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                      {consultTask.dossierTache.name}
+                    </div>
+                  </div>
+                )}
+
+                {/* Optional Dossiers Autorisés for Task */}
+                {mode !== "MISSION" &&
+                  consultTask.authorizedDossiers &&
+                  consultTask.authorizedDossiers.length > 0 && (
+                    <div
+                      style={{
+                        background: "#F8FAFC",
+                        border: "1px solid #F1F5F9",
+                        borderRadius: "8px",
+                        padding: "0.75rem 1rem",
+                      }}
+                    >
+                      <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                        Dossiers autorisés :
+                      </div>
+                      <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                        {consultTask.authorizedDossiers.map((d) => d.name).join(", ")}
+                      </div>
+                    </div>
+                  )}
+              </div>
+            </div>
+
+            {/* Card 2: Consignes / Description */}
+            <div
+              style={{
+                background: "#FFF",
+                border: "1px solid var(--border)",
+                borderRadius: "12px",
+                padding: "1.5rem",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: "0.95rem",
+                  color: "#0F172A",
+                  marginBottom: "0.75rem",
+                }}
+              >
+                Consignes / Description
+              </div>
+
+              <div
+                style={{
+                  background: "#F8FAFC",
+                  border: "1px solid #F1F5F9",
+                  borderRadius: "8px",
+                  padding: "1rem 1.25rem",
+                }}
+              >
+                <div
+                  style={{
+                    whiteSpace: "pre-wrap",
+                    color: "#0F172A",
+                    fontSize: "0.9rem",
+                    fontWeight: 500,
+                  }}
+                >
+                  {msg || (mode === "MISSION" ? "Aucune consigne fournie pour cette mission." : "Aucune consigne fournie pour cette tâche.")}
+                </div>
+                <div
+                  style={{
+                    fontSize: "0.75rem",
+                    color: "#94A3B8",
+                    marginTop: "0.5rem",
+                  }}
+                >
+                  {mode === "MISSION"
+                    ? "Consignes opérationnelles enregistrées pour la réalisation de cette mission."
+                    : "Directives précises pour l'exécution et la clôture de cette tâche."}
+                </div>
+              </div>
+            </div>
           </div>
+
+          {/* Right Column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+            {/* Card 3: GESTION */}
+            <div
+              style={{
+                background: "#FFF",
+                border: "1px solid var(--border)",
+                borderRadius: "12px",
+                padding: "1.5rem",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: "0.85rem",
+                  letterSpacing: "0.05em",
+                  textTransform: "uppercase",
+                  color: "#0F172A",
+                  marginBottom: "1.25rem",
+                }}
+              >
+                {mode === "MISSION"
+                  ? "Gestion de la mission"
+                  : "Gestion de la tâche"}
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                {/* Créé par */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    Créé par :
+                  </div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    {createdByName}{" "}
+                    <span style={{ color: "#64748B", fontWeight: 500, fontSize: "0.85rem" }}>
+                      ({createdByRole})
+                    </span>
+                  </div>
+                </div>
+
+                {/* Assigné à */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    Assigné à :
+                  </div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    {assignedToName}{" "}
+                    <span style={{ color: "#64748B", fontWeight: 500, fontSize: "0.85rem" }}>
+                      ({assignedToRole})
+                    </span>
+                  </div>
+                </div>
+
+                {/* Relecteur */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    Relecteur :
+                  </div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    {relecteurName}
+                  </div>
+                </div>
+
+                {/* Date de création */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    Date de création :
+                  </div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    {createdAtFormatted}
+                  </div>
+                </div>
+
+                {/* Échéance */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    Échéance :
+                  </div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    {echeanceFormatted}
+                  </div>
+                </div>
+
+                {/* Statut avec select et bouton Enregistrer conditionnel */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.35rem" }}>
+                    Statut :
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+                    <select
+                      value={pendingStatus || consultTask.status || "NOUVEAU"}
+                      onChange={(e) => setPendingStatus(e.target.value)}
+                      disabled={isStatusLocked}
+                      style={{
+                        padding: "0.45rem 0.75rem",
+                        borderRadius: "6px",
+                        border: "1px solid var(--border)",
+                        background: isStatusLocked ? "#F3F4F6" : "#FFF",
+                        outline: "none",
+                        cursor: isStatusLocked ? "not-allowed" : "pointer",
+                        fontWeight: 600,
+                        fontSize: "0.9rem",
+                        color: "#0F172A",
+                        minWidth: "150px",
+                      }}
+                    >
+                      {statusOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+
+                    {!isStatusLocked && pendingStatus && pendingStatus !== consultTask.status && (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          if (
+                            await window.customConfirm(
+                              `Vous allez enregistrer 1 modification(s) sur cette ${mode === "MISSION" ? "mission" : "tâche"}.\n\nStatut : ${pendingStatus}`,
+                              "Confirmer l'enregistrement"
+                            )
+                          ) {
+                            handleWorkflowAction(consultTask.id, pendingStatus);
+                          }
+                        }}
+                        style={{
+                          padding: "0.45rem 0.85rem",
+                          fontSize: "0.8rem",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.35rem",
+                          background: "#1E3A8A",
+                          color: "#FFF",
+                          borderRadius: "6px",
+                          border: "none",
+                          cursor: "pointer",
+                          fontWeight: 600,
+                        }}
+                      >
+                        <CheckSquare size={14} /> Enregistrer
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Alert Banner conforming to Screenshots 2 & 3 */}
+            {mode === "TACHE" &&
+            (consultTask.status === "EN_APPROBATION" ||
+              consultTask.status === "EN_RELECTURE") ? (
+              <div
+                style={{
+                  background: "#FAF5FF",
+                  border: "1px solid #E9D5FF",
+                  borderRadius: "8px",
+                  padding: "1.1rem 1.25rem",
+                  color: "#6B21A8",
+                }}
+              >
+                <div style={{ fontWeight: 700, fontSize: "0.9rem", marginBottom: "0.25rem" }}>
+                  Statut : En attente d'approbation par le Relecteur
+                </div>
+                <div style={{ fontSize: "0.8rem", color: "#7E22CE" }}>
+                  Le livrable a été transmis pour relecture par {assignedToName}.
+                </div>
+              </div>
+            ) : !consultTask.relecteurId ? (
+              <div
+                style={{
+                  background: "#FEF9C3",
+                  border: "1px solid #FEF08A",
+                  borderRadius: "8px",
+                  padding: "1.1rem 1.25rem",
+                  color: "#854D0E",
+                }}
+              >
+                <div style={{ fontWeight: 700, fontSize: "0.9rem", marginBottom: "0.25rem" }}>
+                  Attention : Relecteur qualité non assigné (-)
+                </div>
+                <div style={{ fontSize: "0.8rem", color: "#A16207" }}>
+                  Une relecture est nécessaire avant le passage en clôture.
+                </div>
+              </div>
+            ) : null}
+
+            {/* Attached documents if any */}
+            {consultTask.documents && consultTask.documents.length > 0 && (
+              <div
+                style={{
+                  background: "#FFF",
+                  border: "1px solid var(--border)",
+                  borderRadius: "12px",
+                  padding: "1.25rem",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: "0.85rem",
+                    color: "#0F172A",
+                    marginBottom: "0.75rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <Paperclip size={15} /> Documents attachés ({consultTask.documents.length})
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  {consultTask.documents.map((doc) => (
+                    <div
+                      key={doc.id}
+                      onClick={() => setPreviewFile(doc.url)}
+                      style={{
+                        padding: "0.6rem 0.85rem",
+                        background: "#F8FAFC",
+                        borderRadius: "6px",
+                        border: "1px solid var(--border)",
+                        fontSize: "0.85rem",
+                        color: "var(--primary)",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <FileText size={16} />
+                      <span style={{ fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {doc.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Fil de corrections — visible selon le rôle et le statut */}
+        <div style={{ marginTop: "1.5rem" }}>
+          <FeedbackThread
+            adminFeedback={consultTask.adminFeedback}
+            managerFeedback={consultTask.managerFeedback}
+            currentStatus={consultTask.status}
+          />
         </div>
 
         <SmsModal

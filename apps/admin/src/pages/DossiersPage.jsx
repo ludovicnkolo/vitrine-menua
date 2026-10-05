@@ -1392,225 +1392,176 @@ const DossiersPage = () => {
       }
     };
 
+    const ownerName =
+      consultDossier.origin === "CLIENT"
+        ? consultDossier.client?.name ||
+          consultDossier.client?.companyName ||
+          dbClients.find((c) => c.id === consultDossier.clientId)?.name ||
+          dbClients.find((c) => c.id === consultDossier.clientId)?.companyName ||
+          "Client inconnu"
+        : consultDossier.origin === "COLLABORATEUR"
+          ? consultDossier.targetUser?.name ||
+            dbUsers.find((u) => u.id === consultDossier.targetUserId)?.name ||
+            "Collaborateur inconnu"
+          : "MENUA CONSULTING (Interne)";
+
+    const creatorName =
+      consultDossier.createdBy?.name
+        ? `${consultDossier.createdBy.name}${consultDossier.createdBy.role?.name ? ` (${consultDossier.createdBy.role.name})` : ""}`
+        : "Inconnu";
+
+    const traitantName =
+      consultDossier.traitant?.name ||
+      dbUsers.find((u) => u.id === consultDossier.traitantId)?.name ||
+      "Aucun";
+
+    const createdAtFormatted = new Date(consultDossier.createdAt).toLocaleString("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const activeTasks = associatedTasks.filter(
+      (t) => !["TERMINE", "ARCHIVE", "ANNULEE"].includes(t.status)
+    );
+    const tasksByStatus = associatedTasks.reduce((acc, t) => {
+      acc[t.status] = (acc[t.status] || 0) + 1;
+      return acc;
+    }, {});
+    const statusNameMap = {
+      NOUVEAU: "Nouveau",
+      EN_COURS: "En cours",
+      EN_APPROBATION: "En approbation",
+      VERIFIER: "À vérifier",
+      A_CORRIGER: "À corriger",
+      TERMINE: "Terminé",
+      ARCHIVE: "Archivé",
+      BLOQUE: "Bloqué",
+      EN_ATTENTE: "En attente",
+    };
+    const breakdownList = Object.entries(tasksByStatus).map(
+      ([st, cnt]) => `${cnt} mission${cnt > 1 ? "s" : ""} en statut ${statusNameMap[st] || st}`
+    );
+    const breakdownString =
+      breakdownList.length > 0
+        ? breakdownList.join(", ") + "."
+        : "Aucune mission active.";
+
+    const roleName = currentUser?.role?.name || currentUser?.role || "";
+    const isResp = roleName === "Responsable opérationnel";
+    const canChangeStatus =
+      isSuperAdmin || (isResp && currentUser?.id === consultDossier.traitantId);
+    const statusOptions = getAllowedDossierStatuses(consultDossier, currentUser);
+    const isStatusLocked = !canChangeStatus || statusOptions.length === 1;
+
+    const renderDossierPillBadge = (status) => {
+      const s = String(status || "NOUVEAU").toUpperCase();
+      const map = {
+        NOUVEAU: { text: "Nouveau", bg: "#EFF6FF", color: "#2563EB", dot: "#2563EB" },
+        EN_COURS: { text: "En cours", bg: "#FEF3C7", color: "#B45309", dot: "#D97706" },
+        EN_APPROBATION: { text: "En approbation", bg: "#FAF5FF", color: "#7E22CE", dot: "#9333EA" },
+        VERIFIER: { text: "À vérifier", bg: "#FEF9C3", color: "#854D0E", dot: "#CA8A04" },
+        A_CORRIGER: { text: "À corriger", bg: "#FEE2E2", color: "#DC2626", dot: "#DC2626" },
+        TERMINE: { text: "Terminé", bg: "#DCFCE7", color: "#166534", dot: "#16A34A" },
+        ARCHIVE: { text: "Archivé", bg: "#F1F5F9", color: "#475569", dot: "#64748B" },
+        BLOQUE: { text: "Bloqué", bg: "#FEE2E2", color: "#DC2626", dot: "#DC2626" },
+        EN_ATTENTE: { text: "En attente", bg: "#FEF9C3", color: "#854D0E", dot: "#CA8A04" },
+        ANNULEE: { text: "Annulé", bg: "#FEE2E2", color: "#DC2626", dot: "#DC2626" },
+      };
+      const c = map[s] || { text: s, bg: "#F1F5F9", color: "#475569", dot: "#64748B" };
+      return (
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.35rem",
+            background: c.bg,
+            color: c.color,
+            fontSize: "0.75rem",
+            fontWeight: 600,
+            padding: "0.2rem 0.65rem",
+            borderRadius: "9999px",
+          }}
+        >
+          <span style={{ fontSize: "0.75rem", color: c.dot }}>●</span>
+          {c.text}
+        </span>
+      );
+    };
+
+    const getTaskSubject = (desc) => {
+      if (!desc) return "";
+      const match = desc.match(/\[OBJET\]:\s*(.*?)(?=\n\[|$)/);
+      return match ? match[1].trim() : desc.split("\n")[0];
+    };
+
     return (
       <div className="fade-in" style={{ width: "100%", padding: "0" }}>
+        {/* Header Card conforming to Screenshot 1 */}
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "1rem",
-            marginBottom: "2rem",
-            borderBottom: "1px solid var(--border)",
-            paddingBottom: "1.5rem",
-            flexWrap: "wrap",
-          }}
-        >
-          <button
-            type="button"
-            onClick={() => setConsultDossier(null)}
-            className="btn btn-outline"
-            style={{ padding: "0.5rem 1rem" }}
-          >
-            ← Retour
-          </button>
-          <h2
-            style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600, flex: 1 }}
-          >
-            consultation du dossier :{" "}
-            {consultDossier.reference || consultDossier.id}
-          </h2>
-          {canEdit && !isEditMode && (
-            <button
-              type="button"
-              onClick={startEdit}
-              className="btn btn-outline"
-              style={{
-                padding: "0.5rem 1rem",
-                borderColor: "#D97706",
-                color: "#D97706",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.4rem",
-              }}
-            >
-              <Pencil size={16} /> Modifier
-            </button>
-          )}
-        </div>
-
-        {renderDossierFields(consultDossier, false)}
-        <div
-          style={{
-            display: "flex",
-            gap: "2rem",
-            marginTop: "1rem",
-            borderTop: "1px solid var(--border)",
-            paddingTop: "1.5rem",
-            alignItems: "flex-start",
-          }}
-        >
-          <div style={{ flex: "0 0 70%" }}>
-            <h4
-              style={{
-                margin: "0 0 1rem 0",
-                fontSize: "1rem",
-                fontWeight: 600,
-              }}
-            >
-              Description du dossier
-            </h4>
-            {isEditMode ? (
-              <textarea
-                value={consultDossier.description || ""}
-                onChange={(e) =>
-                  setConsultDossier({
-                    ...consultDossier,
-                    description: e.target.value,
-                  })
-                }
-                style={{
-                  width: "100%",
-                  padding: "1rem",
-                  background: "#FFF",
-                  borderRadius: "8px",
-                  border: "1px solid var(--primary)",
-                  
-                  color: "var(--text-main)",
-                  minHeight: "120px",
-                  resize: "vertical",
-                  fontFamily: "inherit",
-                  boxSizing: "border-box",
-                }}
-                placeholder="Description du dossier..."
-              />
-            ) : (
-              <div
-                style={{
-                  padding: "1.5rem",
-                  background: "#F8FAFC",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  whiteSpace: "pre-wrap",
-                  
-                  color: "var(--text-main)",
-                  minHeight: "120px",
-                }}
-              >
-                {consultDossier.description || (
-                  <span style={{ color: "var(--text-muted)" }}>
-                    Aucune description fournie.
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
-          <div style={{ flex: "1 1 auto", minWidth: 0 }}>
-            {isSuperAdmin && isEditMode && (
-              <div style={{ marginBottom: "1.5rem" }}>
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    fontWeight: 600,
-                    
-                    color: "var(--secondary-dark)",
-                  }}
-                >
-                  Traitant
-                </label>
-                <select
-                  value={consultDossier.traitantId || ""}
-                  onChange={(e) =>
-                    setConsultDossier({
-                      ...consultDossier,
-                      traitantId: e.target.value,
-                    })
-                  }
-                  className="input-field"
-                  style={{
-                    width: "100%",
-                    padding: "0.6rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--primary)",
-                    background: "#FFF",
-                  }}
-                >
-                  <option value="">-- Aucun traitant --</option>
-                  {dbUsers
-                    .filter(
-                      (u) =>
-                        u.role?.name === "Responsable opérationnel" ||
-                        u.role?.name === "Super-administrateur",
-                    )
-                    .map((u) => (
-                      <option key={u.id} value={u.id}>
-                        {u.name} ({u.role?.name})
-                      </option>
-                    ))}
-                </select>
-              </div>
-            )}
-            {isSuperAdmin && !isEditMode && consultDossier.traitantId && (
-              <div
-                style={{
-                  marginBottom: "1.5rem",
-                  padding: "0.75rem 1rem",
-                  background: "#F8FAFC",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  
-                  display: "none", // Masqué car affiché en double dans l'en-tête du dossier
-                }}
-              >
-                <strong style={{ color: "var(--text-muted)" }}>
-                  Traitant :
-                </strong>{" "}
-                <span style={{ fontWeight: 500 }}>
-                  {dbUsers.find((u) => u.id === consultDossier.traitantId)
-                    ?.name ||
-                    consultDossier.traitant?.name ||
-                    "Inconnu"}
-                </span>
-              </div>
-            )}
-            {renderAssociatedTasks(associatedTasks, false)}
-          </div>
-        </div>
-
-        <div
-          style={{
-            marginTop: "2rem",
-            borderTop: "1px solid var(--border)",
-            paddingTop: "1.5rem",
+            background: "#FFF",
+            border: "1px solid var(--border)",
+            borderRadius: "12px",
+            padding: "1.25rem 1.5rem",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            marginBottom: "1.5rem",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
             flexWrap: "wrap",
             gap: "1rem",
           }}
         >
-          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+          {/* Left info with folder icon */}
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                borderRadius: "10px",
+                background: "#EFF6FF",
+                border: "1px solid #DBEAFE",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <Folder size={24} color="#2563EB" fill="#2563EB" />
+            </div>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+                <h2
+                  style={{
+                    margin: 0,
+                    fontSize: "1.35rem",
+                    fontWeight: 700,
+                    color: "#0F172A",
+                  }}
+                >
+                  Consultation du dossier : {consultDossier.reference || consultDossier.id}
+                </h2>
+                {renderDossierPillBadge(consultDossier.status)}
+              </div>
+              <div
+                style={{
+                  fontSize: "0.8rem",
+                  color: "#64748B",
+                  marginTop: "0.25rem",
+                }}
+              >
+                Nom : {consultDossier.name || "-"} • Origine : {consultDossier.origin || "GÉNÉRAL"} • Créé le {createdAtFormatted} par {creatorName}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Action buttons */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
             {!["TERMINE", "ARCHIVE", "BLOQUE", "EN_ATTENTE"].includes(consultDossier.status) && (
               <>
-                {(currentUser?.role === "Super-administrateur" ||
-                  currentUser?.role?.name === "Super-administrateur" ||
-                  consultDossier.traitantId === currentUser?.id) && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCreateMissionModal(true);
-                      setMissionDossierId(consultDossier.id);
-                    }}
-                    className="btn btn-primary"
-                    style={{
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                    }}
-                  >
-                    Créer une mission
-                  </button>
-                )}
                 <button
                   type="button"
                   onClick={() => {
@@ -1618,49 +1569,650 @@ const DossiersPage = () => {
                     setGeneratedMagicUrl("");
                     setMagicFiles([]);
                   }}
-                  className="btn btn-outline"
                   style={{
-                    borderColor: "var(--secondary)",
-                    color: "var(--secondary-dark)",
+                    background: "#FFF",
+                    border: "1px solid #CBD5E1",
+                    color: "#334155",
+                    padding: "0.55rem 1rem",
+                    borderRadius: "8px",
+                    fontWeight: 500,
+                    fontSize: "0.85rem",
+                    cursor: "pointer",
                     display: "flex",
-                    gap: "0.5rem",
                     alignItems: "center",
+                    gap: "0.4rem",
                   }}
                 >
-                  <LinkIcon size={16} /> Générer Lien Magique
+                  Générer Lien Magique
                 </button>
+
+                {(isSuperAdmin || consultDossier.traitantId === currentUser?.id) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCreateMissionModal(true);
+                      setMissionDossierId(consultDossier.id);
+                    }}
+                    style={{
+                      background: "#1E3A8A",
+                      border: "none",
+                      color: "#FFF",
+                      padding: "0.55rem 1.1rem",
+                      borderRadius: "8px",
+                      fontWeight: 600,
+                      fontSize: "0.85rem",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.4rem",
+                    }}
+                  >
+                    + Créer une mission
+                  </button>
+                )}
               </>
             )}
-          </div>
-          <div style={{ display: "flex", gap: "1rem" }}>
-            {isEditMode ? (
+
+            {canEdit && !isEditMode && (
+              <button
+                type="button"
+                onClick={startEdit}
+                style={{
+                  background: "#FFF",
+                  border: "1px solid #F59E0B",
+                  color: "#D97706",
+                  padding: "0.55rem 1rem",
+                  borderRadius: "8px",
+                  fontWeight: 600,
+                  fontSize: "0.85rem",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.4rem",
+                }}
+              >
+                <Pencil size={15} /> Modifier
+              </button>
+            )}
+
+            {isEditMode && (
               <>
                 <button
                   type="button"
                   onClick={cancelEdit}
-                  className="btn btn-outline"
+                  style={{
+                    background: "#FFF",
+                    border: "1px solid #CBD5E1",
+                    color: "#475569",
+                    padding: "0.55rem 1rem",
+                    borderRadius: "8px",
+                    fontWeight: 600,
+                    fontSize: "0.85rem",
+                    cursor: "pointer",
+                  }}
                 >
                   Annuler
                 </button>
                 <button
                   type="button"
                   onClick={saveEdit}
-                  className="btn btn-primary"
+                  style={{
+                    background: "#1E3A8A",
+                    border: "none",
+                    color: "#FFF",
+                    padding: "0.55rem 1.1rem",
+                    borderRadius: "8px",
+                    fontWeight: 600,
+                    fontSize: "0.85rem",
+                    cursor: "pointer",
+                  }}
                 >
                   Enregistrer
                 </button>
               </>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setConsultDossier(null);
-                  setPendingStatus("");
+            )}
+
+            <button
+              type="button"
+              onClick={() => {
+                setConsultDossier(null);
+                setPendingStatus("");
+              }}
+              style={{
+                background: "#0F172A",
+                border: "none",
+                color: "#FFF",
+                padding: "0.55rem 1.1rem",
+                borderRadius: "8px",
+                fontWeight: 600,
+                fontSize: "0.85rem",
+                cursor: "pointer",
+              }}
+            >
+              ← Retour
+            </button>
+          </div>
+        </div>
+
+        {/* Two-Column Grid Conforming to Screenshot 1 */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1.1fr",
+            gap: "1.5rem",
+            alignItems: "start",
+          }}
+        >
+          {/* Left Column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+            {/* Card 1: IDENTIFICATION DU DOSSIER */}
+            <div
+              style={{
+                background: "#FFF",
+                border: "1px solid var(--border)",
+                borderRadius: "12px",
+                padding: "1.5rem",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: "0.85rem",
+                  letterSpacing: "0.05em",
+                  textTransform: "uppercase",
+                  color: "#0F172A",
+                  marginBottom: "1.25rem",
                 }}
-                className="btn btn-outline"
               >
-                Fermer
-              </button>
+                Identification du dossier
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                {/* Nom du dossier */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    Nom du dossier :
+                  </div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A", wordBreak: "break-word" }}>
+                    {consultDossier.name || "-"}
+                  </div>
+                </div>
+
+                {/* Origine */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    Origine :
+                  </div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    {consultDossier.origin || "GENERAL"}
+                  </div>
+                </div>
+
+                {/* Propriétaire */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    Propriétaire :
+                  </div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    {ownerName}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2: GESTION DU DOSSIER */}
+            <div
+              style={{
+                background: "#FFF",
+                border: "1px solid var(--border)",
+                borderRadius: "12px",
+                padding: "1.5rem",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: "0.85rem",
+                  letterSpacing: "0.05em",
+                  textTransform: "uppercase",
+                  color: "#0F172A",
+                  marginBottom: "1.25rem",
+                }}
+              >
+                Gestion du dossier
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                {/* Traitant */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    Traitant :
+                  </div>
+                  {isEditMode && isSuperAdmin ? (
+                    <select
+                      value={consultDossier.traitantId || ""}
+                      onChange={(e) =>
+                        setConsultDossier({
+                          ...consultDossier,
+                          traitantId: e.target.value,
+                        })
+                      }
+                      style={{
+                        width: "100%",
+                        padding: "0.45rem 0.6rem",
+                        borderRadius: "6px",
+                        border: "1px solid var(--border)",
+                        background: "#FFF",
+                        fontSize: "0.9rem",
+                        fontWeight: 500,
+                        color: "#0F172A",
+                        marginTop: "0.25rem",
+                      }}
+                    >
+                      <option value="">-- Aucun traitant --</option>
+                      {dbUsers
+                        .filter(
+                          (u) =>
+                            u.role?.name === "Responsable opérationnel" ||
+                            u.role?.name === "Super-administrateur"
+                        )
+                        .map((u) => (
+                          <option key={u.id} value={u.id}>
+                            {u.name} ({u.role?.name})
+                          </option>
+                        ))}
+                    </select>
+                  ) : (
+                    <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                      {traitantName}
+                    </div>
+                  )}
+                </div>
+
+                {/* Créé par */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    Créé par :
+                  </div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    {creatorName}
+                  </div>
+                </div>
+
+                {/* Date de création */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    Date de création :
+                  </div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    {createdAtFormatted}
+                  </div>
+                </div>
+
+                {/* Statut avec select et bouton Enregistrer conditionnel */}
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.35rem" }}>
+                    Statut :
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+                    <select
+                      value={pendingStatus || consultDossier.status || "NOUVEAU"}
+                      onChange={(e) => setPendingStatus(e.target.value)}
+                      disabled={isStatusLocked}
+                      style={{
+                        padding: "0.45rem 0.75rem",
+                        borderRadius: "6px",
+                        border: "1px solid var(--border)",
+                        background: isStatusLocked ? "#F3F4F6" : "#FFF",
+                        outline: "none",
+                        cursor: isStatusLocked ? "not-allowed" : "pointer",
+                        fontWeight: 600,
+                        fontSize: "0.9rem",
+                        color: "#0F172A",
+                        minWidth: "150px",
+                      }}
+                    >
+                      {statusOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+
+                    {pendingStatus && pendingStatus !== (consultDossier.status || "NOUVEAU") && (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          if (
+                            await window.customConfirm(
+                              `Vous allez enregistrer 1 modification(s) sur ce dossier.\n\nStatut : ${pendingStatus}`,
+                              "Confirmer l'enregistrement"
+                            )
+                          ) {
+                            handleStatusAction(consultDossier.id, pendingStatus);
+                          }
+                        }}
+                        style={{
+                          padding: "0.45rem 0.85rem",
+                          fontSize: "0.8rem",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.35rem",
+                          background: "#1E3A8A",
+                          color: "#FFF",
+                          borderRadius: "6px",
+                          border: "none",
+                          cursor: "pointer",
+                          fontWeight: 600,
+                        }}
+                      >
+                        <CheckSquare size={14} /> Enregistrer
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+            {/* Card 3: Description du dossier */}
+            <div
+              style={{
+                background: "#FFF",
+                border: "1px solid var(--border)",
+                borderRadius: "12px",
+                padding: "1.5rem",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: "0.95rem",
+                  color: "#0F172A",
+                  marginBottom: "0.75rem",
+                }}
+              >
+                Description du dossier
+              </div>
+
+              {isEditMode ? (
+                <textarea
+                  value={consultDossier.description || ""}
+                  onChange={(e) =>
+                    setConsultDossier({
+                      ...consultDossier,
+                      description: e.target.value,
+                    })
+                  }
+                  style={{
+                    width: "100%",
+                    padding: "1rem",
+                    background: "#FFF",
+                    borderRadius: "8px",
+                    border: "1px solid var(--primary)",
+                    color: "var(--text-main)",
+                    minHeight: "100px",
+                    resize: "vertical",
+                    fontFamily: "inherit",
+                    boxSizing: "border-box",
+                  }}
+                  placeholder="Description du dossier..."
+                />
+              ) : (
+                <div
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #F1F5F9",
+                    borderRadius: "8px",
+                    padding: "1rem 1.25rem",
+                  }}
+                >
+                  <div
+                    style={{
+                      whiteSpace: "pre-wrap",
+                      color: "#0F172A",
+                      fontSize: "0.9rem",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {consultDossier.description || "Aucune description enregistrée pour ce dossier."}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.75rem",
+                      color: "#94A3B8",
+                      marginTop: "0.5rem",
+                    }}
+                  >
+                    Notes et directives générales enregistrées pour ce dossier opérationnel.
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Card 4: Vues des missions associées */}
+            <div
+              style={{
+                background: "#FFF",
+                border: "1px solid var(--border)",
+                borderRadius: "12px",
+                padding: "1.5rem",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: "0.95rem",
+                  color: "#0F172A",
+                  marginBottom: "0.2rem",
+                }}
+              >
+                Vues des missions associées
+              </div>
+              <div
+                style={{
+                  fontSize: "0.75rem",
+                  color: "#94A3B8",
+                  marginBottom: "1rem",
+                }}
+              >
+                Suivi direct des missions rattachées à ce dossier
+              </div>
+
+              {associatedTasks.length > 0 ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                  {associatedTasks.map((task) => (
+                    <div
+                      key={task.id}
+                      onClick={() => setLocalConsultTask(task)}
+                      style={{
+                        background: "#FFF",
+                        border: "1px solid #E2E8F0",
+                        borderRadius: "8px",
+                        padding: "0.85rem 1.1rem",
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = "#2563EB";
+                        e.currentTarget.style.boxShadow = "0 2px 6px rgba(37,99,235,0.08)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = "#E2E8F0";
+                        e.currentTarget.style.boxShadow = "none";
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: "0.35rem",
+                        }}
+                      >
+                        <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0F172A" }}>
+                          Mission {task.reference || task.id}
+                        </span>
+                        {renderDossierPillBadge(task.status)}
+                      </div>
+                      <div style={{ fontSize: "0.8rem", color: "#64748B" }}>
+                        Objet : {getTaskSubject(task.description) || task.subject || "-"}{" "}
+                        • {task.echeance ? `Échéance : ${new Date(task.echeance).toLocaleDateString("fr-FR")}` : `Créé le ${new Date(task.createdAt).toLocaleDateString("fr-FR")}`}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div
+                  style={{
+                    padding: "1.5rem",
+                    background: "#F8FAFC",
+                    border: "1px dashed var(--border)",
+                    borderRadius: "8px",
+                    textAlign: "center",
+                    color: "var(--text-muted)",
+                    fontSize: "0.85rem",
+                  }}
+                >
+                  Aucune mission associée pour le moment.
+                </div>
+              )}
+
+              {/* État d'avancement global Banner */}
+              {associatedTasks.length > 0 && (
+                <div
+                  style={{
+                    marginTop: "1.25rem",
+                    background: "#F0FDF4",
+                    border: "1px solid #DCFCE7",
+                    borderRadius: "8px",
+                    padding: "0.85rem 1.1rem",
+                    color: "#166534",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontWeight: 700,
+                      fontSize: "0.875rem",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.4rem",
+                    }}
+                  >
+                    ✓ État d'avancement global : {activeTasks.length} mission{activeTasks.length > 1 ? "s" : ""} active{activeTasks.length > 1 ? "s" : ""}
+                  </div>
+                  <div style={{ fontSize: "0.8rem", color: "#15803D", marginTop: "0.25rem" }}>
+                    {breakdownString}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Attached documents if any */}
+            {consultDossier.documents && consultDossier.documents.length > 0 && (
+              <div
+                style={{
+                  background: "#FFF",
+                  border: "1px solid var(--border)",
+                  borderRadius: "12px",
+                  padding: "1.25rem",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: "0.85rem",
+                    color: "#0F172A",
+                    marginBottom: "0.75rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <Paperclip size={15} /> Documents attachés ({consultDossier.documents.length})
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  {consultDossier.documents.map((doc) => (
+                    <div
+                      key={doc.id}
+                      onClick={() => setPreviewFile(doc.url)}
+                      style={{
+                        padding: "0.6rem 0.85rem",
+                        background: "#F8FAFC",
+                        borderRadius: "6px",
+                        border: "1px solid var(--border)",
+                        fontSize: "0.85rem",
+                        color: "var(--primary)",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <FileText size={16} />
+                      <span style={{ fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {doc.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         </div>

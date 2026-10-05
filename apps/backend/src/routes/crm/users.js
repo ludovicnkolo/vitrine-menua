@@ -616,6 +616,108 @@ router.post(
   }
 );
 
+// --- BILAN D'ACTIVITE INTERNE (Dossiers, Missions, Taches assignés et terminés) ---
+router.get("/users/:id/activity-stats", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { startDate, endDate } = req.query;
+
+    const user = await prisma.utilisateur.findUnique({
+      where: { id },
+      select: { id: true, name: true, email: true },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "Utilisateur non trouvé" });
+    }
+
+    const dateFilter = {};
+    if (startDate) {
+      const parts = startDate.split("-").map(Number);
+      if (parts.length === 3 && !parts.some(isNaN)) {
+        dateFilter.gte = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0, 0);
+      }
+    }
+    if (endDate) {
+      const parts = endDate.split("-").map(Number);
+      if (parts.length === 3 && !parts.some(isNaN)) {
+        dateFilter.lte = new Date(parts[0], parts[1] - 1, parts[2], 23, 59, 59, 999);
+      }
+    }
+    const hasDateFilter = Object.keys(dateFilter).length > 0;
+
+    // Dossiers assignés à cet interne (traitant ou targetUser)
+    const dossierBaseWhere = {
+      OR: [{ traitantId: id }, { targetUserId: id }],
+      status: { not: "CORBEILLE" },
+      ...(hasDateFilter ? { createdAt: dateFilter } : {}),
+    };
+
+    const [dossiersAssignes, dossiersTermines] = await Promise.all([
+      prisma.dossier.count({ where: dossierBaseWhere }),
+      prisma.dossier.count({
+        where: {
+          ...dossierBaseWhere,
+          status: "TERMINE",
+        },
+      }),
+    ]);
+
+    // Missions assignées à cet interne (assignedToId)
+    const missionBaseWhere = {
+      assignedToId: id,
+      status: { not: "CORBEILLE" },
+      ...(hasDateFilter ? { createdAt: dateFilter } : {}),
+    };
+
+    const [missionsAssignees, missionsTerminees] = await Promise.all([
+      prisma.mission.count({ where: missionBaseWhere }),
+      prisma.mission.count({
+        where: {
+          ...missionBaseWhere,
+          status: "TERMINE",
+        },
+      }),
+    ]);
+
+    // Tâches assignées à cet interne (assignedToId)
+    const tacheBaseWhere = {
+      assignedToId: id,
+      status: { not: "CORBEILLE" },
+      ...(hasDateFilter ? { createdAt: dateFilter } : {}),
+    };
+
+    const [tachesAssignees, tachesTerminees] = await Promise.all([
+      prisma.tache.count({ where: tacheBaseWhere }),
+      prisma.tache.count({
+        where: {
+          ...tacheBaseWhere,
+          status: "TERMINE",
+        },
+      }),
+    ]);
+
+    res.json({
+      user,
+      dossiers: {
+        assignes: dossiersAssignes,
+        termines: dossiersTermines,
+      },
+      missions: {
+        assignees: missionsAssignees,
+        terminees: missionsTerminees,
+      },
+      taches: {
+        assignees: tachesAssignees,
+        terminees: tachesTerminees,
+      },
+    });
+  } catch (error) {
+    console.error("Erreur user activity stats:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // --- CLIENTS (Externes) ---
 
 module.exports = router;

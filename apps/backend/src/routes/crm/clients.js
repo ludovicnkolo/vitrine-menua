@@ -354,6 +354,124 @@ router.delete(
   },
 );
 
+// --- SUIVI D'ACTIVITE CLIENT (Dossiers, Missions, Taches en cours et terminés) ---
+router.get("/clients/:id/activity-stats", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { startDate, endDate } = req.query;
+
+    const client = await prisma.client.findUnique({
+      where: { id },
+      include: { entreprise: true },
+    });
+
+    if (!client) {
+      return res.status(404).json({ error: "Client non trouvé" });
+    }
+
+    const dateFilter = {};
+    if (startDate) {
+      const parts = startDate.split("-").map(Number);
+      if (parts.length === 3 && !parts.some(isNaN)) {
+        dateFilter.gte = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0, 0);
+      }
+    }
+    if (endDate) {
+      const parts = endDate.split("-").map(Number);
+      if (parts.length === 3 && !parts.some(isNaN)) {
+        dateFilter.lte = new Date(parts[0], parts[1] - 1, parts[2], 23, 59, 59, 999);
+      }
+    }
+    const hasDateFilter = Object.keys(dateFilter).length > 0;
+
+    // 1. Dossiers créés pour ce client
+    const dossierBaseWhere = {
+      clientId: id,
+      status: { not: "CORBEILLE" },
+      ...(hasDateFilter ? { createdAt: dateFilter } : {}),
+    };
+
+    const [dossiersTotal, dossiersTermines] = await Promise.all([
+      prisma.dossier.count({ where: dossierBaseWhere }),
+      prisma.dossier.count({
+        where: {
+          ...dossierBaseWhere,
+          status: "TERMINE",
+        },
+      }),
+    ]);
+    const dossiersEnCours = Math.max(0, dossiersTotal - dossiersTermines);
+
+    // 2. Missions liées à ce client (dossier avec clientId)
+    const missionBaseWhere = {
+      OR: [
+        { dossier: { clientId: id } },
+        { dossierMission: { clientId: id } },
+      ],
+      status: { not: "CORBEILLE" },
+      ...(hasDateFilter ? { createdAt: dateFilter } : {}),
+    };
+
+    const [missionsTotal, missionsTerminees] = await Promise.all([
+      prisma.mission.count({ where: missionBaseWhere }),
+      prisma.mission.count({
+        where: {
+          ...missionBaseWhere,
+          status: "TERMINE",
+        },
+      }),
+    ]);
+    const missionsEnCours = Math.max(0, missionsTotal - missionsTerminees);
+
+    // 3. Tâches liées à ce client
+    const tacheBaseWhere = {
+      OR: [
+        { mission: { dossier: { clientId: id } } },
+        { mission: { dossierMission: { clientId: id } } },
+        { dossierTache: { clientId: id } },
+      ],
+      status: { not: "CORBEILLE" },
+      ...(hasDateFilter ? { createdAt: dateFilter } : {}),
+    };
+
+    const [tachesTotal, tachesTerminees] = await Promise.all([
+      prisma.tache.count({ where: tacheBaseWhere }),
+      prisma.tache.count({
+        where: {
+          ...tacheBaseWhere,
+          status: "TERMINE",
+        },
+      }),
+    ]);
+    const tachesEnCours = Math.max(0, tachesTotal - tachesTerminees);
+
+    res.json({
+      client: {
+        id: client.id,
+        name: client.entreprise?.raisonSociale || client.name,
+      },
+      dossiers: {
+        total: dossiersTotal,
+        enCours: dossiersEnCours,
+        termines: dossiersTermines,
+      },
+      missions: {
+        total: missionsTotal,
+        enCours: missionsEnCours,
+        termines: missionsTerminees,
+      },
+      taches: {
+        total: tachesTotal,
+        enCours: tachesEnCours,
+        termines: tachesTerminees,
+      },
+    });
+  } catch (error) {
+    console.error("Erreur client activity stats:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // --- DOSSIERS ---
 
 module.exports = router;

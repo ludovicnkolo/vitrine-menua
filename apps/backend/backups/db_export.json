@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.222Z",
-      "updatedAt": "2026-10-05T08:43:22.541Z"
+      "updatedAt": "2026-10-05T12:44:12.535Z"
     },
     {
       "id": "a41c168d-dc87-4353-8dcb-c71e4109416c",
@@ -16,7 +16,7 @@
       "status": "Inactif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.242Z",
-      "updatedAt": "2026-10-05T08:43:22.548Z"
+      "updatedAt": "2026-10-05T12:44:12.545Z"
     },
     {
       "id": "7f685243-dda5-4117-a675-d4a7364c7a66",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-09-28T09:31:02.248Z",
-      "updatedAt": "2026-10-05T08:43:22.556Z"
+      "updatedAt": "2026-10-05T12:44:12.552Z"
     },
     {
       "id": "803c6051-c50d-495a-bb21-b6615f1cf0dc",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-09-28T09:31:02.256Z",
-      "updatedAt": "2026-10-05T08:43:22.562Z"
+      "updatedAt": "2026-10-05T12:44:12.558Z"
     },
     {
       "id": "eaa1c720-2a71-493c-a1c0-d14f51051e0f",
@@ -43,14 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.269Z",
-      "updatedAt": "2026-10-05T08:43:22.568Z"
+      "updatedAt": "2026-10-05T12:44:12.565Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "2541799f-86de-4071-86c7-7110615bf37b",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$LwL57XFPlJUwS7vqgKq8J.W/qB2R.0GawoYn/KQuySU6sHK.uzMrO",
+      "password": "$2a$10$vGqhF8MmK8f7UveZfgElGO0HchzAeTTWUn3Tv0W/mMAE04F/XNKHK",
       "name": "Rosette Fouelefack",
       "roleId": "832d5c59-5fe6-488f-b64a-1bfdc6504152",
       "telephone": "+33659207511",
@@ -64,9 +64,9 @@
       "resetTokenExpiry": "2026-10-05T08:38:59.338Z",
       "isBlocked": false,
       "status": "Invitation envoyée",
-      "lastLogin": "2026-10-05T08:12:48.266Z",
+      "lastLogin": "2026-10-05T12:17:36.238Z",
       "createdAt": "2026-09-28T09:31:02.401Z",
-      "updatedAt": "2026-10-05T08:43:22.687Z"
+      "updatedAt": "2026-10-05T12:44:12.736Z"
     },
     {
       "id": "2f2a8d88-0187-455a-a219-5f7a673a5e7a",
@@ -95,11 +95,11 @@
       "password": "$2a$10$aWwK9BDJt6jr8CsoNgSj7enTY1Hhln7oDY7eTzT.KL1.ql0J1Osca",
       "name": "Responsable opérationnel 2",
       "roleId": "a41c168d-dc87-4353-8dcb-c71e4109416c",
-      "telephone": "",
-      "lieuResidence": "",
-      "experienceCle": "",
-      "langues": null,
-      "formations": null,
+      "telephone": "495868568",
+      "lieuResidence": "avgfbetb",
+      "experienceCle": "fewfbewijbfw",
+      "langues": "Arabe, Espagnol",
+      "formations": "dfvnenje",
       "profile": "",
       "idCardUrl": null,
       "resetToken": null,
@@ -108,7 +108,7 @@
       "status": "Invitation envoyée",
       "lastLogin": "2026-10-04T06:36:58.988Z",
       "createdAt": "2026-09-28T09:32:23.218Z",
-      "updatedAt": "2026-10-04T06:36:58.989Z"
+      "updatedAt": "2026-10-05T14:36:54.010Z"
     },
     {
       "id": "91860bc8-7a0e-4244-ae93-0761cf6f9db2",
@@ -284,6 +284,19 @@
       "status": "ACTIF",
       "createdAt": "2026-09-28T09:32:23.284Z",
       "updatedAt": "2026-09-28T09:32:23.284Z"
+    },
+    {
+      "id": "27fc0b4d-f4ab-4f3f-af61-6e8bd60e4dd1",
+      "type": "Particulier",
+      "email": "rezobyron@mailinator.com",
+      "name": "Labore eos dolores q",
+      "telephone": "+1 (349) 176-5954",
+      "contactSecondaire": "Eveniet dolore vita",
+      "secteurActivite": "Tempore asperiores ",
+      "description": "Autem nisi et nulla ",
+      "status": "ACTIF",
+      "createdAt": "2026-10-05T14:14:03.567Z",
+      "updatedAt": "2026-10-05T14:14:03.567Z"
     }
   ],
   "clientEntreprises": [
@@ -400,6 +413,38 @@
       "noteRappel": "dsknbgn",
       "dateEntretien": null,
       "lienVisio": null
+    },
+    {
+      "id": "10acfcbd-5f63-4fe3-95d3-c6f6e13fb06b",
+      "formulaireId": "269d3739-bd3a-40c4-912b-cc72026bb463",
+      "type": "RECRUTEMENT",
+      "statusSubmitter": "PARTICULIER",
+      "nomPrenom": "wffr vwfw",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "6473648464",
+      "priority": "NORMAL",
+      "description": "rfqrf3",
+      "raisonSocial": null,
+      "objet": "Demande de collaboration",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de profil</strong> : <span>Particulier</span><br/>\n        \n        <strong>Nom complet</strong> : <span>vwfw wffr</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>6473648464</span><br/>\n        <strong>Expérience</strong> : <span>2 à 5 ans</span><br/>\n        <strong>Langues</strong> : <span>Anglais</span><br/>\n        <strong>Localisation</strong> : <span>efrf</span><br/>\n        <strong>Disponibilité</strong> : <span>Sous 1 mois</span><br/>\n        <strong>LinkedIn / Portfolio</strong> : <span></span>\n      </div>\n      <strong>Compétences clés</strong> : <div><ul><li>Back et middle office</li></ul></div><br/>\n      <strong>Message / Motivations</strong> : <div>\n      rfqrf3\n      </div>\n    ",
+      "status": "NOUVEAU",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-10-05T08:47:52.581Z",
+      "createdAt": "2026-10-05T08:47:52.581Z",
+      "updatedAt": "2026-10-05T08:47:52.581Z",
+      "dateRappel": null,
+      "noteRappel": null,
+      "dateEntretien": null,
+      "lienVisio": null
     }
   ],
   "formulaireRecrutements": [
@@ -420,6 +465,15 @@
       "lieuResidence": "Duis voluptate saepe",
       "langue": "Anglais, Coréen",
       "lienLinkedin": "https://www.tydygibov.ca"
+    },
+    {
+      "id": "68bbb0fa-b9d1-4ca3-b2c2-2e5399d7dcb6",
+      "formulaireId": "10acfcbd-5f63-4fe3-95d3-c6f6e13fb06b",
+      "competenceCle": "Back et middle office",
+      "anneeExperience": "2 à 5 ans",
+      "lieuResidence": "efrf",
+      "langue": "Anglais",
+      "lienLinkedin": null
     }
   ],
   "formulaireContacts": [
@@ -563,7 +617,28 @@
       "updatedAt": "2026-10-04T17:21:18.480Z"
     }
   ],
-  "documents": [],
+  "documents": [
+    {
+      "id": "db808dc7-e659-4802-9276-5ffb3a7d8c42",
+      "name": "crm.pdf",
+      "url": "ged/1791217694931-d193d89ccfe705c3-crm.pdf",
+      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "dossierId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
+      "missionId": null,
+      "createdAt": "2026-10-05T16:28:17.327Z",
+      "isDeleted": true
+    },
+    {
+      "id": "736de98b-61d8-4af0-9d0d-0df2662e21b2",
+      "name": "crm.pdf",
+      "url": "ged/1791218654618-bed0b2c276f03310-crm.pdf",
+      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "dossierId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
+      "missionId": null,
+      "createdAt": "2026-10-05T16:44:16.449Z",
+      "isDeleted": false
+    }
+  ],
   "auditLogs": [
     {
       "id": "96f04a25-f7d2-40a9-9445-746bcd3cf0c9",
@@ -1829,6 +1904,105 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-10-05T08:34:11.067Z"
+    },
+    {
+      "id": "b828286a-f495-465f-8a27-9e33899501f8",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-05T09:51:49.273Z"
+    },
+    {
+      "id": "d5d4ad59-7679-4112-b551-209760975c3a",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-05T11:53:53.733Z"
+    },
+    {
+      "id": "a796a8ed-bc8b-46aa-9efa-dc97f2a828e6",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_CLIENT",
+      "targetId": "27fc0b4d-f4ab-4f3f-af61-6e8bd60e4dd1",
+      "targetType": "CLIENT",
+      "details": "Client créé : Labore eos dolores q (Particulier)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-05T14:14:03.574Z"
+    },
+    {
+      "id": "ed5151e7-9b86-4470-9eb8-3ed0d4c16e9c",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_UTILISATEUR",
+      "targetId": "db7be20d-5eee-4acc-872b-f47bdac08ec3",
+      "targetType": "USER",
+      "details": "Utilisateur modifié : Responsable opérationnel 2",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-05T14:36:54.031Z"
+    },
+    {
+      "id": "4a905a78-71a3-4e52-832e-bf3707036fca",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "AJOUT_DOCUMENT",
+      "targetId": "db808dc7-e659-4802-9276-5ffb3a7d8c42",
+      "targetType": "DOCUMENT",
+      "details": "Document rattaché (atomique): crm.pdf",
+      "dossierId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
+      "formulaireId": null,
+      "createdAt": "2026-10-05T16:28:17.359Z"
+    },
+    {
+      "id": "2fa1f0b5-ed08-4801-9ab1-caface65d991",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "SUPPRESSION_DOCUMENT",
+      "targetId": "db808dc7-e659-4802-9276-5ffb3a7d8c42",
+      "targetType": "DOCUMENT",
+      "details": "Document supprimé (soft): crm.pdf",
+      "dossierId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
+      "formulaireId": null,
+      "createdAt": "2026-10-05T16:28:39.424Z"
+    },
+    {
+      "id": "d323185d-8786-41c2-83da-e559287d0e98",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_LIEN_MAGIQUE",
+      "targetId": "f80393d8-25aa-4fc4-9479-bf0d2186276d",
+      "targetType": "MAGIC_LINK",
+      "details": "Lien magique (LIVRAISON) généré pour le dossier",
+      "dossierId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
+      "formulaireId": null,
+      "createdAt": "2026-10-05T16:29:49.476Z"
+    },
+    {
+      "id": "754fb01a-935e-4b72-b99b-3a52f780f31e",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "AJOUT_DOCUMENT",
+      "targetId": "736de98b-61d8-4af0-9d0d-0df2662e21b2",
+      "targetType": "DOCUMENT",
+      "details": "Document rattaché (atomique): crm.pdf",
+      "dossierId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
+      "formulaireId": null,
+      "createdAt": "2026-10-05T16:44:16.460Z"
+    },
+    {
+      "id": "b4546338-ef65-4eab-966c-56f9b6cdb4ff",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "SUPPRESSION_DOCUMENT",
+      "targetId": "736de98b-61d8-4af0-9d0d-0df2662e21b2",
+      "targetType": "DOCUMENT",
+      "details": "Document supprimé (soft): crm.pdf",
+      "dossierId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
+      "formulaireId": null,
+      "createdAt": "2026-10-05T16:44:25.132Z"
     }
   ],
   "messagePersonnels": [
@@ -3437,14 +3611,14 @@
       "messageId": "<CALd=wZ6AG7JGVO9OVNcSZ7P3RytUaJQ2bqpDV2YhGfVXqVkJDg@mail.gmail.com>",
       "type": "PERSONNEL",
       "subType": "Indéfini",
-      "status": "EN_ATTENTE",
+      "status": "A_RAPPELER",
       "nomPrenom": "Mehdi Mejdi",
       "email": "mehdi.mejri.bis@gmail.com",
       "objet": "BIGTECH Africa 2026 ( Externalisation Comptable d Europe Francophone vers Tunisie )",
       "bodyText": " Bonjour,\n\nJ ai travaille depuis Mars 2024 à Dec 2025 comme Commercial sur Externalisation\nComptable de La France vers la Tunisie avec le partenaire Expert Comptable\ndu moment, Comptabilité Française et la je cherche un nouveau Partenaire\npour la campagne qui commence a partir de Septembre 2026, SI intéressé,\nappeler moi du Lun au Ven de 10h a 19h sur le 52 785 346 ou\nmehdi.mejri.bis@gmail.com\n\nCordialement\n\nMehdi MEJRI\n",
       "attachment": "formulaires/1790955660205-e7d9c74f150bf00e-MEJRI_MEHDI_Cv.pdf,formulaires/1790955662047-4a25b0eeac77c069-MEJRI_MEJRI_ENG_Cv.pdf",
-      "etiquette": null,
-      "priorite": "Normal",
+      "etiquette": "Contact",
+      "priorite": "Urgent",
       "isDeleted": false,
       "createdAt": "2026-09-30T21:05:32.000Z",
       "receivedAt": "2026-09-30T21:05:32.000Z",

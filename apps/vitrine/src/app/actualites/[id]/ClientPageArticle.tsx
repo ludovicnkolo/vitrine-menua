@@ -75,10 +75,27 @@ export default function ClientPageArticle({ id }: { id: string }) {
       const currentPath = window.location.pathname;
       const parts = currentPath.split('/');
       const currentSlug = parts[parts.length - 1];
+      
+      let newSearch = window.location.search;
+      let urlChanged = false;
+      
+      // Nettoyer le paramètre preview de l'URL pour la rendre propre
+      if (newSearch.includes('preview=true')) {
+        const searchParams = new URLSearchParams(newSearch);
+        searchParams.delete('preview');
+        newSearch = searchParams.toString();
+        newSearch = newSearch ? '?' + newSearch : '';
+        urlChanged = true;
+      }
+
       if (currentSlug && currentSlug !== expectedSlug) {
         parts[parts.length - 1] = expectedSlug;
+        urlChanged = true;
+      }
+      
+      if (urlChanged) {
         const newPath = parts.join('/');
-        window.history.replaceState(null, '', newPath + window.location.search);
+        window.history.replaceState(null, '', newPath + newSearch);
       }
     }
   }, [publication, displayTitle]);

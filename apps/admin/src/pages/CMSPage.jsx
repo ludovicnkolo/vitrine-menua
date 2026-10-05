@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Plus,
-  Edit,
-  Trash,
+  Search,
+  FileText,
+  Calendar,
+  Edit2,
+  Trash2,
   Eye,
-  Globe,
-  ArrowRight,
-  Image as ImageIcon,
-  ChevronUp,
+  Check,
   ChevronDown,
+  ChevronUp,
   X,
-  Settings,
+  ArrowRight,
+  Shield,
+  Globe,
+  Image as ImageIcon,
 } from "lucide-react";
-import { getSafeApiUrl, apiFetch, formatDate } from "../utils/helpers";
+import { getSafeApiUrl, apiFetch } from "../utils/helpers";
 import ConfirmModal from "../components/ConfirmModal";
 import TabsNavigation from "../components/TabsNavigation";
 
@@ -26,6 +30,15 @@ const EMPTY_SECTION = () => ({
   uploading: false,
 });
 
+const CATEGORIES = [
+  "FINANCE ET COMPTABILITÉ",
+  "BACK ET MIDDLE OFFICE",
+  "DATA ET REPORTING",
+  "RISQUES, CONFORMITÉ ET KYC",
+  "GESTION DE PATRIMOINE",
+  "ORGANISATION ET EXTERNALISATION",
+];
+
 const CATEGORY_TRANSLATIONS = {
   "FINANCE ET COMPTABILITÉ": "FINANCE AND ACCOUNTING",
   "BACK ET MIDDLE OFFICE": "BACK AND MIDDLE OFFICE",
@@ -37,7 +50,6 @@ const CATEGORY_TRANSLATIONS = {
 
 const CMSPage = () => {
   const [publications, setPublications] = useState([]);
-  // ── Zero-Trust UI: Détection du rôle depuis sessionStorage ──────────────
   const _adminUser = (() => {
     try {
       return JSON.parse(sessionStorage.getItem("adminUser") || "{}");
@@ -47,9 +59,11 @@ const CMSPage = () => {
   })();
   const _role = _adminUser?.role || "";
   const isSuperAdmin = _role === "Super-administrateur" || _role === "ADMIN";
+
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingPub, setEditingPub] = useState(null);
+
   const storageKey = `active_tab_${window.location.pathname}`;
   const [tab, setTab] = useState(() => {
     const saved = sessionStorage.getItem(storageKey);
@@ -61,20 +75,25 @@ const CMSPage = () => {
     sessionStorage.setItem(storageKey, newTab);
   };
 
+  // Search & Filters on publications
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+
   // Form states
-  const [formLang, setFormLang] = useState("FR");
   const [previewLang, setPreviewLang] = useState("FR");
   const [title, setTitle] = useState("");
   const [title_en, setTitleEn] = useState("");
   const [contentHtml, setContentHtml] = useState("");
   const [contentHtml_en, setContentHtmlEn] = useState("");
   const [coverImage, setCoverImage] = useState("");
-  const [status, setStatus] = useState("BROUILLON");
-  const [category, setCategory] = useState("");
-  const [category_en, setCategoryEn] = useState("");
+  const [status, setStatus] = useState("PUBLIE");
+  const [category, setCategory] = useState("ORGANISATION ET EXTERNALISATION");
+  const [category_en, setCategoryEn] = useState("ORGANIZATION AND OUTSOURCING");
   const [sections, setSections] = useState([]);
   const [uploadingImg, setUploadingImg] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
+
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
     title: "",
@@ -82,6 +101,7 @@ const CMSPage = () => {
     onConfirm: null,
     type: "warning",
   });
+
   const [saveOptionsModal, setSaveOptionsModal] = useState({
     isOpen: false,
     isPreview: false,
@@ -95,7 +115,6 @@ const CMSPage = () => {
     blacklistedDomains: [],
   });
   const [newBlacklistEmail, setNewBlacklistEmail] = useState("");
-  const [newBlacklistDomain, setNewBlacklistDomain] = useState("");
   const [loadingSettings, setLoadingSettings] = useState(false);
 
   const [toast, setToast] = useState({
@@ -103,12 +122,13 @@ const CMSPage = () => {
     message: "",
     type: "success",
   });
+
   const showToast = (message, type = "success") => {
     setToast({ show: true, message, type });
     if (type === "success") {
       setTimeout(
         () => setToast({ show: false, message: "", type: "success" }),
-        18000,
+        5000,
       );
     }
   };
@@ -167,31 +187,33 @@ const CMSPage = () => {
   }, [tab]);
 
   const openModal = (pub = null) => {
-    setFormLang("FR");
     if (pub) {
       setEditingPub(pub);
-      setTitle(pub.title);
+      setTitle(pub.title || "");
       setTitleEn(pub.title_en || "");
       setContentHtml(pub.contentHtml || "");
       setContentHtmlEn(pub.contentHtml_en || "");
       setCoverImage(pub.coverImage || "");
-      setStatus(pub.status || "BROUILLON");
-      setCategory(pub.category || "");
+      setStatus(pub.status || "PUBLIE");
+      const cat = pub.category || "ORGANISATION ET EXTERNALISATION";
+      setCategory(cat);
       setCategoryEn(
-        pub.category_en ||
-          (pub.category ? CATEGORY_TRANSLATIONS[pub.category] : ""),
+        pub.category_en || CATEGORY_TRANSLATIONS[cat] || "ORGANIZATION AND OUTSOURCING",
       );
-      const vitrineUrl = window.location.hostname === "localhost" ? "http://localhost:3000" : "https://menuaconsulting.com";
+
+      const vitrineUrl =
+        window.location.hostname === "localhost"
+          ? "http://localhost:3000"
+          : "https://menuaconsulting.com";
       const formatImageUrl = (url) => {
         if (!url) return "";
         if (url.startsWith("/uploads")) return `${vitrineUrl}${url}`;
         return url;
       };
 
-      setCoverImage(pub.coverImage || "");
       setPreviewImage(formatImageUrl(pub.coverImageUrl || pub.coverImage));
-      
-      // Parse sections from JSON string if stored as string
+
+      // Parse sections
       let parsedSections = [];
       if (pub.sections) {
         try {
@@ -228,9 +250,9 @@ const CMSPage = () => {
       setContentHtmlEn("");
       setCoverImage("");
       setPreviewImage("");
-      setStatus("BROUILLON");
-      setCategory("FINANCE ET COMPTABILITÉ");
-      setCategoryEn("FINANCE AND ACCOUNTING");
+      setStatus("PUBLIE");
+      setCategory("ORGANISATION ET EXTERNALISATION");
+      setCategoryEn("ORGANIZATION AND OUTSOURCING");
       setSections([]);
     }
     setShowModal(true);
@@ -241,7 +263,7 @@ const CMSPage = () => {
     setEditingPub(null);
   };
 
-  const handleSaveAction = async (targetStatus, showPreview = false) => {
+  const handleSaveAction = async (targetStatus = "PUBLIE", showPreview = false) => {
     if (!title) {
       showToast("Le titre (FR) est requis", "error");
       return;
@@ -285,17 +307,16 @@ const CMSPage = () => {
         const savedData = await res.json();
         const savedPub = savedData.data;
         if (showPreview && previewWindow) {
-          // Si on est en dev (localhost:3001), le site vitrine est sur 3000
           const vitrineUrl =
             window.location.hostname === "localhost"
               ? "http://localhost:3000"
               : "https://menuaconsulting.com";
           previewWindow.location.href = `${vitrineUrl}/actualites/${savedPub.id}?preview=true`;
-          setEditingPub(savedPub); // Met à jour l'état local pour continuer l'édition
-          showToast("Brouillon enregistré. Ouverture de l'aperçu...");
+          setEditingPub(savedPub);
+          showToast("Aperçu ouvert dans un nouvel onglet.");
         } else {
           showToast(
-            `Publication ${targetStatus === "PUBLIE" ? "publiée" : "sauvegardée en brouillon"} avec succès.`,
+            `Publication ${targetStatus === "PUBLIE" ? "publiée" : "sauvegardée"} avec succès.`,
           );
           closeModal();
         }
@@ -361,15 +382,12 @@ const CMSPage = () => {
     } catch (err) {
       console.error(err);
       showToast("Erreur réseau.", "error");
-      setPreviewImage(
-        coverImage ? (coverImage.startsWith("http") ? coverImage : "") : "",
-      );
     } finally {
       setUploadingImg(false);
     }
   };
 
-  // ── Sections helpers ──────────────────────────────────────────────────────────
+  // Sections helpers
   const addSection = () => setSections((prev) => [...prev, EMPTY_SECTION()]);
 
   const removeSection = (idx) =>
@@ -428,10 +446,79 @@ const CMSPage = () => {
     updateSection(idx, "imagePreview", "");
   };
 
-  const filteredPubs = publications.filter((p) => p.type === "ACTUALITE");
+  // Rich text formatting toolbar helper
+  const insertFormatting = (tag, isEn = false) => {
+    let openTag = `<${tag}>`;
+    let closeTag = `</${tag}>`;
+    let sample = "texte";
+
+    if (tag === "link") {
+      openTag = '<a href="https://example.com" target="_blank">';
+      closeTag = "</a>";
+      sample = "lien";
+    } else if (tag === "ul") {
+      openTag = "<ul>\n  <li>";
+      closeTag = "</li>\n</ul>";
+      sample = "élément";
+    } else if (tag === "ol") {
+      openTag = "<ol>\n  <li>";
+      closeTag = "</li>\n</ol>";
+      sample = "élément";
+    } else if (tag === "html") {
+      openTag = '<div style="margin: 1rem 0;">\n  ';
+      closeTag = "\n</div>";
+      sample = "contenu personnalisé";
+    }
+
+    if (isEn) {
+      setContentHtmlEn((prev) =>
+        prev ? `${prev}\n${openTag}${sample}${closeTag}` : `${openTag}${sample}${closeTag}`,
+      );
+    } else {
+      setContentHtml((prev) =>
+        prev ? `${prev}\n${openTag}${sample}${closeTag}` : `${openTag}${sample}${closeTag}`,
+      );
+    }
+  };
+
+  // Filtered actualités
+  const filteredPubs = useMemo(() => {
+    return publications.filter((p) => {
+      if (p.type !== "ACTUALITE") return false;
+
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !q ||
+        (p.title || "").toLowerCase().includes(q) ||
+        (p.title_en || "").toLowerCase().includes(q) ||
+        (p.author?.name || "").toLowerCase().includes(q) ||
+        (p.category || "").toLowerCase().includes(q);
+
+      const matchesStatus =
+        statusFilter === "all" || p.status === statusFilter;
+
+      const matchesCategory =
+        categoryFilter === "all" || p.category === categoryFilter;
+
+      return matchesSearch && matchesStatus && matchesCategory;
+    });
+  }, [publications, searchQuery, statusFilter, categoryFilter]);
+
+  const onlineCount = useMemo(() => {
+    return publications.filter((p) => p.type === "ACTUALITE" && p.status === "PUBLIE").length;
+  }, [publications]);
+
+  const formattedCurrentDate = useMemo(() => {
+    return new Date().toLocaleDateString("fr-FR", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).toUpperCase();
+  }, []);
 
   return (
-    <div style={{ padding: "0 1rem" }}>
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 1rem" }}>
+      {/* Toast Notification */}
       {toast.show && (
         <div
           style={{
@@ -440,7 +527,7 @@ const CMSPage = () => {
             right: "2rem",
             background: toast.type === "success" ? "#10B981" : "#EF4444",
             color: "#FFF",
-            padding: "1rem 1.5rem",
+            padding: "0.85rem 1.25rem",
             borderRadius: "8px",
             boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
             zIndex: 9999,
@@ -448,240 +535,593 @@ const CMSPage = () => {
             display: "flex",
             alignItems: "center",
             gap: "0.75rem",
-            maxWidth: "420px",
           }}
         >
-          <span style={{ flex: 1, fontSize: "0.9rem" }}>{toast.message}</span>
+          <span style={{ fontSize: "0.88rem" }}>{toast.message}</span>
           <button
             type="button"
-            onClick={() =>
-              setToast({ show: false, message: "", type: "success" })
-            }
+            onClick={() => setToast({ show: false, message: "", type: "success" })}
             style={{
               background: "transparent",
               border: "none",
               cursor: "pointer",
               color: "#FFF",
               fontWeight: "bold",
-              fontSize: "1.1rem",
+              fontSize: "1rem",
               padding: "0 4px",
             }}
-            title="Fermer"
           >
             ✕
           </button>
         </div>
       )}
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          marginBottom: "1.5rem",
-        }}
-      >
-        <TabsNavigation
-          tabs={[
-            { id: "publication", label: "Publication" },
-            { id: "parametrage", label: "Paramétrage du site" },
-          ]}
-          activeTab={tab}
-          onTabChange={handleTabChange}
-        />
-      </div>
+      {/* Top Tabs */}
+      <TabsNavigation
+        tabs={[
+          { id: "publication", label: "Publication" },
+          { id: "parametrage", label: "Paramétrage Du Site" },
+        ]}
+        activeTab={tab}
+        onTabChange={handleTabChange}
+      />
 
+      {/* ───────────────────────────────────────────────────────────── */}
+      {/* TAB 1: PUBLICATION (IMAGE 3)                                  */}
+      {/* ───────────────────────────────────────────────────────────── */}
       {tab === "publication" && (
         <>
+          {/* Header */}
           <div
             style={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              marginBottom: "2rem",
+              marginBottom: "1.5rem",
+              flexWrap: "wrap",
+              gap: "1rem",
             }}
           >
-            <h1
-              style={{
-                margin: 0,
-                fontSize: "1.5rem",
-                color: "var(--text-main)",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.75rem",
-              }}
-            >
-              <Globe size={28} style={{ color: "var(--primary)" }} />
-              Espace site web
-            </h1>
+            <div>
+              <h1
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: 700,
+                  color: "#0F172A",
+                  margin: "0 0 0.25rem 0",
+                }}
+              >
+                Espace Site Web — Gestion des Publications
+              </h1>
+              <p style={{ color: "#64748B", margin: 0, fontSize: "0.85rem" }}>
+                Pilotez les actualités, articles et contenus diffusés publiquement sur le site officiel
+              </p>
+            </div>
             {isSuperAdmin && (
               <button
+                type="button"
                 onClick={() => openModal()}
-                className="btn btn-primary"
-                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+                style={{
+                  background: "#0F172A",
+                  color: "#FFF",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "0.65rem 1.25rem",
+                  fontWeight: 600,
+                  fontSize: "0.88rem",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  cursor: "pointer",
+                  transition: "background 0.2s",
+                }}
               >
-                <Plus size={18} /> Nouvelle Actualité
+                + Nouvelle Actualité
               </button>
             )}
           </div>
 
-          <div className="table-wrapper" style={{ marginTop: "1.5rem" }}>
-            <table>
-              <thead>
-                <tr>
-                  <th style={{ width: "40%" }}>Titre</th>
-                  <th style={{ width: "15%" }}>Auteur</th>
-                  <th style={{ width: "15%" }}>Statut</th>
-                  <th style={{ width: "15%" }}>Date</th>
-                  <th style={{ width: "15%", textAlign: "center" }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td
-                      colSpan="5"
-                      style={{ textAlign: "center", padding: "2rem" }}
-                    >
-                      Chargement...
-                    </td>
-                  </tr>
-                ) : filteredPubs.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan="5"
+          {/* Filter Bar */}
+          <div
+            style={{
+              background: "#FFF",
+              border: "1px solid #E2E8F0",
+              borderRadius: "12px",
+              padding: "0.85rem 1.25rem",
+              marginBottom: "1.5rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ position: "relative", flex: "1 1 260px" }}>
+              <Search
+                size={16}
+                style={{
+                  position: "absolute",
+                  left: "0.85rem",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "#94A3B8",
+                }}
+              />
+              <input
+                type="text"
+                placeholder="Rechercher par titre, auteur, mot-clé..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "0.6rem 1rem 0.6rem 2.4rem",
+                  borderRadius: "8px",
+                  border: "1px solid #E2E8F0",
+                  fontSize: "0.85rem",
+                  outline: "none",
+                  color: "#0F172A",
+                }}
+              />
+            </div>
+
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              style={{
+                padding: "0.6rem 2rem 0.6rem 0.85rem",
+                borderRadius: "8px",
+                border: "1.5px solid #3B82F6",
+                background: "#FFF",
+                fontSize: "0.85rem",
+                color: "#0F172A",
+                cursor: "pointer",
+                outline: "none",
+              }}
+            >
+              <option value="all">Tous les statuts</option>
+              <option value="PUBLIE">PUBLIÉ</option>
+              <option value="BROUILLON">BROUILLON</option>
+            </select>
+
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              style={{
+                padding: "0.6rem 2rem 0.6rem 0.85rem",
+                borderRadius: "8px",
+                border: "1.5px solid #3B82F6",
+                background: "#FFF",
+                fontSize: "0.85rem",
+                color: "#0F172A",
+                cursor: "pointer",
+                outline: "none",
+              }}
+            >
+              <option value="all">Toutes les catégories</option>
+              {CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+
+            {/* Green count badge */}
+            <div
+              style={{
+                background: "#ECFDF5",
+                color: "#059669",
+                border: "1px solid #A7F3D0",
+                padding: "0.45rem 1rem",
+                borderRadius: "8px",
+                fontWeight: 600,
+                fontSize: "0.82rem",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                whiteSpace: "nowrap",
+                marginLeft: "auto",
+              }}
+            >
+              <span style={{ fontSize: "0.7rem" }}>🟢</span>
+              {onlineCount} Actualité{onlineCount > 1 ? "s" : ""} en ligne
+            </div>
+          </div>
+
+          {/* Table */}
+          <div
+            style={{
+              background: "#FFF",
+              border: "1px solid #E2E8F0",
+              borderRadius: "12px",
+              overflow: "hidden",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+            }}
+          >
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <thead>
+                  <tr style={{ borderBottom: "1px solid #E2E8F0" }}>
+                    <th
                       style={{
-                        textAlign: "center",
-                        padding: "2rem",
-                        color: "var(--text-muted)",
+                        padding: "0.85rem 1.25rem",
+                        textAlign: "left",
+                        fontSize: "0.72rem",
+                        fontWeight: 700,
+                        color: "#64748B",
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase",
+                        width: "36%",
                       }}
                     >
-                      Aucune publication trouvée.
-                    </td>
+                      Titre de l'actualité
+                    </th>
+                    <th
+                      style={{
+                        padding: "0.85rem 1.25rem",
+                        textAlign: "left",
+                        fontSize: "0.72rem",
+                        fontWeight: 700,
+                        color: "#64748B",
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase",
+                        width: "20%",
+                      }}
+                    >
+                      Auteur
+                    </th>
+                    <th
+                      style={{
+                        padding: "0.85rem 1.25rem",
+                        textAlign: "left",
+                        fontSize: "0.72rem",
+                        fontWeight: 700,
+                        color: "#64748B",
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase",
+                        width: "15%",
+                      }}
+                    >
+                      Statut
+                    </th>
+                    <th
+                      style={{
+                        padding: "0.85rem 1.25rem",
+                        textAlign: "left",
+                        fontSize: "0.72rem",
+                        fontWeight: 700,
+                        color: "#64748B",
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase",
+                        width: "17%",
+                      }}
+                    >
+                      Date de publication
+                    </th>
+                    <th
+                      style={{
+                        padding: "0.85rem 1.25rem",
+                        textAlign: "right",
+                        fontSize: "0.72rem",
+                        fontWeight: 700,
+                        color: "#64748B",
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase",
+                        width: "12%",
+                      }}
+                    >
+                      Actions
+                    </th>
                   </tr>
-                ) : (
-                  filteredPubs.map((pub) => (
-                    <tr key={pub.id}>
-                      <td>
-                        <span>{pub.title}</span>
-                      </td>
-                      <td>{pub.author?.name || "Inconnu"}</td>
-                      <td>
-                        <span
-                          style={{
-                            color: pub.status === "PUBLIE" ? "var(--success)" : "var(--text-muted)",
-                          }}
-                        >
-                          {pub.status === "PUBLIE" ? "PUBLIÉ" : "BROUILLON"}
-                        </span>
-                      </td>
-                      <td>{formatDate(pub.createdAt)}</td>
-                      <td>
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "0.4rem",
-                            alignItems: "center",
-                          }}
-                        >
-                          {isSuperAdmin && (
-                            <>
-                              <button
-                                onClick={() => openModal(pub)}
-                                style={{
-                                  background: "none",
-                                  border: "none",
-                                  cursor: "pointer",
-                                  color: "var(--primary)",
-                                  padding: "0.35rem",
-                                }}
-                                title="Modifier"
-                              >
-                                <Edit size={16} />
-                              </button>
-                              <button
-                                onClick={() => handleDelete(pub.id)}
-                                style={{
-                                  background: "none",
-                                  border: "none",
-                                  cursor: "pointer",
-                                  color: "var(--danger)",
-                                  padding: "0.35rem",
-                                }}
-                                title="Supprimer"
-                              >
-                                <Trash size={16} />
-                              </button>
-                            </>
-                          )}
-                        </div>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td
+                        colSpan="5"
+                        style={{
+                          textAlign: "center",
+                          padding: "3rem",
+                          color: "#64748B",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        Chargement des actualités...
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ) : filteredPubs.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan="5"
+                        style={{
+                          textAlign: "center",
+                          padding: "3rem",
+                          color: "#64748B",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        Aucune actualité trouvée.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredPubs.map((pub) => {
+                      const d = new Date(pub.publishedAt || pub.createdAt || Date.now());
+                      const dateStr = d.toLocaleDateString("fr-FR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      });
+                      const timeStr = d.toLocaleTimeString("fr-FR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      });
+
+                      const authorName = pub.author?.name || "Rosette Fouelefack";
+                      const authorInitial = authorName.charAt(0).toUpperCase();
+
+                      return (
+                        <tr
+                          key={pub.id}
+                          style={{
+                            borderBottom: "1px solid #F1F5F9",
+                            transition: "background 0.15s",
+                          }}
+                        >
+                          {/* Titre */}
+                          <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
+                              <div
+                                style={{
+                                  width: "36px",
+                                  height: "36px",
+                                  borderRadius: "8px",
+                                  background: "#EFF6FF",
+                                  border: "1px solid #BFDBFE",
+                                  color: "#2563EB",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  flexShrink: 0,
+                                }}
+                              >
+                                <FileText size={18} />
+                              </div>
+                              <div>
+                                <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "#0F172A" }}>
+                                  {pub.title}
+                                </div>
+                                <div style={{ fontSize: "0.75rem", color: "#64748B", marginTop: "2px" }}>
+                                  Catégorie : {pub.category || "Organisation et Externalisation"} • Langues : FR | EN
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Auteur */}
+                          <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                              <div
+                                style={{
+                                  width: "28px",
+                                  height: "28px",
+                                  borderRadius: "50%",
+                                  background: "#F1F5F9",
+                                  color: "#334155",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  fontWeight: 700,
+                                  fontSize: "0.78rem",
+                                  flexShrink: 0,
+                                }}
+                              >
+                                {authorInitial}
+                              </div>
+                              <span style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A" }}>
+                                {authorName}
+                              </span>
+                            </div>
+                          </td>
+
+                          {/* Statut */}
+                          <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
+                            <span
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "0.35rem",
+                                padding: "0.3rem 0.75rem",
+                                borderRadius: "20px",
+                                fontSize: "0.75rem",
+                                fontWeight: 700,
+                                background: pub.status === "PUBLIE" ? "#ECFDF5" : "#FEF3C7",
+                                color: pub.status === "PUBLIE" ? "#059669" : "#D97706",
+                                border: pub.status === "PUBLIE" ? "1px solid #A7F3D0" : "1px solid #FDE68A",
+                              }}
+                            >
+                              <span style={{ fontSize: "0.65rem" }}>●</span>
+                              {pub.status === "PUBLIE" ? "PUBLIÉ" : "BROUILLON"}
+                            </span>
+                          </td>
+
+                          {/* Date de publication */}
+                          <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#0F172A", fontSize: "0.85rem" }}>
+                              <Calendar size={15} style={{ color: "#94A3B8" }} />
+                              <span>{dateStr} {timeStr}</span>
+                            </div>
+                          </td>
+
+                          {/* Actions */}
+                          <td style={{ padding: "0.85rem 1.25rem", textAlign: "right", verticalAlign: "middle" }}>
+                            <div style={{ display: "inline-flex", gap: "0.4rem" }}>
+                              {/* Edit */}
+                              <button
+                                type="button"
+                                onClick={() => openModal(pub)}
+                                title="Modifier"
+                                style={{
+                                  width: "32px",
+                                  height: "32px",
+                                  borderRadius: "6px",
+                                  background: "#EFF6FF",
+                                  border: "1px solid #BFDBFE",
+                                  color: "#2563EB",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                <Edit2 size={14} />
+                              </button>
+                              {/* Delete */}
+                              {isSuperAdmin && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleDelete(pub.id)}
+                                  title="Supprimer"
+                                  style={{
+                                    width: "32px",
+                                    height: "32px",
+                                    borderRadius: "6px",
+                                    background: "#FEF2F2",
+                                    border: "1px solid #FECACA",
+                                    color: "#DC2626",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              )}
+                              {/* View */}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const vitrineUrl =
+                                    window.location.hostname === "localhost"
+                                      ? "http://localhost:3000"
+                                      : "https://menuaconsulting.com";
+                                  window.open(`${vitrineUrl}/actualites/${pub.id}?preview=true`, "_blank");
+                                }}
+                                title="Voir"
+                                style={{
+                                  width: "32px",
+                                  height: "32px",
+                                  borderRadius: "6px",
+                                  background: "#F1F5F9",
+                                  border: "1px solid #E2E8F0",
+                                  color: "#64748B",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                <Eye size={14} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Footer message */}
+            <div
+              style={{
+                padding: "1.25rem",
+                textAlign: "center",
+                color: "#94A3B8",
+                fontSize: "0.82rem",
+              }}
+            >
+              Fin des articles publiés sur le portail.
+            </div>
+
+            <div
+              style={{
+                padding: "0.75rem 1.25rem",
+                borderTop: "1px solid #F1F5F9",
+                background: "#FFF",
+                fontSize: "0.78rem",
+                color: "#94A3B8",
+              }}
+            >
+              Affichage de {filteredPubs.length} actualité{filteredPubs.length !== 1 ? "s" : ""}
+            </div>
           </div>
         </>
       )}
 
+      {/* ───────────────────────────────────────────────────────────── */}
+      {/* TAB 2: PARAMÉTRAGE DU SITE (IMAGE 4)                          */}
+      {/* ───────────────────────────────────────────────────────────── */}
       {tab === "parametrage" && (
-        <div
-          style={{
-            background: "#FFF",
-            borderRadius: "12px",
-            padding: "2rem",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "1.25rem",
-              color: "var(--text-main)",
-              marginBottom: "1.5rem",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-            }}
-          >
-            <Settings size={20} className="text-primary" />
-            Paramètres des formulaires
-          </h2>
+        <div style={{ maxWidth: "1280px" }}>
+          {/* Header */}
+          <div style={{ marginBottom: "1.5rem" }}>
+            <h1
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: 700,
+                color: "#0F172A",
+                margin: "0 0 0.25rem 0",
+              }}
+            >
+              Paramètres des formulaires du site
+            </h1>
+            <p style={{ fontSize: "0.82rem", color: "#64748B", margin: 0 }}>
+              Contrôlez l'ouverture des formulaires en ligne et la sécurité anti-spam
+            </p>
+          </div>
 
           {loadingSettings ? (
-            <div style={{ padding: "2rem", textAlign: "center" }}>
+            <div style={{ padding: "3rem", textAlign: "center", color: "#64748B" }}>
               Chargement des paramètres...
             </div>
           ) : (
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "2rem" }}
-            >
-              {/* Statut global des formulaires */}
+            <div>
+              {/* Form toggles */}
               <div
                 style={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr",
                   gap: "1.5rem",
+                  marginBottom: "1.5rem",
                 }}
               >
-                <div className="card" style={{ padding: "1.25rem" }}>
-                  <h3
-                    style={{
-                      fontSize: "1rem",
-                      marginBottom: "1rem",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <Settings size={16} /> Formulaire de Contact
+                {/* Contact Card */}
+                <div
+                  style={{
+                    background: "#FFF",
+                    border: "1px solid #E2E8F0",
+                    borderTop: "4px solid #2563EB",
+                    borderRadius: "12px",
+                    padding: "1.25rem",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+                  }}
+                >
+                  <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    Formulaire de Contact Public
                   </h3>
+                  <p style={{ margin: "0 0 1rem 0", fontSize: "0.78rem", color: "#64748B" }}>
+                    Permet aux visiteurs d'envoyer des demandes de devis et d'informations
+                  </p>
+
                   <label
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: "0.5rem",
+                      gap: "0.75rem",
+                      padding: "0.85rem 1.25rem",
+                      background: "#F0FDF4",
+                      border: "1px solid #86EFAC",
+                      borderRadius: "8px",
                       cursor: "pointer",
                     }}
                   >
@@ -689,41 +1129,50 @@ const CMSPage = () => {
                       type="checkbox"
                       checked={formSettings.contactFormEnabled}
                       onChange={(e) =>
-                        setFormSettings({
-                          ...formSettings,
-                          contactFormEnabled: e.target.checked,
-                        })
+                        setFormSettings({ ...formSettings, contactFormEnabled: e.target.checked })
                       }
-                      style={{
-                        width: "1.25rem",
-                        height: "1.25rem",
-                        cursor: "pointer",
-                      }}
+                      style={{ width: "18px", height: "18px", cursor: "pointer", accentColor: "#2563EB" }}
                     />
-                    <span style={{ fontWeight: 500 }}>
-                      {formSettings.contactFormEnabled
-                        ? "Activé (Accepte les soumissions)"
-                        : "Désactivé (Bloque les soumissions)"}
-                    </span>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#15803D" }}>
+                        {formSettings.contactFormEnabled
+                          ? "Activé (Accepte les soumissions)"
+                          : "Désactivé (Bloque les soumissions)"}
+                      </div>
+                      <div style={{ fontSize: "0.75rem", color: "#16A34A", marginTop: "2px" }}>
+                        Le formulaire est actuellement ouvert et opérationnel sur le site
+                      </div>
+                    </div>
                   </label>
                 </div>
-                <div className="card" style={{ padding: "1.25rem" }}>
-                  <h3
-                    style={{
-                      fontSize: "1rem",
-                      marginBottom: "1rem",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <Settings size={16} /> Formulaire Recrutement
+
+                {/* Recrutement Card */}
+                <div
+                  style={{
+                    background: "#FFF",
+                    border: "1px solid #E2E8F0",
+                    borderTop: "4px solid #9333EA",
+                    borderRadius: "12px",
+                    padding: "1.25rem",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+                  }}
+                >
+                  <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    Formulaire Recrutement (Carrières)
                   </h3>
+                  <p style={{ margin: "0 0 1rem 0", fontSize: "0.78rem", color: "#64748B" }}>
+                    Permet aux candidats de déposer leur CV et lettre de motivation
+                  </p>
+
                   <label
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: "0.5rem",
+                      gap: "0.75rem",
+                      padding: "0.85rem 1.25rem",
+                      background: "#F0FDF4",
+                      border: "1px solid #86EFAC",
+                      borderRadius: "8px",
                       cursor: "pointer",
                     }}
                   >
@@ -731,159 +1180,184 @@ const CMSPage = () => {
                       type="checkbox"
                       checked={formSettings.recrutementFormEnabled}
                       onChange={(e) =>
-                        setFormSettings({
-                          ...formSettings,
-                          recrutementFormEnabled: e.target.checked,
-                        })
+                        setFormSettings({ ...formSettings, recrutementFormEnabled: e.target.checked })
                       }
-                      style={{
-                        width: "1.25rem",
-                        height: "1.25rem",
-                        cursor: "pointer",
-                      }}
+                      style={{ width: "18px", height: "18px", cursor: "pointer", accentColor: "#2563EB" }}
                     />
-                    <span style={{ fontWeight: 500 }}>
-                      {formSettings.recrutementFormEnabled
-                        ? "Activé (Accepte les candidatures)"
-                        : "Désactivé (Bloque les candidatures)"}
-                    </span>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#15803D" }}>
+                        {formSettings.recrutementFormEnabled
+                          ? "Activé (Accepte les candidatures)"
+                          : "Désactivé (Bloque les candidatures)"}
+                      </div>
+                      <div style={{ fontSize: "0.75rem", color: "#16A34A", marginTop: "2px" }}>
+                        Les soumissions de CV sont transmises au vivier de talents
+                      </div>
+                    </div>
                   </label>
                 </div>
               </div>
 
-              {/* Blacklists */}
+              {/* Anti-Spam Section */}
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "1.5rem",
+                  background: "#FFF",
+                  border: "1px solid #E2E8F0",
+                  borderRadius: "12px",
+                  padding: "1.5rem",
+                  marginBottom: "1.5rem",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
                 }}
               >
-                {/* Emails bloqués */}
-                <div className="card" style={{ padding: "1.25rem" }}>
-                  <h3 style={{ fontSize: "1rem", marginBottom: "1rem" }}>
-                    Adresses Email bloquées
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.4rem" }}>
+                  <span style={{ fontSize: "1rem" }}>🛑</span>
+                  <h3 style={{ margin: 0, fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    Adresses Email bloquées (Protection Anti-Spam)
                   </h3>
-                  <div
+                </div>
+                <p style={{ margin: "0 0 1.25rem 0", fontSize: "0.8rem", color: "#64748B" }}>
+                  Les adresses répertoriées ici ne peuvent pas soumettre de formulaires de contact ou de candidatures
+                </p>
+
+                <div style={{ height: "1px", background: "#F1F5F9", marginBottom: "1.25rem" }} />
+
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "0.8rem",
+                    fontWeight: 600,
+                    color: "#374151",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  Ajouter une nouvelle adresse indésirable :
+                </label>
+                <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.25rem" }}>
+                  <input
+                    type="email"
+                    placeholder="spam@example.com"
+                    value={newBlacklistEmail}
+                    onChange={(e) => setNewBlacklistEmail(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && newBlacklistEmail) {
+                        e.preventDefault();
+                        setFormSettings({
+                          ...formSettings,
+                          blacklistedEmails: [...(formSettings.blacklistedEmails || []), newBlacklistEmail],
+                        });
+                        setNewBlacklistEmail("");
+                      }
+                    }}
                     style={{
-                      display: "flex",
-                      gap: "0.5rem",
-                      marginBottom: "1rem",
+                      flex: 1,
+                      padding: "0.65rem 1rem",
+                      borderRadius: "8px",
+                      border: "1.5px solid #3B82F6",
+                      fontSize: "0.875rem",
+                      outline: "none",
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (newBlacklistEmail) {
+                        setFormSettings({
+                          ...formSettings,
+                          blacklistedEmails: [...(formSettings.blacklistedEmails || []), newBlacklistEmail],
+                        });
+                        setNewBlacklistEmail("");
+                      }
+                    }}
+                    style={{
+                      padding: "0.65rem 1.25rem",
+                      background: "#0F172A",
+                      color: "#FFF",
+                      border: "none",
+                      borderRadius: "8px",
+                      fontWeight: 600,
+                      fontSize: "0.875rem",
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
                     }}
                   >
-                    <input
-                      type="email"
-                      placeholder="spam@example.com"
-                      value={newBlacklistEmail}
-                      onChange={(e) => setNewBlacklistEmail(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && newBlacklistEmail) {
-                          setFormSettings({
-                            ...formSettings,
-                            blacklistedEmails: [
-                              ...formSettings.blacklistedEmails,
-                              newBlacklistEmail,
-                            ],
-                          });
-                          setNewBlacklistEmail("");
-                        }
-                      }}
+                    + Ajouter
+                  </button>
+                </div>
+
+                <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#374151", marginBottom: "0.5rem" }}>
+                  Adresses actuellement bloquées ({formSettings.blacklistedEmails?.length || 0} adresse{(formSettings.blacklistedEmails?.length || 0) !== 1 ? "s" : ""} active{(formSettings.blacklistedEmails?.length || 0) !== 1 ? "s" : ""}) :
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                  {(formSettings.blacklistedEmails?.length === 0 || !formSettings.blacklistedEmails) && (
+                    <span style={{ color: "#94A3B8", fontSize: "0.82rem" }}>Aucun email bloqué.</span>
+                  )}
+                  {formSettings.blacklistedEmails?.map((email) => (
+                    <div
+                      key={email}
                       style={{
-                        flex: 1,
-                        padding: "0.5rem",
-                        borderRadius: "4px",
-                        border: "1px solid var(--border)",
-                        outline: "none",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                        background: "#FEE2E2",
+                        color: "#DC2626",
+                        padding: "0.3rem 0.8rem",
+                        borderRadius: "20px",
+                        fontSize: "0.82rem",
+                        fontWeight: 500,
                       }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (newBlacklistEmail) {
+                    >
+                      {email}
+                      <button
+                        type="button"
+                        onClick={() =>
                           setFormSettings({
                             ...formSettings,
-                            blacklistedEmails: [
-                              ...formSettings.blacklistedEmails,
-                              newBlacklistEmail,
-                            ],
-                          });
-                          setNewBlacklistEmail("");
+                            blacklistedEmails: formSettings.blacklistedEmails.filter((e) => e !== email),
+                          })
                         }
-                      }}
-                      className="btn btn-primary"
-                    >
-                      Ajouter
-                    </button>
-                  </div>
-                  <div
-                    style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}
-                  >
-                    {formSettings.blacklistedEmails?.length === 0 && (
-                      <span
                         style={{
-                          color: "var(--text-muted)",
-                          
-                        }}
-                      >
-                        Aucun email bloqué.
-                      </span>
-                    )}
-                    {formSettings.blacklistedEmails?.map((email) => (
-                      <div
-                        key={email}
-                        style={{
-                          background: "#FEE2E2",
-                          color: "#991B1B",
-                          padding: "0.25rem 0.5rem",
-                          borderRadius: "4px",
+                          background: "none",
+                          border: "none",
+                          color: "#DC2626",
+                          cursor: "pointer",
+                          padding: 0,
+                          lineHeight: 1,
                           fontSize: "0.85rem",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.5rem",
                         }}
                       >
-                        {email}
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setFormSettings({
-                              ...formSettings,
-                              blacklistedEmails:
-                                formSettings.blacklistedEmails.filter(
-                                  (e) => e !== email,
-                                ),
-                            })
-                          }
-                          style={{
-                            background: "none",
-                            border: "none",
-                            color: "#991B1B",
-                            cursor: "pointer",
-                            padding: 0,
-                          }}
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+                        ✕
+                      </button>
+                    </div>
+                  ))}
                 </div>
               </div>
 
+              {/* Footer */}
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "flex-end",
-                  marginTop: "1rem",
-                  borderTop: "1px solid var(--border)",
-                  paddingTop: "1.5rem",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: "1rem",
                 }}
               >
+                <span style={{ fontSize: "0.82rem", color: "#64748B" }}>
+                  Toute modification des formulaires prend effet immédiatement sur le site public.
+                </span>
                 <button
                   type="button"
                   onClick={saveFormSettings}
-                  className="btn btn-primary"
-                  style={{ padding: "0.75rem 2rem", fontWeight: 600 }}
+                  style={{
+                    padding: "0.65rem 1.5rem",
+                    background: "#0F172A",
+                    color: "#FFF",
+                    border: "none",
+                    borderRadius: "8px",
+                    fontWeight: 600,
+                    fontSize: "0.88rem",
+                    cursor: "pointer",
+                  }}
                 >
                   Enregistrer les paramètres
                 </button>
@@ -893,6 +1367,9 @@ const CMSPage = () => {
         </div>
       )}
 
+      {/* ───────────────────────────────────────────────────────────── */}
+      {/* MODAL: MODIFIER / CRÉER PUBLICATION (IMAGE 5)                 */}
+      {/* ───────────────────────────────────────────────────────────── */}
       {showModal && (
         <div
           style={{
@@ -915,876 +1392,693 @@ const CMSPage = () => {
               background: "#FFF",
               borderRadius: "12px",
               width: "100%",
-              maxWidth: "1100px",
-              boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+              maxWidth: "1150px",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
               display: "flex",
-              minHeight: "600px",
+              flexDirection: "column",
+              overflow: "hidden",
             }}
           >
-            {/* ── FORMULAIRE ── */}
+            {/* Modal Header */}
             <div
               style={{
-                flex: 1,
-                padding: "2rem",
-                overflowY: "auto",
-                maxHeight: "90vh",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "1.25rem 2rem",
+                borderBottom: "1px solid #E2E8F0",
               }}
             >
-              <h2
+              <div style={{ display: "flex", alignItems: "baseline", gap: "0.75rem" }}>
+                <h2 style={{ margin: 0, fontSize: "1.2rem", fontWeight: 700, color: "#0F172A" }}>
+                  {editingPub ? "Modifier la publication" : "Créer une publication"}
+                </h2>
+                <span style={{ fontSize: "0.82rem", color: "#64748B" }}>
+                  Édition bilingue (FR/EN) avec aperçu en temps réel
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={closeModal}
                 style={{
-                  marginTop: 0,
-                  marginBottom: "1.5rem",
-                  color: "var(--text-main)",
-                  fontSize: "1.25rem",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "#94A3B8",
+                  fontSize: "1.2rem",
+                  padding: "0.2rem",
                 }}
               >
-                {editingPub
-                  ? "Modifier la publication"
-                  : "Créer une publication"}
-              </h2>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleSaveAction(status || "BROUILLON");
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Modal Body - 2 Columns */}
+            <div style={{ display: "flex", flex: 1, minHeight: "600px", overflow: "hidden" }}>
+              {/* Left Column (Form) */}
+              <div
+                style={{
+                  flex: 1,
+                  padding: "1.75rem 2rem",
+                  overflowY: "auto",
+                  maxHeight: "75vh",
                 }}
               >
-                {/* Titre */}
-                <div
-                  style={{ marginBottom: "1rem", display: "flex", gap: "1rem" }}
-                >
-                  <div style={{ flex: 1 }}>
-                    <label style={labelStyle}>Titre (FR) *</label>
-                    <input
-                      type="text"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      required
-                      style={inputStyle}
-                    />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <label style={labelStyle}>Titre (EN)</label>
-                    <input
-                      type="text"
-                      value={title_en}
-                      onChange={(e) => setTitleEn(e.target.value)}
-                      placeholder="Titre en anglais..."
-                      style={inputStyle}
-                    />
-                  </div>
-                </div>
-
-                {/* Image */}
-                <div style={{ marginBottom: "1rem" }}>
-                  <label style={labelStyle}>Image de couverture</label>
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                    }}
-                  >
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      id="cms-image-upload"
-                      style={{ display: "none" }}
-                    />
-                    <label
-                      htmlFor="cms-image-upload"
-                      className="btn btn-outline"
-                      style={{ cursor: "pointer", flexShrink: 0 }}
-                    >
-                      {uploadingImg ? "Upload en cours..." : "Parcourir..."}
-                    </label>
-                  </div>
-                  <span
-                    style={{
-                      fontSize: "0.75rem",
-                      color: "var(--text-muted)",
-                      display: "block",
-                      marginTop: "0.5rem",
-                    }}
-                  >
-                    Formats acceptés : JPG, PNG, WEBP.
-                  </span>
-                </div>
-
-                {/* Catégorie */}
-                <div
-                  style={{ marginBottom: "1rem", display: "flex", gap: "1rem" }}
-                >
-                  <div style={{ flex: 1 }}>
-                    <label style={labelStyle}>Catégorie (FR) *</label>
-                    <select
-                      value={category}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setCategory(val);
-                        setCategoryEn(CATEGORY_TRANSLATIONS[val] || "");
-                      }}
-                      required
-                      style={inputStyle}
-                    >
-                      <option value="">Sélectionner</option>
-                      <option value="FINANCE ET COMPTABILITÉ">
-                        FINANCE ET COMPTABILITÉ
-                      </option>
-                      <option value="BACK ET MIDDLE OFFICE">
-                        BACK ET MIDDLE OFFICE
-                      </option>
-                      <option value="DATA ET REPORTING">
-                        DATA ET REPORTING
-                      </option>
-                      <option value="RISQUES, CONFORMITÉ ET KYC">
-                        RISQUES, CONFORMITÉ ET KYC
-                      </option>
-                      <option value="GESTION DE PATRIMOINE">
-                        GESTION DE PATRIMOINE
-                      </option>
-                      <option value="ORGANISATION ET EXTERNALISATION">
-                        ORGANISATION ET EXTERNALISATION
-                      </option>
-                    </select>
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <label style={labelStyle}>
-                      Catégorie (EN) -{" "}
-                      <span
-                        style={{
-                          fontSize: "0.75rem",
-                          fontWeight: "normal",
-                          color: "var(--text-muted)",
-                        }}
-                      >
-                        Généré automatiquement
-                      </span>
-                    </label>
-                    <input
-                      type="text"
-                      value={category_en}
-                      readOnly
-                      disabled
-                      style={{
-                        ...inputStyle,
-                        backgroundColor: "#f8fafc",
-                        color: "#64748b",
-                        cursor: "not-allowed",
-                        borderColor: "#e2e8f0",
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Contenu principal */}
-                <div
-                  style={{
-                    marginBottom: "1.5rem",
-                    display: "flex",
-                    gap: "1rem",
-                    flexDirection: "column",
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSaveAction(status || "PUBLIE");
                   }}
                 >
-                  <div>
-                    <label style={labelStyle}>
-                      Contenu principal (FR) - Texte / HTML
-                    </label>
+                  {/* Titre FR & EN */}
+                  <div style={{ display: "flex", gap: "1rem", marginBottom: "1.25rem" }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={fieldLabelStyle}>Titre (FR) *</label>
+                      <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="Illum maxime Nam ad"
+                        required
+                        style={textInputStyle}
+                      />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <label style={fieldLabelStyle}>Titre (EN)</label>
+                      <input
+                        type="text"
+                        value={title_en}
+                        onChange={(e) => setTitleEn(e.target.value)}
+                        placeholder="Facere debitis qui a"
+                        style={textInputStyle}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Image de couverture */}
+                  <div style={{ marginBottom: "1.25rem" }}>
+                    <label style={fieldLabelStyle}>Image de couverture</label>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        id="cms-image-upload"
+                        style={{ display: "none" }}
+                      />
+                      <label
+                        htmlFor="cms-image-upload"
+                        style={{
+                          display: "inline-block",
+                          padding: "0.5rem 1rem",
+                          borderRadius: "8px",
+                          border: "1px solid #CBD5E1",
+                          background: "#FFF",
+                          fontSize: "0.85rem",
+                          fontWeight: 500,
+                          cursor: "pointer",
+                          color: "#334155",
+                        }}
+                      >
+                        {uploadingImg ? "Upload..." : "Parcourir..."}
+                      </label>
+                      <span style={{ fontSize: "0.78rem", color: "#64748B" }}>
+                        Formats acceptés : JPG, PNG, WEBP (Max 5 Mo)
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Catégories FR & EN */}
+                  <div style={{ display: "flex", gap: "1rem", marginBottom: "1.25rem" }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={fieldLabelStyle}>Catégorie (FR) * (Select interactif)</label>
+                      <select
+                        value={category}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setCategory(val);
+                          setCategoryEn(CATEGORY_TRANSLATIONS[val] || "");
+                        }}
+                        required
+                        style={{ ...textInputStyle, border: "1.5px solid #3B82F6", cursor: "pointer" }}
+                      >
+                        {CATEGORIES.map((cat) => (
+                          <option key={cat} value={cat}>
+                            {cat}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <label style={fieldLabelStyle}>
+                        Catégorie (EN) — <span style={{ fontWeight: "normal", color: "#64748B" }}>Généré automatiquement</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={category_en}
+                        readOnly
+                        disabled
+                        style={{
+                          ...textInputStyle,
+                          background: "#F8FAFC",
+                          color: "#64748B",
+                          cursor: "not-allowed",
+                          borderColor: "#E2E8F0",
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Contenu FR */}
+                  <div style={{ marginBottom: "1.25rem" }}>
+                    <label style={fieldLabelStyle}>Contenu principal (FR) — Texte / HTML</label>
+                    <div style={toolbarStyle}>
+                      <button type="button" onClick={() => insertFormatting("b", false)} style={toolbarBtnStyle} title="Gras"><b>B</b></button>
+                      <button type="button" onClick={() => insertFormatting("i", false)} style={toolbarBtnStyle} title="Italique"><i>I</i></button>
+                      <button type="button" onClick={() => insertFormatting("u", false)} style={toolbarBtnStyle} title="Souligné"><u>U</u></button>
+                      <span style={toolbarDividerStyle} />
+                      <button type="button" onClick={() => insertFormatting("ul", false)} style={toolbarBtnStyle} title="Liste à puces">≡</button>
+                      <button type="button" onClick={() => insertFormatting("ol", false)} style={toolbarBtnStyle} title="Liste ordonnée">≡</button>
+                      <span style={toolbarDividerStyle} />
+                      <button type="button" onClick={() => insertFormatting("link", false)} style={toolbarBtnStyle} title="Lien">Lien</button>
+                      <button type="button" onClick={() => insertFormatting("html", false)} style={toolbarBtnStyle} title="HTML">HTML</button>
+                    </div>
                     <textarea
                       value={contentHtml}
                       onChange={(e) => setContentHtml(e.target.value)}
-                      rows={6}
+                      rows={4}
+                      placeholder="Voluptatem enim bla"
                       style={{
-                        ...inputStyle,
+                        ...textInputStyle,
+                        borderTopLeftRadius: 0,
+                        borderTopRightRadius: 0,
                         resize: "vertical",
-                        fontFamily: "monospace",
                       }}
                     />
                   </div>
-                  <div>
-                    <label style={labelStyle}>
-                      Contenu principal (EN) - Texte / HTML
-                    </label>
+
+                  {/* Contenu EN */}
+                  <div style={{ marginBottom: "0.5rem" }}>
+                    <label style={fieldLabelStyle}>Contenu principal (EN) — Texte / HTML</label>
+                    <div style={toolbarStyle}>
+                      <button type="button" onClick={() => insertFormatting("b", true)} style={toolbarBtnStyle} title="Bold"><b>B</b></button>
+                      <button type="button" onClick={() => insertFormatting("i", true)} style={toolbarBtnStyle} title="Italic"><i>I</i></button>
+                      <button type="button" onClick={() => insertFormatting("u", true)} style={toolbarBtnStyle} title="Underline"><u>U</u></button>
+                      <span style={toolbarDividerStyle} />
+                      <button type="button" onClick={() => insertFormatting("ul", true)} style={toolbarBtnStyle} title="Bullet list">≡</button>
+                      <button type="button" onClick={() => insertFormatting("ol", true)} style={toolbarBtnStyle} title="Numbered list">≡</button>
+                      <span style={toolbarDividerStyle} />
+                      <button type="button" onClick={() => insertFormatting("link", true)} style={toolbarBtnStyle} title="Link">Lien</button>
+                      <button type="button" onClick={() => insertFormatting("html", true)} style={toolbarBtnStyle} title="HTML">HTML</button>
+                    </div>
                     <textarea
                       value={contentHtml_en}
                       onChange={(e) => setContentHtmlEn(e.target.value)}
-                      rows={6}
-                      placeholder="Contenu en anglais..."
+                      rows={4}
+                      placeholder="Amet dolore tempor..."
                       style={{
-                        ...inputStyle,
+                        ...textInputStyle,
+                        borderTopLeftRadius: 0,
+                        borderTopRightRadius: 0,
                         resize: "vertical",
-                        fontFamily: "monospace",
                       }}
                     />
                   </div>
-                  <small
-                    style={{
-                      color: "var(--text-muted)",
-                      display: "block",
-                      marginTop: "0.25rem",
-                    }}
-                  >
-                    Vous pouvez utiliser des balises HTML pour enrichir le
-                    texte.
-                  </small>
-                </div>
 
-                {/* ── SECTIONS ── */}
-                <div style={{ marginBottom: "1.5rem" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    <label
-                      style={{
-                        ...labelStyle,
-                        margin: 0,
-                        fontSize: "0.95rem",
-                        fontWeight: 600,
-                      }}
-                    >
-                      Sections{" "}
-                      <span
+                  <p style={{ fontSize: "0.78rem", color: "#64748B", margin: "0 0 1.25rem 0" }}>
+                    Note : Vous pouvez utiliser des balises HTML pour enrichir le texte (listes, citations, gras).
+                  </p>
+
+                  {/* Sections */}
+                  <div style={{ marginBottom: "1.5rem" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+                      <label style={{ ...fieldLabelStyle, margin: 0 }}>
+                        Sections{" "}
+                        <span style={{ fontWeight: 400, color: "#64748B", fontSize: "0.78rem" }}>
+                          (sous-titres + contenu + image optionnelle)
+                        </span>
+                      </label>
+                      <button
+                        type="button"
+                        onClick={addSection}
                         style={{
-                          fontWeight: 400,
-                          color: "var(--text-muted)",
+                          background: "#EFF6FF",
+                          color: "#2563EB",
+                          border: "1px solid #BFDBFE",
+                          borderRadius: "8px",
+                          padding: "0.4rem 0.8rem",
+                          fontWeight: 600,
                           fontSize: "0.8rem",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "0.4rem",
+                          cursor: "pointer",
                         }}
                       >
-                        (sous-titres + contenu + image optionnelle)
-                      </span>
-                    </label>
-                    <button
-                      type="button"
-                      onClick={addSection}
-                      className="btn btn-outline"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.4rem",
-                        fontSize: "0.8rem",
-                        padding: "0.4rem 0.75rem",
-                      }}
-                    >
-                      <Plus size={14} /> Ajouter une section
-                    </button>
-                  </div>
-
-                  {sections.length === 0 && (
-                    <div
-                      style={{
-                        border: "1px dashed var(--border)",
-                        borderRadius: "8px",
-                        padding: "1.5rem",
-                        textAlign: "center",
-                        color: "var(--text-muted)",
-                        fontSize: "0.85rem",
-                      }}
-                    >
-                      Aucune section ajoutée. Cliquez sur "Ajouter une section"
-                      pour enrichir l'article.
+                        + Ajouter une section
+                      </button>
                     </div>
-                  )}
 
-                  {sections.map((sec, idx) => (
-                    <div
-                      key={idx}
-                      style={{
-                        border: "1px solid var(--border)",
-                        borderRadius: "10px",
-                        padding: "1.25rem",
-                        marginBottom: "1rem",
-                        background: "#FAFBFC",
-                        position: "relative",
-                      }}
-                    >
-                      {/* En-tête section */}
+                    {sections.length === 0 ? (
                       <div
                         style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          marginBottom: "1rem",
+                          background: "#F8FAFC",
+                          border: "1px solid #E2E8F0",
+                          borderRadius: "8px",
+                          padding: "1.25rem",
+                          textAlign: "center",
+                          color: "#64748B",
+                          fontSize: "0.82rem",
                         }}
                       >
-                        <span
+                        Aucune section ajoutée. Cliquez sur "Ajouter une section" pour enrichir l'article.
+                      </div>
+                    ) : (
+                      sections.map((sec, idx) => (
+                        <div
+                          key={idx}
                           style={{
-                            fontWeight: 600,
-                            color: "var(--text-main)",
-                            fontSize: "0.85rem",
+                            border: "1px solid #E2E8F0",
+                            borderRadius: "10px",
+                            padding: "1.25rem",
+                            marginBottom: "1rem",
+                            background: "#FAFBFC",
                           }}
                         >
-                          Section {idx + 1}
-                        </span>
-                        <div style={{ display: "flex", gap: "0.25rem" }}>
-                          <button
-                            type="button"
-                            onClick={() => moveSection(idx, -1)}
-                            disabled={idx === 0}
-                            style={{
-                              ...iconBtnStyle,
-                              opacity: idx === 0 ? 0.3 : 1,
-                            }}
-                            title="Monter"
-                          >
-                            <ChevronUp size={14} />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => moveSection(idx, 1)}
-                            disabled={idx === sections.length - 1}
-                            style={{
-                              ...iconBtnStyle,
-                              opacity: idx === sections.length - 1 ? 0.3 : 1,
-                            }}
-                            title="Descendre"
-                          >
-                            <ChevronDown size={14} />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => removeSection(idx)}
-                            style={{
-                              ...iconBtnStyle,
-                              color: "var(--danger)",
-                              borderColor: "var(--danger)",
-                            }}
-                            title="Supprimer"
-                          >
-                            <X size={14} />
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Sous-titre */}
-                      <div
-                        style={{
-                          marginBottom: "0.75rem",
-                          display: "flex",
-                          gap: "1rem",
-                        }}
-                      >
-                        <div style={{ flex: 1 }}>
-                          <label style={{ ...labelStyle, fontSize: "0.8rem" }}>
-                            Sous-titre (FR)
-                          </label>
-                          <input
-                            type="text"
-                            value={sec.subtitle}
-                            placeholder="Sous-titre de la section..."
-                            onChange={(e) =>
-                              updateSection(idx, "subtitle", e.target.value)
-                            }
-                            style={{ ...inputStyle,  }}
-                          />
-                        </div>
-                        <div style={{ flex: 1 }}>
-                          <label style={{ ...labelStyle, fontSize: "0.8rem" }}>
-                            Sous-titre (EN)
-                          </label>
-                          <input
-                            type="text"
-                            value={sec.subtitle_en}
-                            placeholder="Sous-titre de la section (EN)..."
-                            onChange={(e) =>
-                              updateSection(idx, "subtitle_en", e.target.value)
-                            }
-                            style={{ ...inputStyle,  }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Texte */}
-                      <div
-                        style={{
-                          marginBottom: "0.75rem",
-                          display: "flex",
-                          gap: "1rem",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <div>
-                          <label style={{ ...labelStyle, fontSize: "0.8rem" }}>
-                            Texte (FR)
-                          </label>
-                          <textarea
-                            value={sec.text}
-                            placeholder="Contenu de la section..."
-                            onChange={(e) =>
-                              updateSection(idx, "text", e.target.value)
-                            }
-                            rows={3}
-                            style={{
-                              ...inputStyle,
-                              resize: "vertical",
-                              
-                            }}
-                          />
-                        </div>
-                        <div>
-                          <label style={{ ...labelStyle, fontSize: "0.8rem" }}>
-                            Texte (EN)
-                          </label>
-                          <textarea
-                            value={sec.text_en}
-                            placeholder="Contenu de la section (EN)..."
-                            onChange={(e) =>
-                              updateSection(idx, "text_en", e.target.value)
-                            }
-                            rows={3}
-                            style={{
-                              ...inputStyle,
-                              resize: "vertical",
-                              
-                            }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Image optionnelle */}
-                      <div>
-                        <label style={{ ...labelStyle, fontSize: "0.8rem" }}>
-                          Image (optionnelle)
-                        </label>
-                        {sec.imagePreview ? (
-                          <div
-                            style={{
-                              position: "relative",
-                              display: "inline-block",
-                            }}
-                          >
-                            <img
-                              src={sec.imagePreview}
-                              alt="section"
-                              style={{
-                                height: "100px",
-                                borderRadius: "6px",
-                                objectFit: "cover",
-                                display: "block",
-                                border: "1px solid var(--border)",
-                              }}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => removeSectionImage(idx)}
-                              style={{
-                                position: "absolute",
-                                top: "-8px",
-                                right: "-8px",
-                                background: "#EF4444",
-                                border: "none",
-                                borderRadius: "50%",
-                                width: "22px",
-                                height: "22px",
-                                cursor: "pointer",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                color: "#FFF",
-                              }}
-                            >
-                              <X size={12} />
-                            </button>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+                            <span style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A" }}>
+                              Section {idx + 1}
+                            </span>
+                            <div style={{ display: "flex", gap: "0.25rem" }}>
+                              <button
+                                type="button"
+                                onClick={() => moveSection(idx, -1)}
+                                disabled={idx === 0}
+                                style={sectionIconBtnStyle}
+                                title="Monter"
+                              >
+                                <ChevronUp size={14} />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => moveSection(idx, 1)}
+                                disabled={idx === sections.length - 1}
+                                style={sectionIconBtnStyle}
+                                title="Descendre"
+                              >
+                                <ChevronDown size={14} />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => removeSection(idx)}
+                                style={{ ...sectionIconBtnStyle, color: "#DC2626", borderColor: "#FECACA" }}
+                                title="Supprimer"
+                              >
+                                <X size={14} />
+                              </button>
+                            </div>
                           </div>
-                        ) : (
+
+                          <div style={{ display: "flex", gap: "1rem", marginBottom: "0.75rem" }}>
+                            <div style={{ flex: 1 }}>
+                              <input
+                                type="text"
+                                placeholder="Sous-titre (FR)..."
+                                value={sec.subtitle}
+                                onChange={(e) => updateSection(idx, "subtitle", e.target.value)}
+                                style={textInputStyle}
+                              />
+                            </div>
+                            <div style={{ flex: 1 }}>
+                              <input
+                                type="text"
+                                placeholder="Sous-titre (EN)..."
+                                value={sec.subtitle_en}
+                                onChange={(e) => updateSection(idx, "subtitle_en", e.target.value)}
+                                style={textInputStyle}
+                              />
+                            </div>
+                          </div>
+
+                          <div style={{ display: "flex", gap: "1rem", marginBottom: "0.75rem" }}>
+                            <div style={{ flex: 1 }}>
+                              <textarea
+                                rows={2}
+                                placeholder="Texte (FR)..."
+                                value={sec.text}
+                                onChange={(e) => updateSection(idx, "text", e.target.value)}
+                                style={textInputStyle}
+                              />
+                            </div>
+                            <div style={{ flex: 1 }}>
+                              <textarea
+                                rows={2}
+                                placeholder="Texte (EN)..."
+                                value={sec.text_en}
+                                onChange={(e) => updateSection(idx, "text_en", e.target.value)}
+                                style={textInputStyle}
+                              />
+                            </div>
+                          </div>
+
                           <div>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              id={`section-img-${idx}`}
-                              onChange={(e) => handleSectionImageUpload(e, idx)}
-                              style={{ display: "none" }}
-                            />
-                            <label
-                              htmlFor={`section-img-${idx}`}
-                              className="btn btn-outline"
-                              style={{
-                                cursor: "pointer",
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: "0.4rem",
-                                fontSize: "0.8rem",
-                                padding: "0.4rem 0.75rem",
-                              }}
-                            >
-                              <ImageIcon size={14} />{" "}
-                              {sec.uploading
-                                ? "Upload..."
-                                : "Choisir une image"}
-                            </label>
+                            {sec.imagePreview ? (
+                              <div style={{ position: "relative", display: "inline-block" }}>
+                                <img
+                                  src={sec.imagePreview}
+                                  alt="Section"
+                                  style={{ height: "70px", borderRadius: "6px", objectFit: "cover" }}
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => removeSectionImage(idx)}
+                                  style={{
+                                    position: "absolute",
+                                    top: "-6px",
+                                    right: "-6px",
+                                    background: "#EF4444",
+                                    color: "#FFF",
+                                    border: "none",
+                                    borderRadius: "50%",
+                                    width: "18px",
+                                    height: "18px",
+                                    cursor: "pointer",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                  }}
+                                >
+                                  <X size={12} />
+                                </button>
+                              </div>
+                            ) : (
+                              <div>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  id={`sec-img-${idx}`}
+                                  onChange={(e) => handleSectionImageUpload(e, idx)}
+                                  style={{ display: "none" }}
+                                />
+                                <label
+                                  htmlFor={`sec-img-${idx}`}
+                                  style={{
+                                    cursor: "pointer",
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "0.4rem",
+                                    fontSize: "0.78rem",
+                                    padding: "0.35rem 0.75rem",
+                                    borderRadius: "6px",
+                                    border: "1px solid #CBD5E1",
+                                    background: "#FFF",
+                                  }}
+                                >
+                                  <ImageIcon size={13} /> {sec.uploading ? "Upload..." : "Choisir une image"}
+                                </label>
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Boutons d'action clairs */}
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "1rem",
-                    justifyContent: "flex-end",
-                    borderTop: "1px solid var(--border)",
-                    paddingTop: "1.5rem",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <button
-                    type="button"
-                    onClick={closeModal}
-                    className="btn btn-outline"
-                    style={{ fontWeight: 600 }}
-                  >
-                    Fermer
-                  </button>
-                  <div style={{ flex: 1 }}></div>
-                  <button
-                    type="button"
-                    onClick={() => setSaveOptionsModal({ isOpen: true, isPreview: true })}
-                    className="btn btn-primary"
-                    style={{
-                      fontWeight: 600,
-                      background: "#3b82f6",
-                      borderColor: "#3b82f6",
-                    }}
-                  >
-                    <Eye
-                      size={16}
-                      style={{
-                        display: "inline",
-                        marginRight: "4px",
-                        verticalAlign: "text-bottom",
-                      }}
-                    />{" "}
-                    Aperçu
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSaveOptionsModal({ isOpen: true, isPreview: false })}
-                    className="btn btn-primary"
-                    style={{
-                      fontWeight: 600,
-                      background: "#10B981",
-                      borderColor: "#10B981",
-                    }}
-                  >
-                    Enregistrer
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            {/* ── APERÇU ── */}
-            <div
-              style={{
-                width: "360px",
-                flexShrink: 0,
-                borderLeft: "1px solid var(--border)",
-                padding: "2rem",
-                background: "#F8FAFC",
-                borderTopRightRadius: "12px",
-                borderBottomRightRadius: "12px",
-                display: "flex",
-                flexDirection: "column",
-                overflowY: "auto",
-                maxHeight: "90vh",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "1.5rem",
-                }}
-              >
-                <h3
-                  style={{
-                    margin: 0,
-                    fontSize: "1.1rem",
-                    color: "var(--text-main)",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
-                  <Eye size={18} /> Aperçu
-                </h3>
-                <div
-                  style={{
-                    display: "flex",
-                    background: "#e2e8f0",
-                    borderRadius: "6px",
-                    padding: "2px",
-                  }}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setPreviewLang("FR")}
-                    style={{
-                      border: "none",
-                      background: previewLang === "FR" ? "#fff" : "transparent",
-                      padding: "4px 8px",
-                      borderRadius: "4px",
-                      fontSize: "0.75rem",
-                      fontWeight: previewLang === "FR" ? "bold" : "normal",
-                      cursor: "pointer",
-                      boxShadow:
-                        previewLang === "FR"
-                          ? "0 1px 3px rgba(0,0,0,0.1)"
-                          : "none",
-                    }}
-                  >
-                    FR
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPreviewLang("EN")}
-                    style={{
-                      border: "none",
-                      background: previewLang === "EN" ? "#fff" : "transparent",
-                      padding: "4px 8px",
-                      borderRadius: "4px",
-                      fontSize: "0.75rem",
-                      fontWeight: previewLang === "EN" ? "bold" : "normal",
-                      cursor: "pointer",
-                      boxShadow:
-                        previewLang === "EN"
-                          ? "0 1px 3px rgba(0,0,0,0.1)"
-                          : "none",
-                    }}
-                  >
-                    EN
-                  </button>
-                </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </form>
               </div>
 
+              {/* Right Column (Aperçu) */}
               <div
                 style={{
+                  width: "420px",
+                  flexShrink: 0,
+                  borderLeft: "1px solid #E2E8F0",
+                  padding: "1.75rem",
+                  background: "#FFF",
                   display: "flex",
                   flexDirection: "column",
-                  background: "#FFF",
-                  border: "1px solid var(--border)",
-                  boxShadow: "0 4px 6px rgba(0,0,0,0.05)",
-                  marginBottom: "1.5rem",
+                  overflowY: "auto",
+                  maxHeight: "75vh",
                 }}
               >
-                <div
-                  style={{
-                    height: "150px",
-                    overflow: "hidden",
-                    background: "#1a1f2e",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    position: "relative",
-                  }}
-                >
-                  {previewImage ? (
-                    <img
-                      src={previewImage}
-                      alt="Cover"
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontWeight: 700, fontSize: "0.95rem", color: "#0F172A" }}>
+                    <Eye size={16} color="#2563EB" /> Aperçu de la Publication
+                  </div>
+                  {/* Lang Tabs */}
+                  <div style={{ display: "flex", background: "#F1F5F9", borderRadius: "6px", padding: "2px" }}>
+                    <button
+                      type="button"
+                      onClick={() => setPreviewLang("FR")}
                       style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  ) : (
-                    <span
-                      style={{
-                        color: "rgba(232,225,215,0.2)",
-                        fontWeight: "bold",
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        fontSize: "0.9rem",
+                        border: "none",
+                        background: previewLang === "FR" ? "#0F172A" : "transparent",
+                        color: previewLang === "FR" ? "#FFF" : "#64748B",
+                        padding: "3px 8px",
+                        borderRadius: "4px",
+                        fontSize: "0.75rem",
+                        fontWeight: 700,
+                        cursor: "pointer",
                       }}
                     >
-                      MENUA CONSULTING
-                    </span>
-                  )}
-                  {(previewLang === "EN" ? category_en : category) && (
+                      FR
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPreviewLang("EN")}
+                      style={{
+                        border: "none",
+                        background: previewLang === "EN" ? "#0F172A" : "transparent",
+                        color: previewLang === "EN" ? "#FFF" : "#64748B",
+                        padding: "3px 8px",
+                        borderRadius: "4px",
+                        fontSize: "0.75rem",
+                        fontWeight: 700,
+                        cursor: "pointer",
+                      }}
+                    >
+                      EN
+                    </button>
+                  </div>
+                </div>
+
+                <p style={{ margin: "0 0 1rem 0", fontSize: "0.75rem", color: "#64748B" }}>
+                  Rendu fidèle tel qu'il apparaîtra sur la page d'actualités publique :
+                </p>
+
+                {/* Preview Card */}
+                <div
+                  style={{
+                    background: "#FFF",
+                    border: "1px solid #E2E8F0",
+                    borderRadius: "10px",
+                    overflow: "hidden",
+                    boxShadow: "0 4px 10px rgba(0,0,0,0.04)",
+                    marginBottom: "1.25rem",
+                  }}
+                >
+                  {/* Hero / Cover */}
+                  <div
+                    style={{
+                      height: "150px",
+                      background: "#0A0F1D",
+                      position: "relative",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {previewImage ? (
+                      <img
+                        src={previewImage}
+                        alt="Cover"
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                      />
+                    ) : (
+                      <>
+                        <div
+                          style={{
+                            color: "#E2E8F0",
+                            fontWeight: 800,
+                            letterSpacing: "0.1em",
+                            fontSize: "0.95rem",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          MENUA CONSULTING
+                        </div>
+                        <div style={{ color: "#94A3B8", fontSize: "0.72rem", marginTop: "4px" }}>
+                          Actualité d'expertise
+                        </div>
+                      </>
+                    )}
+
+                    {/* Category badge */}
                     <div
                       style={{
                         position: "absolute",
-                        top: "0.75rem",
-                        left: "0.75rem",
-                        background: "#e8e1d7",
-                        color: "#141824",
-                        padding: "0.2rem 0.6rem",
-                        fontSize: "0.65rem",
-                        fontWeight: "bold",
+                        top: "10px",
+                        left: "10px",
+                        background: "#FFF",
+                        color: "#0F172A",
+                        padding: "3px 8px",
+                        fontSize: "0.62rem",
+                        fontWeight: 800,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
+                        borderRadius: "4px",
                       }}
                     >
-                      {previewLang === "EN" ? category_en : category}
+                      {(previewLang === "EN" ? category_en : category) || "ORGANISATION ET EXTERNALISATION"}
                     </div>
-                  )}
+                  </div>
+
+                  {/* Body */}
+                  <div style={{ padding: "1.25rem" }}>
+                    <div style={{ fontSize: "0.7rem", color: "#64748B", fontWeight: 600, letterSpacing: "0.05em", marginBottom: "0.4rem" }}>
+                      {formattedCurrentDate}
+                    </div>
+                    <div
+                      style={{
+                        fontWeight: 700,
+                        fontSize: "1rem",
+                        color: "#0F172A",
+                        lineHeight: 1.3,
+                        marginBottom: "0.5rem",
+                        overflow: "hidden",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                      }}
+                    >
+                      {(previewLang === "EN" ? title_en : title) || "Illum maxime Nam ad"}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "0.78rem",
+                        color: "#64748B",
+                        lineHeight: 1.5,
+                        marginBottom: "1rem",
+                        overflow: "hidden",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: "vertical",
+                      }}
+                    >
+                      {(() => {
+                        const raw = (previewLang === "EN" ? contentHtml_en : contentHtml) || "";
+                        const plain = raw.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+                        return plain || "Voluptatem enim bla";
+                      })()}
+                    </div>
+                    <div
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "0.35rem",
+                        color: "#2563EB",
+                        fontWeight: 700,
+                        fontSize: "0.75rem",
+                        letterSpacing: "0.05em",
+                        cursor: "pointer",
+                      }}
+                    >
+                      LIRE L'ARTICLE →
+                    </div>
+                  </div>
                 </div>
-                <div style={{ padding: "1.25rem" }}>
-                  <p
-                    style={{
-                      color: "#6e7891",
-                      fontSize: "0.7rem",
-                      fontWeight: 500,
-                      letterSpacing: "0.05em",
-                      marginBottom: "0.5rem",
-                      textTransform: "uppercase",
-                      margin: "0 0 0.4rem",
-                    }}
-                  >
-                    {new Date().toLocaleDateString("fr-FR", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </p>
-                  <h3
-                    style={{
-                      color: "#141824",
-                      fontWeight: 600,
-                      fontSize: "1rem",
-                      lineHeight: 1.3,
-                      margin: "0 0 0.6rem",
-                      overflow: "hidden",
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                    }}
-                  >
-                    {(previewLang === "EN" ? title_en : title) ||
-                      "Titre de la publication..."}
-                  </h3>
-                  <p
-                    style={{
-                      color: "#a0aec0",
-                      fontSize: "0.75rem",
-                      fontWeight: 300,
-                      lineHeight: 1.5,
-                      margin: "0 0 0.75rem",
-                      overflow: "hidden",
-                      display: "-webkit-box",
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: "vertical",
-                    }}
-                  >
-                    {(() => {
-                      const plain = (
-                        (previewLang === "EN" ? contentHtml_en : contentHtml) ||
-                        ""
-                      )
-                        .replace(/<[^>]+>/g, " ")
-                        .replace(/\s+/g, " ")
-                        .trim();
-                      const words = plain.split(" ").filter(Boolean);
-                      return words.length > 25
-                        ? words.slice(0, 25).join(" ") + "..."
-                        : plain || "Extrait du contenu...";
-                    })()}
-                  </p>
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "0.4rem",
-                      color: "#141824",
-                      fontWeight: "bold",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                      fontSize: "0.7rem",
-                    }}
-                  >
-                    Lire l'article <ArrowRight size={13} />
-                  </span>
+
+                {/* Blue Sync Notice Box */}
+                <div
+                  style={{
+                    background: "#EFF6FF",
+                    border: "1px solid #BFDBFE",
+                    borderRadius: "8px",
+                    padding: "0.75rem 1rem",
+                    marginTop: "auto",
+                  }}
+                >
+                  <div style={{ color: "#2563EB", fontWeight: 700, fontSize: "0.82rem" }}>
+                    ✓ Synchronisation dynamique active
+                  </div>
+                  <div style={{ color: "#1E40AF", fontSize: "0.75rem", marginTop: "0.2rem" }}>
+                    Les modifications saisies à gauche se reflètent instantanément ici.
+                  </div>
                 </div>
               </div>
+            </div>
 
-              {/* Aperçu sections */}
-              {sections.length > 0 && (
-                <div>
-                  <p
-                    style={{
-                      fontSize: "0.78rem",
-                      color: "var(--text-muted)",
-                      fontWeight: 600,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                      marginBottom: "0.75rem",
-                    }}
-                  >
-                    {sections.length} section{sections.length > 1 ? "s" : ""}{" "}
-                    ajoutée{sections.length > 1 ? "s" : ""}
-                  </p>
-                  {sections.map((s, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        borderLeft: "3px solid #e8e1d7",
-                        paddingLeft: "0.75rem",
-                        marginBottom: "0.75rem",
-                      }}
-                    >
-                      {(previewLang === "EN" ? s.subtitle_en : s.subtitle) && (
-                        <p
-                          style={{
-                            fontWeight: 600,
-                            fontSize: "0.8rem",
-                            color: "#141824",
-                            margin: "0 0 0.2rem",
-                          }}
-                        >
-                          {previewLang === "EN" ? s.subtitle_en : s.subtitle}
-                        </p>
-                      )}
-                      {s.imagePreview && (
-                        <img
-                          src={s.imagePreview}
-                          alt=""
-                          style={{
-                            height: "50px",
-                            borderRadius: "4px",
-                            objectFit: "cover",
-                            marginBottom: "0.2rem",
-                            display: "block",
-                          }}
-                        />
-                      )}
-                      {(previewLang === "EN" ? s.text_en : s.text) && (
-                        <p
-                          style={{
-                            fontSize: "0.75rem",
-                            color: "#6e7891",
-                            margin: 0,
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            textOverflow: "ellipsis",
-                          }}
-                        >
-                          {(previewLang === "EN"
-                            ? s.text_en
-                            : s.text
-                          ).substring(0, 60)}
-                          {(previewLang === "EN" ? s.text_en : s.text).length >
-                          60
-                            ? "..."
-                            : ""}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
+            {/* Modal Footer */}
+            <div
+              style={{
+                borderTop: "1px solid #E2E8F0",
+                padding: "1rem 2rem",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                background: "#FFF",
+              }}
+            >
+              <button
+                type="button"
+                onClick={closeModal}
+                style={{
+                  background: "#FFF",
+                  border: "1px solid #E2E8F0",
+                  borderRadius: "8px",
+                  padding: "0.6rem 1.25rem",
+                  fontWeight: 600,
+                  fontSize: "0.85rem",
+                  color: "#334155",
+                  cursor: "pointer",
+                }}
+              >
+                Fermer
+              </button>
+              <div style={{ display: "flex", gap: "0.75rem" }}>
+                <button
+                  type="button"
+                  onClick={() => handleSaveAction(status || "PUBLIE", true)}
+                  style={{
+                    background: "#FFF",
+                    border: "1.5px solid #3B82F6",
+                    borderRadius: "8px",
+                    padding: "0.6rem 1.25rem",
+                    fontWeight: 600,
+                    fontSize: "0.85rem",
+                    color: "#2563EB",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.4rem",
+                    cursor: "pointer",
+                  }}
+                >
+                  <Eye size={15} /> Aperçu
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSaveAction(status || "PUBLIE", false)}
+                  style={{
+                    background: "#10B981",
+                    border: "none",
+                    borderRadius: "8px",
+                    padding: "0.6rem 1.5rem",
+                    fontWeight: 600,
+                    fontSize: "0.85rem",
+                    color: "#FFF",
+                    cursor: "pointer",
+                  }}
+                >
+                  Enregistrer
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
+      {/* Confirm Modal */}
       <ConfirmModal
         isOpen={confirmModal.isOpen}
         title={confirmModal.title}
@@ -1795,126 +2089,71 @@ const CMSPage = () => {
         onConfirm={confirmModal.onConfirm}
         onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
       />
-
-      {/* Save Options Modal */}
-      {saveOptionsModal.isOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(0,0,0,0.5)",
-            zIndex: 3000,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              background: "white",
-              padding: "2rem",
-              borderRadius: "12px",
-              width: "400px",
-              maxWidth: "90%",
-              boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
-            }}
-          >
-            <h3 style={{ marginTop: 0, marginBottom: "1rem" }}>
-              Enregistrer l'actualité
-            </h3>
-            <p style={{ color: "var(--text-muted)", marginBottom: "2rem" }}>
-              Voulez-vous enregistrer cette actualité en tant que brouillon (non
-              visible publiquement) ou la publier directement sur le site ?
-            </p>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => {
-                  setSaveOptionsModal({ isOpen: false, isPreview: false });
-                  handleSaveAction("PUBLIE", saveOptionsModal.isPreview);
-                }}
-                className="btn btn-primary"
-                style={{
-                  width: "100%",
-                  padding: "0.8rem",
-                  fontWeight: 600,
-                  background: "#10B981",
-                  borderColor: "#10B981",
-                }}
-              >
-                Publier sur le site
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setSaveOptionsModal({ isOpen: false, isPreview: false });
-                  handleSaveAction("BROUILLON", saveOptionsModal.isPreview);
-                }}
-                className="btn btn-outline"
-                style={{ width: "100%", padding: "0.8rem", fontWeight: 600 }}
-              >
-                Enregistrer comme brouillon
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  setSaveOptionsModal({ isOpen: false, isPreview: false })
-                }
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "var(--text-muted)",
-                  padding: "0.5rem",
-                  cursor: "pointer",
-                  marginTop: "0.5rem",
-                  fontWeight: 600
-                }}
-              >
-                Annuler
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-// Shared styles
-const labelStyle = {
+// Styles
+const fieldLabelStyle = {
   display: "block",
-  marginBottom: "0.5rem",
-  fontWeight: 500,
-  
-  color: "var(--text-main)",
+  marginBottom: "0.45rem",
+  fontWeight: 600,
+  fontSize: "0.82rem",
+  color: "#374151",
 };
-const inputStyle = {
+
+const textInputStyle = {
   width: "100%",
-  padding: "0.75rem",
+  padding: "0.65rem 0.85rem",
   borderRadius: "8px",
-  border: "1px solid var(--border)",
-  
+  border: "1px solid #CBD5E1",
+  fontSize: "0.875rem",
   outline: "none",
+  color: "#0F172A",
   boxSizing: "border-box",
 };
-const iconBtnStyle = {
-  background: "none",
-  border: "1px solid var(--border)",
+
+const toolbarStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: "0.25rem",
+  background: "#F1F5F9",
+  border: "1px solid #CBD5E1",
+  borderBottom: "none",
+  borderTopLeftRadius: "8px",
+  borderTopRightRadius: "8px",
+  padding: "0.35rem 0.5rem",
+};
+
+const toolbarBtnStyle = {
+  background: "#FFF",
+  border: "1px solid #E2E8F0",
+  borderRadius: "4px",
+  padding: "0.2rem 0.5rem",
+  fontSize: "0.78rem",
+  fontWeight: 600,
+  color: "#334155",
+  cursor: "pointer",
+  lineHeight: 1.2,
+};
+
+const toolbarDividerStyle = {
+  width: "1px",
+  height: "16px",
+  background: "#CBD5E1",
+  margin: "0 0.25rem",
+};
+
+const sectionIconBtnStyle = {
+  background: "#FFF",
+  border: "1px solid #E2E8F0",
   borderRadius: "4px",
   cursor: "pointer",
-  padding: "0.2rem 0.35rem",
+  padding: "0.25rem",
   display: "inline-flex",
   alignItems: "center",
-  color: "var(--text-muted)",
+  justifyContent: "center",
+  color: "#64748B",
 };
 
 export default CMSPage;

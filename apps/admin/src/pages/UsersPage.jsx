@@ -102,7 +102,7 @@ const UsersPage = ({ forceTab }) => {
     roleId: "",
     lieuResidence: "",
     experienceCle: "",
-    status: "Inactif",
+    status: "Invitation envoyée",
     langues: "",
     profile: "",
   });
@@ -202,7 +202,7 @@ const UsersPage = ({ forceTab }) => {
           roleId: "",
           lieuResidence: "",
           experienceCle: "",
-          status: "Inactif",
+          status: "Invitation envoyée",
           langues: "",
           profile: "",
         });
@@ -298,7 +298,7 @@ const UsersPage = ({ forceTab }) => {
         email: editUser.email,
         roleId: editUser.roleId,
         profile: editUser.profile,
-        status: editUser.isBlocked ? "Inactif" : "Actif",
+        status: editUser.status,
         telephone: editUser.telephone,
         lieuResidence: editUser.lieuResidence,
         experienceCle: editUser.experienceCle,
@@ -306,6 +306,26 @@ const UsersPage = ({ forceTab }) => {
       },
       () => setEditUser(null),
       "Erreur lors de la modification",
+    );
+  };
+
+  const handleTriggerPasswordReset = async (userId) => {
+    if (
+      !(await window.customConfirm(
+        "Voulez-vous vraiment déclencher une réinitialisation de mot de passe pour cet utilisateur ? Un email lui sera envoyé.",
+        "Réinitialisation de mot de passe",
+      ))
+    )
+      return;
+    await submitApiRequest(
+      `/api/crm/users/${encodeURIComponent(userId)}/trigger-password-reset`,
+      "POST",
+      {},
+      () => {
+        window.customAlert("Un lien de réinitialisation a été envoyé à l'utilisateur.", "Succès");
+        setConsultUser(null);
+      },
+      "Erreur lors du déclenchement de la réinitialisation",
     );
   };
 
@@ -397,19 +417,21 @@ const UsersPage = ({ forceTab }) => {
         >
           <Pencil size={14} /> Modifier
         </button>
-        <button
-          type="button"
-          className="dropdown-item danger"
-          onClick={() => {
-            setOpenMenuId(null);
-            if (userObj) {
-              if (isExternal) handleDeleteClient(userObj.id);
-              else handleDeleteUser(userObj.id);
-            }
-          }}
-        >
-          <Trash size={14} /> Supprimer
-        </button>
+        {userObj?.role?.name !== "Super-administrateur" && (
+          <button
+            type="button"
+            className="dropdown-item danger"
+            onClick={() => {
+              setOpenMenuId(null);
+              if (userObj) {
+                if (isExternal) handleDeleteClient(userObj.id);
+                else handleDeleteUser(userObj.id);
+              }
+            }}
+          >
+            <Trash size={14} /> Supprimer
+          </button>
+        )}
       </ActionDropdown>
     );
   };
@@ -1352,8 +1374,16 @@ const UsersPage = ({ forceTab }) => {
                   display: "flex",
                   justifyContent: "flex-end",
                   marginTop: "1rem",
+                  gap: "0.5rem"
                 }}
               >
+                <button
+                  type="button"
+                  onClick={() => handleTriggerPasswordReset(consultUser.id)}
+                  className="btn btn-primary"
+                >
+                  Réinitialiser le mot de passe
+                </button>
                 <button
                   type="button"
                   onClick={() => setConsultUser(null)}

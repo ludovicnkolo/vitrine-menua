@@ -1,5 +1,6 @@
 import { getSafeApiUrl } from "../utils/helpers";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState("");
@@ -79,88 +80,105 @@ const LoginPage = ({ onLogin }) => {
             />
           </div>
         </div>
+        
         <form
-          onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-        >
-          {error && (
-            <div
-              style={{
-                padding: "0.75rem",
-                background: "#FEE2E2",
-                color: "#B91C1C",
-                borderRadius: "8px",
-                
-              }}
-            >
-              {error}
-            </div>
-          )}
-          <div>
-            <label
-              htmlFor="login-email"
-              style={{
-                display: "block",
-                marginBottom: "0.25rem",
-                
-                fontWeight: 500,
-              }}
-            >
-              Email
-            </label>
-            <input
-              id="login-email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                borderRadius: "8px",
-                border: "1px solid var(--border)",
-              }}
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="login-password"
-              style={{
-                display: "block",
-                marginBottom: "0.25rem",
-                
-                fontWeight: 500,
-              }}
-            >
-              Mot de passe
-            </label>
-            <input
-              id="login-password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                borderRadius: "8px",
-                border: "1px solid var(--border)",
-              }}
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn btn-primary"
-            style={{
-              marginTop: "0.5rem",
-              justifyContent: "center",
-              width: "100%",
-            }}
+            onSubmit={handleSubmit}
+            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
           >
-            {loading ? "Connexion..." : "Se connecter"}
-          </button>
-        </form>
+            {error && (
+              <div
+                style={{
+                  padding: "0.75rem",
+                  background: "#FEE2E2",
+                  color: "#B91C1C",
+                  borderRadius: "8px",
+                  
+                }}
+              >
+                {error}
+              </div>
+            )}
+            <div>
+              <label
+                htmlFor="login-email"
+                style={{
+                  display: "block",
+                  marginBottom: "0.25rem",
+                  
+                  fontWeight: 500,
+                }}
+              >
+                Email
+              </label>
+              <input
+                id="login-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                style={{
+                  width: "100%",
+                  padding: "0.75rem",
+                  borderRadius: "8px",
+                  border: "1px solid var(--border)",
+                }}
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="login-password"
+                style={{
+                  display: "block",
+                  marginBottom: "0.25rem",
+                  fontWeight: 500,
+                }}
+              >
+                Mot de passe
+              </label>
+              <input
+                id="login-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{
+                  width: "100%",
+                  padding: "0.75rem",
+                  borderRadius: "8px",
+                  border: "1px solid var(--border)",
+                }}
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary"
+              style={{
+                marginTop: "0.5rem",
+                justifyContent: "center",
+                width: "100%",
+                padding: "0.85rem",
+                fontSize: "1rem"
+              }}
+            >
+              {loading ? "Connexion..." : "Se connecter"}
+            </button>
+            <div style={{ textAlign: "center", marginTop: "0.5rem" }}>
+              <Link
+                to="/forgot-password"
+                style={{
+                  display: "inline-block",
+                  color: "var(--primary)",
+                  textDecoration: "underline",
+                  fontSize: "0.95rem",
+                  fontWeight: 500,
+                  padding: "0.5rem"
+                }}
+              >
+                Mot de passe oublié ?
+              </Link>
+            </div>
+          </form>
       </div>
     </div>
   );

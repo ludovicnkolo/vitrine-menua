@@ -41,6 +41,7 @@ model Utilisateur {
   resetToken       String?
   resetTokenExpiry DateTime?
   isBlocked        Boolean   @default(false)
+  status           String    @default("Invitation envoyée")
   lastLogin        DateTime?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt

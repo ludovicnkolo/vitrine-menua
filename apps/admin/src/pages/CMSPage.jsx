@@ -269,6 +269,11 @@ const CMSPage = () => {
       })),
     };
 
+    let previewWindow = null;
+    if (showPreview) {
+      previewWindow = window.open("about:blank", "_blank");
+    }
+
     try {
       let res;
       if (editingPub) {
@@ -279,16 +284,13 @@ const CMSPage = () => {
       if (res.ok) {
         const savedData = await res.json();
         const savedPub = savedData.data;
-        if (showPreview) {
+        if (showPreview && previewWindow) {
           // Si on est en dev (localhost:3001), le site vitrine est sur 3000
           const vitrineUrl =
             window.location.hostname === "localhost"
               ? "http://localhost:3000"
               : "https://menuaconsulting.com";
-          window.open(
-            `${vitrineUrl}/actualites/${savedPub.id}?preview=true`,
-            "_blank",
-          );
+          previewWindow.location.href = `${vitrineUrl}/actualites/${savedPub.id}?preview=true`;
           setEditingPub(savedPub); // Met à jour l'état local pour continuer l'édition
           showToast("Brouillon enregistré. Ouverture de l'aperçu...");
         } else {
@@ -299,10 +301,12 @@ const CMSPage = () => {
         }
         fetchPublications();
       } else {
+        if (previewWindow) previewWindow.close();
         showToast("Erreur lors de la sauvegarde.", "error");
       }
     } catch (err) {
       console.error(err);
+      if (previewWindow) previewWindow.close();
       showToast("Erreur lors de la sauvegarde.", "error");
     }
   };

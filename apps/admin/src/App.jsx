@@ -23,7 +23,7 @@ import UsersPage from "./pages/UsersPage";
 import RolesPage from "./pages/RolesPage";
 import AuditPage from "./pages/AuditPage";
 import LoginPage from "./pages/LoginPage";
-import SetupPasswordPage from "./pages/SetupPasswordPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import WorkspacePage from "./pages/WorkspacePage";
 import UsersSpacePage from "./pages/UsersSpacePage";
 import SystemSpacePage from "./pages/SystemSpacePage";
@@ -233,13 +233,7 @@ function App() {
 
   // handleLogout is defined above the useEffects
 
-  if (location.pathname === "/setup-password") {
-    return (
-      <Routes>
-        <Route path="/setup-password" element={<SetupPasswordPage />} />
-      </Routes>
-    );
-  }
+  // handleLogout is defined above the useEffects
 
   if (location.pathname.startsWith("/magic-drop/")) {
     return (
@@ -250,6 +244,13 @@ function App() {
   }
 
   if (!token || !user) {
+    if (location.pathname === "/forgot-password") {
+      return (
+        <Routes>
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        </Routes>
+      );
+    }
     if (
       location.pathname !== "/" &&
       !location.pathname.startsWith("/magic-drop/")

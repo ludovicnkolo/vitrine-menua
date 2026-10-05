@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import Link from '@/components/Link';
 import { useLanguage } from '@/components/LanguageProvider';
+import { generateSlug } from '@/utils/slug';
 
 interface Section {
   subtitle?: string;
@@ -62,6 +63,26 @@ export default function ClientPageArticle({ id }: { id: string }) {
     fetchArticle();
   }, [id]);
 
+  const isEN = lang === 'EN';
+  const displayTitle = publication 
+    ? (isEN && publication.title_en ? publication.title_en : publication.title) 
+    : '';
+
+  // Ensure the URL slug matches the current language
+  useEffect(() => {
+    if (publication && displayTitle) {
+      const expectedSlug = generateSlug(displayTitle, publication.id);
+      const currentPath = window.location.pathname;
+      const parts = currentPath.split('/');
+      const currentSlug = parts[parts.length - 1];
+      if (currentSlug && currentSlug !== expectedSlug) {
+        parts[parts.length - 1] = expectedSlug;
+        const newPath = parts.join('/');
+        window.history.replaceState(null, '', newPath + window.location.search);
+      }
+    }
+  }, [publication, displayTitle]);
+
   const formatDate = (dateString?: string) => {
     if (!dateString) return "";
     const locale = lang === 'EN' ? 'en-GB' : 'fr-FR';
@@ -82,16 +103,14 @@ export default function ClientPageArticle({ id }: { id: string }) {
       <main className="flex flex-col w-full min-h-[70vh] bg-[#f5f7fa] items-center justify-center p-8">
         <h2 className="text-[#141824] text-2xl font-bold mb-4">{t('Erreur', 'Error')}</h2>
         <p className="text-[#6e7891] mb-8">{error || t('Article introuvable.', 'Article not found.')}</p>
-        <Link href="/actualites" className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-sm border-b-2 border-[#141824] pb-1 hover:text-[#d4af37] hover:border-[#d4af37] transition-colors">
+        <Link href={lang === 'EN' ? '/en/news' : '/actualites'} className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-sm border-b-2 border-[#141824] pb-1 hover:text-[#d4af37] hover:border-[#d4af37] transition-colors">
           <ArrowLeft size={16} /> {t('RETOUR AUX ACTUALITÉS', 'BACK TO NEWS')}
         </Link>
       </main>
     );
   }
 
-  // ── Language-aware field resolution ──────────────────────────────────────────
-  const isEN = lang === 'EN';
-  const displayTitle    = (isEN && publication.title_en)       ? publication.title_en       : publication.title;
+  const basePath = isEN ? '/en/news' : '/actualites';
   const displayContent  = (isEN && publication.contentHtml_en) ? publication.contentHtml_en : publication.contentHtml;
   const displayCategory = (isEN && publication.category_en)    ? publication.category_en    : publication.category;
 
@@ -202,7 +221,7 @@ export default function ClientPageArticle({ id }: { id: string }) {
 
             {/* Retour */}
             <div className="mt-20 pt-8 border-t border-[#e8e1d7]">
-              <Link href="/actualites" className="inline-flex items-center gap-3 text-[#141824] font-bold uppercase tracking-wider text-sm hover:text-[#c1a070] transition-colors">
+              <Link href={basePath} className="inline-flex items-center gap-3 text-[#141824] font-bold uppercase tracking-wider text-sm hover:text-[#c1a070] transition-colors">
                 <ArrowLeft size={18} /> {t('RETOUR AUX ACTUALITÉS', 'BACK TO NEWS')}
               </Link>
             </div>

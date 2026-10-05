@@ -1,8 +1,8 @@
 async function verifyTurnstile(token, ip) {
-  if (!process.env.TURNSTILE_SECRET_KEY) {
-    // If no secret key is configured, bypass for local dev, but warn in production
+  if (process.env.NODE_ENV !== "production" || !process.env.TURNSTILE_SECRET_KEY) {
+    // If not in production mode or no secret key is configured, bypass validation
     console.warn(
-      "TURNSTILE_SECRET_KEY is not set. Bypassing Turnstile validation.",
+      "Turnstile validation bypassed (Development mode or TURNSTILE_SECRET_KEY missing).",
     );
     return true;
   }

@@ -151,7 +151,7 @@ export default function ActualitesPage() {
                 </p>
 
                 <div className="flex justify-end mt-auto">
-                  <Link href={`/actualites/${generateSlug(displayTitle(featuredPub), featuredPub.id)}`} className="inline-flex items-center gap-2 text-[#141824] group-hover:text-white font-bold tracking-wider uppercase text-[0.7rem] transition-colors duration-300">
+                  <Link href={`${basePath}/${generateSlug(displayTitle(featuredPub), featuredPub.id)}`} className="inline-flex items-center gap-2 text-[#141824] group-hover:text-white font-bold tracking-wider uppercase text-[0.7rem] transition-colors duration-300">
                     {t("LIRE L'ARTICLE", "READ ARTICLE")}
                     <span className="w-6 h-[1px] bg-[#141824] group-hover:bg-white group-hover:w-10 transition-all duration-300"></span>
                     <ChevronRight size={14} className="-ml-2 group-hover:text-white transition-colors duration-300" />
@@ -238,7 +238,7 @@ export default function ActualitesPage() {
                     <p className="text-[#6e7891] text-[0.85rem] font-light leading-relaxed flex-grow mb-4 line-clamp-3">
                       {displayContent(pub) ? displayContent(pub).replace(/<[^>]+>/g, "").substring(0, 150) + "..." : "Analyse détaillée de nos experts métier sur ce sujet."}
                     </p>
-                    <Link href={`/actualites/${generateSlug(displayTitle(pub), pub.id)}`} className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.7rem] group-hover:gap-3 transition-all">
+                    <Link href={`${basePath}/${generateSlug(displayTitle(pub), pub.id)}`} className="inline-flex items-center gap-2 text-[#141824] font-bold uppercase tracking-wider text-[0.7rem] group-hover:gap-3 transition-all">
                       {t("LIRE L'ARTICLE", "READ ARTICLE")} <ArrowRight size={14} />
                     </Link>
                   </div>

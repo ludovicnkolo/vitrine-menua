@@ -199,6 +199,11 @@ router.post(
   async (req, res) => {
     try {
       const { name, permissions, description, status } = req.body;
+      
+      if (name === "Super-administrateur" || name.toLowerCase() === "super-administrateur") {
+        return res.status(403).json({ error: "Le rôle Super-administrateur est unique et ne peut pas être dupliqué." });
+      }
+
       const role = await prisma.role.create({
         data: { name, permissions, description, status: status || "Actif" },
       });
@@ -388,8 +393,8 @@ router.post(
         10,
       );
 
-      // Statut par défaut : Inactif (isBlocked=true) sauf si l'admin choisit explicitement Actif au moment de la création
-      const isBlockedDefault = status === "Actif" ? false : true;
+      const initialStatus = status || "Invitation envoyée";
+      const isBlockedDefault = initialStatus === "Suspendu / Inactif";
 
       const user = await prisma.utilisateur.create({
         data: {
@@ -405,6 +410,7 @@ router.post(
           langues: langues || null,
           formations: formations || null,
           profile: profile || "",
+          status: initialStatus,
           isBlocked: isBlockedDefault,
         },
       });
@@ -419,9 +425,7 @@ router.post(
 
       // Send email — Use ADMIN_FRONTEND_URL env var (the CRM admin frontend, NOT the backend)
       try {
-        const adminFrontend =
-          process.env.ADMIN_FRONTEND_URL || "http://localhost:5173";
-        const setupUrl = `${adminFrontend}/setup-password?token=${token}`;
+        const adminFrontend = process.env.ADMIN_FRONTEND_URL || "http://localhost:5173";
 
         await transporter.sendMail({
           from: process.env.SMTP_FROM || "contact@menuaconsulting.com",
@@ -430,10 +434,9 @@ router.post(
           html: `
           <h3>Bienvenue ${name},</h3>
           <p>Un compte collaborateur a été créé pour vous sur l'espace Menua Consulting.</p>
-          <p>Veuillez cliquer sur le lien ci-dessous pour configurer votre mot de passe :</p>
-          <a href="${setupUrl}" style="display:inline-block;padding:10px 20px;background:#141824;color:#fff;text-decoration:none;border-radius:4px;">Créer mon mot de passe</a>
-          <p>Ce lien est valable 24 heures.</p>
-          <p style="color:#666;font-size:0.85em;">Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur : ${setupUrl}</p>
+          <p>Veuillez vous rendre sur la page de connexion de l'espace administrateur et utiliser la fonction <strong>"Mot de passe oublié ?"</strong> pour configurer votre mot de passe et activer votre compte :</p>
+          <a href="${adminFrontend}" style="display:inline-block;padding:10px 20px;background:#141824;color:#fff;text-decoration:none;border-radius:4px;">Accéder au CRM</a>
+          <p style="color:#666;font-size:0.85em;">Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur : ${adminFrontend}</p>
         `,
         });
       } catch (emailErr) {
@@ -503,7 +506,7 @@ router.patch(
           ...(experienceCle !== undefined && { experienceCle }),
           ...(langues !== undefined && { langues }),
           ...(formations !== undefined && { formations }),
-          ...(status && { isBlocked: status === "Inactif" }),
+          ...(status && { status, isBlocked: status === "Suspendu / Inactif" }),
         },
       });
       await logAudit(
@@ -528,7 +531,13 @@ router.delete(
     try {
       const existing = await prisma.utilisateur.findUnique({
         where: { id: req.params.id },
+        include: { role: true },
       });
+
+      if (existing?.role?.name === "Super-administrateur" || existing?.role === "Super-administrateur") {
+        return res.status(403).json({ error: "Le compte Super-administrateur ne peut pas être supprimé." });
+      }
+
       await prisma.utilisateur.delete({ where: { id: req.params.id } });
       await logAudit(
         req.user?.id,
@@ -543,6 +552,68 @@ router.delete(
       res.status(500).json({ error: "Erreur lors de la suppression." });
     }
   },
+);
+
+router.post(
+  "/users/:id/trigger-password-reset",
+  requireRoles("Super-administrateur", "Administrateur technique"),
+  async (req, res) => {
+    try {
+      const user = await prisma.utilisateur.findUnique({
+        where: { id: req.params.id },
+      });
+
+      if (!user) {
+        return res.status(404).json({ error: "Utilisateur introuvable." });
+      }
+
+      // Generate token
+      const token = crypto.randomBytes(32).toString("hex");
+      const resetTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
+
+      await prisma.utilisateur.update({
+        where: { id: user.id },
+        data: {
+          resetToken: token,
+          resetTokenExpiry,
+        },
+      });
+
+      // Journal d'audit
+      await logAudit(
+        req.user?.id,
+        "DECLENCHEMENT_REINITIALISATION_MDP",
+        user.id,
+        "USER",
+        `Réinitialisation de mot de passe déclenchée pour : ${user.name}`
+      );
+
+      const adminFrontend = process.env.ADMIN_FRONTEND_URL || "http://localhost:5173";
+
+      await transporter.sendMail({
+        from: process.env.SMTP_FROM || "contact@menuaconsulting.com",
+        to: user.email,
+        subject: "Réinitialisation de votre mot de passe CRM Menua",
+        html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+          <h2 style="color: #c99c5c;">Réinitialisation de mot de passe</h2>
+          <p>Bonjour ${user.name},</p>
+          <p>Un administrateur a déclenché une réinitialisation de votre mot de passe pour accéder au CRM Menua.</p>
+          <p>Veuillez vous rendre sur la page de connexion et utiliser la fonction <strong>"Mot de passe oublié ?"</strong> pour créer un nouveau mot de passe de façon sécurisée via OTP.</p>
+          <div style="text-align: center; margin: 20px 0;">
+            <a href="${adminFrontend}" style="background-color: #c99c5c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">Accéder au CRM</a>
+          </div>
+          <p>Cordialement,<br>L'équipe Menua Consulting</p>
+        </div>
+        `,
+      });
+
+      res.json({ success: true, message: "Lien de réinitialisation envoyé avec succès." });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Erreur lors du déclenchement de la réinitialisation." });
+    }
+  }
 );
 
 // --- CLIENTS (Externes) ---

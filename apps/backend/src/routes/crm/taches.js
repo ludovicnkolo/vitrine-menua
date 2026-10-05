@@ -505,6 +505,7 @@ router.patch("/taches/:id", async (req, res) => {
       isAdmin(userRole) ||
       currentTache.assignedToId === userId ||
       currentTache.createdById === userId ||
+      currentTache.relecteurId === userId ||
       currentTache.mission?.assignedToId === userId ||
       dossierTraitantId === userId;
 

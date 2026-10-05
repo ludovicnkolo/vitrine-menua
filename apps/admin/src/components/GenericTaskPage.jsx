@@ -18,6 +18,7 @@ import {
   Files,
   FileText,
   Check,
+  CheckSquare,
 } from "lucide-react";
 import ActionDropdown from "../components/ActionDropdown";
 import FilePreviewModal from "../components/FilePreviewModal";
@@ -2024,25 +2025,20 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                         <button
                           type="button"
                           onClick={async () => {
-                            if (await window.customConfirm(`Êtes-vous sûr de vouloir passer au statut : ${pendingStatus} ?`, "Confirmer le statut")) {
+                            if (await window.customConfirm(`Vous allez enregistrer 1 modification(s) sur cette ${mode === "MISSION" ? "mission" : "tâche"}.\n\nStatut : ${pendingStatus}`, "Confirmer l'enregistrement")) {
                               handleWorkflowAction(consultTask.id, pendingStatus);
                             }
                           }}
                           className="btn btn-primary"
                           style={{
-                            padding: "0.4rem 0.8rem",
-                            
+                            padding: "0.4rem 0.75rem",
+                            fontSize: "0.75rem",
                             display: "flex",
                             alignItems: "center",
-                            gap: "0.4rem",
-                            backgroundColor: "#1D4ED8",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: "pointer",
+                            gap: "0.25rem",
                           }}
                         >
-                          <Check size={14} color="white" /> Enregistrer
+                          <CheckSquare size={14} /> Enregistrer
                         </button>
                       )}
                     </div>
@@ -2453,7 +2449,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                                 const res = await fetch(
                                   new URL(
                                     getSafeApiUrl(
-                                      `/api/crm/tasks/${encodeURIComponent(t.id)}`,
+                                      `/api/crm/${mode === "MISSION" ? "tasks" : "taches"}/${encodeURIComponent(t.id)}`,
                                     ),
                                   ).toString(),
                                   {

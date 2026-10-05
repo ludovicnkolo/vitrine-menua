@@ -254,17 +254,14 @@ const UserFormFields = ({
             )}
           </label>
           <select
-            value={
-              user.isBlocked
-                ? "Inactif"
-                : user.status || (isEdit ? "Actif" : "Inactif")
-            }
-            onChange={handleChange(isEdit ? "isBlocked" : "status")}
+            value={user.status || "Invitation envoyée"}
+            onChange={handleChange("status")}
             style={selectStyle}
           >
-            {!isEdit && <option value="Inactif">Inactif</option>}
+            <option value="Invitation envoyée">Invitation envoyée</option>
+            <option value="Activation en attente">Activation en attente</option>
             <option value="Actif">Actif</option>
-            {isEdit && <option value="Inactif">Inactif</option>}
+            <option value="Suspendu / Inactif">Suspendu / Inactif</option>
           </select>
         </div>
       </div>

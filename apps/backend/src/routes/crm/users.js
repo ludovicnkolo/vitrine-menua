@@ -357,14 +357,18 @@ router.post(
       }
 
       // --- Validation unicité email et téléphone ---
-      const existingEmail = await prisma.utilisateur.findUnique({
-        where: { email },
+      const cleanEmail = String(email || "").trim().toLowerCase();
+      const allExistingUsers = await prisma.utilisateur.findMany({
+        select: { id: true, email: true, name: true },
       });
-      if (existingEmail) {
+      const duplicateEmailUser = allExistingUsers.find(
+        (u) => u.email && u.email.trim().toLowerCase() === cleanEmail,
+      );
+      if (duplicateEmailUser) {
         return res
           .status(409)
           .json({
-            error: `Un collaborateur avec l'email "${email}" existe déjà.`,
+            error: `Impossible d'inscrire ce membre : l'adresse email "${cleanEmail}" est déjà utilisée par un autre membre interne (${duplicateEmailUser.name}).`,
           });
       }
 
@@ -398,8 +402,8 @@ router.post(
 
       const user = await prisma.utilisateur.create({
         data: {
-          name,
-          email,
+          name: name.trim(),
+          email: cleanEmail,
           password: hashedPassword,
           resetToken: token,
           resetTokenExpiry,
@@ -429,7 +433,7 @@ router.post(
 
         await transporter.sendMail({
           from: process.env.SMTP_FROM || "contact@menuaconsulting.com",
-          to: email,
+          to: cleanEmail,
           subject: "Création de votre compte Menua Consulting",
           html: `
           <h3>Bienvenue ${name},</h3>
@@ -448,10 +452,15 @@ router.post(
 
       res.json(user);
     } catch (error) {
-      console.error(error);
+      console.error("Erreur création utilisateur:", error);
+      if (error.code === "P2002") {
+        return res.status(409).json({
+          error: "Impossible d'inscrire ce membre : l'adresse email ou le téléphone renseigné est déjà utilisé par un autre membre interne.",
+        });
+      }
       res
         .status(500)
-        .json({ error: "Erreur lors de la création de l'utilisateur." });
+        .json({ error: error.message || "Erreur lors de la création de l'utilisateur." });
     }
   },
 );
@@ -494,14 +503,45 @@ router.patch(
         }
       }
 
+      if (email !== undefined) {
+        const cleanEmail = String(email || "").trim().toLowerCase();
+        const allUsers = await prisma.utilisateur.findMany({
+          where: { id: { not: req.params.id } },
+          select: { id: true, email: true, name: true },
+        });
+        const duplicateEmail = allUsers.find(
+          (u) => u.email && u.email.trim().toLowerCase() === cleanEmail,
+        );
+        if (duplicateEmail) {
+          return res.status(409).json({
+            error: `Impossible de modifier ce membre : l'adresse email "${cleanEmail}" est déjà utilisée par un autre membre interne (${duplicateEmail.name}).`,
+          });
+        }
+      }
+
+      if (telephone !== undefined && telephone) {
+        const normalizedTel = String(telephone).replace(/\s/g, "");
+        const existingTel = await prisma.utilisateur.findFirst({
+          where: {
+            id: { not: req.params.id },
+            telephone: { equals: normalizedTel },
+          },
+        });
+        if (existingTel) {
+          return res.status(409).json({
+            error: `Impossible de modifier ce membre : le numéro "${telephone}" est déjà utilisé par un autre membre interne.`,
+          });
+        }
+      }
+
       const user = await prisma.utilisateur.update({
         where: { id: req.params.id },
         data: {
-          ...(name && { name }),
-          ...(email && { email }),
+          ...(name && { name: name.trim() }),
+          ...(email && { email: String(email).trim().toLowerCase() }),
           ...(roleId !== undefined && { roleId }),
           ...(profile !== undefined && { profile }),
-          ...(telephone !== undefined && { telephone }),
+          ...(telephone !== undefined && { telephone: telephone ? String(telephone).replace(/\s/g, "") : null }),
           ...(lieuResidence !== undefined && { lieuResidence }),
           ...(experienceCle !== undefined && { experienceCle }),
           ...(langues !== undefined && { langues }),
@@ -518,8 +558,13 @@ router.patch(
       );
       res.json(user);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Erreur lors de la mise à jour." });
+      console.error("Erreur modification utilisateur:", error);
+      if (error.code === "P2002") {
+        return res.status(409).json({
+          error: "Impossible de modifier ce membre : cette adresse email ou ce numéro de téléphone est déjà utilisé par un autre membre interne.",
+        });
+      }
+      res.status(500).json({ error: error.message || "Erreur lors de la mise à jour." });
     }
   },
 );

@@ -334,13 +334,17 @@ const UsersPage = ({ forceTab }) => {
         // Read the actual API error message
         try {
           const errData = await res.json();
-          setErrorMsg(errData.error || errorText);
+          const message = errData.error || errorText;
+          setErrorMsg(message);
+          window.customAlert(message, "Erreur");
         } catch (e) {
           setErrorMsg(errorText);
+          window.customAlert(errorText, "Erreur");
         }
       }
     } catch (e) {
       setErrorMsg("Erreur réseau");
+      window.customAlert("Erreur réseau lors de la communication avec le serveur.", "Erreur");
     }
     setLoading(false);
   };
@@ -349,10 +353,22 @@ const UsersPage = ({ forceTab }) => {
     e.preventDefault();
     if (!newUser.name || !newUser.email || !newUser.telephone || !newUser.roleId || !newUser.lieuResidence || !newUser.experienceCle || !newUser.langues)
       return setErrorMsg("Veuillez remplir tous les champs obligatoires (marqués d'un astérisque rouge).");
+
+    const emailTrimmed = newUser.email.trim().toLowerCase();
+    const existing = users.find(
+      (u) => u.email && u.email.trim().toLowerCase() === emailTrimmed,
+    );
+    if (existing) {
+      const msg = `Impossible d'inscrire ce membre : l'adresse email "${newUser.email.trim()}" est déjà attribuée à ${existing.name}.`;
+      setErrorMsg(msg);
+      window.customAlert(msg, "Email déjà existant");
+      return;
+    }
+
     await submitApiRequest(
       "/api/crm/users",
       "POST",
-      { ...newUser, lastLogin: "Jamais connecté" },
+      { ...newUser, email: emailTrimmed, lastLogin: "Jamais connecté" },
       () => {
         setShowModal(false);
         setNewUser({
@@ -450,12 +466,26 @@ const UsersPage = ({ forceTab }) => {
 
   const handleUpdateUser = async (e) => {
     e.preventDefault();
+    const emailTrimmed = editUser.email?.trim().toLowerCase();
+    const existing = users.find(
+      (u) =>
+        u.id !== editUser.id &&
+        u.email &&
+        u.email.trim().toLowerCase() === emailTrimmed,
+    );
+    if (existing) {
+      const msg = `Impossible d'enregistrer : l'adresse email "${editUser.email?.trim()}" est déjà attribuée à un autre membre (${existing.name}).`;
+      setErrorMsg(msg);
+      window.customAlert(msg, "Email déjà existant");
+      return;
+    }
+
     await submitApiRequest(
       `/api/crm/users/${encodeURIComponent(editUser.id)}`,
       "PATCH",
       {
         name: editUser.name,
-        email: editUser.email,
+        email: emailTrimmed,
         roleId: editUser.roleId,
         profile: editUser.profile,
         status: editUser.status,

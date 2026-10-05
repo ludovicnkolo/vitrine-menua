@@ -3287,13 +3287,13 @@ const DossiersPage = () => {
         <table style={{ tableLayout: "fixed", width: "100%" }}>
           <thead>
             <tr>
-              <th style={{ width: "10%" }}>{t("common.reference")}</th>
-              <th style={{ width: "25%", textAlign: "left", paddingLeft: "1.25rem" }}>{t("dossier.folderName", "Nom du dossier")}</th>
-              <th style={{ width: "12%" }}>{t("dossier.origin")}</th>
-              <th style={{ width: "20%" }}>{t("dossier.owner", "Propriétaire")}</th>
-              <th style={{ width: "11%" }}>{t("common.status")}</th>
-              <th style={{ width: "14%" }}>{t("common.createdAt")}</th>
-              <th style={{ width: "8%" }}>{t("common.actions")}</th>
+              <th style={{ width: "85px" }}>{t("common.reference")}</th>
+              <th style={{ textAlign: "left", paddingLeft: "1.25rem" }}>{t("dossier.folderName", "Nom du dossier")}</th>
+              <th style={{ width: "115px" }}>{t("dossier.origin")}</th>
+              <th style={{ width: "180px" }}>{t("dossier.owner", "Propriétaire")}</th>
+              <th style={{ width: "110px" }}>{t("common.status")}</th>
+              <th className="table-date-cell" style={{ width: "165px" }}>{t("common.createdAt")}</th>
+              <th style={{ width: "70px" }}>{t("common.actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -3419,11 +3419,12 @@ const DossiersPage = () => {
                       </td>
 
                       <td
+                        className="table-date-cell"
                         style={{
                           color: "var(--text-muted)",
-                          whiteSpace: "nowrap",
                           fontSize: "0.85rem",
                           textAlign: "center",
+                          width: "165px",
                         }}
                       >
                         {new Date(d.createdAt).toLocaleString("fr-FR", {

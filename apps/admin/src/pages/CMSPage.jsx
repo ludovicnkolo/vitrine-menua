@@ -783,6 +783,7 @@ const CMSPage = () => {
                       Statut
                     </th>
                     <th
+                      className="table-date-cell"
                       style={{
                         padding: "0.85rem 1.25rem",
                         textAlign: "left",
@@ -791,7 +792,7 @@ const CMSPage = () => {
                         color: "#64748B",
                         letterSpacing: "0.05em",
                         textTransform: "uppercase",
-                        width: "17%",
+                        width: "190px",
                       }}
                     >
                       Date de publication
@@ -805,7 +806,7 @@ const CMSPage = () => {
                         color: "#64748B",
                         letterSpacing: "0.05em",
                         textTransform: "uppercase",
-                        width: "12%",
+                        width: "90px",
                       }}
                     >
                       Actions
@@ -954,10 +955,10 @@ const CMSPage = () => {
                           </td>
 
                           {/* Date de publication */}
-                          <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#0F172A", fontSize: "0.85rem" }}>
-                              <Calendar size={15} style={{ color: "#94A3B8" }} />
-                              <span>{dateStr} {timeStr}</span>
+                          <td className="table-date-cell" style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle", width: "190px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#0F172A", fontSize: "0.85rem", whiteSpace: "nowrap" }}>
+                              <Calendar size={15} style={{ color: "#94A3B8", flexShrink: 0 }} />
+                              <span style={{ whiteSpace: "nowrap" }}>{dateStr} {timeStr}</span>
                             </div>
                           </td>
 

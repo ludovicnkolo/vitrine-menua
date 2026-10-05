@@ -1211,8 +1211,8 @@ const InboxPage = ({ userRole }) => {
                           {t("inbox.columns.type")}
                         </th>
                       )}
-                      <th style={{ width: "14%" }}>{t("inbox.columns.date")}</th>
-                      <th style={{ width: "10%", textAlign: "center" }}>
+                      <th className="table-date-cell" style={{ width: "160px" }}>{t("inbox.columns.date")}</th>
+                      <th style={{ width: "80px", textAlign: "center" }}>
                         {t("inbox.columns.actions")}
                       </th>
                     </tr>
@@ -1381,10 +1381,10 @@ const InboxPage = ({ userRole }) => {
                               </td>
                             )}
                             <td
+                              className="table-date-cell"
                               style={{
                                 color: "var(--text-muted)",
-                                
-                                whiteSpace: "nowrap",
+                                width: "160px",
                               }}
                             >
                               {formatDate(m.createdAt)}

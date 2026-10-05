@@ -2595,12 +2595,12 @@ const UsersPage = ({ forceTab }) => {
               <table style={{ tableLayout: "fixed", width: "100%" }}>
                 <thead>
                   <tr>
-                    <th style={{ width: "20%" }}>Nom</th>
-                    <th style={{ width: "24%" }}>Email</th>
-                    <th style={{ width: "22%" }}>Rôle</th>
-                    <th style={{ width: "10%" }}>Statut</th>
-                    <th style={{ width: "16%" }}>Dernière Connexion</th>
-                    <th style={{ width: "8%" }}>Actions</th>
+                    <th style={{ textAlign: "left", paddingLeft: "1.25rem" }}>Nom</th>
+                    <th style={{ width: "220px" }}>Email</th>
+                    <th style={{ width: "180px" }}>Rôle</th>
+                    <th style={{ width: "100px" }}>Statut</th>
+                    <th className="table-date-cell" style={{ width: "165px" }}>Dernière Connexion</th>
+                    <th style={{ width: "70px" }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2618,7 +2618,7 @@ const UsersPage = ({ forceTab }) => {
                     })
                     .map((u) => (
                     <tr key={u.id}>
-                      <td>
+                      <td style={{ textAlign: "left", paddingLeft: "1.25rem" }}>
                         <div className="truncate-name" style={{ maxWidth: "100%" }} title={u.name}>
                           {u.name}
                         </div>
@@ -2650,10 +2650,11 @@ const UsersPage = ({ forceTab }) => {
                         </span>
                       </td>
                       <td
+                        className="table-date-cell"
                         style={{
                           color: "var(--text-muted)",
-                          
-                          whiteSpace: "nowrap",
+                          width: "165px",
+                          textAlign: "center",
                         }}
                       >
                         {u.lastLogin
@@ -2700,13 +2701,13 @@ const UsersPage = ({ forceTab }) => {
               <table style={{ tableLayout: "fixed", width: "100%" }}>
                 <thead>
                   <tr>
-                    <th style={{ width: "20%" }}>Société / Nom</th>
-                    <th style={{ width: "20%" }}>Email</th>
-                    <th style={{ width: "10%" }}>Type</th>
-                    <th style={{ width: "8%" }}>État</th>
-                    <th style={{ width: "20%" }}>Activité</th>
-                    <th style={{ width: "14%" }}>Date de création</th>
-                    <th style={{ width: "8%" }}>Actions</th>
+                    <th style={{ textAlign: "left", paddingLeft: "1.25rem" }}>Société / Nom</th>
+                    <th style={{ width: "200px" }}>Email</th>
+                    <th style={{ width: "100px" }}>Type</th>
+                    <th style={{ width: "90px" }}>État</th>
+                    <th style={{ width: "180px" }}>Activité</th>
+                    <th className="table-date-cell" style={{ width: "155px" }}>Date de création</th>
+                    <th style={{ width: "70px" }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2793,8 +2794,8 @@ const UsersPage = ({ forceTab }) => {
                           {c.secteurActivite || "N/A"}
                         </div>
                       </td>
-                      <td>
-                        <span style={{ color: "var(--text-muted)", whiteSpace: "nowrap" }}>
+                      <td className="table-date-cell" style={{ textAlign: "center", width: "155px" }}>
+                        <span style={{ color: "var(--text-muted)" }}>
                           {c.createdAt ? formatDate(c.createdAt) : "N/A"}
                         </span>
                       </td>

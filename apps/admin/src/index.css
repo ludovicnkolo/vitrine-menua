@@ -223,6 +223,13 @@ th, td {
   vertical-align: middle;
 }
 
+.table-date-cell, .col-date {
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  font-variant-numeric: tabular-nums;
+}
+
 
 
 th {

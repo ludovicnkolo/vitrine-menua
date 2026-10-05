@@ -2456,6 +2456,7 @@ export default function DocumentsPage() {
                             ORIGINE
                           </th>
                           <th
+                            className="table-date-cell"
                             style={{
                               padding: "0.75rem 1rem",
                               textAlign: "left",
@@ -2464,7 +2465,7 @@ export default function DocumentsPage() {
                               color: "#64748B",
                               letterSpacing: "0.05em",
                               textTransform: "uppercase",
-                              width: "20%",
+                              width: "140px",
                             }}
                           >
                             DATE
@@ -2572,7 +2573,7 @@ export default function DocumentsPage() {
                                 </td>
 
                                 {/* DATE */}
-                                <td style={{ padding: "0.75rem 1rem", verticalAlign: "middle", color: "#64748B", fontSize: "0.8rem" }}>
+                                <td className="table-date-cell" style={{ padding: "0.75rem 1rem", verticalAlign: "middle", color: "#64748B", fontSize: "0.8rem", width: "140px" }}>
                                   {dateStr}
                                 </td>
 

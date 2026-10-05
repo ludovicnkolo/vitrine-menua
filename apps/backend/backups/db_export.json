@@ -466,6 +466,70 @@
       "noteRappel": null,
       "dateEntretien": null,
       "lienVisio": null
+    },
+    {
+      "id": "35be2e8f-5979-4956-994a-f33d81db715b",
+      "formulaireId": "6a52ba6b-bff3-4101-81c6-ba0db743c144",
+      "type": "RECRUTEMENT",
+      "statusSubmitter": "SOCIETE",
+      "nomPrenom": "LUDOVIC NKOLO",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "+1 (437) 309-4416",
+      "priority": "NORMAL",
+      "description": "test",
+      "raisonSocial": "Menua",
+      "objet": "Demande de collaboration",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de profil</strong> : <span>Entreprise (B2B)</span><br/>\n        <strong>Société</strong> : <span>Menua</span><br/>\n        <strong>Nom complet</strong> : <span>NKOLO LUDOVIC</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (437) 309-4416</span><br/>\n        <strong>Expérience</strong> : <span>Plus de 10 ans</span><br/>\n        <strong>Langues</strong> : <span>Anglais</span><br/>\n        <strong>Localisation</strong> : <span>Yaounde</span><br/>\n        <strong>Disponibilité</strong> : <span>Immédiate</span><br/>\n        <strong>LinkedIn / Portfolio</strong> : <span><a href=\"https://www.cakux.co.uk\" style=\"color: #141824;\">https://www.cakux.co.uk</a></span>\n      </div>\n      <strong>Compétences clés</strong> : <div><ul><li>Risques et Conformité</li></ul></div><br/>\n      <strong>Message / Motivations</strong> : <div>\n      test\n      </div>\n    ",
+      "status": "NOUVEAU",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-10-05T17:47:50.964Z",
+      "createdAt": "2026-10-05T17:47:50.964Z",
+      "updatedAt": "2026-10-05T17:47:50.964Z",
+      "dateRappel": null,
+      "noteRappel": null,
+      "dateEntretien": null,
+      "lienVisio": null
+    },
+    {
+      "id": "7eff2cb0-c57c-4a26-8cb2-df18ab22c655",
+      "formulaireId": "5f421f05-df61-495d-a53d-cddadd325efd",
+      "type": "RECRUTEMENT",
+      "statusSubmitter": "SOCIETE",
+      "nomPrenom": "Amal Colon",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "+1 (637) 623-3803",
+      "priority": "NORMAL",
+      "description": "test",
+      "raisonSocial": "menua",
+      "objet": "Demande de collaboration",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de profil</strong> : <span>Entreprise (B2B)</span><br/>\n        <strong>Société</strong> : <span>menua</span><br/>\n        <strong>Nom complet</strong> : <span>Colon Amal</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (637) 623-3803</span><br/>\n        <strong>Expérience</strong> : <span>Plus de 10 ans</span><br/>\n        <strong>Langues</strong> : <span>Anglais</span><br/>\n        <strong>Localisation</strong> : <span>Ipsum laudantium v</span><br/>\n        <strong>Disponibilité</strong> : <span>Immédiate</span><br/>\n        <strong>LinkedIn / Portfolio</strong> : <span><a href=\"https://www.ditet.info\" style=\"color: #141824;\">https://www.ditet.info</a></span>\n      </div>\n      <strong>Compétences clés</strong> : <div><ul><li>Support opérationnel CGP</li></ul></div><br/>\n      <strong>Message / Motivations</strong> : <div>\n      test\n      </div>\n    ",
+      "status": "NOUVEAU",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-10-05T17:48:44.200Z",
+      "createdAt": "2026-10-05T17:48:44.200Z",
+      "updatedAt": "2026-10-05T17:48:44.200Z",
+      "dateRappel": null,
+      "noteRappel": null,
+      "dateEntretien": null,
+      "lienVisio": null
     }
   ],
   "formulaireRecrutements": [
@@ -495,6 +559,24 @@
       "lieuResidence": "efrf",
       "langue": "Anglais",
       "lienLinkedin": null
+    },
+    {
+      "id": "c40d7594-fc10-4757-9f7c-80f3364a1a46",
+      "formulaireId": "35be2e8f-5979-4956-994a-f33d81db715b",
+      "competenceCle": "Risques et Conformité",
+      "anneeExperience": "Plus de 10 ans",
+      "lieuResidence": "Yaounde",
+      "langue": "Anglais",
+      "lienLinkedin": "https://www.cakux.co.uk"
+    },
+    {
+      "id": "f57d3ae4-1068-4810-a0c1-62a52fb9fb72",
+      "formulaireId": "7eff2cb0-c57c-4a26-8cb2-df18ab22c655",
+      "competenceCle": "Support opérationnel CGP",
+      "anneeExperience": "Plus de 10 ans",
+      "lieuResidence": "Ipsum laudantium v",
+      "langue": "Anglais",
+      "lienLinkedin": "https://www.ditet.info"
     }
   ],
   "formulaireContacts": [
@@ -657,28 +739,7 @@
       "updatedAt": "2026-10-04T17:21:18.480Z"
     }
   ],
-  "documents": [
-    {
-      "id": "db808dc7-e659-4802-9276-5ffb3a7d8c42",
-      "name": "crm.pdf",
-      "url": "ged/1791217694931-d193d89ccfe705c3-crm.pdf",
-      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
-      "dossierId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
-      "missionId": null,
-      "createdAt": "2026-10-05T16:28:17.327Z",
-      "isDeleted": true
-    },
-    {
-      "id": "736de98b-61d8-4af0-9d0d-0df2662e21b2",
-      "name": "crm.pdf",
-      "url": "ged/1791218654618-bed0b2c276f03310-crm.pdf",
-      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
-      "dossierId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
-      "missionId": null,
-      "createdAt": "2026-10-05T16:44:16.449Z",
-      "isDeleted": false
-    }
-  ],
+  "documents": [],
   "auditLogs": [
     {
       "id": "96f04a25-f7d2-40a9-9445-746bcd3cf0c9",
@@ -2076,6 +2137,39 @@
       "dossierId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
       "formulaireId": null,
       "createdAt": "2026-10-05T17:44:11.559Z"
+    },
+    {
+      "id": "e6f63a74-c60a-43d4-a598-224f738dc929",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "SUPPRESSION_DOCUMENT",
+      "targetId": "736de98b-61d8-4af0-9d0d-0df2662e21b2",
+      "targetType": "DOCUMENT",
+      "details": "Document supprimé (soft): crm.pdf",
+      "dossierId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
+      "formulaireId": null,
+      "createdAt": "2026-10-05T17:44:15.305Z"
+    },
+    {
+      "id": "2ed43981-304d-404d-b6c3-0ceb7ffe194e",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "PURGE_DEFINITIVE",
+      "targetId": "DOCUMENT",
+      "targetType": "Purge définitive de : crm.pdf",
+      "details": "::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-05T17:44:28.913Z"
+    },
+    {
+      "id": "f5b2d668-1eb5-4dd7-b2f2-a38a1ed6d9f6",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "PURGE_DEFINITIVE",
+      "targetId": "DOCUMENT",
+      "targetType": "Purge définitive de : crm.pdf",
+      "details": "::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-05T17:44:28.997Z"
     }
   ],
   "messagePersonnels": [
@@ -3695,8 +3789,8 @@
       "isDeleted": false,
       "createdAt": "2026-09-30T21:05:32.000Z",
       "receivedAt": "2026-09-30T21:05:32.000Z",
-      "dateRappel": null,
-      "noteRappel": null,
+      "dateRappel": "2027-02-11T09:00:00.000Z",
+      "noteRappel": "fvjwfbv",
       "dateEntretien": null,
       "lienVisio": null,
       "dossierId": null,

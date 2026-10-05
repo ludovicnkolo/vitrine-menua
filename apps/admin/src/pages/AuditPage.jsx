@@ -389,6 +389,7 @@ export default function AuditPage() {
             <thead>
               <tr style={{ background: "#FFF", borderBottom: "1px solid #E2E8F0" }}>
                 <th
+                  className="table-date-cell"
                   style={{
                     padding: "0.9rem 1.25rem",
                     textAlign: "left",
@@ -397,7 +398,7 @@ export default function AuditPage() {
                     color: "#64748B",
                     letterSpacing: "0.05em",
                     textTransform: "uppercase",
-                    width: "16%",
+                    width: "165px",
                   }}
                 >
                   Horodatage
@@ -529,14 +530,14 @@ export default function AuditPage() {
                       }}
                     >
                       {/* Horodatage */}
-                      <td style={{ padding: "0.9rem 1.25rem", verticalAlign: "middle" }}>
+                      <td className="table-date-cell" style={{ padding: "0.9rem 1.25rem", verticalAlign: "middle", width: "165px" }}>
                         <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
-                          <Clock size={15} style={{ color: "#94A3B8", marginTop: "2px" }} />
-                          <div>
-                            <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A" }}>
+                          <Clock size={15} style={{ color: "#94A3B8", marginTop: "2px", flexShrink: 0 }} />
+                          <div style={{ whiteSpace: "nowrap" }}>
+                            <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A", whiteSpace: "nowrap" }}>
                               {dateStr}
                             </div>
-                            <div style={{ fontSize: "0.78rem", color: "#64748B" }}>
+                            <div style={{ fontSize: "0.78rem", color: "#64748B", whiteSpace: "nowrap" }}>
                               {timeStr}
                             </div>
                           </div>

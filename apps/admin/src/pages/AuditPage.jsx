@@ -385,7 +385,7 @@ export default function AuditPage() {
         }}
       >
         <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
             <thead>
               <tr style={{ background: "#FFF", borderBottom: "1px solid #E2E8F0" }}>
                 <th
@@ -411,7 +411,7 @@ export default function AuditPage() {
                     color: "#64748B",
                     letterSpacing: "0.05em",
                     textTransform: "uppercase",
-                    width: "22%",
+                    width: "20%",
                   }}
                 >
                   Utilisateur & Rôle
@@ -425,7 +425,7 @@ export default function AuditPage() {
                     color: "#64748B",
                     letterSpacing: "0.05em",
                     textTransform: "uppercase",
-                    width: "22%",
+                    width: "18%",
                   }}
                 >
                   Action effectuée
@@ -439,7 +439,7 @@ export default function AuditPage() {
                     color: "#64748B",
                     letterSpacing: "0.05em",
                     textTransform: "uppercase",
-                    width: "26%",
+                    width: "32%",
                   }}
                 >
                   Cible / Détails contextuels
@@ -563,11 +563,11 @@ export default function AuditPage() {
                           >
                             {userInitial}
                           </div>
-                          <div>
-                            <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A" }}>
+                          <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
+                            <div className="truncate-name" style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A", maxWidth: "100%" }} title={userName}>
                               {userName}
                             </div>
-                            <div style={{ fontSize: "0.75rem", color: "#64748B" }}>
+                            <div className="truncate-name" style={{ fontSize: "0.75rem", color: "#64748B", maxWidth: "100%" }} title={userRole}>
                               {userRole}
                             </div>
                           </div>
@@ -593,15 +593,15 @@ export default function AuditPage() {
 
                       {/* Cible / Détails contextuels */}
                       <td style={{ padding: "0.9rem 1.25rem", verticalAlign: "middle" }}>
-                        <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                        <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", minWidth: 0 }}>
                           <FileText size={15} style={{ color: "#94A3B8", marginTop: "2px", flexShrink: 0 }} />
-                          <div>
+                          <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
                             {targetLabel && (
-                              <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A" }}>
+                              <div className="truncate-name" style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A", maxWidth: "100%" }} title={targetLabel}>
                                 {targetLabel}
                               </div>
                             )}
-                            <div style={{ fontSize: "0.78rem", color: "#64748B" }}>
+                            <div className="truncate-name" style={{ fontSize: "0.78rem", color: "#64748B", maxWidth: "100%" }} title={log.details || "-"}>
                               {log.details || "-"}
                             </div>
                           </div>

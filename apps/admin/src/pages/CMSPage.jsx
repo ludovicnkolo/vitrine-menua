@@ -737,7 +737,7 @@ const CMSPage = () => {
             }}
           >
             <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
                 <thead>
                   <tr style={{ borderBottom: "1px solid #E2E8F0" }}>
                     <th
@@ -884,11 +884,18 @@ const CMSPage = () => {
                               >
                                 <FileText size={18} />
                               </div>
-                              <div>
-                                <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "#0F172A" }}>
+                              <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
+                                <div
+                                  className="truncate-name"
+                                  style={{ fontWeight: 700, fontSize: "0.88rem", color: "#0F172A", maxWidth: "100%" }}
+                                  title={pub.title}
+                                >
                                   {pub.title}
                                 </div>
-                                <div style={{ fontSize: "0.75rem", color: "#64748B", marginTop: "2px" }}>
+                                <div
+                                  className="truncate-name"
+                                  style={{ fontSize: "0.75rem", color: "#64748B", marginTop: "2px", maxWidth: "100%" }}
+                                >
                                   Catégorie : {pub.category || "Organisation et Externalisation"} • Langues : FR | EN
                                 </div>
                               </div>
@@ -897,7 +904,7 @@ const CMSPage = () => {
 
                           {/* Auteur */}
                           <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", minWidth: 0 }}>
                               <div
                                 style={{
                                   width: "28px",
@@ -915,7 +922,11 @@ const CMSPage = () => {
                               >
                                 {authorInitial}
                               </div>
-                              <span style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A" }}>
+                              <span
+                                className="truncate-name"
+                                style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A", maxWidth: "100%" }}
+                                title={authorName}
+                              >
                                 {authorName}
                               </span>
                             </div>

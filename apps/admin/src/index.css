@@ -197,13 +197,13 @@ body {
   border: 1px solid var(--border);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  width: 100%;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 800px;
-  table-layout: auto;
+  table-layout: fixed;
 }
 
 th {
@@ -215,9 +215,12 @@ td {
 }
 
 th, td {
-  padding: 0.5rem 1rem;
+  padding: 0.65rem 0.85rem;
   text-align: center;
   border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
 }
 
 
@@ -297,20 +300,19 @@ tr:hover td {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-  overflow-wrap: break-word;
-  word-break: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   max-width: 100%;
   text-align: left;
   margin: 0;
 }
 
-.truncate-name {
+.truncate-name, .cell-truncate {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  display: inline-block;
-  vertical-align: bottom;
+  display: block;
 }
 
 @keyframes blink-expired {

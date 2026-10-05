@@ -451,23 +451,23 @@ const RolesPage = () => {
 
           <div className="card" style={{ padding: 0, overflow: "visible" }}>
             <div className="table-wrapper">
-              <table>
+              <table style={{ tableLayout: "fixed", width: "100%" }}>
                 <thead>
                   <tr>
-                    <th>Rôle</th>
-                    <th>Permissions</th>
-                    <th>Statut</th>
-                    <th>Utilisateurs</th>
-                    <th>Actions</th>
+                    <th style={{ width: "24%", textAlign: "left", paddingLeft: "1.25rem" }}>Rôle</th>
+                    <th style={{ width: "36%" }}>Permissions</th>
+                    <th style={{ width: "14%" }}>Statut</th>
+                    <th style={{ width: "14%" }}>Utilisateurs</th>
+                    <th style={{ width: "12%" }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {roles.map((r) => (
                     <tr key={r.id}>
-                      <td>
-                        <span className="truncate-name" style={{}}>
+                      <td style={{ textAlign: "left", paddingLeft: "1.25rem" }}>
+                        <div className="truncate-name" style={{ maxWidth: "100%" }} title={r.name}>
                           {r.name}
-                        </span>
+                        </div>
                       </td>
                       <td>
                         <span style={{ color: "var(--text-muted)" }}>

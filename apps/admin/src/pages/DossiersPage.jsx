@@ -3284,16 +3284,16 @@ const DossiersPage = () => {
         </select>
       </div>
       <div className="table-wrapper">
-        <table>
+        <table style={{ tableLayout: "fixed", width: "100%" }}>
           <thead>
             <tr>
               <th style={{ width: "10%" }}>{t("common.reference")}</th>
-              <th style={{ width: "22%" }}>{t("dossier.folderName", "Nom du dossier")}</th>
-              <th style={{ width: "15%" }}>{t("dossier.origin")}</th>
+              <th style={{ width: "25%", textAlign: "left", paddingLeft: "1.25rem" }}>{t("dossier.folderName", "Nom du dossier")}</th>
+              <th style={{ width: "12%" }}>{t("dossier.origin")}</th>
               <th style={{ width: "20%" }}>{t("dossier.owner", "Propriétaire")}</th>
-              <th style={{ width: "10%" }}>{t("common.status")}</th>
-              <th style={{ width: "13%" }}>{t("common.createdAt")}</th>
-              <th style={{ width: "10%" }}>{t("common.actions")}</th>
+              <th style={{ width: "11%" }}>{t("common.status")}</th>
+              <th style={{ width: "14%" }}>{t("common.createdAt")}</th>
+              <th style={{ width: "8%" }}>{t("common.actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -3360,36 +3360,39 @@ const DossiersPage = () => {
                     >
                       <td>
                         <div
+                          className="truncate-name"
                           style={{
-                            whiteSpace: "nowrap",
                             fontWeight: 400,
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            maxWidth: "90px",
+                            maxWidth: "100%",
+                            textAlign: "center",
                           }}
                           title={d.reference || d.id}
                         >
                           {d.reference || d.id}
                         </div>
                       </td>
-                      <td>
+                      <td style={{ textAlign: "left", paddingLeft: "1.25rem" }}>
                         <span
                           className="truncate-name"
-                          style={{ color: "var(--text-main)" }}
+                          style={{
+                            color: "var(--text-main)",
+                            maxWidth: "100%",
+                            display: "block",
+                          }}
+                          title={d.name}
                         >
                           {d.name}
                         </span>
                       </td>
                       <td>
                         <div
+                          className="truncate-name"
                           style={{
                             color: "var(--text-muted)",
-                            
-                            textTransform: "capitalize",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                            maxWidth: "120px",
+                            textTransform: "uppercase",
+                            maxWidth: "100%",
+                            fontSize: "0.85rem",
+                            textAlign: "center",
                           }}
                           title={dOrigin}
                         >
@@ -3398,11 +3401,11 @@ const DossiersPage = () => {
                       </td>
                       <td>
                         <div
+                          className="truncate-name"
                           style={{
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            maxWidth: "160px",
+                            maxWidth: "100%",
+                            fontSize: "0.85rem",
+                            textAlign: "center",
                           }}
                           title={dOwner}
                         >
@@ -3410,7 +3413,7 @@ const DossiersPage = () => {
                         </div>
                       </td>
                       <td>
-                        <div className="truncate-text">
+                        <div style={{ display: "inline-flex", justifyContent: "center" }}>
                           {getStatusBadge(d.status)}
                         </div>
                       </td>
@@ -3419,7 +3422,8 @@ const DossiersPage = () => {
                         style={{
                           color: "var(--text-muted)",
                           whiteSpace: "nowrap",
-                          
+                          fontSize: "0.85rem",
+                          textAlign: "center",
                         }}
                       >
                         {new Date(d.createdAt).toLocaleString("fr-FR", {
@@ -3437,6 +3441,7 @@ const DossiersPage = () => {
                             flexDirection: "column",
                             gap: "0.25rem",
                             alignItems: "center",
+                            justifyContent: "center",
                           }}
                         >
                           <button

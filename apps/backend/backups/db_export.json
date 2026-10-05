@@ -256,6 +256,27 @@
       "lastLogin": null,
       "createdAt": "2026-10-05T08:15:41.479Z",
       "updatedAt": "2026-10-05T08:34:11.052Z"
+    },
+    {
+      "id": "6de51cd0-085b-4f83-8597-9e2218a2c12b",
+      "email": "ludo@gmail.com",
+      "password": "$2a$10$cg/OtUT8Lm7a1/IKU4xdJe.0BP99UMKU9gUDPDgBlykzqGlgQmyIa",
+      "name": "Ipsum voluptas aut h wfbqfbiuwrfiur fwbqfibiuwr qjbwjifwbef dwbe",
+      "roleId": "7f685243-dda5-4117-a675-d4a7364c7a66",
+      "telephone": "+1 (555) 205-8257",
+      "lieuResidence": "Eius velit proident",
+      "experienceCle": "Velit quaerat volup",
+      "langues": "Anglais",
+      "formations": "Sed in autem labore ",
+      "profile": "Quis culpa et mollit",
+      "idCardUrl": null,
+      "resetToken": "5b7a9e7ecf94479dfc66f9337f4c0462034a418bd26f9741c6fb29b10f40ad84",
+      "resetTokenExpiry": "2026-10-06T17:33:30.104Z",
+      "isBlocked": true,
+      "status": "Suspendu / Inactif",
+      "lastLogin": null,
+      "createdAt": "2026-10-05T17:33:30.431Z",
+      "updatedAt": "2026-10-05T17:33:30.431Z"
     }
   ],
   "clients": [
@@ -541,6 +562,25 @@
       "createdAt": "2026-10-04T07:19:12.504Z",
       "updatedAt": "2026-10-04T07:19:12.504Z",
       "isSystem": true
+    },
+    {
+      "origin": "COLLABORATEUR",
+      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "id": "494fafdf-e7c0-4f1b-8cba-a77526d7dd75",
+      "reference": "DOS-04",
+      "name": "dos-04_ipsum_voluptas_aut_h_wfbqfbiuwrfiur_fwbqfibiuwr_qjbwjifwbef_dwbe",
+      "description": "adcc",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": "6de51cd0-085b-4f83-8597-9e2218a2c12b",
+      "traitantId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "parentDossierId": null,
+      "createdAt": "2026-10-05T17:33:59.433Z",
+      "updatedAt": "2026-10-05T17:33:59.433Z",
+      "isSystem": false
     }
   ],
   "missions": [
@@ -2003,6 +2043,39 @@
       "dossierId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
       "formulaireId": null,
       "createdAt": "2026-10-05T16:44:25.132Z"
+    },
+    {
+      "id": "cc10605c-d12f-4ab0-ad6a-f741a9ac7ebd",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_UTILISATEUR",
+      "targetId": "6de51cd0-085b-4f83-8597-9e2218a2c12b",
+      "targetType": "USER",
+      "details": "Utilisateur créé : Ipsum voluptas aut h wfbqfbiuwrfiur fwbqfibiuwr qjbwjifwbef dwbe (ludo@gmail.com)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-05T17:33:30.442Z"
+    },
+    {
+      "id": "3881ed3a-bcf2-423a-ab05-d75466f22ca4",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_DOSSIER",
+      "targetId": "494fafdf-e7c0-4f1b-8cba-a77526d7dd75",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dos-04_ipsum_voluptas_aut_h_wfbqfbiuwrfiur_fwbqfibiuwr_qjbwjifwbef_dwbe",
+      "dossierId": "494fafdf-e7c0-4f1b-8cba-a77526d7dd75",
+      "formulaireId": null,
+      "createdAt": "2026-10-05T17:33:59.461Z"
+    },
+    {
+      "id": "4c5e006c-f0d7-4841-9c53-8c14691635f1",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "SUPPRESSION_DOCUMENT",
+      "targetId": "db808dc7-e659-4802-9276-5ffb3a7d8c42",
+      "targetType": "DOCUMENT",
+      "details": "Document supprimé (soft): crm.pdf",
+      "dossierId": "834184c0-caae-4dbc-9fc7-6ed6914bf403",
+      "formulaireId": null,
+      "createdAt": "2026-10-05T17:44:11.559Z"
     }
   ],
   "messagePersonnels": [

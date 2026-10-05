@@ -2592,14 +2592,14 @@ const UsersPage = ({ forceTab }) => {
 
           <div className="table-wrapper">
             {tab === "interne" ? (
-              <table>
+              <table style={{ tableLayout: "fixed", width: "100%" }}>
                 <thead>
                   <tr>
                     <th style={{ width: "20%" }}>Nom</th>
-                    <th style={{ width: "22%" }}>Email</th>
-                    <th style={{ width: "25%" }}>Rôle</th>
+                    <th style={{ width: "24%" }}>Email</th>
+                    <th style={{ width: "22%" }}>Rôle</th>
                     <th style={{ width: "10%" }}>Statut</th>
-                    <th style={{ width: "15%" }}>Dernière Connexion</th>
+                    <th style={{ width: "16%" }}>Dernière Connexion</th>
                     <th style={{ width: "8%" }}>Actions</th>
                   </tr>
                 </thead>
@@ -2619,19 +2619,16 @@ const UsersPage = ({ forceTab }) => {
                     .map((u) => (
                     <tr key={u.id}>
                       <td>
-                        <span className="truncate-name" style={{}}>
+                        <div className="truncate-name" style={{ maxWidth: "100%" }} title={u.name}>
                           {u.name}
-                        </span>
+                        </div>
                       </td>
                       <td>
                         <div
+                          className="truncate-name"
                           style={{
-                            maxWidth: "180px",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
+                            maxWidth: "100%",
                             color: "var(--text-muted)",
-                            
                           }}
                           title={u.email}
                         >
@@ -2700,15 +2697,15 @@ const UsersPage = ({ forceTab }) => {
                 </tbody>
               </table>
             ) : (
-              <table>
+              <table style={{ tableLayout: "fixed", width: "100%" }}>
                 <thead>
                   <tr>
-                    <th style={{ width: "18%" }}>Société / Nom</th>
-                    <th style={{ width: "18%" }}>Email</th>
+                    <th style={{ width: "20%" }}>Société / Nom</th>
+                    <th style={{ width: "20%" }}>Email</th>
                     <th style={{ width: "10%" }}>Type</th>
                     <th style={{ width: "8%" }}>État</th>
-                    <th style={{ width: "21%" }}>Activité</th>
-                    <th style={{ width: "17%" }}>Date de création</th>
+                    <th style={{ width: "20%" }}>Activité</th>
+                    <th style={{ width: "14%" }}>Date de création</th>
                     <th style={{ width: "8%" }}>Actions</th>
                   </tr>
                 </thead>
@@ -2729,24 +2726,29 @@ const UsersPage = ({ forceTab }) => {
                     .map((c) => (
                     <tr key={c.id}>
                       <td>
-                        <span className="truncate-name">
+                        <div
+                          className="truncate-name"
+                          style={{ maxWidth: "100%" }}
+                          title={(c.type === "Société" || c.type === "SOCIETE") ? c.entreprise?.raisonSociale || c.name : c.name}
+                        >
                           {(c.type === "Société" || c.type === "SOCIETE") ? c.entreprise?.raisonSociale || "N/A" : c.name}
-                        </span>
+                        </div>
                         {(c.type === "Société" || c.type === "SOCIETE") && (
-                          <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "2px" }}>
+                          <div
+                            className="truncate-name"
+                            style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "2px", maxWidth: "100%" }}
+                            title={`Contact : ${c.name}`}
+                          >
                             Contact : {c.name}
                           </div>
                         )}
                       </td>
                       <td>
                         <div
+                          className="truncate-name"
                           style={{
-                            maxWidth: "180px",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
+                            maxWidth: "100%",
                             color: "var(--text-muted)",
-                            
                           }}
                           title={c.email}
                         >
@@ -2783,12 +2785,16 @@ const UsersPage = ({ forceTab }) => {
                         </span>
                       </td>
                       <td>
-                        <span style={{ color: "var(--text-muted)" }}>
+                        <div
+                          className="truncate-name"
+                          style={{ color: "var(--text-muted)", maxWidth: "100%" }}
+                          title={c.secteurActivite || "N/A"}
+                        >
                           {c.secteurActivite || "N/A"}
-                        </span>
+                        </div>
                       </td>
                       <td>
-                        <span style={{ color: "var(--text-muted)" }}>
+                        <span style={{ color: "var(--text-muted)", whiteSpace: "nowrap" }}>
                           {c.createdAt ? formatDate(c.createdAt) : "N/A"}
                         </span>
                       </td>

@@ -2450,11 +2450,11 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         </select>
       </div>
       <div className="table-wrapper">
-        <table>
+        <table style={{ tableLayout: "fixed", width: "100%" }}>
           <thead>
             <tr>
               <th style={{ width: "10%", textAlign: "left" }}>{t("task.columns.id")}</th>
-              <th style={{ width: "20%", textAlign: "left" }}>
+              <th style={{ width: "22%", textAlign: "left" }}>
                 {mode === "MISSION" ? t("task.columns.missionFolder") : t("task.columns.missionId")}
               </th>
               <th style={{ width: "20%", textAlign: "left" }}>{t("task.columns.assignedTo")}</th>
@@ -2467,8 +2467,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               >
                 {t("task.columns.dueDate")}
               </th>
-              <th style={{ width: "15%", textAlign: "center" }}>{t("task.columns.status")}</th>
-              <th style={{ width: "15%", textAlign: "left" }}>{t("task.columns.date")}</th>
+              <th style={{ width: "12%", textAlign: "center" }}>{t("task.columns.status")}</th>
+              <th style={{ width: "16%", textAlign: "left" }}>{t("task.columns.date")}</th>
               <th style={{ width: "10%", textAlign: "center" }}>{t("task.columns.actions")}</th>
             </tr>
           </thead>
@@ -2492,29 +2492,27 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               return (
                 <tr key={t.id} className={isExpired(t) ? "row-expired" : ""}>
                   <td style={{ textAlign: "left" }}>
-                    <span
-                      className="truncate-text"
+                    <div
+                      className="truncate-name"
                       style={{
-                        
                         color: "var(--text-main)",
                         margin: 0,
                         fontWeight: 400,
+                        maxWidth: "100%",
                       }}
+                      title={t.reference || t.id}
                     >
                       {t.reference || t.id.slice(0, 8)}
-                    </span>
+                    </div>
                   </td>
                   <td style={{ textAlign: "left" }}>
                     <div
+                      className="truncate-name"
                       style={{
                         color: "var(--primary)",
                         fontWeight: 400,
-                        
                         margin: 0,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        maxWidth: "170px",
+                        maxWidth: "100%",
                       }}
                       title={
                         mode === "MISSION"
@@ -2529,12 +2527,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   </td>
 
                   <td style={{ textAlign: "left" }}>
-                    <span
+                    <div
                       className="truncate-name"
-                      style={{  margin: 0 }}
+                      style={{ margin: 0, maxWidth: "100%" }}
+                      title={t.assignedTo?.name || "Non assigné"}
                     >
                       {t.assignedTo?.name || "Non assigné"}
-                    </span>
+                    </div>
                   </td>
                   <td style={{ textAlign: "right", paddingRight: "0.5rem" }}>
                     <span
@@ -2543,8 +2542,8 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                           ? "var(--text-main)"
                           : "var(--danger)",
                         fontWeight: 400,
-                        
                         margin: 0,
+                        whiteSpace: "nowrap",
                       }}
                     >
                       {t.echeance
@@ -2559,7 +2558,6 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     style={{
                       textAlign: "left",
                       color: "var(--text-muted)",
-                      
                       whiteSpace: "nowrap",
                     }}
                   >
@@ -2572,6 +2570,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                         flexDirection: "column",
                         gap: "0.25rem",
                         alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
                       <button

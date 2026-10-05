@@ -1186,10 +1186,10 @@ const InboxPage = ({ userRole }) => {
           ) : (
             <>
               <div className="table-wrapper">
-                <table>
+                <table style={{ tableLayout: "fixed", width: "100%" }}>
                   <thead>
                     <tr>
-                      <th style={{ width: "4%" }}>{t("inbox.columns.no")}</th>
+                      <th style={{ width: "5%" }}>{t("inbox.columns.no")}</th>
                       {(tab === "personnel" ||
                         tab === "contact" ||
                         tab === "recrutement") && (
@@ -1197,24 +1197,22 @@ const InboxPage = ({ userRole }) => {
                           {t("inbox.columns.priority")}
                         </th>
                       )}
-                      <th style={{ width: "10%", whiteSpace: "nowrap" }}>
+                      <th style={{ width: (tab === "personnel" || tab === "contact" || tab === "recrutement") ? "10%" : "12%", whiteSpace: "nowrap" }}>
                         {t("inbox.columns.status")}
                       </th>
-                      <th style={{ width: tab === "interne" ? "22%" : "18%" }}>
-                        {tab === "interne" ? "Emetteur" : t("inbox.columns.name")}
+                      <th style={{ width: tab === "personnel" ? "24%" : "20%" }}>
+                        {t("inbox.columns.name")}
                       </th>
-                      <th style={{ width: tab === "interne" ? "28%" : "20%" }}>
+                      <th style={{ width: tab === "personnel" ? "26%" : "22%" }}>
                         {t("inbox.columns.email")}
                       </th>
                       {(tab !== "personnel") && (
                         <th style={{ width: "10%" }}>
-                          {tab === "interne"
-                            ? "Source"
-                            : t("inbox.columns.type")}
+                          {t("inbox.columns.type")}
                         </th>
                       )}
-                      <th style={{ width: "11%" }}>{t("inbox.columns.date")}</th>
-                      <th style={{ width: "8%", textAlign: "center" }}>
+                      <th style={{ width: "14%" }}>{t("inbox.columns.date")}</th>
+                      <th style={{ width: "10%", textAlign: "center" }}>
                         {t("inbox.columns.actions")}
                       </th>
                     </tr>
@@ -1339,23 +1337,25 @@ const InboxPage = ({ userRole }) => {
                               </span>
                             </td>
                             <td>
-                              <span
+                              <div
                                 className="truncate-name"
-                                style={{  }}
+                                style={{ maxWidth: "100%" }}
+                                title={col2}
                               >
                                 {col2}
-                              </span>
+                              </div>
                             </td>
                             <td>
-                              <span
-                                className="truncate-text"
+                              <div
+                                className="truncate-name"
                                 style={{
                                   color: "var(--text-muted)",
-                                  
+                                  maxWidth: "100%",
                                 }}
+                                title={col3}
                               >
                                 {col3}
-                              </span>
+                              </div>
                             </td>
                             {(tab !== "personnel") && (
                               <td>

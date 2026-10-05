@@ -2424,7 +2424,7 @@ export default function DocumentsPage() {
                       background: "#FFF",
                     }}
                   >
-                    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
                       <thead>
                         <tr style={{ background: "#F8FAFC", borderBottom: "1px solid #E2E8F0" }}>
                           <th
@@ -2450,7 +2450,7 @@ export default function DocumentsPage() {
                               color: "#64748B",
                               letterSpacing: "0.05em",
                               textTransform: "uppercase",
-                              width: "25%",
+                              width: "20%",
                             }}
                           >
                             ORIGINE
@@ -2464,7 +2464,7 @@ export default function DocumentsPage() {
                               color: "#64748B",
                               letterSpacing: "0.05em",
                               textTransform: "uppercase",
-                              width: "15%",
+                              width: "20%",
                             }}
                           >
                             DATE
@@ -2529,22 +2529,20 @@ export default function DocumentsPage() {
                                     ) : (
                                       <FileText size={18} color="#2563EB" style={{ flexShrink: 0 }} />
                                     )}
-                                    <div style={{ minWidth: 0 }}>
+                                    <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
                                       <div
+                                        className="truncate-name"
                                         style={{
                                           fontWeight: 600,
                                           fontSize: "0.85rem",
                                           color: "#0F172A",
-                                          whiteSpace: "nowrap",
-                                          overflow: "hidden",
-                                          textOverflow: "ellipsis",
-                                          maxWidth: "340px",
+                                          maxWidth: "100%",
                                         }}
                                         title={item.name}
                                       >
                                         {item.name}
                                       </div>
-                                      <div style={{ fontSize: "0.72rem", color: "#94A3B8", marginTop: "2px" }}>
+                                      <div className="truncate-name" style={{ fontSize: "0.72rem", color: "#94A3B8", marginTop: "2px", maxWidth: "100%" }}>
                                         Par {author} • {daysRemaining}j restants
                                       </div>
                                     </div>

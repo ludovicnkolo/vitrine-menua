@@ -6,13 +6,16 @@
  * 2. Conserve 100% des publications du CMS (offres d'emploi, articles de blog, etc.).
  * 3. Supprime tous les autres éléments (Dossiers, Missions, Tâches, Documents, Clients, Formulaires, Messages, Logs, Liens Magiques, Notifications).
  * 4. Crée exactement 2 membres internes par rôle opérationnel (2 Collaborateurs, 2 Relecteurs, 2 Techniciens, 2 Responsables Opérationnels)
- *    avec le numéro devant leur nom (ex: "1 - Collaborateur", "2 - Collaborateur"), tous les champs requis remplis, et le mot de passe "123456@w".
+ *    avec le numéro APRÈS leur nom (ex: "Collaborateur 1", "Collaborateur 2"), tous les champs requis remplis, et le mot de passe "123456@w".
  * 
- * Usage : node scripts/purge_and_seed_crm.js
+ * Usage local  : node scripts/purge_and_seed_crm.js  (ou: npm run purge-crm)
+ * Usage Docker : docker exec -it menua_backend node scripts/purge_and_seed_crm.js
  */
 
-require('dotenv').config({ path: require('node:path').resolve(__dirname, '../../../.env') });
+require('dotenv').config();
+require('dotenv').config({ path: require('node:path').resolve(__dirname, '../.env') });
 require('dotenv').config({ path: require('node:path').resolve(__dirname, '../../.env') });
+require('dotenv').config({ path: require('node:path').resolve(__dirname, '../../../.env') });
 
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
@@ -55,12 +58,12 @@ const DEFAULT_ROLES = [
   }
 ];
 
-// Configuration des 2 membres par rôle opérationnel avec numéro devant le nom
+// Configuration des 2 membres par rôle opérationnel avec numéro APRÈS le nom
 const MEMBERS_TO_SEED = [
   // ─── 2 RESPONSABLES OPÉRATIONNELS ───
   {
     roleName: 'Responsable opérationnel',
-    name: '1 - Responsable Opérationnel',
+    name: 'Responsable Opérationnel 1',
     email: 'resp.op1@menua.local',
     telephone: '+237 690 00 00 01',
     lieuResidence: 'Douala, Cameroun',
@@ -71,7 +74,7 @@ const MEMBERS_TO_SEED = [
   },
   {
     roleName: 'Responsable opérationnel',
-    name: '2 - Responsable Opérationnel',
+    name: 'Responsable Opérationnel 2',
     email: 'resp.op2@menua.local',
     telephone: '+237 690 00 00 02',
     lieuResidence: 'Yaoundé, Cameroun',
@@ -84,7 +87,7 @@ const MEMBERS_TO_SEED = [
   // ─── 2 RELECTEURS ───
   {
     roleName: 'Relecteur',
-    name: '1 - Relecteur',
+    name: 'Relecteur 1',
     email: 'relecteur1@menua.local',
     telephone: '+237 690 00 00 03',
     lieuResidence: 'Yaoundé, Cameroun',
@@ -95,7 +98,7 @@ const MEMBERS_TO_SEED = [
   },
   {
     roleName: 'Relecteur',
-    name: '2 - Relecteur',
+    name: 'Relecteur 2',
     email: 'relecteur2@menua.local',
     telephone: '+237 690 00 00 04',
     lieuResidence: 'Douala, Cameroun',
@@ -108,7 +111,7 @@ const MEMBERS_TO_SEED = [
   // ─── 2 COLLABORATEURS ───
   {
     roleName: 'Collaborateur',
-    name: '1 - Collaborateur',
+    name: 'Collaborateur 1',
     email: 'collaborateur1@menua.local',
     telephone: '+237 690 00 00 05',
     lieuResidence: 'Douala, Cameroun',
@@ -119,7 +122,7 @@ const MEMBERS_TO_SEED = [
   },
   {
     roleName: 'Collaborateur',
-    name: '2 - Collaborateur',
+    name: 'Collaborateur 2',
     email: 'collaborateur2@menua.local',
     telephone: '+237 690 00 00 06',
     lieuResidence: 'Bafoussam, Cameroun',
@@ -132,7 +135,7 @@ const MEMBERS_TO_SEED = [
   // ─── 2 TECHNICIENS (ADMINISTRATEURS TECHNIQUES) ───
   {
     roleName: 'Administrateur technique',
-    name: '1 - Administrateur Technique',
+    name: 'Administrateur Technique 1',
     email: 'admin.tech1@menua.local',
     telephone: '+237 690 00 00 07',
     lieuResidence: 'Paris, France',
@@ -143,7 +146,7 @@ const MEMBERS_TO_SEED = [
   },
   {
     roleName: 'Administrateur technique',
-    name: '2 - Administrateur Technique',
+    name: 'Administrateur Technique 2',
     email: 'admin.tech2@menua.local',
     telephone: '+237 690 00 00 08',
     lieuResidence: 'Douala, Cameroun',
@@ -284,8 +287,8 @@ async function main() {
   });
   console.log(`   ✓ Utilisateurs supprimés : ${countUsersDeleted.count}`);
 
-  // 6. Création des 8 utilisateurs internes (2 par rôle avec numéro devant leur nom)
-  console.log('\n6️⃣  Création des 8 utilisateurs internes avec numéro devant leur nom...');
+  // 6. Création des 8 utilisateurs internes (2 par rôle avec numéro après leur nom)
+  console.log('\n6️⃣  Création des 8 utilisateurs internes avec numéro après leur nom...');
   
   const createdUsers = [];
 

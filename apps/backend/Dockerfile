@@ -11,6 +11,7 @@ COPY seed_admin.js ./
 COPY seed_test_users.js ./
 COPY export_db.js ./
 COPY restore_db.js ./
+COPY scripts/ ./scripts/
 # Transformation du schéma SQLite vers PostgreSQL pour la production Docker
 RUN sed -i 's/provider = "sqlite"/provider = "postgresql"/' prisma/schema.prisma && \
     sed -i 's/url      = "file:.\/dev.db"/url      = env("DATABASE_URL")/' prisma/schema.prisma && \

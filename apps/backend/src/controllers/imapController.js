@@ -78,7 +78,7 @@ const syncMessages = async (req, res) => {
     await connection.openBox("INBOX");
 
     const lastMsg = await prisma.messagePersonnel.findFirst({
-      where: { type: "PERSONNEL", receivedAt: { not: null } },
+      where: { type: "PERSONNEL" },
       orderBy: { receivedAt: "desc" },
     });
 

@@ -17,9 +17,11 @@ export const metadata: Metadata = {
     "cabinets financiers France",
   ],
   alternates: {
+    canonical: 'https://menuaconsulting.com/fr',
     languages: {
-      'fr-FR': '/',
-      'en-US': '/en',
+      'fr-FR': 'https://menuaconsulting.com/fr',
+      'en-US': 'https://menuaconsulting.com/en',
+      'x-default': 'https://menuaconsulting.com/fr',
     },
   },
   openGraph: {

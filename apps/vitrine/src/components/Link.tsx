@@ -65,10 +65,8 @@ export default function Link({ href, children, ...props }: LinkProps) {
       }
       const translatedHref = pathToTranslate + suffix;
       finalHref = translatedHref === "/" ? "/en" : `/en${translatedHref}`;
-    } else if (isFrPrefix) {
-      finalHref = pathToTranslate === "/" ? "/fr" : `/fr${pathToTranslate}${suffix}`;
     } else {
-      finalHref = pathToTranslate + suffix;
+      finalHref = pathToTranslate === "/" ? "/fr" : `/fr${pathToTranslate}${suffix}`;
     }
   }
 

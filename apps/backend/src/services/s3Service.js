@@ -6,6 +6,7 @@ const {
   DeleteObjectsCommand,
   ListObjectVersionsCommand,
   HeadObjectCommand,
+  CopyObjectCommand,
 } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 require("dotenv").config({ path: "../../.env" }); // Adjust according to execution context
@@ -155,11 +156,57 @@ async function purgeFromS3(fileKey) {
   }
 }
 
+/**
+ * Vérifie l'intégrité d'un fichier juste après son upload en S3.
+ * Lance une erreur si la clé n'existe pas, pour prévenir tout NoSuchKey ultérieur.
+ * @param {string} fileKey - La clé S3 à vérifier.
+ * @throws {Error} Si le fichier n'est pas trouvé après upload.
+ */
+async function verifyUploadIntegrity(fileKey) {
+  const exists = await fileExistsInS3(fileKey);
+  if (!exists) {
+    throw new Error(
+      `[S3 INTEGRITY] Fichier introuvable après upload : ${fileKey}. Possible erreur OVH ou désynchronisation.`
+    );
+  }
+}
+
+/**
+ * Renomme un objet S3 : copie vers la nouvelle clé puis suppression de l'ancienne.
+ * S3 ne supporte pas le renommage natif — cette opération est atomique côté applicatif.
+ * @param {string} oldKey - La clé S3 actuelle.
+ * @param {string} newKey - La nouvelle clé S3 cible.
+ * @returns {Promise<string>} La nouvelle clé S3.
+ */
+async function renameInS3(oldKey, newKey) {
+  // Étape 1 : Copier l'objet vers la nouvelle clé
+  const copyCmd = new CopyObjectCommand({
+    Bucket: BUCKET_NAME,
+    CopySource: `/${BUCKET_NAME}/${oldKey}`,
+    Key: newKey,
+    ServerSideEncryption: "AES256",
+  });
+  await s3Client.send(copyCmd);
+
+  // Étape 2 : Vérifier que la copie est bien arrivée
+  const copied = await fileExistsInS3(newKey);
+  if (!copied) {
+    throw new Error(`[S3 RENAME] Copie échouée : ${newKey} introuvable après CopyObject.`);
+  }
+
+  // Étape 3 : Supprimer l'ancienne clé (delete marker si bucket versionné)
+  await deleteFromS3(oldKey);
+  console.log(`[S3 RENAME] ${oldKey} → ${newKey}`);
+  return newKey;
+}
+
 module.exports = {
   s3Client,
   uploadToS3,
   getPresignedUrl,
   fileExistsInS3,
+  verifyUploadIntegrity,
   deleteFromS3,
   purgeFromS3,
+  renameInS3,
 };

@@ -2062,7 +2062,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                         onClick={async () => {
                           if (
                             await window.customConfirm(
-                              `Vous allez enregistrer 1 modification(s) sur cette ${mode === "MISSION" ? "mission" : "tâche"}.\n\nStatut : ${pendingStatus}`,
+                              `Vous allez enregistrer 1 modification(s) sur cette ${mode === "MISSION" ? "mission" : "tâche"}.\n\nStatut : ${TACHE_STATUS_LABELS[pendingStatus] || pendingStatus}`,
                               "Confirmer l'enregistrement"
                             )
                           ) {

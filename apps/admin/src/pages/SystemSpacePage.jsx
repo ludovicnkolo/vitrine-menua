@@ -67,7 +67,7 @@ const SystemSpacePage = ({ userRole }) => {
                   style={{
                     fontSize: "1.6rem",
                     fontWeight: 700,
-                    color: "var(--text-main, #0F172A)",
+                    color: "var(--text-main)",
                     margin: "0 0 0.25rem 0",
                   }}
                 >
@@ -102,7 +102,7 @@ const SystemSpacePage = ({ userRole }) => {
                       margin: "0 0 0.25rem 0",
                       fontSize: "1rem",
                       fontWeight: 700,
-                      color: "#0F172A",
+                      color: "var(--text-main)",
                     }}
                   >
                     {t("systemSpace.appearance", "Apparence de l'interface")}
@@ -157,7 +157,7 @@ const SystemSpacePage = ({ userRole }) => {
                       >
                         <Sun size={28} />
                       </div>
-                      <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0F172A" }}>
+                      <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-main)" }}>
                         {t("systemSpace.lightMode", "Mode Clair")}
                       </div>
                       <div
@@ -217,7 +217,7 @@ const SystemSpacePage = ({ userRole }) => {
                       >
                         <Moon size={28} />
                       </div>
-                      <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0F172A" }}>
+                      <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-main)" }}>
                         {t("systemSpace.darkMode", "Mode Sombre")}
                       </div>
                       <div
@@ -249,7 +249,7 @@ const SystemSpacePage = ({ userRole }) => {
                       margin: "0 0 0.25rem 0",
                       fontSize: "1rem",
                       fontWeight: 700,
-                      color: "#0F172A",
+                      color: "var(--text-main)",
                     }}
                   >
                     {t("systemSpace.language", "Langue / Language")}
@@ -299,7 +299,7 @@ const SystemSpacePage = ({ userRole }) => {
                         borderRadius: "8px",
                         border: "1.5px solid #3B82F6",
                         background: "#FFF",
-                        color: "#0F172A",
+                        color: "var(--text-main)",
                         fontSize: "0.88rem",
                         fontWeight: 500,
                         cursor: "pointer",
@@ -317,7 +317,7 @@ const SystemSpacePage = ({ userRole }) => {
                         right: "0.85rem",
                         top: "50%",
                         transform: "translateY(-50%)",
-                        color: "#0F172A",
+                        color: "var(--text-main)",
                         pointerEvents: "none",
                       }}
                     />

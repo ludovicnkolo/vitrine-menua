@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     canonical: 'https://menuaconsulting.com/en/legal-notices',
     languages: {
       'fr-FR': 'https://menuaconsulting.com/fr/mentions-legales',
-      'en-US': 'https://menuaconsulting.com/en/legal-notices',
+      'en-GB': 'https://menuaconsulting.com/en/legal-notices',
       'x-default': 'https://menuaconsulting.com/fr/mentions-legales',
     },
   },

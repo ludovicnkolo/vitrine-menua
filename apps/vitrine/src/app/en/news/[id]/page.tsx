@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       canonical: `https://menuaconsulting.com/en/news/${resolvedParams.id}`,
       languages: {
         'fr-FR': `https://menuaconsulting.com/fr/actualites/${resolvedParams.id}`,
-        'en-US': `https://menuaconsulting.com/en/news/${resolvedParams.id}`,
+        'en-GB': `https://menuaconsulting.com/en/news/${resolvedParams.id}`,
       'x-default': `https://menuaconsulting.com/fr/actualites/${resolvedParams.id}`,
       },
     },

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     canonical: 'https://menuaconsulting.com/en/privacy-policy',
     languages: {
       'fr-FR': 'https://menuaconsulting.com/fr/politique-de-confidentialite',
-      'en-US': 'https://menuaconsulting.com/en/privacy-policy',
+      'en-GB': 'https://menuaconsulting.com/en/privacy-policy',
       'x-default': 'https://menuaconsulting.com/fr/politique-de-confidentialite',
     },
   },

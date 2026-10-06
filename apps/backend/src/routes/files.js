@@ -14,6 +14,7 @@ const {
   uploadToS3,
   getPresignedUrl,
   deleteFromS3,
+  verifyUploadIntegrity,
 } = require("../services/s3Service");
 
 // Utilisation du stockage en mémoire pour multer avant l'envoi vers S3
@@ -62,6 +63,9 @@ router.post(
 
       // Upload to S3 directly from memory
       await uploadToS3(req.file.buffer, s3Key, req.file.mimetype);
+
+      // Vérification d'intégrité post-upload (prévient tout NoSuchKey ultérieur)
+      await verifyUploadIntegrity(s3Key);
 
       res.json({
         success: true,
@@ -127,9 +131,11 @@ router.post(
     const finalFilename = uniqueSuffix + "-" + safeOriginalName;
     const s3Key = `${bucket}/${finalFilename}`;
 
-    // ── ÉTAPE 1 : Upload S3 ──────────────────────────────────────────────────────
+    // ── ÉTAPE 1 : Upload S3 + vérification d'intégrité ──────────────────────────
     try {
       await uploadToS3(req.file.buffer, s3Key, req.file.mimetype);
+      // Contrôle post-upload : s'assurer que la clé est réellement accessible en OVH
+      await verifyUploadIntegrity(s3Key);
     } catch (s3Error) {
       console.error({ event: "upload_s3_failed", error: s3Error.message });
       return res
@@ -334,9 +340,11 @@ router.post(
       const finalFilename = uniqueSuffix + "-" + safeOriginalName;
       const newS3Key = `${bucket}/${finalFilename}`;
 
-      // ── ÉTAPE 1 : Upload nouveau fichier S3
+      // ── ÉTAPE 1 : Upload nouveau fichier S3 + vérification d'intégrité
       try {
         await uploadToS3(req.file.buffer, newS3Key, req.file.mimetype);
+        // Contrôle post-upload : garantir que la nouvelle clé est accessible avant de modifier la BDD
+        await verifyUploadIntegrity(newS3Key);
       } catch (s3Error) {
         console.error({
           event: "replace_s3_upload_failed",

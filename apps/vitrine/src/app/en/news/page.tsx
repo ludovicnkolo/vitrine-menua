@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     canonical: 'https://menuaconsulting.com/en/news',
     languages: {
       'fr-FR': 'https://menuaconsulting.com/fr/actualites',
-      'en-US': 'https://menuaconsulting.com/en/news',
+      'en-GB': 'https://menuaconsulting.com/en/news',
       'x-default': 'https://menuaconsulting.com/fr/actualites',
     },
   },

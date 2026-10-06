@@ -1,8 +1,19 @@
 async function verifyTurnstile(token, ip) {
-  if (process.env.NODE_ENV !== "production" || !process.env.TURNSTILE_SECRET_KEY) {
-    // If not in production mode or no secret key is configured, bypass validation
+  const isProduction = process.env.NODE_ENV === "production";
+  const secretKey = process.env.TURNSTILE_SECRET_KEY;
+
+  // En production, la clé est obligatoire — bloquer si absente
+  if (isProduction && !secretKey) {
+    console.error(
+      "[SECURITE][Turnstile] TURNSTILE_SECRET_KEY absent en production. Requête rejetée par sécurité."
+    );
+    return false;
+  }
+
+  // Hors production (développement, test) : bypass autorisé avec avertissement
+  if (!isProduction || !secretKey) {
     console.warn(
-      "Turnstile validation bypassed (Development mode or TURNSTILE_SECRET_KEY missing).",
+      "[Turnstile] Validation contournée (mode développement — TURNSTILE_SECRET_KEY non configuré)."
     );
     return true;
   }

@@ -16,6 +16,7 @@ const {
 } = require("../../middlewares/auth");
 const { transporter } = require("../../utils/mailer");
 const { logAudit } = require("../../utils/audit");
+const { renameInS3 } = require("../../services/s3Service");
 
 const imapConfig = {
   imap: {
@@ -426,9 +427,42 @@ router.patch("/documents/:id", async (req, res) => {
         .status(409)
         .json({ error: "Document supprimé, veuillez le restaurer d'abord." });
 
+    let newS3Key = doc.url; // par défaut : la clé existante ne change pas
+
+    // Si le nom change, renommer également l'objet dans S3
+    if (name && name !== doc.name && doc.url) {
+      try {
+        // Construire la nouvelle clé S3 en conservant le bucket/préfixe :
+        // ex. "ged/1728230000000-abc123-ancien_nom.pdf" → "ged/1728230000000-abc123-nouveau_nom.pdf"
+        const parts = doc.url.split("/");
+        const prefix = parts.slice(0, -1).join("/"); // ex: "ged"
+        const oldFilename = parts[parts.length - 1];
+
+        // Conserver l'horodatage/hash préfixe, remplacer uniquement la partie nom
+        const dashIdx = oldFilename.indexOf("-", oldFilename.indexOf("-") + 1); // 2è tiret
+        const uniquePrefix = dashIdx > -1 ? oldFilename.substring(0, dashIdx + 1) : "";
+
+        // Sanitiser le nouveau nom (même règle que à l'upload)
+        const safeName = name.replace(/[^a-zA-Z0-9.-]/g, "_");
+        const newFilename = uniquePrefix + safeName;
+        newS3Key = prefix ? `${prefix}/${newFilename}` : newFilename;
+
+        await renameInS3(doc.url, newS3Key);
+      } catch (s3Err) {
+        console.error("[RENOMMAGE S3] Erreur lors du renommage S3:", s3Err.message);
+        return res.status(502).json({
+          error: "Erreur lors du renommage du fichier dans le stockage. Le document n'a pas été modifié.",
+        });
+      }
+    }
+
     const updated = await prisma.document.update({
       where: { id: req.params.id },
-      data: { ...(name && { name }) },
+      data: {
+        ...(name && { name }),
+        // Mettre à jour la clé S3 si elle a changé
+        ...(newS3Key !== doc.url && { url: newS3Key }),
+      },
     });
 
     await logAudit(
@@ -436,7 +470,7 @@ router.patch("/documents/:id", async (req, res) => {
       "RENOMMAGE_DOCUMENT",
       doc.id,
       "DOCUMENT",
-      `Document renommé: ${doc.name} → ${name}`,
+      `Document renommé: ${doc.name} → ${name}${newS3Key !== doc.url ? ` (clé S3 mise à jour)` : ""}`,
       doc.dossierId || null,
     );
     res.json(updated);

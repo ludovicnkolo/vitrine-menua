@@ -739,6 +739,333 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     else setOpenMenuId(id);
   };
 
+  const renderCreateTaskModal = () => {
+    if (!createTaskModal) return null;
+    return (
+      <div
+        className="fade-in"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(15, 23, 42, 0.6)",
+          backdropFilter: "blur(4px)",
+          zIndex: 9999,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "1rem",
+        }}
+      >
+        <div
+          style={{
+            background: "#FFF",
+            padding: "2rem",
+            borderRadius: "12px",
+            boxShadow:
+              "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+            width: "100%",
+            maxWidth: "750px",
+            maxHeight: "90vh",
+            overflowY: "auto",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "1.5rem",
+            }}
+          >
+            <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
+              Créer une tâche
+            </h3>
+            <button
+              type="button"
+              onClick={() => {
+                setCreateTaskModal(false);
+                setNewTaskFile(null);
+                setSelectedParentDocs([]);
+                setSelectedMissionDocs([]);
+              }}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                color: "var(--text-muted)",
+                fontSize: "0.75rem",
+                gap: "2px",
+              }}
+            >
+              <X size={20} />
+              <span>Fermer</span>
+            </button>
+          </div>
+
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+          >
+            <div>
+              <label
+                htmlFor="new-task-subject"
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  fontWeight: 500,
+                }}
+              >
+                Objet de la tâche *
+              </label>
+              <input
+                id="new-task-subject"
+                type="text"
+                value={newTaskSubject}
+                onChange={(e) => setNewTaskSubject(e.target.value)}
+                placeholder="Sujet de la tâche..."
+                className="input-field"
+                style={{
+                  width: "100%",
+                  padding: "0.75rem",
+                  borderRadius: "8px",
+                  border: "1px solid var(--border)",
+                }}
+              />
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "1rem",
+              }}
+            >
+              <div>
+                <label
+                  htmlFor="new-task-assigned-to"
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: 500,
+                  }}
+                >
+                  Assigné à *
+                </label>
+                <select
+                  id="new-task-assigned-to"
+                  className="input-field"
+                  value={newTaskAssignedTo}
+                  onChange={(e) => setNewTaskAssignedTo(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                    background: "#FFF",
+                  }}
+                >
+                  <option value="">-- Sélectionner un membre --</option>
+                  {users
+                    .filter(
+                      (u) =>
+                        u.role?.name === "Collaborateur" ||
+                        u.role?.name === "Responsable opérationnel" ||
+                        u.role?.name === "Super-administrateur" ||
+                        u.role?.name === "Administrateur",
+                    )
+                    .map((u) => (
+                      <option key={u.id} value={u.id}>
+                        {u.name} ({u.role?.name || "Sans rôle"})
+                      </option>
+                    ))}
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="new-task-relecteur"
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: 500,
+                  }}
+                >
+                  Relecteur (Contrôleur)
+                </label>
+                <select
+                  id="new-task-relecteur"
+                  className="input-field"
+                  value={newTaskRelecteur}
+                  onChange={(e) => setNewTaskRelecteur(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                    background: "#FFF",
+                  }}
+                >
+                  <option value="">-- Aucun relecteur --</option>
+                  {users
+                    .filter(
+                      (u) =>
+                        u.role?.name === "Relecteur" ||
+                        u.role?.name === "Responsable opérationnel",
+                    )
+                    .map((u) => (
+                      <option key={u.id} value={u.id}>
+                        {u.name} ({u.role?.name || "Sans rôle"})
+                      </option>
+                    ))}
+                </select>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "1rem",
+              }}
+            >
+              <div>
+                <label
+                  htmlFor="new-task-echeance"
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: 500,
+                  }}
+                >
+                  Échéance *
+                </label>
+                <input
+                  id="new-task-echeance"
+                  type="date"
+                  max={
+                    consultTask?.echeance
+                      ? new Date(consultTask.echeance)
+                          .toISOString()
+                          .split("T")[0]
+                      : undefined
+                  }
+                  value={newTaskEcheance}
+                  onChange={(e) => setNewTaskEcheance(e.target.value)}
+                  className="input-field"
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                  }}
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="new-task-mission-associee"
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: 500,
+                  }}
+                >
+                  Mission associée
+                </label>
+                <input
+                  id="new-task-mission-associee"
+                  type="text"
+                  value={
+                    consultTask?.reference
+                      ? `🔒 ${consultTask.reference}`
+                      : consultTask?.id
+                        ? `🔒 ${consultTask.id}`
+                        : ""
+                  }
+                  readOnly
+                  className="input-field"
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                    background: "#F8FAFC",
+                    color: "var(--text-muted)",
+                    fontWeight: 600,
+                  }}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="new-task-message"
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  fontWeight: 500,
+                }}
+              >
+                Message / Consignes *
+              </label>
+              <textarea
+                id="new-task-message"
+                value={newTaskMessage}
+                onChange={(e) => setNewTaskMessage(e.target.value)}
+                placeholder="Détails de la tâche à effectuer..."
+                style={{
+                  width: "100%",
+                  padding: "0.75rem",
+                  borderRadius: "8px",
+                  border: "1px solid var(--border)",
+                  minHeight: "120px",
+                  resize: "vertical",
+                  fontFamily: "inherit",
+                }}
+              ></textarea>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: "1rem",
+              marginTop: "2rem",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => {
+                setCreateTaskModal(false);
+                setNewTaskFile(null);
+                setSelectedParentDocs([]);
+                setSelectedMissionDocs([]);
+              }}
+              className="btn btn-outline"
+              disabled={isSubmitting}
+            >
+              Annuler
+            </button>
+            <button
+              type="button"
+              onClick={handleCreateSubTask}
+              disabled={isSubmitting}
+              className="btn btn-primary"
+            >
+              {isSubmitting ? "Création..." : "Créer la tâche"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (editTask) {
     return (
       <div className="fade-in" style={{ width: "100%", padding: "0" }}>
@@ -1911,7 +2238,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           isSubmitting={isFeedbackSubmitting}
         />
 
-
+        {renderCreateTaskModal()}
       </div>
     );
   }
@@ -2327,329 +2654,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         </div>
       )}
 
-      {createTaskModal && (
-        <div
-          className="fade-in"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(15, 23, 42, 0.6)",
-            backdropFilter: "blur(4px)",
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "1rem",
-          }}
-        >
-          <div
-            style={{
-              background: "#FFF",
-              padding: "2rem",
-              borderRadius: "12px",
-              boxShadow:
-                "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-              width: "100%",
-              maxWidth: "750px",
-              maxHeight: "90vh",
-              overflowY: "auto",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "1.5rem",
-              }}
-            >
-              <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
-                Créer une tâche
-              </h3>
-              <button
-                type="button"
-                onClick={() => {
-                  setCreateTaskModal(false);
-                  setNewTaskFile(null);
-                  setSelectedParentDocs([]);
-                  setSelectedMissionDocs([]);
-                }}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  color: "var(--text-muted)",
-                  fontSize: "0.75rem",
-                  gap: "2px",
-                }}
-              >
-                <X size={20} />
-                <span>Fermer</span>
-              </button>
-            </div>
-
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-            >
-              <div>
-                <label
-                  htmlFor="new-task-subject"
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    fontWeight: 500,
-                  }}
-                >
-                  Objet de la tâche *
-                </label>
-                <input
-                  id="new-task-subject"
-                  type="text"
-                  value={newTaskSubject}
-                  onChange={(e) => setNewTaskSubject(e.target.value)}
-                  placeholder="Sujet de la tâche..."
-                  className="input-field"
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                  }}
-                />
-              </div>
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "1rem",
-                }}
-              >
-                <div>
-                  <label
-                    htmlFor="new-task-assigned-to"
-                    style={{
-                      display: "block",
-                      marginBottom: "0.5rem",
-                      fontWeight: 500,
-                    }}
-                  >
-                    Assigné à *
-                  </label>
-                  <select
-                    id="new-task-assigned-to"
-                    className="input-field"
-                    value={newTaskAssignedTo}
-                    onChange={(e) => setNewTaskAssignedTo(e.target.value)}
-                    style={{
-                      width: "100%",
-                      padding: "0.75rem",
-                      borderRadius: "8px",
-                      border: "1px solid var(--border)",
-                      background: "#FFF",
-                    }}
-                  >
-                    <option value="">-- Sélectionner un membre --</option>
-                    {users
-                      .filter(
-                        (u) =>
-                          u.role?.name === "Collaborateur" ||
-                          u.role?.name === "Responsable opérationnel" ||
-                          u.role?.name === "Super-administrateur" ||
-                          u.role?.name === "Administrateur",
-                      )
-                      .map((u) => (
-                        <option key={u.id} value={u.id}>
-                          {u.name} ({u.role?.name || "Sans rôle"})
-                        </option>
-                      ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="new-task-relecteur"
-                    style={{
-                      display: "block",
-                      marginBottom: "0.5rem",
-                      fontWeight: 500,
-                    }}
-                  >
-                    Relecteur (Contrôleur)
-                  </label>
-                  <select
-                    id="new-task-relecteur"
-                    className="input-field"
-                    value={newTaskRelecteur}
-                    onChange={(e) => setNewTaskRelecteur(e.target.value)}
-                    style={{
-                      width: "100%",
-                      padding: "0.75rem",
-                      borderRadius: "8px",
-                      border: "1px solid var(--border)",
-                      background: "#FFF",
-                    }}
-                  >
-                    <option value="">-- Aucun relecteur --</option>
-                    {users
-                      .filter(
-                        (u) =>
-                          u.role?.name === "Relecteur" ||
-                          u.role?.name === "Responsable opérationnel",
-                      )
-                      .map((u) => (
-                        <option key={u.id} value={u.id}>
-                          {u.name} ({u.role?.name || "Sans rôle"})
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              </div>
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "1rem",
-                }}
-              >
-                <div>
-                  <label
-                    htmlFor="new-task-echeance"
-                    style={{
-                      display: "block",
-                      marginBottom: "0.5rem",
-                      fontWeight: 500,
-                    }}
-                  >
-                    Échéance *
-                  </label>
-                  <input
-                    id="new-task-echeance"
-                    type="date"
-                    max={
-                      consultTask?.echeance
-                        ? new Date(consultTask.echeance)
-                            .toISOString()
-                            .split("T")[0]
-                        : undefined
-                    }
-                    value={newTaskEcheance}
-                    onChange={(e) => setNewTaskEcheance(e.target.value)}
-                    className="input-field"
-                    style={{
-                      width: "100%",
-                      padding: "0.75rem",
-                      borderRadius: "8px",
-                      border: "1px solid var(--border)",
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="new-task-mission-associee"
-                    style={{
-                      display: "block",
-                      marginBottom: "0.5rem",
-                      fontWeight: 500,
-                    }}
-                  >
-                    Mission associée
-                  </label>
-                  <input
-                    id="new-task-mission-associee"
-                    type="text"
-                    value={
-                      consultTask?.reference
-                        ? `🔒 ${consultTask.reference}`
-                        : consultTask?.id
-                          ? `🔒 ${consultTask.id}`
-                          : ""
-                    }
-                    readOnly
-                    className="input-field"
-                    style={{
-                      width: "100%",
-                      padding: "0.75rem",
-                      borderRadius: "8px",
-                      border: "1px solid var(--border)",
-                      background: "#F8FAFC",
-                      color: "var(--text-muted)",
-                      fontWeight: 600,
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="new-task-message"
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    fontWeight: 500,
-                  }}
-                >
-                  Message / Consignes *
-                </label>
-                <textarea
-                  id="new-task-message"
-                  value={newTaskMessage}
-                  onChange={(e) => setNewTaskMessage(e.target.value)}
-                  placeholder="Détails de la tâche à effectuer..."
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                    minHeight: "120px",
-                    resize: "vertical",
-                    fontFamily: "inherit",
-                  }}
-                ></textarea>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "1rem",
-                marginTop: "2rem",
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => {
-                  setCreateTaskModal(false);
-                  setNewTaskFile(null);
-                  setSelectedParentDocs([]);
-                  setSelectedMissionDocs([]);
-                }}
-                className="btn btn-outline"
-                disabled={isSubmitting}
-              >
-                Annuler
-              </button>
-              <button
-                type="button"
-                onClick={handleCreateSubTask}
-                disabled={isSubmitting}
-                className="btn btn-primary"
-              >
-                {isSubmitting ? "Création..." : "Créer la tâche"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {renderCreateTaskModal()}
 
       <FilePreviewModal
         previewFile={previewFile}

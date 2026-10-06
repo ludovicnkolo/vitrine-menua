@@ -7,7 +7,11 @@ import { formatBrand } from "@/utils/formatBrand";
 
 import { generateSlug } from "@/utils/slug";
 
-export default function ActualitesPage() {
+interface ActualitesPageProps {
+  initialPublications?: any[];
+}
+
+export default function ActualitesPage({ initialPublications = [] }: ActualitesPageProps) {
   const { lang, t } = useLanguage();
   const isEN = lang === 'EN';
   const basePath = isEN ? "/en/news" : "/actualites";
@@ -16,7 +20,7 @@ export default function ActualitesPage() {
   const displayContent = (pub: any) => (isEN && pub.contentHtml_en) ? pub.contentHtml_en : pub.contentHtml;
   const displayCategory = (pub: any) => (isEN && pub.category_en) ? pub.category_en : pub.category;
   const [activeFilter, setActiveFilter] = useState("TOUTES LES ACTUALITÉS");
-  const [publications, setPublications] = useState<any[]>([]);
+  const [publications, setPublications] = useState<any[]>(initialPublications);
 
   useEffect(() => {
     const fetchPubs = async () => {
@@ -32,8 +36,10 @@ export default function ActualitesPage() {
         console.error("Erreur lors de la récupération des actualités:", err);
       }
     };
-    fetchPubs();
-  }, []);
+    if (!initialPublications || initialPublications.length === 0) {
+      fetchPubs();
+    }
+  }, [initialPublications]);
 
   const featuredPub = publications.length > 0 ? publications[0] : null;
   const filteredPubs = activeFilter === "TOUTES LES ACTUALITÉS"
@@ -247,7 +253,7 @@ export default function ActualitesPage() {
 
               {filteredPubs.length === 0 && publications.length > 0 && (
                 <div className="col-span-full py-12 text-center text-[#6e7891]">
-                  {t("Aucune publication dans cette rubrique pour le moment.", "No publications in this category at the moment.")}
+                  {t("Aucune publication dans cette rubrique pour le moment.", "No publications are available in this category at the moment.")}
                 </div>
               )}
 

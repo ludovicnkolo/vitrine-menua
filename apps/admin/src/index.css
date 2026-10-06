@@ -327,14 +327,9 @@ tr:hover td {
   display: block;
 }
 
-@keyframes blink-expired {
-  0% { background-color: transparent; }
-  50% { background-color: rgba(239, 68, 68, 0.2); }
-  100% { background-color: transparent; }
-}
-
 .row-expired {
-  animation: blink-expired 2s infinite ease-in-out !important;
+  background-color: rgba(239, 68, 68, 0.04) !important;
+  border-left: 3px solid #EF4444 !important;
 }
 
 /* Responsive Layout */

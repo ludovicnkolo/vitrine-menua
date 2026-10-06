@@ -215,6 +215,15 @@ export default function NousContacter() {
                 <textarea name="description" rows={5} required placeholder={t("Saisissez ou collez votre descriptif ici...", "Type or paste your description here...")} className="w-full border border-[#141824]/30 bg-white/40 p-4 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] resize-none transition-colors placeholder:text-[#a0aabf]"></textarea>
               </div>
 
+              <div className="bg-[#f5f7fa] py-4 px-5 border-l-4 border-[#141824]">
+                <p className="text-[0.9rem] text-[#141824] leading-relaxed">
+                  {formatBrand(t(
+                    "Aucun document n’est demandé via ce formulaire. Si des pièces sont nécessaires après qualification de votre besoin, MENUA vous indiquera un canal sécurisé pour les transmettre.",
+                    "No document is requested through this form. If supporting documents are needed after your requirement has been qualified, MENUA will provide a secure channel for sharing them."
+                  ))}
+                </p>
+              </div>
+
               {formEnabled === false ? (
                 <div className="text-center py-6 px-4 bg-[#141824]/5 border border-[#141824]/20 rounded">
                   <p className="text-[#141824] font-semibold text-[1.05rem] mb-1">

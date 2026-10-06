@@ -3,6 +3,8 @@ const {
   PutObjectCommand,
   GetObjectCommand,
   DeleteObjectCommand,
+  DeleteObjectsCommand,
+  ListObjectVersionsCommand,
   HeadObjectCommand,
 } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
@@ -85,7 +87,7 @@ async function fileExistsInS3(fileKey) {
 }
 
 /**
- * Deletes a file from the S3 bucket.
+ * Deletes a file from the S3 bucket (writes a delete marker if versioned).
  * @param {string} fileKey - The key of the file to delete.
  */
 async function deleteFromS3(fileKey) {
@@ -97,10 +99,67 @@ async function deleteFromS3(fileKey) {
   await s3Client.send(command);
 }
 
+/**
+ * Permanently purges a file and all its historical versions and delete markers from S3.
+ * Essential for versioned buckets (OVH Object Storage with S3 versioning enabled).
+ * @param {string} fileKey - The key of the file to permanently purge.
+ */
+async function purgeFromS3(fileKey) {
+  if (!fileKey) return;
+  try {
+    const listVersionsCmd = new ListObjectVersionsCommand({
+      Bucket: BUCKET_NAME,
+      Prefix: fileKey,
+    });
+    const versionData = await s3Client.send(listVersionsCmd);
+
+    const objectsToDelete = [];
+
+    if (versionData.Versions && versionData.Versions.length > 0) {
+      for (const v of versionData.Versions) {
+        if (v.Key === fileKey) {
+          objectsToDelete.push({ Key: v.Key, VersionId: v.VersionId });
+        }
+      }
+    }
+
+    if (versionData.DeleteMarkers && versionData.DeleteMarkers.length > 0) {
+      for (const dm of versionData.DeleteMarkers) {
+        if (dm.Key === fileKey) {
+          objectsToDelete.push({ Key: dm.Key, VersionId: dm.VersionId });
+        }
+      }
+    }
+
+    if (objectsToDelete.length > 0) {
+      const deleteCmd = new DeleteObjectsCommand({
+        Bucket: BUCKET_NAME,
+        Delete: {
+          Objects: objectsToDelete,
+          Quiet: true,
+        },
+      });
+      await s3Client.send(deleteCmd);
+      console.log(`[S3 PURGE] Purged ${objectsToDelete.length} versions/markers for ${fileKey}`);
+    } else {
+      // Fallback: standard delete if no version records returned
+      await deleteFromS3(fileKey);
+    }
+  } catch (error) {
+    console.error(`[S3 PURGE ERROR] Failed to purge versions for ${fileKey}:`, error);
+    try {
+      await deleteFromS3(fileKey);
+    } catch (fallbackErr) {
+      // ignore fallback error
+    }
+  }
+}
+
 module.exports = {
   s3Client,
   uploadToS3,
   getPresignedUrl,
   fileExistsInS3,
   deleteFromS3,
+  purgeFromS3,
 };

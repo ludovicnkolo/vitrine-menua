@@ -382,10 +382,10 @@ router.delete("/documents/:id/purge", async (req, res) => {
     // Suppression physique en BDD
     await prisma.document.delete({ where: { id: req.params.id } });
 
-    // Suppression dans OVH S3
+    // Suppression dans OVH S3 (purge complète des versions)
     try {
-      const { deleteFromS3 } = require("../services/s3Service");
-      await deleteFromS3(doc.url);
+      const { purgeFromS3 } = require("../../services/s3Service");
+      await purgeFromS3(doc.url);
     } catch (s3Err) {
       console.error({
         event: "purge_s3_delete_failed",
@@ -492,11 +492,11 @@ router.delete("/trash/purge/:type/:id", authenticateJWT, async (req, res) => {
       if (doc) {
         itemName = doc.name;
         if (doc.url) {
-          const { deleteFromS3 } = require("../../services/s3Service");
+          const { purgeFromS3 } = require("../../services/s3Service");
           try {
-            await deleteFromS3(doc.url);
+            await purgeFromS3(doc.url);
           } catch (err) {
-            console.error("Erreur lors de la suppression S3 pendant la purge:", err);
+            console.error("Erreur lors de la purge S3 pendant la purge:", err);
           }
         }
         await prisma.document.delete({ where: { id } });

@@ -15,6 +15,11 @@ const crypto = require("crypto");
 router.post("/login", async (req, res) => {
   try {
     let { email, password } = req.body;
+    const clientIp =
+      req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+      req.socket.remoteAddress ||
+      req.ip ||
+      "127.0.0.1";
 
     if (!email || !password) {
       return res.status(400).json({ error: "Email et mot de passe requis." });
@@ -45,9 +50,25 @@ router.post("/login", async (req, res) => {
         { expiresIn: "7d" },
       );
 
+      await prisma.auditLog.create({
+        data: {
+          userId: realUserId !== "MASTER-ADMIN" ? realUserId : null,
+          action: "CONNEXION_REUSSIE",
+          targetId: realUserId,
+          targetType: "USER",
+          details: `Connexion Master-Admin réussie depuis ${clientIp}`,
+        },
+      });
+
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
       return res.json({
         success: true,
-        token,
         user: {
           id: realUserId,
           name: process.env.MASTER_ADMIN_NAME || "Super Administrateur",
@@ -64,10 +85,26 @@ router.post("/login", async (req, res) => {
     });
 
     if (!user) {
+      await prisma.auditLog.create({
+        data: {
+          action: "ECHEC_CONNEXION",
+          targetType: "AUTH",
+          details: `Tentative de connexion avec email inconnu : ${email} depuis ${clientIp}`,
+        },
+      });
       return res.status(401).json({ error: "Identifiants invalides." });
     }
 
     if (user.isBlocked) {
+      await prisma.auditLog.create({
+        data: {
+          userId: user.id,
+          action: "ECHEC_CONNEXION",
+          targetId: user.id,
+          targetType: "USER",
+          details: `Tentative de connexion sur un compte bloqué : ${user.email} depuis ${clientIp}`,
+        },
+      });
       return res.status(403).json({ error: "Ce compte a été bloqué." });
     }
 
@@ -75,6 +112,15 @@ router.post("/login", async (req, res) => {
     isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
+      await prisma.auditLog.create({
+        data: {
+          userId: user.id,
+          action: "ECHEC_CONNEXION",
+          targetId: user.id,
+          targetType: "USER",
+          details: `Mot de passe erroné pour ${user.email} depuis ${clientIp}`,
+        },
+      });
       return res.status(401).json({ error: "Identifiants invalides." });
     }
 
@@ -85,7 +131,7 @@ router.post("/login", async (req, res) => {
       data: { lastLogin: now },
     });
 
-    // Générer le token JWT valide pendant 12 heures
+    // Générer le token JWT valide pendant 7 jours
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role?.name || "SANS ROLE" },
       JWT_SECRET,
@@ -98,13 +144,19 @@ router.post("/login", async (req, res) => {
         action: "CONNEXION_REUSSIE",
         targetId: user.id,
         targetType: "USER",
-        details: "Connexion au CRM",
+        details: `Connexion au CRM depuis ${clientIp}`,
       },
+    });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.json({
       success: true,
-      token,
       user: {
         id: user.id,
         name: user.name,
@@ -125,6 +177,12 @@ router.post("/login", async (req, res) => {
 // Route de déconnexion (Logout)
 router.post("/logout", authenticateJWT, async (req, res) => {
   try {
+    const clientIp =
+      req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+      req.socket.remoteAddress ||
+      req.ip ||
+      "127.0.0.1";
+
     if (req.user.id && req.user.id !== "MASTER-ADMIN") {
       await prisma.auditLog.create({
         data: {
@@ -132,10 +190,15 @@ router.post("/logout", authenticateJWT, async (req, res) => {
           action: "DECONNEXION",
           targetId: req.user.id,
           targetType: "USER",
-          details: "Déconnexion manuelle du CRM",
+          details: `Déconnexion manuelle du CRM depuis ${clientIp}`,
         },
       });
     }
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax"
+    });
     res.json({ success: true });
   } catch (e) {
     console.error("Erreur logout:", e);
@@ -268,12 +331,93 @@ router.post("/reset-password-otp", async (req, res) => {
       },
     });
 
+    await prisma.auditLog.create({
+      data: {
+        userId: user.id,
+        action: "REINITIALISATION_MDP_SUCCES",
+        targetId: user.id,
+        targetType: "USER",
+        details: `Mot de passe réinitialisé via code OTP pour ${user.email}`,
+      },
+    });
+
     res.json({ success: true, message: "Mot de passe réinitialisé avec succès." });
   } catch (error) {
     console.error("Erreur reset-password-otp:", error);
     res
       .status(500)
       .json({ error: "Erreur lors de la réinitialisation du mot de passe." });
+  }
+});
+
+// Route "Activation de compte / Configuration initiale du mot de passe via invitation"
+router.post("/setup-password", async (req, res) => {
+  try {
+    const { token, password } = req.body;
+    const clientIp =
+      req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+      req.socket.remoteAddress ||
+      req.ip ||
+      "127.0.0.1";
+
+    if (!token || !password) {
+      return res.status(400).json({ error: "Jeton d'activation et mot de passe requis." });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({ error: "Le mot de passe doit comporter au moins 8 caractères." });
+    }
+
+    const user = await prisma.utilisateur.findFirst({
+      where: {
+        resetToken: token,
+        resetTokenExpiry: { gt: new Date() },
+      },
+    });
+
+    if (!user) {
+      await prisma.auditLog.create({
+        data: {
+          action: "ECHEC_ACTIVATION_COMPTE",
+          targetType: "AUTH",
+          details: `Tentative d'activation avec token invalide ou expiré depuis ${clientIp}`,
+        },
+      });
+      return res.status(400).json({
+        error: "Le lien d'activation est invalide ou a expiré (validité 24h). Veuillez contacter un administrateur pour recevoir une nouvelle invitation.",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await prisma.utilisateur.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        resetToken: null,
+        resetTokenExpiry: null,
+        status: "Actif",
+        isBlocked: false,
+      },
+    });
+
+    await prisma.auditLog.create({
+      data: {
+        userId: user.id,
+        action: "ACTIVATION_COMPTE",
+        targetId: user.id,
+        targetType: "USER",
+        details: `Compte activé et mot de passe initialisé pour ${user.email} depuis ${clientIp}`,
+      },
+    });
+
+    res.json({
+      success: true,
+      message: "Votre mot de passe a été configuré avec succès. Vous pouvez maintenant vous connecter.",
+    });
+  } catch (error) {
+    console.error("Erreur setup-password:", error);
+    res.status(500).json({ error: "Erreur lors de la configuration du mot de passe." });
   }
 });
 

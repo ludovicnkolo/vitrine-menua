@@ -24,6 +24,7 @@ import RolesPage from "./pages/RolesPage";
 import AuditPage from "./pages/AuditPage";
 import LoginPage from "./pages/LoginPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import SetupPasswordPage from "./pages/SetupPasswordPage";
 import WorkspacePage from "./pages/WorkspacePage";
 import UsersSpacePage from "./pages/UsersSpacePage";
 import SystemSpacePage from "./pages/SystemSpacePage";
@@ -32,6 +33,51 @@ import MagicLinkDropPage from "./pages/MagicLinkDropPage";
 import GlobalAlerts from "./components/GlobalAlerts";
 import NotificationBell from "./components/NotificationBell";
 import "./utils/AlertService"; // initialize overrides
+
+// 2. Intercepteur global de fetch pour injecter les credentials (cookies) et attraper les 401 / 403
+const originalFetch = window.fetch;
+window.fetch = async (...args) => {
+  try {
+    let [url, options] = args;
+    options = options || {};
+    options.credentials = "include"; // Forcer l'envoi du cookie HttpOnly
+    
+    // Nettoyer les anciens headers Authorization qui pourraient valoir Bearer null
+    if (options.headers) {
+      const headersObj = new Headers(options.headers);
+      if (headersObj.has("Authorization")) {
+        headersObj.delete("Authorization");
+      }
+      // Reconstruire l'objet simple pour éviter les soucis avec certains codes
+      const cleanHeaders = {};
+      headersObj.forEach((value, key) => { cleanHeaders[key] = value; });
+      options.headers = cleanHeaders;
+    }
+
+    const response = await originalFetch(url, options);
+    // Si l'utilisateur a été rendu inactif ou son token est expiré, le backend renverra 401.
+    if (response.status === 401) {
+      const clone = response.clone();
+      try {
+        const data = await clone.json();
+        if (data?.action === "FORCE_LOGOUT" || response.status === 401) {
+          console.error(
+            "Accès révoqué ou session expirée. Déconnexion forcée.",
+          );
+          // Redirection vers login
+          sessionStorage.removeItem("adminUser");
+          window.location.href = "/?logout=expired";
+        }
+      } catch (e) {
+        sessionStorage.removeItem("adminUser");
+        window.location.href = "/?logout=expired";
+      }
+    }
+    return response;
+  } catch (err) {
+    throw err;
+  }
+};
 
 const MOCK_USER = {
   id: "U-001",
@@ -48,8 +94,8 @@ function App() {
   const [lang, setLang] = useState(
     i18n.language?.startsWith("en") ? "en" : "fr",
   );
-  const [token, setToken] = useState(
-    sessionStorage.getItem("adminToken") || null,
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!sessionStorage.getItem("adminUser"),
   );
   const [user, setUser] = useState(() => {
     const saved = sessionStorage.getItem("adminUser");
@@ -76,28 +122,23 @@ function App() {
   }, []);
 
   const handleLogout = async (reason = "") => {
-    // Journaliser la déconnexion dans l'audit avant de vider la session
-    const currentToken = sessionStorage.getItem("adminToken");
-    if (currentToken) {
-      try {
-        await fetch(getSafeApiUrl("/api/auth/logout"), {
-          method: "POST",
-          headers: { Authorization: `Bearer ${currentToken}` },
-        });
-      } catch (e) {
-        // Ignorer l'erreur réseau — on se déconnecte quand même
-      }
+    try {
+      await fetch(getSafeApiUrl("/api/auth/logout"), {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (e) {
+      // Ignorer l'erreur réseau — on se déconnecte quand même
     }
-    sessionStorage.removeItem("adminToken");
     sessionStorage.removeItem("adminUser");
-    setToken(null);
+    setIsAuthenticated(false);
     setUser(null);
     window.location.href = reason ? `/?logout=${reason}` : "/"; // Force reload to clear all states and redirect to login
   };
 
   // --- HAUTE SÉCURITÉ : Intercepteur global & Déconnexion pour inactivité ---
   useEffect(() => {
-    if (!token) return;
+    if (!user) return;
 
     // 1. Déconnexion automatique après 1h (3600000 ms) d'inactivité
     let inactivityTimer;
@@ -125,7 +166,7 @@ function App() {
     const pingInterval = setInterval(async () => {
       try {
         const res = await window.fetch(getSafeApiUrl("/api/auth/verify"), {
-          headers: { Authorization: `Bearer ${token}` },
+          credentials: "include",
         });
         if (res.ok) {
           const data = await res.json();
@@ -143,31 +184,7 @@ function App() {
       }
     }, 15000); // Toutes les 15 secondes
 
-    // 2. Intercepteur global de fetch pour attraper les 401 / 403 instantanément
-    const originalFetch = window.fetch;
-    window.fetch = async (...args) => {
-      try {
-        const response = await originalFetch(...args);
-        // Si l'utilisateur a été rendu inactif ou son token est expiré, le backend renverra 401.
-        if (response.status === 401) {
-          const clone = response.clone();
-          try {
-            const data = await clone.json();
-            if (data?.action === "FORCE_LOGOUT" || response.status === 401) {
-              console.error(
-                "Accès révoqué ou session expirée. Déconnexion forcée.",
-              );
-              handleLogout("expired");
-            }
-          } catch (e) {
-            handleLogout("expired");
-          }
-        }
-        return response;
-      } catch (err) {
-        throw err;
-      }
-    };
+
 
     return () => {
       events.forEach((event) =>
@@ -175,17 +192,10 @@ function App() {
       );
       clearTimeout(inactivityTimer);
       clearInterval(pingInterval);
-      window.fetch = originalFetch;
     };
-  }, [token]);
+  }, [user]);
 
-  const handleLogin = (newToken, userData) => {
-    // Validation stricte du jeton JWT (Format : 3 parties séparées par un point, base64url)
-    const jwtRegex = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$/;
-    if (!newToken || typeof newToken !== "string" || !jwtRegex.test(newToken)) {
-      console.error("Format de jeton invalide.");
-      return;
-    }
+  const handleLogin = (userData) => {
 
     // Validation stricte par liste blanche et regex pour contrer l'empoisonnement du stockage (S8475)
     const ALLOWED_ROLES = [
@@ -225,9 +235,8 @@ function App() {
 
     const cleanUserData = { id, email, name, role };
 
-    sessionStorage.setItem("adminToken", newToken);
     sessionStorage.setItem("adminUser", JSON.stringify(cleanUserData)); // NOSONAR
-    setToken(newToken);
+    setIsAuthenticated(true);
     setUser(cleanUserData);
   };
 
@@ -243,7 +252,7 @@ function App() {
     );
   }
 
-  if (!token || !user) {
+  if (!isAuthenticated || !user) {
     if (location.pathname === "/forgot-password") {
       return (
         <Routes>
@@ -251,9 +260,17 @@ function App() {
         </Routes>
       );
     }
+    if (location.pathname.startsWith("/setup-password")) {
+      return (
+        <Routes>
+          <Route path="/setup-password" element={<SetupPasswordPage />} />
+        </Routes>
+      );
+    }
     if (
       location.pathname !== "/" &&
-      !location.pathname.startsWith("/magic-drop/")
+      !location.pathname.startsWith("/magic-drop/") &&
+      !location.pathname.startsWith("/setup-password")
     ) {
       window.location.replace("/");
       return null;

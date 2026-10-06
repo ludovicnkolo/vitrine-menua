@@ -2,26 +2,26 @@ import { Metadata } from 'next';
 import ClientPage from '../ClientPage';
 
 export const metadata: Metadata = {
-  title: "Operational Back & Middle Office Outsourcing",
-  description: "Operational outsourcing of back and middle office functions for financial institutions, wealth managers, accounting firms, regulated actors, IT and data.",
+  title: "Menua Consulting | Back & Middle Office Outsourcing",
+  description: "Menua Consulting supports finance, accounting, insurance, wealth management, compliance, data and IT teams with operational outsourcing across back and middle office functions.",
   alternates: {
     canonical: 'https://menuaconsulting.com/en',
     languages: {
-      'fr-FR': 'https://menuaconsulting.com',
+      'fr-FR': 'https://menuaconsulting.com/fr',
       'en-US': 'https://menuaconsulting.com/en',
-      'x-default': 'https://menuaconsulting.com',
+      'x-default': 'https://menuaconsulting.com/fr',
     },
   },
   openGraph: {
-    title: "Menua Consulting | Operational Back & Middle Office Outsourcing",
-    description: "We secure the execution of your back and middle office operations, allowing your teams to focus on strategic decisions.",
-    locale: 'en_US',
+    title: "Menua Consulting | Back & Middle Office Outsourcing",
+    description: "Menua Consulting supports finance, accounting, insurance, wealth management, compliance, data and IT teams with operational outsourcing across back and middle office functions.",
+    locale: 'en_GB',
     url: 'https://menuaconsulting.com/en',
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Menua Consulting | Operational Back & Middle Office Outsourcing",
-    description: "We secure the execution of your back and middle office operations, allowing your teams to focus on strategic decisions.",
+    title: "Menua Consulting | Back & Middle Office Outsourcing",
+    description: "Menua Consulting supports finance, accounting, insurance, wealth management, compliance, data and IT teams with operational outsourcing across back and middle office functions.",
   },
 };
 

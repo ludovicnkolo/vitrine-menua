@@ -23,6 +23,7 @@ const LoginPage = ({ onLogin }) => {
     try {
       const res = await fetch(getSafeApiUrl("/api/auth/login"), {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
@@ -33,8 +34,8 @@ const LoginPage = ({ onLogin }) => {
       } catch {
         throw new Error(`Réponse inattendue du serveur (${res.status})`);
       }
-      if (data.success && data.token) {
-        onLogin(data.token, data.user);
+      if (data.success && data.user) {
+        onLogin(data.user);
       } else {
         setError(data.error || "Identifiants invalides");
         setTimeout(() => setError(""), 3000);

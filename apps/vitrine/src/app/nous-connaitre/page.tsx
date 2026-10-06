@@ -3,7 +3,7 @@ import ClientPage from './ClientPage';
 
 export const metadata: Metadata = {
   title: "Nous Connaître",
-  description: "Découvrez l'expertise et l'organisation de Menua Consulting, votre partenaire de confiance en externalisation financière.",
+  description: "Découvrez Menua Consulting, spécialiste de l’externalisation opérationnelle back & middle office pour la finance, la comptabilité, l’assurance, la gestion de patrimoine, la conformité, la data et l’IT.",
   alternates: {
     canonical: 'https://menuaconsulting.com/fr/nous-connaitre',
     languages: {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Nous Connaître | Menua Consulting",
-    description: "Une organisation opérationnelle structurée pour accompagner les entreprises dans l'exécution fiable de leurs fonctions back & middle office.",
+    description: "Découvrez Menua Consulting, spécialiste de l’externalisation opérationnelle back & middle office pour la finance, la comptabilité, l’assurance, la gestion de patrimoine, la conformité, la data et l’IT.",
     locale: 'fr_FR',
     url: 'https://menuaconsulting.com/fr/nous-connaitre',
   },

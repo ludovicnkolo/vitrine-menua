@@ -211,6 +211,15 @@ router.post("/clients", async (req, res) => {
       emailEntreprise,
       telephoneEntreprise,
     } = req.body;
+
+    const isSociete =
+      (type && (type.toUpperCase() === "SOCIETE" || type.toLowerCase().includes("soci"))) ||
+      !!(siret || raisonSociale || emailEntreprise || telephoneEntreprise);
+
+    const clientType = isSociete
+      ? "SOCIETE"
+      : (type?.toUpperCase() === "PARTICULIER" || type?.toLowerCase().includes("particulier") ? "PARTICULIER" : (type || "PARTICULIER"));
+
     const client = await prisma.client.create({
       data: {
         name,
@@ -219,18 +228,21 @@ router.post("/clients", async (req, res) => {
         contactSecondaire: contactSecondaire || null,
         secteurActivite: secteurActivite || null,
         description: description || null,
-        type: type || "PARTICULIER",
+        type: clientType,
         status: "ACTIF",
-        ...(type === "Société" && {
+        ...(isSociete && {
           entreprise: {
             create: {
               siret: siret || null,
-              raisonSociale: raisonSociale || null,
+              raisonSociale: raisonSociale || name || null,
               emailEntreprise: emailEntreprise || null,
               telephoneEntreprise: telephoneEntreprise || null,
             },
           },
         }),
+      },
+      include: {
+        entreprise: true,
       },
     });
     await logAudit(
@@ -262,7 +274,7 @@ router.post("/clients", async (req, res) => {
   }
 });
 
-router.patch("/clients/:id", async (req, res) => {
+const handleClientUpdate = async (req, res) => {
   try {
     const {
       name,
@@ -279,26 +291,41 @@ router.patch("/clients/:id", async (req, res) => {
       status,
     } = req.body;
 
-    // Si c'est une société, on met à jour ou crée les données de l'entreprise
+    const existingClient = await prisma.client.findUnique({
+      where: { id: req.params.id },
+      include: { entreprise: true },
+    });
+    if (!existingClient) return res.status(404).json({ error: "Client introuvable." });
+
+    const isSociete =
+      (type !== undefined
+        ? (type.toUpperCase() === "SOCIETE" || type.toLowerCase().includes("soci"))
+        : (existingClient.type?.toUpperCase() === "SOCIETE" || existingClient.type?.toLowerCase().includes("soci"))) ||
+      (siret !== undefined || raisonSociale !== undefined || emailEntreprise !== undefined || telephoneEntreprise !== undefined);
+
     let entrepriseUpdate = undefined;
-    if (type === "Société") {
+    if (isSociete) {
       entrepriseUpdate = {
         upsert: {
           create: {
-            siret,
-            raisonSociale,
-            emailEntreprise,
-            telephoneEntreprise,
+            siret: siret || null,
+            raisonSociale: raisonSociale || name || existingClient.name || null,
+            emailEntreprise: emailEntreprise || null,
+            telephoneEntreprise: telephoneEntreprise || null,
           },
           update: {
-            siret,
-            raisonSociale,
-            emailEntreprise,
-            telephoneEntreprise,
+            ...(siret !== undefined && { siret: siret || null }),
+            ...(raisonSociale !== undefined && { raisonSociale: raisonSociale || null }),
+            ...(emailEntreprise !== undefined && { emailEntreprise: emailEntreprise || null }),
+            ...(telephoneEntreprise !== undefined && { telephoneEntreprise: telephoneEntreprise || null }),
           },
         },
       };
     }
+
+    const resolvedType = type !== undefined
+      ? (isSociete ? "SOCIETE" : (type.toUpperCase() === "PARTICULIER" || type.toLowerCase().includes("particulier") ? "PARTICULIER" : type))
+      : undefined;
 
     const client = await prisma.client.update({
       where: { id: req.params.id },
@@ -309,9 +336,12 @@ router.patch("/clients/:id", async (req, res) => {
         ...(contactSecondaire !== undefined && { contactSecondaire }),
         ...(secteurActivite !== undefined && { secteurActivite }),
         ...(description !== undefined && { description }),
-        ...(type !== undefined && { type }),
+        ...(resolvedType !== undefined && { type: resolvedType }),
         ...(status && { status }),
         ...(entrepriseUpdate && { entreprise: entrepriseUpdate }),
+      },
+      include: {
+        entreprise: true,
       },
     });
     const clientAuditAction =
@@ -328,7 +358,10 @@ router.patch("/clients/:id", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Erreur lors de la mise à jour." });
   }
-});
+};
+
+router.patch("/clients/:id", handleClientUpdate);
+router.put("/clients/:id", handleClientUpdate);
 
 router.delete(
   "/clients/:id",

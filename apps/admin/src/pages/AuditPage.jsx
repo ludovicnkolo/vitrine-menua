@@ -25,7 +25,7 @@ export default function AuditPage() {
   const [selectedUser, setSelectedUser] = useState("all");
   const [dateFilterActive, setDateFilterActive] = useState(false);
   const [page, setPage] = useState(1);
-  const pageSize = 5;
+  const pageSize = 15;
 
   useEffect(() => {
     fetchLogs();
@@ -100,8 +100,9 @@ export default function AuditPage() {
 
   const getSecurityBadge = (log) => {
     if (log.ipAddress) return `IP: ${log.ipAddress}`;
-    if (log.details && log.details.includes("192.")) {
-      const match = log.details.match(/192\.\d+\.\d+\.\d+/);
+    if (log.ip) return `IP: ${log.ip}`;
+    if (log.details) {
+      const match = log.details.match(/\b(?:\d{1,3}\.){3}\d{1,3}\b/);
       if (match) return `IP: ${match[0]}`;
     }
     const act = (log.action || "").toLowerCase();
@@ -114,8 +115,7 @@ export default function AuditPage() {
       }
       return "OTP Envoyé";
     }
-    if (log.ip) return `IP: ${log.ip}`;
-    return "IP: 192.168.1.42";
+    return "Traçabilité interne";
   };
 
   // Filter logs
@@ -181,21 +181,21 @@ export default function AuditPage() {
             style={{
               fontSize: "1.6rem",
               fontWeight: 700,
-              color: "#0F172A",
+              color: "var(--text-main, #0F172A)",
               margin: "0 0 0.25rem 0",
             }}
           >
             Journal d'Audit
           </h1>
-          <p style={{ color: "#64748B", margin: 0, fontSize: "0.85rem" }}>
+          <p style={{ color: "var(--text-muted, #64748B)", margin: 0, fontSize: "0.85rem" }}>
             Traçabilité complète et immutable de toutes les actions effectuées sur la plateforme
           </p>
         </div>
         <div
           style={{
-            background: "#EFF6FF",
-            color: "#2563EB",
-            border: "1px solid #BFDBFE",
+            background: "rgba(37, 99, 235, 0.1)",
+            color: "var(--accent, #2563EB)",
+            border: "1px solid rgba(37, 99, 235, 0.2)",
             padding: "0.45rem 1rem",
             borderRadius: "20px",
             display: "inline-flex",
@@ -213,8 +213,8 @@ export default function AuditPage() {
       {/* Filter Row Card */}
       <div
         style={{
-          background: "#FFF",
-          border: "1px solid #E2E8F0",
+          background: "var(--card-bg, #FFF)",
+          border: "1px solid var(--border, #E2E8F0)",
           borderRadius: "12px",
           padding: "1rem 1.25rem",
           marginBottom: "1.5rem",

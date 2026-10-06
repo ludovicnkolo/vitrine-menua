@@ -273,7 +273,10 @@ export default function NousConnaitrePage() {
               {
                 id: "verifications",
                 title: t("Vérifications préalables", "Pre-engagement checks"),
-                desc: t("Vérification de l’identité juridique, de la situation administrative et de la cohérence opérationnelle du client ou partenaire, afin de sécuriser l’entrée en relation.", "We verify the legal identity, administrative standing and operational consistency of the client or partner before onboarding.")
+                desc: t(
+                  "Avant toute entrée en relation, MENUA vérifie les informations essentielles du client nécessaires à la bonne exécution de la mission : identité juridique, coordonnées et éléments administratifs utiles, ainsi que la cohérence du besoin exprimé avec le périmètre d’intervention de MENUA.",
+                  "Before any engagement begins, MENUA verifies the essential client information required for proper delivery of the assignment: legal identity, contact details and relevant administrative information, as well as the consistency of the stated requirement with MENUA’s scope of services."
+                )
               },
               {
                 id: "analyse",
@@ -356,8 +359,8 @@ export default function NousConnaitrePage() {
                 </p>
                 <p className="text-[#e8e1d7] font-bold leading-relaxed">
                   {formatBrand(t(
-                    "MENUA CONSULTING s’appuie sur une organisation agile, pilotée depuis la France et complétée, selon les besoins des missions, par des collaborateurs ou partenaires sélectionnés et encadrés.",
-                    "MENUA CONSULTING operates through an agile model led from France and complemented, depending on the engagement, by carefully selected and supervised professionals or partners."
+                    "MENUA CONSULTING s’appuie sur une organisation agile, pilotée depuis la France et articulée autour d’équipes dédiées, rigoureusement formées et encadrées selon les standards de nos clients.",
+                    "MENUA CONSULTING relies on an agile organisation led from France and structured around dedicated teams, rigorously trained and supervised in accordance with our clients’ standards."
                   ))}
                 </p>
               </div>

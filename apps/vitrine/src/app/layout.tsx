@@ -25,10 +25,10 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Menua Consulting",
+    title: "Menua Consulting | Externalisation Back & Middle Office",
     description:
       "Nous sécurisons l'exécution de vos opérations back et middle office afin de permettre à vos équipes de se concentrer sur les décisions stratégiques.",
-    url: 'https://menuaconsulting.com',
+    url: 'https://menuaconsulting.com/fr',
     siteName: 'Menua Consulting',
     type: "website",
     locale: "fr_FR",

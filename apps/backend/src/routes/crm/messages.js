@@ -668,12 +668,11 @@ router.patch("/messages/:id/status", async (req, res) => {
     const dataToUpdate = {};
     if (status !== undefined) {
       const userRole = req.user.role;
-      const isSuperAdminRole = userRole === "Super-administrateur";
-      const isResp = userRole === "Responsable operationnel";
       
-      if (!isSuperAdminRole && !isResp) {
+      // Utilisation des helpers d'autorisation
+      if (!isManager(userRole) && !isAdmin(userRole)) {
         return res.status(403).json({
-          error: "Acces refuse. Seuls le Super-Administrateur et le Responsable operationnel peuvent modifier le statut d un message.",
+          error: "Acces refuse. Seuls les administrateurs et responsables peuvent modifier le statut d un message.",
         });
       }
 

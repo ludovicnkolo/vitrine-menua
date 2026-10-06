@@ -222,10 +222,10 @@ function getSafeApiUrl(path) {
  * @param {object|null} body - Corps JSON optionnel
  */
 async function apiFetch(endpoint, method = "GET", body = null) {
-  const token = sessionStorage.getItem("adminToken");
   const options = {
     method,
-    headers: { Authorization: `Bearer ${token}` },
+    credentials: "include",
+    headers: {},
   };
   if (body) {
     options.headers["Content-Type"] = "application/json";
@@ -248,9 +248,7 @@ async function uploadFile(file, bucket = "formulaires") {
   try {
     const res = await fetch(getSafeApiUrl("/api/files/upload"), {
       method: "POST",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("adminToken"),
-      },
+      credentials: "include",
       body: formData,
     });
     const data = await res.json();

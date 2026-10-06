@@ -5,6 +5,7 @@ const { PrismaClient } = require("@prisma/client");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const cookieParser = require("cookie-parser");
 
 dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
@@ -84,6 +85,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 app.use(express.json({ limit: process.env.EXPRESS_JSON_LIMIT })); // from .env
+app.use(cookieParser());
 
 // Middlewares
 const logAudit = async (userId, action, targetId, targetType, details) => {

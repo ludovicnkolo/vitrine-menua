@@ -231,7 +231,7 @@ export default function NosSolutionsPage() {
               <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
                 <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Intervention ponctuelle", "Support during transition")}</h4>
                 <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
-                  {t("sur un volume de dossiers comptables, financiers, patrimoniaux, conformité ou administratifs", "managing volumes of accounting, financial, wealth-management, compliance or administrative files")}
+                  {t("sur un volume de dossiers comptables, financiers, patrimoniaux, d'assurance, conformité ou administratifs", "managing volumes of accounting, financial, wealth-management, insurance, compliance or administrative files")}
                 </p>
               </div>
               <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
@@ -306,7 +306,7 @@ export default function NosSolutionsPage() {
           t("dispositif dédié pour un service ou un périmètre clairement identifié", "a dedicated team for a clearly identified service or scope"),
           t("intervention par mission pour un besoin borné dans le temps", "project-based support for time-bound requirements"),
           t("prise en charge de flux ou de process récurrents", "management of recurring workflows or processes"),
-          t("traitement de dossiers, adhésions, opérations ou demandes selon des règles définies avec le client", "processing of files, operations or requests based on rules agreed with the client"),
+          t("traitement de dossiers, contrats, polices d'assurance, adhésions, opérations ou demandes selon des règles définies avec le client", "processing of files, contracts, insurance policies, applications, operations or requests based on rules agreed with the client"),
           t("suivi structuré avec points de contrôle réguliers", "structured oversight with regular control points"),
           t("reporting opérationnel selon la fréquence convenue", "operational reporting at an agreed frequency")
         ]}

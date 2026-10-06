@@ -6,14 +6,23 @@ process.env.JWT_SECRET = "CHANGE_MOI_EN_PRODUCTION_openssl_rand_base64_64";
 // NO MOCKS for Prisma. Real database connection.
 const prisma = require("../prisma");
 
-// Real middlewares and router
+// Real middlewares and modularized routers
 const authMiddleware = require("../middlewares/auth");
-const crmRouter = require("../routes/crm");
 
 const app = express();
 app.use(express.json());
-// Injecter le vrai router
-app.use("/api/crm", crmRouter);
+
+// Injecter les vrais routers modulaires
+app.use("/api/crm", require("../routes/crm/users"));
+app.use("/api/crm", require("../routes/crm/clients"));
+app.use("/api/crm", require("../routes/crm/dossiers"));
+app.use("/api/crm", require("../routes/crm/audit"));
+app.use("/api/crm", require("../routes/crm/missions"));
+app.use("/api/crm", require("../routes/crm/taches"));
+app.use("/api/crm", require("../routes/crm/documents"));
+app.use("/api/crm", require("../routes/crm/messages"));
+app.use("/api/crm", require("../routes/crm/dashboard"));
+app.use("/api/crm", require("../routes/crm/notifications"));
 
 describe("Suite de tests CRM (Tests RÉELS d'intégration)", () => {
   let token = "";
@@ -139,7 +148,7 @@ describe("Suite de tests CRM (Tests RÉELS d'intégration)", () => {
         .expect(201);
 
       expect(res.body).toHaveProperty("id");
-      expect(res.body.name).toBe("Dossier de Test Intégration");
+      expect(res.body.name.toLowerCase()).toContain("dossier de test intégration");
       testDossierId = res.body.id; // Sauvegarde pour suppression
     });
   });

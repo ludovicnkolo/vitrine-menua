@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://menuaconsulting.com/en/your-needs',
     languages: {
-      'fr-FR': 'https://menuaconsulting.com/vos-besoins',
+      'fr-FR': 'https://menuaconsulting.com/fr/vos-besoins',
       'en-US': 'https://menuaconsulting.com/en/your-needs',
-      'x-default': 'https://menuaconsulting.com/vos-besoins',
+      'x-default': 'https://menuaconsulting.com/fr/vos-besoins',
     },
   },
   openGraph: {

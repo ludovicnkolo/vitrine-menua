@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://menuaconsulting.com';
+  const baseDate = new Date('2026-10-06T08:00:00.000Z');
 
   // Pages FR avec préfixe /fr/ (URL canonique)
   const frRoutes = [
@@ -31,12 +32,50 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/en/privacy-policy', priority: 0.3, freq: 'yearly' as const },
   ];
 
-  const allRoutes = [...frRoutes, ...enRoutes];
-
-  return allRoutes.map(({ path, priority, freq }) => ({
+  const baseSitemap = [...frRoutes, ...enRoutes].map(({ path, priority, freq }) => ({
     url: `${baseUrl}${path}`,
-    lastModified: new Date(),
+    lastModified: baseDate,
     changeFrequency: freq,
     priority,
   }));
+
+  // Extraction dynamique des publications CMS publiées
+  const articleRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const backendUrl =
+      process.env.BACKEND_URL ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      'http://localhost:4000';
+    const res = await fetch(`${backendUrl}/api/cms/public?type=ACTUALITE`, {
+      next: { revalidate: 3600 },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && Array.isArray(data.data)) {
+        for (const pub of data.data) {
+          const modDate = pub.updatedAt
+            ? new Date(pub.updatedAt)
+            : pub.publishedAt
+            ? new Date(pub.publishedAt)
+            : baseDate;
+          articleRoutes.push({
+            url: `${baseUrl}/fr/actualites/${pub.id}`,
+            lastModified: modDate,
+            changeFrequency: 'weekly' as const,
+            priority: 0.8,
+          });
+          articleRoutes.push({
+            url: `${baseUrl}/en/news/${pub.id}`,
+            lastModified: modDate,
+            changeFrequency: 'weekly' as const,
+            priority: 0.8,
+          });
+        }
+      }
+    }
+  } catch {
+    // Si le backend n'est pas joignable pendant le build, le sitemap de base est retourné
+  }
+
+  return [...baseSitemap, ...articleRoutes];
 }

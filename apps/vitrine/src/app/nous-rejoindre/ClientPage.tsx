@@ -188,47 +188,8 @@ export default function NousRejoindre() {
             <form className="space-y-10" onSubmit={handleSubmit}>
 
               <div>
-                <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Vous êtes", "You are")}</p>
-                <div className="flex flex-col sm:flex-row gap-8 sm:gap-24">
-                  <label htmlFor="profileTypeIndividual" className="flex items-center gap-3 cursor-pointer group">
-                    <input 
-                      type="radio" 
-                      id="profileTypeIndividual"
-                      name="profileType" 
-                      value="individual" 
-                      checked={profileType === "individual"} 
-                      onChange={() => { setProfileType("individual"); setIsOtherSkillChecked(false); }}
-                      className="accent-[#141824] w-5 h-5 cursor-pointer"
-                    />
-                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Particulier", "Individual")}</span>
-                  </label>
-                  <label htmlFor="profileTypeCompany" className="flex items-center gap-3 cursor-pointer group">
-                    <input 
-                      type="radio" 
-                      id="profileTypeCompany"
-                      name="profileType" 
-                      value="company" 
-                      checked={profileType === "company"} 
-                      onChange={() => { setProfileType("company"); setIsOtherSkillChecked(false); }}
-                      className="accent-[#141824] w-5 h-5 cursor-pointer"
-                    />
-                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Société", "Company")}</span>
-                  </label>
-                </div>
-              </div>
-
-              <div>
-                <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Informations", "Information")}</p>
+                <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Informations personnelles", "Personal Information")}</p>
                 <ContactInfoFields emailError={emailError} />
-
-                {profileType === "company" && (
-                  <div className="grid grid-cols-1 gap-8 mb-8">
-                    <div>
-                      <label htmlFor="company" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Raison sociale", "Company Name")} <span className="text-red-500">*</span></label>
-                      <input id="company" type="text" name="company" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                    </div>
-                  </div>
-                )}
               </div>
 
 
@@ -427,11 +388,11 @@ export default function NousRejoindre() {
                 </div>
               </div>
 
-              <div className="bg-[#f5f7fa] py-3 px-4 border-l-4 border-[#141824]">
-                <p className="text-[0.85rem] text-[#6e7891] italic leading-relaxed">
+              <div className="bg-[#f5f7fa] py-4 px-5 border-l-4 border-[#141824]">
+                <p className="text-[0.9rem] text-[#141824] leading-relaxed">
                   {formatBrand(t(
-                    "Aucun document n'est demandé à ce stade. Si votre profil est retenu, MENUA CONSULTING vous contactera afin de vous indiquer les éventuelles pièces complémentaires à transmettre.",
-                    "No document is required at this stage. If your profile is selected, MENUA CONSULTING will contact you to indicate the additional documents to provide."
+                    "Vous souhaitez rejoindre les équipes MENUA ? Présentez votre profil, vos compétences, votre expérience et vos disponibilités. Aucun document n’est demandé à ce stade ; si votre profil correspond à un besoin, nous vous recontacterons pour la suite du processus.",
+                    "Would you like to join the MENUA team? Tell us about your profile, skills, experience and availability. No document is required at this stage; if your profile matches a current or future need, we will contact you regarding the next steps."
                   ))}
                 </p>
               </div>

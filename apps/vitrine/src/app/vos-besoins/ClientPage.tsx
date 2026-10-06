@@ -167,12 +167,20 @@ export default function VosBesoinsPage() {
                     "MENUA CONSULTING supports finance, accounting, compliance, data and wealth management teams, as well as teams operating in regulated environments, by providing the rigorous back and middle office support needed to ensure operational reliability and continuity."
                   ))}
                 </p>
-                <p className="text-[#6e7891] text-[1rem] font-light leading-relaxed mb-10">
+                <p className="text-[#6e7891] text-[1rem] font-light leading-relaxed mb-6">
                   {t(
                     "Nos interventions s'adaptent aux besoins ponctuels, récurrents ou volumineux : traitement de dossiers, contrôle documentaire, reporting, suivi opérationnel, mise à jour de données, préparation de livrables ou renfort temporaire d'équipes.",
                     "Our services are designed to meet one-off, recurring or high-volume requirements. This includes file processing, document review, reporting, operational monitoring, data updates, deliverable preparation and temporary team reinforcement."
                   )}
                 </p>
+                <div className="p-4 border-l-2 border-[#141824]/30 bg-[#141824]/5 mb-10">
+                  <p className="text-[#141824] text-[0.95rem] font-medium leading-relaxed">
+                    {t(
+                      "Nos interventions couvrent l'analyse financière préparatoire, l'instruction technique de dossiers de crédit et le support aux opérations, la décision finale d'octroi ou d'investissement demeurant le monopole des établissements habilités.",
+                      "Our interventions cover preparatory financial analysis, technical review of credit files and operational support, while the final credit or investment decision remains the exclusive responsibility of authorized institutions."
+                    )}
+                  </p>
+                </div>
                 <div className="mt-8 flex justify-end">
                   <Link href="/nous-contacter" className="inline-flex items-center gap-2 text-[#141824] uppercase tracking-wider text-[1.05rem] hover:text-[#6e7891] transition-colors group text-right">
                     <span className="max-w-[18ch] portrait:sm:max-w-[24ch] landscape:max-lg:max-w-[21ch] landscape:lg:max-w-[22ch] xl:max-w-none">{t("Présenter votre besoin", "Tell us about your requirements")}</span>
@@ -350,7 +358,35 @@ export default function VosBesoinsPage() {
         cardBg="bg-[#f5f7fa]"
       />
 
-      {/* ── 3.8 AUTRES BESOINS ── */}
+      {/* ── 3.8 ASSURANCE ET COURTAGE ── */}
+      <NeedCardSection
+        id="assurance-courtage"
+        imgSrc="/img/besoins-assurance.webp"
+        imgAlt="Assurance et Courtage"
+        imgFallback="/img/besoins-cgp.webp"
+        title={t("Support aux acteurs de l’assurance et du courtage", "Support for insurance and brokerage firms")}
+        intro={formatBrand(t(
+          "MENUA CONSULTING accompagne les courtiers, agents généraux et acteurs de l’assurance dans le traitement administratif, le suivi de gestion et le contrôle documentaire de leurs dossiers. La souscription, le conseil, la tarification et les engagements contractuels demeurent sous l’entière responsabilité des professionnels habilités.",
+          "MENUA CONSULTING supports brokers, general agents and insurance entities in the administrative processing, management tracking and documentary verification of their files. Policy underwriting, advice, rating and contractual commitments remain under the full responsibility of authorized professionals."
+        ))}
+        items={{
+          label: t("Besoins couverts :", "Our support includes:"),
+          list: [
+            t("préparation et complétude des dossiers de souscription ;", "preparation and completeness checks of underwriting files;"),
+            t("collecte et vérification des pièces justificatives ;", "collection and verification of supporting documentation;"),
+            t("mise à jour des contrats et avenants ;", "contract and endorsement record updates;"),
+            t("traitement administratif des actes de gestion de contrats ;", "administrative processing of contract management operations;"),
+            t("préparation et transmission des pièces pour les règlements et sinistres ;", "preparation and transmission of files for claim and settlement processing;"),
+            t("relances administratives des assurés ou partenaires ;", "administrative reminders to policyholders or partners;"),
+            t("rapprochements de bordereaux de commissions ou primes ;", "commission and premium bordereau reconciliations;"),
+            t("archivage et organisation documentaire des portefeuilles.", "document archiving and portfolio organisation.")
+          ]
+        }}
+        bgClass="bg-[#f5f7fa]"
+        cardBg="bg-white"
+      />
+
+      {/* ── 3.9 AUTRES BESOINS ── */}
       <DarkNeedSection
         id="autres-besoins"
         bgClass="bg-[#e8e1d7]"
@@ -375,7 +411,7 @@ export default function VosBesoinsPage() {
           t("suivi de demandes internes ou clients", "monitoring of internal or client requests"),
           t("support en période de surcharge d'activité", "support during periods of overload"),
           t("remplacement ou appui temporaire d'équipe", "replacement or temporary team support"),
-          t("coordination entre équipes internes et prestataires externalisés", "coordination between internal teams and outsourced providers"),
+          t("coordination entre équipes internes et interlocuteurs opérationnels", "coordination between internal teams and operational contacts"),
           t("étude de besoins spécifiques non listés dans les rubriques précédentes", "assessment of specific needs not covered above"),
         ]}
       />

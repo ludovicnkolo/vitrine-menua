@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import ClientPage from '../../nous-connaitre/ClientPage';
 
 export const metadata: Metadata = {
-  title: "About Us",
-  description: "Discover the expertise and structured operational organisation of Menua Consulting, your trusted partner in operational back and middle office.",
+  title: "About Us | Menua Consulting",
+  description: "Discover Menua Consulting, an operational outsourcing firm supporting back and middle office functions across finance, accounting, insurance, wealth management, compliance, data and IT.",
   alternates: {
     canonical: 'https://menuaconsulting.com/en/about-us',
     languages: {
@@ -14,14 +14,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "About Us | Menua Consulting",
-    description: "A structured operational organisation supporting businesses in the reliable execution of back and middle office functions.",
-    locale: 'en_US',
+    description: "Discover Menua Consulting, an operational outsourcing firm supporting back and middle office functions across finance, accounting, insurance, wealth management, compliance, data and IT.",
+    locale: 'en_GB',
     url: 'https://menuaconsulting.com/en/about-us',
   },
   twitter: {
     card: 'summary_large_image',
     title: "About Us | Menua Consulting",
-    description: "A structured operational organisation supporting businesses in the reliable execution of back and middle office functions.",
+    description: "Discover Menua Consulting, an operational outsourcing firm supporting back and middle office functions across finance, accounting, insurance, wealth management, compliance, data and IT.",
   },
 };
 

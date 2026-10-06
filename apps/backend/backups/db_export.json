@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.222Z",
-      "updatedAt": "2026-10-06T08:28:45.845Z"
+      "updatedAt": "2026-10-06T14:18:42.273Z"
     },
     {
       "id": "a41c168d-dc87-4353-8dcb-c71e4109416c",
@@ -16,7 +16,7 @@
       "status": "Inactif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.242Z",
-      "updatedAt": "2026-10-06T08:28:45.856Z"
+      "updatedAt": "2026-10-06T14:18:45.700Z"
     },
     {
       "id": "7f685243-dda5-4117-a675-d4a7364c7a66",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-09-28T09:31:02.248Z",
-      "updatedAt": "2026-10-06T08:28:45.864Z"
+      "updatedAt": "2026-10-06T14:18:46.297Z"
     },
     {
       "id": "803c6051-c50d-495a-bb21-b6615f1cf0dc",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-09-28T09:31:02.256Z",
-      "updatedAt": "2026-10-06T08:28:45.870Z"
+      "updatedAt": "2026-10-06T14:18:47.669Z"
     },
     {
       "id": "eaa1c720-2a71-493c-a1c0-d14f51051e0f",
@@ -43,14 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.269Z",
-      "updatedAt": "2026-10-06T08:28:45.875Z"
+      "updatedAt": "2026-10-06T14:18:48.991Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "2541799f-86de-4071-86c7-7110615bf37b",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$MRvPNLnM2PjOV1T43pAYGecN4mRznFRqXZHx1RYzXDSDwU4dwUS0i",
+      "password": "$2a$10$X1I0tDaPwuSX1U.3YzDLlOBlITAYamyITmT8rjgbn7LpK5L0EPoDy",
       "name": "Rosette Fouelefack",
       "roleId": "832d5c59-5fe6-488f-b64a-1bfdc6504152",
       "telephone": "+33659207511",
@@ -64,9 +64,9 @@
       "resetTokenExpiry": "2026-10-05T08:38:59.338Z",
       "isBlocked": false,
       "status": "Actif",
-      "lastLogin": "2026-10-06T07:43:46.429Z",
+      "lastLogin": "2026-10-06T14:14:39.116Z",
       "createdAt": "2026-09-28T09:31:02.401Z",
-      "updatedAt": "2026-10-06T08:28:46.056Z"
+      "updatedAt": "2026-10-06T14:18:49.359Z"
     },
     {
       "id": "d835f1ac-9910-402b-89df-f3968179f15a",
@@ -239,9 +239,129 @@
   ],
   "clients": [],
   "clientEntreprises": [],
-  "formulaires": [],
-  "formulaireRecrutements": [],
-  "formulaireContacts": [],
+  "formulaires": [
+    {
+      "id": "5cae5a2f-e84b-4dd9-9e14-1eec9bbbd934",
+      "formulaireId": "59346d6e-0c69-4b30-bf6c-1a24f729b22c",
+      "type": "RECRUTEMENT",
+      "statusSubmitter": "PARTICULIER",
+      "nomPrenom": "Imani Rivas",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "+1 (202) 156-8097",
+      "priority": "NORMAL",
+      "description": "Qui molestiae possim",
+      "raisonSocial": null,
+      "objet": "Demande de collaboration",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de profil</strong> : <span>Particulier</span><br/>\n        \n        <strong>Nom complet</strong> : <span>Rivas Imani</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (202) 156-8097</span><br/>\n        <strong>Expérience</strong> : <span>Moins de 2 ans</span><br/>\n        <strong>Langues</strong> : <span>Arabe, Coréen</span><br/>\n        <strong>Localisation</strong> : <span>Quae ea eu reiciendi</span><br/>\n        <strong>Disponibilité</strong> : <span>Sous 1 mois</span><br/>\n        <strong>LinkedIn / Portfolio</strong> : <span><a href=\"https://www.qib.org.au\" style=\"color: #141824;\">https://www.qib.org.au</a></span>\n      </div>\n      <strong>Compétences clés</strong> : <div><ul><li>Back et middle office</li><li>Risques et Conformité</li><li>Support opérationnel CGP</li></ul></div><br/>\n      <strong>Message / Motivations</strong> : <div>\n      Qui molestiae possim\n      </div>\n    ",
+      "status": "NOUVEAU",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-10-06T13:13:57.793Z",
+      "createdAt": "2026-10-06T13:13:57.793Z",
+      "updatedAt": "2026-10-06T13:13:57.793Z",
+      "dateRappel": null,
+      "noteRappel": null,
+      "dateEntretien": null,
+      "lienVisio": null
+    },
+    {
+      "id": "b02f73d4-d1ef-43b2-b38e-052b85fcd33a",
+      "formulaireId": "afb73a02-873f-40bc-a584-c53abda3ada0",
+      "type": "CONTACT",
+      "statusSubmitter": "SOCIETE",
+      "nomPrenom": "Kiara Hodges",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "+1 (614) 618-5447",
+      "priority": "NORMAL",
+      "description": "Qui impedit molliti",
+      "raisonSocial": " fvjebie",
+      "objet": "Demande de contact",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de client</strong> : <span>Entreprise / Organisation</span><br/>\n        <strong>Société</strong> : <span> fvjebie</span><br/>\n        <strong>Nom complet</strong> : <span>Kiara Hodges</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (614) 618-5447</span>\n      </div>\n      <strong>Besoins identifiés</strong> : <div><ul><li>Risques et conformité</li><li>Support comptable et data</li><li>Support opérationnel CGP / gestion de patrimoine</li><li>Autre besoin opérationnel</li></ul></div><br/>\n      <strong>Description du besoin</strong> : <div>\n      Qui impedit molliti\n      </div>\n    ",
+      "status": "NOUVEAU",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-10-06T13:15:12.542Z",
+      "createdAt": "2026-10-06T13:15:12.542Z",
+      "updatedAt": "2026-10-06T13:15:12.542Z",
+      "dateRappel": null,
+      "noteRappel": null,
+      "dateEntretien": null,
+      "lienVisio": null
+    },
+    {
+      "id": "e56fd530-f696-4120-ab42-cc4fea2ff06d",
+      "formulaireId": "353e97a4-a6a8-4808-81a7-4edea242beed",
+      "type": "CONTACT",
+      "statusSubmitter": "PARTICULIER",
+      "nomPrenom": "Paul Sloan",
+      "email": "ludovicnkolo01@gmail.com",
+      "telephone": "+1 (316) 846-3616",
+      "priority": "Normal",
+      "description": "Rerum tempora ration",
+      "raisonSocial": null,
+      "objet": "Demande de contact",
+      "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de client</strong> : <span>Particulier</span><br/>\n        \n        <strong>Nom complet</strong> : <span>Paul Sloan</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (316) 846-3616</span>\n      </div>\n      <strong>Besoins identifiés</strong> : <div><ul><li>Renfort opérationnel</li><li>Contrôle de gestion</li><li>Risques et conformité</li><li>Support comptable et data</li><li>Autre besoin opérationnel</li></ul></div><br/>\n      <strong>Description du besoin</strong> : <div>\n      Rerum tempora ration\n      </div>\n    ",
+      "status": "A_RAPPELER",
+      "isAnonyme": true,
+      "verifaliaJobId": null,
+      "verifaliaStatus": "COMPLETED_VALID",
+      "verifaliaNextRetry": null,
+      "verifaliaRetries": 0,
+      "clientId": null,
+      "dossierId": null,
+      "missionId": null,
+      "tacheId": null,
+      "assignedToId": null,
+      "receivedAt": "2026-10-06T13:15:52.586Z",
+      "createdAt": "2026-10-06T13:15:52.586Z",
+      "updatedAt": "2026-10-06T13:24:26.729Z",
+      "dateRappel": "2026-10-06T00:00:00.000Z",
+      "noteRappel": "Rappeler le client demain",
+      "dateEntretien": null,
+      "lienVisio": null
+    }
+  ],
+  "formulaireRecrutements": [
+    {
+      "id": "cdcfbf8c-8b47-4c07-9ca9-33e2ff7fc44d",
+      "formulaireId": "5cae5a2f-e84b-4dd9-9e14-1eec9bbbd934",
+      "competenceCle": "Back et middle office, Risques et Conformité, Support opérationnel CGP",
+      "anneeExperience": "Moins de 2 ans",
+      "lieuResidence": "Quae ea eu reiciendi",
+      "langue": "Arabe, Coréen",
+      "lienLinkedin": "https://www.qib.org.au"
+    }
+  ],
+  "formulaireContacts": [
+    {
+      "id": "1ab0b3d9-2749-47be-9cb0-1adbdaa01faf",
+      "formulaireId": "b02f73d4-d1ef-43b2-b38e-052b85fcd33a",
+      "typeBesoin": "Risques et conformité, Support comptable et data, Support opérationnel CGP / gestion de patrimoine, Autre besoin opérationnel",
+      "pieceJointe": null
+    },
+    {
+      "id": "0a4adb31-03c9-4fb6-a3ca-e5bcc82527cd",
+      "formulaireId": "e56fd530-f696-4120-ab42-cc4fea2ff06d",
+      "typeBesoin": "Renfort opérationnel, Contrôle de gestion, Risques et conformité, Support comptable et data, Autre besoin opérationnel",
+      "pieceJointe": null
+    }
+  ],
   "dossiers": [
     {
       "origin": "INTERNE",
@@ -317,6 +437,25 @@
       "parentDossierId": null,
       "createdAt": "2026-10-05T21:27:56.701Z",
       "updatedAt": "2026-10-05T21:27:56.701Z",
+      "isSystem": false
+    },
+    {
+      "origin": "INTERNE",
+      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "id": "9b4f8392-4bda-472b-8fd7-19eacd1b6ac5",
+      "reference": "DOS-05",
+      "name": "dos-05_dossier de test intégration",
+      "description": null,
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "traitantId": null,
+      "parentDossierId": null,
+      "createdAt": "2026-10-06T12:18:03.205Z",
+      "updatedAt": "2026-10-06T12:18:03.205Z",
       "isSystem": false
     }
   ],
@@ -613,61 +752,352 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-10-05T22:50:38.146Z"
+    },
+    {
+      "id": "23612825-c007-4849-8d83-bb045db68e0c",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_ROLE",
+      "targetId": "e7cc43c1-d107-4d95-9ef9-1f6223460fe5",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1791289083112",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:18:03.141Z"
+    },
+    {
+      "id": "502ec43c-715f-40bc-9121-8092b9c2cf29",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_DOSSIER",
+      "targetId": "9b4f8392-4bda-472b-8fd7-19eacd1b6ac5",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dos-05_dossier de test intégration",
+      "dossierId": "9b4f8392-4bda-472b-8fd7-19eacd1b6ac5",
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:18:03.210Z"
+    },
+    {
+      "id": "a09d0c24-fe92-4a77-9ef7-d65eb8240793",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_ROLE",
+      "targetId": "ca04424d-a32f-40de-a23c-0dcee4c44644",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1791289393446",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:23:13.480Z"
+    },
+    {
+      "id": "a2aa1729-74ce-4713-a58f-8a486d3e8e2a",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "761b769d-2450-44d5-962f-195b19f53187",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1791289691758@test.menua.local depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:28:11.896Z"
+    },
+    {
+      "id": "02da1747-5936-4c42-ad86-9ce175ab9cb8",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_CLIENT",
+      "targetId": "8439a13f-f286-4513-9007-9255e68c4b0f",
+      "targetType": "CLIENT",
+      "details": "Client créé : ACME Corporation (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:28:12.024Z"
+    },
+    {
+      "id": "7bc1fc9d-0cae-4223-97b0-77d5cc6400f2",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_CLIENT",
+      "targetId": "8439a13f-f286-4513-9007-9255e68c4b0f",
+      "targetType": "CLIENT",
+      "details": "Client modifié : ACME Corporation",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:28:12.044Z"
+    },
+    {
+      "id": "c7c13448-f000-4c73-b08f-dff10c69f520",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_ROLE",
+      "targetId": "659f04d7-d3dc-4cd8-84d1-4473b614a1d6",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1791289704365",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:28:24.393Z"
+    },
+    {
+      "id": "59b0e21e-e247-4de8-9bef-4352f8d5abc7",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "5fdf991f-2c83-4e7d-914e-e1c28e97fc28",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1791289704389@test.menua.local depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:28:24.564Z"
+    },
+    {
+      "id": "e89234c2-e416-439e-b2c5-675acf9aad61",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_CLIENT",
+      "targetId": "85c47b10-a05c-443d-ab12-56f14afb5309",
+      "targetType": "CLIENT",
+      "details": "Client créé : ACME Corporation (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:28:24.690Z"
+    },
+    {
+      "id": "ab651c00-17dc-4aa2-9e07-eddc6680ae98",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_CLIENT",
+      "targetId": "85c47b10-a05c-443d-ab12-56f14afb5309",
+      "targetType": "CLIENT",
+      "details": "Client modifié : ACME Corporation",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:28:24.710Z"
+    },
+    {
+      "id": "4aad7349-a995-444e-b4c7-d9331fe3cbea",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_ROLE",
+      "targetId": "9e547a25-eadd-4718-99cb-db8086d87538",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1791290844250",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:47:24.272Z"
+    },
+    {
+      "id": "e506f68b-54af-46b3-820d-820e033338ef",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "c5d005a7-2297-4cca-aac8-2ce8574abf68",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1791290844279@test.menua.local depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:47:24.441Z"
+    },
+    {
+      "id": "5c1270c2-0287-41be-a762-645f0cd42747",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_CLIENT",
+      "targetId": "3e4e6b20-49aa-49ff-b233-73aae5a60127",
+      "targetType": "CLIENT",
+      "details": "Client créé : ACME Corporation (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:47:24.579Z"
+    },
+    {
+      "id": "6f8cb4f5-4b1f-437c-b01e-ad23ba4ca242",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_CLIENT",
+      "targetId": "3e4e6b20-49aa-49ff-b233-73aae5a60127",
+      "targetType": "CLIENT",
+      "details": "Client modifié : ACME Corporation",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:47:24.600Z"
+    },
+    {
+      "id": "2bff4d9e-c7d1-4b8c-8d1e-503c9795acb7",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_ROLE",
+      "targetId": "94f29806-014d-4faa-98ae-364d71aa0324",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1791291526388",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:58:46.407Z"
+    },
+    {
+      "id": "3189c528-32f3-4f38-8ab6-13b9c66a3830",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "4d35f784-329e-4565-98e6-cf9ce70685df",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1791291526336@test.menua.local depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:58:46.496Z"
+    },
+    {
+      "id": "196602d9-34c6-4e91-b45f-4ebed471e4b9",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_CLIENT",
+      "targetId": "5d7dc987-4e0f-43c9-96c6-b42ec1afd08f",
+      "targetType": "CLIENT",
+      "details": "Client créé : ACME Corporation (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:58:46.623Z"
+    },
+    {
+      "id": "53593082-b630-4b48-b65c-6c56221f21b3",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_CLIENT",
+      "targetId": "5d7dc987-4e0f-43c9-96c6-b42ec1afd08f",
+      "targetType": "CLIENT",
+      "details": "Client modifié : ACME Corporation",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T12:58:46.642Z"
+    },
+    {
+      "id": "1c32c967-f4e6-485f-b4c2-a7bfca810abf",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T13:00:22.625Z"
+    },
+    {
+      "id": "6dbc1aa3-515d-41bd-bfc3-f37de2c954b3",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_ROLE",
+      "targetId": "9e834209-2b23-4f45-ae29-0ee0a4e651e8",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1791291998340",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T13:06:38.363Z"
+    },
+    {
+      "id": "22300a8b-3b7a-4ed0-b051-4be5a0d0303d",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "ebfeca73-3c36-4a21-9495-d4372709ca2f",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1791291998342@test.menua.local depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T13:06:38.501Z"
+    },
+    {
+      "id": "f1d0fbd8-0314-4b4a-923d-6850704c001f",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_CLIENT",
+      "targetId": "32f91f86-68a6-4198-95c8-6694d612498f",
+      "targetType": "CLIENT",
+      "details": "Client créé : ACME Corporation (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T13:06:38.630Z"
+    },
+    {
+      "id": "8aea13de-2f64-4528-88b9-22854dc67100",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_CLIENT",
+      "targetId": "32f91f86-68a6-4198-95c8-6694d612498f",
+      "targetType": "CLIENT",
+      "details": "Client modifié : ACME Corporation",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T13:06:38.650Z"
+    },
+    {
+      "id": "1c120285-ad6d-4702-8489-3900059394e2",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T14:05:53.513Z"
+    },
+    {
+      "id": "ea2d5893-04bf-4183-8c4b-133362d0204b",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T14:11:14.087Z"
+    },
+    {
+      "id": "69159998-538f-42dd-8989-48843889faa7",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T14:11:21.142Z"
+    },
+    {
+      "id": "b2320481-66a7-4999-8810-a6810f47c2d0",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T14:11:59.521Z"
+    },
+    {
+      "id": "6c365ce6-0150-4e03-a787-6045b0cf690a",
+      "userId": null,
+      "action": "ECHEC_CONNEXION",
+      "targetId": null,
+      "targetType": "AUTH",
+      "details": "Tentative de connexion avec email inconnu : contact@menuaconsulting.com depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T14:12:58.757Z"
+    },
+    {
+      "id": "56bdb2fb-f149-4bf6-99cb-039198450943",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T14:13:29.056Z"
+    },
+    {
+      "id": "f214db82-ed91-4526-9ee6-f4e4d3c3b36a",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T14:14:39.137Z"
+    },
+    {
+      "id": "4f58b0cb-3256-4ed1-962e-0f9583462d81",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-06T14:14:39.656Z"
     }
   ],
   "messagePersonnels": [
     {
-      "id": "f121e8b1-2394-4db8-a482-48e07191b051",
-      "messageId": "e9db66f0-4bc5-430d-bcf4-8fdc547d18c2",
-      "type": "INTERNE",
-      "subType": "Message direct",
-      "status": "CONSULTE",
-      "nomPrenom": "Responsable Opérationnel 2",
-      "email": "resp.op2@menua.local",
-      "objet": "Message Interne",
-      "bodyText": "salut",
-      "attachment": null,
-      "etiquette": null,
-      "priorite": "Normal",
-      "isDeleted": false,
-      "createdAt": "2026-10-05T21:18:58.210Z",
-      "receivedAt": "2026-10-05T21:18:58.210Z",
-      "dateRappel": null,
-      "noteRappel": null,
-      "dateEntretien": null,
-      "lienVisio": null,
-      "dossierId": null,
-      "missionId": null,
-      "assignedToId": "d835f1ac-9910-402b-89df-f3968179f15a",
-      "tacheId": null
-    },
-    {
-      "id": "19b2a376-af4c-4798-9f73-4d15fa165143",
-      "messageId": "76b9cd36-954e-45d5-b453-be8370d4f68a",
-      "type": "INTERNE",
-      "subType": "Message direct",
-      "status": "CONSULTE",
-      "nomPrenom": "Responsable Opérationnel 1",
-      "email": "resp.op1@menua.local",
-      "objet": "Message Interne",
-      "bodyText": "bonsoir",
-      "attachment": null,
-      "etiquette": null,
-      "priorite": "Normal",
-      "isDeleted": false,
-      "createdAt": "2026-10-05T21:19:17.266Z",
-      "receivedAt": "2026-10-05T21:19:17.266Z",
-      "dateRappel": null,
-      "noteRappel": null,
-      "dateEntretien": null,
-      "lienVisio": null,
-      "dossierId": null,
-      "missionId": null,
-      "assignedToId": "eb4a1daf-8987-45e8-9c10-b4886910bb10",
-      "tacheId": null
-    },
-    {
-      "id": "903195d3-e65a-46f2-8222-4b1c717163a6",
+      "id": "00628a81-845f-4648-acdd-ebdb991e772e",
       "messageId": "<0382014c-7f89-458f-b647-9e0580a0db5e@dgfip.finances.gouv.fr>",
       "type": "PERSONNEL",
       "subType": "Indéfini",
@@ -676,7 +1106,7 @@
       "email": "sie.paris-20e@dgfip.finances.gouv.fr",
       "objet": "Pour information / CFE 2025 / SIREN 993 749 779-SAS MENUA CONSULTING-ST",
       "bodyText": "Bonjour,\n\n\nNotre service est en charge de l'établissement de la contribution foncière des entreprises (CFE).\nVous avez créé un nouvel établissement  au:\n\n * 92 RUE DES PYRENEES 75020 PARIS.\n\n\nNous devons établir votre situation concernant ou pas la surface professionnelle que vous occupez;\n\nAussi, nous vous saurions gré de fournir par retour de mail ou par courrier *selon votre cas*:\n\n    • la copie du contrat de la domiciliation ou de co-working si c’est une société de ce type qui vous héberge.\n    • une copie du bail de location professionnelle ou de sous-location\n    • une copie du bail d’habitation si l’adresse pro correspond à un domicile personnel. Y avez-vous un espace exclusivement dédié à cette seule activité et pour quelle superficie?\n\n*A défaut de réponse, la CFE sera calculée sur la base de la valeur locative la plus élevée.\n\n*\n\nNous vous informons que vous devez nous renvoyez le formulaire de la lettre d'accueil ainsi que le formulaire cerfa 1447-C-SD.\n\nLe micro-entrepreneur ou entreprise est *exonéré du paiement de la CFE la première année d'activité*, quelle que soit la date d'ouverture de l'exercice de création. Il n'a rien à payer.\n\nPour en bénéficier, il doit effectuer, au service des impôts des entreprises, une déclaration 1447-C-SD (dite déclaration initiale) avant le 31 décembre de l'année de début d'activité.\n\nhttps://entreprendre.service-public.gouv.fr/vosdroits/F23999?profil=tout\n\nCependant,nous vous invitons à nous l*es renvoyer avant le 12 janvier 2026 *pour la mise à jour de votre CFE.\n\n-- \nDGFiP \tTHEODAT Sandrine\nControleur des finances publiques\nService des Impôts des Entreprises Paris 20ème\n6 rue Paganini\n75020 PARIS\n01.53.27.44.50",
-      "attachment": null,
+      "attachment": "formulaires/1791292055216-28f36d004b780312-fp_logo_ss.jpg",
       "etiquette": null,
       "priorite": "Normal",
       "isDeleted": false,
@@ -692,7 +1122,7 @@
       "tacheId": null
     },
     {
-      "id": "f2b94267-658e-4e5e-be79-9b116d27b7a9",
+      "id": "73f44cbc-038b-4da1-8eab-dcc4069b66f0",
       "messageId": "<4dpPGn4kTnz5yjR@mo534.mail-out.ovh.net>",
       "type": "PERSONNEL",
       "subType": "Indéfini",
@@ -701,7 +1131,7 @@
       "email": "MAILER-DAEMON@mo534.mail-out.ovh.net",
       "objet": "Undelivered Mail Returned to Sender",
       "bodyText": "This is the mail system at host mo534.mail-out.ovh.net.\n\nI'm sorry to have to inform you that your message could not\nbe delivered to one or more recipients. It's attached below.\n\nFor further assistance, please send mail to postmaster.\n\nIf you do so, please include this problem report. You can\ndelete your own text from the attached returned message.\n\n                   The mail system\n\n<rosettefouel@gmail.fr>: Domain gmail.fr does not accept mail (nullMX)\n\n<rosettef@tomail.fr>: host mail.tomail.fr[188.165.250.189] said: 550 5.1.1\n    <rosettef@tomail.fr>: Recipient address rejected: User unknown in virtual\n    alias table (in reply to RCPT TO command)\n\nReporting-MTA: dns; mo534.mail-out.ovh.net\nX-Postfix-Queue-ID: 4dpPGn2CFkz5y9K\nX-Postfix-Sender: rfc822; contact@menuaconsulting.com\nArrival-Date: Sat, 10 Jan 2026 16:29:05 +0000 (UTC)\n\nFinal-Recipient: rfc822; rosettefouel@gmail.fr\nOriginal-Recipient: rfc822;rosettefouel@gmail.fr\nAction: failed\nStatus: 5.1.0\nDiagnostic-Code: X-Postfix; Domain gmail.fr does not accept mail (nullMX)\n\nFinal-Recipient: rfc822; rosettef@tomail.fr\nOriginal-Recipient: rfc822;rosettef@tomail.fr\nAction: failed\nStatus: 5.1.1\nRemote-MTA: dns; mail.tomail.fr\nDiagnostic-Code: smtp; 550 5.1.1 <rosettef@tomail.fr>: Recipient address\n    rejected: User unknown in virtual alias table\n",
-      "attachment": null,
+      "attachment": "formulaires/1791292057501-2f4ba8b611b05c6a-piece_jointe",
       "etiquette": null,
       "priorite": "Normal",
       "isDeleted": false,
@@ -717,7 +1147,7 @@
       "tacheId": null
     },
     {
-      "id": "5d210219-21c2-44f5-bbb6-4525bdee697c",
+      "id": "5897c54e-367d-4c5a-8825-2bceed9523ce",
       "messageId": "<1071098789.116175.1781783791370@srl-11-vm-mapi-01-prod.novalocal>",
       "type": "PERSONNEL",
       "subType": "Indéfini",
@@ -742,7 +1172,7 @@
       "tacheId": null
     },
     {
-      "id": "c104795e-8d87-4f87-b7a5-1fe3f807c6c2",
+      "id": "7d308be0-a33c-461c-8ae7-361888820e4f",
       "messageId": "<CANmTpSnj8r47VKjdFYshSBOd0fckRd13CjS8yYEgVto-QdTXkQ@mail.gmail.com>",
       "type": "PERSONNEL",
       "subType": "Indéfini",
@@ -751,7 +1181,7 @@
       "email": "colombe.jonas30@gmail.com",
       "objet": "Candidature – Alternance Middle / Back Office Finance & Patrimoine | MENUA Consulting – Jonas COLOMBE",
       "bodyText": "Bonjour,\n\nJe vous adresse ma candidature pour une alternance de 12 mois au sein\nde MENUA Consulting dans le cadre de mon Master 2 Gestion de\nPatrimoine à l’IAE Valenciennes – UPHF.\n\nVotre positionnement sur l’externalisation opérationnelle des\nfonctions back et middle office en environnement financier,\npatrimonial et réglementé correspond bien à mon parcours. Chez Foncia,\nj’ai suivi la comptabilité de 30 copropriétés et contrôlé plus de 1\n800 flux financiers. En cabinet patrimonial, j’ai travaillé sur\nl’analyse de portefeuilles, l’allocation, l’assurance-vie et le suivi\nde dossiers clients. À la DGFiP, j’ai renforcé ma rigueur sur la\nconformité documentaire et l’analyse de dossiers fiscaux.\n\nJe peux ainsi apporter une combinaison de précision opérationnelle,\ncompréhension des produits patrimoniaux et sens du service, avec une\nvraie aisance dans les environnements nécessitant contrôle,\ntraçabilité et fiabilité.\n\nRythme : lundi-mardi à l’université, mercredi-vendredi en entreprise.\nDisponibilité immédiate.\n\nJe vous joins mon CV et serais ravi d’échanger avec vous.\n\nBien cordialement,\n\nJonas COLOMBE\n+33 6 59 62 02 59\ncolombe.jonas30@gmail.com\nlinkedin.com/in/jonascolombe\n",
-      "attachment": null,
+      "attachment": "formulaires/1791292057782-996d33fdbc55cd0d-Jonas_COLOMBE_Wealth_Management_2026-2027.pdf_9_.pdf",
       "etiquette": null,
       "priorite": "Normal",
       "isDeleted": false,
@@ -767,7 +1197,7 @@
       "tacheId": null
     },
     {
-      "id": "a6e6e3ef-6795-498e-9ceb-8254697632f0",
+      "id": "ca4ba661-daab-4c35-b60e-385a63eb1ec0",
       "messageId": "<CANmTpSk8qyfgkrr_0NrNjr51awp3WkFHUKT+jsDA_LGYYEhuSA@mail.gmail.com>",
       "type": "PERSONNEL",
       "subType": "Indéfini",
@@ -792,7 +1222,7 @@
       "tacheId": null
     },
     {
-      "id": "e5af8fd9-cd4d-4e0b-94a0-bc782dee659f",
+      "id": "4ddb93ad-bcab-4281-872c-52da2b5ceeb2",
       "messageId": "<CALd=wZ5ARfJne7vk7_yhewMOrqzS4fSP354yu10KY2hwsrDvkA@mail.gmail.com>",
       "type": "PERSONNEL",
       "subType": "Indéfini",
@@ -801,7 +1231,7 @@
       "email": "mehdi.mejri.bis@gmail.com",
       "objet": "EXTERNALISATION COMPTABLE",
       "bodyText": "Madame / Monsieur,\n\nJ ai travaillé comme Commercial sur Extérnalisation Comptable de la France\nvers Tunisie de Mars 2024 a Dec 2025 en prenant de 1 a 3 RDVs avec Experts\nComptables Fr pour apporter le travail en Tunisie pour sous traitance DONC\nSI INTERESSER APPELLEZ MOI AU +216 52 785 346 SINON VIA CETTE ADRESSE MAIL\n\nBonne soirée\n",
-      "attachment": null,
+      "attachment": "formulaires/1791292060704-c0c63d2aa8fb67e6-MEJRI_MEHDI_Cv.pdf",
       "etiquette": null,
       "priorite": "Normal",
       "isDeleted": false,
@@ -817,7 +1247,7 @@
       "tacheId": null
     },
     {
-      "id": "2c42f4e4-666b-42c8-bc9e-7b25bc6cb985",
+      "id": "3b77fff3-3f6f-45da-80e7-b30cf3b9014e",
       "messageId": "<CALd=wZ6AG7JGVO9OVNcSZ7P3RytUaJQ2bqpDV2YhGfVXqVkJDg@mail.gmail.com>",
       "type": "PERSONNEL",
       "subType": "Indéfini",
@@ -826,7 +1256,7 @@
       "email": "mehdi.mejri.bis@gmail.com",
       "objet": "BIGTECH Africa 2026 ( Externalisation Comptable d Europe Francophone vers Tunisie )",
       "bodyText": " Bonjour,\n\nJ ai travaille depuis Mars 2024 à Dec 2025 comme Commercial sur Externalisation\nComptable de La France vers la Tunisie avec le partenaire Expert Comptable\ndu moment, Comptabilité Française et la je cherche un nouveau Partenaire\npour la campagne qui commence a partir de Septembre 2026, SI intéressé,\nappeler moi du Lun au Ven de 10h a 19h sur le 52 785 346 ou\nmehdi.mejri.bis@gmail.com\n\nCordialement\n\nMehdi MEJRI\n",
-      "attachment": null,
+      "attachment": "formulaires/1791292063440-e3f76f5cfd02beae-MEJRI_MEHDI_Cv.pdf,formulaires/1791292064949-5dd383c02585f627-MEJRI_MEJRI_ENG_Cv.pdf",
       "etiquette": null,
       "priorite": "Normal",
       "isDeleted": false,

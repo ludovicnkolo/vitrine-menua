@@ -68,7 +68,7 @@ const SystemSpacePage = ({ userRole }) => {
                   style={{
                     fontSize: "1.6rem",
                     fontWeight: 700,
-                    color: "#0F172A",
+                    color: "var(--text-main, #0F172A)",
                     margin: "0 0 0.25rem 0",
                   }}
                 >

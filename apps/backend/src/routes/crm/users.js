@@ -430,17 +430,26 @@ router.post(
       // Send email — Use ADMIN_FRONTEND_URL env var (the CRM admin frontend, NOT the backend)
       try {
         const adminFrontend = process.env.ADMIN_FRONTEND_URL || "http://localhost:5173";
+        const activationLink = `${adminFrontend}/setup-password?token=${token}`;
 
         await transporter.sendMail({
           from: process.env.SMTP_FROM || "contact@menuaconsulting.com",
           to: cleanEmail,
-          subject: "Création de votre compte Menua Consulting",
+          subject: "Invitation à rejoindre le CRM Menua Consulting — Activez votre compte",
           html: `
-          <h3>Bienvenue ${name},</h3>
-          <p>Un compte collaborateur a été créé pour vous sur l'espace Menua Consulting.</p>
-          <p>Veuillez vous rendre sur la page de connexion de l'espace administrateur et utiliser la fonction <strong>"Mot de passe oublié ?"</strong> pour configurer votre mot de passe et activer votre compte :</p>
-          <a href="${adminFrontend}" style="display:inline-block;padding:10px 20px;background:#141824;color:#fff;text-decoration:none;border-radius:4px;">Accéder au CRM</a>
-          <p style="color:#666;font-size:0.85em;">Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur : ${adminFrontend}</p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 8px;">
+            <h2 style="color: #141824; margin-top: 0;">Bienvenue sur Menua Consulting</h2>
+            <p>Bonjour ${name.trim()},</p>
+            <p>Un compte collaborateur a été créé pour vous sur l'espace d'administration et de gestion de <strong>MENUA CONSULTING</strong>.</p>
+            <p>Pour activer votre compte et configurer votre mot de passe d'accès, veuillez cliquer sur le bouton ci-dessous :</p>
+            <div style="text-align: center; margin: 25px 0;">
+              <a href="${activationLink}" style="display:inline-block;padding:12px 28px;background:#141824;color:#ffffff;text-decoration:none;border-radius:4px;font-weight:bold;">Activer mon compte</a>
+            </div>
+            <p style="color: #64748b; font-size: 0.9em;">Ce lien d'activation est sécurisé et valable pendant <strong>24 heures</strong>.</p>
+            <p style="color: #94a3b8; font-size: 0.85em; word-break: break-all;">Si le bouton ne fonctionne pas, vous pouvez copier et coller ce lien dans votre navigateur :<br>${activationLink}</p>
+            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+            <p style="color: #64748b; font-size: 0.8em; margin-bottom: 0;">Équipe Support & Administration — MENUA CONSULTING</p>
+          </div>
         `,
         });
       } catch (emailErr) {

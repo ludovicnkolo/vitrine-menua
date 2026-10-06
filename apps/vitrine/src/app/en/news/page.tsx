@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "News & Insights | Menua Consulting",
     description: "Analyses, benchmarks and publications dedicated to operational challenges.",
-    locale: 'en_US',
+    locale: 'en_GB',
     url: 'https://menuaconsulting.com/en/news',
   },
   twitter: {
@@ -25,6 +25,28 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Page() {
-  return <ClientPage />;
+async function getPublications() {
+  try {
+    const backendUrl =
+      process.env.BACKEND_URL ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      'http://localhost:4000';
+    const res = await fetch(`${backendUrl}/api/cms/public?type=ACTUALITE`, {
+      next: { revalidate: 60 },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && Array.isArray(data.data)) {
+        return data.data;
+      }
+    }
+  } catch (err) {
+    console.error("SSR getPublications error (en):", err);
+  }
+  return [];
+}
+
+export default async function Page() {
+  const publications = await getPublications();
+  return <ClientPage initialPublications={publications} />;
 }

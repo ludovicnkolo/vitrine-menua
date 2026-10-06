@@ -23,10 +23,15 @@ const authenticateJWT = (req, res, next) => {
   let token = null;
 
   if (authHeader && authHeader.startsWith("Bearer ")) {
-    token = authHeader.split(" ")[1];
-  } else if (req.cookies && req.cookies.token) {
+    const raw = authHeader.split(" ")[1];
+    if (raw && raw !== "null" && raw !== "undefined" && raw !== "") {
+      token = raw;
+    }
+  }
+
+  if (!token && req.cookies && req.cookies.token) {
     token = req.cookies.token;
-  } else if (req.query && req.query.token) {
+  } else if (!token && req.query && req.query.token) {
     token = req.query.token;
   }
 

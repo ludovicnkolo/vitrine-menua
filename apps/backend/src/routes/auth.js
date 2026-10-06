@@ -157,6 +157,7 @@ router.post("/login", async (req, res) => {
 
     res.json({
       success: true,
+      token,
       user: {
         id: user.id,
         name: user.name,
@@ -249,14 +250,14 @@ router.get("/verify", authenticateJWT, async (req, res) => {
 router.post("/setup", async (req, res) => {
   try {
     const adminRole = await prisma.role.findUnique({
-      where: { name: "ADMIN" },
+      where: { name: "Super-administrateur" },
     });
     if (!adminRole) {
-      await prisma.role.create({ data: { name: "ADMIN" } });
+      await prisma.role.create({ data: { name: "Super-administrateur" } });
     }
 
     const adminCount = await prisma.utilisateur.count({
-      where: { role: { name: "ADMIN" } },
+      where: { role: { name: "Super-administrateur" } },
     });
     if (adminCount > 0) {
       return res.status(403).json({ error: "Le système est déjà initialisé." });
@@ -274,7 +275,7 @@ router.post("/setup", async (req, res) => {
     const defaultPass = process.env.MASTER_ADMIN_PASSWORD;
     const hashedPassword = await bcrypt.hash(defaultPass, 10);
     const roleRecord = await prisma.role.findUnique({
-      where: { name: "ADMIN" },
+      where: { name: "Super-administrateur" },
     });
     const user = await prisma.utilisateur.create({
       data: {

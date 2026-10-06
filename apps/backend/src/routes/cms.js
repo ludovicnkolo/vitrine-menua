@@ -20,7 +20,7 @@ const FORM_SETTINGS_PATH = path.join(__dirname, "../config/form_settings.json");
 // Récupérer les paramètres des formulaires
 router.get("/settings/forms", authenticateJWT, async (req, res) => {
   try {
-    if (req.user.role !== "Super-administrateur" && req.user.role !== "ADMIN") {
+    if (req.user.role !== "Super-administrateur") {
       return res.status(403).json({ success: false, error: "Accès refusé" });
     }
     const raw = fs.readFileSync(FORM_SETTINGS_PATH, "utf-8");
@@ -35,7 +35,7 @@ router.get("/settings/forms", authenticateJWT, async (req, res) => {
 // Mettre à jour les paramètres des formulaires
 router.put("/settings/forms", authenticateJWT, async (req, res) => {
   try {
-    if (req.user.role !== "Super-administrateur" && req.user.role !== "ADMIN") {
+    if (req.user.role !== "Super-administrateur") {
       return res.status(403).json({ success: false, error: "Accès refusé" });
     }
     const current = JSON.parse(fs.readFileSync(FORM_SETTINGS_PATH, "utf-8"));

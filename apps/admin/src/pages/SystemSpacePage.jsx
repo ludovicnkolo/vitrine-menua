@@ -19,7 +19,6 @@ const SystemSpacePage = ({ userRole }) => {
   // Collaborateur, Relecteur, Responsable opérationnel ne voient que Configuration
   const canSeeAudit =
     userRole === "Super-administrateur" ||
-    userRole === "ADMIN" ||
     userRole === "Administrateur technique";
 
   const tabs = [

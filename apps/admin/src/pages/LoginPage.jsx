@@ -35,6 +35,9 @@ const LoginPage = ({ onLogin }) => {
         throw new Error(`Réponse inattendue du serveur (${res.status})`);
       }
       if (data.success && data.user) {
+        if (data.token) {
+          sessionStorage.setItem("adminToken", data.token);
+        }
         onLogin(data.user);
       } else {
         setError(data.error || "Identifiants invalides");

@@ -42,17 +42,20 @@ window.fetch = async (...args) => {
     options = options || {};
     options.credentials = "include"; // Forcer l'envoi du cookie HttpOnly
     
-    // Nettoyer les anciens headers Authorization qui pourraient valoir Bearer null
-    if (options.headers) {
-      const headersObj = new Headers(options.headers);
-      if (headersObj.has("Authorization")) {
-        headersObj.delete("Authorization");
-      }
-      // Reconstruire l'objet simple pour éviter les soucis avec certains codes
-      const cleanHeaders = {};
-      headersObj.forEach((value, key) => { cleanHeaders[key] = value; });
-      options.headers = cleanHeaders;
+    // Gérer proprement le header Authorization
+    const token = sessionStorage.getItem("adminToken");
+    const headersObj = options.headers ? new Headers(options.headers) : new Headers();
+
+    const currentAuth = headersObj.get("Authorization");
+    if (currentAuth === "Bearer null" || currentAuth === "Bearer undefined" || currentAuth === "Bearer ") {
+      headersObj.delete("Authorization");
     }
+
+    if (!headersObj.has("Authorization") && token && token !== "null" && token !== "undefined") {
+      headersObj.set("Authorization", `Bearer ${token}`);
+    }
+
+    options.headers = headersObj;
 
     const response = await originalFetch(url, options);
     // Si l'utilisateur a été rendu inactif ou son token est expiré, le backend renverra 401.
@@ -82,7 +85,7 @@ window.fetch = async (...args) => {
 const MOCK_USER = {
   id: "U-001",
   name: "Marie Claire",
-  role: "ADMIN",
+  role: "Super-administrateur",
   email: "m.claire@menua.fr",
   status: "Actif",
   lastLogin: "Il y a 2h",
@@ -204,9 +207,6 @@ function App() {
       "Relecteur",
       "Collaborateur",
       "Administrateur technique",
-      "ADMIN",
-      "SUPERVISOR",
-      "USER",
       "SANS ROLE",
     ];
 
@@ -280,7 +280,7 @@ function App() {
 
   // ─── RBAC — Définition des droits par rôle ──────────────────────────────────
   const role = user.role;
-  const isSuperAdmin = role === "Super-administrateur" || role === "ADMIN";
+  const isSuperAdmin = role === "Super-administrateur";
   const isRespOp = role === "Responsable opérationnel";
   const isRelecteur = role === "Relecteur";
   const isCollaborateur = role === "Collaborateur";

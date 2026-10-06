@@ -284,7 +284,10 @@ const InboxPage = ({ userRole }) => {
     try {
       setLoading(true);
       const token = sessionStorage.getItem("adminToken");
-      if (!token) return;
+      const headers = {};
+      if (token && token !== "null" && token !== "undefined") {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
 
       const urlMessages = new URL(getSafeApiUrl(`/api/crm/messages`));
       urlMessages.searchParams.append("type", tab);
@@ -298,18 +301,20 @@ const InboxPage = ({ userRole }) => {
 
       const [resMsgs, resUsers, resDossiers, resClients] = await Promise.all([
         fetch(urlMessages.toString(), {
-          headers: { Authorization: `Bearer ${token}` },
+          headers,
+          credentials: "include",
         }),
         fetch(new URL(getSafeApiUrl(`/api/crm/users`)).toString(), {
-          headers: { Authorization: `Bearer ${token}` },
+          headers,
+          credentials: "include",
         }),
         fetch(
           new URL(getSafeApiUrl(`/api/crm/dossiers?limit=1000`)).toString(),
-          { headers: { Authorization: `Bearer ${token}` } },
+          { headers, credentials: "include" },
         ),
         fetch(
           new URL(getSafeApiUrl(`/api/crm/clients?limit=1000`)).toString(),
-          { headers: { Authorization: `Bearer ${token}` } },
+          { headers, credentials: "include" },
         ),
       ]);
 

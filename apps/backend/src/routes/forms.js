@@ -181,9 +181,9 @@ router.post("/contact", upload.none(), async (req, res) => {
     }
 
     // Si VALID => on procède normalement (NOUVEAU) et on envoie les emails.
-    // Si DEFERRED => on enregistre avec A_VERIFIER pour que le cron prenne le relais.
+    // Si DEFERRED => on enregistre avec verifaliaStatus A_VERIFIER pour que le cron prenne le relais.
     const isDeferred = verification.status === "DEFERRED";
-    const formStatus = isDeferred ? "A_VERIFIER" : "NOUVEAU";
+    const formStatus = "NOUVEAU";
 
     // Enregistrement dans le CRM
     let formulaireRecord;
@@ -375,9 +375,9 @@ router.post("/join", upload.none(), async (req, res) => {
     }
 
     // Si VALID => on procède normalement (NOUVEAU) et on envoie les emails.
-    // Si DEFERRED => on enregistre avec A_VERIFIER pour que le cron prenne le relais.
+    // Si DEFERRED => on enregistre avec verifaliaStatus A_VERIFIER pour que le cron prenne le relais.
     const isDeferred = verification.status === "DEFERRED";
-    const formStatus = isDeferred ? "A_VERIFIER" : "NOUVEAU";
+    const formStatus = "NOUVEAU";
 
     // Enregistrement dans le CRM
     let formulaireRecord;

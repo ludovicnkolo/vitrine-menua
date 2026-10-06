@@ -7,10 +7,10 @@ async function processVerifaliaJobs() {
     return; // Coupe-circuit actif : on ne fait rien pour ne pas spammer l'API ni surcharger la BDD
   }
   console.log("[Verifalia] Cron started");
-  // 1. Process forms that are 'A_VERIFIER' and have no job ID (meaning we need to submit them to Verifalia)
+  // 1. Process forms that are 'A_VERIFIER' in verifaliaStatus and have no job ID (meaning we need to submit them to Verifalia)
   const pendingSubmissions = await prisma.formulaire.findMany({
     where: {
-      status: "A_VERIFIER",
+      verifaliaStatus: "A_VERIFIER",
       verifaliaJobId: null,
       OR: [
         { verifaliaNextRetry: null },
@@ -48,7 +48,7 @@ async function processVerifaliaJobs() {
         await prisma.formulaire.update({
           where: { id: form.id },
           data: {
-            status: "CONTROLE_MANUEL",
+            verifaliaStatus: "CONTROLE_MANUEL",
             verifaliaRetries: retries,
           },
         });
@@ -64,10 +64,10 @@ async function processVerifaliaJobs() {
     }
   }
 
-  // 2. Process forms that have a verifaliaJobId but are still 'A_VERIFIER' (we need to fetch the result)
+  // 2. Process forms that have a verifaliaJobId but are still 'A_VERIFIER' in verifaliaStatus (we need to fetch the result)
   const pendingResults = await prisma.formulaire.findMany({
     where: {
-      status: "A_VERIFIER",
+      verifaliaStatus: "A_VERIFIER",
       verifaliaJobId: { not: null },
     },
   });
@@ -94,7 +94,6 @@ async function processVerifaliaJobs() {
             await prisma.formulaire.update({
               where: { id: form.id },
               data: {
-                status: "NOUVEAU",
                 verifaliaStatus: "COMPLETED_VALID",
               },
             });
@@ -114,7 +113,6 @@ async function processVerifaliaJobs() {
             await prisma.formulaire.update({
               where: { id: form.id },
               data: {
-                status: "INVALIDE",
                 verifaliaStatus: "COMPLETED_INVALID",
               },
             });
@@ -122,7 +120,6 @@ async function processVerifaliaJobs() {
             await prisma.formulaire.update({
               where: { id: form.id },
               data: {
-                status: "CONTROLE_MANUEL",
                 verifaliaStatus:
                   result.classification === "Risky"
                     ? "COMPLETED_RISKY"

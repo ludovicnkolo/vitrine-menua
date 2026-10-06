@@ -230,7 +230,7 @@ router.get("/dashboard-stats", async (req, res) => {
 
     // 1. Radar des Urgences et Engagements (SLAs)
     const whereUrgentsForm = {
-      status: { not: "TRAITE" },
+      status: { notIn: ["GAGNE", "SANS_SUITE", "RETENU", "REFUSE", "TERMINE", "ARCHIVE"] },
       priority: { in: ["URGENT", "Urgent"] },
     };
     if (isFiltered)
@@ -239,7 +239,11 @@ router.get("/dashboard-stats", async (req, res) => {
       where: whereUrgentsForm,
     });
 
-    const whereUrgentsMsg = { priorite: { in: ["URGENT", "Urgent"] }, isDeleted: false };
+    const whereUrgentsMsg = {
+      status: { notIn: ["TRAITE", "TERMINE", "ARCHIVE", "GAGNE"] },
+      priorite: { in: ["URGENT", "Urgent"] },
+      isDeleted: false,
+    };
     if (isFiltered)
       whereUrgentsMsg.createdAt = { gte: startPeriod, lte: endPeriod };
     const urgentsMessages = await prisma.messagePersonnel.count({

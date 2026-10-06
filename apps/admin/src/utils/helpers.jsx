@@ -222,11 +222,15 @@ function getSafeApiUrl(path) {
  * @param {object|null} body - Corps JSON optionnel
  */
 async function apiFetch(endpoint, method = "GET", body = null) {
+  const token = sessionStorage.getItem("adminToken");
   const options = {
     method,
     credentials: "include",
     headers: {},
   };
+  if (token && token !== "null" && token !== "undefined") {
+    options.headers["Authorization"] = `Bearer ${token}`;
+  }
   if (body) {
     options.headers["Content-Type"] = "application/json";
     options.body = JSON.stringify(body);

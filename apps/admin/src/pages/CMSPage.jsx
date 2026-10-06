@@ -60,7 +60,7 @@ const CMSPage = () => {
     }
   })();
   const _role = _adminUser?.role || "";
-  const isSuperAdmin = _role === "Super-administrateur" || _role === "ADMIN";
+  const isSuperAdmin = _role === "Super-administrateur";
 
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);

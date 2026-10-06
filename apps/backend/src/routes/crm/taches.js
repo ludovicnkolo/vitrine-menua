@@ -382,6 +382,14 @@ router.post("/taches", async (req, res) => {
 
     if (dossierTacheId) {
       tacheData.dossierTacheId = dossierTacheId;
+    } else if (missionId) {
+      const parentMission = await prisma.mission.findUnique({
+        where: { id: missionId },
+        select: { dossierId: true },
+      });
+      if (parentMission && parentMission.dossierId) {
+        tacheData.dossierTacheId = parentMission.dossierId;
+      }
     }
 
     if (authorizedDossierIds && authorizedDossierIds.length > 0) {

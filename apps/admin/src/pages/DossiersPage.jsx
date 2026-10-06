@@ -301,7 +301,8 @@ const DossiersPage = () => {
       window.customAlert("L'objet de la mission est requis.");
       return;
     }
-    if (!missionDossierId) {
+    const targetMissionDossierId = missionDossierId || consultDossier?.id;
+    if (!targetMissionDossierId) {
       window.customAlert("Veuillez sélectionner un dossier mission.");
       return;
     }
@@ -340,7 +341,7 @@ const DossiersPage = () => {
           dossierId: consultDossier.id,
           echeance: missionEcheance,
           attachment: attachmentFilename,
-          dossierMissionId: missionDossierId || null,
+          dossierMissionId: targetMissionDossierId || null,
           authorizedDossierIds: authorizedDossierIds,
         }),
       });
@@ -2663,16 +2664,47 @@ const DossiersPage = () => {
                     boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
                   }}
                 >
-                  <h3
+                  <div
                     style={{
-                      marginTop: 0,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
                       marginBottom: "1.5rem",
-                      fontSize: "1.25rem",
-                      fontWeight: 600,
                     }}
                   >
-                    Nouvelle Mission
-                  </h3>
+                    <h3
+                      style={{
+                        margin: 0,
+                        fontSize: "1.25rem",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Nouvelle Mission
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCreateMissionModal(false);
+                        setSelectedDossierDocs([]);
+                        setMissionDossierId("");
+                        setAuthorizedDossierIds([]);
+                      }}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        color: "var(--text-muted)",
+                        fontSize: "0.75rem",
+                        gap: "2px",
+                      }}
+                    >
+                      <X size={20} />
+                      <span>Fermer</span>
+                    </button>
+                  </div>
 
                   <div
                     style={{
@@ -2687,7 +2719,6 @@ const DossiersPage = () => {
                           display: "block",
                           marginBottom: "0.5rem",
                           fontWeight: 500,
-                          
                         }}
                       >
                         Objet de la mission *
@@ -2696,7 +2727,7 @@ const DossiersPage = () => {
                         type="text"
                         value={missionSubject}
                         onChange={(e) => setMissionSubject(e.target.value)}
-                        placeholder="Sujet..."
+                        placeholder="Sujet de la mission..."
                         className="input-field"
                         style={{
                           width: "100%",
@@ -2903,10 +2934,9 @@ const DossiersPage = () => {
                             display: "block",
                             marginBottom: "0.5rem",
                             fontWeight: 500,
-                            
                           }}
                         >
-                          Assigner à *
+                          Assigné à *
                         </label>
                         <select
                           value={missionAssignedTo}
@@ -2920,7 +2950,7 @@ const DossiersPage = () => {
                             background: "#FFF",
                           }}
                         >
-                          <option value="">Sélectionner...</option>
+                          <option value="">Sélectionner un membre...</option>
                           {dbUsers
                             .filter(
                               (u) =>
@@ -3587,13 +3617,9 @@ const DossiersPage = () => {
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "1fr 1fr 1fr",
+                      gridTemplateColumns: "1fr 1fr",
                       gap: "0.75rem",
-                      marginBottom:
-                        newDossierData.origin &&
-                        newDossierData.origin !== "GENERAL"
-                          ? "1.5rem"
-                          : "0",
+                      marginBottom: newDossierData.origin ? "1.5rem" : "0",
                     }}
                   >
                     <button
@@ -3608,6 +3634,7 @@ const DossiersPage = () => {
                       style={{
                         padding: "1rem 0.5rem",
                         borderRadius: "8px",
+                        position: "relative",
                         border:
                           newDossierData.origin === "CLIENT"
                             ? "2px solid var(--primary)"
@@ -3632,6 +3659,27 @@ const DossiersPage = () => {
                         textAlign: "center",
                       }}
                     >
+                      {newDossierData.origin === "CLIENT" && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "8px",
+                            right: "8px",
+                            background: "#1e3a8a",
+                            color: "#FFF",
+                            borderRadius: "50%",
+                            width: "18px",
+                            height: "18px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "11px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          ✓
+                        </div>
+                      )}
                       <span style={{ fontSize: "1.5rem" }}>🏢</span>
                       Dossier Client
                     </button>
@@ -3647,6 +3695,7 @@ const DossiersPage = () => {
                       style={{
                         padding: "1rem 0.5rem",
                         borderRadius: "8px",
+                        position: "relative",
                         border:
                           newDossierData.origin === "COLLABORATEUR"
                             ? "2px solid var(--primary)"
@@ -3671,47 +3720,29 @@ const DossiersPage = () => {
                         textAlign: "center",
                       }}
                     >
+                      {newDossierData.origin === "COLLABORATEUR" && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "8px",
+                            right: "8px",
+                            background: "#1e3a8a",
+                            color: "#FFF",
+                            borderRadius: "50%",
+                            width: "18px",
+                            height: "18px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "11px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          ✓
+                        </div>
+                      )}
                       <span style={{ fontSize: "1.5rem" }}>👥</span>
                       Dossier Interne (Collab.)
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setNewDossierData({
-                          ...newDossierData,
-                          origin: "GENERAL",
-                          targetId: "",
-                        })
-                      }
-                      style={{
-                        padding: "1rem 0.5rem",
-                        borderRadius: "8px",
-                        border:
-                          newDossierData.origin === "GENERAL"
-                            ? "2px solid #7c3aed"
-                            : "1px solid var(--border)",
-                        background:
-                          newDossierData.origin === "GENERAL"
-                            ? "#ede9fe"
-                            : "#FFF",
-                        color:
-                          newDossierData.origin === "GENERAL"
-                            ? "#5b21b6"
-                            : "var(--text-main)",
-                        fontWeight: 600,
-                        cursor: "pointer",
-                        transition: "all 0.2s",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "0.4rem",
-                        fontSize: "0.85rem",
-                        textAlign: "center",
-                      }}
-                    >
-                      <span style={{ fontSize: "1.5rem" }}>📁</span>
-                      Général / Entreprise
                     </button>
                   </div>
 
@@ -3768,58 +3799,6 @@ const DossiersPage = () => {
                           placeholder="-- Rechercher un collaborateur --"
                         />
                       )}
-                    </div>
-                  )}
-                  {newDossierData.origin === "GENERAL" && (
-                    <div
-                      className="fade-in"
-                      style={{
-                        paddingTop: "1rem",
-                        borderTop: "1px solid var(--border)",
-                      }}
-                    >
-                      <label
-                        style={{
-                          display: "block",
-                          marginBottom: "0.5rem",
-                          fontWeight: 600,
-                          fontSize: "0.95rem",
-                          color: "#5b21b6",
-                        }}
-                      >
-                        📁 Nom du dossier *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="Ex: Projet Marketing, Chantier 2026..."
-                        value={newDossierData.generalName || ""}
-                        onChange={(e) =>
-                          setNewDossierData({
-                            ...newDossierData,
-                            generalName: e.target.value,
-                          })
-                        }
-                        className="input-field"
-                        style={{
-                          width: "100%",
-                          padding: "0.75rem",
-                          borderRadius: "8px",
-                          border: "1px solid #7c3aed",
-                          background: "#faf5ff",
-                          boxSizing: "border-box",
-                        }}
-                      />
-                      <p
-                        style={{
-                          margin: "0.4rem 0 0",
-                          color: "#7c3aed",
-                          fontSize: "0.8rem",
-                        }}
-                      >
-                        Ce nom sera utilisé pour identifier le dossier dans la
-                        GED.
-                      </p>
                     </div>
                   )}
                 </div>

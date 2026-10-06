@@ -337,14 +337,22 @@ router.get("/dashboard-stats", async (req, res) => {
       return { name: u.name, role: u.role?.name, tachesEnCours: count, etat };
     });
 
-    // 5. Entonnoir de Production (Période)
-    const messagesTraitesPeriode = await prisma.messagePersonnel.count({
+    // 5. Entonnoir de Production (Période) : Demandes & formulaires qualifiés traités
+    const formulairesTraitesPeriode = await prisma.formulaire.count({
       where: {
-        status: { not: "NOUVEAU" },
+        status: { in: ["TERMINE", "ARCHIVE", "TRAITE"] },
+        createdAt: { gte: startPeriod, lte: endPeriod },
+      },
+    });
+    const emailsTraitesPeriode = await prisma.messagePersonnel.count({
+      where: {
+        type: "PERSONNEL",
+        status: { in: ["TERMINE", "ARCHIVE", "TRAITE"] },
         isDeleted: false,
         createdAt: { gte: startPeriod, lte: endPeriod },
       },
     });
+    const messagesTraitesPeriode = formulairesTraitesPeriode + emailsTraitesPeriode;
 
     const missionsDemarreesPeriode = await prisma.mission.count({
       where: { status: { not: "CORBEILLE" }, createdAt: { gte: startPeriod, lte: endPeriod } },

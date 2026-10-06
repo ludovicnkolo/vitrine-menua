@@ -107,12 +107,12 @@ const DashboardPage = () => {
   };
 
   // KPI Data
-  const alertesCount = stats?.alertesPrioritaires ?? 2;
-  const delaisCount = stats?.delaisCritiques ?? 3;
+  const alertesCount = stats?.alertesPrioritaires ?? 0;
+  const delaisCount = stats?.delaisCritiques ?? 0;
   const bloqueesCount = stats?.operationsBloquees ?? 0;
-  const totalDossiers = stats?.totalDossiers ?? 1;
-  const totalMissions = stats?.totalMissions ?? 2;
-  const totalTaches = stats?.totalTaches ?? 2;
+  const totalDossiers = stats?.totalDossiers ?? 0;
+  const totalMissions = stats?.totalMissions ?? 0;
+  const totalTaches = stats?.totalTaches ?? 0;
   const volumeTotal =
     stats?.volumeTotal ?? (totalDossiers + totalMissions + totalTaches);
   const nouveauxDepots = stats?.nouveauxDepots ?? 0;
@@ -138,10 +138,10 @@ const DashboardPage = () => {
       return stats.entonnoirPeriode;
     }
     return [
-      { name: "Messages Traités", value: 2 },
-      { name: "Missions Démarrées", value: 2 },
-      { name: "Tâches Terminées", value: 2 },
-      { name: "Dossiers Clôturés", value: 1 },
+      { name: "Messages Traités", value: 0 },
+      { name: "Missions Démarrées", value: 0 },
+      { name: "Tâches Terminées", value: 0 },
+      { name: "Dossiers Clôturés", value: 0 },
     ];
   }, [stats]);
 
@@ -785,25 +785,33 @@ const DashboardPage = () => {
                   width: "100%",
                   position: "relative",
                   overflow: "hidden",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
                 <div
                   style={{
                     background: "#2563EB",
-                    width: `${Math.max(12, ((entonnoirData[0]?.value ?? 2) / maxFunnelVolume) * 100)}%`,
+                    width: `${(entonnoirData[0]?.value || 0) > 0 ? Math.max(12, ((entonnoirData[0]?.value || 0) / maxFunnelVolume) * 100) : 0}%`,
                     height: "100%",
                     borderRadius: "6px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "flex-end",
-                    paddingRight: "10px",
+                    paddingRight: (entonnoirData[0]?.value || 0) > 0 ? "10px" : 0,
                     color: "#FFF",
                     fontWeight: 700,
                     fontSize: "0.82rem",
+                    transition: "width 0.3s ease",
                   }}
                 >
-                  {entonnoirData[0]?.value ?? 2}
+                  {(entonnoirData[0]?.value || 0) > 0 && entonnoirData[0].value}
                 </div>
+                {(entonnoirData[0]?.value || 0) === 0 && (
+                  <span style={{ position: "absolute", left: "12px", color: "#94A3B8", fontWeight: 700, fontSize: "0.82rem" }}>
+                    0
+                  </span>
+                )}
               </div>
             </div>
 
@@ -823,25 +831,33 @@ const DashboardPage = () => {
                   width: "100%",
                   position: "relative",
                   overflow: "hidden",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
                 <div
                   style={{
                     background: "#8B5CF6",
-                    width: `${Math.max(12, ((entonnoirData[1]?.value ?? 2) / maxFunnelVolume) * 100)}%`,
+                    width: `${(entonnoirData[1]?.value || 0) > 0 ? Math.max(12, ((entonnoirData[1]?.value || 0) / maxFunnelVolume) * 100) : 0}%`,
                     height: "100%",
                     borderRadius: "6px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "flex-end",
-                    paddingRight: "10px",
+                    paddingRight: (entonnoirData[1]?.value || 0) > 0 ? "10px" : 0,
                     color: "#FFF",
                     fontWeight: 700,
                     fontSize: "0.82rem",
+                    transition: "width 0.3s ease",
                   }}
                 >
-                  {entonnoirData[1]?.value ?? 2}
+                  {(entonnoirData[1]?.value || 0) > 0 && entonnoirData[1].value}
                 </div>
+                {(entonnoirData[1]?.value || 0) === 0 && (
+                  <span style={{ position: "absolute", left: "12px", color: "#94A3B8", fontWeight: 700, fontSize: "0.82rem" }}>
+                    0
+                  </span>
+                )}
               </div>
             </div>
 
@@ -861,25 +877,33 @@ const DashboardPage = () => {
                   width: "100%",
                   position: "relative",
                   overflow: "hidden",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
                 <div
                   style={{
                     background: "#10B981",
-                    width: `${Math.max(12, ((entonnoirData[2]?.value ?? 2) / maxFunnelVolume) * 100)}%`,
+                    width: `${(entonnoirData[2]?.value || 0) > 0 ? Math.max(12, ((entonnoirData[2]?.value || 0) / maxFunnelVolume) * 100) : 0}%`,
                     height: "100%",
                     borderRadius: "6px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "flex-end",
-                    paddingRight: "10px",
+                    paddingRight: (entonnoirData[2]?.value || 0) > 0 ? "10px" : 0,
                     color: "#FFF",
                     fontWeight: 700,
                     fontSize: "0.82rem",
+                    transition: "width 0.3s ease",
                   }}
                 >
-                  {entonnoirData[2]?.value ?? 2}
+                  {(entonnoirData[2]?.value || 0) > 0 && entonnoirData[2].value}
                 </div>
+                {(entonnoirData[2]?.value || 0) === 0 && (
+                  <span style={{ position: "absolute", left: "12px", color: "#94A3B8", fontWeight: 700, fontSize: "0.82rem" }}>
+                    0
+                  </span>
+                )}
               </div>
             </div>
 
@@ -899,25 +923,33 @@ const DashboardPage = () => {
                   width: "100%",
                   position: "relative",
                   overflow: "hidden",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
                 <div
                   style={{
                     background: "#F59E0B",
-                    width: `${Math.max(12, ((entonnoirData[3]?.value ?? 1) / maxFunnelVolume) * 100)}%`,
+                    width: `${(entonnoirData[3]?.value || 0) > 0 ? Math.max(12, ((entonnoirData[3]?.value || 0) / maxFunnelVolume) * 100) : 0}%`,
                     height: "100%",
                     borderRadius: "6px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "flex-end",
-                    paddingRight: "10px",
+                    paddingRight: (entonnoirData[3]?.value || 0) > 0 ? "10px" : 0,
                     color: "#FFF",
                     fontWeight: 700,
                     fontSize: "0.82rem",
+                    transition: "width 0.3s ease",
                   }}
                 >
-                  {entonnoirData[3]?.value ?? 1}
+                  {(entonnoirData[3]?.value || 0) > 0 && entonnoirData[3].value}
                 </div>
+                {(entonnoirData[3]?.value || 0) === 0 && (
+                  <span style={{ position: "absolute", left: "12px", color: "#94A3B8", fontWeight: 700, fontSize: "0.82rem" }}>
+                    0
+                  </span>
+                )}
               </div>
             </div>
 

@@ -7,9 +7,9 @@ const prisma = new PrismaClient();
 
 const imapConfig = {
   imap: {
-    user: process.env.IMAP_USER || "menua@vitrine-menua.fr",
+    user: process.env.IMAP_USER || "contact@menuaconsulting.com",
     password: process.env.IMAP_PASSWORD || "", // Ne jamais mettre de mot de passe en dur dans le code (CWE-259)
-    host: process.env.IMAP_HOST || "mail.vitrine-menua.fr",
+    host: process.env.IMAP_HOST || "ssl0.ovh.net",
     port: Number.parseInt(process.env.IMAP_PORT || "993", 10),
     tls: process.env.IMAP_TLS === "true" || true,
     authTimeout: 10000,
@@ -78,12 +78,15 @@ const syncMessages = async (req, res) => {
     await connection.openBox("INBOX");
 
     const lastMsg = await prisma.messagePersonnel.findFirst({
+      where: { type: "PERSONNEL", receivedAt: { not: null } },
       orderBy: { receivedAt: "desc" },
     });
 
     let searchCriteria = ["ALL"];
     if (lastMsg?.receivedAt) {
-      searchCriteria = [["SINCE", lastMsg.receivedAt]];
+      const sinceDate = new Date(lastMsg.receivedAt);
+      sinceDate.setDate(sinceDate.getDate() - 1);
+      searchCriteria = [["SINCE", sinceDate]];
     }
 
     const fetchOptions = { bodies: [""], struct: true };

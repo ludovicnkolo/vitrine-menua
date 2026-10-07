@@ -43,7 +43,7 @@ export default function Footer() {
             {t("Externalisation opérationnelle des fonctions back et middle office.", "Operational outsourcing of back and middle office functions.")}
           </p>
           <div className="flex items-center gap-4 mt-auto">
-            <a href="https://www.linkedin.com/company/menua-consulting" target="_blank" rel="noopener noreferrer" title="Suivez Menua Consulting sur LinkedIn" className="w-10 h-10 rounded-full bg-[#141824]/5 flex items-center justify-center text-[#141824] hover:bg-[#141824] hover:text-white transition-all duration-300" aria-label="Page LinkedIn de Menua Consulting">
+            <a href="https://www.linkedin.com/company/menua-consulting" target="_blank" rel="noopener noreferrer" title={t("Suivez Menua Consulting sur LinkedIn", "Follow Menua Consulting on LinkedIn")} className="w-10 h-10 rounded-full bg-[#141824]/5 flex items-center justify-center text-[#141824] hover:bg-[#141824] hover:text-white transition-all duration-300" aria-label={t("Page LinkedIn de Menua Consulting", "Menua Consulting LinkedIn page")}>
               <LinkedinIcon size={18} />
             </a>
           </div>

@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import ClientPage from '../ClientPage';
 
 export const metadata: Metadata = {
-  title: "Menua Consulting | Back & Middle Office Outsourcing",
+  title: { absolute: "Menua Consulting | Back & Middle Office Outsourcing" },
   description: "Menua Consulting supports finance, accounting, insurance, wealth management, compliance, data and IT teams with operational outsourcing across back and middle office functions.",
   alternates: {
     canonical: 'https://menuaconsulting.com/en',
@@ -23,13 +23,6 @@ export const metadata: Metadata = {
     title: "Menua Consulting | Back & Middle Office Outsourcing",
     description: "Menua Consulting supports finance, accounting, insurance, wealth management, compliance, data and IT teams with operational outsourcing across back and middle office functions.",
   },
-  keywords: [
-    "back office outsourcing",
-    "middle office support",
-    "compliance services",
-    "wealth management support",
-    "financial services outsourcing"
-  ],
 };
 
 export default function Page() {

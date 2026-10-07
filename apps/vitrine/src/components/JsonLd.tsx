@@ -1,15 +1,10 @@
-"use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-export default function JsonLd() {
-  const [isEn, setIsEn] = useState(false);
+interface JsonLdProps {
+  isEn?: boolean;
+}
 
-  useEffect(() => {
-    if (window.location.pathname.startsWith("/en")) {
-      setIsEn(true);
-    }
-  }, []);
-
+export default function JsonLd({ isEn = false }: JsonLdProps) {
   return (
     <script
       type="application/ld+json"
@@ -30,7 +25,7 @@ export default function JsonLd() {
             addressCountry: 'FR'
           },
           areaServed: 'FR',
-          serviceType: isEn ? 'Back and middle-office operational outsourcing' : 'Externalisation opérationnelle back et middle office'
+          serviceType: isEn ? 'Operational outsourcing for back and middle office functions' : 'Externalisation opérationnelle back et middle office'
         })
       }}
     />

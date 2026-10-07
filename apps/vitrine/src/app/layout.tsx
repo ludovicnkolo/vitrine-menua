@@ -17,9 +17,6 @@ export async function generateMetadata(): Promise<Metadata> {
     description: isEn
       ? "Menua Consulting secures the execution of your back and middle office operations. Our expertise covers financial, accounting, wealth management, regulated, IT and data sectors."
       : "Menua Consulting sécurise l'exécution de vos opérations back et middle office. Notre expertise couvre les métiers financiers, comptables, patrimoniaux, réglementés, IT et data.",
-    keywords: isEn
-      ? ["back office outsourcing", "middle office", "AMF compliance", "wealth management", "financial firms France"]
-      : ["externalisation back office", "middle office", "conformité AMF", "gestion de patrimoine", "cabinets financiers France"],
     alternates: {
       canonical: 'https://menuaconsulting.com/fr',
       languages: {
@@ -73,7 +70,7 @@ export default async function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
       </head>
       <body className={`min-h-screen flex flex-col antialiased bg-[#f5f7fa] text-[#141824]`}>
-        <JsonLd />
+        <JsonLd isEn={locale === "en"} />
         <LanguageProvider initialLang={initialLang}>
           <ScrollObserver />
           <Header />

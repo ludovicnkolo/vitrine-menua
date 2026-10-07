@@ -53,13 +53,14 @@ export default function ActualitesPage({ initialPublications = [] }: ActualitesP
     { key: "DATA ET REPORTING", fr: "DATA ET REPORTING", en: "DATA AND REPORTING" },
     { key: "RISQUES, CONFORMITÉ ET KYC", fr: "RISQUES, CONFORMITÉ ET KYC", en: "RISK, COMPLIANCE AND KYC" },
     { key: "GESTION DE PATRIMOINE", fr: "GESTION DE PATRIMOINE", en: "WEALTH MANAGEMENT" },
-    { key: "ORGANISATION ET EXTERNALISATION", fr: "ORGANISATION ET EXTERNALISATION", en: "ORGANIZATION AND OUTSOURCING" }
+    { key: "ORGANISATION ET EXTERNALISATION", fr: "ORGANISATION ET EXTERNALISATION", en: "ORGANISATION AND OUTSOURCING" }
   ];
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
-    return new Date(dateString).toLocaleDateString('fr-FR', options);
+    const locale = isEN ? 'en-GB' : 'fr-FR';
+    return new Date(dateString).toLocaleDateString(locale, options);
   };
 
   return (

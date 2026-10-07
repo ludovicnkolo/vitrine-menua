@@ -514,7 +514,6 @@ const UsersPage = ({ forceTab }) => {
       () => setEditUser(null),
       "Erreur lors de la modification",
     );
-    );
   };
 
   const handleTriggerPasswordReset = async (userId) => {

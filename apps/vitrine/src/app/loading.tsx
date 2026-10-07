@@ -1,4 +1,8 @@
+"use client";
+import { useLanguage } from "@/components/LanguageProvider";
+
 export default function Loading() {
+  const { t } = useLanguage();
   return (
     <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#f5f7fa]">
       <div className="relative flex items-center justify-center">
@@ -15,7 +19,7 @@ export default function Loading() {
       {/* Premium typography loader text */}
       <div className="mt-10 overflow-hidden">
         <p className="text-[#141824] text-xs tracking-[0.3em] font-bold uppercase animate-pulse">
-          Chargement
+          {t("Chargement", "Loading")}
         </p>
       </div>
     </div>

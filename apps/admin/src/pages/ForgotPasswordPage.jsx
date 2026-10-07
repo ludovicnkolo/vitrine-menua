@@ -26,8 +26,7 @@ const ForgotPasswordPage = () => {
       });
       const data = await res.json();
       if (data.success) {
-        setSuccessMessage(""); // We don't show the big green alert for sending OTP
-        setResetStep(2);
+        setSuccessMessage("Un lien de réinitialisation sécurisé vous a été envoyé par e-mail.");
       } else {
         setError(data.error || "Erreur lors de la demande");
       }
@@ -99,7 +98,20 @@ const ForgotPasswordPage = () => {
           </div>
         </div>
 
-        {resetStep === 1 ? (
+        {successMessage ? (
+          <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <div style={{ padding: "1rem", background: "#D1FAE5", color: "#065F46", borderRadius: "8px", fontWeight: "500" }}>
+              {successMessage}
+            </div>
+            <Link
+              to="/"
+              className="btn btn-primary"
+              style={{ justifyContent: "center", width: "100%", padding: "0.85rem", fontSize: "1rem", textDecoration: "none" }}
+            >
+              Retour à la connexion
+            </Link>
+          </div>
+        ) : (
           <form
             onSubmit={handleSendOtp}
             style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
@@ -110,6 +122,9 @@ const ForgotPasswordPage = () => {
                 {error}
               </div>
             )}
+            <p style={{ fontSize: "0.95rem", color: "var(--text-muted)", textAlign: "center", margin: 0 }}>
+              Saisissez votre adresse e-mail. Nous vous enverrons un lien unique sécurisé.
+            </p>
             <div>
               <label htmlFor="forgot-email" style={{ display: "block", marginBottom: "0.25rem", fontWeight: 500 }}>
                 Email
@@ -123,26 +138,13 @@ const ForgotPasswordPage = () => {
                 style={{ width: "100%", padding: "0.75rem", borderRadius: "8px", border: "1px solid var(--border)" }}
               />
             </div>
-            <div>
-              <label htmlFor="new-password" style={{ display: "block", marginBottom: "0.25rem", fontWeight: 500 }}>
-                Nouveau mot de passe
-              </label>
-              <input
-                id="new-password"
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-                style={{ width: "100%", padding: "0.75rem", borderRadius: "8px", border: "1px solid var(--border)" }}
-              />
-            </div>
             <button
               type="submit"
               disabled={loading}
               className="btn btn-primary"
               style={{ marginTop: "0.5rem", justifyContent: "center", width: "100%", padding: "0.85rem", fontSize: "1rem" }}
             >
-              {loading ? "Envoi..." : "Envoyer OTP"}
+              {loading ? "Envoi..." : "Envoyer le lien"}
             </button>
             <Link
               to="/"
@@ -151,100 +153,6 @@ const ForgotPasswordPage = () => {
             >
               Retour à la connexion
             </Link>
-          </form>
-        ) : (
-          <form
-            onSubmit={handleVerifyOtp}
-            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-          >
-            <h3 style={{ margin: 0, textAlign: "center" }}>Validation OTP</h3>
-            {error && (
-              <div style={{ padding: "0.75rem", background: "#FEE2E2", color: "#B91C1C", borderRadius: "8px" }}>
-                {error}
-              </div>
-            )}
-            {successMessage && (
-              <div style={{ padding: "0.75rem", background: "#D1FAE5", color: "#065F46", borderRadius: "8px" }}>
-                {successMessage}
-              </div>
-            )}
-            <p style={{ fontSize: "0.9rem", color: "var(--text-muted)", textAlign: "center", margin: 0 }}>
-              Un code de vérification vous a été envoyé par mail.
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 500 }}>
-                Code OTP (4 chiffres)
-              </label>
-              <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center" }}>
-                {otp.map((digit, index) => (
-                  <input
-                    key={index}
-                    ref={(el) => (inputRefs.current[index] = el)}
-                    type="text"
-                    maxLength="1"
-                    value={digit}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (!/^[0-9]*$/.test(val)) return;
-                      const newOtp = [...otp];
-                      newOtp[index] = val;
-                      setOtp(newOtp);
-                      if (val && index < 3) {
-                        inputRefs.current[index + 1].focus();
-                      }
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Backspace" && !otp[index] && index > 0) {
-                        inputRefs.current[index - 1].focus();
-                      }
-                    }}
-                    onPaste={(e) => {
-                      e.preventDefault();
-                      const pastedData = e.clipboardData.getData("text").replace(/[^0-9]/g, "").slice(0, 4);
-                      if (pastedData) {
-                        const newOtp = ["", "", "", ""];
-                        for (let i = 0; i < pastedData.length; i++) {
-                          newOtp[i] = pastedData[i];
-                        }
-                        setOtp(newOtp);
-                        const nextFocusIndex = Math.min(pastedData.length, 3);
-                        inputRefs.current[nextFocusIndex].focus();
-                      }
-                    }}
-                    required
-                    style={{
-                      width: "3rem",
-                      height: "3.5rem",
-                      padding: "0",
-                      borderRadius: "8px",
-                      border: "1px solid var(--border)",
-                      fontSize: "1.5rem",
-                      fontWeight: "bold",
-                      textAlign: "center",
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn btn-primary"
-              style={{ marginTop: "0.5rem", justifyContent: "center", width: "100%", padding: "0.85rem", fontSize: "1rem" }}
-            >
-              {loading ? "Validation..." : "Valider et réinitialiser"}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setResetStep(1);
-                setOtp(["", "", "", ""]);
-              }}
-              className="btn"
-              style={{ justifyContent: "center", width: "100%", border: "1px solid var(--border)", background: "transparent" }}
-            >
-              Annuler
-            </button>
           </form>
         )}
       </div>

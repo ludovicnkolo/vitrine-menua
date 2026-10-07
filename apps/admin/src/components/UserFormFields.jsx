@@ -13,6 +13,7 @@ const UserFormFields = ({
   user,
   setUser,
   rolesList,
+  polesList = [],
   isEdit,
   setSelectedFile,
 }) => {
@@ -273,13 +274,21 @@ const UserFormFields = ({
               style={selectStyle}
             >
               <option value="">— Aucun pôle —</option>
-              <option value="Assurance">Assurance</option>
-              <option value="CGP / Patrimoine">CGP / Patrimoine</option>
-              <option value="Comptabilité / Gestion">Comptabilité / Gestion</option>
-              <option value="Finance / Reporting">Finance / Reporting</option>
-              <option value="Risques / Conformité">Risques / Conformité</option>
-              <option value="Data / IT">Data / IT</option>
-              <option value="Transversal">Transversal</option>
+              {polesList.length > 0
+                ? polesList.map((p) => (
+                    <option key={p.id} value={p.name}>{p.name}</option>
+                  ))
+                : [
+                    "Assurance",
+                    "CGP / Patrimoine",
+                    "Comptabilité / Gestion",
+                    "Finance / Reporting",
+                    "Risques / Conformité",
+                    "Data / IT",
+                    "Transversal",
+                  ].map((n) => (
+                    <option key={n} value={n}>{n}</option>
+                  ))}
             </select>
           </div>
           {/* Matricule interne */}

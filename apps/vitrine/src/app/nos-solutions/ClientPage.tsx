@@ -53,7 +53,7 @@ export default function NosSolutionsPage() {
         <div className="absolute inset-0 z-0">
           <img
             src="/img/solutions-hero.webp"
-            alt="Nos solutions"
+            alt={t("Nos solutions", "Our solutions")}
             className="w-full h-full object-cover object-[center_35%]"
             onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
           />
@@ -105,7 +105,7 @@ export default function NosSolutionsPage() {
               <div className="w-[85%] lg:h-[360px] relative overflow-hidden shadow-xl">
                 <img
                   src="/img/solutions_3.webp"
-                  alt="Nos solutions"
+                  alt={t("Nos solutions", "Our solutions")}
                   className="w-full h-full object-cover shadow-xl"
                   onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                 />
@@ -125,7 +125,7 @@ export default function NosSolutionsPage() {
                   <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                     <img
                       src="/img/solutions_3.webp"
-                      alt="Nos solutions"
+                      alt={t("Nos solutions", "Our solutions")}
                       className="w-full h-full object-cover object-center"
                       onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                     />
@@ -202,12 +202,12 @@ export default function NosSolutionsPage() {
 
               {/* Mobile Image */}
               <div className="block lg:hidden w-[105%] -ml-[2.5%] h-[280px] portrait:sm:h-[320px] my-6 rounded-sm shadow-md overflow-hidden">
-                <img src="/img/solutions_2.webp" alt="Durée" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
+                <img src="/img/solutions_2.webp" alt={t("Durée", "Duration")} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
               </div>
               <div className="w-full aspect-[4/5] rounded-sm overflow-hidden shadow-lg hidden lg:block">
                 <img
                   src="/img/solutions_2.webp"
-                  alt="Durée"
+                  alt={t("Durée", "Duration")}
                   className="w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                 />

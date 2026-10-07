@@ -59,7 +59,7 @@ export default function NousContacter() {
         <div className="absolute inset-0 z-0">
           <img 
             src="/img/nous-contacter-hero-new.webp" 
-            alt="Nous contacter" 
+            alt={t("Nous contacter", "Contact us")}
             className="w-full h-full object-cover" 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>

@@ -1,6 +1,7 @@
 import React from "react";
 import UsersPage from "./UsersPage";
 import RolesPage from "./RolesPage";
+import PolesPage from "./PolesPage";
 import SpacePageLayout from "../components/SpacePageLayout";
 
 const UsersSpacePage = () => (
@@ -10,13 +11,15 @@ const UsersSpacePage = () => (
       { id: "equipe", label: "Équipe" },
       { id: "client", label: "Client" },
       { id: "role", label: "Rôle" },
+      { id: "poles", label: "Pôles" },
     ]}
   >
     {(tab) => (
       <>
         {tab === "equipe" && <UsersPage forceTab="interne" />}
-        {tab === "role" && <RolesPage />}
         {tab === "client" && <UsersPage forceTab="externe" />}
+        {tab === "role" && <RolesPage />}
+        {tab === "poles" && <PolesPage />}
       </>
     )}
   </SpacePageLayout>

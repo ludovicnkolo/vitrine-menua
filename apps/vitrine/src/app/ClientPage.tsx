@@ -47,7 +47,7 @@ export default function Home() {
         <div className="absolute inset-0 z-0">
           <img
             src="/img/hero-paris.webp"
-            alt="Paris Aerial"
+            alt={t("Paris Aerial", "Paris Aerial")}
             className="w-full h-full object-cover object-[75%_center] md:object-[80%_center] lg:object-center"
             onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }}
           />
@@ -113,7 +113,7 @@ export default function Home() {
               <div className="w-[85%] lg:h-[360px] relative overflow-hidden shadow-xl">
                 <img
                   src="/img/accueil-intro.webp"
-                  alt="Intro"
+                  alt={t("Intro", "Intro")}
                   className="w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
                 />
@@ -132,7 +132,7 @@ export default function Home() {
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                   <img
                     src="/img/accueil-intro.webp"
-                    alt="Intro"
+                    alt={t("Intro", "Intro")}
                     className="w-full h-full object-cover"
                     onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
                   />
@@ -222,7 +222,7 @@ export default function Home() {
             <div className="hidden lg:block w-4/12 lg:h-[360px] shrink-0 relative overflow-hidden shadow-xl z-20">
               <img
                 src="/img/besoins-meeting.webp"
-                alt="Vos besoins"
+                alt={t("Vos besoins", "Your needs")}
                 className="w-full h-full object-cover"
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
               />
@@ -240,7 +240,7 @@ export default function Home() {
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                   <img
                     src="/img/besoins-meeting.webp"
-                    alt="Vos besoins"
+                    alt={t("Vos besoins", "Your needs")}
                     className="w-full h-full object-cover"
                     onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                   />

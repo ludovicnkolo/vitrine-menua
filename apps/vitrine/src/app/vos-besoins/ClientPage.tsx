@@ -90,7 +90,7 @@ export default function VosBesoinsPage() {
         <div className="absolute inset-0 z-0">
           <img
             src="/img/besoins-hero.webp"
-            alt="Hero Vos Besoins"
+            alt={t("Hero Vos Besoins", "Hero Your needs")}
             className="w-full h-full object-cover object-[center_35%]"
             onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
           />
@@ -141,7 +141,7 @@ export default function VosBesoinsPage() {
               <div className="w-[85%] lg:h-[360px] relative overflow-hidden shadow-xl">
                 <img
                   src="/img/besoins-intro.webp"
-                  alt="Vos besoins"
+                  alt={t("Vos besoins", "Your needs")}
                   className="w-full h-full object-cover object-center"
                   onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                 />
@@ -158,7 +158,7 @@ export default function VosBesoinsPage() {
 
                 {/* Mobile Image */}
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
-                  <img src="/img/besoins-intro.webp" alt="Vos besoins" className="w-full h-full object-cover object-center" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
+                  <img src="/img/besoins-intro.webp" alt={t("Vos besoins", "Your needs")} className="w-full h-full object-cover object-center" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
                 </div>
 
                 <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">
@@ -198,7 +198,7 @@ export default function VosBesoinsPage() {
       <NeedCardSection
         id="finance-reporting"
         imgSrc="/img/besoins-finance.webp"
-        imgAlt="Finance & Reporting"
+        imgAlt={t("Finance & Reporting", "Finance & Reporting")}
         imgFallback="/img/intro-office.webp"
         title={<>{t("Finance", "Finance")} <span className="font-sans font-medium">&amp;</span> {t("Reporting", "Reporting")}</>}
         intro={formatBrand(t(
@@ -229,7 +229,7 @@ export default function VosBesoinsPage() {
         id="controle-gestion"
         reversed
         imgSrc="/img/besoins-gestion.webp"
-        imgAlt="Contrôle de gestion"
+        imgAlt={t("Contrôle de gestion", "Management control")}
         imgFallback="/img/besoins-meeting.webp"
         title={t("Contrôle de gestion", "Management control")}
         intro={formatBrand(t(
@@ -297,7 +297,7 @@ export default function VosBesoinsPage() {
       <NeedCardSection
         id="support-comptable-data"
         imgSrc="/img/besoins-data.webp"
-        imgAlt="Support comptable & Data"
+        imgAlt={t("Support comptable & Data", "Accounting & Data Support")}
         imgFallback="/img/intro-office.webp"
         title={<>{t("Support comptable", "Accounting")} <span className="font-sans font-medium">&amp;</span> {t("Data", "Data Support")}</>}
         intro={formatBrand(t(
@@ -331,7 +331,7 @@ export default function VosBesoinsPage() {
         id="support-cgp"
         reversed
         imgSrc="/img/besoins-cgp.webp"
-        imgAlt="Support aux CGP"
+        imgAlt={t("Support aux CGP", "Support for wealth management firms")}
         imgFallback="/img/intro-office.webp"
         title={t("Support aux cabinets de gestion de patrimoine / CGP", "Support for wealth management firms and financial advisers")}
         intro={formatBrand(t(
@@ -358,13 +358,13 @@ export default function VosBesoinsPage() {
         cardBg="bg-[#f5f7fa]"
       />
 
-      {/* ── 3.8 ASSURANCE ET COURTAGE ── */}
+      {/* ── 3.8 ASSURANCE ── */}
       <NeedCardSection
         id="assurance-courtage"
         imgSrc="/img/besoins-assurance.webp"
-        imgAlt="Assurance et Courtage"
+        imgAlt={t("Assurance", "Insurance")}
         imgFallback="/img/besoins-cgp.webp"
-        title={t("Support aux acteurs de l’assurance et du courtage", "Support for insurance and brokerage firms")}
+        title={t("ASSURANCE — BACK & MIDDLE OFFICE", "INSURANCE — BACK & MIDDLE OFFICE")}
         intro={formatBrand(t(
           "MENUA CONSULTING accompagne les courtiers, agents généraux et acteurs de l’assurance en prenant en charge les opérations de Back & Middle office, la gestion contractuelle et le contrôle documentaire de leurs dossiers. La souscription, le conseil, la tarification et les engagements contractuels demeurent sous l’entière responsabilité des professionnels habilités.",
           "MENUA CONSULTING supports brokers, general agents and insurance entities by handling Back & Middle office operations, contractual management and documentary verification of their files. Policy underwriting, advice, rating and contractual commitments remain under the full responsibility of authorized professionals."

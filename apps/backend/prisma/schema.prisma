@@ -425,3 +425,12 @@ model Notification {
 
   createdAt DateTime @default(now())
 }
+
+// ─── POLES D'ACTIVITE (Modèle d'organisation) ──────────────────────────────
+model PoleActivite {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

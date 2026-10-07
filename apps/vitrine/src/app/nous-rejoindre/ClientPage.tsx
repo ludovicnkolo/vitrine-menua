@@ -120,7 +120,7 @@ export default function NousRejoindre() {
         <div className="absolute inset-0 z-0">
           <img 
             src="/img/nous-rejoindre-hero-new.webp" 
-            alt="Nous rejoindre" 
+            alt={t("Nous rejoindre", "Join us")} 
             className="w-full h-full object-cover object-[center_35%]" 
             onError={(e) => { e.currentTarget.src = "/meeting.webp"; }} 
           />

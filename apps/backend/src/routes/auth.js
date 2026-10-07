@@ -412,6 +412,12 @@ router.post("/setup-password", async (req, res) => {
       },
     });
 
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax"
+    });
+
     res.json({
       success: true,
       message: "Votre mot de passe a été configuré avec succès. Vous pouvez maintenant vous connecter.",
@@ -443,18 +449,13 @@ router.post("/forgot-password", async (req, res) => {
        return res.status(403).json({ error: "Ce compte a été bloqué." });
     }
 
-    // Générer un OTP de 4 chiffres
-    const resetOtp = Math.floor(1000 + Math.random() * 9000).toString();
-    console.log(`\n==============================================`);
-    console.log(`[DEV MODE] CODE OTP POUR ${user.email} : ${resetOtp}`);
-    console.log(`==============================================\n`);
-    // Expiration dans 5 minutes
-    const resetTokenExpiry = new Date(Date.now() + 5 * 60 * 1000);
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetTokenExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
 
     await prisma.utilisateur.update({
       where: { id: user.id },
       data: {
-        resetToken: resetOtp,
+        resetToken: resetToken,
         resetTokenExpiry,
       },
     });
@@ -466,24 +467,26 @@ router.post("/forgot-password", async (req, res) => {
         action: "DEMANDE_REINITIALISATION_MDP",
         targetId: user.id,
         targetType: "USER",
-        details: "Demande de réinitialisation de mot de passe par OTP",
+        details: "Demande de réinitialisation de mot de passe par lien unique",
       },
     });
+
+    const resetLink = `${process.env.ADMIN_URL || "http://localhost:5174"}/setup-password?token=${resetToken}`;
 
     const mailOptions = {
       from: process.env.SMTP_FROM || "contact@menuaconsulting.com",
       to: user.email,
-      subject: "Votre code OTP - CRM Menua",
+      subject: "Réinitialisation de votre mot de passe - CRM Menua",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
-          <h2 style="color: #c99c5c;">Code de vérification (OTP)</h2>
+          <h2 style="color: #c99c5c;">Réinitialisation de votre mot de passe</h2>
           <p>Bonjour ${user.name},</p>
           <p>Vous avez demandé à réinitialiser votre mot de passe pour accéder au CRM Menua.</p>
-          <p>Voici votre code de vérification à 4 chiffres :</p>
+          <p>Veuillez cliquer sur le lien sécurisé ci-dessous pour définir un nouveau mot de passe :</p>
           <div style="text-align: center; margin: 20px 0;">
-            <span style="background-color: #f4f4f4; border: 1px dashed #c99c5c; padding: 15px 30px; font-size: 24px; font-weight: bold; letter-spacing: 5px; color: #333;">${resetOtp}</span>
+            <a href="${resetLink}" style="background-color: #c99c5c; color: white; padding: 15px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Réinitialiser mon mot de passe</a>
           </div>
-          <p><strong>Ce code est valide pendant 5 minutes.</strong></p>
+          <p><strong>Ce lien unique est valide pendant 15 minutes.</strong></p>
           <p>Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet e-mail.</p>
           <p>Cordialement,<br>L'équipe Menua Consulting</p>
         </div>

@@ -137,6 +137,10 @@ app.use("/api/crm", require("./routes/crm/notifications"));
 const cmsRouter = require("./routes/cms");
 app.use("/api/cms", cmsRouter);
 
+// Poles d'activité routes
+const polesRouter = require("./routes/poles");
+app.use("/api/poles", polesRouter);
+
 // Magic Links routes
 const magicRouter = require("./routes/magic");
 app.use("/api/magic", magicRouter);

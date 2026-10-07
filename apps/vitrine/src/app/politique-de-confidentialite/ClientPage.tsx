@@ -71,18 +71,10 @@ export default function PolitiqueConfidentialite() {
 
             {/* 10.5 ACCÈS HORS ESPACE ÉCONOMIQUE EUROPÉEN */}
             <SectionBlock title={t("Accès hors Espace économique européen", "Access outside the European Economic Area")}>
-              <p className="mb-4">{formatBrand(t(
-                "Dans le cadre de l’exécution des missions opérationnelles confiées par ses clients, MENUA CONSULTING peut mobiliser des collaborateurs et membres de ses équipes situés hors de l’Espace économique européen. Lorsque cela est strictement nécessaire à la réalisation des travaux, certaines données opérationnelles peuvent leur être rendues accessibles dans la seule limite du périmètre qui leur est confié et sous la supervision de MENUA CONSULTING.",
-                "In connection with the execution of operational assignments entrusted by its clients, MENUA CONSULTING may deploy staff and team members located outside the European Economic Area. Where strictly necessary for the performance of the work, relevant operational data may be accessed by them solely within the boundaries of the tasks assigned to them and under the supervision of MENUA CONSULTING."
+              <p>{formatBrand(t(
+                "Dans le cadre de certaines missions, certaines opérations peuvent, lorsque cela est nécessaire, être réalisées par des équipes MENUA depuis un pays situé hors de l’Espace économique européen. Tout accès aux données est limité au périmètre strictement nécessaire à la mission et encadré par les mesures organisationnelles, techniques et de sécurité applicables. Les accès sont individualisés, contrôlés, traçables et révocables. Les modalités applicables sont précisées contractuellement lorsque la nature de la mission le requiert.",
+                "In connection with certain client engagements, some operations may, where required, be performed by MENUA teams from outside the European Economic Area. Any access to data is limited to what is strictly necessary for the relevant scope and is subject to the applicable organisational, technical and security safeguards. Access is individualised, monitored, auditable and revocable. The applicable arrangements are specified contractually where required by the nature of the engagement."
               ))}</p>
-              <p className="mb-4">{formatBrand(t(
-                "Avant tout accès depuis un pays situé hors de l’Espace économique européen, MENUA CONSULTING met en place les garanties juridiques et les mesures de sécurité requises par la réglementation applicable. Les accès sont strictement individualisés, limités aux seules données nécessaires, tracés, contrôlés et révocables. Ils s’effectuent dans le respect des Clauses Contractuelles Types (CCT) adoptées par la Commission européenne et sont assortis de mesures techniques et organisationnelles renforcées (authentification forte, chiffrement, cloisonnement, journalisation et audits réguliers).",
-                "Prior to any access from a jurisdiction outside the European Economic Area, MENUA CONSULTING establishes the legal safeguards and security controls required by applicable regulations. Access is strictly individualized, restricted to strictly necessary data, auditable, monitored and revocable. It is governed in accordance with the Standard Contractual Clauses (SCCs) adopted by the European Commission, complemented by reinforced technical and organizational safeguards (strong authentication, encryption, partitioning, logging and regular audits)."
-              ))}</p>
-              <p>{t(
-                "Aucune donnée n’est rendue accessible depuis un pays tiers en l’absence de nécessité opérationnelle liée à la mission et tant que le cadre contractuel, organisationnel et technique applicable n’a pas été validé.",
-                "No data is made accessible from a third country without a legitimate operational requirement tied to the engagement, and until the applicable contractual, organizational and technical safeguards have been validated."
-              )}</p>
             </SectionBlock>
 
             {/* 10.6 CONSERVATION */}

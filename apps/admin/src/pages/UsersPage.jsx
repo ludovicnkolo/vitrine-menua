@@ -287,11 +287,13 @@ const UsersPage = ({ forceTab }) => {
 
   const [rolesList, setRolesList] = useState([]);
 
+  const [polesList, setPolesList] = useState([]);
+
   const fetchData = async () => {
     try {
       const token = sessionStorage.getItem("adminToken");
       const headers = { Authorization: "Bearer " + token };
-      const [rUsers, rClients, rRoles] = await Promise.all([
+      const [rUsers, rClients, rRoles, rPoles] = await Promise.all([
         fetch(getSafeApiUrl("/api/crm/users"), { headers })
           .then((r) => r.json())
           .catch(() => []),
@@ -299,6 +301,9 @@ const UsersPage = ({ forceTab }) => {
           .then((r) => r.json())
           .catch(() => []),
         fetch(getSafeApiUrl("/api/crm/roles"), { headers })
+          .then((r) => r.json())
+          .catch(() => []),
+        fetch(getSafeApiUrl("/api/poles"), { headers })
           .then((r) => r.json())
           .catch(() => []),
       ]);
@@ -309,6 +314,7 @@ const UsersPage = ({ forceTab }) => {
           ? rRoles.filter((r) => r.name !== "Super-administrateur")
           : [],
       );
+      setPolesList(Array.isArray(rPoles) ? rPoles : []);
     } catch (e) {}
   };
 
@@ -1560,6 +1566,7 @@ const UsersPage = ({ forceTab }) => {
                 user={newUser}
                 setUser={setNewUser}
                 rolesList={rolesList}
+                polesList={polesList}
                 isEdit={false}
               />
 
@@ -2005,6 +2012,88 @@ const UsersPage = ({ forceTab }) => {
                   </div>
                 </div>
 
+                {/* Card 4: Organisation & Fiche Interne (V3) */}
+                <div
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    borderRadius: "12px",
+                    border: "1px solid var(--border)",
+                    padding: "1.5rem",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1.25rem",
+                  }}
+                >
+                  <div>
+                    <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                      4. Organisation & Fiche Interne
+                    </h2>
+                    <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                      Pôle d'affectation, matricule et données administratives internes
+                    </p>
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                    {/* Pôle d'activité */}
+                    <div>
+                      <label style={labelStyle}>Pôle d'activité</label>
+                      <select
+                        value={editUser.poleActivite || ""}
+                        onChange={(e) => setEditUser({ ...editUser, poleActivite: e.target.value || null })}
+                        style={inputStyle}
+                      >
+                        <option value="">— Aucun pôle —</option>
+                        {polesList.length > 0
+                          ? polesList.map((p) => (
+                              <option key={p.id} value={p.name}>{p.name}</option>
+                            ))
+                          : ["Assurance", "CGP / Patrimoine", "Comptabilité / Gestion", "Finance / Reporting", "Risques / Conformité", "Data / IT", "Transversal"].map((n) => (
+                              <option key={n} value={n}>{n}</option>
+                            ))}
+                      </select>
+                    </div>
+
+                    {/* Matricule & Fonction */}
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                      <div>
+                        <label style={labelStyle}>Matricule interne</label>
+                        <input
+                          type="text"
+                          placeholder="Ex: MC-2024-001"
+                          value={editUser.matricule || ""}
+                          onChange={(e) => setEditUser({ ...editUser, matricule: e.target.value || null })}
+                          style={inputStyle}
+                        />
+                      </div>
+                      <div>
+                        <label style={labelStyle}>Fonction / Intitulé de poste</label>
+                        <input
+                          type="text"
+                          placeholder="Ex: Chargé(e) de back-office"
+                          value={editUser.fonction || ""}
+                          onChange={(e) => setEditUser({ ...editUser, fonction: e.target.value || null })}
+                          style={inputStyle}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Email Pro */}
+                    <div>
+                      <label style={labelStyle}>E-mail professionnel (identifiant CRM)</label>
+                      <input
+                        type="email"
+                        placeholder="prenom.nom@menuaconsulting.com"
+                        value={editUser.emailPro || ""}
+                        onChange={(e) => setEditUser({ ...editUser, emailPro: e.target.value || null })}
+                        style={inputStyle}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
                 {/* Info Callout */}
                 <div
                   style={{
@@ -2027,8 +2116,6 @@ const UsersPage = ({ forceTab }) => {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
           </form>
         );
       })()}
@@ -2452,6 +2539,60 @@ const UsersPage = ({ forceTab }) => {
               </div>
             </div>
           </div>
+
+          {/* Card V3: Organisation & Fiche Interne — displayed if any field has data */}
+          {(consultUser.poleActivite || consultUser.matricule || consultUser.emailPro || consultUser.fonction || consultUser.manager) && (
+            <div
+              style={{
+                backgroundColor: "#FFFFFF",
+                borderRadius: "12px",
+                border: "1px solid var(--border)",
+                padding: "1.5rem",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+              }}
+            >
+              <div style={{ marginBottom: "1rem" }}>
+                <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  Organisation & Fiche Interne
+                </h2>
+                <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                  Rattachement organisationnel et données administratives internes
+                </p>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem" }}>
+                {consultUser.poleActivite && (
+                  <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.75rem 1rem" }}>
+                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.3rem" }}>Pôle d'activité</span>
+                    <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--text-main)" }}>{consultUser.poleActivite}</span>
+                  </div>
+                )}
+                {consultUser.fonction && (
+                  <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.75rem 1rem" }}>
+                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.3rem" }}>Fonction</span>
+                    <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--text-main)" }}>{consultUser.fonction}</span>
+                  </div>
+                )}
+                {consultUser.matricule && (
+                  <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.75rem 1rem" }}>
+                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.3rem" }}>Matricule</span>
+                    <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--text-main)", fontFamily: "monospace" }}>{consultUser.matricule}</span>
+                  </div>
+                )}
+                {consultUser.emailPro && (
+                  <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.75rem 1rem" }}>
+                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.3rem" }}>Email Pro (CRM)</span>
+                    <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--text-main)" }}>{consultUser.emailPro}</span>
+                  </div>
+                )}
+                {consultUser.manager && (
+                  <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.75rem 1rem" }}>
+                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.3rem" }}>Manager direct</span>
+                    <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--text-main)" }}>{consultUser.manager.name}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

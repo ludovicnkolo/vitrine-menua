@@ -17,7 +17,7 @@ export default function NousConnaitrePage() {
         <div className="absolute inset-0 z-0">
           <img
             src="/img/connaitre-hero.webp"
-            alt="Hero Background"
+            alt={t("Arrière-plan", "Hero Background")}
             className="w-full h-full object-cover object-[center_65%]"
             onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
           />
@@ -30,9 +30,9 @@ export default function NousConnaitrePage() {
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
             <p className="text-[1.1rem] lg:text-[1.3rem] landscape:text-[1rem] landscape:lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
-              {t("Une organisation opérationnelle structurée pour accompagner les entreprises dans l'exécution fiable de leurs fonctions back ", "A trusted operational partner working closely with businesses to deliver reliable back ")}
+              {t("Une organisation opérationnelle structurée pour accompagner les entreprises dans l'exécution fiable de leurs fonctions back ", "A specialised operational organisation supporting businesses in the reliable execution of their back ")}
               <span className="font-sans font-medium">&amp;</span>
-              {t(" middle office.", " middle-office support.")}
+              {t(" middle office.", " middle office functions.")}
             </p>
             <div className="mt-4">
               <Link href="#notre-approche" className="inline-flex items-center gap-2 text-left px-4 py-2 border border-white/60 text-white uppercase tracking-wider text-[0.95rem] font-bold hover:bg-white hover:text-[#141824] transition-colors group">
@@ -68,7 +68,7 @@ export default function NousConnaitrePage() {
               <div className="w-[85%] lg:h-[420px] relative overflow-hidden shadow-xl">
                 <img
                   src="/img/connaitre_2.webp"
-                  alt="Cabinet"
+                  alt={t("Cabinet", "Firm")}
                   className="w-full h-full object-cover object-center"
                 />
               </div>
@@ -86,7 +86,7 @@ export default function NousConnaitrePage() {
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                   <img
                     src="/img/connaitre_2.webp"
-                    alt="Cabinet"
+                    alt={t("Cabinet", "Firm")}
                     className="w-full h-full object-cover object-center"
                   />
                 </div>
@@ -106,14 +106,14 @@ export default function NousConnaitrePage() {
                   </p>
                   <p>
                     {t(
-                      "Notre intervention s’adresse notamment aux équipes financières, comptables, patrimoniales, IT, data et réglementées, ainsi qu’aux cabinets de gestion de patrimoine à la recherche d’un support opérationnel structuré et fiable.",
-                      "Our services are designed in particular for finance, accounting, IT and data teams, teams operating in regulated environments, and wealth management firms seeking structured and dependable operational support."
+                      "Notre intervention s’adresse notamment aux équipes financières, comptables, patrimoniales, IT, data et réglementées, ainsi qu’aux cabinets de gestion de patrimoine à la recherche d’un support opérationnel structuré et fiable pour la réalisation de travaux d'analyse financière, de contrôles et de suivi administratif.",
+                      "Our services are designed in particular for finance, accounting, IT and data teams, teams operating in regulated environments, and wealth management firms seeking structured and dependable operational support for financial analysis, compliance checks and administrative tracking."
                     )}
                   </p>
                   <p>
                     {formatBrand(t(
                       "MENUA CONSULTING adopte une posture résolument exécutante. Nos clients définissent leurs besoins, leurs procédures, leurs priorités et leurs circuits de validation. Nous prenons ensuite en charge la réalisation opérationnelle des tâches confiées, dans le respect de leurs instructions, avec rigueur, confidentialité et traçabilité.",
-                      "MENUA CONSULTING takes a firmly delivery-focused approach while maintaining a close working relationship with each client. Our clients define their requirements, procedures, priorities and approval workflows. We then carry out the assigned activities with rigour, confidentiality and traceability, under the appropriate level of supervision whenever required."
+                      "MENUA CONSULTING takes a firmly delivery-focused approach. Our clients define their requirements, procedures, priorities and approval workflows. We then carry out the assigned operational tasks with rigour, confidentiality and traceability, in accordance with their instructions and under the required level of supervision."
                     ))}
                   </p>
                 </div>
@@ -145,14 +145,14 @@ export default function NousConnaitrePage() {
               <div className="space-y-6 text-[#6e7891] text-[1.05rem] md:text-[1.1rem] font-light leading-relaxed">
                 <p>
                   {formatBrand(t(
-                    "MENUA CONSULTING accompagne les entreprises, cabinets et organisations dans l’externalisation de leurs fonctions back et middle office en français et en anglais, afin de renforcer la fiabilité de leurs opérations, d’optimiser leurs ressources et de garantir la continuity de leurs activités.",
-                    "MENUA CONSULTING supports its clients in both French and English through a responsive, collaborative working relationship. We help improve operational reliability, make better use of internal resources and maintain business continuity."
+                    "MENUA CONSULTING accompagne les entreprises, cabinets et organisations dans la prise en charge de leurs fonctions back et middle office en français et en anglais, incluant notamment les travaux d'analyse financière préparatoire, de contrôle documentaire et de reporting, afin de renforcer la fiabilité de leurs opérations et de garantir la continuité de leurs activités.",
+                    "MENUA CONSULTING supports businesses, professional firms and other organisations in the delivery of their back and middle office functions, in both French and English. This includes preparatory financial analysis, documentary review and reporting, with the aim of improving operational reliability and maintaining business continuity."
                   ))}
                 </p>
                 <p>
                   {t(
                     "Cette approche permet aux équipes internes de se concentrer sur les décisions stratégiques, les validations réglementaires et la relation client, tout en sécurisant le traitement opérationnel des activités back et middle office.",
-                    "This enables internal teams to focus on strategic decisions, regulatory approvals and client relationships while ensuring dependable delivery across back and middle office activities."
+                    "This enables internal teams to focus on strategic decisions, regulatory approvals and client relationships, while ensuring dependable delivery across back and middle office activities."
                   )}
                 </p>
               </div>
@@ -182,7 +182,7 @@ export default function NousConnaitrePage() {
               <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[280px] portrait:sm:h-[320px] my-6 rounded-sm shadow-md overflow-hidden">
                 <img
                   src="/img/connaitre-approche.webp"
-                  alt="Notre approche"
+                  alt={t("Notre approche", "Our approach")}
                   className="w-full h-full object-cover object-center"
                   onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
                 />
@@ -191,7 +191,7 @@ export default function NousConnaitrePage() {
               <div className="w-[85%] aspect-[4/5] rounded-sm overflow-hidden shadow-lg hidden lg:block">
                 <img
                   src="/img/connaitre-approche.webp"
-                  alt="Notre approche"
+                  alt={t("Notre approche", "Our approach")}
                   className="w-full h-full object-cover object-left"
                   onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
                 />
@@ -359,8 +359,8 @@ export default function NousConnaitrePage() {
                 </p>
                 <p className="text-[#e8e1d7] font-bold leading-relaxed">
                   {formatBrand(t(
-                    "MENUA CONSULTING s’appuie sur une organisation agile, pilotée depuis la France et articulée autour d’équipes dédiées, rigoureusement formées et encadrées selon les standards de nos clients.",
-                    "MENUA CONSULTING relies on an agile organisation led from France and structured around dedicated teams, rigorously trained and supervised in accordance with our clients’ standards."
+                    "Menua Consulting s’appuie sur une organisation agile, pilotée depuis la France, avec des équipes MENUA mobilisées selon les besoins de chaque mission, en fonction des compétences, du volume et du niveau de technicité requis.",
+                    "Menua Consulting operates through an agile model led from France, with dedicated MENUA teams mobilised according to each engagement’s required skills, workload and level of complexity."
                   ))}
                 </p>
               </div>
@@ -379,7 +379,7 @@ export default function NousConnaitrePage() {
             {/* Image (Right Desktop only) */}
             <div className="hidden lg:flex w-5/12 shrink-0 z-20 items-center justify-start">
               <div className="w-[85%] lg:h-[450px] relative overflow-hidden shadow-xl">
-                <img src="/img/conforme.jpg" alt="Accréditations" className="w-full h-full object-cover object-bottom" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
+                <img src="/img/conforme.jpg" alt={t("Accréditations", "Accreditations")} className="w-full h-full object-cover object-bottom" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
               </div>
             </div>
 
@@ -393,7 +393,7 @@ export default function NousConnaitrePage() {
 
                 {/* Mobile Image */}
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
-                  <img src="/img/conforme.jpg" alt="Accréditations" className="w-full h-full object-cover object-bottom" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
+                  <img src="/img/conforme.jpg" alt={t("Accréditations", "Accreditations")} className="w-full h-full object-cover object-bottom" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
                 </div>
 
                 <div className="space-y-4 text-[#141824] text-[1.05rem] font-light leading-relaxed">
@@ -405,14 +405,14 @@ export default function NousConnaitrePage() {
                   </p>
                   <p>
                     {t(
-                      "Pour répondre à des besoins spécifiques, le cabinet peut également s’appuyer sur un réseau d'experts qualifiés, notamment sur des sujets liés aux métiers de la comptabilité, de la data, du reporting et du pilotage de gestion.",
-                      "Depending on the scope, the firm can draw on relevant capabilities in accounting, data, reporting and performance management."
+                      "Selon le périmètre de la mission, Menua Consulting mobilise au sein de son organisation les compétences nécessaires, notamment en comptabilité, data, reporting et pilotage de gestion.",
+                      "Depending on the scope of the engagement, Menua Consulting mobilises the required capabilities within its organisation, particularly in accounting, data, reporting and performance management."
                     )}
                   </p>
                   <p>
                     {t(
-                      "Cette organisation permet de proposer une réponse flexible et adaptée, tout en conservant un cadre de suivi clair, une exigence de confidentialité et une qualité d’exécution conforme aux attentes du client.",
-                      "This structure ensures a flexible and tailored response while maintaining clear oversight, strict confidentiality and execution quality that meets client expectations."
+                      "Ce modèle permet de proposer une réponse flexible et adaptée, tout en conservant un pilotage clair, une exigence élevée de confidentialité et une qualité d’exécution conforme aux attentes du client.",
+                      "This model enables a flexible and tailored response while maintaining clear oversight, a high standard of confidentiality and delivery quality aligned with the client’s expectations."
                     )}
                   </p>
                   <div className="bg-white/40 border-l-4 border-[#141824] p-5 my-2 shadow-sm">

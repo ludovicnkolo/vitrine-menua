@@ -70,7 +70,7 @@ export default function ActualitesPage({ initialPublications = [] }: ActualitesP
         <div className="absolute inset-0 z-0">
           <img
             src="/img/accueil-actus.webp"
-            alt="Actualités et Veille"
+            alt={t("Actualités et Veille", "Insights and News")}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>

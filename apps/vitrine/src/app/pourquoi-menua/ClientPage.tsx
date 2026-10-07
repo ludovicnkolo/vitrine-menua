@@ -18,7 +18,7 @@ export default function PourquoiMenuaPage() {
         <div className="absolute inset-0 z-0">
           <img
             src="/img/pourquoi-hero.webp"
-            alt="Pourquoi Menua Consulting"
+            alt={t("Pourquoi Menua Consulting", "Why Menua Consulting")}
             className="w-full h-full object-cover object-[center_35%]"
             onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
           />
@@ -69,7 +69,7 @@ export default function PourquoiMenuaPage() {
             <div className="hidden lg:block w-5/12 lg:h-[360px] shrink-0 relative z-30 shadow-xl overflow-hidden">
               <img
                 src="/img/pourquoi_2.webp"
-                alt="Pourquoi Menua"
+                alt={t("Pourquoi Menua", "Why Menua")}
                 className="w-full h-full object-cover object-center"
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
               />
@@ -87,7 +87,7 @@ export default function PourquoiMenuaPage() {
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                   <img
                     src="/img/pourquoi_2.webp"
-                    alt="Pourquoi Menua"
+                    alt={t("Pourquoi Menua", "Why Menua")}
                     className="w-full h-full object-cover object-center"
                     onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                   />
@@ -117,7 +117,7 @@ export default function PourquoiMenuaPage() {
           <div className="flex flex-col lg:flex-row lg:items-center">
             {/* Image (Left Desktop only) */}
             <div className="hidden lg:block w-5/12 lg:h-[360px] shrink-0 relative z-30 shadow-xl overflow-hidden">
-              <img src="/img/benefices.webp" alt="Bénéfices" className="w-full h-full object-cover object-[80%_center]" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
+              <img src="/img/benefices.webp" alt={t("Bénéfices", "Benefits")} className="w-full h-full object-cover object-[80%_center]" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
             </div>
 
             {/* Text Box (Right) */}
@@ -128,7 +128,7 @@ export default function PourquoiMenuaPage() {
 
                 {/* Mobile Image */}
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
-                  <img src="/img/benefices.webp" alt="Bénéfices" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
+                  <img src="/img/benefices.webp" alt={t("Bénéfices", "Benefits")} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
                 </div>
                 <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
                   {formatBrand(t(
@@ -228,7 +228,7 @@ export default function PourquoiMenuaPage() {
             <div className="hidden lg:block w-5/12 lg:h-[360px] shrink-0 relative z-30 shadow-xl overflow-hidden">
               <img
                 src="/img/pourquoi_4.webp"
-                alt="Engagements"
+                alt={t("Engagements", "Commitments")}
                 className="w-full h-full object-cover object-center"
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
               />
@@ -246,7 +246,7 @@ export default function PourquoiMenuaPage() {
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                   <img
                     src="/img/pourquoi_4.webp"
-                    alt="Engagements"
+                    alt={t("Engagements", "Commitments")}
                     className="w-full h-full object-cover object-center"
                     onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                   />

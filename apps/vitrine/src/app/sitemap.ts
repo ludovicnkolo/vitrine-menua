@@ -1,11 +1,23 @@
 import { MetadataRoute } from 'next';
+import fs from 'fs';
+import path from 'path';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://menuaconsulting.com';
-  // Chaque page a sa propre date de dernière modification significative.
-  // Les pages éditoriales (actualités) utilisent la date de build/revalidation dynamique.
-  // Les pages légales restent à leur date de publication réelle.
   const now = new Date();
+
+  function getFileLastMod(routePath: string): Date {
+    try {
+      let fsPath = routePath;
+      if (routePath.startsWith('/fr')) {
+        fsPath = routePath.replace(/^\/fr/, '') || '/';
+      }
+      const filePath = path.join(process.cwd(), 'src/app', fsPath, 'page.tsx');
+      return fs.statSync(filePath).mtime;
+    } catch (err) {
+      return now;
+    }
+  }
 
   type RouteEntry = {
     path: string;
@@ -16,30 +28,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Pages FR avec préfixe /fr/ (URL canonique)
   const frRoutes: RouteEntry[] = [
-    { path: '/fr', priority: 1.0, freq: 'weekly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/fr/nous-connaitre', priority: 0.8, freq: 'monthly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/fr/vos-besoins', priority: 0.8, freq: 'monthly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/fr/nos-solutions', priority: 0.8, freq: 'monthly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/fr/pourquoi-menua', priority: 0.8, freq: 'monthly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/fr/actualites', priority: 0.9, freq: 'weekly', lastMod: now },
-    { path: '/fr/nous-rejoindre', priority: 0.7, freq: 'monthly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/fr/nous-contacter', priority: 0.7, freq: 'monthly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/fr/mentions-legales', priority: 0.3, freq: 'yearly', lastMod: new Date('2026-10-01T00:00:00.000Z') },
-    { path: '/fr/politique-de-confidentialite', priority: 0.3, freq: 'yearly', lastMod: new Date('2026-10-01T00:00:00.000Z') },
+    { path: '/fr', priority: 1.0, freq: 'weekly', lastMod: getFileLastMod('/fr') },
+    { path: '/fr/nous-connaitre', priority: 0.8, freq: 'monthly', lastMod: getFileLastMod('/fr/nous-connaitre') },
+    { path: '/fr/vos-besoins', priority: 0.8, freq: 'monthly', lastMod: getFileLastMod('/fr/vos-besoins') },
+    { path: '/fr/nos-solutions', priority: 0.8, freq: 'monthly', lastMod: getFileLastMod('/fr/nos-solutions') },
+    { path: '/fr/pourquoi-menua', priority: 0.8, freq: 'monthly', lastMod: getFileLastMod('/fr/pourquoi-menua') },
+    { path: '/fr/actualites', priority: 0.9, freq: 'weekly', lastMod: getFileLastMod('/fr/actualites') },
+    { path: '/fr/nous-rejoindre', priority: 0.7, freq: 'monthly', lastMod: getFileLastMod('/fr/nous-rejoindre') },
+    { path: '/fr/nous-contacter', priority: 0.7, freq: 'monthly', lastMod: getFileLastMod('/fr/nous-contacter') },
+    { path: '/fr/mentions-legales', priority: 0.3, freq: 'yearly', lastMod: getFileLastMod('/fr/mentions-legales') },
+    { path: '/fr/politique-de-confidentialite', priority: 0.3, freq: 'yearly', lastMod: getFileLastMod('/fr/politique-de-confidentialite') },
   ];
 
   // Pages EN
   const enRoutes: RouteEntry[] = [
-    { path: '/en', priority: 1.0, freq: 'weekly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/en/about-us', priority: 0.8, freq: 'monthly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/en/your-needs', priority: 0.8, freq: 'monthly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/en/our-solutions', priority: 0.8, freq: 'monthly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/en/why-choose-us', priority: 0.8, freq: 'monthly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/en/news', priority: 0.9, freq: 'weekly', lastMod: now },
-    { path: '/en/join-us', priority: 0.7, freq: 'monthly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/en/contact-us', priority: 0.7, freq: 'monthly', lastMod: new Date('2026-10-06T08:00:00.000Z') },
-    { path: '/en/legal-notices', priority: 0.3, freq: 'yearly', lastMod: new Date('2026-10-01T00:00:00.000Z') },
-    { path: '/en/privacy-policy', priority: 0.3, freq: 'yearly', lastMod: new Date('2026-10-01T00:00:00.000Z') },
+    { path: '/en', priority: 1.0, freq: 'weekly', lastMod: getFileLastMod('/en') },
+    { path: '/en/about-us', priority: 0.8, freq: 'monthly', lastMod: getFileLastMod('/en/about-us') },
+    { path: '/en/your-needs', priority: 0.8, freq: 'monthly', lastMod: getFileLastMod('/en/your-needs') },
+    { path: '/en/our-solutions', priority: 0.8, freq: 'monthly', lastMod: getFileLastMod('/en/our-solutions') },
+    { path: '/en/why-choose-us', priority: 0.8, freq: 'monthly', lastMod: getFileLastMod('/en/why-choose-us') },
+    { path: '/en/news', priority: 0.9, freq: 'weekly', lastMod: getFileLastMod('/en/news') },
+    { path: '/en/join-us', priority: 0.7, freq: 'monthly', lastMod: getFileLastMod('/en/join-us') },
+    { path: '/en/contact-us', priority: 0.7, freq: 'monthly', lastMod: getFileLastMod('/en/contact-us') },
+    { path: '/en/legal-notices', priority: 0.3, freq: 'yearly', lastMod: getFileLastMod('/en/legal-notices') },
+    { path: '/en/privacy-policy', priority: 0.3, freq: 'yearly', lastMod: getFileLastMod('/en/privacy-policy') },
   ];
 
   const baseSitemap = [...frRoutes, ...enRoutes].map(({ path, priority, freq, lastMod }) => ({

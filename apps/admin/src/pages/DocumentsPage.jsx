@@ -725,7 +725,7 @@ export default function DocumentsPage() {
             style={{
               fontSize: "1.4rem",
               fontWeight: 700,
-              color: "#0F172A",
+              color: "var(--text-main)",
               margin: 0,
             }}
           >
@@ -819,7 +819,7 @@ export default function DocumentsPage() {
                 alignItems: "center",
                 gap: "0.4rem",
                 background: "#FFF",
-                color: "#0F172A",
+                color: "var(--text-main)",
                 border: "1px solid #CBD5E1",
                 padding: "0.55rem 1.1rem",
                 borderRadius: "8px",
@@ -900,7 +900,7 @@ export default function DocumentsPage() {
               style={{
                 background: "none",
                 border: "none",
-                color: currentFolderId === null ? "#0F172A" : "var(--primary)",
+                color: currentFolderId === null ? "var(--text-main)" : "var(--primary)",
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
@@ -921,7 +921,7 @@ export default function DocumentsPage() {
                   style={{
                     background: "none",
                     border: "none",
-                    color: index === currentPath.length - 1 ? "#0F172A" : "var(--primary)",
+                    color: index === currentPath.length - 1 ? "var(--text-main)" : "var(--primary)",
                     cursor: "pointer",
                     fontSize: "0.95rem",
                     fontWeight: index === currentPath.length - 1 ? 700 : 500,
@@ -936,7 +936,7 @@ export default function DocumentsPage() {
 
           <div style={{ fontSize: "0.85rem", color: "#64748B", fontWeight: 500 }}>
             Emplacement :{" "}
-            <span style={{ color: "#0F172A", fontWeight: 600 }}>
+            <span style={{ color: "var(--text-main)", fontWeight: 600 }}>
               {currentFolder
                 ? currentFolder.reference
                   ? `Dossier ${currentFolder.reference}`
@@ -1176,7 +1176,7 @@ export default function DocumentsPage() {
                   style={{
                     fontSize: "0.95rem",
                     fontWeight: 700,
-                    color: "#0F172A",
+                    color: "var(--text-main)",
                     margin: "0 0 1rem 0",
                   }}
                 >
@@ -1265,7 +1265,7 @@ export default function DocumentsPage() {
                           style={{
                             fontWeight: 700,
                             fontSize: "0.95rem",
-                            color: "#0F172A",
+                            color: "var(--text-main)",
                             marginTop: "0.75rem",
                             wordBreak: "break-word",
                           }}
@@ -1310,7 +1310,7 @@ export default function DocumentsPage() {
                   style={{
                     fontSize: "0.95rem",
                     fontWeight: 700,
-                    color: "#0F172A",
+                    color: "var(--text-main)",
                     margin: "0 0 1rem 0",
                   }}
                 >
@@ -1358,7 +1358,7 @@ export default function DocumentsPage() {
                             style={{
                               fontSize: "0.85rem",
                               fontWeight: 600,
-                              color: "#0F172A",
+                              color: "var(--text-main)",
                               overflow: "hidden",
                               textOverflow: "ellipsis",
                               whiteSpace: "nowrap",
@@ -2148,7 +2148,7 @@ export default function DocumentsPage() {
                     margin: 0,
                     fontSize: "1.25rem",
                     fontWeight: 700,
-                    color: "#0F172A",
+                    color: "var(--text-main)",
                   }}
                 >
                   Corbeille
@@ -2270,7 +2270,7 @@ export default function DocumentsPage() {
                       margin: "0 0 0.5rem 0",
                       fontSize: "1.2rem",
                       fontWeight: 700,
-                      color: "#0F172A",
+                      color: "var(--text-main)",
                     }}
                   >
                     La corbeille est vide
@@ -2308,11 +2308,11 @@ export default function DocumentsPage() {
                         gap: "0.5rem",
                         fontWeight: 700,
                         fontSize: "0.82rem",
-                        color: "#0F172A",
+                        color: "var(--text-main)",
                         marginBottom: "0.6rem",
                       }}
                     >
-                      <Shield size={16} color="#0F172A" />
+                      <Shield size={16} color="var(--text-main)" />
                       <span>Politique de sécurité & rétention des documents :</span>
                     </div>
                     <ul
@@ -2367,7 +2367,7 @@ export default function DocumentsPage() {
                           background: "#FFF",
                           fontSize: "0.85rem",
                           outline: "none",
-                          color: "#0F172A",
+                          color: "var(--text-main)",
                         }}
                       />
                     </div>
@@ -2381,7 +2381,7 @@ export default function DocumentsPage() {
                         border: "1.5px solid #3B82F6",
                         background: "#FFF",
                         fontSize: "0.85rem",
-                        color: "#0F172A",
+                        color: "var(--text-main)",
                         cursor: "pointer",
                         outline: "none",
                       }}
@@ -2536,7 +2536,7 @@ export default function DocumentsPage() {
                                         style={{
                                           fontWeight: 600,
                                           fontSize: "0.85rem",
-                                          color: "#0F172A",
+                                          color: "var(--text-main)",
                                           maxWidth: "100%",
                                         }}
                                         title={item.name}
@@ -2672,7 +2672,7 @@ export default function DocumentsPage() {
                       border: "1px solid #E2E8F0",
                       borderRadius: "8px",
                       background: "#FFF",
-                      color: "#0F172A",
+                      color: "var(--text-main)",
                       fontWeight: 600,
                       padding: "0.55rem 1.4rem",
                       fontSize: "0.85rem",
@@ -2711,7 +2711,7 @@ export default function DocumentsPage() {
                         border: "1px solid #E2E8F0",
                         borderRadius: "8px",
                         background: "#FFF",
-                        color: "#0F172A",
+                        color: "var(--text-main)",
                         fontWeight: 600,
                         padding: "0.55rem 1.4rem",
                         fontSize: "0.85rem",

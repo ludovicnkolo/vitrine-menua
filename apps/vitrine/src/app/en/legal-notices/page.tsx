@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Legal Notices | Menua Consulting",
-    locale: 'en_US',
+    locale: 'en_GB',
     url: 'https://menuaconsulting.com/en/legal-notices',
   },
 };

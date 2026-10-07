@@ -938,7 +938,7 @@ const RolesPage = () => {
                                   style={{
                                     fontSize: "0.85rem",
                                     fontWeight: isSelected ? 600 : 500,
-                                    color: isSelected ? "#0F172A" : "#475569",
+                                    color: isSelected ? "var(--text-main)" : "#475569",
                                   }}
                                 >
                                   {getPermLabel(val)}
@@ -1117,7 +1117,7 @@ const RolesPage = () => {
                     gap: "0.35rem",
                     fontSize: "0.85rem",
                     padding: "0.5rem 1.25rem",
-                    backgroundColor: "#0F172A",
+                    backgroundColor: "var(--text-main)",
                     color: "#FFFFFF",
                     border: "none",
                     borderRadius: "8px",

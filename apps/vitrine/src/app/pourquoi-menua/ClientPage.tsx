@@ -32,7 +32,7 @@ export default function PourquoiMenuaPage() {
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
             <p className="text-[1.1rem] lg:text-[1.3rem] landscape:text-[1rem] landscape:lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
               {t(
-                "Un partenaire opérationnel pour renforcer vos équipes, fiabiliser vos traitements et sécuriser la continuité de vos activités.",
+                "Un accompagnement opérationnel pour renforcer vos équipes, fiabiliser vos traitements et sécuriser la continuité de vos activités.",
                 "An independent, flexible and specialised approach designed to maintain the delivery of your operations."
               )}
             </p>
@@ -207,7 +207,7 @@ export default function PourquoiMenuaPage() {
                   t("interventions adaptées aux procédures internes du client ;", "delivery aligned with the client's internal procedures;"),
                   t("exécution fiable et continue ;", "reliable and continuous execution;"),
                   t("suivi structuré des livrables ;", "structured monitoring of deliverables;"),
-                  t("mobilisation possible de ressources ou partenaires qualifiés selon les besoins ;", "targeted deployment of qualified resources or partners tailored to project requirements;"),
+                  t("mobilisation possible d'experts qualifiés selon les besoins ;", "targeted deployment of qualified resources or partners tailored to project requirements;"),
                   t("intervention en français et en anglais.", "bilingual delivery in French and English.")
                 ]}
               />

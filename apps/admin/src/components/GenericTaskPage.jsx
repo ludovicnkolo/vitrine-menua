@@ -1608,7 +1608,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     margin: 0,
                     fontSize: "1.35rem",
                     fontWeight: 700,
-                    color: "#0F172A",
+                    color: "var(--text-main)",
                   }}
                 >
                   {mode === "MISSION" ? "Consultation mission :" : "Consultation tâche :"}{" "}
@@ -1701,7 +1701,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 setTaskFile(null);
               }}
               style={{
-                background: "#0F172A",
+                background: "var(--text-main)",
                 border: "none",
                 color: "#FFF",
                 padding: "0.55rem 1.1rem",
@@ -1743,7 +1743,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   fontSize: "0.85rem",
                   letterSpacing: "0.05em",
                   textTransform: "uppercase",
-                  color: "#0F172A",
+                  color: "var(--text-main)",
                   marginBottom: "1.25rem",
                 }}
               >
@@ -1765,7 +1765,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                     Nom :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {consultTask.reference || consultTask.id}
                   </div>
                 </div>
@@ -1782,7 +1782,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                     Objet :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A", wordBreak: "break-word" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)", wordBreak: "break-word" }}>
                     {subj || "-"}
                   </div>
                 </div>
@@ -1799,7 +1799,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                     {mode === "MISSION" ? "Dossier associé :" : "Mission Liée :"}
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {dossierAssociated}
                   </div>
                 </div>
@@ -1817,7 +1817,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                       Dossier tâche :
                     </div>
-                    <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                       {consultTask.dossierTache.name}
                     </div>
                   </div>
@@ -1838,7 +1838,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                       <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                         Dossiers autorisés :
                       </div>
-                      <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                      <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                         {consultTask.authorizedDossiers.map((d) => d.name).join(", ")}
                       </div>
                     </div>
@@ -1860,7 +1860,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 style={{
                   fontWeight: 700,
                   fontSize: "0.95rem",
-                  color: "#0F172A",
+                  color: "var(--text-main)",
                   marginBottom: "0.75rem",
                 }}
               >
@@ -1878,7 +1878,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 <div
                   style={{
                     whiteSpace: "pre-wrap",
-                    color: "#0F172A",
+                    color: "var(--text-main)",
                     fontSize: "0.9rem",
                     fontWeight: 500,
                   }}
@@ -1918,7 +1918,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   fontSize: "0.85rem",
                   letterSpacing: "0.05em",
                   textTransform: "uppercase",
-                  color: "#0F172A",
+                  color: "var(--text-main)",
                   marginBottom: "1.25rem",
                 }}
               >
@@ -1940,7 +1940,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                     Créé par :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {createdByName}{" "}
                     <span style={{ color: "#64748B", fontWeight: 500, fontSize: "0.85rem" }}>
                       ({createdByRole})
@@ -1960,7 +1960,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                     Assigné à :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {assignedToName}{" "}
                     <span style={{ color: "#64748B", fontWeight: 500, fontSize: "0.85rem" }}>
                       ({assignedToRole})
@@ -1980,7 +1980,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                     Relecteur :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {relecteurName}
                   </div>
                 </div>
@@ -1997,7 +1997,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                     Date de création :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {createdAtFormatted}
                   </div>
                 </div>
@@ -2014,7 +2014,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                     Échéance :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {echeanceFormatted}
                   </div>
                 </div>
@@ -2045,7 +2045,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                         cursor: isStatusLocked ? "not-allowed" : "pointer",
                         fontWeight: 600,
                         fontSize: "0.9rem",
-                        color: "#0F172A",
+                        color: "var(--text-main)",
                         minWidth: "150px",
                       }}
                     >
@@ -2145,7 +2145,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   style={{
                     fontWeight: 700,
                     fontSize: "0.85rem",
-                    color: "#0F172A",
+                    color: "var(--text-main)",
                     marginBottom: "0.75rem",
                     display: "flex",
                     alignItems: "center",

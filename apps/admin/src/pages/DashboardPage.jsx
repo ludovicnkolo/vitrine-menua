@@ -181,7 +181,7 @@ const DashboardPage = () => {
             style={{
               fontSize: "1.6rem",
               fontWeight: 700,
-              color: "#0F172A",
+              color: "var(--text-main)",
               margin: "0 0 0.25rem 0",
             }}
           >
@@ -230,7 +230,7 @@ const DashboardPage = () => {
                 border: "none",
                 outline: "none",
                 fontSize: "0.82rem",
-                color: "#0F172A",
+                color: "var(--text-main)",
                 fontWeight: 600,
                 background: "transparent",
                 cursor: "pointer",
@@ -261,7 +261,7 @@ const DashboardPage = () => {
                 border: "none",
                 outline: "none",
                 fontSize: "0.82rem",
-                color: "#0F172A",
+                color: "var(--text-main)",
                 fontWeight: 600,
                 background: "transparent",
                 cursor: "pointer",
@@ -275,7 +275,7 @@ const DashboardPage = () => {
             disabled={loading}
             style={{
               padding: "0.45rem 1.25rem",
-              background: "#0F172A",
+              background: "var(--text-main)",
               color: "#FFF",
               border: "none",
               borderRadius: "8px",
@@ -341,7 +341,7 @@ const DashboardPage = () => {
               !
             </div>
           </div>
-          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "#0F172A", margin: "0.3rem 0 0.15rem 0" }}>
+          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "var(--text-main)", margin: "0.3rem 0 0.15rem 0" }}>
             {alertesCount}
           </div>
           <div style={{ fontSize: "0.74rem", color: "#64748B" }}>
@@ -390,7 +390,7 @@ const DashboardPage = () => {
               &gt;
             </div>
           </div>
-          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "#0F172A", margin: "0.3rem 0 0.15rem 0" }}>
+          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "var(--text-main)", margin: "0.3rem 0 0.15rem 0" }}>
             {delaisCount}
           </div>
           <div style={{ fontSize: "0.74rem", color: "#64748B" }}>
@@ -439,7 +439,7 @@ const DashboardPage = () => {
               ||
             </div>
           </div>
-          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "#0F172A", margin: "0.3rem 0 0.15rem 0" }}>
+          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "var(--text-main)", margin: "0.3rem 0 0.15rem 0" }}>
             {bloqueesCount}
           </div>
           <div style={{ fontSize: "0.74rem", color: "#64748B" }}>
@@ -488,7 +488,7 @@ const DashboardPage = () => {
               ✓
             </div>
           </div>
-          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "#0F172A", margin: "0.3rem 0 0.15rem 0" }}>
+          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "var(--text-main)", margin: "0.3rem 0 0.15rem 0" }}>
             {volumeTotal}
           </div>
           <div style={{ fontSize: "0.74rem", color: "#64748B", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -541,7 +541,7 @@ const DashboardPage = () => {
               @
             </div>
           </div>
-          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "#0F172A", margin: "0.3rem 0 0.15rem 0" }}>
+          <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "var(--text-main)", margin: "0.3rem 0 0.15rem 0" }}>
             {nouveauxDepots}
           </div>
           <div style={{ fontSize: "0.74rem", color: "#64748B" }}>
@@ -582,7 +582,7 @@ const DashboardPage = () => {
             }}
           >
             <div>
-              <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "1rem", fontWeight: 700, color: "#0F172A" }}>
+              <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "1rem", fontWeight: 700, color: "var(--text-main)" }}>
                 {t("dashboard.workloadWeather", "Météo de Charge (En cours)")}
               </h3>
               <p style={{ margin: 0, fontSize: "0.78rem", color: "#64748B" }}>
@@ -598,7 +598,7 @@ const DashboardPage = () => {
                 border: "1.5px solid #3B82F6",
                 background: "#FFF",
                 fontSize: "0.8rem",
-                color: "#0F172A",
+                color: "var(--text-main)",
                 cursor: "pointer",
                 outline: "none",
               }}
@@ -653,7 +653,7 @@ const DashboardPage = () => {
                       {initials}
                     </div>
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
+                      <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--text-main)" }}>
                         {collab.name}
                       </div>
                       <div style={{ fontSize: "0.72rem", color: "#64748B", marginTop: "1px" }}>
@@ -741,7 +741,7 @@ const DashboardPage = () => {
             }}
           >
             <div>
-              <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "1rem", fontWeight: 700, color: "#0F172A" }}>
+              <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "1rem", fontWeight: 700, color: "var(--text-main)" }}>
                 {t("dashboard.productionFunnel", "Entonnoir de Production (Période)")}
               </h3>
               <p style={{ margin: 0, fontSize: "0.78rem", color: "#64748B" }}>
@@ -757,7 +757,7 @@ const DashboardPage = () => {
                 border: "1.5px solid #3B82F6",
                 background: "#FFF",
                 fontSize: "0.8rem",
-                color: "#0F172A",
+                color: "var(--text-main)",
                 cursor: "pointer",
                 outline: "none",
               }}
@@ -771,7 +771,7 @@ const DashboardPage = () => {
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem", flex: 1 }}>
             {/* 1. Messages Traités */}
             <div>
-              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
+              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--text-main)" }}>
                 {t("dashboard.processedMessages", "Messages Traités")}
               </div>
               <div style={{ fontSize: "0.72rem", color: "#64748B", marginBottom: "0.35rem" }}>
@@ -817,7 +817,7 @@ const DashboardPage = () => {
 
             {/* 2. Missions Démarrées */}
             <div>
-              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
+              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--text-main)" }}>
                 {t("dashboard.startedMissions", "Missions Démarrées")}
               </div>
               <div style={{ fontSize: "0.72rem", color: "#64748B", marginBottom: "0.35rem" }}>
@@ -863,7 +863,7 @@ const DashboardPage = () => {
 
             {/* 3. Tâches Terminées */}
             <div>
-              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
+              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--text-main)" }}>
                 {t("dashboard.completedTasks", "Tâches Terminées")}
               </div>
               <div style={{ fontSize: "0.72rem", color: "#64748B", marginBottom: "0.35rem" }}>
@@ -909,7 +909,7 @@ const DashboardPage = () => {
 
             {/* 4. Dossiers Clôturés */}
             <div>
-              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#0F172A" }}>
+              <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--text-main)" }}>
                 {t("dashboard.closedDossiers", "Dossiers Clôturés")}
               </div>
               <div style={{ fontSize: "0.72rem", color: "#64748B", marginBottom: "0.35rem" }}>

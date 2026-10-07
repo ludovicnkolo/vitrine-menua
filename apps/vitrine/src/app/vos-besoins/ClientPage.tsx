@@ -366,8 +366,8 @@ export default function VosBesoinsPage() {
         imgFallback="/img/besoins-cgp.webp"
         title={t("Support aux acteurs de l’assurance et du courtage", "Support for insurance and brokerage firms")}
         intro={formatBrand(t(
-          "MENUA CONSULTING accompagne les courtiers, agents généraux et acteurs de l’assurance dans le traitement administratif, le suivi de gestion et le contrôle documentaire de leurs dossiers. La souscription, le conseil, la tarification et les engagements contractuels demeurent sous l’entière responsabilité des professionnels habilités.",
-          "MENUA CONSULTING supports brokers, general agents and insurance entities in the administrative processing, management tracking and documentary verification of their files. Policy underwriting, advice, rating and contractual commitments remain under the full responsibility of authorized professionals."
+          "MENUA CONSULTING accompagne les courtiers, agents généraux et acteurs de l’assurance en prenant en charge les opérations de Back & Middle office, la gestion contractuelle et le contrôle documentaire de leurs dossiers. La souscription, le conseil, la tarification et les engagements contractuels demeurent sous l’entière responsabilité des professionnels habilités.",
+          "MENUA CONSULTING supports brokers, general agents and insurance entities by handling Back & Middle office operations, contractual management and documentary verification of their files. Policy underwriting, advice, rating and contractual commitments remain under the full responsibility of authorized professionals."
         ))}
         items={{
           label: t("Besoins couverts :", "Our support includes:"),
@@ -377,7 +377,7 @@ export default function VosBesoinsPage() {
             t("mise à jour des contrats et avenants ;", "contract and endorsement record updates;"),
             t("traitement administratif des actes de gestion de contrats ;", "administrative processing of contract management operations;"),
             t("préparation et transmission des pièces pour les règlements et sinistres ;", "preparation and transmission of files for claim and settlement processing;"),
-            t("relances administratives des assurés ou partenaires ;", "administrative reminders to policyholders or partners;"),
+            t("relances administratives des assurés ;", "administrative reminders to policyholders;"),
             t("rapprochements de bordereaux de commissions ou primes ;", "commission and premium bordereau reconciliations;"),
             t("archivage et organisation documentaire des portefeuilles.", "document archiving and portfolio organisation.")
           ]

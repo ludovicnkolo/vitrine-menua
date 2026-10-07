@@ -73,7 +73,7 @@ const SystemSpacePage = ({ userRole }) => {
                 >
                   {t("systemSpace.title", "Configuration de la Plateforme")}
                 </h1>
-                <p style={{ color: "#64748B", margin: 0, fontSize: "0.85rem" }}>
+                <p style={{ color: "var(--text-muted)", margin: 0, fontSize: "0.85rem" }}>
                   {t("systemSpace.subtitle", "Personnalisez l'environnement de travail, les préférences d'affichage et la localisation")}
                 </p>
               </div>
@@ -390,7 +390,7 @@ const SystemSpacePage = ({ userRole }) => {
                     type="button"
                     onClick={handleSavePreferences}
                     style={{
-                      background: "#0F172A",
+                      background: "var(--text-main)",
                       color: "#FFF",
                       border: "none",
                       borderRadius: "8px",

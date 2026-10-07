@@ -212,14 +212,19 @@ class VerifaliaService {
         const result = entriesData.data[0];
 
         // Verifalia Classifications: Deliverable, Undeliverable, Risky, Unknown
+        // NOTE V3: "Undeliverable" uniquement est un rejet ferme (boîte inexistante / erreur SMTP 550).
+        // "Risky" (catch-all, serveur accepting-all) n'est PAS rejeté : l'adresse peut être valide
+        // même si Verifalia ne peut pas le confirmer. On la traite en DEFERRED pour le cron.
+        // Les adresses jetables (disposable) restent INVALID même si deliverable.
         if (
           result.classification === "Undeliverable" ||
-          result.classification === "Risky" ||
           result.isDisposableEmailAddress
         ) {
           return {
             status: "INVALID",
-            reason: "Email invalide, risqué (catch-all) ou jetable",
+            reason: result.classification === "Undeliverable"
+              ? "Email introuvable ou boîte inexistante"
+              : "Adresse e-mail jetable non acceptée",
           };
         }
 
@@ -230,6 +235,7 @@ class VerifaliaService {
           return { status: "VALID" };
         }
 
+        // Risky (catch-all), Unknown, ou autre → différer au cron pour retraitement
         return {
           status: "DEFERRED",
           jobId: job.id,

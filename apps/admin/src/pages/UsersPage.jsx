@@ -266,6 +266,11 @@ const UsersPage = ({ forceTab }) => {
     status: "Invitation envoyée",
     langues: "",
     profile: "",
+    // Champs V3 — Organisation & Fiche interne
+    poleActivite: "",
+    matricule: "",
+    emailPro: "",
+    fonction: "",
   });
   const [newClient, setNewClient] = useState({
     name: "",
@@ -382,6 +387,11 @@ const UsersPage = ({ forceTab }) => {
           status: "Invitation envoyée",
           langues: "",
           profile: "",
+          // Champs V3 — Organisation & Fiche interne
+          poleActivite: "",
+          matricule: "",
+          emailPro: "",
+          fonction: "",
         });
       },
       "Erreur lors de la création",
@@ -495,9 +505,15 @@ const UsersPage = ({ forceTab }) => {
         experienceCle: editUser.experienceCle,
         langues: editUser.langues,
         formations: editUser.formations,
+        // Champs V3 — Organisation & Fiche interne
+        poleActivite: editUser.poleActivite || null,
+        matricule: editUser.matricule || null,
+        emailPro: editUser.emailPro || null,
+        fonction: editUser.fonction || null,
       },
       () => setEditUser(null),
       "Erreur lors de la modification",
+    );
     );
   };
 
@@ -1225,7 +1241,7 @@ const UsersPage = ({ forceTab }) => {
                     gap: "0.35rem",
                     fontSize: "0.85rem",
                     padding: "0.5rem 1.25rem",
-                    backgroundColor: "#0F172A",
+                    backgroundColor: "var(--text-main)",
                     color: "#FFFFFF",
                     border: "none",
                     borderRadius: "8px",
@@ -2137,7 +2153,7 @@ const UsersPage = ({ forceTab }) => {
                   gap: "0.35rem",
                   fontSize: "0.85rem",
                   padding: "0.5rem 1.25rem",
-                  backgroundColor: "#0F172A",
+                  backgroundColor: "var(--text-main)",
                   color: "#FFFFFF",
                   border: "none",
                   borderRadius: "8px",

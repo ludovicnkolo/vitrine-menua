@@ -1540,7 +1540,7 @@ const DossiersPage = () => {
                     margin: 0,
                     fontSize: "1.35rem",
                     fontWeight: 700,
-                    color: "#0F172A",
+                    color: "var(--text-main)",
                   }}
                 >
                   Consultation du dossier : {consultDossier.reference || consultDossier.id}
@@ -1680,7 +1680,7 @@ const DossiersPage = () => {
                 setPendingStatus("");
               }}
               style={{
-                background: "#0F172A",
+                background: "var(--text-main)",
                 border: "none",
                 color: "#FFF",
                 padding: "0.55rem 1.1rem",
@@ -1722,7 +1722,7 @@ const DossiersPage = () => {
                   fontSize: "0.85rem",
                   letterSpacing: "0.05em",
                   textTransform: "uppercase",
-                  color: "#0F172A",
+                  color: "var(--text-main)",
                   marginBottom: "1.25rem",
                 }}
               >
@@ -1742,7 +1742,7 @@ const DossiersPage = () => {
                   <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                     Nom du dossier :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A", wordBreak: "break-word" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)", wordBreak: "break-word" }}>
                     {consultDossier.name || "-"}
                   </div>
                 </div>
@@ -1759,7 +1759,7 @@ const DossiersPage = () => {
                   <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                     Origine :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {consultDossier.origin || "GENERAL"}
                   </div>
                 </div>
@@ -1776,7 +1776,7 @@ const DossiersPage = () => {
                   <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                     Propriétaire :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {ownerName}
                   </div>
                 </div>
@@ -1799,7 +1799,7 @@ const DossiersPage = () => {
                   fontSize: "0.85rem",
                   letterSpacing: "0.05em",
                   textTransform: "uppercase",
-                  color: "#0F172A",
+                  color: "var(--text-main)",
                   marginBottom: "1.25rem",
                 }}
               >
@@ -1836,7 +1836,7 @@ const DossiersPage = () => {
                         background: "#FFF",
                         fontSize: "0.9rem",
                         fontWeight: 500,
-                        color: "#0F172A",
+                        color: "var(--text-main)",
                         marginTop: "0.25rem",
                       }}
                     >
@@ -1854,7 +1854,7 @@ const DossiersPage = () => {
                         ))}
                     </select>
                   ) : (
-                    <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                    <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                       {traitantName}
                     </div>
                   )}
@@ -1872,7 +1872,7 @@ const DossiersPage = () => {
                   <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                     Créé par :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {creatorName}
                   </div>
                 </div>
@@ -1889,7 +1889,7 @@ const DossiersPage = () => {
                   <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
                     Date de création :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {createdAtFormatted}
                   </div>
                 </div>
@@ -1920,7 +1920,7 @@ const DossiersPage = () => {
                         cursor: isStatusLocked ? "not-allowed" : "pointer",
                         fontWeight: 600,
                         fontSize: "0.9rem",
-                        color: "#0F172A",
+                        color: "var(--text-main)",
                         minWidth: "150px",
                       }}
                     >
@@ -1983,7 +1983,7 @@ const DossiersPage = () => {
                 style={{
                   fontWeight: 700,
                   fontSize: "0.95rem",
-                  color: "#0F172A",
+                  color: "var(--text-main)",
                   marginBottom: "0.75rem",
                 }}
               >
@@ -2025,7 +2025,7 @@ const DossiersPage = () => {
                   <div
                     style={{
                       whiteSpace: "pre-wrap",
-                      color: "#0F172A",
+                      color: "var(--text-main)",
                       fontSize: "0.9rem",
                       fontWeight: 500,
                     }}
@@ -2059,7 +2059,7 @@ const DossiersPage = () => {
                 style={{
                   fontWeight: 700,
                   fontSize: "0.95rem",
-                  color: "#0F172A",
+                  color: "var(--text-main)",
                   marginBottom: "0.2rem",
                 }}
               >
@@ -2106,7 +2106,7 @@ const DossiersPage = () => {
                           marginBottom: "0.35rem",
                         }}
                       >
-                        <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0F172A" }}>
+                        <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-main)" }}>
                           Mission {task.reference || task.id}
                         </span>
                         {renderDossierPillBadge(task.status)}
@@ -2179,7 +2179,7 @@ const DossiersPage = () => {
                   style={{
                     fontWeight: 700,
                     fontSize: "0.85rem",
-                    color: "#0F172A",
+                    color: "var(--text-main)",
                     marginBottom: "0.75rem",
                     display: "flex",
                     alignItems: "center",

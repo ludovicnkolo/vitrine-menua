@@ -405,7 +405,7 @@ export default function NousConnaitrePage() {
                   </p>
                   <p>
                     {t(
-                      "Pour répondre à des besoins spécifiques, le cabinet peut également s’appuyer sur un réseau de partenaires qualifiés, notamment sur des sujets liés aux métiers de la comptabilité, de la data, du reporting et du pilotage de gestion.",
+                      "Pour répondre à des besoins spécifiques, le cabinet peut également s’appuyer sur un réseau d'experts qualifiés, notamment sur des sujets liés aux métiers de la comptabilité, de la data, du reporting et du pilotage de gestion.",
                       "Depending on the scope, the firm can draw on relevant capabilities in accounting, data, reporting and performance management."
                     )}
                   </p>

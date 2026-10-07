@@ -61,7 +61,7 @@ const MessageDetailCard = ({ label, value, children, sublabel }) => (
       style={{
         fontSize: "0.88rem",
         fontWeight: 600,
-        color: "#0F172A",
+        color: "var(--text-main)",
         wordBreak: "break-word",
       }}
     >
@@ -1002,7 +1002,7 @@ const InboxPage = ({ userRole }) => {
           background: isDisabled ? "#F3F4F6" : "#FFF",
           fontWeight: 700,
           fontSize: "0.85rem",
-          color: statusColor !== "#CBD5E1" ? statusColor : "#0F172A",
+          color: statusColor !== "#CBD5E1" ? statusColor : "var(--text-main)",
           cursor: isDisabled ? "not-allowed" : "pointer",
         }}
       >
@@ -1010,7 +1010,7 @@ const InboxPage = ({ userRole }) => {
           <option value="" disabled style={{ color: "#F59E0B" }}>● Sélectionnez une étiquette...</option>
         ) : (
           options.map((opt) => (
-            <option key={opt.value} value={opt.value} style={{ color: "#0F172A" }}>
+            <option key={opt.value} value={opt.value} style={{ color: "var(--text-main)" }}>
               ● {opt.label}
             </option>
           ))
@@ -1635,7 +1635,7 @@ const InboxPage = ({ userRole }) => {
                         margin: 0,
                         fontSize: "1.15rem",
                         fontWeight: 800,
-                        color: "#0F172A",
+                        color: "var(--text-main)",
                         letterSpacing: "0.02em",
                       }}
                     >
@@ -1737,7 +1737,7 @@ const InboxPage = ({ userRole }) => {
                     style={{
                       padding: "0.55rem 1.4rem",
                       borderRadius: "6px",
-                      background: "#0F172A",
+                      background: "var(--text-main)",
                       color: "#FFF",
                       fontWeight: 600,
                       fontSize: "0.85rem",
@@ -1910,7 +1910,7 @@ const InboxPage = ({ userRole }) => {
                           fontSize: "0.8rem",
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
-                          color: "#0F172A",
+                          color: "var(--text-main)",
                           marginBottom: "1rem",
                         }}
                       >
@@ -1996,7 +1996,7 @@ const InboxPage = ({ userRole }) => {
                           fontSize: "0.8rem",
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
-                          color: "#0F172A",
+                          color: "var(--text-main)",
                           marginBottom: "1rem",
                         }}
                       >
@@ -2063,7 +2063,7 @@ const InboxPage = ({ userRole }) => {
                               color:
                                 formatPriority(pendingChanges.priorite !== undefined ? pendingChanges.priorite : processMsg.priorite) === "Urgent"
                                   ? "#EF4444"
-                                  : "#0F172A",
+                                  : "var(--text-main)",
                               cursor: "pointer",
                             }}
                           >
@@ -2102,7 +2102,7 @@ const InboxPage = ({ userRole }) => {
                           fontSize: "0.8rem",
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
-                          color: "#0F172A",
+                          color: "var(--text-main)",
                         }}
                       >
                         Description / Contenu
@@ -2134,7 +2134,7 @@ const InboxPage = ({ userRole }) => {
                           minHeight: "220px",
                         }}
                       >
-                        <div style={{ fontSize: "0.95rem", color: "#0F172A", lineHeight: "1.6", whiteSpace: "pre-wrap" }}>
+                        <div style={{ fontSize: "0.95rem", color: "var(--text-main)", lineHeight: "1.6", whiteSpace: "pre-wrap" }}>
                           {extractBlockFromHtml(processMsg.bodyHtml, "Description du besoin") ||
                            processMsg.description ||
                            processMsg.bodyText ||
@@ -2177,7 +2177,7 @@ const InboxPage = ({ userRole }) => {
                           fontSize: "0.8rem",
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
-                          color: "#0F172A",
+                          color: "var(--text-main)",
                           marginBottom: "1rem",
                         }}
                       >
@@ -2278,7 +2278,7 @@ const InboxPage = ({ userRole }) => {
                           fontSize: "0.8rem",
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
-                          color: "#0F172A",
+                          color: "var(--text-main)",
                           marginBottom: "1rem",
                         }}
                       >
@@ -2295,7 +2295,7 @@ const InboxPage = ({ userRole }) => {
                         <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#2563EB", marginBottom: "0.5rem" }}>
                           Objet : {processMsg.objet || "Demande de collaboration"}
                         </div>
-                        <div style={{ fontSize: "0.9rem", color: "#0F172A", lineHeight: "1.5", whiteSpace: "pre-wrap" }}>
+                        <div style={{ fontSize: "0.9rem", color: "var(--text-main)", lineHeight: "1.5", whiteSpace: "pre-wrap" }}>
                           {extractBlockFromHtml(processMsg.bodyHtml, "Message / Motivations") ||
                            processMsg.description ||
                            processMsg.bodyText ||
@@ -2322,7 +2322,7 @@ const InboxPage = ({ userRole }) => {
                           fontSize: "0.8rem",
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
-                          color: "#0F172A",
+                          color: "var(--text-main)",
                           marginBottom: "1rem",
                         }}
                       >
@@ -2458,7 +2458,7 @@ const InboxPage = ({ userRole }) => {
                           fontSize: "0.8rem",
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
-                          color: "#0F172A",
+                          color: "var(--text-main)",
                           marginBottom: "1rem",
                         }}
                       >
@@ -2618,7 +2618,7 @@ const InboxPage = ({ userRole }) => {
                           fontSize: "0.8rem",
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
-                          color: "#0F172A",
+                          color: "var(--text-main)",
                         }}
                       >
                         Fil de conversation
@@ -2661,7 +2661,7 @@ const InboxPage = ({ userRole }) => {
                                   style={{
                                     alignSelf: isMe ? "flex-end" : "flex-start",
                                     background: isMe ? "#1E3A8A" : "#F1F5F9",
-                                    color: isMe ? "#FFF" : "#0F172A",
+                                    color: isMe ? "#FFF" : "var(--text-main)",
                                     padding: "0.75rem 1rem",
                                     borderRadius: "8px",
                                     border: isMe ? "none" : "1px solid var(--border)",
@@ -2680,7 +2680,7 @@ const InboxPage = ({ userRole }) => {
                             })}
                           </div>
                         ) : (
-                          <div style={{ fontSize: "0.95rem", color: "#0F172A", lineHeight: "1.6", whiteSpace: "pre-wrap" }}>
+                          <div style={{ fontSize: "0.95rem", color: "var(--text-main)", lineHeight: "1.6", whiteSpace: "pre-wrap" }}>
                             {processMsg.description || processMsg.bodyText || (processMsg.bodyHtml && !processMsg.bodyHtml.includes("<") ? processMsg.bodyHtml : null) || "Bonjour,\n\nMessage lié à ce fil."}
                           </div>
                         )}

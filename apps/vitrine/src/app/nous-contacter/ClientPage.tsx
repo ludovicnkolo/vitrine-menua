@@ -13,7 +13,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 export default function NousContacter() {
   const { t, lang } = useLanguage();
-  const [clientType, setClientType] = useState<"company" | "individual">("company");
+  // V3 — Plus de bifurcation Particulier/Société sur le formulaire Contact public
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
@@ -141,48 +141,29 @@ export default function NousContacter() {
             
             <form className="space-y-8" onSubmit={handleSubmit}>
               
-              <div>
-                <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Vous êtes", "You are")}</p>
-                <div className="flex flex-col sm:flex-row gap-8 sm:gap-24">
-                  <label htmlFor="clientTypeCompany" className="flex items-center gap-3 cursor-pointer group">
-                    <input 
-                      type="radio" 
-                      id="clientTypeCompany"
-                      name="clientType" 
-                      value="company" 
-                      checked={clientType === "company"} 
-                      onChange={() => setClientType("company")}
-                      className="accent-[#141824] w-5 h-5 cursor-pointer"
-                    />
-                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Société", "Company")}</span>
-                  </label>
-                  <label htmlFor="clientTypeIndividual" className="flex items-center gap-3 cursor-pointer group">
-                    <input 
-                      type="radio" 
-                      id="clientTypeIndividual"
-                      name="clientType" 
-                      value="individual" 
-                      checked={clientType === "individual"} 
-                      onChange={() => setClientType("individual")}
-                      className="accent-[#141824] w-5 h-5 cursor-pointer"
-                    />
-                    <span className="text-[1.05rem] text-[#141824] group-hover:text-[#6e7891] transition-colors">{t("Particulier", "Individual")}</span>
-                  </label>
-                </div>
-              </div>
-
+              {/* V3 — Coordonnées : formulaire simplifié, sans bifurcation Particulier/Société */}
               <div>
                 <p className="text-[#141824] text-[0.85rem] font-bold tracking-widest uppercase mb-6 border-b border-[#e8e1d7] pb-3">{t("Vos coordonnées", "Your contact details")}</p>
                 <ContactInfoFields emailError={emailError} />
 
-                {clientType === "company" && (
-                  <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
-                    <div>
-                      <label htmlFor="company" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">{t("Raison sociale", "Company")} <span className="text-red-500">*</span></label>
-                      <input id="company" type="text" name="company" placeholder={t("Nom de votre société", "Your company name")} className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]" required />
-                    </div>
+                {/* Champ Organisation optionnel — permet aux sociétés de se présenter sans forcer la catégorie */}
+                <div className="grid grid-cols-1 gap-8 mt-6">
+                  <div>
+                    <label htmlFor="company" className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-3 block">
+                      {t("Organisation / Société", "Organisation / Company")}
+                      <span className="text-[#a0aabf] font-normal ml-2 text-[0.78rem] normal-case tracking-normal">
+                        {t("(facultatif)", "(optional)")}
+                      </span>
+                    </label>
+                    <input
+                      id="company"
+                      type="text"
+                      name="company"
+                      placeholder={t("Nom de votre organisation ou société, si applicable", "Your organisation or company name, if applicable")}
+                      className="w-full border-b border-[#d1d5db] bg-transparent px-0 py-3 text-[1.05rem] text-[#141824] focus:outline-none focus:border-[#141824] transition-colors placeholder:text-[#a0aabf]"
+                    />
                   </div>
-                )}
+                </div>
               </div>
 
               <div>

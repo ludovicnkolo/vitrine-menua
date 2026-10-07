@@ -38,11 +38,22 @@ export default function AuditPage() {
       const res = await fetch(getSafeApiUrl(`/api/crm/audit`), {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error("Erreur de récupération de l'audit");
+      if (res.status === 403) {
+        setError("Accès refusé : droits insuffisants pour consulter le journal d'audit. (Super-administrateur ou Administrateur technique requis)");
+        setLogs([]);
+        return;
+      }
+      if (!res.ok) {
+        const errorBody = await res.json().catch(() => ({}));
+        throw new Error(errorBody.error || `Erreur HTTP ${res.status} lors de la récupération de l'audit`);
+      }
       const data = await res.json();
-      setLogs(Array.isArray(data) ? data : []);
+      const logsArray = Array.isArray(data) ? data : [];
+      setLogs(logsArray);
+      // Pas d'erreur si la liste est vide — c'est un état légitime
     } catch (err) {
       setError(err.message);
+      setLogs([]);
     } finally {
       setLoading(false);
     }
@@ -252,7 +263,7 @@ export default function AuditPage() {
               background: "#FFF",
               fontSize: "0.85rem",
               outline: "none",
-              color: "#0F172A",
+              color: "var(--text-main)",
             }}
           />
         </div>
@@ -270,7 +281,7 @@ export default function AuditPage() {
             border: "1.5px solid #3B82F6",
             background: "#FFF",
             fontSize: "0.85rem",
-            color: "#0F172A",
+            color: "var(--text-main)",
             cursor: "pointer",
             outline: "none",
           }}
@@ -296,7 +307,7 @@ export default function AuditPage() {
             border: "1.5px solid #3B82F6",
             background: "#FFF",
             fontSize: "0.85rem",
-            color: "#0F172A",
+            color: "var(--text-main)",
             cursor: "pointer",
             outline: "none",
           }}
@@ -321,7 +332,7 @@ export default function AuditPage() {
             borderRadius: "8px",
             border: dateFilterActive ? "1.5px solid #2563EB" : "1.5px solid #3B82F6",
             background: dateFilterActive ? "#EFF6FF" : "#FFF",
-            color: dateFilterActive ? "#1D4ED8" : "#0F172A",
+            color: dateFilterActive ? "#1D4ED8" : "var(--text-main)",
             fontSize: "0.85rem",
             display: "inline-flex",
             alignItems: "center",
@@ -342,7 +353,7 @@ export default function AuditPage() {
             padding: "0.6rem 1.25rem",
             borderRadius: "8px",
             border: "none",
-            background: "#0F172A",
+            background: "var(--text-main)",
             color: "#FFF",
             fontSize: "0.85rem",
             fontWeight: 600,
@@ -534,7 +545,7 @@ export default function AuditPage() {
                         <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
                           <Clock size={15} style={{ color: "#94A3B8", marginTop: "2px", flexShrink: 0 }} />
                           <div style={{ whiteSpace: "nowrap" }}>
-                            <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A", whiteSpace: "nowrap" }}>
+                            <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "var(--text-main)", whiteSpace: "nowrap" }}>
                               {dateStr}
                             </div>
                             <div style={{ fontSize: "0.78rem", color: "#64748B", whiteSpace: "nowrap" }}>
@@ -565,7 +576,7 @@ export default function AuditPage() {
                             {userInitial}
                           </div>
                           <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
-                            <div className="truncate-name" style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A", maxWidth: "100%" }} title={userName}>
+                            <div className="truncate-name" style={{ fontWeight: 600, fontSize: "0.85rem", color: "var(--text-main)", maxWidth: "100%" }} title={userName}>
                               {userName}
                             </div>
                             <div className="truncate-name" style={{ fontSize: "0.75rem", color: "#64748B", maxWidth: "100%" }} title={userRole}>
@@ -598,7 +609,7 @@ export default function AuditPage() {
                           <FileText size={15} style={{ color: "#94A3B8", marginTop: "2px", flexShrink: 0 }} />
                           <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
                             {targetLabel && (
-                              <div className="truncate-name" style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A", maxWidth: "100%" }} title={targetLabel}>
+                              <div className="truncate-name" style={{ fontWeight: 600, fontSize: "0.85rem", color: "var(--text-main)", maxWidth: "100%" }} title={targetLabel}>
                                 {targetLabel}
                               </div>
                             )}

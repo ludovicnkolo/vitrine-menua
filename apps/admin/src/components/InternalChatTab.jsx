@@ -152,7 +152,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
             alignItems: "center",
           }}
         >
-          <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700, color: "#0F172A" }}>
+          <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700, color: "var(--text-main)" }}>
             Interne
           </h3>
           <button
@@ -212,12 +212,12 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                   border: "none",
                   cursor: "pointer",
                   display: "flex",
-                  color: "#0F172A",
+                  color: "var(--text-main)",
                 }}
               >
                 <ArrowLeft size={16} />
               </button>
-              <h4 style={{ margin: 0, color: "#0F172A", fontSize: "0.95rem" }}>À qui ?</h4>
+              <h4 style={{ margin: 0, color: "var(--text-main)", fontSize: "0.95rem" }}>À qui ?</h4>
             </div>
             {users
               .filter(
@@ -262,7 +262,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                     {u.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "#0F172A" }}>
+                    <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--text-main)" }}>
                       {u.name}
                     </div>
                     <div
@@ -361,7 +361,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                           <span
                             style={{
                               fontWeight: isSelected ? 700 : 600,
-                              color: "#0F172A",
+                              color: "var(--text-main)",
                               fontSize: "0.9rem",
                               whiteSpace: "nowrap",
                               overflow: "hidden",
@@ -463,7 +463,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                 {selectedContact.name.charAt(0).toUpperCase()}
               </div>
               <div>
-                <h3 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "#0F172A" }}>
+                <h3 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
                   {selectedContact.name}
                 </h3>
                 <span
@@ -497,7 +497,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                   boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
                 }}
               >
-                <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0F172A", marginBottom: "0.35rem" }}>
+                <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-main)", marginBottom: "0.35rem" }}>
                   Vos messages internes
                 </div>
                 <div style={{ fontSize: "0.8rem", color: "#64748B" }}>
@@ -522,7 +522,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                         padding: "0.75rem 1rem",
                         borderRadius: "8px",
                         background: isMine ? "#1E3A8A" : "#F1F5F9",
-                        color: isMine ? "#FFF" : "#0F172A",
+                        color: isMine ? "#FFF" : "var(--text-main)",
                         boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
                         border: isMine ? "none" : "1px solid #E2E8F0",
                       }}

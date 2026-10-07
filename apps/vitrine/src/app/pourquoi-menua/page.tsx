@@ -3,7 +3,7 @@ import ClientPage from './ClientPage';
 
 export const metadata: Metadata = {
   title: "Pourquoi Menua Consulting ?",
-  description: "Un partenaire opérationnel fiable pour renforcer vos équipes et sécuriser la continuité de vos activités.",
+  description: "Un accompagnement opérationnel fiable pour renforcer vos équipes et sécuriser la continuité de vos activités.",
   alternates: {
     canonical: 'https://menuaconsulting.com/fr/pourquoi-menua',
     languages: {

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Your Needs | Menua Consulting",
     description: "Tailored operational support for finance, compliance, accounting and wealth management teams.",
-    locale: 'en_US',
+    locale: 'en_GB',
     url: 'https://menuaconsulting.com/en/your-needs',
   },
   twitter: {

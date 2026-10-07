@@ -24,7 +24,7 @@ const TabsNavigation = ({ tabs, activeTab, onTabChange }) => {
             key={tabItem.id}
             onClick={() => onTabChange(tabItem.id)}
             style={{
-              background: activeTab === tabItem.id ? "#0F172A" : "#FFF",
+              background: activeTab === tabItem.id ? "var(--text-main)" : "#FFF",
               color: activeTab === tabItem.id ? "#FFF" : "#334155",
               border:
                 activeTab === tabItem.id

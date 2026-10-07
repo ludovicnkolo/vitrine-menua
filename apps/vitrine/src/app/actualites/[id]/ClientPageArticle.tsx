@@ -30,13 +30,15 @@ interface Publication {
   createdAt?: string;
 }
 
-export default function ClientPageArticle({ id }: { id: string }) {
+export default function ClientPageArticle({ id, initialData }: { id: string, initialData?: Publication | null }) {
   const { lang, t } = useLanguage();
-  const [publication, setPublication] = useState<Publication | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [publication, setPublication] = useState<Publication | null>(initialData || null);
+  const [loading, setLoading] = useState(!initialData);
   const [error, setError] = useState('');
 
   useEffect(() => {
+    if (initialData) return; // Skip fetch if SSR provided data
+    
     const fetchArticle = async () => {
       try {
         const params = new URLSearchParams(window.location.search);
@@ -61,7 +63,7 @@ export default function ClientPageArticle({ id }: { id: string }) {
       }
     };
     fetchArticle();
-  }, [id]);
+  }, [id, initialData]);
 
   const isEN = lang === 'EN';
   const displayTitle = publication 

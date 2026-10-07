@@ -589,7 +589,7 @@ const CMSPage = () => {
                 style={{
                   fontSize: "1.5rem",
                   fontWeight: 700,
-                  color: "#0F172A",
+                  color: "var(--text-main)",
                   margin: "0 0 0.25rem 0",
                 }}
               >
@@ -604,7 +604,7 @@ const CMSPage = () => {
                 type="button"
                 onClick={() => openModal()}
                 style={{
-                  background: "#0F172A",
+                  background: "var(--text-main)",
                   color: "#FFF",
                   border: "none",
                   borderRadius: "8px",
@@ -660,7 +660,7 @@ const CMSPage = () => {
                   border: "1px solid #E2E8F0",
                   fontSize: "0.85rem",
                   outline: "none",
-                  color: "#0F172A",
+                  color: "var(--text-main)",
                 }}
               />
             </div>
@@ -674,7 +674,7 @@ const CMSPage = () => {
                 border: "1.5px solid #3B82F6",
                 background: "#FFF",
                 fontSize: "0.85rem",
-                color: "#0F172A",
+                color: "var(--text-main)",
                 cursor: "pointer",
                 outline: "none",
               }}
@@ -693,7 +693,7 @@ const CMSPage = () => {
                 border: "1.5px solid #3B82F6",
                 background: "#FFF",
                 fontSize: "0.85rem",
-                color: "#0F172A",
+                color: "var(--text-main)",
                 cursor: "pointer",
                 outline: "none",
               }}
@@ -890,7 +890,7 @@ const CMSPage = () => {
                               <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
                                 <div
                                   className="truncate-name"
-                                  style={{ fontWeight: 700, fontSize: "0.88rem", color: "#0F172A", maxWidth: "100%" }}
+                                  style={{ fontWeight: 700, fontSize: "0.88rem", color: "var(--text-main)", maxWidth: "100%" }}
                                   title={pub.title}
                                 >
                                   {pub.title}
@@ -927,7 +927,7 @@ const CMSPage = () => {
                               </div>
                               <span
                                 className="truncate-name"
-                                style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A", maxWidth: "100%" }}
+                                style={{ fontWeight: 600, fontSize: "0.85rem", color: "var(--text-main)", maxWidth: "100%" }}
                                 title={authorName}
                               >
                                 {authorName}
@@ -958,7 +958,7 @@ const CMSPage = () => {
 
                           {/* Date de publication */}
                           <td className="table-date-cell" style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle", width: "190px" }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#0F172A", fontSize: "0.85rem", whiteSpace: "nowrap" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--text-main)", fontSize: "0.85rem", whiteSpace: "nowrap" }}>
                               <Calendar size={15} style={{ color: "#94A3B8", flexShrink: 0 }} />
                               <span style={{ whiteSpace: "nowrap" }}>{dateStr} {timeStr}</span>
                             </div>
@@ -1083,7 +1083,7 @@ const CMSPage = () => {
               style={{
                 fontSize: "1.5rem",
                 fontWeight: 700,
-                color: "#0F172A",
+                color: "var(--text-main)",
                 margin: "0 0 0.25rem 0",
               }}
             >
@@ -1120,7 +1120,7 @@ const CMSPage = () => {
                     boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
                   }}
                 >
-                  <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {t("cms.contactCardTitle", "Formulaire de Contact Public")}
                   </h3>
                   <p style={{ margin: "0 0 1rem 0", fontSize: "0.78rem", color: "#64748B" }}>
@@ -1171,7 +1171,7 @@ const CMSPage = () => {
                     boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
                   }}
                 >
-                  <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {t("cms.recruitmentCardTitle", "Formulaire Recrutement (Carrières)")}
                   </h3>
                   <p style={{ margin: "0 0 1rem 0", fontSize: "0.78rem", color: "#64748B" }}>
@@ -1225,7 +1225,7 @@ const CMSPage = () => {
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.4rem" }}>
                   <span style={{ fontSize: "1rem" }}>🛑</span>
-                  <h3 style={{ margin: 0, fontSize: "0.95rem", fontWeight: 700, color: "#0F172A" }}>
+                  <h3 style={{ margin: 0, fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                     {t("cms.antiSpamTitle", "Adresses Email bloquées (Protection Anti-Spam)")}
                   </h3>
                 </div>
@@ -1284,7 +1284,7 @@ const CMSPage = () => {
                     }}
                     style={{
                       padding: "0.65rem 1.25rem",
-                      background: "#0F172A",
+                      background: "var(--text-main)",
                       color: "#FFF",
                       border: "none",
                       borderRadius: "8px",
@@ -1364,7 +1364,7 @@ const CMSPage = () => {
                   onClick={saveFormSettings}
                   style={{
                     padding: "0.65rem 1.5rem",
-                    background: "#0F172A",
+                    background: "var(--text-main)",
                     color: "#FFF",
                     border: "none",
                     borderRadius: "8px",
@@ -1424,7 +1424,7 @@ const CMSPage = () => {
               }}
             >
               <div style={{ display: "flex", alignItems: "baseline", gap: "0.75rem" }}>
-                <h2 style={{ margin: 0, fontSize: "1.2rem", fontWeight: 700, color: "#0F172A" }}>
+                <h2 style={{ margin: 0, fontSize: "1.2rem", fontWeight: 700, color: "var(--text-main)" }}>
                   {editingPub ? "Modifier la publication" : "Créer une publication"}
                 </h2>
                 <span style={{ fontSize: "0.82rem", color: "#64748B" }}>
@@ -1680,7 +1680,7 @@ const CMSPage = () => {
                           }}
                         >
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-                            <span style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0F172A" }}>
+                            <span style={{ fontWeight: 600, fontSize: "0.85rem", color: "var(--text-main)" }}>
                               Section {idx + 1}
                             </span>
                             <div style={{ display: "flex", gap: "0.25rem" }}>
@@ -1835,7 +1835,7 @@ const CMSPage = () => {
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontWeight: 700, fontSize: "0.95rem", color: "#0F172A" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontWeight: 700, fontSize: "0.95rem", color: "var(--text-main)" }}>
                     <Eye size={16} color="#2563EB" /> Aperçu de la Publication
                   </div>
                   {/* Lang Tabs */}
@@ -1845,7 +1845,7 @@ const CMSPage = () => {
                       onClick={() => setPreviewLang("FR")}
                       style={{
                         border: "none",
-                        background: previewLang === "FR" ? "#0F172A" : "transparent",
+                        background: previewLang === "FR" ? "var(--text-main)" : "transparent",
                         color: previewLang === "FR" ? "#FFF" : "#64748B",
                         padding: "3px 8px",
                         borderRadius: "4px",
@@ -1861,7 +1861,7 @@ const CMSPage = () => {
                       onClick={() => setPreviewLang("EN")}
                       style={{
                         border: "none",
-                        background: previewLang === "EN" ? "#0F172A" : "transparent",
+                        background: previewLang === "EN" ? "var(--text-main)" : "transparent",
                         color: previewLang === "EN" ? "#FFF" : "#64748B",
                         padding: "3px 8px",
                         borderRadius: "4px",
@@ -1935,7 +1935,7 @@ const CMSPage = () => {
                         top: "10px",
                         left: "10px",
                         background: "#FFF",
-                        color: "#0F172A",
+                        color: "var(--text-main)",
                         padding: "3px 8px",
                         fontSize: "0.62rem",
                         fontWeight: 800,
@@ -1957,7 +1957,7 @@ const CMSPage = () => {
                       style={{
                         fontWeight: 700,
                         fontSize: "1rem",
-                        color: "#0F172A",
+                        color: "var(--text-main)",
                         lineHeight: 1.3,
                         marginBottom: "0.5rem",
                         overflow: "hidden",
@@ -2123,7 +2123,7 @@ const textInputStyle = {
   border: "1px solid #CBD5E1",
   fontSize: "0.875rem",
   outline: "none",
-  color: "#0F172A",
+  color: "var(--text-main)",
   boxSizing: "border-box",
 };
 

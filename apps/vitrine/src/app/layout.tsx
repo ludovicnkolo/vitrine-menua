@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     siteName: 'Menua Consulting',
     type: "website",
     locale: "fr_FR",
-    alternateLocale: "en_US",
+    alternateLocale: "en_GB",
     images: [{ url: '/img/logo-clean-light.webp', width: 1200, height: 630, alt: 'Menua Consulting' }],
   },
   twitter: {

@@ -30,6 +30,8 @@ body.dark {
   --text-main: #F8FAFC;
   --text-muted: #94A3B8;
   --border: #334155;
+  /* Variable th-bg pour les en-têtes de tableau en dark mode */
+  --th-bg: #0F172A;
   
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.5);
@@ -238,7 +240,7 @@ td.table-actions {
 
 
 th {
-  background: #F8FAFC;
+  background: var(--th-bg, #F8FAFC);
   font-weight: 600;
   color: var(--text-muted);
   font-size: 0.75rem;
@@ -273,13 +275,13 @@ tr:hover td {
   cursor: pointer;
   text-align: left;
   font-size: 0.875rem;
-  color: #4A5568;
+  color: var(--text-main);
   width: 100%;
   transition: background-color 0.2s;
 }
 
 .dropdown-item:hover {
-  background-color: #E2E8F0;
+  background-color: var(--border);
 }
 
 .dropdown-item.danger {

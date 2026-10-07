@@ -287,11 +287,19 @@ router.get("/users", async (req, res) => {
         isBlocked: true,
         lastLogin: true,
         createdAt: true,
+        status: true,
         telephone: true,
         lieuResidence: true,
         experienceCle: true,
         langues: true,
         formations: true,
+        // Champs V3 — Fiche interne et organisation
+        poleActivite: true,
+        matricule: true,
+        emailPro: true,
+        fonction: true,
+        managerId: true,
+        manager: { select: { id: true, name: true, email: true } },
         assignedMissions: { select: { status: true } },
       },
     });
@@ -332,6 +340,12 @@ router.post(
         experienceCle,
         langues,
         formations,
+        // Champs V3 — Fiche interne et organisation (contre-recette MENUA V3)
+        poleActivite,
+        matricule,
+        emailPro,
+        fonction,
+        managerId,
       } = req.body;
       const bcrypt = require("bcryptjs");
       const crypto = require("node:crypto");
@@ -416,6 +430,12 @@ router.post(
           profile: profile || "",
           status: initialStatus,
           isBlocked: isBlockedDefault,
+          // Champs V3 — Fiche interne et organisation
+          poleActivite: poleActivite || null,
+          matricule: matricule || null,
+          emailPro: emailPro || null,
+          fonction: fonction || null,
+          managerId: managerId || null,
         },
       });
 
@@ -490,6 +510,12 @@ router.patch(
         experienceCle,
         langues,
         formations,
+        // Champs V3 — Fiche interne et organisation
+        poleActivite,
+        matricule,
+        emailPro,
+        fonction,
+        managerId,
       } = req.body;
 
       if (roleId !== undefined) {
@@ -556,6 +582,12 @@ router.patch(
           ...(langues !== undefined && { langues }),
           ...(formations !== undefined && { formations }),
           ...(status && { status, isBlocked: status === "Suspendu / Inactif" }),
+          // Champs V3 — Fiche interne et organisation
+          ...(poleActivite !== undefined && { poleActivite: poleActivite || null }),
+          ...(matricule !== undefined && { matricule: matricule || null }),
+          ...(emailPro !== undefined && { emailPro: emailPro || null }),
+          ...(fonction !== undefined && { fonction: fonction || null }),
+          ...(managerId !== undefined && { managerId: managerId || null }),
         },
       });
       await logAudit(

@@ -13,7 +13,7 @@ const router = express.Router();
 const {
   uploadToS3,
   getPresignedUrl,
-  deleteFromS3,
+  purgeFromS3,
   verifyUploadIntegrity,
 } = require("../services/s3Service");
 
@@ -177,7 +177,7 @@ router.post(
         error: dbError.message,
       });
       try {
-        await deleteFromS3(s3Key);
+        await purgeFromS3(s3Key);
         console.info({ event: "s3_rollback_success", s3Key });
       } catch (rollbackError) {
         // Le fichier reste dans S3 — logué pour nettoyage manuel / cron futur
@@ -380,8 +380,8 @@ router.post(
           error: dbError.message,
         });
         try {
-          await deleteFromS3(newS3Key);
-        } catch (rollbackError) {}
+          await purgeFromS3(newS3Key);
+        } catch (rollbackError) { }
         return res
           .status(500)
           .json({
@@ -392,7 +392,7 @@ router.post(
 
       // ── ÉTAPE 3 : Suppression de l'ANCIEN fichier S3
       try {
-        await deleteFromS3(oldS3Key);
+        await purgeFromS3(oldS3Key);
       } catch (cleanupError) {
         console.warn({
           event: "replace_old_s3_cleanup_failed",
@@ -413,7 +413,7 @@ router.post(
           `Document remplacé: ${document.name} -> ${updatedDoc.name}`,
           document.dossierId || null,
         );
-      } catch (e) {}
+      } catch (e) { }
 
       return res.json({
         success: true,

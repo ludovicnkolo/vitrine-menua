@@ -143,16 +143,19 @@ async function purgeFromS3(fileKey) {
       await s3Client.send(deleteCmd);
       console.log(`[S3 PURGE] Purged ${objectsToDelete.length} versions/markers for ${fileKey}`);
     } else {
-      // Fallback: standard delete if no version records returned
-      await deleteFromS3(fileKey);
+      // V3 NOTE: Dans un bucket versionné OVH, si ListObjectVersions ne retourne aucune version
+      // ni delete marker pour cette clé, deux cas possibles :
+      // 1. Le fichier n'existe pas (déjà purgé ou jamais uploadé) → OK
+      // 2. Le listing a retourné une liste incomplète (pagination non gérée) → investigation manuelle
+      // On NE fait PAS de simple deleteFromS3 car cela créerait un delete marker (≠ purge physique).
+      console.warn(`[S3 PURGE] Aucune version trouvée pour la clé "${fileKey}". Le fichier est peut-être déjà purgé ou absent du bucket "${BUCKET_NAME}". Vérification manuelle recommandée si inattendu.`);
     }
   } catch (error) {
     console.error(`[S3 PURGE ERROR] Failed to purge versions for ${fileKey}:`, error);
-    try {
-      await deleteFromS3(fileKey);
-    } catch (fallbackErr) {
-      // ignore fallback error
-    }
+    // Fallback NON EXÉCUTÉ dans les erreurs : un simple delete sur bucket versionné
+    // crée un delete marker, ce qui n'est pas une purge physique.
+    // L'erreur doit être levée pour que l'appelant sache que la purge a échoué.
+    throw error;
   }
 }
 

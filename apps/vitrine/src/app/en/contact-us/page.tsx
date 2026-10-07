@@ -14,14 +14,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Contact Us | Menua Consulting",
-    description: "Get in touch with Menua Consulting to discuss your operational delegation needs.",
-    locale: 'en_US',
+    description: "Get in touch with Menua Consulting to discuss your operational outsourcing needs across back and middle office functions.",
+    locale: 'en_GB',
     url: 'https://menuaconsulting.com/en/contact-us',
   },
   twitter: {
     card: 'summary_large_image',
     title: "Contact Us | Menua Consulting",
-    description: "Get in touch with Menua Consulting to discuss your operational delegation needs.",
+    description: "Get in touch with Menua Consulting to discuss your operational outsourcing needs across back and middle office functions.",
   },
 };
 

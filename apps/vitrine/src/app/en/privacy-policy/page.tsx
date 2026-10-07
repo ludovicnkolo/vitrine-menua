@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Privacy Policy | Menua Consulting",
-    locale: 'en_US',
+    locale: 'en_GB',
     url: 'https://menuaconsulting.com/en/privacy-policy',
   },
 };

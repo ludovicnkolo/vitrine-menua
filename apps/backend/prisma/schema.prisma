@@ -38,6 +38,16 @@ model Utilisateur {
   formations       String?
   profile          String?
   idCardUrl        String?
+  
+  // Nouveaux champs V3 : Organisation & Fiche Interne
+  poleActivite     String?   // ex: Assurance, CGP, Finance
+  matricule        String?   // Matricule interne
+  emailPro         String?   // E-mail professionnel dédié
+  fonction         String?   // Intitulé de poste / Fonction
+  managerId        String?   // Lien vers le manager direct
+  manager          Utilisateur? @relation("ManagerSubordinates", fields: [managerId], references: [id])
+  subordinates     Utilisateur[] @relation("ManagerSubordinates")
+
   resetToken       String?
   resetTokenExpiry DateTime?
   isBlocked        Boolean   @default(false)

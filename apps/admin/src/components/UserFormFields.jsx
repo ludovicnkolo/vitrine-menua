@@ -223,9 +223,7 @@ const UserFormFields = ({
         />
       </div>
 
-      <div
-        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}
-      >
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginTop: "1rem" }}>
         <FormField
           label="Description profil"
           type="textarea"
@@ -233,23 +231,11 @@ const UserFormFields = ({
           onChange={handleChange("profile")}
         />
         <div>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "0.25rem",
-              fontWeight: 500,
-            }}
-          >
+          <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: 500 }}>
             Statut <span style={{ color: "red" }}>*</span>
             {!isEdit && (
-              <span
-                style={{
-                  color: "var(--text-muted)",
-                  fontSize: "0.75rem",
-                  marginLeft: "0.5rem",
-                }}
-              >
-                (Inactif par défaut)
+              <span style={{ color: "var(--text-muted)", fontSize: "0.75rem", marginLeft: "0.5rem" }}>
+                (Invitation envoyée par défaut)
               </span>
             )}
           </label>
@@ -263,6 +249,81 @@ const UserFormFields = ({
             <option value="Actif">Actif</option>
             <option value="Suspendu / Inactif">Suspendu / Inactif</option>
           </select>
+        </div>
+      </div>
+
+      {/* ── Section V3 : Organisation & Fiche interne ─────────────────────────── */}
+      <div style={{
+        marginTop: "1.25rem",
+        paddingTop: "1rem",
+        borderTop: "1px solid var(--border)",
+      }}>
+        <p style={{ fontWeight: 600, fontSize: "0.78rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.75rem" }}>
+          Organisation &amp; Fiche interne
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          {/* Pôle d'activité */}
+          <div>
+            <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: 500 }}>
+              Pôle d'activité
+            </label>
+            <select
+              value={user.poleActivite || ""}
+              onChange={handleChange("poleActivite")}
+              style={selectStyle}
+            >
+              <option value="">— Aucun pôle —</option>
+              <option value="Assurance">Assurance</option>
+              <option value="CGP / Patrimoine">CGP / Patrimoine</option>
+              <option value="Comptabilité / Gestion">Comptabilité / Gestion</option>
+              <option value="Finance / Reporting">Finance / Reporting</option>
+              <option value="Risques / Conformité">Risques / Conformité</option>
+              <option value="Data / IT">Data / IT</option>
+              <option value="Transversal">Transversal</option>
+            </select>
+          </div>
+          {/* Matricule interne */}
+          <div>
+            <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: 500 }}>
+              Matricule interne
+            </label>
+            <input
+              type="text"
+              value={user.matricule || ""}
+              onChange={handleChange("matricule")}
+              placeholder="Ex: MC-2024-001"
+              style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid var(--border)" }}
+            />
+          </div>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginTop: "1rem" }}>
+          {/* E-mail professionnel */}
+          <div>
+            <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: 500 }}>
+              E-mail professionnel (identifiant CRM)
+            </label>
+            <input
+              type="email"
+              value={user.emailPro || ""}
+              onChange={handleChange("emailPro")}
+              placeholder="prenom.nom@menuaconsulting.com"
+              style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid var(--border)" }}
+            />
+          </div>
+          {/* Fonction */}
+          <div>
+            <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: 500 }}>
+              Fonction / Intitulé de poste
+            </label>
+            <input
+              type="text"
+              value={user.fonction || ""}
+              onChange={handleChange("fonction")}
+              placeholder="Ex: Chargé(e) de back-office"
+              style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid var(--border)" }}
+            />
+          </div>
         </div>
       </div>
     </>

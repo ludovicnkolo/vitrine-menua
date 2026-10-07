@@ -1,10 +1,12 @@
 import { getSafeApiUrl } from "../utils/helpers";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 
 const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -139,19 +141,43 @@ const LoginPage = ({ onLogin }) => {
               >
                 Mot de passe
               </label>
-              <input
-                id="login-password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                }}
-              />
+              <div style={{ position: "relative" }}>
+                <input
+                  id="login-password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    paddingRight: "2.5rem",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: "absolute",
+                    right: "0.75rem",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "var(--text-light, #6e7891)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: 0
+                  }}
+                  title={showPassword ? "Cacher le mot de passe" : "Afficher le mot de passe"}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
             <button
               type="submit"

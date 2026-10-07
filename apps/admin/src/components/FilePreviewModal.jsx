@@ -9,7 +9,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 const FilePreviewModal = ({ previewFile, onClose }) => {
   const [previewBlobUrl, setPreviewBlobUrl] = useState(null);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [scale, setScale] = useState(1.0);
@@ -17,13 +17,13 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
   useEffect(() => {
     if (!previewFile) {
       setPreviewBlobUrl(null);
-      setError(false);
+      setError(null);
       setNumPages(null);
       setPageNumber(1);
       setScale(1.0);
       return;
     }
-    setError(false);
+    setError(null);
 
     try {
       const token = sessionStorage.getItem("adminToken");
@@ -43,11 +43,12 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
       );
       if (token) urlObj.searchParams.set("token", token);
       urlObj.searchParams.set("stream", "true");
+      urlObj.searchParams.set("t", Date.now()); // Cache buster pour contourner le cache du navigateur
 
       setPreviewBlobUrl(urlObj.toString());
     } catch (err) {
       console.error("Error setting preview URL:", err);
-      setError(true);
+      setError(err.message || "Invalid URL");
     }
   }, [previewFile]);
 
@@ -206,7 +207,8 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
                     }}
                   >
                     <div style={{ color: "var(--danger)", fontWeight: 500 }}>
-                      Ce fichier est introuvable ou inaccessible.
+                      Ce fichier est introuvable ou inaccessible.<br />
+                      Détails de l'erreur: {String(error)}
                     </div>
                     <a
                       href={previewBlobUrl}
@@ -290,7 +292,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
                     onLoadSuccess={({ numPages }) => setNumPages(numPages)}
                     onLoadError={(err) => {
                       console.error("React-pdf error:", err);
-                      setError(true);
+                      setError(err.message || String(err));
                     }}
                     loading={
                       <div style={{ padding: "2rem" }}>

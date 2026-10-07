@@ -246,14 +246,21 @@ router.get("/download/:bucket/:filename", authenticateJWT, async (req, res) => {
 });
 
 // Route GET : Consultation inline (Affichage navigateur via Presigned URL)
-router.get("/view/:bucket/:filename", authenticateJWT, async (req, res) => {
-  const { bucket, filename } = req.params;
+// Le wildcard (*) permet de capturer des clés S3 multi-niveaux comme :
+// menua-ged-prod/dossiers/dos-05/fichier.pdf
+router.get("/view/*", authenticateJWT, async (req, res) => {
+  // req.params[0] contient tout ce qui suit /view/
+  const fullPath = decodeURIComponent(req.params[0] || "");
+  const slashIndex = fullPath.indexOf("/");
 
-  if (
-    bucket.includes("..") ||
-    filename.includes("..") ||
-    bucket.includes("/")
-  ) {
+  if (slashIndex === -1) {
+    return res.status(400).json({ success: false, error: "Chemin S3 invalide." });
+  }
+
+  const bucket = fullPath.substring(0, slashIndex);
+  const filename = fullPath.substring(slashIndex + 1);
+
+  if (bucket.includes("..") || filename.includes("..")) {
     return res.status(403).json({ success: false, error: "Accès interdit." });
   }
 
@@ -264,7 +271,7 @@ router.get("/view/:bucket/:filename", authenticateJWT, async (req, res) => {
 
     if (req.query.stream === "true") {
       // Proxy le fichier depuis S3 via le backend pour éviter le blocage CORS
-      // S3 OVH ne retourne pas Access-Control-Allow-Origin, on passe par le backend
+      // S3 OVH ne retourne pas Access-Control-Allow-Origin sur les URLs présignées
       const fetchResponse = await fetch(url);
       if (!fetchResponse.ok) {
         console.error(`[S3] ${fetchResponse.status} pour la clé : ${s3Key}`);
@@ -278,7 +285,6 @@ router.get("/view/:bucket/:filename", authenticateJWT, async (req, res) => {
       const contentType =
         fetchResponse.headers.get("content-type") || "application/octet-stream";
       res.setHeader("Content-Type", contentType);
-      res.setHeader("Access-Control-Allow-Origin", "*");
       res.setHeader("Cache-Control", "private, max-age=3600");
       const arrayBuffer = await fetchResponse.arrayBuffer();
       return res.end(Buffer.from(arrayBuffer));

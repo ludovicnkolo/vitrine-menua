@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.222Z",
-      "updatedAt": "2026-10-07T12:36:39.917Z"
+      "updatedAt": "2026-10-07T15:51:01.905Z"
     },
     {
       "id": "a41c168d-dc87-4353-8dcb-c71e4109416c",
@@ -16,7 +16,7 @@
       "status": "Inactif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.242Z",
-      "updatedAt": "2026-10-07T12:36:39.930Z"
+      "updatedAt": "2026-10-07T15:51:01.916Z"
     },
     {
       "id": "7f685243-dda5-4117-a675-d4a7364c7a66",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-09-28T09:31:02.248Z",
-      "updatedAt": "2026-10-07T12:36:39.943Z"
+      "updatedAt": "2026-10-07T15:51:01.936Z"
     },
     {
       "id": "803c6051-c50d-495a-bb21-b6615f1cf0dc",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-09-28T09:31:02.256Z",
-      "updatedAt": "2026-10-07T12:36:39.954Z"
+      "updatedAt": "2026-10-07T15:51:01.948Z"
     },
     {
       "id": "eaa1c720-2a71-493c-a1c0-d14f51051e0f",
@@ -43,14 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.269Z",
-      "updatedAt": "2026-10-07T12:36:39.966Z"
+      "updatedAt": "2026-10-07T15:51:01.977Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "2541799f-86de-4071-86c7-7110615bf37b",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$K6EHO.VdYpov.D9BKN6Bz.5NlWuHdQ.kWAhFDB48fYJxR.flM2OVW",
+      "password": "$2a$10$ujY3FT9OWtyiIC2sB1DyM.gu1ZOwc8uTayFB1pEIxuUnbxNy4wZYG",
       "name": "Rosette Fouelefack",
       "roleId": "832d5c59-5fe6-488f-b64a-1bfdc6504152",
       "telephone": "+33659207511",
@@ -69,9 +69,9 @@
       "resetTokenExpiry": "2026-10-05T08:38:59.338Z",
       "isBlocked": false,
       "status": "Actif",
-      "lastLogin": "2026-10-06T23:02:09.109Z",
+      "lastLogin": "2026-10-07T14:33:31.230Z",
       "createdAt": "2026-09-28T09:31:02.401Z",
-      "updatedAt": "2026-10-07T12:36:40.271Z"
+      "updatedAt": "2026-10-07T15:51:02.319Z"
     },
     {
       "id": "d835f1ac-9910-402b-89df-f3968179f15a",
@@ -472,7 +472,7 @@
       "reference": "DOS-04",
       "name": "dos-04_hbjbhh",
       "description": "Sous-dossier GED",
-      "status": "NOUVEAU",
+      "status": "CORBEILLE",
       "previousStatus": null,
       "priority": "NORMAL",
       "categorie": null,
@@ -481,7 +481,7 @@
       "traitantId": null,
       "parentDossierId": null,
       "createdAt": "2026-10-05T21:27:56.701Z",
-      "updatedAt": "2026-10-05T21:27:56.701Z",
+      "updatedAt": "2026-10-07T14:37:13.897Z",
       "isSystem": false
     },
     {
@@ -500,7 +500,7 @@
       "traitantId": null,
       "parentDossierId": null,
       "createdAt": "2026-10-06T19:59:33.252Z",
-      "updatedAt": "2026-10-06T23:09:30.140Z",
+      "updatedAt": "2026-10-07T15:01:28.530Z",
       "isSystem": false
     },
     {
@@ -520,6 +520,25 @@
       "parentDossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
       "createdAt": "2026-10-06T23:07:34.326Z",
       "updatedAt": "2026-10-06T23:07:34.326Z",
+      "isSystem": true
+    },
+    {
+      "origin": "INTERNE",
+      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "id": "08d6f38a-5694-4e54-a5fd-7d1d0a1ec392",
+      "reference": "DOS-07",
+      "name": "mis-02_dos-05_interne",
+      "description": "Sous-dossier GED auto-généré pour la mission MSN-03",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "traitantId": null,
+      "parentDossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "createdAt": "2026-10-07T15:01:28.557Z",
+      "updatedAt": "2026-10-07T15:01:28.557Z",
       "isSystem": true
     }
   ],
@@ -556,6 +575,23 @@
       "dossierMissionId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
       "createdAt": "2026-10-06T23:07:34.288Z",
       "updatedAt": "2026-10-06T23:09:39.673Z",
+      "parentMissionId": null
+    },
+    {
+      "id": "de544727-8ba3-4dd1-9fad-0e222b6a3f0f",
+      "reference": "MSN-03",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "assignedToId": "d835f1ac-9910-402b-89df-f3968179f15a",
+      "relecteurId": null,
+      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "description": "Voluptas voluptates \n\nPlaceat est sunt m",
+      "echeance": "2026-10-06T23:00:00.000Z",
+      "status": "CORBEILLE",
+      "previousStatus": null,
+      "attachment": null,
+      "dossierMissionId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "createdAt": "2026-10-07T15:01:28.515Z",
+      "updatedAt": "2026-10-07T15:02:35.921Z",
       "parentMissionId": null
     }
   ],
@@ -595,9 +631,58 @@
       "dossierTacheId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
       "createdAt": "2026-10-06T23:08:15.795Z",
       "updatedAt": "2026-10-06T23:21:25.705Z"
+    },
+    {
+      "id": "1b160568-2b35-475b-a220-ad029f088ad0",
+      "reference": "TCH-03",
+      "missionId": "de544727-8ba3-4dd1-9fad-0e222b6a3f0f",
+      "assignedToId": "eb4a1daf-8987-45e8-9c10-b4886910bb10",
+      "relecteurId": "eb4a1daf-8987-45e8-9c10-b4886910bb10",
+      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "description": "Objet: Ipsam sit quam minus\n\nConsignes: Totam possimus aliq",
+      "echeance": "2026-10-06T23:00:00.000Z",
+      "status": "CORBEILLE",
+      "previousStatus": null,
+      "attachment": null,
+      "adminFeedback": null,
+      "managerFeedback": null,
+      "dossierTacheId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "createdAt": "2026-10-07T15:02:13.679Z",
+      "updatedAt": "2026-10-07T15:02:35.943Z"
     }
   ],
-  "documents": [],
+  "documents": [
+    {
+      "id": "422a5d0a-6c90-48a5-92f6-57183690543b",
+      "name": "MENUA_CONSULTING_Contre_recette_003 finale_Site_CRM_OVH_V3_06-10-2026 (3).pdf",
+      "url": "ged/1791385430569-38981bb19d1b4047-MENUA_CONSULTING_Contre_recette_003_finale_Site_CRM_OVH_V3_06-10-2026__3_.pdf",
+      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "missionId": null,
+      "createdAt": "2026-10-07T15:03:57.100Z",
+      "isDeleted": false
+    },
+    {
+      "id": "50a60652-69b4-485d-b35b-fd29af0662cd",
+      "name": "MENUA_CONSULTING_Contre_recette_003 finale_Site_CRM_OVH_V3_06-10-2026 (3) (1).pdf",
+      "url": "ged/1791385845995-6e04e5c1a8549c14-MENUA_CONSULTING_Contre_recette_003_finale_Site_CRM_OVH_V3_06-10-2026__3___1_.pdf",
+      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "missionId": null,
+      "createdAt": "2026-10-07T15:10:48.202Z",
+      "isDeleted": false
+    },
+    {
+      "id": "5c8ad5b2-02fa-4611-bbc2-aa5243196101",
+      "name": "MENUA_CONSULTING_Contre_recette_finale_Site_CRM_OVH_V3_06-10-2026.pdf",
+      "url": "ged/1791387281012-5449d8943963472b-MENUA_CONSULTING_Contre_recette_finale_Site_CRM_OVH_V3_06-10-2026.pdf",
+      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "missionId": null,
+      "createdAt": "2026-10-07T15:34:43.280Z",
+      "isDeleted": false
+    }
+  ],
   "auditLogs": [
     {
       "id": "b8090e34-6d19-4b44-8e38-22713bea303c",
@@ -1401,6 +1486,94 @@
       "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
       "formulaireId": null,
       "createdAt": "2026-10-06T23:21:25.731Z"
+    },
+    {
+      "id": "ec5b23fd-4987-458e-b51e-8e430f76e618",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-07T14:33:31.244Z"
+    },
+    {
+      "id": "c46e794c-6532-4c99-879f-4b5188516478",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "SUPPRESSION_DOSSIER",
+      "targetId": "a61c9890-0b28-4461-b866-c8dc6cdde24b",
+      "targetType": "DOSSIER",
+      "details": "Dossier mis en corbeille: dos-04_hbjbhh",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-07T14:37:13.925Z"
+    },
+    {
+      "id": "ffde7ff3-aa21-4519-b0b8-4f124a22521f",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_MISSION",
+      "targetId": "de544727-8ba3-4dd1-9fad-0e222b6a3f0f",
+      "targetType": "MISSION",
+      "details": "Mission créée: Voluptas voluptates \n\nPlaceat est sunt m",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-07T15:01:28.541Z"
+    },
+    {
+      "id": "b436b9a4-2227-412e-adb3-c61f918a5c8e",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_TACHE",
+      "targetId": "1b160568-2b35-475b-a220-ad029f088ad0",
+      "targetType": "TACHE",
+      "details": "Tâche créée: Objet: Ipsam sit quam minus\n\nConsignes: Totam possimus aliq",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-07T15:02:13.730Z"
+    },
+    {
+      "id": "d72ed799-035e-48e0-bdfb-2f418ed2ddaa",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "SUPPRESSION_MISSION",
+      "targetId": "de544727-8ba3-4dd1-9fad-0e222b6a3f0f",
+      "targetType": "MISSION",
+      "details": "Mission supprimée: Voluptas voluptates \n\nPlaceat est sunt m",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-07T15:02:35.952Z"
+    },
+    {
+      "id": "05a5014a-442c-429c-ae0f-4294577bf9d7",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "AJOUT_DOCUMENT",
+      "targetId": "422a5d0a-6c90-48a5-92f6-57183690543b",
+      "targetType": "DOCUMENT",
+      "details": "Document rattaché (atomique): MENUA_CONSULTING_Contre_recette_003 finale_Site_CRM_OVH_V3_06-10-2026 (3).pdf",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-07T15:03:57.112Z"
+    },
+    {
+      "id": "dd2b9434-a2ea-4a77-ac0f-66a4b39602fd",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "AJOUT_DOCUMENT",
+      "targetId": "50a60652-69b4-485d-b35b-fd29af0662cd",
+      "targetType": "DOCUMENT",
+      "details": "Document rattaché (atomique): MENUA_CONSULTING_Contre_recette_003 finale_Site_CRM_OVH_V3_06-10-2026 (3) (1).pdf",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-07T15:10:48.212Z"
+    },
+    {
+      "id": "31e26bcf-1148-4c4c-b126-ebbc7139c445",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "AJOUT_DOCUMENT",
+      "targetId": "5c8ad5b2-02fa-4611-bbc2-aa5243196101",
+      "targetType": "DOCUMENT",
+      "details": "Document rattaché (atomique): MENUA_CONSULTING_Contre_recette_finale_Site_CRM_OVH_V3_06-10-2026.pdf",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-07T15:34:43.334Z"
     }
   ],
   "messagePersonnels": [
@@ -1566,7 +1739,7 @@
       "bodyText": " Bonjour,\n\nJ ai travaille depuis Mars 2024 à Dec 2025 comme Commercial sur Externalisation\nComptable de La France vers la Tunisie avec le partenaire Expert Comptable\ndu moment, Comptabilité Française et la je cherche un nouveau Partenaire\npour la campagne qui commence a partir de Septembre 2026, SI intéressé,\nappeler moi du Lun au Ven de 10h a 19h sur le 52 785 346 ou\nmehdi.mejri.bis@gmail.com\n\nCordialement\n\nMehdi MEJRI\n",
       "attachment": "formulaires/1791297800315-9b1e2d755e9de633-MEJRI_MEHDI_Cv.pdf,formulaires/1791297803518-77e5504d2df28f8a-MEJRI_MEJRI_ENG_Cv.pdf",
       "etiquette": "Contact",
-      "priorite": "Normal",
+      "priorite": "Urgent",
       "isDeleted": false,
       "createdAt": "2026-09-30T21:05:32.000Z",
       "receivedAt": "2026-09-30T21:05:32.000Z",

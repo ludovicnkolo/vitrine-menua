@@ -1380,47 +1380,47 @@ export default function DocumentsPage() {
               </div>
             )}
 
-            {/* Dropzone Container conforming to Screenshot 4 */}
-            <div
-              onClick={() => {
-                if (canWriteCurrent && currentFolderId) setShowUploadModal(true);
-              }}
-              onDragOver={(e) => {
-                e.preventDefault();
-                e.currentTarget.style.borderColor = "#2563EB";
-                e.currentTarget.style.background = "#EFF6FF";
-              }}
-              onDragLeave={(e) => {
-                e.currentTarget.style.borderColor = "#CBD5E1";
-                e.currentTarget.style.background = "#F8FAFC";
-              }}
-              onDrop={(e) => {
-                e.preventDefault();
-                e.currentTarget.style.borderColor = "#CBD5E1";
-                e.currentTarget.style.background = "#F8FAFC";
-                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                  setUploadFile(e.dataTransfer.files[0]);
-                  setShowUploadModal(true);
-                }
-              }}
-              style={{
-                border: "2px dashed #CBD5E1",
-                borderRadius: "10px",
-                background: "#F8FAFC",
-                padding: "3.5rem 1.5rem",
-                textAlign: "center",
-                marginTop: "1.5rem",
-                cursor: canWriteCurrent && currentFolderId ? "pointer" : "default",
-                transition: "all 0.2s",
-              }}
-            >
-              <div style={{ color: "#334155", fontWeight: 600, fontSize: "0.95rem" }}>
-                Glissez déposez des fichiers ici ou cliquez sur Importer pour ajouter des pièces
+            {/* Dropzone : uniquement affiché à l'intérieur d'un dossier, jamais à la racine */}
+            {currentFolderId && canWriteCurrent && (
+              <div
+                onClick={() => setShowUploadModal(true)}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.style.borderColor = "#2563EB";
+                  e.currentTarget.style.background = "#EFF6FF";
+                }}
+                onDragLeave={(e) => {
+                  e.currentTarget.style.borderColor = "#CBD5E1";
+                  e.currentTarget.style.background = "#F8FAFC";
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.style.borderColor = "#CBD5E1";
+                  e.currentTarget.style.background = "#F8FAFC";
+                  if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    setUploadFile(e.dataTransfer.files[0]);
+                    setShowUploadModal(true);
+                  }
+                }}
+                style={{
+                  border: "2px dashed #CBD5E1",
+                  borderRadius: "10px",
+                  background: "#F8FAFC",
+                  padding: "3.5rem 1.5rem",
+                  textAlign: "center",
+                  marginTop: "1.5rem",
+                  cursor: "pointer",
+                  transition: "all 0.2s",
+                }}
+              >
+                <div style={{ color: "#334155", fontWeight: 600, fontSize: "0.95rem" }}>
+                  Glissez déposez des fichiers ici ou cliquez sur Importer pour ajouter des pièces
+                </div>
+                <div style={{ color: "#94A3B8", fontSize: "0.75rem", marginTop: "0.4rem" }}>
+                  Formats supportés : PDF, XLSX, DOCX, PNG, JPG (Max 50 Mo)
+                </div>
               </div>
-              <div style={{ color: "#94A3B8", fontSize: "0.75rem", marginTop: "0.4rem" }}>
-                Formats supportés : PDF, XLSX, DOCX, PNG, JPG (Max 50 Mo)
-              </div>
-            </div>
+            )}
           </div>
         )}
       </div>

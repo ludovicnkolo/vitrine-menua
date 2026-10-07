@@ -229,26 +229,27 @@ router.get("/dashboard-stats", async (req, res) => {
     const isFiltered = !!startDateQuery || !!endDateQuery;
 
     // 1. Radar des Urgences et Engagements (SLAs)
+    // Source 1 : formulaires Contact / Recrutement avec priorité URGENT
+    // Les urgences sont GLOBALES : on ne les filtre pas par date (startPeriod/endPeriod)
     const whereUrgentsForm = {
       status: { notIn: ["GAGNE", "SANS_SUITE", "RETENU", "REFUSE", "TERMINE", "ARCHIVE"] },
       priority: { in: ["URGENT", "Urgent"] },
     };
-    if (isFiltered)
-      whereUrgentsForm.createdAt = { gte: startPeriod, lte: endPeriod };
     const urgentsFormulaires = await prisma.formulaire.count({
       where: whereUrgentsForm,
     });
 
+    // Source 2 : tous les messages (Contact, Recrutement CRM ET emails IMAP boîte mail)
+    // marqués priorité URGENT — également globaux.
     const whereUrgentsMsg = {
       status: { notIn: ["TRAITE", "TERMINE", "ARCHIVE", "GAGNE"] },
       priorite: { in: ["URGENT", "Urgent"] },
       isDeleted: false,
     };
-    if (isFiltered)
-      whereUrgentsMsg.createdAt = { gte: startPeriod, lte: endPeriod };
     const urgentsMessages = await prisma.messagePersonnel.count({
       where: whereUrgentsMsg,
     });
+
     const alertesPrioritaires = urgentsFormulaires + urgentsMessages;
 
     const whereTachesCrit = { status: { notIn: ["TERMINE", "ARCHIVE", "CORBEILLE"] }, echeance: { not: null } };

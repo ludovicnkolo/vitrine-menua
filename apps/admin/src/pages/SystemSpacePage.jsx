@@ -90,11 +90,11 @@ const SystemSpacePage = ({ userRole }) => {
                 {/* Card 1: Apparence */}
                 <div
                   style={{
-                    background: "#FFF",
-                    border: "1px solid #E2E8F0",
+                    background: "var(--surface)",
+                    border: "1px solid var(--border)",
                     borderRadius: "12px",
                     padding: "1.5rem",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+                    boxShadow: "var(--shadow-sm)",
                   }}
                 >
                   <h3
@@ -107,7 +107,7 @@ const SystemSpacePage = ({ userRole }) => {
                   >
                     {t("systemSpace.appearance", "Apparence de l'interface")}
                   </h3>
-                  <p style={{ margin: "0 0 1.25rem 0", fontSize: "0.8rem", color: "#64748B" }}>
+                  <p style={{ margin: "0 0 1.25rem 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
                     {t("systemSpace.appearanceDesc", "Choisissez le thème d'affichage adapté à votre confort visuel")}
                   </p>
 
@@ -117,8 +117,8 @@ const SystemSpacePage = ({ userRole }) => {
                       onClick={() => handleThemeChange("light")}
                       style={{
                         position: "relative",
-                        border: theme === "light" ? "2px solid #3B82F6" : "1px solid #E2E8F0",
-                        background: theme === "light" ? "#EFF6FF" : "#FFF",
+                        border: theme === "light" ? "2px solid #3B82F6" : "1px solid var(--border)",
+                        background: theme === "light" ? "#EFF6FF" : "var(--surface)",
                         borderRadius: "10px",
                         padding: "1.5rem 1rem",
                         textAlign: "center",
@@ -163,7 +163,7 @@ const SystemSpacePage = ({ userRole }) => {
                       <div
                         style={{
                           fontSize: "0.72rem",
-                          color: "#64748B",
+                          color: "var(--text-muted)",
                           marginTop: "0.35rem",
                           lineHeight: 1.3,
                         }}
@@ -177,8 +177,8 @@ const SystemSpacePage = ({ userRole }) => {
                       onClick={() => handleThemeChange("dark")}
                       style={{
                         position: "relative",
-                        border: theme === "dark" ? "2px solid #3B82F6" : "1px solid #E2E8F0",
-                        background: theme === "dark" ? "#EFF6FF" : "#FFF",
+                        border: theme === "dark" ? "2px solid #3B82F6" : "1px solid var(--border)",
+                        background: theme === "dark" ? "#1e3a5f" : "var(--surface)",
                         borderRadius: "10px",
                         padding: "1.5rem 1rem",
                         textAlign: "center",
@@ -223,7 +223,7 @@ const SystemSpacePage = ({ userRole }) => {
                       <div
                         style={{
                           fontSize: "0.72rem",
-                          color: "#64748B",
+                          color: "var(--text-muted)",
                           marginTop: "0.35rem",
                           lineHeight: 1.3,
                         }}
@@ -237,11 +237,11 @@ const SystemSpacePage = ({ userRole }) => {
                 {/* Card 2: Langue / Language */}
                 <div
                   style={{
-                    background: "#FFF",
-                    border: "1px solid #E2E8F0",
+                    background: "var(--surface)",
+                    border: "1px solid var(--border)",
                     borderRadius: "12px",
                     padding: "1.5rem",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+                    boxShadow: "var(--shadow-sm)",
                   }}
                 >
                   <h3
@@ -254,7 +254,7 @@ const SystemSpacePage = ({ userRole }) => {
                   >
                     {t("systemSpace.language", "Langue / Language")}
                   </h3>
-                  <p style={{ margin: "0 0 1.25rem 0", fontSize: "0.8rem", color: "#64748B" }}>
+                  <p style={{ margin: "0 0 1.25rem 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
                     {t("systemSpace.languageDesc", "Sélectionnez la langue principale de l'interface d'administration")}
                   </p>
 
@@ -263,7 +263,7 @@ const SystemSpacePage = ({ userRole }) => {
                       display: "block",
                       fontSize: "0.8rem",
                       fontWeight: 600,
-                      color: "#374151",
+                      color: "var(--text-main)",
                       marginBottom: "0.5rem",
                     }}
                   >
@@ -298,7 +298,7 @@ const SystemSpacePage = ({ userRole }) => {
                         padding: "0.65rem 2.5rem 0.65rem 3.5rem",
                         borderRadius: "8px",
                         border: "1.5px solid #3B82F6",
-                        background: "#FFF",
+                        background: "var(--surface)",
                         color: "var(--text-main)",
                         fontSize: "0.88rem",
                         fontWeight: 500,
@@ -323,7 +323,7 @@ const SystemSpacePage = ({ userRole }) => {
                     />
                   </div>
 
-                  <div style={{ fontSize: "0.78rem", color: "#64748B", marginBottom: "0.4rem" }}>
+                  <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginBottom: "0.4rem" }}>
                     {t("systemSpace.availableOptions", "Options disponibles dans la liste déroulante :")}
                   </div>
                   <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -333,9 +333,9 @@ const SystemSpacePage = ({ userRole }) => {
                       style={{
                         padding: "0.3rem 0.75rem",
                         borderRadius: "6px",
-                        border: lang === "fr" ? "1px solid #3B82F6" : "1px solid #E2E8F0",
-                        background: lang === "fr" ? "#EFF6FF" : "#F1F5F9",
-                        color: lang === "fr" ? "#1D4ED8" : "#475569",
+                        border: lang === "fr" ? "1px solid #3B82F6" : "1px solid var(--border)",
+                        background: lang === "fr" ? "#EFF6FF" : "var(--bg-color)",
+                        color: lang === "fr" ? "#1D4ED8" : "var(--text-muted)",
                         fontSize: "0.8rem",
                         fontWeight: 600,
                         cursor: "pointer",
@@ -349,9 +349,9 @@ const SystemSpacePage = ({ userRole }) => {
                       style={{
                         padding: "0.3rem 0.75rem",
                         borderRadius: "6px",
-                        border: lang === "en" ? "1px solid #3B82F6" : "1px solid #E2E8F0",
-                        background: lang === "en" ? "#EFF6FF" : "#F1F5F9",
-                        color: lang === "en" ? "#1D4ED8" : "#475569",
+                        border: lang === "en" ? "1px solid #3B82F6" : "1px solid var(--border)",
+                        background: lang === "en" ? "#EFF6FF" : "var(--bg-color)",
+                        color: lang === "en" ? "#1D4ED8" : "var(--text-muted)",
                         fontSize: "0.8rem",
                         fontWeight: 600,
                         cursor: "pointer",
@@ -366,8 +366,8 @@ const SystemSpacePage = ({ userRole }) => {
               {/* Bottom Card / Footer */}
               <div
                 style={{
-                  background: "#FFF",
-                  border: "1px solid #E2E8F0",
+                  background: "var(--surface)",
+                  border: "1px solid var(--border)",
                   borderRadius: "10px",
                   padding: "1rem 1.5rem",
                   display: "flex",
@@ -377,7 +377,7 @@ const SystemSpacePage = ({ userRole }) => {
                   gap: "1rem",
                 }}
               >
-                <div style={{ fontSize: "0.82rem", color: "#64748B" }}>
+                <div style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
                   {t("systemSpace.infoNotice", "Info : Les modifications des paramètres généraux sont appliquées immédiatement pour votre session.")}
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>

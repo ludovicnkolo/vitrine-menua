@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.222Z",
-      "updatedAt": "2026-10-07T15:51:01.905Z"
+      "updatedAt": "2026-10-07T16:02:32.665Z"
     },
     {
       "id": "a41c168d-dc87-4353-8dcb-c71e4109416c",
@@ -16,7 +16,7 @@
       "status": "Inactif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.242Z",
-      "updatedAt": "2026-10-07T15:51:01.916Z"
+      "updatedAt": "2026-10-07T16:02:32.717Z"
     },
     {
       "id": "7f685243-dda5-4117-a675-d4a7364c7a66",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-09-28T09:31:02.248Z",
-      "updatedAt": "2026-10-07T15:51:01.936Z"
+      "updatedAt": "2026-10-07T16:02:32.750Z"
     },
     {
       "id": "803c6051-c50d-495a-bb21-b6615f1cf0dc",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-09-28T09:31:02.256Z",
-      "updatedAt": "2026-10-07T15:51:01.948Z"
+      "updatedAt": "2026-10-07T16:02:32.772Z"
     },
     {
       "id": "eaa1c720-2a71-493c-a1c0-d14f51051e0f",
@@ -43,14 +43,14 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.269Z",
-      "updatedAt": "2026-10-07T15:51:01.977Z"
+      "updatedAt": "2026-10-07T16:02:32.822Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "2541799f-86de-4071-86c7-7110615bf37b",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$ujY3FT9OWtyiIC2sB1DyM.gu1ZOwc8uTayFB1pEIxuUnbxNy4wZYG",
+      "password": "$2a$10$uCNojRz0nqP5ysSc0Dxf1uF4ETwmSkO2HHGNSdsQ1mH6/Aat93cra",
       "name": "Rosette Fouelefack",
       "roleId": "832d5c59-5fe6-488f-b64a-1bfdc6504152",
       "telephone": "+33659207511",
@@ -69,9 +69,9 @@
       "resetTokenExpiry": "2026-10-05T08:38:59.338Z",
       "isBlocked": false,
       "status": "Actif",
-      "lastLogin": "2026-10-07T14:33:31.230Z",
+      "lastLogin": "2026-10-07T15:52:26.303Z",
       "createdAt": "2026-09-28T09:31:02.401Z",
-      "updatedAt": "2026-10-07T15:51:02.319Z"
+      "updatedAt": "2026-10-07T16:02:33.494Z"
     },
     {
       "id": "d835f1ac-9910-402b-89df-f3968179f15a",
@@ -680,6 +680,16 @@
       "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
       "missionId": null,
       "createdAt": "2026-10-07T15:34:43.280Z",
+      "isDeleted": false
+    },
+    {
+      "id": "21ef7716-f3fa-4dfd-bd95-4cd5e1186838",
+      "name": "images.jpeg",
+      "url": "dossiers/e393cc81-53cb-4f2d-ae62-31fdc78f44ba/fdcbcebb-e481-46ff-b975-73ad71b83b09-images.jpeg",
+      "uploadedById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "missionId": null,
+      "createdAt": "2026-10-07T15:59:21.616Z",
       "isDeleted": false
     }
   ],
@@ -1574,6 +1584,72 @@
       "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
       "formulaireId": null,
       "createdAt": "2026-10-07T15:34:43.334Z"
+    },
+    {
+      "id": "6f6ae2a2-149f-4c25-9775-42b63d9214f5",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-07T15:52:22.199Z"
+    },
+    {
+      "id": "0762dbe2-be2b-4e86-98ed-af4abf8e6560",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-07T15:52:26.319Z"
+    },
+    {
+      "id": "93bb3745-e7cf-4767-96b6-f95e6ecb6543",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_LIEN_MAGIQUE",
+      "targetId": "df4df20b-dba6-4ccc-990c-c137934e2e1a",
+      "targetType": "MAGIC_LINK",
+      "details": "Lien magique (ACQUISITION) généré pour le dossier",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-07T15:57:51.920Z"
+    },
+    {
+      "id": "cd87dbd9-e449-4f6e-a023-1324e0dc4118",
+      "userId": null,
+      "action": "ACCES_LIEN_MAGIQUE",
+      "targetId": "df4df20b-dba6-4ccc-990c-c137934e2e1a",
+      "targetType": "MAGIC_LINK",
+      "details": "Accès au lien magique (ACQUISITION) — IP: ::ffff:127.0.0.1",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-07T15:58:16.643Z"
+    },
+    {
+      "id": "f157c1ea-888d-4fa1-9999-060d3c453d22",
+      "userId": null,
+      "action": "ACCES_LIEN_MAGIQUE",
+      "targetId": "df4df20b-dba6-4ccc-990c-c137934e2e1a",
+      "targetType": "MAGIC_LINK",
+      "details": "Accès au lien magique (ACQUISITION) — IP: ::ffff:127.0.0.1",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-07T15:58:16.689Z"
+    },
+    {
+      "id": "5ecebc5d-3040-4e8c-a3c9-8c6ad8c65365",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DEPOT_DOCUMENT_MAGIQUE",
+      "targetId": "21ef7716-f3fa-4dfd-bd95-4cd5e1186838",
+      "targetType": "DOCUMENT",
+      "details": "1 document(s) déposé(s) via Lien Magique (images.jpeg)",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-07T15:59:21.627Z"
     }
   ],
   "messagePersonnels": [

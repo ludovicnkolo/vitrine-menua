@@ -282,8 +282,15 @@ router.get("/view/*", authenticateJWT, async (req, res) => {
             error: `Fichier introuvable (S3 ${fetchResponse.status}).`,
           });
       }
-      const contentType =
-        fetchResponse.headers.get("content-type") || "application/octet-stream";
+      let contentType = fetchResponse.headers.get("content-type");
+      if (!contentType || contentType === "application/octet-stream" || contentType === "binary/octet-stream") {
+        if (filename.match(/\\.jpe?g$/i)) contentType = "image/jpeg";
+        else if (filename.match(/\\.png$/i)) contentType = "image/png";
+        else if (filename.match(/\\.gif$/i)) contentType = "image/gif";
+        else if (filename.match(/\\.webp$/i)) contentType = "image/webp";
+        else if (filename.match(/\\.pdf$/i)) contentType = "application/pdf";
+        else contentType = "application/octet-stream";
+      }
       res.setHeader("Content-Type", contentType);
       res.setHeader("Cache-Control", "private, max-age=3600");
       const arrayBuffer = await fetchResponse.arrayBuffer();

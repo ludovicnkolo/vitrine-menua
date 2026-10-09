@@ -399,6 +399,8 @@ export default function VosBesoinsPage() {
         ]}
       />
 
+      <div className="w-full h-12 lg:h-20 bg-white" />
+
       {/* ── 3.9 AUTRES BESOINS ── */}
       <DarkNeedSection
         id="autres-besoins"

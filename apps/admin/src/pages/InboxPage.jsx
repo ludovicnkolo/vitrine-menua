@@ -30,7 +30,7 @@ import AttachmentSelect from "../components/AttachmentSelect";
 
 import InternalChatTab from "../components/InternalChatTab";
 
-const MessageDetailCard = ({ label, value, children, sublabel }) => (
+const MessageDetailCard = ({ label, value, children, sublabel, inline }) => (
   <div
     style={{
       background: "#F8FAFC",
@@ -38,8 +38,10 @@ const MessageDetailCard = ({ label, value, children, sublabel }) => (
       padding: "0.55rem 0.85rem",
       border: "1px solid #F1F5F9",
       display: "flex",
-      flexDirection: "column",
-      gap: "0.2rem",
+      flexDirection: inline ? "row" : "column",
+      alignItems: inline ? "center" : "stretch",
+      justifyContent: inline ? "space-between" : "flex-start",
+      gap: inline ? "1rem" : "0.2rem",
     }}
   >
     <div
@@ -2004,6 +2006,7 @@ const InboxPage = ({ userRole }) => {
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
                         <MessageDetailCard
+                          inline
                           label="Statut vérification email"
                           value={
                             processMsg.verifaliaStatus ? (
@@ -2330,6 +2333,7 @@ const InboxPage = ({ userRole }) => {
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
                         <MessageDetailCard
+                          inline
                           label="Statut vérification email"
                           value={
                             processMsg.verifaliaStatus ? (

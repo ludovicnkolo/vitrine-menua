@@ -116,6 +116,11 @@ const validateMessageStatus = (fromStatus, toStatus, category, role) => {
       RETENU: [],
       REFUSE: []
     };
+  } else if (category === "interne") {
+    rule = {
+      NON_CONSULTE: ["CONSULTE"],
+      CONSULTE: ["NON_CONSULTE"]
+    };
   } else {
     rule = {
       NOUVEAU: ["A_RAPPELER", "TRAITE"],

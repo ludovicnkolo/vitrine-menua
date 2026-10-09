@@ -683,6 +683,7 @@ router.patch("/messages/:id/status", async (req, res) => {
         const msgType = (existingMsg.type || "").toLowerCase();
         if (msgType === "contact" || currentEtiquette === "Contact") category = "contact";
         else if (msgType === "recrutement" || currentEtiquette === "Recrutement") category = "recrutement";
+        else if (msgType === "interne" || currentEtiquette === "Interne") category = "interne";
         
         const VALID = {
           contact: {
@@ -698,6 +699,10 @@ router.patch("/messages/:id/status", async (req, res) => {
             ENTRETIEN: ["A_RAPPELER", "RETENU", "REFUSE"],
             RETENU: [],
             REFUSE: []
+          },
+          interne: {
+            NON_CONSULTE: ["CONSULTE"],
+            CONSULTE: ["NON_CONSULTE"]
           }
         };
 

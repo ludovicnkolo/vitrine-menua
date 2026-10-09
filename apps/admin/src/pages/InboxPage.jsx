@@ -2008,7 +2008,7 @@ const InboxPage = ({ userRole }) => {
                           value={
                             processMsg.verifaliaStatus ? (
                               <span style={{ color: "#059669", fontWeight: 700 }}>
-                                {getVerifaliaBadge(processMsg.verifaliaStatus).text} ({processMsg.verifaliaStatus})
+                                {getVerifaliaBadge(processMsg.verifaliaStatus).text}
                               </span>
                             ) : (
                               "Non vérifié"
@@ -2334,7 +2334,7 @@ const InboxPage = ({ userRole }) => {
                           value={
                             processMsg.verifaliaStatus ? (
                               <span style={{ color: "#059669", fontWeight: 700 }}>
-                                {getVerifaliaBadge(processMsg.verifaliaStatus).text} ({processMsg.verifaliaStatus})
+                                {getVerifaliaBadge(processMsg.verifaliaStatus).text}
                               </span>
                             ) : (
                               "Non vérifié"

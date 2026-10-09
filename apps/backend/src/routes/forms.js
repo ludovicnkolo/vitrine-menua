@@ -259,7 +259,6 @@ router.post("/join", upload.none(), async (req, res) => {
   try {
     const sanitizedBody = sanitizeInput(req.body);
     const {
-    const {
       lastName,
       firstName,
       email,

@@ -355,7 +355,7 @@ export default function VosBesoinsPage() {
           ]
         }}
         bgClass="bg-white"
-        cardBg="bg-[#f5f7fa]"
+        cardBg="bg-[#e8e1d7]"
       />
 
       {/* ── 3.8 ASSURANCE ── */}
@@ -365,7 +365,15 @@ export default function VosBesoinsPage() {
         topDecoClass="absolute top-0 right-0 w-1/2 h-full bg-[#eef2f6] skew-x-[-10deg] origin-bottom-right hidden lg:block"
         titleDecoClass="bg-[#141824]"
         borderClass="border border-[#e2e8f0]"
-        title={t("ASSURANCE — BACK & MIDDLE OFFICE, GESTION CONTRACTUELLE, ANALYSE & PRESTATIONS", "INSURANCE — BACK & MIDDLE OFFICE, POLICY ADMINISTRATION, ANALYSIS, CLAIMS & BENEFITS SUPPORT")}
+        title={
+          <>
+            {t("ASSURANCE — BACK ", "INSURANCE — BACK ")}
+            <span className="font-sans font-medium">&amp;</span>
+            {t(" MIDDLE OFFICE, GESTION CONTRACTUELLE, ANALYSE ", " MIDDLE OFFICE, POLICY ADMINISTRATION, ANALYSIS, CLAIMS ")}
+            <span className="font-sans font-medium">&amp;</span>
+            {t(" PRESTATIONS", " BENEFITS SUPPORT")}
+          </>
+        }
         intro={
           <>
             <p className="mb-4">

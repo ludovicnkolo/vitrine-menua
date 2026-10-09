@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? "Menua Consulting secures the execution of your back and middle office operations. Our expertise covers financial, accounting, wealth management, regulated, IT and data sectors."
       : "Menua Consulting sécurise l'exécution de vos opérations back et middle office. Notre expertise couvre les métiers financiers, comptables, patrimoniaux, réglementés, IT et data.",
     alternates: {
-      canonical: 'https://menuaconsulting.com/fr',
+      canonical: isEn ? 'https://menuaconsulting.com/en' : 'https://menuaconsulting.com/fr',
       languages: {
         'fr-FR': 'https://menuaconsulting.com/fr',
         'en-GB': 'https://menuaconsulting.com/en',

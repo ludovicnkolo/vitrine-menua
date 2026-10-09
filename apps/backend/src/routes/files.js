@@ -284,11 +284,12 @@ router.get("/view/*", authenticateJWT, async (req, res) => {
       }
       let contentType = fetchResponse.headers.get("content-type");
       if (!contentType || contentType === "application/octet-stream" || contentType === "binary/octet-stream") {
-        if (filename.match(/\\.jpe?g$/i)) contentType = "image/jpeg";
-        else if (filename.match(/\\.png$/i)) contentType = "image/png";
-        else if (filename.match(/\\.gif$/i)) contentType = "image/gif";
-        else if (filename.match(/\\.webp$/i)) contentType = "image/webp";
-        else if (filename.match(/\\.pdf$/i)) contentType = "application/pdf";
+        if (/\.jpe?g$/i.test(filename)) contentType = "image/jpeg";
+        else if (/\.png$/i.test(filename)) contentType = "image/png";
+        else if (/\.gif$/i.test(filename)) contentType = "image/gif";
+        else if (/\.webp$/i.test(filename)) contentType = "image/webp";
+        else if (/\.svg$/i.test(filename)) contentType = "image/svg+xml";
+        else if (/\.pdf$/i.test(filename)) contentType = "application/pdf";
         else contentType = "application/octet-stream";
       }
       res.setHeader("Content-Type", contentType);

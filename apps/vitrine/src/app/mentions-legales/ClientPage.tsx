@@ -15,7 +15,7 @@ export default function MentionsLegales() {
         <div className="laplace-container portrait:sm:px-10 max-w-5xl">
           <LegalPageHeader 
             title={t("Mentions légales", "Legal Notice")} 
-            lastUpdate={t("Dernière mise à jour : juillet 2026.", "Last update: July 2026.")} 
+            lastUpdate={t("Dernière mise à jour : octobre 2026.", "Last update: October 2026.")} 
           />
           <div className="space-y-14 text-[#6e7891] text-[1.05rem] font-light leading-relaxed">
             
@@ -70,13 +70,9 @@ export default function MentionsLegales() {
                 "MENUA CONSULTING does not exercise any regulated activity in its own name. The company does not act as a financial investment advisor, nor as an insurance intermediary, nor as an intermediary in banking operations and payment services. It does not hold any funds, securities, or values on behalf of third parties."
               ))}</p>
               <p className="mb-4">{formatBrand(t(
-                "MENUA CONSULTING réalise des prestations d’externalisation opérationnelle et de support back et middle office au moyen de ressources opérationnelles spécialisées. Les prestations sont exécutées selon le périmètre contractuel, les procédures, les outils, les habilitations et les circuits de validation définis avec le client.",
-                "MENUA CONSULTING provides operational outsourcing and back and middle office support services using specialized operational resources. Services are performed in accordance with the contractual scope, procedures, systems, authorizations and approval workflows agreed with the client."
+                "Dans le cadre de ses prestations d’externalisation opérationnelle, MENUA peut réaliser des travaux de préparation, de contrôle, d’analyse et d’instruction dans le cadre des procédures, outils et habilitations du client. Les décisions de souscription, de garantie, d’indemnisation, de conseil, d’arbitrage, de validation et, plus généralement, les actes réglementés ou engageants restent sous la responsabilité du client ou des professionnels habilités.",
+                "As part of its operational outsourcing services, MENUA may perform preparation, review, analysis and operational assessment activities within the client’s procedures, systems and authorisation framework. Underwriting, coverage, claims settlement, advisory, investment switch/reallocation, approval and, more generally, regulated or binding decisions remain the responsibility of the client or its authorised professionals."
               ))}</p>
-              <p>{t(
-                "Lorsque le périmètre concerne une activité réglementée, comptable, juridique, fiscale, patrimoniale, d'assurance ou financière, les conseils, décisions, arbitrages, validations et actes réservés restent sous la responsabilité du client ou de ses professionnels habilités.",
-                "When the scope relates to regulated accounting, legal, tax, wealth management, insurance or financial activities, all advice, discretionary decisions, investment switch/reallocation decisions, final approvals and reserved statutory acts remain the sole responsibility of the client or its authorized professionals."
-              )}</p>
             </SectionBlock>
 
             {/* 9.5 INFORMATIONS, PROPRIÉTÉ INTELLECTUELLE ET RESPONSABILITÉ */}

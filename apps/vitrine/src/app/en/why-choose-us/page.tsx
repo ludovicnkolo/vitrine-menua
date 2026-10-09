@@ -14,14 +14,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Why Choose Menua Consulting? | Menua Consulting",
-    description: "Operational rigor, internal workload control, and business continuity support.",
+    description: "Operational rigour, internal workload control, and business continuity support.",
     locale: 'en_GB',
     url: 'https://menuaconsulting.com/en/why-choose-us',
   },
   twitter: {
     card: 'summary_large_image',
     title: "Why Choose Menua Consulting? | Menua Consulting",
-    description: "Operational rigor, internal workload control, and business continuity support.",
+    description: "Operational rigour, internal workload control, and business continuity support.",
   },
 };
 

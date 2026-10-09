@@ -2,14 +2,14 @@ import { Metadata } from 'next';
 import ClientPage from './ClientPage';
 
 export const metadata: Metadata = {
-  title: "Menua Consulting | Externalisation Back & Middle Office",
+  title: { absolute: "Menua Consulting | Externalisation Back & Middle Office" },
   description: "Menua Consulting accompagne les équipes finance, comptabilité, assurance, gestion de patrimoine, conformité, data et IT dans l’externalisation opérationnelle de fonctions back & middle office.",
   alternates: {
     canonical: 'https://menuaconsulting.com/fr',
     languages: {
       'fr-FR': 'https://menuaconsulting.com/fr',
       'en-GB': 'https://menuaconsulting.com/en',
-      'x-default': 'https://menuaconsulting.com/fr',
+      'x-default': 'https://menuaconsulting.com/',
     }
   },
   openGraph: {
@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Page() {
-  return <ClientPage />;
+import { fetchPublishedNews } from '@/lib/cms';
+
+export default async function Page() {
+  const publications = await fetchPublishedNews();
+  return <ClientPage initialPublications={publications} />;
 }

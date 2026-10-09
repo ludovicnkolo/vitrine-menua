@@ -69,7 +69,7 @@ export default function PourquoiMenuaPage() {
             <div className="hidden lg:block w-5/12 lg:h-[360px] shrink-0 relative z-30 shadow-xl overflow-hidden">
               <img
                 src="/img/pourquoi_2.webp"
-                alt={t("Pourquoi Menua", "Why Menua")}
+                alt={t("Pourquoi Menua", "Why Choose Us")}
                 className="w-full h-full object-cover object-center"
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
               />
@@ -87,7 +87,7 @@ export default function PourquoiMenuaPage() {
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                   <img
                     src="/img/pourquoi_2.webp"
-                    alt={t("Pourquoi Menua", "Why Menua")}
+                    alt={t("Pourquoi Menua", "Why Choose Us")}
                     className="w-full h-full object-cover object-center"
                     onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                   />
@@ -207,7 +207,7 @@ export default function PourquoiMenuaPage() {
                   t("interventions adaptées aux procédures internes du client ;", "delivery aligned with the client's internal procedures;"),
                   t("exécution fiable et continue ;", "reliable and continuous execution;"),
                   t("suivi structuré des livrables ;", "structured monitoring of deliverables;"),
-                  t("mobilisation possible d'experts qualifiés selon les besoins ;", "targeted deployment of qualified resources or partners tailored to project requirements;"),
+                  t("mobilisation d’équipes MENUA adaptées aux compétences, au volume et au niveau de technicité requis", "mobilisation of dedicated MENUA teams aligned with the skills, workload and level of complexity required for each engagement"),
                   t("intervention en français et en anglais.", "bilingual delivery in French and English.")
                 ]}
               />

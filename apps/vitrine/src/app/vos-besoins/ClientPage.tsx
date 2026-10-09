@@ -32,7 +32,7 @@ const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items,
                 <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover object-center" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
               </div>
 
-              <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8">{intro}</p>
+              <div className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8 space-y-4">{intro}</div>
               <h4 className="text-[#141824] font-semibold text-[0.95rem] uppercase tracking-wider mb-6">{items.label}</h4>
               <BulletList items={items.list} />
             </div>
@@ -90,7 +90,7 @@ export default function VosBesoinsPage() {
         <div className="absolute inset-0 z-0">
           <img
             src="/img/besoins-hero.webp"
-            alt={t("Hero Vos Besoins", "Hero Your needs")}
+            alt={t("Hero Vos Besoins", "Hero Your Needs")}
             className="w-full h-full object-cover object-[center_35%]"
             onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
           />
@@ -141,7 +141,7 @@ export default function VosBesoinsPage() {
               <div className="w-[85%] lg:h-[360px] relative overflow-hidden shadow-xl">
                 <img
                   src="/img/besoins-intro.webp"
-                  alt={t("Vos besoins", "Your needs")}
+                  alt={t("Vos besoins", "Your Needs")}
                   className="w-full h-full object-cover object-center"
                   onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                 />
@@ -158,7 +158,7 @@ export default function VosBesoinsPage() {
 
                 {/* Mobile Image */}
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
-                  <img src="/img/besoins-intro.webp" alt={t("Vos besoins", "Your needs")} className="w-full h-full object-cover object-center" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
+                  <img src="/img/besoins-intro.webp" alt={t("Vos besoins", "Your Needs")} className="w-full h-full object-cover object-center" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
                 </div>
 
                 <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">
@@ -359,31 +359,44 @@ export default function VosBesoinsPage() {
       />
 
       {/* ── 3.8 ASSURANCE ── */}
-      <NeedCardSection
+      <DarkNeedSection
         id="assurance-courtage"
-        imgSrc="/img/besoins-assurance.webp"
-        imgAlt={t("Assurance", "Insurance")}
-        imgFallback="/img/besoins-cgp.webp"
-        title={t("ASSURANCE — BACK & MIDDLE OFFICE", "INSURANCE — BACK & MIDDLE OFFICE")}
-        intro={formatBrand(t(
-          "MENUA CONSULTING accompagne les courtiers, agents généraux et acteurs de l’assurance en prenant en charge les opérations de Back & Middle office, la gestion contractuelle et le contrôle documentaire de leurs dossiers. La souscription, le conseil, la tarification et les engagements contractuels demeurent sous l’entière responsabilité des professionnels habilités.",
-          "MENUA CONSULTING supports brokers, general agents and insurance entities by handling Back & Middle office operations, contractual management and documentary verification of their files. Policy underwriting, advice, rating and contractual commitments remain under the full responsibility of authorized professionals."
-        ))}
-        items={{
-          label: t("Besoins couverts :", "Our support includes:"),
-          list: [
-            t("préparation et complétude des dossiers de souscription ;", "preparation and completeness checks of underwriting files;"),
-            t("collecte et vérification des pièces justificatives ;", "collection and verification of supporting documentation;"),
-            t("mise à jour des contrats et avenants ;", "contract and endorsement record updates;"),
-            t("traitement administratif des actes de gestion de contrats ;", "administrative processing of contract management operations;"),
-            t("préparation et transmission des pièces pour les règlements et sinistres ;", "preparation and transmission of files for claim and settlement processing;"),
-            t("relances administratives des assurés ;", "administrative reminders to policyholders;"),
-            t("rapprochements de bordereaux de commissions ou primes ;", "commission and premium bordereau reconciliations;"),
-            t("archivage et organisation documentaire des portefeuilles.", "document archiving and portfolio organisation.")
-          ]
-        }}
         bgClass="bg-[#f5f7fa]"
-        cardBg="bg-white"
+        topDecoClass="absolute top-0 right-0 w-1/2 h-full bg-[#eef2f6] skew-x-[-10deg] origin-bottom-right hidden lg:block"
+        titleDecoClass="bg-[#141824]"
+        borderClass="border border-[#e2e8f0]"
+        title={t("ASSURANCE — BACK & MIDDLE OFFICE, GESTION CONTRACTUELLE, ANALYSE & PRESTATIONS", "INSURANCE — BACK & MIDDLE OFFICE, POLICY ADMINISTRATION, ANALYSIS, CLAIMS & BENEFITS SUPPORT")}
+        intro={
+          <>
+            <p className="mb-4">
+              {formatBrand(t(
+                "Menua Consulting accompagne les assureurs, courtiers et équipes de gestion sur un large périmètre d’activités back et middle office liées aux contrats, prestations, sinistres, demandes clients et opérations de gestion. Les interventions peuvent porter aussi bien sur des actes courants que sur des dossiers nécessitant un niveau d’analyse ou de technicité particulier : analyse contractuelle, contrôle de cohérence, revue documentaire, instruction opérationnelle, préparation de dossiers, suivi et reporting.",
+                "Menua Consulting supports insurers, brokers, third-party administrators and insurance operations teams across a broad range of back and middle office activities relating to policies, benefits, claims, customer requests and operational workflows. Our services can cover both routine processing and technically demanding files requiring contract analysis, consistency checks, document review, operational assessment, file preparation, monitoring and reporting."
+              ))}
+            </p>
+            <p>
+              {t(
+                "MENUA intervient dans le cadre des procédures, règles de gestion, outils, habilitations et circuits de validation du client. Les équipes peuvent notamment analyser les documents contractuels et justificatifs, identifier les garanties, exclusions, franchises, plafonds, délais et pièces applicables, contrôler la complétude et la cohérence des dossiers et préparer les éléments nécessaires au traitement d’une demande ou à la réponse au client. Les décisions de souscription, de garantie, d’indemnisation, de conseil ou tout autre acte réglementé ou engageant restent sous la responsabilité du client ou des professionnels habilités.",
+                "MENUA works within the client’s procedures, business rules, systems, authorisation framework and approval workflows. Our teams may review policy wording and supporting documentation, identify applicable cover, exclusions, deductibles, limits, deadlines and required documents, assess file completeness and consistency, and prepare the operational elements required to process a case or respond to a customer. Underwriting, coverage, claims settlement, advisory and other regulated or binding decisions remain the responsibility of the client or its authorised professionals."
+              )}
+            </p>
+          </>
+        }
+        listLabel={t("Besoins couverts :", "Our support includes:")}
+        listItems={[
+          t("Gestion administrative des contrats et souscriptions : adhésions, avenants, attestations, renouvellements et modifications.", "Policy administration and servicing: applications, endorsements, certificates, renewals and amendments."),
+          t("Analyse opérationnelle des contrats, notices, conditions générales et particulières.", "Operational review of policies, notices, general terms and specific terms and conditions."),
+          t("Identification des garanties, exclusions, franchises, plafonds, délais et pièces nécessaires.", "Identification of cover, exclusions, deductibles, limits, deadlines and required documents."),
+          t("Préparation de réponses clients à partir des documents et référentiels approuvés par le client.", "Preparation of customer responses based on client-approved documentation and reference materials."),
+          t("Traitement des demandes clients, courriers, e-mails et opérations de gestion.", "Processing of customer requests, correspondence, emails and policy servicing operations."),
+          t("Préparation et contrôle de complétude de dossiers de souscription avant validation du client.", "Preparation and completeness checks of underwriting files before client approval."),
+          t("Ouverture et suivi administratif de dossiers de sinistre et de prestations.", "Opening and administrative follow-up of claims and benefit files."),
+          t("Contrôle des justificatifs, complétude et cohérence documentaire.", "Supporting-document checks, completeness and documentary consistency."),
+          t("Prévoyance : incapacité, invalidité, décès et prestations associées.", "Protection insurance: incapacity, disability, death and related benefits."),
+          t("IARD : automobile, habitation, responsabilité et autres risques selon procédures du client.", "P&C insurance: motor, home, liability and other risks in line with the client’s procedures."),
+          t("Coordination avec assureurs, courtiers, gestionnaires, experts et interlocuteurs opérationnels.", "Coordination with insurers, brokers, claims handlers, experts and operational stakeholders."),
+          t("Suivi des délais, relances, cohérence des données contractuelles, traitement de volumes importants, tableaux de bord, reporting et contrôles qualité.", "Monitoring of deadlines, follow-ups, contractual data consistency, high-volume processing, dashboards, reporting and quality checks.")
+        ]}
       />
 
       {/* ── 3.9 AUTRES BESOINS ── */}
@@ -411,7 +424,7 @@ export default function VosBesoinsPage() {
           t("suivi de demandes internes ou clients", "monitoring of internal or client requests"),
           t("support en période de surcharge d'activité", "support during periods of overload"),
           t("remplacement ou appui temporaire d'équipe", "replacement or temporary team support"),
-          t("coordination entre équipes internes et interlocuteurs opérationnels", "coordination between internal teams and operational contacts"),
+          t("coordination entre équipes internes et interlocuteurs opérationnels", "coordination across internal teams and operational stakeholders"),
           t("étude de besoins spécifiques non listés dans les rubriques précédentes", "assessment of specific needs not covered above"),
         ]}
       />

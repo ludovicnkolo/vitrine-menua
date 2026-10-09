@@ -259,8 +259,7 @@ router.post("/join", upload.none(), async (req, res) => {
   try {
     const sanitizedBody = sanitizeInput(req.body);
     const {
-      profileType,
-      company,
+    const {
       lastName,
       firstName,
       email,
@@ -319,9 +318,7 @@ router.post("/join", upload.none(), async (req, res) => {
     if (!hasSkills) {
       return sendResponse(res, 400, "ERROR_SKILLS_REQUIRED", lang);
     }
-    if (profileType === "company" && !company) {
-      return sendResponse(res, 400, "ERROR_REQUIRED_FIELDS", lang);
-    }
+
 
     let parsedSkills = [];
     if (Array.isArray(skills)) {
@@ -338,12 +335,6 @@ router.post("/join", upload.none(), async (req, res) => {
         : s;
     });
 
-    const typeText =
-      profileType === "company" ? "Entreprise (B2B)" : "Particulier";
-    const companyHtml =
-      profileType === "company"
-        ? `<strong>Société</strong> : <span>${company}</span><br/>`
-        : "";
     const skillsHtml =
       parsedSkills.length > 0
         ? `<ul>${parsedSkills.map((s) => `<li>${s}</li>`).join("")}</ul>`
@@ -351,8 +342,6 @@ router.post("/join", upload.none(), async (req, res) => {
 
     const contentHTML = `
       <div style="margin-bottom: 20px;">
-        <strong>Type de profil</strong> : <span>${typeText}</span><br/>
-        ${companyHtml}
         <strong>Nom complet</strong> : <span>${lastName + " " + firstName}</span><br/>
         <strong>Email</strong> : <span>${email}</span><br/>
         <strong>Téléphone</strong> : <span>${phone || ""}</span><br/>
@@ -386,13 +375,12 @@ router.post("/join", upload.none(), async (req, res) => {
         data: {
           formulaireId: crypto.randomUUID(),
           type: "RECRUTEMENT",
-          statusSubmitter:
-            profileType === "company" ? "SOCIETE" : "PARTICULIER",
+          statusSubmitter: "PARTICULIER",
           nomPrenom: `${firstName || ""} ${lastName || ""}`.trim(),
           email: email,
           telephone: phone || null,
           description: message || null,
-          raisonSocial: company || null,
+          raisonSocial: null,
           objet: "Demande de collaboration",
           bodyHtml: contentHTML,
           isAnonyme: true,

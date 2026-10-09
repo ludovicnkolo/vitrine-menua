@@ -28,7 +28,6 @@ const LANGUAGES = [
 
 export default function NousRejoindre() {
   const { t, lang } = useLanguage();
-  const [profileType, setProfileType] = useState<"individual" | "company">("individual");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{ type: "success" | "error", message: string } | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
@@ -200,7 +199,7 @@ export default function NousRejoindre() {
                   <label className="text-[0.85rem] font-bold tracking-widest text-[#141824] mb-4 block">
                     {t("Compétences clés", "Key skills")} <span className="text-red-500">*</span>
                   </label>
-                  <div key={profileType} className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
                     {[
                       t("Back et middle office", "Back and middle office"),
                       t("Comptabilité", "Accounting"),

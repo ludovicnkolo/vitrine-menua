@@ -6,5 +6,9 @@ export const generateSlug = (title: string, id?: string) => {
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)+/g, "");
+  
+  if (id) {
+    return `${slug}-${id}`;
+  }
   return slug;
 };

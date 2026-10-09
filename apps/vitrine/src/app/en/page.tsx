@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     languages: {
       'fr-FR': 'https://menuaconsulting.com/fr',
       'en-GB': 'https://menuaconsulting.com/en',
-      'x-default': 'https://menuaconsulting.com/fr',
+      'x-default': 'https://menuaconsulting.com/',
     },
   },
   openGraph: {
@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Page() {
-  return <ClientPage />;
+import { fetchPublishedNews } from '@/lib/cms';
+
+export default async function Page() {
+  const publications = await fetchPublishedNews();
+  return <ClientPage initialPublications={publications} />;
 }

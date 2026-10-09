@@ -3,7 +3,7 @@ import ClientPage from '../../vos-besoins/ClientPage';
 
 export const metadata: Metadata = {
   title: "Your Needs",
-  description: "Finance, compliance, data and wealth management: operational support and delegated management tailored to your needs.",
+  description: "Finance, compliance, data and wealth management: operational support and operational outsourcing tailored to your needs.",
   alternates: {
     canonical: 'https://menuaconsulting.com/en/your-needs',
     languages: {

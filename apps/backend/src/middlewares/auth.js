@@ -68,6 +68,19 @@ const authenticateJWT = (req, res, next) => {
               action: "FORCE_LOGOUT",
             });
         }
+        
+        // Validation de session: si le mot de passe a changé, la signature change
+        if (user.sessionSig !== undefined) {
+          const currentSig = dbUser.password ? dbUser.password.substring(dbUser.password.length - 10) : "";
+          if (user.sessionSig !== currentSig) {
+            return res
+              .status(401)
+              .json({
+                error: "Session expirée suite à une modification du mot de passe. Veuillez vous reconnecter.",
+                action: "FORCE_LOGOUT",
+              });
+          }
+        }
         req.user = {
           ...user,
           role: dbUser.role?.name || user.role || "Collaborateur",

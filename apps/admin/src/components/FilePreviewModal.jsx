@@ -10,6 +10,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 const FilePreviewModal = ({ previewFile, onClose }) => {
   const [previewBlobUrl, setPreviewBlobUrl] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [scale, setScale] = useState(1.0);
@@ -18,12 +19,14 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
     if (!previewFile) {
       setPreviewBlobUrl(null);
       setError(null);
+      setIsLoading(false);
       setNumPages(null);
       setPageNumber(1);
       setScale(1.0);
       return;
     }
     setError(null);
+    setIsLoading(true);
 
     try {
       const token = sessionStorage.getItem("adminToken");
@@ -36,9 +39,11 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
       }
       // Utilise le proxy backend avec stream=true pour contourner le blocage CORS de S3 OVH
       // (S3 OVH ne retourne pas Access-Control-Allow-Origin sur les URLs présignées)
+      // On encode chaque segment du filename séparément pour préserver les "/" (clés S3 multi-niveaux)
+      const encodedFilename = filename.split("/").map(encodeURIComponent).join("/");
       const urlObj = new URL(
         getSafeApiUrl(
-          `/api/files/view/${encodeURIComponent(bucket)}/${encodeURIComponent(filename)}`,
+          `/api/files/view/${encodeURIComponent(bucket)}/${encodedFilename}`,
         ),
       );
       if (token) urlObj.searchParams.set("token", token);
@@ -54,7 +59,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
 
   if (!previewFile) return null;
 
-  const isImage = previewFile.match(/\.(jpeg|jpg|png|gif|webp)$/i);
+  const isImage = previewFile.match(/\.(jpeg|jpg|png|gif|webp|svg)$/i);
   const isPdf = previewFile.match(/\.pdf$/i);
   const isUnsupported = !isImage && !isPdf;
 
@@ -222,31 +227,49 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
                   </div>
                 );
               }
-              if (!previewBlobUrl) {
+              if (!previewBlobUrl || (isLoading && isImage)) {
                 return (
                   <div
                     style={{
                       display: "flex",
+                      flexDirection: "column",
                       alignItems: "center",
                       justifyContent: "center",
                       height: "100%",
+                      gap: "1rem",
+                      color: "var(--text-muted)",
                     }}
                   >
-                    Chargement du document...
+                    <div style={{
+                      width: "40px",
+                      height: "40px",
+                      border: "3px solid var(--border)",
+                      borderTopColor: "var(--primary)",
+                      borderRadius: "50%",
+                      animation: "spin 0.8s linear infinite",
+                    }} />
+                    <span>Chargement du fichier...</span>
                   </div>
                 );
               }
               if (isImage) {
                 return (
-                  <img
-                    src={previewBlobUrl}
-                    alt={previewFile}
-                    style={{
-                      maxWidth: "100%",
-                      maxHeight: "100%",
-                      objectFit: "contain",
-                    }}
-                  />
+                  <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+                    <img
+                      src={previewBlobUrl}
+                      alt={previewFile.split("/").pop()}
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        objectFit: "contain",
+                      }}
+                      onLoad={() => setIsLoading(false)}
+                      onError={() => {
+                        setIsLoading(false);
+                        setError("Impossible de charger l'image.");
+                      }}
+                    />
+                  </div>
                 );
               }
               if (isUnsupported) {
@@ -289,10 +312,11 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
                 <div style={{ padding: "1rem" }}>
                   <Document
                     file={previewBlobUrl}
-                    onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+                    onLoadSuccess={({ numPages }) => { setNumPages(numPages); setIsLoading(false); }}
                     onLoadError={(err) => {
                       console.error("React-pdf error:", err);
                       setError(err.message || String(err));
+                      setIsLoading(false);
                     }}
                     loading={
                       <div style={{ padding: "2rem" }}>

@@ -18,7 +18,24 @@ export default function ActualitesPage({ initialPublications = [] }: ActualitesP
 
   const displayTitle = (pub: any) => (isEN && pub.title_en) ? pub.title_en : pub.title;
   const displayContent = (pub: any) => (isEN && pub.contentHtml_en) ? pub.contentHtml_en : pub.contentHtml;
-  const displayCategory = (pub: any) => (isEN && pub.category_en) ? pub.category_en : pub.category;
+  const displayCategory = (pub: any) => {
+  const categoryKey = pub.category;
+  if (!categoryKey) return "";
+  const filterList = [
+    { key: "TOUTES LES ACTUALITÉS", fr: "TOUTES LES ACTUALITÉS", en: "ALL NEWS" },
+    { key: "FINANCE ET COMPTABILITÉ", fr: "FINANCE ET COMPTABILITÉ", en: "FINANCE AND ACCOUNTING" },
+    { key: "BACK ET MIDDLE OFFICE", fr: "BACK ET MIDDLE OFFICE", en: "BACK & MIDDLE OFFICE" },
+    { key: "DATA ET REPORTING", fr: "DATA ET REPORTING", en: "DATA AND REPORTING" },
+    { key: "RISQUES, CONFORMITÉ ET KYC", fr: "RISQUES, CONFORMITÉ ET KYC", en: "RISK, COMPLIANCE AND KYC" },
+    { key: "GESTION DE PATRIMOINE", fr: "GESTION DE PATRIMOINE", en: "WEALTH MANAGEMENT" },
+    { key: "ORGANISATION ET EXTERNALISATION", fr: "ORGANISATION ET EXTERNALISATION", en: "ORGANISATION AND OUTSOURCING" }
+  ];
+  const filter = filterList.find(f => f.key === categoryKey);
+  if (filter) {
+    return isEN ? filter.en : filter.fr;
+  }
+  return (isEN && pub.category_en) ? pub.category_en : categoryKey;
+};
   const [activeFilter, setActiveFilter] = useState("TOUTES LES ACTUALITÉS");
   const [publications, setPublications] = useState<any[]>(initialPublications);
 
@@ -71,7 +88,7 @@ export default function ActualitesPage({ initialPublications = [] }: ActualitesP
         <div className="absolute inset-0 z-0">
           <img
             src="/img/accueil-actus.webp"
-            alt={t("Actualités et Veille", "Insights and News")}
+            alt={t("Actualités et Veille", "News")}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>
@@ -140,7 +157,7 @@ export default function ActualitesPage({ initialPublications = [] }: ActualitesP
                   <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-xl">MENUA CONSULTING</span>
                 )}
                 {featuredPub.category && (
-                  <div className="absolute top-4 left-4 bg-[#e8e1d7] text-[#141824] px-4 py-2 text-[0.8rem] font-bold uppercase tracking-wider">
+                  <div className="absolute top-4 left-4 bg-[#e8e1d7] text-[#141824] px-4 py-2 text-[0.8rem] font-bold uppercase tracking-wider z-20">
                     {displayCategory(featuredPub)}
                   </div>
                 )}
@@ -232,7 +249,7 @@ export default function ActualitesPage({ initialPublications = [] }: ActualitesP
                       <span className="text-[#141824]/20 font-bold tracking-widest uppercase text-sm">MENUA CONSULTING</span>
                     )}
                     {pub.category && (
-                      <div className="absolute top-3 left-3 bg-[#e8e1d7] text-[#141824] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wider">
+                      <div className="absolute top-3 left-3 bg-[#e8e1d7] text-[#141824] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wider z-20">
                         {displayCategory(pub)}
                       </div>
                     )}

@@ -15,7 +15,7 @@ export default function PolitiqueConfidentialite() {
         <div className="laplace-container portrait:sm:px-10 max-w-5xl">
           <LegalPageHeader 
             title={t("Politique de confidentialité", "Privacy Policy")} 
-            lastUpdate={t("Dernière mise à jour : juillet 2026.", "Last update: July 2026.")} 
+            lastUpdate={t("Dernière mise à jour : octobre 2026.", "Last update: October 2026.")} 
           />
           <div className="space-y-14 text-[#6e7891] text-[1.05rem] font-light leading-relaxed">
             

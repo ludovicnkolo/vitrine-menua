@@ -460,38 +460,29 @@ const RolesPage = () => {
               <table style={{ tableLayout: "fixed", width: "100%" }}>
                 <thead>
                   <tr>
-                    <th style={{ width: "24%", textAlign: "left", paddingLeft: "1.25rem" }}>{t("users.columns.role", "Rôle")}</th>
-                    <th style={{ width: "36%" }}>{t("roles.permissions", "Permissions")}</th>
-                    <th style={{ width: "14%" }}>{t("users.columns.status", "Statut")}</th>
-                    <th style={{ width: "14%" }}>{t("roles.users", "Utilisateurs")}</th>
-                    <th style={{ width: "12%" }}>{t("common.actions", "Actions")}</th>
+                    <th style={{ width: "20%", textAlign: "left", paddingLeft: "1.25rem" }}>N°</th>
+                    <th style={{ width: "20%" }}>Intitulé</th>
+                    <th style={{ width: "20%" }}>Date de création</th>
+                    <th style={{ width: "30%" }}>Statut</th>
+                    <th style={{ width: "10%" }}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {roles.map((r) => (
                     <tr key={r.id}>
-                      <td style={{ textAlign: "left", paddingLeft: "1.25rem" }}>
-                        <div className="truncate-name" style={{ maxWidth: "100%" }} title={r.name}>
+                      <td style={{ textAlign: "left", paddingLeft: "1.25rem", color: "var(--text-muted)", fontSize: "0.85rem" }}>
+                        <div className="truncate-name" style={{ maxWidth: "100%" }} title={r.id}>
+                          {r.id.split('-')[0]}...
+                        </div>
+                      </td>
+                      <td>
+                        <div className="truncate-name" style={{ maxWidth: "100%", fontWeight: 500 }} title={r.name}>
                           {r.name}
                         </div>
                       </td>
                       <td>
                         <span style={{ color: "var(--text-muted)" }}>
-                          {(() => {
-                            try {
-                              const arr = JSON.parse(r.permissions);
-                              return (
-                                arr.length +
-                                " " +
-                                t("roles.permCount", {
-                                  count: arr.length,
-                                  defaultValue: "permission" + (arr.length > 1 ? "s" : ""),
-                                })
-                              );
-                            } catch {
-                              return t("roles.noPermission", "Aucune permission");
-                            }
-                          })()}
+                          {new Date(r.createdAt || Date.now()).toLocaleDateString("fr-FR")}
                         </span>
                       </td>
                       <td>
@@ -501,11 +492,6 @@ const RolesPage = () => {
                           }}
                         >
                           {r.status === "Inactif" ? t("common.inactive", "Inactif") : t("common.active", "Actif")}
-                        </span>
-                      </td>
-                      <td>
-                        <span style={{ color: "#1D4ED8" }}>
-                          {t("roles.members", { count: r.users, defaultValue: `${r.users} membre${r.users !== 1 ? "s" : ""}` })}
                         </span>
                       </td>
                       <td style={{ overflow: "visible", position: "relative", zIndex: openMenuId === r.id ? 1000 : 1 }}>
@@ -559,7 +545,7 @@ const RolesPage = () => {
           async (e) => {
             e.preventDefault();
             try {
-              await fetch(getSafeApiUrl("/api/crm/roles"), {
+              const res = await fetch(getSafeApiUrl("/api/crm/roles"), {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -573,12 +559,18 @@ const RolesPage = () => {
                   permissions: JSON.stringify(selectedPermissions),
                 }),
               });
+              const data = await res.json();
+              if (!res.ok) {
+                alert("Erreur: " + (data.error || "Impossible de créer le rôle"));
+                return;
+              }
               setNewRole({ name: "", description: "", status: "Actif" });
               setSelectedPermissions([]);
               setShowRoleModal(false);
               fetchData();
             } catch (err) {
               console.error("Erreur lors de la création:", err);
+              alert("Erreur réseau");
             }
           },
           () => setShowRoleModal(false),
@@ -647,7 +639,7 @@ const RolesPage = () => {
         const handleSaveRole = async (e) => {
           e.preventDefault();
           try {
-            await fetch(
+            const res = await fetch(
               getSafeApiUrl(`/api/crm/roles/${encodeURIComponent(editRole.id)}`),
               {
                 method: "PATCH",
@@ -663,10 +655,16 @@ const RolesPage = () => {
                 }),
               },
             );
+            const data = await res.json();
+            if (!res.ok) {
+              alert("Erreur: " + (data.error || "Impossible de modifier le rôle"));
+              return;
+            }
             setEditRole(null);
             fetchData();
           } catch (err) {
             console.error("Erreur lors de la mise à jour:", err);
+            alert("Erreur réseau");
           }
         };
 

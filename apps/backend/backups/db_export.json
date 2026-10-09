@@ -7,7 +7,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.222Z",
-      "updatedAt": "2026-10-07T16:02:32.665Z"
+      "updatedAt": "2026-10-09T22:06:43.711Z"
     },
     {
       "id": "a41c168d-dc87-4353-8dcb-c71e4109416c",
@@ -16,7 +16,7 @@
       "status": "Inactif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.242Z",
-      "updatedAt": "2026-10-07T16:02:32.717Z"
+      "updatedAt": "2026-10-09T22:06:43.730Z"
     },
     {
       "id": "7f685243-dda5-4117-a675-d4a7364c7a66",
@@ -25,7 +25,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-09-28T09:31:02.248Z",
-      "updatedAt": "2026-10-07T16:02:32.750Z"
+      "updatedAt": "2026-10-09T22:06:43.742Z"
     },
     {
       "id": "803c6051-c50d-495a-bb21-b6615f1cf0dc",
@@ -34,7 +34,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-09-28T09:31:02.256Z",
-      "updatedAt": "2026-10-07T16:02:32.772Z"
+      "updatedAt": "2026-10-09T22:06:43.759Z"
     },
     {
       "id": "eaa1c720-2a71-493c-a1c0-d14f51051e0f",
@@ -43,14 +43,50 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-09-28T09:31:02.269Z",
-      "updatedAt": "2026-10-07T16:02:32.822Z"
+      "updatedAt": "2026-10-09T22:06:43.774Z"
+    },
+    {
+      "id": "1ecfc45c-2bd5-4fb0-96aa-ef8b3f0837f6",
+      "name": "Rem ut rerum atque a",
+      "description": "At necessitatibus do",
+      "status": "Actif",
+      "permissions": "[\"MESSAGES_PROCESS\"]",
+      "createdAt": "2026-10-09T13:34:54.440Z",
+      "updatedAt": "2026-10-09T13:34:54.440Z"
+    },
+    {
+      "id": "4a184d23-5871-4eeb-ba16-e4ddf517292b",
+      "name": "Est minima tempor v",
+      "description": "Qui optio sit delen",
+      "status": "Inactif",
+      "permissions": "[\"TACHES_VIEW_ALL\",\"DOSSIERS_MANAGE\",\"MESSAGES_VIEW\"]",
+      "createdAt": "2026-10-09T13:35:20.136Z",
+      "updatedAt": "2026-10-09T13:35:20.136Z"
+    },
+    {
+      "id": "4559119e-b17e-4ae3-a79e-2da089a64f53",
+      "name": "Sunt iste proident",
+      "description": "Aliquip non ut illo ",
+      "status": "Inactif",
+      "permissions": "[\"MESSAGES_PROCESS\"]",
+      "createdAt": "2026-10-09T14:15:10.609Z",
+      "updatedAt": "2026-10-09T14:15:10.609Z"
+    },
+    {
+      "id": "596ab075-73f8-441a-ac44-9a719823a822",
+      "name": "TEST_ROLE_4",
+      "description": "Test",
+      "status": "Actif",
+      "permissions": "[]",
+      "createdAt": "2026-10-09T14:26:53.301Z",
+      "updatedAt": "2026-10-09T14:26:53.301Z"
     }
   ],
   "utilisateurs": [
     {
       "id": "2541799f-86de-4071-86c7-7110615bf37b",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$uCNojRz0nqP5ysSc0Dxf1uF4ETwmSkO2HHGNSdsQ1mH6/Aat93cra",
+      "password": "$2a$10$9zIWMZ2iWCTkWNP0rfRqle7rO3ElZPdaFGT30kw500lWH0bS6cQlW",
       "name": "Rosette Fouelefack",
       "roleId": "832d5c59-5fe6-488f-b64a-1bfdc6504152",
       "telephone": "+33659207511",
@@ -69,9 +105,9 @@
       "resetTokenExpiry": "2026-10-05T08:38:59.338Z",
       "isBlocked": false,
       "status": "Actif",
-      "lastLogin": "2026-10-07T15:52:26.303Z",
+      "lastLogin": "2026-10-09T16:05:26.060Z",
       "createdAt": "2026-09-28T09:31:02.401Z",
-      "updatedAt": "2026-10-07T16:02:33.494Z"
+      "updatedAt": "2026-10-09T22:06:44.045Z"
     },
     {
       "id": "d835f1ac-9910-402b-89df-f3968179f15a",
@@ -145,11 +181,11 @@
       "managerId": null,
       "resetToken": null,
       "resetTokenExpiry": null,
-      "isBlocked": false,
-      "status": "Actif",
+      "isBlocked": true,
+      "status": "Suspendu / Inactif",
       "lastLogin": "2026-10-05T21:31:30.180Z",
       "createdAt": "2026-10-05T19:44:20.676Z",
-      "updatedAt": "2026-10-05T21:31:30.181Z"
+      "updatedAt": "2026-10-09T15:28:04.013Z"
     },
     {
       "id": "4ff989df-4979-4205-9dcc-8499e92f3c88",
@@ -282,8 +318,31 @@
       "updatedAt": "2026-10-05T19:44:20.752Z"
     }
   ],
-  "clients": [],
-  "clientEntreprises": [],
+  "clients": [
+    {
+      "id": "bfd6e303-5848-4947-bcf9-02bb93081fd6",
+      "type": "SOCIETE",
+      "email": "ludovi@gmail.com",
+      "name": "Mollit consequatur d",
+      "telephone": "1rrcrwercr",
+      "contactSecondaire": "fvg",
+      "secteurActivite": "dcwc",
+      "description": "Mollit beatae fugiat",
+      "status": "ACTIF",
+      "createdAt": "2026-10-07T16:16:57.505Z",
+      "updatedAt": "2026-10-07T16:16:57.505Z"
+    }
+  ],
+  "clientEntreprises": [
+    {
+      "id": "f053d608-27c3-4c62-b25d-cccf3036c8f7",
+      "clientId": "bfd6e303-5848-4947-bcf9-02bb93081fd6",
+      "siret": "Necessitatibus a est",
+      "raisonSociale": "Odit voluptatem Sus",
+      "emailEntreprise": "vipyqu@mailinator.com",
+      "telephoneEntreprise": "+1 (738) 384-2492"
+    }
+  ],
   "formulaires": [
     {
       "id": "5cae5a2f-e84b-4dd9-9e14-1eec9bbbd934",
@@ -293,12 +352,12 @@
       "nomPrenom": "Imani Rivas",
       "email": "ludovicnkolo01@gmail.com",
       "telephone": "+1 (202) 156-8097",
-      "priority": "Urgent",
+      "priority": "Normal",
       "description": "Qui molestiae possim",
       "raisonSocial": null,
       "objet": "Demande de collaboration",
       "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de profil</strong> : <span>Particulier</span><br/>\n        \n        <strong>Nom complet</strong> : <span>Rivas Imani</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (202) 156-8097</span><br/>\n        <strong>Expérience</strong> : <span>Moins de 2 ans</span><br/>\n        <strong>Langues</strong> : <span>Arabe, Coréen</span><br/>\n        <strong>Localisation</strong> : <span>Quae ea eu reiciendi</span><br/>\n        <strong>Disponibilité</strong> : <span>Sous 1 mois</span><br/>\n        <strong>LinkedIn / Portfolio</strong> : <span><a href=\"https://www.qib.org.au\" style=\"color: #141824;\">https://www.qib.org.au</a></span>\n      </div>\n      <strong>Compétences clés</strong> : <div><ul><li>Back et middle office</li><li>Risques et Conformité</li><li>Support opérationnel CGP</li></ul></div><br/>\n      <strong>Message / Motivations</strong> : <div>\n      Qui molestiae possim\n      </div>\n    ",
-      "status": "ENTRETIEN",
+      "status": "REFUSE",
       "isAnonyme": true,
       "verifaliaJobId": null,
       "verifaliaStatus": "COMPLETED_VALID",
@@ -311,7 +370,7 @@
       "assignedToId": null,
       "receivedAt": "2026-10-06T13:13:57.793Z",
       "createdAt": "2026-10-06T13:13:57.793Z",
-      "updatedAt": "2026-10-06T23:05:58.899Z",
+      "updatedAt": "2026-10-07T16:09:26.308Z",
       "dateRappel": "2026-12-11T10:11:00.000Z",
       "noteRappel": null,
       "dateEntretien": "2027-02-11T10:10:00.000Z",
@@ -357,12 +416,12 @@
       "nomPrenom": "Paul Sloan",
       "email": "ludovicnkolo01@gmail.com",
       "telephone": "+1 (316) 846-3616",
-      "priority": "Urgent",
+      "priority": "Normal",
       "description": "Rerum tempora ration",
       "raisonSocial": null,
       "objet": "Demande de contact",
       "bodyHtml": "\n      <div style=\"margin-bottom: 20px;\">\n        <strong>Type de client</strong> : <span>Particulier</span><br/>\n        \n        <strong>Nom complet</strong> : <span>Paul Sloan</span><br/>\n        <strong>Email</strong> : <span>ludovicnkolo01@gmail.com</span><br/>\n        <strong>Téléphone</strong> : <span>+1 (316) 846-3616</span>\n      </div>\n      <strong>Besoins identifiés</strong> : <div><ul><li>Renfort opérationnel</li><li>Contrôle de gestion</li><li>Risques et conformité</li><li>Support comptable et data</li><li>Autre besoin opérationnel</li></ul></div><br/>\n      <strong>Description du besoin</strong> : <div>\n      Rerum tempora ration\n      </div>\n    ",
-      "status": "A_RAPPELER",
+      "status": "DISCUSSION",
       "isAnonyme": true,
       "verifaliaJobId": null,
       "verifaliaStatus": "COMPLETED_VALID",
@@ -375,7 +434,7 @@
       "assignedToId": null,
       "receivedAt": "2026-10-06T13:15:52.586Z",
       "createdAt": "2026-10-06T13:15:52.586Z",
-      "updatedAt": "2026-10-06T23:05:36.363Z",
+      "updatedAt": "2026-10-08T16:25:55.970Z",
       "dateRappel": "2027-12-22T10:10:00.000Z",
       "noteRappel": "rapelle pour definir heure rdv",
       "dateEntretien": null,
@@ -468,30 +527,11 @@
     {
       "origin": "INTERNE",
       "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
-      "id": "a61c9890-0b28-4461-b866-c8dc6cdde24b",
-      "reference": "DOS-04",
-      "name": "dos-04_hbjbhh",
-      "description": "Sous-dossier GED",
-      "status": "CORBEILLE",
-      "previousStatus": null,
-      "priority": "NORMAL",
-      "categorie": null,
-      "clientId": null,
-      "targetUserId": null,
-      "traitantId": null,
-      "parentDossierId": null,
-      "createdAt": "2026-10-05T21:27:56.701Z",
-      "updatedAt": "2026-10-07T14:37:13.897Z",
-      "isSystem": false
-    },
-    {
-      "origin": "INTERNE",
-      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
       "id": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
       "reference": "DOS-05",
       "name": "dos-05_n  kjkjkbk",
       "description": "Sous-dossier GED",
-      "status": "NOUVEAU",
+      "status": "EN_COURS",
       "previousStatus": "EN_ATTENTE",
       "priority": "NORMAL",
       "categorie": null,
@@ -500,7 +540,7 @@
       "traitantId": null,
       "parentDossierId": null,
       "createdAt": "2026-10-06T19:59:33.252Z",
-      "updatedAt": "2026-10-07T15:01:28.530Z",
+      "updatedAt": "2026-10-08T20:46:32.706Z",
       "isSystem": false
     },
     {
@@ -540,6 +580,63 @@
       "createdAt": "2026-10-07T15:01:28.557Z",
       "updatedAt": "2026-10-07T15:01:28.557Z",
       "isSystem": true
+    },
+    {
+      "origin": "CLIENT",
+      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "id": "de60da2b-e686-4b7d-b5dc-9cb281a7a020",
+      "reference": "DOS-08",
+      "name": "dos-08_mollit_consequatur_d",
+      "description": "qwfv",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": "bfd6e303-5848-4947-bcf9-02bb93081fd6",
+      "targetUserId": null,
+      "traitantId": "d835f1ac-9910-402b-89df-f3968179f15a",
+      "parentDossierId": null,
+      "createdAt": "2026-10-07T16:17:37.599Z",
+      "updatedAt": "2026-10-07T16:17:37.599Z",
+      "isSystem": false
+    },
+    {
+      "origin": "CLIENT",
+      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "id": "472b282b-1eb6-47af-b53b-59143f9b6f57",
+      "reference": "DOS-09",
+      "name": "dos-09_mollit_consequatur_d",
+      "description": "aetht",
+      "status": "EN_COURS",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": "bfd6e303-5848-4947-bcf9-02bb93081fd6",
+      "targetUserId": null,
+      "traitantId": "d835f1ac-9910-402b-89df-f3968179f15a",
+      "parentDossierId": null,
+      "createdAt": "2026-10-09T14:22:23.278Z",
+      "updatedAt": "2026-10-09T14:25:20.287Z",
+      "isSystem": false
+    },
+    {
+      "origin": "CLIENT",
+      "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
+      "id": "1d6bb473-3eb9-4740-a6fc-38f2f7ace7d2",
+      "reference": "DOS-10",
+      "name": "mis-01_dos-09_odit_voluptatem_sus",
+      "description": "Sous-dossier GED auto-généré pour la mission MSN-03",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": "bfd6e303-5848-4947-bcf9-02bb93081fd6",
+      "targetUserId": null,
+      "traitantId": "d835f1ac-9910-402b-89df-f3968179f15a",
+      "parentDossierId": "472b282b-1eb6-47af-b53b-59143f9b6f57",
+      "createdAt": "2026-10-09T14:22:57.813Z",
+      "updatedAt": "2026-10-09T14:22:57.813Z",
+      "isSystem": true
     }
   ],
   "missions": [
@@ -567,31 +664,31 @@
       "assignedToId": "2541799f-86de-4071-86c7-7110615bf37b",
       "relecteurId": null,
       "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
-      "description": "Adipisicing eaque po\n\nTempor distinctio O",
-      "echeance": "2026-10-09T23:00:00.000Z",
-      "status": "NOUVEAU",
-      "previousStatus": "EN_ATTENTE",
+      "description": "Objet: Adipisicing eaque po\nConsignes: Tempor distinctio O",
+      "echeance": "2026-10-06T23:00:00.000Z",
+      "status": "TERMINE",
+      "previousStatus": "EN_COURS",
       "attachment": null,
       "dossierMissionId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
       "createdAt": "2026-10-06T23:07:34.288Z",
-      "updatedAt": "2026-10-06T23:09:39.673Z",
+      "updatedAt": "2026-10-08T20:47:32.131Z",
       "parentMissionId": null
     },
     {
-      "id": "de544727-8ba3-4dd1-9fad-0e222b6a3f0f",
+      "id": "89703f20-ec5d-4f3b-9b66-51bb275197e8",
       "reference": "MSN-03",
-      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "dossierId": "472b282b-1eb6-47af-b53b-59143f9b6f57",
       "assignedToId": "d835f1ac-9910-402b-89df-f3968179f15a",
       "relecteurId": null,
       "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
-      "description": "Voluptas voluptates \n\nPlaceat est sunt m",
-      "echeance": "2026-10-06T23:00:00.000Z",
-      "status": "CORBEILLE",
-      "previousStatus": null,
+      "description": "Commodo sapiente exe\n\nAmet aut est sequi ",
+      "echeance": "2026-10-14T23:00:00.000Z",
+      "status": "EN_COURS",
+      "previousStatus": "NOUVEAU",
       "attachment": null,
-      "dossierMissionId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
-      "createdAt": "2026-10-07T15:01:28.515Z",
-      "updatedAt": "2026-10-07T15:02:35.921Z",
+      "dossierMissionId": "472b282b-1eb6-47af-b53b-59143f9b6f57",
+      "createdAt": "2026-10-09T14:22:57.764Z",
+      "updatedAt": "2026-10-09T14:25:20.278Z",
       "parentMissionId": null
     }
   ],
@@ -623,32 +720,32 @@
       "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
       "description": "Objet: Repellendus Officia\n\nConsignes: Laudantium esse sus",
       "echeance": "2026-10-06T23:00:00.000Z",
-      "status": "NOUVEAU",
-      "previousStatus": "EN_ATTENTE",
+      "status": "TERMINE",
+      "previousStatus": "APPROUVEE",
       "attachment": null,
       "adminFeedback": null,
       "managerFeedback": null,
       "dossierTacheId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
       "createdAt": "2026-10-06T23:08:15.795Z",
-      "updatedAt": "2026-10-06T23:21:25.705Z"
+      "updatedAt": "2026-10-08T20:47:32.117Z"
     },
     {
-      "id": "1b160568-2b35-475b-a220-ad029f088ad0",
+      "id": "40f6eb83-d6fa-40c7-9907-19623633860f",
       "reference": "TCH-03",
-      "missionId": "de544727-8ba3-4dd1-9fad-0e222b6a3f0f",
-      "assignedToId": "eb4a1daf-8987-45e8-9c10-b4886910bb10",
+      "missionId": "89703f20-ec5d-4f3b-9b66-51bb275197e8",
+      "assignedToId": "d835f1ac-9910-402b-89df-f3968179f15a",
       "relecteurId": "eb4a1daf-8987-45e8-9c10-b4886910bb10",
       "createdById": "2541799f-86de-4071-86c7-7110615bf37b",
-      "description": "Objet: Ipsam sit quam minus\n\nConsignes: Totam possimus aliq",
-      "echeance": "2026-10-06T23:00:00.000Z",
-      "status": "CORBEILLE",
-      "previousStatus": null,
+      "description": "Objet: Aliquip alias amet \n\nConsignes: Dolor corrupti beat",
+      "echeance": "2026-10-13T23:00:00.000Z",
+      "status": "EN_COURS",
+      "previousStatus": "NOUVEAU",
       "attachment": null,
       "adminFeedback": null,
       "managerFeedback": null,
-      "dossierTacheId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
-      "createdAt": "2026-10-07T15:02:13.679Z",
-      "updatedAt": "2026-10-07T15:02:35.943Z"
+      "dossierTacheId": "472b282b-1eb6-47af-b53b-59143f9b6f57",
+      "createdAt": "2026-10-09T14:24:11.301Z",
+      "updatedAt": "2026-10-09T14:25:20.253Z"
     }
   ],
   "documents": [
@@ -825,17 +922,6 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-10-05T21:20:45.188Z"
-    },
-    {
-      "id": "090129f8-1a15-445c-959a-f2b652563eac",
-      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
-      "action": "CREATION_DOSSIER",
-      "targetId": "a61c9890-0b28-4461-b866-c8dc6cdde24b",
-      "targetType": "DOSSIER",
-      "details": "Dossier créé: dos-04_hbjbhh",
-      "dossierId": "a61c9890-0b28-4461-b866-c8dc6cdde24b",
-      "formulaireId": null,
-      "createdAt": "2026-10-05T21:27:56.718Z"
     },
     {
       "id": "135cc67f-bdd9-4125-8f78-01656d392f75",
@@ -1650,6 +1736,391 @@
       "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
       "formulaireId": null,
       "createdAt": "2026-10-07T15:59:21.627Z"
+    },
+    {
+      "id": "706d642a-09e6-4a09-98cd-49421c735bd8",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_POLE",
+      "targetId": null,
+      "targetType": null,
+      "details": "Création du pôle : cjvbfebvevie",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-07T16:14:45.662Z"
+    },
+    {
+      "id": "e73d14a4-1012-4a18-a0aa-799649fdfd18",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_CLIENT",
+      "targetId": "bfd6e303-5848-4947-bcf9-02bb93081fd6",
+      "targetType": "CLIENT",
+      "details": "Client créé : Mollit consequatur d (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-07T16:16:57.522Z"
+    },
+    {
+      "id": "43ea0fee-f0d2-42be-8beb-e1ac7d2ea657",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_DOSSIER",
+      "targetId": "de60da2b-e686-4b7d-b5dc-9cb281a7a020",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dos-08_mollit_consequatur_d",
+      "dossierId": "de60da2b-e686-4b7d-b5dc-9cb281a7a020",
+      "formulaireId": null,
+      "createdAt": "2026-10-07T16:17:37.650Z"
+    },
+    {
+      "id": "454b4b75-21f0-4ac0-8c6f-cf12e657fb9d",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "SUPPRESSION_POLE",
+      "targetId": null,
+      "targetType": null,
+      "details": "Suppression du pôle : cjvbfebvevie",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-07T16:19:13.305Z"
+    },
+    {
+      "id": "cdd79bc7-2b97-4ae8-8cbf-b5b75e48b025",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_MISSION",
+      "targetId": "75a99400-8aeb-4072-aa77-199522c273dd",
+      "targetType": "MISSION",
+      "details": "Mission modifiée (Statut: NOUVEAU)",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-07T20:51:32.956Z"
+    },
+    {
+      "id": "cf17d2f3-0230-4570-8765-7a00a2f76cc8",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-08T07:55:43.009Z"
+    },
+    {
+      "id": "0dd84b42-2082-485a-869c-69c0edc2c130",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-08T15:32:44.251Z"
+    },
+    {
+      "id": "ce3eb7bc-35c9-49a2-837b-13cf8ceda4d5",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_POLE",
+      "targetId": null,
+      "targetType": null,
+      "details": "Création du pôle : finance",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-08T16:40:10.547Z"
+    },
+    {
+      "id": "0af84bf6-971f-45b1-9e4c-b20086fd0dd9",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-08T17:59:46.084Z"
+    },
+    {
+      "id": "4fa43c30-60e1-4213-a7af-35ca9985e519",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-08T20:45:53.630Z"
+    },
+    {
+      "id": "efaa2a81-c38c-4871-8b7e-74c83e0fe9e8",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_TACHE",
+      "targetId": "cf933fa0-e6c5-420c-a8c1-b728a01ee303",
+      "targetType": "TACHE",
+      "details": "Tâche modifiée (Statut: EN_COURS)",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-08T20:46:32.722Z"
+    },
+    {
+      "id": "e99bfc0e-6c0b-4d33-8a02-a686d6a340e5",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_TACHE",
+      "targetId": "cf933fa0-e6c5-420c-a8c1-b728a01ee303",
+      "targetType": "TACHE",
+      "details": "Tâche modifiée (Statut: EN_RELECTURE)",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-08T20:46:46.302Z"
+    },
+    {
+      "id": "5905bfe5-b3da-48b1-a714-89d274d6a5a4",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_TACHE",
+      "targetId": "cf933fa0-e6c5-420c-a8c1-b728a01ee303",
+      "targetType": "TACHE",
+      "details": "Tâche modifiée (Statut: EN_APPROBATION)",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-08T20:47:09.847Z"
+    },
+    {
+      "id": "bc551918-1219-470d-a6bf-895d1184d5c6",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_TACHE",
+      "targetId": "cf933fa0-e6c5-420c-a8c1-b728a01ee303",
+      "targetType": "TACHE",
+      "details": "Tâche modifiée (Statut: APPROUVEE)",
+      "dossierId": "e393cc81-53cb-4f2d-ae62-31fdc78f44ba",
+      "formulaireId": null,
+      "createdAt": "2026-10-08T20:47:21.509Z"
+    },
+    {
+      "id": "a3eca2b6-4491-493a-9137-338bad202d91",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-08T23:35:11.268Z"
+    },
+    {
+      "id": "0518b632-eaea-470d-8546-b673f7cf2e96",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T07:08:48.627Z"
+    },
+    {
+      "id": "dab88522-346b-4a8c-8573-a9f68ea59e9b",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T13:33:54.552Z"
+    },
+    {
+      "id": "7f6516bf-9120-4da0-8c91-26da124b9e0a",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_ROLE",
+      "targetId": "1ecfc45c-2bd5-4fb0-96aa-ef8b3f0837f6",
+      "targetType": "ROLE",
+      "details": "Rôle créé : Rem ut rerum atque a",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T13:34:54.454Z"
+    },
+    {
+      "id": "0e1b8fe7-81a5-4027-b0ca-df13f9cfb3a7",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_ROLE",
+      "targetId": "4a184d23-5871-4eeb-ba16-e4ddf517292b",
+      "targetType": "ROLE",
+      "details": "Rôle créé : Est minima tempor v",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T13:35:20.152Z"
+    },
+    {
+      "id": "abb088f6-72ed-4a73-a589-1c19536bdbdd",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T13:48:05.291Z"
+    },
+    {
+      "id": "2de710b2-3910-443b-a84c-eb4c813a8e7b",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "PURGE_DEFINITIVE",
+      "targetId": "MISSION",
+      "targetType": "Purge définitive de : de544727-8ba3-4dd1-9fad-0e222b6a3f0f",
+      "details": "::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T14:07:43.880Z"
+    },
+    {
+      "id": "3b52e36a-aa57-49fe-a7d9-cd5d7953f3c1",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "PURGE_DEFINITIVE",
+      "targetId": "DOSSIER",
+      "targetType": "Purge définitive de : dos-04_hbjbhh",
+      "details": "::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T14:07:47.235Z"
+    },
+    {
+      "id": "b6da6bc5-7e50-4f80-b464-c042ee2f36f8",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_ROLE",
+      "targetId": "4559119e-b17e-4ae3-a79e-2da089a64f53",
+      "targetType": "ROLE",
+      "details": "Rôle créé : Sunt iste proident",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T14:15:10.624Z"
+    },
+    {
+      "id": "a5df1fa3-4e13-4223-a35c-d7c324720ab3",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "DECONNEXION",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T14:19:39.211Z"
+    },
+    {
+      "id": "beb5520c-51ed-49e4-8440-8dc4e8849a49",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T14:19:50.246Z"
+    },
+    {
+      "id": "56cd6017-74b6-4d69-bb51-968a21ab4810",
+      "userId": "d835f1ac-9910-402b-89df-f3968179f15a",
+      "action": "ECHEC_CONNEXION",
+      "targetId": "d835f1ac-9910-402b-89df-f3968179f15a",
+      "targetType": "USER",
+      "details": "Mot de passe erroné pour resp.op1@menua.local depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T14:20:34.639Z"
+    },
+    {
+      "id": "99d4e04e-9643-427c-acd8-e47a5db86cff",
+      "userId": "eb4a1daf-8987-45e8-9c10-b4886910bb10",
+      "action": "ECHEC_CONNEXION",
+      "targetId": "eb4a1daf-8987-45e8-9c10-b4886910bb10",
+      "targetType": "USER",
+      "details": "Mot de passe erroné pour resp.op2@menua.local depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T14:21:23.988Z"
+    },
+    {
+      "id": "755d5b14-b0df-4b25-92e1-f1170e3775ec",
+      "userId": "eb4a1daf-8987-45e8-9c10-b4886910bb10",
+      "action": "ECHEC_CONNEXION",
+      "targetId": "eb4a1daf-8987-45e8-9c10-b4886910bb10",
+      "targetType": "USER",
+      "details": "Mot de passe erroné pour resp.op2@menua.local depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T14:21:34.920Z"
+    },
+    {
+      "id": "66161ef6-eea3-4a70-896d-cdc3db6ab7b6",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_DOSSIER",
+      "targetId": "472b282b-1eb6-47af-b53b-59143f9b6f57",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dos-09_mollit_consequatur_d",
+      "dossierId": "472b282b-1eb6-47af-b53b-59143f9b6f57",
+      "formulaireId": null,
+      "createdAt": "2026-10-09T14:22:23.293Z"
+    },
+    {
+      "id": "095a7d61-1287-4fe9-b551-988341450b5e",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_MISSION",
+      "targetId": "89703f20-ec5d-4f3b-9b66-51bb275197e8",
+      "targetType": "MISSION",
+      "details": "Mission créée: Commodo sapiente exe\n\nAmet aut est sequi ",
+      "dossierId": "472b282b-1eb6-47af-b53b-59143f9b6f57",
+      "formulaireId": null,
+      "createdAt": "2026-10-09T14:22:57.792Z"
+    },
+    {
+      "id": "54c90561-dba6-4051-9055-4d6ca9da641c",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CREATION_TACHE",
+      "targetId": "40f6eb83-d6fa-40c7-9907-19623633860f",
+      "targetType": "TACHE",
+      "details": "Tâche créée: Objet: Aliquip alias amet \n\nConsignes: Dolor corrupti beat",
+      "dossierId": "472b282b-1eb6-47af-b53b-59143f9b6f57",
+      "formulaireId": null,
+      "createdAt": "2026-10-09T14:24:11.346Z"
+    },
+    {
+      "id": "7ad2ecfc-ab87-42d8-bdd2-a46d494c7678",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_TACHE",
+      "targetId": "40f6eb83-d6fa-40c7-9907-19623633860f",
+      "targetType": "TACHE",
+      "details": "Tâche modifiée (Statut: EN_COURS)",
+      "dossierId": "472b282b-1eb6-47af-b53b-59143f9b6f57",
+      "formulaireId": null,
+      "createdAt": "2026-10-09T14:25:20.303Z"
+    },
+    {
+      "id": "deac7ca6-090a-42fe-beaa-4f9b03e633d6",
+      "userId": null,
+      "action": "CREATION_ROLE",
+      "targetId": "596ab075-73f8-441a-ac44-9a719823a822",
+      "targetType": "ROLE",
+      "details": "Rôle créé : TEST_ROLE_4",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T14:26:53.308Z"
+    },
+    {
+      "id": "8434f945-ca90-4df1-b3b1-2d41e636771f",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "MODIFICATION_UTILISATEUR",
+      "targetId": "cf8efe73-f88b-4337-b443-9b19b02dec91",
+      "targetType": "USER",
+      "details": "Utilisateur modifié : Relecteur 1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T15:28:04.035Z"
+    },
+    {
+      "id": "01494a80-03be-486a-aced-2f4128a4c255",
+      "userId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "2541799f-86de-4071-86c7-7110615bf37b",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie depuis ::ffff:127.0.0.1",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-09T16:05:26.094Z"
     }
   ],
   "messagePersonnels": [
@@ -1826,6 +2297,31 @@
       "dossierId": null,
       "missionId": null,
       "assignedToId": "eb4a1daf-8987-45e8-9c10-b4886910bb10",
+      "tacheId": null
+    },
+    {
+      "id": "bfec3165-977d-4cb3-b3a6-38d89e29f27a",
+      "messageId": "803d9d62-3a82-4606-8180-78c2df4f6e90",
+      "type": "INTERNE",
+      "subType": "Message direct",
+      "status": "NON_CONSULTE",
+      "nomPrenom": "Rosette Fouelefack",
+      "email": "r.fouelefack@menuaconsulting.com",
+      "objet": "Message Interne",
+      "bodyText": "nbjhb",
+      "attachment": null,
+      "etiquette": null,
+      "priorite": "Normal",
+      "isDeleted": false,
+      "createdAt": "2026-10-08T16:35:06.796Z",
+      "receivedAt": "2026-10-08T16:35:06.796Z",
+      "dateRappel": null,
+      "noteRappel": null,
+      "dateEntretien": null,
+      "lienVisio": null,
+      "dossierId": null,
+      "missionId": null,
+      "assignedToId": "d835f1ac-9910-402b-89df-f3968179f15a",
       "tacheId": null
     }
   ]

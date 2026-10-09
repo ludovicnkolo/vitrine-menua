@@ -19,7 +19,7 @@ interface Publication {
   id: string;
   title: string;
   title_en?: string;
-  contentHtml: string;
+  contentHtml?: string;
   contentHtml_en?: string;
   sections?: Section[];
   sections_en?: Section[];
@@ -54,10 +54,10 @@ export default function ClientPageArticle({ id, initialData }: { id: string, ini
         if (data.success) {
           setPublication(data.data);
         } else {
-          setError(data.error || 'Article introuvable.');
+          setError(data.error || (lang === 'EN' ? 'Article not found.' : 'Article introuvable.'));
         }
       } catch (err) {
-        setError('Erreur lors du chargement de l\'article.');
+        setError(lang === 'EN' ? 'Error loading article.' : 'Erreur lors du chargement de l\'article.');
       } finally {
         setLoading(false);
       }

@@ -6,7 +6,11 @@ interface SubmitStatusModalProps {
   onClose?: () => void;
 }
 
+import { useLanguage } from './LanguageProvider';
+
 export default function SubmitStatusModal({ status, onClose }: SubmitStatusModalProps) {
+  const { t } = useLanguage();
+
   if (!status) return null;
 
   return (
@@ -18,7 +22,7 @@ export default function SubmitStatusModal({ status, onClose }: SubmitStatusModal
           <button 
             type="button"
             onClick={onClose}
-            aria-label="Fermer"
+            aria-label={t("Fermer", "Close")}
             className="absolute top-2 right-2 text-[#141824]/60 hover:text-[#141824] p-1 rounded-full hover:bg-black/5 transition-colors cursor-pointer"
           >
             <X size={18} />
@@ -57,7 +61,7 @@ export default function SubmitStatusModal({ status, onClose }: SubmitStatusModal
             </div>
             
             <p className="font-bold tracking-widest text-[0.8rem] text-[#141824] uppercase text-center leading-relaxed mb-1">
-              Envoi réussi
+              {t("Envoi réussi", "Successfully sent")}
             </p>
             <p className="text-[0.85rem] text-[#6e7891] text-center font-light leading-snug">
               {status.message}
@@ -69,7 +73,7 @@ export default function SubmitStatusModal({ status, onClose }: SubmitStatusModal
               <div className="absolute inset-0 rounded-full border-2 border-red-400 bg-white shadow-[0_0_10px_rgba(248,113,113,0.15)]"></div>
               <AlertCircle className="w-6 h-6 text-red-500 z-10 stroke-[2]" />
             </div>
-            <h3 className="text-[#141824] text-[0.8rem] font-bold uppercase tracking-wider mb-1 text-center">Erreur</h3>
+            <h3 className="text-[#141824] text-[0.8rem] font-bold uppercase tracking-wider mb-1 text-center">{t("Erreur", "Error")}</h3>
             <p className="text-[0.85rem] text-[#6e7891] font-light text-center leading-snug mb-3">{status.message}</p>
             {onClose && (
               <button
@@ -77,7 +81,7 @@ export default function SubmitStatusModal({ status, onClose }: SubmitStatusModal
                 onClick={onClose}
                 className="mt-2 px-4 py-1.5 bg-[#141824] text-white text-[0.75rem] font-bold uppercase tracking-wider hover:bg-[#2b334a] transition-colors"
               >
-                Fermer
+                {t("Fermer", "Close")}
               </button>
             )}
           </>

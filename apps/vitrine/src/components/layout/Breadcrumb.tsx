@@ -16,7 +16,7 @@ export default function Breadcrumb({ items, light = false }: { items: Breadcrumb
   const activeColor = light ? "text-white" : "text-[#0D1B2A]";
 
   return (
-    <nav className={`flex items-center text-xs font-semibold tracking-wide ${textColor} mb-8`} aria-label="Breadcrumb">
+    <nav className={`flex items-center text-xs font-semibold tracking-wide ${textColor} mb-8`} aria-label={t("Fil d'Ariane", "Breadcrumb")}>
       <Link href="/" className={`${hoverColor} transition-colors`}>
         {t("Accueil", "Home")}
       </Link>

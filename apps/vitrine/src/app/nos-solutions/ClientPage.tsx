@@ -53,7 +53,7 @@ export default function NosSolutionsPage() {
         <div className="absolute inset-0 z-0">
           <img
             src="/img/solutions-hero.webp"
-            alt={t("Nos solutions", "Our solutions")}
+            alt={t("Nos solutions", "Our Solutions")}
             className="w-full h-full object-cover object-[center_35%]"
             onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
           />
@@ -62,7 +62,7 @@ export default function NosSolutionsPage() {
         <div className="laplace-container portrait:sm:px-10 landscape:px-16 relative z-10 pt-56 md:pt-72 landscape:pt-24 lg:pt-0 landscape:lg:pt-0 pb-28 portrait:sm:pb-20 landscape:pb-24 lg:pb-10 landscape:lg:pb-40 xl:pb-16 mt-16 landscape:mt-0 lg:mt-0 landscape:lg:mt-0">
           <div className="max-w-4xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-12 landscape:ml-6 landscape:lg:-ml-4">
             <h1 className="text-white text-[1.25rem] portrait:sm:text-[1.5rem] md:text-[2.5rem] portrait:md:text-[1.8rem] landscape:text-[1.25rem] landscape:lg:text-[1.88rem] xl:text-[2.75rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
-              {t("Nos solutions", "Our solutions")}
+              {t("Nos solutions", "Our Solutions")}
             </h1>
             <div className="w-24 h-[2px] bg-[#e8e1d7] mb-6 landscape:mb-3 landscape:lg:mb-6"></div>
             <p className="text-[1.1rem] lg:text-[1.3rem] landscape:text-[1rem] landscape:lg:text-[1.3rem] text-[#e5e9f0] font-light max-w-2xl mb-1">
@@ -95,7 +95,7 @@ export default function NosSolutionsPage() {
             <p className="text-[#141824] text-[0.7rem] font-bold tracking-widest uppercase mb-0">
               <Link href="/" className="hover:text-[#6e7891] transition-colors">{t("Accueil", "Home")}</Link>
               <span className="mx-2">/</span>
-              <span>{t("Nos solutions", "Our solutions")}</span>
+              <span>{t("Nos solutions", "Our Solutions")}</span>
             </p>
           </div>
           <div className="flex flex-col lg:flex-row lg:items-center">
@@ -105,7 +105,7 @@ export default function NosSolutionsPage() {
               <div className="w-[85%] lg:h-[360px] relative overflow-hidden shadow-xl">
                 <img
                   src="/img/solutions_3.webp"
-                  alt={t("Nos solutions", "Our solutions")}
+                  alt={t("Nos solutions", "Our Solutions")}
                   className="w-full h-full object-cover shadow-xl"
                   onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                 />
@@ -125,7 +125,7 @@ export default function NosSolutionsPage() {
                   <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                     <img
                       src="/img/solutions_3.webp"
-                      alt={t("Nos solutions", "Our solutions")}
+                      alt={t("Nos solutions", "Our Solutions")}
                       className="w-full h-full object-cover object-center"
                       onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                     />
@@ -231,7 +231,7 @@ export default function NosSolutionsPage() {
               <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
                 <h4 className="text-[#141824] font-bold text-[1.1rem] mb-3">{t("Intervention ponctuelle", "Support during transition")}</h4>
                 <p className="text-[#6e7891] font-light text-[0.95rem] leading-relaxed">
-                  {t("sur un volume de dossiers comptables, financiers, patrimoniaux, d'assurance, conformité ou administratifs", "managing volumes of accounting, financial, wealth-management, insurance, compliance or administrative files")}
+                  {t("sur un volume de dossiers comptables, financiers, patrimoniaux, assurantiels, de conformité ou administratifs", "managing a volume of accounting, financial, wealth management, insurance, compliance or administrative files")}
                 </p>
               </div>
               <div className="bg-white p-8 border-l-4 border-[#141824] shadow-sm">
@@ -306,7 +306,7 @@ export default function NosSolutionsPage() {
           t("dispositif dédié pour un service ou un périmètre clairement identifié", "a dedicated team for a clearly identified service or scope"),
           t("intervention par mission pour un besoin borné dans le temps", "project-based support for time-bound requirements"),
           t("prise en charge de flux ou de process récurrents", "management of recurring workflows or processes"),
-          t("traitement de dossiers, contrats, polices d'assurance, adhésions, opérations ou demandes selon des règles définies avec le client", "processing of files, contracts, insurance policies, applications, operations or requests based on rules agreed with the client"),
+          t("traitement de dossiers, adhésions, contrats, prestations, opérations ou demandes selon des règles définies avec le client", "processing of files, policies, benefits, operations or requests based on rules agreed with the client"),
           t("suivi structuré avec points de contrôle réguliers", "structured oversight with regular control points"),
           t("reporting opérationnel selon la fréquence convenue", "operational reporting at an agreed frequency")
         ]}

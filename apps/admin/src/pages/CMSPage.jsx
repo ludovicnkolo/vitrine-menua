@@ -2053,7 +2053,7 @@ const CMSPage = () => {
               <div style={{ display: "flex", gap: "0.75rem" }}>
                 <button
                   type="button"
-                  onClick={() => handleSaveAction(status || "PUBLIE", true)}
+                  onClick={() => handleSaveAction(status === "PUBLIE" ? "PUBLIE" : "BROUILLON", true)}
                   style={{
                     background: "#FFF",
                     border: "1.5px solid #3B82F6",
@@ -2072,7 +2072,7 @@ const CMSPage = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleSaveAction(status || "PUBLIE", false)}
+                  onClick={() => setSaveOptionsModal({ isOpen: true, isPreview: false })}
                   style={{
                     background: "#10B981",
                     border: "none",
@@ -2103,6 +2103,111 @@ const CMSPage = () => {
         onConfirm={confirmModal.onConfirm}
         onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
       />
+
+      {/* Save Options Modal */}
+      {saveOptionsModal.isOpen && (
+        <div style={{
+          position: "fixed",
+          top: 0, left: 0, right: 0, bottom: 0,
+          background: "rgba(15, 23, 42, 0.75)",
+          backdropFilter: "blur(4px)",
+          zIndex: 9999,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          animation: "fadeIn 0.2s ease-out"
+        }}>
+          <div style={{
+            background: "#FFF",
+            borderRadius: "16px",
+            width: "100%",
+            maxWidth: "400px",
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+            overflow: "hidden",
+            animation: "slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)"
+          }}>
+            <div style={{
+              padding: "1.5rem 1.5rem 1rem",
+              borderBottom: "1px solid #F1F5F9",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center"
+            }}>
+              <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#1E293B", fontWeight: 600, display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <Check size={20} color="#10B981" />
+                Options d'enregistrement
+              </h3>
+              <button
+                onClick={() => setSaveOptionsModal({ isOpen: false, isPreview: false })}
+                style={{ background: "none", border: "none", color: "#94A3B8", cursor: "pointer", padding: "0.25rem" }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div style={{ padding: "1.5rem" }}>
+              <p style={{ margin: "0 0 1.5rem", color: "#475569", fontSize: "0.95rem", lineHeight: 1.5 }}>
+                Souhaitez-vous enregistrer cet article en tant que brouillon pour y revenir plus tard, ou le publier immédiatement sur le site public ?
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSaveOptionsModal({ isOpen: false, isPreview: false });
+                    handleSaveAction("BROUILLON", saveOptionsModal.isPreview);
+                  }}
+                  style={{
+                    background: "#F8FAFC",
+                    border: "1px solid #CBD5E1",
+                    borderRadius: "8px",
+                    padding: "0.85rem",
+                    fontWeight: 600,
+                    fontSize: "0.95rem",
+                    color: "#334155",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "0.5rem",
+                    transition: "all 0.2s"
+                  }}
+                  onMouseOver={(e) => { e.currentTarget.style.background = "#F1F5F9"; e.currentTarget.style.borderColor = "#94A3B8"; }}
+                  onMouseOut={(e) => { e.currentTarget.style.background = "#F8FAFC"; e.currentTarget.style.borderColor = "#CBD5E1"; }}
+                >
+                  <FileText size={18} />
+                  Enregistrer en brouillon
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSaveOptionsModal({ isOpen: false, isPreview: false });
+                    handleSaveAction("PUBLIE", saveOptionsModal.isPreview);
+                  }}
+                  style={{
+                    background: "#10B981",
+                    border: "none",
+                    borderRadius: "8px",
+                    padding: "0.85rem",
+                    fontWeight: 600,
+                    fontSize: "0.95rem",
+                    color: "#FFF",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "0.5rem",
+                    transition: "all 0.2s"
+                  }}
+                  onMouseOver={(e) => { e.currentTarget.style.background = "#059669"; }}
+                  onMouseOut={(e) => { e.currentTarget.style.background = "#10B981"; }}
+                >
+                  <Globe size={18} />
+                  Publier sur le site
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

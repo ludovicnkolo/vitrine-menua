@@ -6,14 +6,22 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
 import { generateSlug } from "@/utils/slug";
 
-export default function Home() {
+interface ClientPageProps {
+  initialPublications?: any[];
+}
+
+export default function Home({ initialPublications = [] }: ClientPageProps = {}) {
   const { lang, t } = useLanguage();
   const isEN = lang === 'EN';
 
   const displayTitle = (pub: any) => (isEN && pub.title_en) ? pub.title_en : pub.title;
   const displayContent = (pub: any) => (isEN && pub.contentHtml_en) ? pub.contentHtml_en : pub.contentHtml;
   const displayCategory = (pub: any) => (isEN && pub.category_en) ? pub.category_en : pub.category;
-  const [publications, setPublications] = useState<any[]>([]);
+  const [publications, setPublications] = useState<any[]>(
+    Array.isArray(initialPublications) && initialPublications.length > 0
+      ? initialPublications.slice(0, 3)
+      : []
+  );
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return "";
@@ -23,6 +31,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (initialPublications && initialPublications.length > 0) return;
     const fetchPubs = async () => {
       try {
         const res = await fetch('/api/cms/public?type=ACTUALITE');
@@ -37,7 +46,7 @@ export default function Home() {
       }
     };
     fetchPubs();
-  }, []);
+  }, [initialPublications]);
 
   return (
     <main className="flex flex-col w-full min-h-screen">
@@ -141,8 +150,14 @@ export default function Home() {
                 <div className="leading-relaxed text-[#141824] text-[1.1rem] md:text-[1.2rem] font-light mb-8 space-y-6">
                   <p>
                     {formatBrand(t(
-                      "MENUA CONSULTING intervient en appui des équipes financières, comptables, patrimoniales, IT, data et réglementées pour sécuriser et renforcer l'exécution de leurs fonctions back et middle office. Nous prenons en charge des opérations clairement définies, selon les procédures, les outils, les priorités et les circuits de validation de chaque client.",
-                      "MENUA CONSULTING supports finance, accounting, wealth management, IT and data teams, as well as teams operating in regulated environments, by safeguarding and strengthening the delivery of their back and middle office functions. We take ownership of clearly defined operations in line with each client's procedures, tools, priorities and approval workflows."
+                      "MENUA CONSULTING intervient en appui des équipes financières, comptables, assurantielles, patrimoniales, IT, data et réglementées pour sécuriser et renforcer l'exécution de leurs fonctions back et middle office. Ces missions peuvent exiger un haut niveau d'analyse et de technicité, au-delà du seul traitement administratif. Nous prenons en charge des opérations clairement définies, selon les procédures, les outils, les priorités et les circuits de validation de chaque client.",
+                      "MENUA CONSULTING supports finance, accounting, insurance, wealth management, IT and data teams, as well as teams operating in regulated environments, by safeguarding and strengthening the delivery of their back and middle office functions. These missions may require a high level of analysis and technical expertise, rather than just administrative processing. We take ownership of clearly defined operations in line with each client's procedures, tools, priorities and approval workflows."
+                    ))}
+                  </p>
+                  <p>
+                    {formatBrand(t(
+                      "Le positionnement de MENUA CONSULTING ne se limite pas à des tâches administratives. Selon le périmètre confié, les missions peuvent intégrer des travaux d’analyse financière, d’analyse de crédit, d’analyse documentaire ou contractuelle, de contrôle de cohérence, de revue de données, de préparation de dossiers techniques, de reporting et d’instruction opérationnelle. Ces travaux sont réalisés dans le cadre des procédures et habilitations du client, les actes réglementés, décisions finales et validations relevant du client ou du professionnel habilité.",
+                      "MENUA CONSULTING’s positioning is not limited to administrative processing. Depending on the agreed scope, engagements may include financial analysis, credit analysis, document and contract review, consistency checks, data analysis, preparation of technical files, reporting and operational assessment. These activities are performed within the client’s procedures, systems and authorisation framework, while regulated acts, final decisions and formal approvals remain with the client or its authorised professionals."
                     ))}
                   </p>
                 </div>
@@ -222,7 +237,7 @@ export default function Home() {
             <div className="hidden lg:block w-4/12 lg:h-[360px] shrink-0 relative overflow-hidden shadow-xl z-20">
               <img
                 src="/img/besoins-meeting.webp"
-                alt={t("Vos besoins", "Your needs")}
+                alt={t("Vos besoins", "Your Needs")}
                 className="w-full h-full object-cover"
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
               />
@@ -240,17 +255,17 @@ export default function Home() {
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                   <img
                     src="/img/besoins-meeting.webp"
-                    alt={t("Vos besoins", "Your needs")}
+                    alt={t("Vos besoins", "Your Needs")}
                     className="w-full h-full object-cover"
                     onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                   />
                 </div>
 
                 <p className="text-[#6e7891] text-[1.1rem] font-light leading-relaxed mb-10">
-                  {formatBrand(t(
-                    "Un appui opérationnel adapté aux équipes financières, comptables, patrimoniales, IT, data et réglementées, pour traiter les opérations qui exigent rigueur, continuité et fiabilité.",
-                    "Structured operational support for finance, accounting, wealth management, IT and data teams, as well as teams operating in regulated environments, where activities require rigour, continuity and reliable execution."
-                  ))}
+                  {t(
+                    "Un appui opérationnel adapté aux équipes de la finance, de la comptabilité, de l’assurance, de la gestion de patrimoine, de l’IT et de la data, ainsi qu’aux environnements réglementés, pour des besoins ponctuels, récurrents ou à fort volume, y compris lorsque les opérations nécessitent un niveau d’analyse ou de technicité particulier.",
+                    "Operational support tailored to finance, accounting, insurance, wealth management, IT and data teams, as well as regulated environments, for one-off, recurring or high-volume needs, including where operations require a particular level of analysis or technical expertise."
+                  )}
                 </p>
 
                 {/* 3 need items */}

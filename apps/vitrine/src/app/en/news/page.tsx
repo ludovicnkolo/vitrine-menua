@@ -25,28 +25,9 @@ export const metadata: Metadata = {
   },
 };
 
-async function getPublications() {
-  try {
-    const backendUrl =
-      process.env.BACKEND_URL ||
-      process.env.NEXT_PUBLIC_API_URL ||
-      'http://localhost:4000';
-    const res = await fetch(`${backendUrl}/api/cms/public?type=ACTUALITE`, {
-      next: { revalidate: 60 },
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.success && Array.isArray(data.data)) {
-        return data.data;
-      }
-    }
-  } catch (err) {
-    console.error("SSR getPublications error (en):", err);
-  }
-  return [];
-}
+import { fetchPublishedNews } from '@/lib/cms';
 
 export default async function Page() {
-  const publications = await getPublications();
+  const publications = await fetchPublishedNews();
   return <ClientPage initialPublications={publications} />;
 }

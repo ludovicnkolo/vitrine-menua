@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? "Discover our tailored operational outsourcing solutions to secure and streamline your back and middle office operations."
       : "Découvrez nos solutions sur-mesure d'externalisation pour sécuriser et fluidifier vos opérations back et middle office.",
     alternates: {
-      canonical: 'https://menuaconsulting.com/fr/nos-solutions',
+      canonical: isEn ? 'https://menuaconsulting.com/en/our-solutions' : 'https://menuaconsulting.com/fr/nos-solutions',
       languages: {
         'fr-FR': 'https://menuaconsulting.com/fr/nos-solutions',
         'en-GB': 'https://menuaconsulting.com/en/our-solutions',

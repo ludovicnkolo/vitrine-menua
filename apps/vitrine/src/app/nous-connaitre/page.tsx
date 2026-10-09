@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? "Discover Menua Consulting, a specialist in back & middle office operational outsourcing for finance, accounting, insurance, wealth management, compliance, data and IT."
       : "Découvrez Menua Consulting, spécialiste de l'externalisation opérationnelle back & middle office pour la finance, la comptabilité, l'assurance, la gestion de patrimoine, la conformité, la data et l'IT.",
     alternates: {
-      canonical: 'https://menuaconsulting.com/fr/nous-connaitre',
+      canonical: isEn ? 'https://menuaconsulting.com/en/about-us' : 'https://menuaconsulting.com/fr/nous-connaitre',
       languages: {
         'fr-FR': 'https://menuaconsulting.com/fr/nous-connaitre',
         'en-GB': 'https://menuaconsulting.com/en/about-us',

@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? "Finance, compliance, data: structured operational support to strengthen your teams and maintain continuity."
       : "Finance, conformité, data : nous répondons à vos besoins de renfort opérationnel et de support fonctionnel.",
     alternates: {
-      canonical: 'https://menuaconsulting.com/fr/vos-besoins',
+      canonical: isEn ? 'https://menuaconsulting.com/en/your-needs' : 'https://menuaconsulting.com/fr/vos-besoins',
       languages: {
         'fr-FR': 'https://menuaconsulting.com/fr/vos-besoins',
         'en-GB': 'https://menuaconsulting.com/en/your-needs',

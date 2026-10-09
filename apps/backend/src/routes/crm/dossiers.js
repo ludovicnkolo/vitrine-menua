@@ -204,22 +204,14 @@ router.get("/dossiers", async (req, res) => {
       where.AND.push({
         OR: [
           { traitantId: userId },
-          { createdById: userId },
-          { missions: { some: { assignedToId: userId } } },
-          {
-            missions: {
-              some: { taches: { some: { assignedToId: userId } } },
-            },
-          },
+          { createdById: userId }
         ],
       });
     } else if (userRole === "Relecteur") {
       where.AND.push({
         OR: [
           { missions: { some: { relecteurId: userId } } },
-          {
-            missions: { some: { taches: { some: { relecteurId: userId } } } },
-          },
+          { missions: { some: { taches: { some: { relecteurId: userId } } } } },
         ],
       });
     }

@@ -202,7 +202,6 @@ router.get("/tasks", async (req, res) => {
           { assignedToId: req.user.id },
           { createdById: req.user.id },
           { dossier: { traitantId: req.user.id } },
-          { taches: { some: { assignedToId: req.user.id } } },
         ]
       });
     } else if (req.user.role === "Relecteur") {

@@ -11,7 +11,6 @@ const {
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 require("dotenv").config({ path: "../../.env" }); // Adjust according to execution context
 
-// Initialize the S3 Client with OVH parameters
 const s3Client = new S3Client({
   endpoint: process.env.S3_ENDPOINT,
   region: process.env.S3_REGION,
@@ -23,6 +22,19 @@ const s3Client = new S3Client({
 });
 
 const BUCKET_NAME = process.env.S3_BUCKET || "menua-ged-prod";
+
+// Initialize the S3 Client for the Public Website Assets
+const s3PublicClient = new S3Client({
+  endpoint: process.env.S3_ENDPOINT, // Réutilisé
+  region: process.env.S3_REGION,     // Réutilisé
+  credentials: {
+    accessKeyId: process.env.S3_PUBLIC_ACCESS_KEY,
+    secretAccessKey: process.env.S3_PUBLIC_SECRET_KEY,
+  },
+  forcePathStyle: true,
+});
+
+const PUBLIC_BUCKET_NAME = process.env.S3_PUBLIC_BUCKET || "menua-site-public-assets";
 
 /**
  * Uploads a file buffer to OVH S3.
@@ -43,6 +55,27 @@ async function uploadToS3(fileBuffer, fileName, mimeType) {
 
   await s3Client.send(command);
   return fileName;
+}
+
+/**
+ * Uploads a file buffer to the Public OVH S3 bucket (site web assets).
+ * Applique l'ACL public-read par défaut pour que l'image soit visible en ligne.
+ * @param {Buffer} fileBuffer - The file content in memory.
+ * @param {string} fileName - The destination path/name in the bucket.
+ * @param {string} mimeType - The file's MIME type.
+ * @returns {Promise<string>} The URL of the uploaded public file.
+ */
+async function uploadToPublicS3(fileBuffer, fileName, mimeType) {
+  const command = new PutObjectCommand({
+    Bucket: PUBLIC_BUCKET_NAME,
+    Key: fileName,
+    Body: fileBuffer,
+    ContentType: mimeType,
+    ACL: "public-read", // Requis par OVH pour que l'image soit lisible par tous
+  });
+
+  await s3PublicClient.send(command);
+  return `https://${PUBLIC_BUCKET_NAME}.s3.${process.env.S3_REGION}.io.cloud.ovh.net/${fileName}`;
 }
 
 /**
@@ -205,7 +238,9 @@ async function renameInS3(oldKey, newKey) {
 
 module.exports = {
   s3Client,
+  s3PublicClient,
   uploadToS3,
+  uploadToPublicS3,
   getPresignedUrl,
   fileExistsInS3,
   verifyUploadIntegrity,

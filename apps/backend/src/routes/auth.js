@@ -132,8 +132,9 @@ router.post("/login", async (req, res) => {
     });
 
     // Générer le token JWT valide pendant 7 jours
+    const sessionSig = user.password ? user.password.substring(user.password.length - 10) : "";
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role?.name || "SANS ROLE" },
+      { id: user.id, email: user.email, role: user.role?.name || "SANS ROLE", sessionSig },
       JWT_SECRET,
       { expiresIn: "7d" },
     );

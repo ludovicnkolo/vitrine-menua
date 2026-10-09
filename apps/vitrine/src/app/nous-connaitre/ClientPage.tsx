@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "@/components/Link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { formatBrand } from "@/utils/formatBrand";
@@ -8,6 +8,7 @@ import { ArrowRight, ChevronRight } from "lucide-react";
 export default function NousConnaitrePage() {
   const { t, lang } = useLanguage();
   const isEN = lang === 'EN';
+  const [imageError, setImageError] = useState(false);
 
   return (
     <main className="flex flex-col w-full min-h-screen">
@@ -329,13 +330,14 @@ export default function NousConnaitrePage() {
 
             <div className="flex flex-col md:flex-row gap-10 items-start">
               {/* Photo */}
+              {!imageError && (
               <div className="shrink-0 flex flex-col items-center mx-auto md:mx-0">
                 <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-[3px] border-[#e8e1d7]/40 bg-[#141824] mb-4">
                   <img
                     src="/img/rosette.webp"
                     alt="Rosette Fouelefack"
                     className="w-full h-full object-cover object-[center_15%]"
-                    onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
+                    onError={() => setImageError(true)}
                   />
                 </div>
                 <span className="text-[#e8e1d7] text-[1rem] font-bold uppercase tracking-wider text-center leading-tight">
@@ -345,6 +347,7 @@ export default function NousConnaitrePage() {
                   {formatBrand(t("Présidente de MENUA CONSULTING", "President of MENUA CONSULTING"))}
                 </span>
               </div>
+              )}
 
               {/* Text content */}
               <div className="flex-1">
@@ -379,7 +382,7 @@ export default function NousConnaitrePage() {
             {/* Image (Right Desktop only) */}
             <div className="hidden lg:flex w-5/12 shrink-0 z-20 items-center justify-start">
               <div className="w-[85%] lg:h-[450px] relative overflow-hidden shadow-xl">
-                <img src="/img/conforme.jpg" alt={t("Accréditations", "Accreditations")} className="w-full h-full object-cover object-bottom" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
+                <img src="/img/conforme.jpg" alt={t("Accréditations", "Qualifications and certifications")} className="w-full h-full object-cover object-bottom" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
               </div>
             </div>
 
@@ -393,7 +396,7 @@ export default function NousConnaitrePage() {
 
                 {/* Mobile Image */}
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
-                  <img src="/img/conforme.jpg" alt={t("Accréditations", "Accreditations")} className="w-full h-full object-cover object-bottom" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
+                  <img src="/img/conforme.jpg" alt={t("Accréditations", "Qualifications and certifications")} className="w-full h-full object-cover object-bottom" onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }} />
                 </div>
 
                 <div className="space-y-4 text-[#141824] text-[1.05rem] font-light leading-relaxed">

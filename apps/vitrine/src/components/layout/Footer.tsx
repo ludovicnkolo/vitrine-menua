@@ -26,7 +26,7 @@ export default function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-white text-[#141824] pt-32 pb-16 px-6 lg:px-12 w-full">
+    <footer className="bg-white text-[#141824] pt-40 pb-24 px-6 lg:px-12 w-full">
       <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between gap-12 mb-24">
         
         {/* Colonne 1: Branding */}

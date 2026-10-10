@@ -15,6 +15,14 @@ const {
   isManager,
 } = require("../../middlewares/auth");
 const { transporter } = require("../../utils/mailer");
+const emitEntityUpdate = (req, entityType, entityId, action, payload = {}) => {
+  const io = req.app.get('io');
+  if (io) {
+    io.to(entityId).emit('entity_updated', { entityType, entityId, action, ...payload });
+    io.emit('entity_updated_global', { entityType, entityId, action, ...payload });
+  }
+};
+
 const { logAudit } = require("../../utils/audit");
 
 const imapConfig = {
@@ -204,7 +212,10 @@ router.get("/dossiers", async (req, res) => {
       where.AND.push({
         OR: [
           { traitantId: userId },
-          { createdById: userId }
+          { createdById: userId },
+          { missions: { some: { assignedToId: userId } } },
+          { missions: { some: { taches: { some: { assignedToId: userId } } } } },
+          { tachesLinked: { some: { assignedToId: userId } } }
         ],
       });
     } else if (userRole === "Relecteur") {
@@ -212,6 +223,7 @@ router.get("/dossiers", async (req, res) => {
         OR: [
           { missions: { some: { relecteurId: userId } } },
           { missions: { some: { taches: { some: { relecteurId: userId } } } } },
+          { tachesLinked: { some: { relecteurId: userId } } }
         ],
       });
     }
@@ -256,27 +268,66 @@ router.get("/dossiers", async (req, res) => {
       delete where.AND;
     }
 
+    let missionsWhere = undefined;
+    let tachesWhere = undefined;
+
+    if (!isSuperAdmin(userRole)) {
+      if (userRole === "Responsable opérationnel" || userRole === "Collaborateur") {
+        missionsWhere = {
+          OR: [
+            { assignedToId: userId },
+            { createdById: userId },
+            { dossier: { traitantId: userId } },
+            { taches: { some: { assignedToId: userId } } }
+          ]
+        };
+        tachesWhere = {
+          OR: [
+            { assignedToId: userId },
+            { createdById: userId },
+            { mission: { assignedToId: userId } },
+            { mission: { dossier: { traitantId: userId } } },
+            { dossierTache: { traitantId: userId } }
+          ]
+        };
+      } else if (userRole === "Relecteur") {
+        missionsWhere = {
+          OR: [
+            { relecteurId: userId },
+            { taches: { some: { relecteurId: userId } } }
+          ]
+        };
+        tachesWhere = { relecteurId: userId };
+      }
+    }
+
     let total = await prisma.dossier.count({ where });
     let dossiers = await prisma.dossier.findMany({
       where,
       skip: inMemoryFilter ? undefined : skip,
       take: inMemoryFilter ? undefined : limit,
       orderBy: { createdAt: "desc" },
+
       include: {
         traitant: { include: { role: true } },
         missions: {
-          include: { assignedTo: { include: { role: true } }, taches: true },
+          where: missionsWhere,
+          include: { assignedTo: { include: { role: true } }, taches: { where: tachesWhere } },
         },
         authorizedForMissions: {
-          include: { assignedTo: true, taches: true },
+          where: missionsWhere,
+          include: { assignedTo: true, taches: { where: tachesWhere } },
         },
         missionsLinked: {
-          include: { assignedTo: true, taches: true },
+          where: missionsWhere,
+          include: { assignedTo: true, taches: { where: tachesWhere } },
         },
         tachesLinked: {
+          where: tachesWhere,
           include: { assignedTo: true },
         },
         authorizedForTaches: {
+          where: tachesWhere,
           include: { assignedTo: true },
         },
         client: true,
@@ -520,6 +571,7 @@ router.post("/dossiers", async (req, res) => {
       },
     });
 
+    emitEntityUpdate(req, 'DOSSIER', dossier.id, 'CREATED');
     res.status(201).json(dossier);
   } catch (error) {
     console.error(error);
@@ -559,7 +611,7 @@ router.patch("/dossiers/:id", async (req, res) => {
     if (req.body.status) {
       const from = currentDossier.status;
       const to = req.body.status;
-      const isSA = isSuperAdmin(userRole);
+      const isSA = isSuperAdmin(userRole); console.log("DELETE DOSSIER ROLE IS:", userRole);
       const isRO = userRole === "Responsable opérationnel";
       const isRespOrAdmin = isSA || isRO;
 
@@ -733,6 +785,7 @@ router.patch("/dossiers/:id", async (req, res) => {
       dossier.id,
     );
 
+    emitEntityUpdate(req, 'DOSSIER', dossier.id, 'UPDATED', dossier);
     res.json(dossier);
   } catch (error) {
     console.error(error);
@@ -745,7 +798,7 @@ router.patch("/dossiers/:id", async (req, res) => {
 router.delete("/dossiers/:id", async (req, res) => {
   try {
     const userRole = req.user.role;
-    const isSA = isSuperAdmin(userRole);
+    const isSA = isSuperAdmin(userRole); console.log("DELETE DOSSIER ROLE IS:", userRole);
 
     // Seul le Super-Administrateur peut supprimer un dossier
     if (!isSA) {

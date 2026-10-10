@@ -1,5 +1,4 @@
-import { getSafeApiUrl } from "../utils/helpers";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Shield,
   Clock,
@@ -9,149 +8,155 @@ import {
   Calendar,
   ChevronLeft,
   ChevronRight,
+  RefreshCw,
+  Loader2,
 } from "lucide-react";
+import { getSafeApiUrl } from "../utils/helpers";
+
+const PAGE_SIZE = 15;
+
+// --- Utilitaires de formatage ---
+
+function formatActionLabel(str) {
+  if (!str) return "";
+  const formatted = String(str).replace(/_/g, " ").toLowerCase();
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+}
+
+function getActionBadgeStyle(action) {
+  const act = (action || "").toLowerCase();
+  if (act.includes("create") || act.includes("créat") || act.includes("ajout")) {
+    return "bg-blue-50 text-blue-700 border-blue-200";
+  }
+  if (act.includes("deconnexion") || act.includes("logout")) {
+    return "bg-purple-50 text-purple-700 border-purple-200";
+  }
+  if (act.includes("login") || act.includes("connexion")) {
+    return "bg-emerald-50 text-emerald-700 border-emerald-200";
+  }
+  if (
+    act.includes("mdp") ||
+    act.includes("password") ||
+    act.includes("reinit") ||
+    act.includes("reset") ||
+    act.includes("otp")
+  ) {
+    return "bg-amber-50 text-amber-700 border-amber-200";
+  }
+  if (act.includes("delete") || act.includes("suppr")) {
+    return "bg-red-50 text-red-700 border-red-200";
+  }
+  return "bg-slate-100 text-slate-700 border-slate-200";
+}
+
+function getSecurityBadge(log) {
+  if (log.ipAddress) return `IP: ${log.ipAddress}`;
+  if (log.ip) return `IP: ${log.ip}`;
+  if (log.details) {
+    const match = log.details.match(/\b(?:\d{1,3}\.){3}\d{1,3}\b/);
+    if (match) return `IP: ${match[0]}`;
+  }
+  const act = (log.action || "").toLowerCase();
+  if (act.includes("deconnexion") || act.includes("logout")) return "Session close";
+  if (act.includes("reinit") || act.includes("otp") || act.includes("mdp")) {
+    return log.details?.toLowerCase().includes("tentative") ? "Tentative OTP" : "OTP Envoyé";
+  }
+  return "Traçabilité interne";
+}
+
+// --- Composant Principal ---
 
 export default function AuditPage() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setRawError] = useState(null);
-  const setError = (msg) => {
-    setRawError(msg);
-    if (msg) setTimeout(() => setRawError(null), 3000);
-  };
+  const [errorMessage, setErrorMessage] = useState(null);
 
+  // Filtres
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAction, setSelectedAction] = useState("all");
   const [selectedUser, setSelectedUser] = useState("all");
   const [dateFilterActive, setDateFilterActive] = useState(false);
   const [page, setPage] = useState(1);
-  const pageSize = 15;
 
-  useEffect(() => {
-    fetchLogs();
+  // Gestion temporisée des alertes d'erreur sans fuite mémoire
+  const triggerError = useCallback((msg) => {
+    setErrorMessage(msg);
   }, []);
 
-  const fetchLogs = async () => {
+  useEffect(() => {
+    if (!errorMessage) return;
+    const timer = setTimeout(() => setErrorMessage(null), 4000);
+    return () => clearTimeout(timer);
+  }, [errorMessage]);
+
+  const fetchLogs = useCallback(async () => {
     try {
       setLoading(true);
-      const token = sessionStorage.getItem("adminToken");
-      const res = await fetch(getSafeApiUrl(`/api/crm/audit`), {
-        headers: { Authorization: `Bearer ${token}` },
+      const token = typeof window !== "undefined" ? sessionStorage.getItem("adminToken") : null;
+      const res = await fetch(getSafeApiUrl("/api/crm/audit"), {
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
       });
+
       if (res.status === 403) {
-        setError("Accès refusé : droits insuffisants pour consulter le journal d'audit. (Super-administrateur ou Administrateur technique requis)");
+        triggerError("Accès refusé : permissions insuffisantes.");
         setLogs([]);
         return;
       }
+
       if (!res.ok) {
         const errorBody = await res.json().catch(() => ({}));
-        throw new Error(errorBody.error || `Erreur HTTP ${res.status} lors de la récupération de l'audit`);
+        throw new Error(errorBody.error || `Erreur serveur (${res.status})`);
       }
+
       const data = await res.json();
-      const logsArray = Array.isArray(data) ? data : [];
-      setLogs(logsArray);
-      // Pas d'erreur si la liste est vide — c'est un état légitime
+      setLogs(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err.message);
+      triggerError(err instanceof Error ? err.message : "Erreur de chargement des journaux.");
       setLogs([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [triggerError]);
 
-  const formatStr = (str) => {
-    if (!str) return "";
-    const formatted = String(str).replace(/_/g, " ").toLowerCase();
-    return formatted.charAt(0).toUpperCase() + formatted.slice(1);
-  };
+  useEffect(() => {
+    fetchLogs();
+  }, [fetchLogs]);
 
-  // Distinct action and user lists for filter dropdowns
+  // Options pour les menus déroulants
   const actionOptions = useMemo(() => {
-    const set = new Set();
-    logs.forEach((l) => {
-      if (l.action) set.add(l.action);
-    });
-    return Array.from(set);
+    return Array.from(new Set(logs.map((l) => l.action).filter(Boolean)));
   }, [logs]);
 
   const userOptions = useMemo(() => {
-    const set = new Set();
-    logs.forEach((l) => {
-      const name = l.user?.name || l.userName;
-      if (name) set.add(name);
-    });
-    return Array.from(set);
+    return Array.from(
+      new Set(logs.map((l) => l.user?.name || l.userName).filter(Boolean))
+    );
   }, [logs]);
 
-  const getPillStyle = (action) => {
-    const act = (action || "").toLowerCase();
-    if (act.includes("create") || act.includes("créat") || act.includes("ajout")) {
-      return { background: "#EFF6FF", color: "#2563EB" }; // Blue pill
-    }
-    if (act.includes("deconnexion") || act.includes("logout")) {
-      return { background: "#FAF5FF", color: "#9333EA" }; // Purple pill
-    }
-    if (act.includes("login") || act.includes("connexion")) {
-      return { background: "#ECFDF5", color: "#059669" }; // Green pill
-    }
-    if (
-      act.includes("mdp") ||
-      act.includes("password") ||
-      act.includes("reinit") ||
-      act.includes("reset") ||
-      act.includes("otp")
-    ) {
-      return { background: "#FEF3C7", color: "#D97706" }; // Amber pill
-    }
-    if (act.includes("delete") || act.includes("suppr")) {
-      return { background: "#FEE2E2", color: "#DC2626" }; // Red pill
-    }
-    return { background: "#F1F5F9", color: "#475569" };
-  };
-
-  const getSecurityBadge = (log) => {
-    if (log.ipAddress) return `IP: ${log.ipAddress}`;
-    if (log.ip) return `IP: ${log.ip}`;
-    if (log.details) {
-      const match = log.details.match(/\b(?:\d{1,3}\.){3}\d{1,3}\b/);
-      if (match) return `IP: ${match[0]}`;
-    }
-    const act = (log.action || "").toLowerCase();
-    if (act.includes("deconnexion") || act.includes("logout")) {
-      return "Session close";
-    }
-    if (act.includes("reinit") || act.includes("otp") || act.includes("mdp")) {
-      if (log.details && log.details.toLowerCase().includes("tentative")) {
-        return "Tentative OTP";
-      }
-      return "OTP Envoyé";
-    }
-    return "Traçabilité interne";
-  };
-
-  // Filter logs
+  // Filtrage combiné
   const filteredLogs = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    const today = new Date();
+
     return logs.filter((log) => {
-      const q = searchQuery.toLowerCase().trim();
+      const userName = log.user?.name || log.userName || "";
       const matchesSearch =
         !q ||
         (log.action || "").toLowerCase().includes(q) ||
-        (log.user?.name || "").toLowerCase().includes(q) ||
+        userName.toLowerCase().includes(q) ||
         (log.details || "").toLowerCase().includes(q) ||
         (log.targetType || "").toLowerCase().includes(q) ||
         (log.targetId || "").toLowerCase().includes(q);
 
-      const matchesAction =
-        selectedAction === "all" || log.action === selectedAction;
-
-      const userName = log.user?.name || log.userName || "";
-      const matchesUser =
-        selectedUser === "all" || userName === selectedUser;
+      const matchesAction = selectedAction === "all" || log.action === selectedAction;
+      const matchesUser = selectedUser === "all" || userName === selectedUser;
 
       let matchesDate = true;
       if (dateFilterActive && log.createdAt) {
         const d = new Date(log.createdAt);
-        const today = new Date();
         matchesDate =
           d.getDate() === today.getDate() &&
           d.getMonth() === today.getMonth() &&
@@ -162,479 +167,218 @@ export default function AuditPage() {
     });
   }, [logs, searchQuery, selectedAction, selectedUser, dateFilterActive]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredLogs.length / pageSize));
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(filteredLogs.length / PAGE_SIZE));
   const paginatedLogs = useMemo(() => {
-    const start = (page - 1) * pageSize;
-    return filteredLogs.slice(start, start + pageSize);
-  }, [filteredLogs, page, pageSize]);
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredLogs.slice(start, start + PAGE_SIZE);
+  }, [filteredLogs, page]);
 
-  const todayFormatted = new Date().toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+  const todayFormatted = useMemo(() => {
+    return new Date().toLocaleDateString("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  }, []);
 
   return (
-    <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-      {/* Title & Badge */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "1.5rem",
-          flexWrap: "wrap",
-          gap: "1rem",
-        }}
-      >
+    <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
+      {/* En-tête */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1
-            style={{
-              fontSize: "1.6rem",
-              fontWeight: 700,
-              color: "var(--text-main, #0F172A)",
-              margin: "0 0 0.25rem 0",
-            }}
-          >
-            Journal d'Audit
-          </h1>
-          <p style={{ color: "var(--text-muted, #64748B)", margin: 0, fontSize: "0.85rem" }}>
-            Traçabilité complète et immutable de toutes les actions effectuées sur la plateforme
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Journal d'Audit</h1>
+          <p className="text-sm text-slate-500">
+            Traçabilité et journalisation immuable des activités d'administration
           </p>
         </div>
-        <div
-          style={{
-            background: "rgba(37, 99, 235, 0.1)",
-            color: "var(--accent, #2563EB)",
-            border: "1px solid rgba(37, 99, 235, 0.2)",
-            padding: "0.45rem 1rem",
-            borderRadius: "20px",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            fontWeight: 600,
-            fontSize: "0.82rem",
-          }}
-        >
-          <Shield size={16} />
+        <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50/70 px-3.5 py-1 text-xs font-semibold text-blue-700">
+          <Shield className="h-4 w-4" />
           Journal d'activité & traçabilité
         </div>
       </div>
 
-      {/* Filter Row Card */}
-      <div
-        style={{
-          background: "var(--card-bg, #FFF)",
-          border: "1px solid var(--border, #E2E8F0)",
-          borderRadius: "12px",
-          padding: "1rem 1.25rem",
-          marginBottom: "1.5rem",
-          display: "flex",
-          alignItems: "center",
-          gap: "0.75rem",
-          flexWrap: "wrap",
-        }}
-      >
-        {/* Search Input */}
-        <div style={{ position: "relative", flex: "1 1 260px" }}>
-          <Search
-            size={16}
-            style={{
-              position: "absolute",
-              left: "0.85rem",
-              top: "50%",
-              transform: "translateY(-50%)",
-              color: "#94A3B8",
-            }}
-          />
+      {/* Barre d'outils et filtres */}
+      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
+        <div className="relative min-w-[260px] flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input
             type="text"
-            placeholder="Rechercher une action, un utilisateur, une cible (#id)..."
+            placeholder="Rechercher une action, un compte, une cible..."
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
               setPage(1);
             }}
-            style={{
-              width: "100%",
-              padding: "0.6rem 1rem 0.6rem 2.4rem",
-              borderRadius: "8px",
-              border: "1px solid #E2E8F0",
-              background: "#FFF",
-              fontSize: "0.85rem",
-              outline: "none",
-              color: "var(--text-main)",
-            }}
+            className="w-full rounded-lg border border-slate-200 bg-slate-50/50 py-2 pl-9 pr-3 text-sm text-slate-800 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500"
           />
         </div>
 
-        {/* Filter Action */}
         <select
           value={selectedAction}
           onChange={(e) => {
             setSelectedAction(e.target.value);
             setPage(1);
           }}
-          style={{
-            padding: "0.6rem 2rem 0.6rem 0.85rem",
-            borderRadius: "8px",
-            border: "1.5px solid #3B82F6",
-            background: "#FFF",
-            fontSize: "0.85rem",
-            color: "var(--text-main)",
-            cursor: "pointer",
-            outline: "none",
-          }}
+          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none hover:border-slate-300 focus:border-blue-500"
         >
           <option value="all">Toutes les actions</option>
           {actionOptions.map((act) => (
             <option key={act} value={act}>
-              {formatStr(act)}
+              {formatActionLabel(act)}
             </option>
           ))}
         </select>
 
-        {/* Filter User */}
         <select
           value={selectedUser}
           onChange={(e) => {
             setSelectedUser(e.target.value);
             setPage(1);
           }}
-          style={{
-            padding: "0.6rem 2rem 0.6rem 0.85rem",
-            borderRadius: "8px",
-            border: "1.5px solid #3B82F6",
-            background: "#FFF",
-            fontSize: "0.85rem",
-            color: "var(--text-main)",
-            cursor: "pointer",
-            outline: "none",
-          }}
+          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none hover:border-slate-300 focus:border-blue-500"
         >
           <option value="all">Tous les utilisateurs</option>
-          {userOptions.map((u) => (
-            <option key={u} value={u}>
-              {u}
+          {userOptions.map((user) => (
+            <option key={user} value={user}>
+              {user}
             </option>
           ))}
         </select>
 
-        {/* Date Button */}
         <button
           type="button"
           onClick={() => {
             setDateFilterActive(!dateFilterActive);
             setPage(1);
           }}
-          style={{
-            padding: "0.6rem 1rem",
-            borderRadius: "8px",
-            border: dateFilterActive ? "1.5px solid #2563EB" : "1.5px solid #3B82F6",
-            background: dateFilterActive ? "#EFF6FF" : "#FFF",
-            color: dateFilterActive ? "#1D4ED8" : "var(--text-main)",
-            fontSize: "0.85rem",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            cursor: "pointer",
-            fontWeight: 500,
-          }}
+          className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition ${
+            dateFilterActive
+              ? "border-blue-600 bg-blue-50 text-blue-700"
+              : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+          }`}
         >
-          <Calendar size={15} color="#2563EB" />
+          <Calendar className="h-4 w-4 text-blue-600" />
           Aujourd'hui ({todayFormatted})
         </button>
 
-        {/* Refresh Button */}
         <button
           type="button"
           onClick={fetchLogs}
-          style={{
-            padding: "0.6rem 1.25rem",
-            borderRadius: "8px",
-            border: "none",
-            background: "var(--text-main)",
-            color: "#FFF",
-            fontSize: "0.85rem",
-            fontWeight: 600,
-            cursor: "pointer",
-            transition: "background 0.2s",
-          }}
+          disabled={loading}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800 disabled:opacity-50"
         >
+          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           Rafraîchir
         </button>
       </div>
 
-      {error && (
-        <div
-          style={{
-            padding: "0.9rem 1.2rem",
-            background: "#FEF2F2",
-            border: "1px solid #FECACA",
-            color: "#DC2626",
-            borderRadius: "8px",
-            marginBottom: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            fontSize: "0.85rem",
-          }}
-        >
-          <AlertCircle size={18} />
-          {error}
+      {/* Message d'erreur */}
+      {errorMessage && (
+        <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3.5 text-sm text-red-700">
+          <AlertCircle className="h-5 w-5 shrink-0" />
+          <span>{errorMessage}</span>
         </div>
       )}
 
-      {/* Table Card */}
-      <div
-        style={{
-          background: "#FFF",
-          border: "1px solid #E2E8F0",
-          borderRadius: "12px",
-          overflow: "hidden",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-        }}
-      >
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+      {/* Tableau des logs */}
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse table-fixed">
             <thead>
-              <tr style={{ background: "#FFF", borderBottom: "1px solid #E2E8F0" }}>
-                <th
-                  className="table-date-cell"
-                  style={{
-                    padding: "0.9rem 1.25rem",
-                    textAlign: "left",
-                    fontSize: "0.72rem",
-                    fontWeight: 700,
-                    color: "#64748B",
-                    letterSpacing: "0.05em",
-                    textTransform: "uppercase",
-                    width: "165px",
-                  }}
-                >
-                  Horodatage
-                </th>
-                <th
-                  style={{
-                    padding: "0.9rem 1.25rem",
-                    textAlign: "left",
-                    fontSize: "0.72rem",
-                    fontWeight: 700,
-                    color: "#64748B",
-                    letterSpacing: "0.05em",
-                    textTransform: "uppercase",
-                    width: "20%",
-                  }}
-                >
-                  Utilisateur & Rôle
-                </th>
-                <th
-                  style={{
-                    padding: "0.9rem 1.25rem",
-                    textAlign: "left",
-                    fontSize: "0.72rem",
-                    fontWeight: 700,
-                    color: "#64748B",
-                    letterSpacing: "0.05em",
-                    textTransform: "uppercase",
-                    width: "18%",
-                  }}
-                >
-                  Action effectuée
-                </th>
-                <th
-                  style={{
-                    padding: "0.9rem 1.25rem",
-                    textAlign: "left",
-                    fontSize: "0.72rem",
-                    fontWeight: 700,
-                    color: "#64748B",
-                    letterSpacing: "0.05em",
-                    textTransform: "uppercase",
-                    width: "32%",
-                  }}
-                >
-                  Cible / Détails contextuels
-                </th>
-                <th
-                  style={{
-                    padding: "0.9rem 1.25rem",
-                    textAlign: "right",
-                    fontSize: "0.72rem",
-                    fontWeight: 700,
-                    color: "#64748B",
-                    letterSpacing: "0.05em",
-                    textTransform: "uppercase",
-                    width: "14%",
-                  }}
-                >
-                  Sécurité
-                </th>
+              <tr className="border-b border-slate-200 bg-slate-50/75 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                <th className="w-[170px] px-4 py-3">Horodatage</th>
+                <th className="w-[22%] px-4 py-3">Utilisateur</th>
+                <th className="w-[18%] px-4 py-3">Action</th>
+                <th className="w-[30%] px-4 py-3">Cible / Détails</th>
+                <th className="w-[15%] px-4 py-3 text-right">Sécurité</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-slate-100 text-sm">
               {loading ? (
                 <tr>
-                  <td
-                    colSpan="5"
-                    style={{
-                      textAlign: "center",
-                      padding: "3rem",
-                      color: "#64748B",
-                      fontSize: "0.9rem",
-                    }}
-                  >
+                  <td colSpan={5} className="py-12 text-center text-slate-500">
+                    <Loader2 className="mx-auto h-6 w-6 animate-spin text-slate-400 mb-2" />
                     Chargement du journal d'audit...
                   </td>
                 </tr>
               ) : paginatedLogs.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan="5"
-                    style={{
-                      textAlign: "center",
-                      padding: "3rem",
-                      color: "#64748B",
-                      fontSize: "0.9rem",
-                    }}
-                  >
-                    Aucun enregistrement trouvé.
+                  <td colSpan={5} className="py-12 text-center text-slate-500">
+                    Aucun événement correspondant aux critères.
                   </td>
                 </tr>
               ) : (
                 paginatedLogs.map((log) => {
                   const d = new Date(log.createdAt || Date.now());
-                  const dateStr = d.toLocaleDateString("fr-FR", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  });
-                  const timeStr = d.toLocaleTimeString("fr-FR", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                  });
+                  const dateStr = d.toLocaleDateString("fr-FR");
+                  const timeStr = d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
-                  const pill = getPillStyle(log.action);
                   const userName = log.user?.name || log.userName || "Système";
-                  const userInitial = userName.charAt(0).toUpperCase();
-                  const userRole =
-                    log.user?.role?.name ||
-                    log.user?.role ||
-                    (userName.toLowerCase().includes("rosette")
-                      ? "Super-administrateur"
-                      : "Administrateur technique");
+                  const roleLabel =
+                    typeof log.user?.role === "object"
+                      ? log.user.role?.name
+                      : log.user?.role || "Membre";
 
-                  const secBadge = getSecurityBadge(log);
                   const targetLabel = log.targetType
-                    ? `${formatStr(log.targetType)} (#${(log.targetId || "").split("-")[0].toLowerCase()})`
+                    ? `${formatActionLabel(log.targetType)} (#${(log.targetId || "").slice(0, 8)})`
                     : log.targetId
-                    ? `#${log.targetId.split("-")[0]}`
-                    : "";
+                    ? `#${log.targetId.slice(0, 8)}`
+                    : null;
 
                   return (
-                    <tr
-                      key={log.id || Math.random()}
-                      style={{
-                        borderBottom: "1px solid #F1F5F9",
-                        transition: "background 0.15s",
-                      }}
-                    >
-                      {/* Horodatage */}
-                      <td className="table-date-cell" style={{ padding: "0.9rem 1.25rem", verticalAlign: "middle", width: "165px" }}>
-                        <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
-                          <Clock size={15} style={{ color: "#94A3B8", marginTop: "2px", flexShrink: 0 }} />
-                          <div style={{ whiteSpace: "nowrap" }}>
-                            <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "var(--text-main)", whiteSpace: "nowrap" }}>
-                              {dateStr}
-                            </div>
-                            <div style={{ fontSize: "0.78rem", color: "#64748B", whiteSpace: "nowrap" }}>
-                              {timeStr}
-                            </div>
+                    <tr key={log.id} className="hover:bg-slate-50/50 transition-colors">
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <div className="flex items-center gap-2 text-slate-700">
+                          <Clock className="h-4 w-4 text-slate-400 shrink-0" />
+                          <div>
+                            <div className="font-medium text-xs text-slate-900">{dateStr}</div>
+                            <div className="text-[11px] text-slate-500">{timeStr}</div>
                           </div>
                         </div>
                       </td>
 
-                      {/* Utilisateur & Rôle */}
-                      <td style={{ padding: "0.9rem 1.25rem", verticalAlign: "middle" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
-                          <div
-                            style={{
-                              width: "30px",
-                              height: "30px",
-                              borderRadius: "50%",
-                              background: "#F1F5F9",
-                              color: "#334155",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              fontWeight: 700,
-                              fontSize: "0.82rem",
-                              flexShrink: 0,
-                            }}
-                          >
-                            {userInitial}
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
+                            {userName.charAt(0).toUpperCase()}
                           </div>
-                          <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
-                            <div className="truncate-name" style={{ fontWeight: 600, fontSize: "0.85rem", color: "var(--text-main)", maxWidth: "100%" }} title={userName}>
+                          <div className="min-w-0 flex-1 truncate">
+                            <div className="truncate font-medium text-slate-900" title={userName}>
                               {userName}
                             </div>
-                            <div className="truncate-name" style={{ fontSize: "0.75rem", color: "#64748B", maxWidth: "100%" }} title={userRole}>
-                              {userRole}
+                            <div className="truncate text-xs text-slate-500" title={roleLabel}>
+                              {roleLabel}
                             </div>
                           </div>
                         </div>
                       </td>
 
-                      {/* Action effectuée */}
-                      <td style={{ padding: "0.9rem 1.25rem", verticalAlign: "middle" }}>
-                        <span
-                          style={{
-                            display: "inline-block",
-                            padding: "0.3rem 0.8rem",
-                            borderRadius: "20px",
-                            fontSize: "0.78rem",
-                            fontWeight: 600,
-                            background: pill.background,
-                            color: pill.color,
-                          }}
-                        >
-                          {formatStr(log.action)}
+                      <td className="px-4 py-3">
+                        <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-medium ${getActionBadgeStyle(log.action)}`}>
+                          {formatActionLabel(log.action)}
                         </span>
                       </td>
 
-                      {/* Cible / Détails contextuels */}
-                      <td style={{ padding: "0.9rem 1.25rem", verticalAlign: "middle" }}>
-                        <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", minWidth: 0 }}>
-                          <FileText size={15} style={{ color: "#94A3B8", marginTop: "2px", flexShrink: 0 }} />
-                          <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
+                      <td className="px-4 py-3">
+                        <div className="flex items-start gap-2 min-w-0">
+                          <FileText className="h-4 w-4 text-slate-400 shrink-0 mt-0.5" />
+                          <div className="min-w-0 flex-1">
                             {targetLabel && (
-                              <div className="truncate-name" style={{ fontWeight: 600, fontSize: "0.85rem", color: "var(--text-main)", maxWidth: "100%" }} title={targetLabel}>
+                              <div className="truncate font-medium text-xs text-slate-800" title={targetLabel}>
                                 {targetLabel}
                               </div>
                             )}
-                            <div className="truncate-name" style={{ fontSize: "0.78rem", color: "#64748B", maxWidth: "100%" }} title={log.details || "-"}>
+                            <div className="truncate text-xs text-slate-500" title={log.details || "-"}>
                               {log.details || "-"}
                             </div>
                           </div>
                         </div>
                       </td>
 
-                      {/* Sécurité */}
-                      <td style={{ padding: "0.9rem 1.25rem", textAlign: "right", verticalAlign: "middle" }}>
-                        <span
-                          style={{
-                            display: "inline-block",
-                            padding: "0.25rem 0.6rem",
-                            borderRadius: "6px",
-                            fontSize: "0.75rem",
-                            color: "#64748B",
-                            background: "#F8FAFC",
-                            border: "1px solid #E2E8F0",
-                            fontFamily: "monospace",
-                          }}
-                        >
-                          {secBadge}
+                      <td className="px-4 py-3 text-right">
+                        <span className="inline-block rounded border border-slate-200 bg-slate-50 px-2 py-0.5 font-mono text-[11px] text-slate-600">
+                          {getSecurityBadge(log)}
                         </span>
                       </td>
                     </tr>
@@ -645,61 +389,39 @@ export default function AuditPage() {
           </table>
         </div>
 
-        {/* Footer with pagination */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "0.85rem 1.25rem",
-            borderTop: "1px solid #F1F5F9",
-            background: "#FFF",
-            fontSize: "0.8rem",
-            color: "#64748B",
-          }}
-        >
+        {/* Pied de page et pagination */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 bg-white px-4 py-3 text-xs text-slate-600">
           <div>
-            Affichage de {filteredLogs.length > 0 ? (page - 1) * pageSize + 1 : 0} à{" "}
-            {Math.min(page * pageSize, filteredLogs.length)} sur {filteredLogs.length} événements enregistrés
+            Affichage de{" "}
+            <span className="font-semibold">
+              {filteredLogs.length > 0 ? (page - 1) * PAGE_SIZE + 1 : 0}
+            </span>{" "}
+            à{" "}
+            <span className="font-semibold">
+              {Math.min(page * PAGE_SIZE, filteredLogs.length)}
+            </span>{" "}
+            sur <span className="font-semibold">{filteredLogs.length}</span> enregistrements
           </div>
-          <div style={{ display: "flex", gap: "0.5rem" }}>
+
+          <div className="flex items-center gap-1.5">
             <button
               type="button"
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              style={{
-                padding: "0.35rem 0.75rem",
-                borderRadius: "6px",
-                border: "1px solid #E2E8F0",
-                background: "#FFF",
-                color: page <= 1 ? "#CBD5E1" : "#334155",
-                fontSize: "0.8rem",
-                cursor: page <= 1 ? "not-allowed" : "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.25rem",
-              }}
+              className="inline-flex items-center gap-1 rounded-md border border-slate-200 px-2.5 py-1.5 font-medium hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <ChevronLeft size={14} /> Précédent
+              <ChevronLeft className="h-3.5 w-3.5" /> Précédent
             </button>
+            <span className="px-2 font-medium text-slate-700">
+              Page {page} / {totalPages}
+            </span>
             <button
               type="button"
               disabled={page >= totalPages}
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              style={{
-                padding: "0.35rem 0.75rem",
-                borderRadius: "6px",
-                border: "1px solid #E2E8F0",
-                background: "#FFF",
-                color: page >= totalPages ? "#CBD5E1" : "#334155",
-                fontSize: "0.8rem",
-                cursor: page >= totalPages ? "not-allowed" : "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.25rem",
-              }}
+              className="inline-flex items-center gap-1 rounded-md border border-slate-200 px-2.5 py-1.5 font-medium hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Suivant <ChevronRight size={14} />
+              Suivant <ChevronRight className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>

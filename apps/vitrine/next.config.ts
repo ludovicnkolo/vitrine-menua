@@ -25,6 +25,18 @@ const nextConfig: NextConfig = {
   // Autoriser automatiquement l'accès HMR depuis toutes les IP de la machine (évite le blocage sur réseau local)
   allowedDevOrigins: getLocalIPs(),
   output: "standalone",
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**', // Allow any domain over https (e.g. CMS, CDN, S3)
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+    ],
+  },
   async redirects() {
     return [
       // Anciennes routes FR sans préfixe → /fr/ (SEO permanent 301)
@@ -64,14 +76,6 @@ const nextConfig: NextConfig = {
   // Et support transparent de /fr et /fr/* sans redirection
   async rewrites() {
     return [
-      {
-        source: '/fr',
-        destination: '/',
-      },
-      {
-        source: '/fr/:path*',
-        destination: '/:path*',
-      },
       {
         source: '/api/:path*',
         destination: process.env.NODE_ENV === 'production' ? (process.env.BACKEND_URL || 'http://backend:4000') + '/api/:path*' : 'http://localhost:4000/api/:path*',

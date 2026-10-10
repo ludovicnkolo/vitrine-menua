@@ -17,6 +17,14 @@ const {
   isManager,
 } = require("../../middlewares/auth");
 const { transporter } = require("../../utils/mailer");
+const emitEntityUpdate = (req, entityType, entityId, action, payload = {}) => {
+  const io = req.app.get('io');
+  if (io) {
+    if (entityId) io.to(entityId).emit('entity_updated', { entityType, entityId, action, ...payload });
+    io.emit('entity_updated_global', { entityType, entityId, action, ...payload });
+  }
+};
+
 const { logAudit } = require("../../utils/audit");
 
 const imapConfig = {
@@ -533,7 +541,7 @@ router.get("/messages", async (req, res) => {
       total = await prisma.messagePersonnel.count({ where });
       const records = await prisma.messagePersonnel.findMany({
         where,
-        orderBy: { createdAt: "desc" },
+        orderBy: { receivedAt: "desc" },
         skip,
         take: limit,
         include: { dossier: true, mission: true, Tache: true },

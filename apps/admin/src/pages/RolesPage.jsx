@@ -57,21 +57,28 @@ const RolesPage = () => {
 
   const fetchData = async () => {
     try {
-      const token = sessionStorage.getItem("adminToken");
-      if (!token) return;
+      const token = sessionStorage.getItem("adminToken") || "";
 
-      const [rUsers, rRoles] = await Promise.all([
-        fetch(new URL(getSafeApiUrl(`/api/crm/users`)).toString(), {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-          .then((r) => r.json())
-          .catch(() => []),
-        fetch(new URL(getSafeApiUrl(`/api/crm/roles`)).toString(), {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-          .then((r) => r.json())
-          .catch(() => []),
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+      const [resUsers, resRoles] = await Promise.all([
+        fetch(getSafeApiUrl("/api/crm/users"), { headers }).catch(() => null),
+        fetch(getSafeApiUrl("/api/crm/roles"), { headers }).catch(() => null),
       ]);
+
+      let rUsers = [];
+      let rRoles = [];
+
+      if (resUsers && resUsers.ok) {
+        rUsers = await resUsers.json().catch(() => []);
+      }
+      
+      if (resRoles && resRoles.ok) {
+        rRoles = await resRoles.json().catch(() => []);
+      } else if (resRoles && !resRoles.ok) {
+        const errData = await resRoles.json().catch(() => ({}));
+        console.error("Error fetching roles:", errData);
+      }
 
       const validRoles = Array.isArray(rRoles) ? rRoles : [];
       const validUsers = Array.isArray(rUsers) ? rUsers : [];
@@ -460,19 +467,19 @@ const RolesPage = () => {
               <table style={{ tableLayout: "fixed", width: "100%" }}>
                 <thead>
                   <tr>
-                    <th style={{ width: "20%", textAlign: "left", paddingLeft: "1.25rem" }}>N°</th>
-                    <th style={{ width: "20%" }}>Intitulé</th>
-                    <th style={{ width: "20%" }}>Date de création</th>
+                    <th style={{ width: "5%", textAlign: "left", paddingLeft: "1.25rem" }}>N°</th>
+                    <th style={{ width: "25%" }}>Intitulé</th>
+                    <th style={{ width: "25%" }}>Date de création</th>
                     <th style={{ width: "30%" }}>Statut</th>
-                    <th style={{ width: "10%" }}>{t("common.actions", "Actions")}</th>
+                    <th style={{ width: "15%" }}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {roles.map((r) => (
+                  {roles.map((r, index) => (
                     <tr key={r.id}>
                       <td style={{ textAlign: "left", paddingLeft: "1.25rem", color: "var(--text-muted)", fontSize: "0.85rem" }}>
-                        <div className="truncate-name" style={{ maxWidth: "100%" }} title={r.id}>
-                          {r.id.split('-')[0]}...
+                        <div className="truncate-name" style={{ maxWidth: "100%" }}>
+                          {String(index + 1).padStart(2, '0')}
                         </div>
                       </td>
                       <td>
@@ -561,16 +568,17 @@ const RolesPage = () => {
               });
               const data = await res.json();
               if (!res.ok) {
-                alert("Erreur: " + (data.error || "Impossible de créer le rôle"));
+                window.customAlert("Erreur: " + (data.error || "Impossible de créer le rôle"), "Erreur", "error");
                 return;
               }
               setNewRole({ name: "", description: "", status: "Actif" });
               setSelectedPermissions([]);
               setShowRoleModal(false);
+              window.customAlert("Le rôle a été enregistré avec succès.", "Succès", "info");
               fetchData();
             } catch (err) {
               console.error("Erreur lors de la création:", err);
-              alert("Erreur réseau");
+              window.customAlert("Erreur réseau lors de la création du rôle.", "Erreur", "error");
             }
           },
           () => setShowRoleModal(false),
@@ -657,14 +665,15 @@ const RolesPage = () => {
             );
             const data = await res.json();
             if (!res.ok) {
-              alert("Erreur: " + (data.error || "Impossible de modifier le rôle"));
+              window.customAlert("Erreur: " + (data.error || "Impossible de modifier le rôle"), "Erreur", "error");
               return;
             }
             setEditRole(null);
+            window.customAlert("Le rôle a été modifié avec succès.", "Succès", "info");
             fetchData();
           } catch (err) {
             console.error("Erreur lors de la mise à jour:", err);
-            alert("Erreur réseau");
+            window.customAlert("Erreur réseau lors de la modification du rôle.", "Erreur", "error");
           }
         };
 

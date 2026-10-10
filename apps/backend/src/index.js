@@ -6,6 +6,8 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 
 dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
@@ -31,6 +33,41 @@ if (missingVars.length > 0) {
 }
 
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: [
+      "http://localhost:3000",
+      "http://127.0.0.1:3000",
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+      "http://localhost:5174",
+      "http://127.0.0.1:5174",
+      "https://menuaconsulting.com/",
+      "https://crm-admin.menuaconsulting.com",
+    ],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    credentials: true,
+  }
+});
+app.set("io", io);
+
+io.on("connection", (socket) => {
+  console.log("Client connected to Socket.IO");
+  
+  socket.on("join_entity", (entityId) => {
+    socket.join(entityId);
+  });
+
+  socket.on("leave_entity", (entityId) => {
+    socket.leave(entityId);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected from Socket.IO");
+  });
+});
+
 const prisma = new PrismaClient();
 
 // Confiance au reverse proxy (Nginx) pour obtenir l'adresse IP réelle de l'utilisateur
@@ -160,7 +197,7 @@ app.get("/api/dossiers", async (req, res) => {
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Backend server running on port ${PORT}`);
 
   // Auto-seed default roles and admin on startup

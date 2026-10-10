@@ -363,11 +363,34 @@ const InboxPage = ({ userRole }) => {
   }, [tab, filterTraite, filterDate, page, searchQuery, limit]);
 
   useEffect(() => {
+    const handleUpdate = () => {
+      fetchMessages();
+    };
+    import("../utils/socket").then(({ socket }) => {
+      socket.on("entity_updated_global", handleUpdate);
+    });
+    return () => {
+      import("../utils/socket").then(({ socket }) => {
+        socket.off("entity_updated_global", handleUpdate);
+      });
+    };
+  }, [tab, filterTraite, filterDate, page, searchQuery, limit]);
+
+  useEffect(() => {
     try {
       const userStr = sessionStorage.getItem("adminUser");
       if (userStr) setCurrentUser(JSON.parse(userStr));
     } catch (e) {}
   }, []);
+
+  useEffect(() => {
+    if (processMsg && messages.length > 0) {
+      const updated = messages.find(m => m.id === processMsg.id);
+      if (updated && JSON.stringify(updated) !== JSON.stringify(processMsg)) {
+        setProcessMsg({ ...updated });
+      }
+    }
+  }, [messages]);
 
   // Auto-afficher la bannière de rappel/entretien à l'ouverture d'un message
   useEffect(() => {

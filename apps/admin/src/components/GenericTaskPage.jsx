@@ -340,11 +340,34 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   };
 
   useEffect(() => {
+    if (consultTask && tasks.length > 0) {
+      const updated = tasks.find(i => i.id === consultTask.id);
+      if (updated && JSON.stringify(updated) !== JSON.stringify(consultTask)) {
+        setConsultTask({ ...updated, _editing: consultTask._editing });
+      }
+    }
+  }, [tasks]);
+
+  useEffect(() => {
     setPage(1);
   }, [searchQuery, filterStatus]);
 
   useEffect(() => {
     fetchData();
+  }, [page, searchQuery, filterStatus]);
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      fetchData();
+    };
+    import("../utils/socket").then(({ socket }) => {
+      socket.on("entity_updated_global", handleUpdate);
+    });
+    return () => {
+      import("../utils/socket").then(({ socket }) => {
+        socket.off("entity_updated_global", handleUpdate);
+      });
+    };
   }, [page, searchQuery, filterStatus]);
 
   const handleUpdateMission = async () => {

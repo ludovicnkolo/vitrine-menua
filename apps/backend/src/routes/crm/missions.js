@@ -18,6 +18,15 @@ const {
 } = require("../../middlewares/auth");
 const { notify } = require("../../utils/notify");
 const { transporter } = require("../../utils/mailer");
+const emitEntityUpdate = (req, entityType, entityId, action, payload = {}) => {
+  const io = req.app.get('io');
+  if (io) {
+    io.to(entityId).emit('entity_updated', { entityType, entityId, action, ...payload });
+    io.emit('entity_updated_global', { entityType, entityId, action, ...payload });
+    if (payload.dossierId) io.to(payload.dossierId).emit('entity_updated', { entityType: 'DOSSIER', entityId: payload.dossierId, action: 'CHILD_UPDATED' });
+  }
+};
+
 const { logAudit } = require("../../utils/audit");
 
 const imapConfig = {
@@ -516,6 +525,7 @@ router.post("/tasks", async (req, res) => {
     }
     // --- Fin création sous-dossier GED ---
 
+    emitEntityUpdate(req, 'MISSION', task.id, 'CREATED', task);
     res.status(201).json(task);
   } catch (error) {
     console.error(error);
@@ -843,6 +853,7 @@ router.patch("/tasks/:id", async (req, res) => {
       task.dossierId,
     );
 
+    emitEntityUpdate(req, 'MISSION', task.id, 'UPDATED', task);
     res.json(task);
   } catch (error) {
     console.error(error);
@@ -880,6 +891,7 @@ router.delete("/tasks/:id", async (req, res) => {
       mission.dossierId,
     );
 
+    emitEntityUpdate(req, 'MISSION', req.params.id, 'DELETED');
     res.json({ success: true, message: "Mission supprimée" });
   } catch (error) {
     console.error(error);

@@ -288,12 +288,35 @@ const DossiersPage = () => {
   };
 
   useEffect(() => {
+    if (consultDossier && dbDossiers.length > 0) {
+      const updated = dbDossiers.find(d => d.id === consultDossier.id);
+      if (updated && JSON.stringify(updated) !== JSON.stringify(consultDossier)) {
+        setConsultDossier({ ...updated, _editing: consultDossier._editing });
+      }
+    }
+  }, [dbDossiers]);
+
+  useEffect(() => {
     setPage(1);
   }, [searchQuery, filterStatus, filterOrigine]);
 
   useEffect(() => {
     setPage(1);
     fetchDossiers();
+  }, [filterStatus, filterOrigine, searchQuery]);
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      fetchDossiers();
+    };
+    import("../utils/socket").then(({ socket }) => {
+      socket.on("entity_updated_global", handleUpdate);
+    });
+    return () => {
+      import("../utils/socket").then(({ socket }) => {
+        socket.off("entity_updated_global", handleUpdate);
+      });
+    };
   }, [filterStatus, filterOrigine, searchQuery]);
 
   const handleCreateMission = async () => {
@@ -3317,7 +3340,7 @@ const DossiersPage = () => {
         <table style={{ tableLayout: "fixed", width: "100%" }}>
           <thead>
             <tr>
-              <th style={{ width: "110px", textAlign: "center" }}>{t("common.reference", "Référence")}</th>
+              <th style={{ width: "50px", textAlign: "center" }}>N°</th>
               <th style={{ width: "28%", textAlign: "left", paddingLeft: "1.25rem" }}>{t("dossier.folderName", "Nom du dossier")}</th>
               <th style={{ width: "120px", textAlign: "center" }}>{t("dossier.origin", "Origine")}</th>
               <th style={{ width: "24%", textAlign: "center" }}>{t("dossier.owner", "Propriétaire")}</th>
@@ -3348,7 +3371,7 @@ const DossiersPage = () => {
             ) : (
               dbDossiers
                 .filter((d) => !d.parentDossierId)
-                .map((d) => {
+                .map((d, index) => {
                   const dOrigin = d.origin || "INTERNE";
                   const dOwner =
                     d.origin === "CLIENT"
@@ -3396,9 +3419,9 @@ const DossiersPage = () => {
                             maxWidth: "100%",
                             textAlign: "center",
                           }}
-                          title={d.reference || d.id}
+                          title={String(index + 1).padStart(2, "0")}
                         >
-                          {d.reference || d.id}
+                          {String(index + 1).padStart(2, "0")}
                         </div>
                       </td>
                       <td style={{ textAlign: "left", paddingLeft: "1.25rem" }}>

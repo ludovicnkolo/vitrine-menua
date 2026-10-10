@@ -90,6 +90,20 @@ const DashboardPage = () => {
     fetchStats(startDate, endDate);
   }, []);
 
+  useEffect(() => {
+    const handleUpdate = () => {
+      fetchStats(startDate, endDate);
+    };
+    import("../utils/socket").then(({ socket }) => {
+      socket.on("entity_updated_global", handleUpdate);
+    });
+    return () => {
+      import("../utils/socket").then(({ socket }) => {
+        socket.off("entity_updated_global", handleUpdate);
+      });
+    };
+  }, [startDate, endDate]);
+
   const handleApplyFilter = () => {
     if (!startDate || !endDate) {
       if (window.customAlert)

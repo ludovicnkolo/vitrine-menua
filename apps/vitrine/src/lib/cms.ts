@@ -24,7 +24,9 @@ export interface Publication {
 }
 
 export function getBackendUrl(): string {
-  const defaultUrl = process.env.NODE_ENV === 'production' ? 'http://backend:4000' : 'http://127.0.0.1:4000';
+  // During local 'npm run build', NODE_ENV is 'production' but we are not in docker.
+  // So we default to 127.0.0.1:4000 if BACKEND_URL is not explicitly set.
+  const defaultUrl = process.env.BACKEND_URL_DOCKER === 'true' ? 'http://backend:4000' : 'http://127.0.0.1:4000';
   return (
     process.env.BACKEND_URL ||
     process.env.NEXT_PUBLIC_API_URL ||

@@ -1,5 +1,5 @@
-export const generateSlug = (title: string, id?: string) => {
-  if (!title) return id || "";
+export const generateSlug = (title: string, _id?: string | number) => {
+  if (!title) return _id ? String(_id) : "";
   const slug = title
     .toLowerCase()
     .normalize("NFD")
@@ -7,8 +7,5 @@ export const generateSlug = (title: string, id?: string) => {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)+/g, "");
   
-  if (id) {
-    return `${slug}-${id}`;
-  }
   return slug;
 };

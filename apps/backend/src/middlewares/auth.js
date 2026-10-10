@@ -13,9 +13,18 @@ const ADMIN_ROLES = ["Super-administrateur"];
 const MANAGER_ROLES = ["Super-administrateur", "Responsable opérationnel"];
 
 // Helpers booléens
-const isSuperAdmin = (role) => SUPER_ADMIN_ROLES.includes(role);
-const isAdmin = (role) => ADMIN_ROLES.includes(role);
-const isManager = (role) => MANAGER_ROLES.includes(role);
+const isSuperAdmin = (role) => {
+  if (!role) return false;
+  return SUPER_ADMIN_ROLES.includes(role) || role.toLowerCase().includes('super-admin');
+};
+const isAdmin = (role) => {
+  if (!role) return false;
+  return isSuperAdmin(role) || ADMIN_ROLES.includes(role) || role.toLowerCase().includes('admin');
+};
+const isManager = (role) => {
+  if (!role) return false;
+  return isAdmin(role) || MANAGER_ROLES.includes(role) || role.toLowerCase().includes('responsable');
+};
 
 // ─── MIDDLEWARE AUTHENTIFICATION ──────────────────────────────────────────────
 const authenticateJWT = (req, res, next) => {

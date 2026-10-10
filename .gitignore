@@ -51,3 +51,10 @@ DEPLOIEMENT_VPS.md
 # Uploads
 apps/admin/public/uploads/
 apps/vitrine/public/uploads/
+
+# Ignore log, bak, and Cypress artifacts
+*.log
+*.bak
+storage/
+cypress/screenshots/
+cypress/videos/

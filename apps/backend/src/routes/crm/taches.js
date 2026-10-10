@@ -18,6 +18,16 @@ const {
 } = require("../../middlewares/auth");
 const { notify } = require("../../utils/notify");
 const { transporter } = require("../../utils/mailer");
+const emitEntityUpdate = (req, entityType, entityId, action, payload = {}) => {
+  const io = req.app.get('io');
+  if (io) {
+    io.to(entityId).emit('entity_updated', { entityType, entityId, action, ...payload });
+    io.emit('entity_updated_global', { entityType, entityId, action, ...payload });
+    if (payload.missionId) io.to(payload.missionId).emit('entity_updated', { entityType: 'MISSION', entityId: payload.missionId, action: 'CHILD_UPDATED' });
+    if (payload.dossierTacheId) io.to(payload.dossierTacheId).emit('entity_updated', { entityType: 'DOSSIER', entityId: payload.dossierTacheId, action: 'CHILD_UPDATED' });
+  }
+};
+
 const { logAudit } = require("../../utils/audit");
 
 const imapConfig = {
@@ -208,6 +218,7 @@ router.get("/taches", async (req, res) => {
           { createdById: req.user.id },
           { mission: { assignedToId: req.user.id } },
           { mission: { dossier: { traitantId: req.user.id } } },
+          { dossierTache: { traitantId: req.user.id } }
         ]
       });
     } else if (req.user.role === "Relecteur") {
@@ -433,6 +444,7 @@ router.post("/taches", async (req, res) => {
       tache.dossierTacheId || null,
     );
 
+    emitEntityUpdate(req, 'TACHE', tache.id, 'UPDATED', tache);
     res.json(tache);
   } catch (error) {
     console.error(error);
@@ -757,6 +769,7 @@ router.patch("/taches/:id", async (req, res) => {
       tache.dossierTacheId || null,
     );
 
+    emitEntityUpdate(req, 'TACHE', tache.id, 'UPDATED', tache);
     res.json(tache);
   } catch (error) {
     console.error(error);
@@ -789,6 +802,7 @@ router.delete("/taches/:id", async (req, res) => {
       tache.dossierTacheId || null,
     );
 
+    emitEntityUpdate(req, 'TACHE', req.params.id, 'DELETED');
     res.json({ success: true, message: "Tâche supprimée" });
   } catch (error) {
     console.error(error);

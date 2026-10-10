@@ -123,7 +123,7 @@ const syncMessages = async (req, res) => {
             attachment:
               attachmentKeys.length > 0 ? attachmentKeys.join(",") : null,
             createdAt: date,
-            receivedAt: date,
+            receivedAt: new Date(),
           },
         });
         addedCount++;

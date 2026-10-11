@@ -117,59 +117,27 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
 
   if (loading && conversations.length === 0) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>Chargement...</div>
+      <div className="p-8 text-center">Chargement...</div>
     );
   }
 
   return (
     <div
-      style={{
-        display: "flex",
-        height: "70vh",
-        background: "#FFF",
-        borderRadius: "8px",
-        border: "1px solid var(--border)",
-        overflow: "hidden",
-        marginTop: "1rem",
-      }}
+      className="flex mt-4" style={{height:"70vh",background:"#FFF",borderRadius:"8px",border:"1px solid var(--border)",overflow:"hidden"}}
     >
       {/* Sidebar: Conversations List */}
       <div
-        style={{
-          width: "320px",
-          borderRight: "1px solid var(--border)",
-          display: "flex",
-          flexDirection: "column",
-          background: "#F8FAFC",
-        }}
+        className="flex flex-col" style={{width:"320px",borderRight:"1px solid var(--border)",background:"#F8FAFC"}}
       >
         <div
-          style={{
-            padding: "1rem",
-            borderBottom: "1px solid var(--border)",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
+          className="p-4 flex justify-between items-center" style={{borderBottom:"1px solid var(--border)"}}
         >
-          <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700, color: "var(--text-main)" }}>
+          <h3 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.1rem"}}>
             Interne
           </h3>
           <button
             onClick={() => setShowNewChat(true)}
-            style={{
-              padding: "0.45rem 0.85rem",
-              display: "flex",
-              gap: "0.3rem",
-              alignItems: "center",
-              fontSize: "0.85rem",
-              background: "#1E3A8A",
-              color: "#FFF",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontWeight: 600,
-            }}
+            className="flex items-center text-white cursor-pointer font-semibold" style={{padding:"0.45rem 0.85rem",gap:"0.3rem",fontSize:"0.85rem",background:"#1E3A8A",border:"none",borderRadius:"6px"}}
           >
             + Écrire
           </button>
@@ -182,42 +150,22 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
             placeholder="Filtrer les collègues..."
             value={filterQuery}
             onChange={(e) => setFilterQuery(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "0.45rem 0.75rem",
-              borderRadius: "6px",
-              border: "1px solid var(--border)",
-              background: "#FFF",
-              fontSize: "0.85rem",
-              boxSizing: "border-box",
-              outline: "none",
-            }}
+            className="w-full" style={{padding:"0.45rem 0.75rem",borderRadius:"6px",border:"1px solid var(--border)",background:"#FFF",fontSize:"0.85rem",boxSizing:"border-box",outline:"none"}}
           />
         </div>
 
         {showNewChat ? (
-          <div style={{ padding: "1rem", flex: 1, overflowY: "auto" }}>
+          <div className="p-4" style={{flex:1,overflowY:"auto"}}>
             <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                marginBottom: "1rem",
-              }}
+              className="flex items-center gap-2 mb-4"
             >
               <button
                 onClick={() => setShowNewChat(false)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  display: "flex",
-                  color: "var(--text-main)",
-                }}
+                className="cursor-pointer flex text-[var(--text-main)]" style={{background:"none",border:"none"}}
               >
                 <ArrowLeft size={16} />
               </button>
-              <h4 style={{ margin: 0, color: "var(--text-main)", fontSize: "0.95rem" }}>À qui ?</h4>
+              <h4 className="text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>À qui ?</h4>
             </div>
             {users
               .filter(
@@ -234,35 +182,15 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                 <div
                   key={u.id}
                   onClick={() => handleSelectNewContact(u.id)}
-                  style={{
-                    padding: "0.75rem",
-                    borderBottom: "1px solid var(--border)",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.75rem",
-                    borderRadius: "6px",
-                    marginBottom: "0.25rem",
-                    background: "white",
-                  }}
+                  className="cursor-pointer flex items-center" style={{padding:"0.75rem",borderBottom:"1px solid var(--border)",gap:"0.75rem",borderRadius:"6px",marginBottom:"0.25rem",background:"white"}}
                 >
                   <div
-                    style={{
-                      width: "36px",
-                      height: "36px",
-                      borderRadius: "50%",
-                      background: "#1E3A8A",
-                      color: "white",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontWeight: "bold",
-                    }}
+                    className="text-white flex items-center justify-center font-bold" style={{width:"36px",height:"36px",borderRadius:"50%",background:"#1E3A8A"}}
                   >
                     {u.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--text-main)" }}>
+                    <div className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.9rem"}}>
                       {u.name}
                     </div>
                     <div
@@ -288,12 +216,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
               )
               .length === 0 ? (
               <div
-                style={{
-                  padding: "2rem 1rem",
-                  textAlign: "center",
-                  color: "var(--text-muted)",
-                  fontSize: "0.9rem",
-                }}
+                className="text-center" style={{padding:"2rem 1rem",color:"var(--text-muted)",fontSize:"0.9rem"}}
               >
                 {filterQuery
                   ? "Aucun collègue ne correspond à votre recherche."
@@ -333,30 +256,13 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                       }}
                     >
                       <div
-                        style={{
-                          width: "38px",
-                          height: "38px",
-                          borderRadius: "50%",
-                          background: "#1E3A8A",
-                          color: "white",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontWeight: "bold",
-                          flexShrink: 0,
-                          marginTop: "2px",
-                        }}
+                        className="text-white flex items-center justify-center font-bold" style={{width:"38px",height:"38px",borderRadius:"50%",background:"#1E3A8A",marginTop:"2px"}}
                       >
                         {conv.contact.name.charAt(0).toUpperCase()}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            marginBottom: "0.15rem",
-                          }}
+                          className="flex justify-between items-center" style={{marginBottom:"0.15rem"}}
                         >
                           <span
                             style={{
@@ -410,16 +316,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
                         )}
                         {conv.unreadCount > 0 && !isSelected && (
                           <span
-                            style={{
-                              background: "#EAB308",
-                              color: "white",
-                              fontSize: "0.7rem",
-                              fontWeight: "bold",
-                              padding: "0.1rem 0.4rem",
-                              borderRadius: "10px",
-                              display: "inline-block",
-                              marginTop: "0.25rem",
-                            }}
+                            className="text-white font-bold inline-block" style={{background:"#EAB308",fontSize:"0.7rem",padding:"0.1rem 0.4rem",borderRadius:"10px",marginTop:"0.25rem"}}
                           >
                             {conv.unreadCount} non lu
                           </span>
@@ -434,36 +331,19 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
       </div>
 
       {/* Main Chat Area */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <div className="flex flex-col" style={{flex:1}}>
         {selectedContact ? (
           <>
             <div
-              style={{
-                padding: "1rem 1.5rem",
-                borderBottom: "1px solid var(--border)",
-                background: "#FFF",
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-              }}
+              className="flex items-center gap-4" style={{padding:"1rem 1.5rem",borderBottom:"1px solid var(--border)",background:"#FFF"}}
             >
               <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  background: "#1E3A8A",
-                  color: "white",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: "bold",
-                }}
+                className="text-white flex items-center justify-center font-bold" style={{width:"40px",height:"40px",borderRadius:"50%",background:"#1E3A8A"}}
               >
                 {selectedContact.name.charAt(0).toUpperCase()}
               </div>
               <div>
-                <h3 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                <h3 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                   {selectedContact.name}
                 </h3>
                 <span
@@ -475,29 +355,12 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
             </div>
 
             <div
-              style={{
-                flex: 1,
-                overflowY: "auto",
-                padding: "1.5rem",
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-                background: "#F8FAFC",
-              }}
+              className="p-6 flex flex-col gap-4" style={{flex:1,overflowY:"auto",background:"#F8FAFC"}}
             >
               <div
-                style={{
-                  maxWidth: "380px",
-                  margin: "0.5rem auto 1rem",
-                  padding: "1rem 1.5rem",
-                  background: "#FFF",
-                  border: "1px solid #E2E8F0",
-                  borderRadius: "8px",
-                  textAlign: "center",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-                }}
+                className="text-center" style={{maxWidth:"380px",margin:"0.5rem auto 1rem",padding:"1rem 1.5rem",background:"#FFF",border:"1px solid #E2E8F0",borderRadius:"8px",boxShadow:"0 1px 3px rgba(0,0,0,0.02)"}}
               >
-                <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-main)", marginBottom: "0.35rem" }}>
+                <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem",marginBottom:"0.35rem"}}>
                   Vos messages internes
                 </div>
                 <div style={{ fontSize: "0.8rem", color: "#64748B" }}>
@@ -565,7 +428,7 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
             >
               <form
                 onSubmit={handleSendMessage}
-                style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}
+                className="flex items-center" style={{gap:"0.75rem"}}
               >
                 <input
                   type="text"
@@ -610,23 +473,16 @@ export default function InternalChatTab({ currentUser, users, showToast }) {
           </>
         ) : (
           <div
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "var(--text-muted)",
-            }}
+            className="flex flex-col items-center justify-center" style={{flex:1,color:"var(--text-muted)"}}
           >
             <MessageSquare
               size={48}
-              style={{ marginBottom: "1rem", opacity: 0.5 }}
+              className="mb-4" style={{opacity:0.5}}
             />
-            <h2 style={{ fontSize: "1.25rem", fontWeight: 500, margin: 0 }}>
+            <h2 className="font-medium" style={{fontSize:"1.25rem"}}>
               Vos messages internes
             </h2>
-            <p style={{ marginTop: "0.5rem" }}>
+            <p className="mt-2">
               Sélectionnez une conversation ou écrivez un nouveau message.
             </p>
           </div>

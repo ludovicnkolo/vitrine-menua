@@ -43,6 +43,7 @@ export default function AppRoutes() {
     }
     if (
       location.pathname !== "/" &&
+      location.pathname !== "/login" &&
       !location.pathname.startsWith("/magic-drop/") &&
       !location.pathname.startsWith("/setup-password")
     ) {
@@ -80,6 +81,7 @@ export default function AppRoutes() {
       {hasAccess.toCMS(role) && <Route path="/cms" element={<CMSPage />} />}
 
       {/* Redirections sécurisées */}
+      <Route path="/login" element={<Navigate to="/" replace />} />
       <Route path="/dossiers" element={hasAccess.toWorkspace(role) ? <Navigate to="/workspace" replace /> : <Navigate to="/" replace />} />
       <Route path="/taches" element={hasAccess.toWorkspace(role) ? <Navigate to="/workspace" replace /> : <Navigate to="/" replace />} />
       <Route path="/tasks" element={hasAccess.toWorkspace(role) ? <Navigate to="/workspace" replace /> : <Navigate to="/" replace />} />

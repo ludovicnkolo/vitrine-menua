@@ -4,12 +4,7 @@ const ReadOnlyField = ({ label, value }) => {
   return (
     <div>
       <label
-        style={{
-          display: "block",
-          marginBottom: "0.5rem",
-          fontWeight: 500,
-          
-        }}
+        className="block mb-2 font-medium"
       >
         {label}
       </label>
@@ -17,15 +12,7 @@ const ReadOnlyField = ({ label, value }) => {
         type="text"
         value={value || ""}
         readOnly
-        className="input-field"
-        style={{
-          width: "100%",
-          padding: "0.75rem",
-          borderRadius: "8px",
-          border: "1px solid var(--border)",
-          background: "#F8FAFC",
-          color: "var(--text-main)",
-        }}
+        className="input-field w-full text-[var(--text-main)]" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#F8FAFC"}}
       />
     </div>
   );

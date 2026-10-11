@@ -56,18 +56,7 @@ const FeedbackModal = ({
 
   return (
     <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: "rgba(0,0,0,0.55)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 2000,
-      }}
+      className="fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.55)",zIndex:2000}}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -81,27 +70,11 @@ const FeedbackModal = ({
       aria-label="Fermer la modale"
     >
       <div
-        style={{
-          background: "#FFF",
-          borderRadius: "12px",
-          width: "90%",
-          maxWidth: "560px",
-          padding: "2rem",
-          boxShadow: "0 20px 50px rgba(0,0,0,0.2)",
-          display: "flex",
-          flexDirection: "column",
-          gap: "1.25rem",
-        }}
+        className="p-8 flex flex-col" style={{background:"#FFF",borderRadius:"12px",width:"90%",maxWidth:"560px",boxShadow:"0 20px 50px rgba(0,0,0,0.2)",gap:"1.25rem"}}
       >
         {/* Header */}
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            borderBottom: "1px solid var(--border)",
-            paddingBottom: "1rem",
-          }}
+          className="flex items-center" style={{gap:"0.75rem",borderBottom:"1px solid var(--border)",paddingBottom:"1rem"}}
         >
           <div
             style={{
@@ -117,12 +90,7 @@ const FeedbackModal = ({
             <MessageSquare size={18} color={isAdmin ? "#B91C1C" : "#6D28D9"} />
           </div>
           <h3
-            style={{
-              margin: 0,
-              fontSize: "1.125rem",
-              fontWeight: 600,
-              color: "var(--text-main)",
-            }}
+            className="font-semibold text-[var(--text-main)]" style={{fontSize:"1.125rem"}}
           >
             {title}
           </h3>
@@ -139,30 +107,19 @@ const FeedbackModal = ({
             }}
           >
             <div
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: "0.75rem",
-              }}
+              className="flex items-start" style={{gap:"0.75rem"}}
             >
               <input
                 type="checkbox"
                 id="include-admin-feedback"
                 checked={includeRef}
                 onChange={(e) => setIncludeRef(e.target.checked)}
-                style={{ marginTop: "3px", cursor: "pointer", flexShrink: 0 }}
+                className="cursor-pointer" style={{marginTop:"3px"}}
               />
               <div>
                 <label
                   htmlFor="include-admin-feedback"
-                  style={{
-                    display: "block",
-                    fontWeight: 600,
-                    
-                    cursor: "pointer",
-                    marginBottom: "0.25rem",
-                    color: "#92400E",
-                  }}
+                  className="block font-semibold cursor-pointer" style={{marginBottom:"0.25rem",color:"#92400E"}}
                 >
                   Inclure les instructions de l'Admin
                 </label>
@@ -187,13 +144,7 @@ const FeedbackModal = ({
         <div>
           <label
             htmlFor="feedback-text"
-            style={{
-              display: "block",
-              marginBottom: "0.5rem",
-              fontWeight: 500,
-              
-              color: "var(--text-main)",
-            }}
+            className="block mb-2 font-medium text-[var(--text-main)]"
           >
             {isAdmin ? "Vos instructions" : "Vos corrections"}
             <span style={{ color: "var(--danger)", marginLeft: "2px" }}>*</span>
@@ -235,11 +186,7 @@ const FeedbackModal = ({
 
         {/* Actions */}
         <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: "0.75rem",
-          }}
+          className="flex justify-end" style={{gap:"0.75rem"}}
         >
           <button
             type="button"

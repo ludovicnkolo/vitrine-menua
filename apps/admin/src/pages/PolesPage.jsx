@@ -94,10 +94,10 @@ const PolesPage = () => {
   };
 
   return (
-    <div style={{ padding: "1.5rem" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.5rem", fontWeight: 600 }}>Pôles d'activité</h2>
-        <button onClick={() => handleOpenModal()} className="btn btn-primary" style={{ display: "flex", gap: "0.5rem" }}>
+    <div className="p-6">
+      <div className="flex justify-between mb-6">
+        <h2 className="font-semibold" style={{fontSize:"1.5rem"}}>Pôles d'activité</h2>
+        <button onClick={() => handleOpenModal()} className="btn btn-primary flex gap-2">
           <Plus size={16} /> Nouveau pôle
         </button>
       </div>
@@ -105,16 +105,16 @@ const PolesPage = () => {
       {loading ? (
         <p>Chargement...</p>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1rem" }}>
+        <div className="grid gap-4" style={{gridTemplateColumns:"repeat(auto-fill, minmax(300px, 1fr))"}}>
           {poles.map((pole) => (
-            <div key={pole.id} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "8px", padding: "1.5rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
+            <div key={pole.id} className="bg-[var(--surface)] p-6" style={{border:"1px solid var(--border)",borderRadius:"8px"}}>
+              <div className="flex justify-between items-start mb-4">
                 <h3 style={{ margin: 0, fontSize: "1.1rem", color: "var(--primary)" }}>{pole.name}</h3>
-                <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <button onClick={() => handleOpenModal(pole)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)" }}>
+                <div className="flex gap-2">
+                  <button onClick={() => handleOpenModal(pole)} className="cursor-pointer" style={{background:"none",border:"none",color:"var(--text-muted)"}}>
                     <Edit2 size={16} />
                   </button>
-                  <button onClick={() => handleDelete(pole.id)} style={{ background: "none", border: "none", cursor: "pointer", color: "#EF4444" }}>
+                  <button onClick={() => handleDelete(pole.id)} className="cursor-pointer" style={{background:"none",border:"none",color:"#EF4444"}}>
                     <Trash2 size={16} />
                   </button>
                 </div>
@@ -135,27 +135,27 @@ const PolesPage = () => {
               <button className="close-btn" onClick={handleCloseModal}>×</button>
             </div>
             <form onSubmit={handleSubmit} className="modal-body">
-              <div style={{ marginBottom: "1rem" }}>
-                <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 500 }}>Nom du pôle *</label>
+              <div className="mb-4">
+                <label className="block mb-2 font-medium">Nom du pôle *</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  style={{ width: "100%", padding: "0.75rem", borderRadius: "8px", border: "1px solid var(--border)" }}
+                  className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
                   placeholder="Ex: Finance, IT, Compliance..."
                 />
               </div>
-              <div style={{ marginBottom: "1.5rem" }}>
-                <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 500 }}>Description</label>
+              <div className="mb-6">
+                <label className="block mb-2 font-medium">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  style={{ width: "100%", padding: "0.75rem", borderRadius: "8px", border: "1px solid var(--border)", minHeight: "100px" }}
+                  className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",minHeight:"100px"}}
                   placeholder="Description facultative..."
                 />
               </div>
-              <div className="modal-footer" style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
+              <div className="modal-footer flex gap-4 justify-end">
                 <button type="button" onClick={handleCloseModal} className="btn">Annuler</button>
                 <button type="submit" className="btn btn-primary">{editPole ? "Mettre à jour" : "Créer"}</button>
               </div>

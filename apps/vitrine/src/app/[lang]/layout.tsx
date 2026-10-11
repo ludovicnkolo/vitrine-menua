@@ -85,6 +85,9 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
         : "Externalisation opérationnelle back et middle office.",
       images: ["/img/logo-clean-light.webp"],
     },
+    other: {
+      google: "notranslate",
+    },
   };
 }
 
@@ -107,9 +110,6 @@ export default async function RootLayout({
       translate="no"
       className={`notranslate ${inter.variable} ${playfair.variable} ${lobster.variable}`}
     >
-      <head>
-        <meta name="google" content="notranslate" />
-      </head>
       <body className="min-h-screen flex flex-col antialiased bg-[#f5f7fa] text-[#141824] font-sans">
         <JsonLd isEn={isEn} />
         <LanguageProvider initialLang={initialLang}>

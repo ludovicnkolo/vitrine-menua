@@ -65,96 +65,39 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
 
   return (
     <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: "rgba(0,0,0,0.8)",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 200,
-      }}
+      className="fixed flex flex-col items-center justify-center" style={{background:"rgba(0,0,0,0.8)",zIndex:200}}
     >
       <div
-        style={{
-          width: "80%",
-          height: "80%",
-          background: "#FFF",
-          borderRadius: "8px",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-        }}
+        className="flex flex-col" style={{width:"80%",height:"80%",background:"#FFF",borderRadius:"8px",overflow:"hidden"}}
       >
         {/* En-tête */}
         <div
-          style={{
-            padding: "1rem",
-            borderBottom: "1px solid var(--border)",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            background: "#F8FAFC",
-          }}
+          className="p-4 flex justify-between items-center" style={{borderBottom:"1px solid var(--border)",background:"#F8FAFC"}}
         >
           <h3
-            style={{
-              margin: 0,
-              fontSize: "1rem",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
+            className="flex items-center gap-2" style={{fontSize:"1rem"}}
           ></h3>
 
           {/* Barre de contrôle pour le PDF */}
           {!isImage && !error && previewBlobUrl && (
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <div className="flex items-center gap-4">
               <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  background: "#FFF",
-                  padding: "0.25rem",
-                  borderRadius: "6px",
-                  border: "1px solid var(--border)",
-                }}
+                className="flex items-center gap-2" style={{background:"#FFF",padding:"0.25rem",borderRadius:"6px",border:"1px solid var(--border)"}}
               >
                 <button
                   onClick={() => setScale((s) => Math.max(0.5, s - 0.2))}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
+                  className="cursor-pointer flex items-center" style={{background:"none",border:"none"}}
                 >
                   <ZoomOut size={16} />
                 </button>
                 <span
-                  style={{
-                    
-                    minWidth: "40px",
-                    textAlign: "center",
-                  }}
+                  className="text-center" style={{minWidth:"40px"}}
                 >
                   {Math.round(scale * 100)}%
                 </span>
                 <button
                   onClick={() => setScale((s) => s + 0.2)}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
+                  className="cursor-pointer flex items-center" style={{background:"none",border:"none"}}
                 >
                   <ZoomIn size={16} />
                 </button>
@@ -174,44 +117,18 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
 
         {/* Zone d'affichage */}
         <div
-          style={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "#E2E8F0",
-            padding: "2rem",
-            overflow: "hidden",
-          }}
+          className="flex items-center justify-center p-8" style={{flex:1,background:"#E2E8F0",overflow:"hidden"}}
         >
           <div
-            style={{
-              width: "100%",
-              height: "100%",
-              background: "#FFF",
-              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-              borderRadius: "8px",
-              overflow: "auto",
-              display: "flex",
-              justifyContent: "center",
-            }}
+            className="w-full h-full flex justify-center" style={{background:"#FFF",boxShadow:"0 4px 6px rgba(0,0,0,0.1)",borderRadius:"8px",overflow:"auto"}}
           >
             {(() => {
               if (error) {
                 return (
                   <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: "100%",
-                      gap: "1rem",
-                      padding: "2rem",
-                      textAlign: "center",
-                    }}
+                    className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center"
                   >
-                    <div style={{ color: "var(--danger)", fontWeight: 500 }}>
+                    <div className="font-medium" style={{color:"var(--danger)"}}>
                       Ce fichier est introuvable ou inaccessible.<br />
                       Détails de l'erreur: {String(error)}
                     </div>
@@ -230,15 +147,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
               if (!previewBlobUrl || (isLoading && isImage)) {
                 return (
                   <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: "100%",
-                      gap: "1rem",
-                      color: "var(--text-muted)",
-                    }}
+                    className="flex flex-col items-center justify-center h-full gap-4" style={{color:"var(--text-muted)"}}
                   >
                     <div style={{
                       width: "40px",
@@ -254,7 +163,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
               }
               if (isImage) {
                 return (
-                  <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+                  <div className="w-full h-full flex items-center justify-center relative">
                     <img
                       src={previewBlobUrl}
                       alt={previewFile.split("/").pop()}
@@ -275,23 +184,14 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
               if (isUnsupported) {
                 return (
                   <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: "100%",
-                      gap: "1rem",
-                      padding: "2rem",
-                      textAlign: "center",
-                    }}
+                    className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center"
                   >
                     <div
                       style={{ fontSize: "3rem", color: "var(--text-muted)" }}
                     >
                       📄
                     </div>
-                    <div style={{ color: "var(--text-main)", fontWeight: 500 }}>
+                    <div className="text-[var(--text-main)] font-medium">
                       Ce type de fichier ne peut pas être prévisualisé
                       directement.
                     </div>
@@ -309,7 +209,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
                 );
               }
               return (
-                <div style={{ padding: "1rem" }}>
+                <div className="p-4">
                   <Document
                     file={previewBlobUrl}
                     onLoadSuccess={({ numPages }) => { setNumPages(numPages); setIsLoading(false); }}
@@ -319,12 +219,12 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
                       setIsLoading(false);
                     }}
                     loading={
-                      <div style={{ padding: "2rem" }}>
+                      <div className="p-8">
                         Chargement du PDF...
                       </div>
                     }
                     error={
-                      <div style={{ padding: "2rem", color: "var(--danger)" }}>
+                      <div className="p-8" style={{color:"var(--danger)"}}>
                         Impossible de charger le PDF.
                       </div>
                     }
@@ -332,10 +232,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
                     {Array.from(new Array(numPages || 0), (el, index) => (
                       <div
                         key={`page_${index + 1}`}
-                        style={{
-                          marginBottom: "2rem",
-                          boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                        }}
+                        className="mb-8" style={{boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}
                       >
                         <Page
                           pageNumber={index + 1}

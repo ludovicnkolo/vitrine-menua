@@ -78,13 +78,7 @@ const MagicLinkDropPage = () => {
   if (loading) {
     return (
       <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          background: "#F8FAFC",
-        }}
+        className="flex justify-center items-center" style={{height:"100vh",background:"#F8FAFC"}}
       >
         Chargement sécurisé...
       </div>
@@ -94,33 +88,17 @@ const MagicLinkDropPage = () => {
   if (error && !uploadSuccess) {
     return (
       <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          background: "#F8FAFC",
-          padding: "1rem",
-        }}
+        className="flex justify-center items-center p-4" style={{height:"100vh",background:"#F8FAFC"}}
       >
         <div
-          className="card"
-          style={{
-            maxWidth: "500px",
-            textAlign: "center",
-            padding: "3rem 2rem",
-          }}
+          className="card text-center" style={{maxWidth:"500px",padding:"3rem 2rem"}}
         >
           <AlertCircle
             size={48}
             style={{ color: "var(--danger)", margin: "0 auto 1rem auto" }}
           />
           <h2
-            style={{
-              marginTop: 0,
-              marginBottom: "1rem",
-              color: "var(--text-main)",
-            }}
+            className="mb-4 text-[var(--text-main)]"
           >
             Lien invalide
           </h2>
@@ -132,76 +110,37 @@ const MagicLinkDropPage = () => {
 
   return (
     <div
-      style={{
-        minHeight: "100vh",
-        background: "#F8FAFC",
-        display: "flex",
-        flexDirection: "column",
-      }}
+      className="flex flex-col" style={{minHeight:"100vh",background:"#F8FAFC"}}
     >
       <div
-        style={{
-          background: "var(--primary)",
-          padding: "1.5rem",
-          color: "#FFF",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "0.5rem",
-        }}
+        className="bg-[var(--primary)] p-6 text-white flex justify-center items-center gap-2"
       >
         <ShieldCheck size={24} />
-        <span style={{ fontWeight: 600, fontSize: "1.25rem" }}>
+        <span className="font-semibold" style={{fontSize:"1.25rem"}}>
           Espace Sécurisé MENUA CRM
         </span>
       </div>
 
       <div
-        style={{
-          flex: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "2rem 1rem",
-        }}
+        className="flex justify-center items-center" style={{flex:1,padding:"2rem 1rem"}}
       >
         <div
-          className="card"
-          style={{
-            width: "100%",
-            maxWidth: "600px",
-            padding: "2.5rem",
-            boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
-          }}
+          className="card w-full" style={{maxWidth:"600px",padding:"2.5rem",boxShadow:"0 10px 25px rgba(0,0,0,0.05)"}}
         >
           <h1
-            style={{
-              marginTop: 0,
-              marginBottom: "0.5rem",
-              fontSize: "1.5rem",
-              textAlign: "center",
-              color: "var(--text-main)",
-            }}
+            className="mb-2 text-center text-[var(--text-main)]" style={{fontSize:"1.5rem"}}
           >
             {linkData?.type === "ACQUISITION"
               ? "📤 Lien de dépôt de documents"
               : "📦 Documents partagés avec vous"}
           </h1>
           <p
-            style={{
-              textAlign: "center",
-              color: "var(--text-muted)",
-              marginBottom: "0.5rem",
-            }}
+            className="text-center mb-2" style={{color:"var(--text-muted)"}}
           >
             Dossier : <strong>{linkData?.dossierRef || "N/A"}</strong>
           </p>
           <p
-            style={{
-              textAlign: "center",
-              color: "var(--text-muted)",
-              marginBottom: "2.5rem",
-            }}
+            className="text-center" style={{color:"var(--text-muted)",marginBottom:"2.5rem"}}
           >
             Client : <strong>{linkData?.clientName}</strong>
           </p>
@@ -251,12 +190,12 @@ const MagicLinkDropPage = () => {
           {linkData?.type === "ACQUISITION" && (
             <>
               {uploadSuccess ? (
-                <div style={{ textAlign: "center", padding: "2rem 0" }}>
+                <div className="text-center" style={{padding:"2rem 0"}}>
                   <CheckCircle
                     size={64}
                     style={{ color: "#10B981", margin: "0 auto 1.5rem auto" }}
                   />
-                  <h2 style={{ color: "#10B981", marginBottom: "1rem" }}>
+                  <h2 className="mb-4" style={{color:"#10B981"}}>
                     Fichiers transmis avec succès !
                   </h2>
                   <p style={{ color: "var(--text-muted)" }}>
@@ -267,14 +206,7 @@ const MagicLinkDropPage = () => {
               ) : (
                 <form onSubmit={handleUpload}>
                   <div
-                    style={{
-                      border: "2px dashed var(--border)",
-                      borderRadius: "12px",
-                      padding: "3rem 2rem",
-                      textAlign: "center",
-                      marginBottom: "2rem",
-                      background: "#F1F5F9",
-                    }}
+                    className="text-center mb-8" style={{border:"2px dashed var(--border)",borderRadius:"12px",padding:"3rem 2rem",background:"#F1F5F9"}}
                   >
                     <UploadCloud
                       size={48}
@@ -284,30 +216,18 @@ const MagicLinkDropPage = () => {
                       }}
                     />
                     <h3
-                      style={{
-                        marginTop: 0,
-                        marginBottom: "0.75rem",
-                        color: "var(--text-main)",
-                      }}
+                      className="text-[var(--text-main)]" style={{marginBottom:"0.75rem"}}
                     >
                       Déposez vos documents ici
                     </h3>
                     <p
-                      style={{
-                        color: "var(--text-muted)",
-                        marginBottom: "0.5rem",
-                        
-                      }}
+                      className="mb-2" style={{color:"var(--text-muted)"}}
                     >
                       Votre conseiller MENUA attend vos fichiers dans le cadre
                       de votre dossier.
                     </p>
                     <p
-                      style={{
-                        color: "var(--text-muted)",
-                        marginBottom: "1.5rem",
-                        fontSize: "0.8rem",
-                      }}
+                      className="mb-6" style={{color:"var(--text-muted)",fontSize:"0.8rem"}}
                     >
                       Formats acceptés : PDF, JPG, PNG, DOCX (Max 50Mo/fichier)
                     </p>
@@ -317,32 +237,21 @@ const MagicLinkDropPage = () => {
                       multiple
                       onChange={handleFileChange}
                       id="file-upload"
-                      style={{ display: "none" }}
+                      className="hidden"
                     />
                     <label
                       htmlFor="file-upload"
-                      className="btn btn-outline-primary"
-                      style={{ cursor: "pointer", display: "inline-block" }}
+                      className="btn btn-outline-primary cursor-pointer inline-block"
                     >
                       Parcourir les fichiers
                     </label>
 
                     {files.length > 0 && (
                       <div
-                        style={{
-                          marginTop: "1.5rem",
-                          textAlign: "left",
-                          background: "#FFF",
-                          padding: "1rem",
-                          borderRadius: "8px",
-                        }}
+                        className="mt-6 text-left p-4" style={{background:"#FFF",borderRadius:"8px"}}
                       >
                         <strong
-                          style={{
-                            display: "block",
-                            marginBottom: "0.5rem",
-                            
-                          }}
+                          className="block mb-2"
                         >
                           Fichiers sélectionnés :
                         </strong>
@@ -366,12 +275,7 @@ const MagicLinkDropPage = () => {
 
                   {error && (
                     <div
-                      style={{
-                        color: "var(--danger)",
-                        marginBottom: "1rem",
-                        textAlign: "center",
-                        
-                      }}
+                      className="mb-4 text-center" style={{color:"var(--danger)"}}
                     >
                       {error}
                     </div>
@@ -380,12 +284,7 @@ const MagicLinkDropPage = () => {
                   <button
                     type="submit"
                     disabled={uploading || files.length === 0}
-                    className="btn btn-primary"
-                    style={{
-                      width: "100%",
-                      padding: "1rem",
-                      fontSize: "1.1rem",
-                    }}
+                    className="btn btn-primary w-full p-4" style={{fontSize:"1.1rem"}}
                   >
                     {uploading
                       ? "Transfert sécurisé en cours..."
@@ -399,16 +298,9 @@ const MagicLinkDropPage = () => {
           {linkData?.type === "LIVRAISON" && (
             <div>
               <div
-                style={{
-                  background: "#F0F9FF",
-                  border: "1px solid #BAE6FD",
-                  padding: "1.5rem",
-                  borderRadius: "8px",
-                  marginBottom: "2rem",
-                  textAlign: "center",
-                }}
+                className="p-6 mb-8 text-center" style={{background:"#F0F9FF",border:"1px solid #BAE6FD",borderRadius:"8px"}}
               >
-                <p style={{ margin: 0, color: "#0369A1", fontWeight: 500 }}>
+                <p className="font-medium" style={{color:"#0369A1"}}>
                   Votre conseiller MENUA met ces documents à votre disposition.
                   Vous pouvez les télécharger librement.
                 </p>
@@ -416,31 +308,15 @@ const MagicLinkDropPage = () => {
 
               {linkData.documents?.length > 0 ? (
                 <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1rem",
-                  }}
+                  className="flex flex-col gap-4"
                 >
                   {linkData.documents.map((doc) => (
                     <div
                       key={doc.id}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "1rem",
-                        border: "1px solid var(--border)",
-                        borderRadius: "8px",
-                        background: "#FFF",
-                      }}
+                      className="flex items-center justify-between p-4" style={{border:"1px solid var(--border)",borderRadius:"8px",background:"#FFF"}}
                     >
                       <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.75rem",
-                        }}
+                        className="flex items-center" style={{gap:"0.75rem"}}
                       >
                         <FileText
                           size={24}
@@ -448,10 +324,7 @@ const MagicLinkDropPage = () => {
                         />
                         <div>
                           <div
-                            style={{
-                              fontWeight: 500,
-                              color: "var(--text-main)",
-                            }}
+                            className="font-medium text-[var(--text-main)]"
                           >
                             {doc.name}
                           </div>
@@ -467,14 +340,7 @@ const MagicLinkDropPage = () => {
                       </div>
                       <button
                         type="button"
-                        className="btn btn-outline"
-                        style={{
-                          padding: "0.5rem 1rem",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.5rem",
-                          cursor: "pointer",
-                        }}
+                        className="btn btn-outline flex items-center gap-2 cursor-pointer" style={{padding:"0.5rem 1rem"}}
                         onClick={async () => {
                           // Log the download for traceability
                           try {
@@ -502,13 +368,7 @@ const MagicLinkDropPage = () => {
                 </div>
               ) : (
                 <div
-                  style={{
-                    textAlign: "center",
-                    color: "var(--text-muted)",
-                    padding: "2rem",
-                    background: "#F8FAFC",
-                    borderRadius: "8px",
-                  }}
+                  className="text-center p-8" style={{color:"var(--text-muted)",background:"#F8FAFC",borderRadius:"8px"}}
                 >
                   Aucun document disponible pour le moment.
                 </div>
@@ -519,12 +379,7 @@ const MagicLinkDropPage = () => {
       </div>
 
       <div
-        style={{
-          padding: "1rem",
-          textAlign: "center",
-          color: "var(--text-muted)",
-          fontSize: "0.75rem",
-        }}
+        className="p-4 text-center" style={{color:"var(--text-muted)",fontSize:"0.75rem"}}
       >
         Propulsé par MENUA CRM — Tous les transferts sont chiffrés et sécurisés
         de bout en bout.

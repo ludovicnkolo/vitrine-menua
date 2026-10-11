@@ -54,7 +54,7 @@ const UserFormFields = ({
   return (
     <>
       <div
-        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}
+        className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}
       >
         <FormField
           label="Nom complet"
@@ -64,11 +64,7 @@ const UserFormFields = ({
         />
         <div>
           <label
-            style={{
-              display: "block",
-              marginBottom: "0.25rem",
-              fontWeight: 500,
-            }}
+            className="block font-medium" style={{marginBottom:"0.25rem"}}
           >
             Email <span style={{ color: "red" }}>*</span>
           </label>
@@ -77,18 +73,13 @@ const UserFormFields = ({
             value={user.email || ""}
             onChange={handleChange("email")}
             required={true}
-            style={{
-              width: "100%",
-              padding: "0.5rem",
-              borderRadius: "4px",
-              border: "1px solid var(--border)",
-            }}
+            className="w-full p-2" style={{borderRadius:"4px",border:"1px solid var(--border)"}}
           />
         </div>
       </div>
 
       <div
-        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}
+        className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}
       >
         <FormField
           label="Numéro de téléphone"
@@ -99,11 +90,7 @@ const UserFormFields = ({
         />
         <div>
           <label
-            style={{
-              display: "block",
-              marginBottom: "0.25rem",
-              fontWeight: 500,
-            }}
+            className="block font-medium" style={{marginBottom:"0.25rem"}}
           >
             Rôle <span style={{ color: "red" }}>*</span>
           </label>
@@ -124,7 +111,7 @@ const UserFormFields = ({
       </div>
 
       <div
-        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}
+        className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}
       >
         <FormField
           label="Lieu de résidence"
@@ -141,31 +128,17 @@ const UserFormFields = ({
       </div>
 
       <div
-        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}
+        className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}
       >
-        <div ref={langDropdownRef} style={{ position: "relative" }}>
+        <div ref={langDropdownRef} className="relative">
           <label
-            style={{
-              display: "block",
-              marginBottom: "0.25rem",
-              fontWeight: 500,
-            }}
+            className="block font-medium" style={{marginBottom:"0.25rem"}}
           >
             Langues <span style={{ color: "red" }}>*</span>
           </label>
           <div
             onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-            style={{
-              width: "100%",
-              padding: "0.5rem",
-              borderRadius: "4px",
-              border: "1px solid var(--border)",
-              background: "white",
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center"
-            }}
+            className="w-full p-2 cursor-pointer flex justify-between items-center" style={{borderRadius:"4px",border:"1px solid var(--border)",background:"white"}}
           >
             <span style={{ 
               whiteSpace: "nowrap", 
@@ -179,20 +152,7 @@ const UserFormFields = ({
           </div>
           
           {langDropdownOpen && (
-            <div style={{
-              position: "absolute",
-              top: "100%",
-              left: 0,
-              right: 0,
-              background: "white",
-              border: "1px solid var(--border)",
-              borderRadius: "4px",
-              marginTop: "4px",
-              maxHeight: "200px",
-              overflowY: "auto",
-              zIndex: 50,
-              boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
-            }}>
+            <div className="absolute" style={{top:"100%",background:"white",border:"1px solid var(--border)",borderRadius:"4px",marginTop:"4px",maxHeight:"200px",overflowY:"auto",zIndex:50,boxShadow:"0 4px 6px -1px rgba(0, 0, 0, 0.1)"}}>
               {LANGUAGES.map(lang => (
                 <label 
                   key={lang} 
@@ -224,7 +184,7 @@ const UserFormFields = ({
         />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginTop: "1rem" }}>
+      <div className="grid gap-4 mt-4" style={{gridTemplateColumns:"1fr 1fr"}}>
         <FormField
           label="Description profil"
           type="textarea"
@@ -232,7 +192,7 @@ const UserFormFields = ({
           onChange={handleChange("profile")}
         />
         <div>
-          <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: 500 }}>
+          <label className="block font-medium" style={{marginBottom:"0.25rem"}}>
             Statut <span style={{ color: "red" }}>*</span>
             {!isEdit && (
               <span style={{ color: "var(--text-muted)", fontSize: "0.75rem", marginLeft: "0.5rem" }}>
@@ -259,13 +219,13 @@ const UserFormFields = ({
         paddingTop: "1rem",
         borderTop: "1px solid var(--border)",
       }}>
-        <p style={{ fontWeight: 600, fontSize: "0.78rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.75rem" }}>
+        <p className="font-semibold" style={{fontSize:"0.78rem",color:"var(--text-muted)",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:"0.75rem"}}>
           Organisation &amp; Fiche interne
         </p>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        <div className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}>
           {/* Pôle d'activité */}
           <div>
-            <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: 500 }}>
+            <label className="block font-medium" style={{marginBottom:"0.25rem"}}>
               Pôle d'activité
             </label>
             <select
@@ -293,7 +253,7 @@ const UserFormFields = ({
           </div>
           {/* Matricule interne */}
           <div>
-            <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: 500 }}>
+            <label className="block font-medium" style={{marginBottom:"0.25rem"}}>
               Matricule interne
             </label>
             <input
@@ -301,15 +261,15 @@ const UserFormFields = ({
               value={user.matricule || ""}
               onChange={handleChange("matricule")}
               placeholder="Ex: MC-2024-001"
-              style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid var(--border)" }}
+              className="w-full p-2" style={{borderRadius:"4px",border:"1px solid var(--border)"}}
             />
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginTop: "1rem" }}>
+        <div className="grid gap-4 mt-4" style={{gridTemplateColumns:"1fr 1fr"}}>
           {/* E-mail professionnel */}
           <div>
-            <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: 500 }}>
+            <label className="block font-medium" style={{marginBottom:"0.25rem"}}>
               E-mail professionnel (identifiant CRM)
             </label>
             <input
@@ -317,12 +277,12 @@ const UserFormFields = ({
               value={user.emailPro || ""}
               onChange={handleChange("emailPro")}
               placeholder="prenom.nom@menuaconsulting.com"
-              style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid var(--border)" }}
+              className="w-full p-2" style={{borderRadius:"4px",border:"1px solid var(--border)"}}
             />
           </div>
           {/* Fonction */}
           <div>
-            <label style={{ display: "block", marginBottom: "0.25rem", fontWeight: 500 }}>
+            <label className="block font-medium" style={{marginBottom:"0.25rem"}}>
               Fonction / Intitulé de poste
             </label>
             <input
@@ -330,7 +290,7 @@ const UserFormFields = ({
               value={user.fonction || ""}
               onChange={handleChange("fonction")}
               placeholder="Ex: Chargé(e) de back-office"
-              style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid var(--border)" }}
+              className="w-full p-2" style={{borderRadius:"4px",border:"1px solid var(--border)"}}
             />
           </div>
         </div>

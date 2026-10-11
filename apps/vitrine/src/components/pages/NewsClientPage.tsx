@@ -199,6 +199,7 @@ export default function ActualitesPage({ initialPublications = [] }: ActualitesP
                       src={featuredPub.coverImageUrl} 
                       alt={displayTitle(featuredPub)} 
                       fill
+                      unoptimized
                       sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover transition-transform duration-700 group-hover:scale-105 z-10" 
                       onError={() => setImageErrors(prev => ({ ...prev, [featuredPub.id]: true }))}
@@ -301,6 +302,7 @@ export default function ActualitesPage({ initialPublications = [] }: ActualitesP
                             src={pub.coverImageUrl}
                             alt={displayTitle(pub)}
                             fill
+                            unoptimized
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             className="object-cover transition-transform duration-700 group-hover:scale-105 z-10"
                             onError={() => setImageErrors(prev => ({ ...prev, [pub.id]: true }))}

@@ -20,15 +20,7 @@ const TaskConsultModal = ({
     if (documents.length === 0) {
       return (
         <div
-          style={{
-            padding: "0.75rem 1rem",
-            background: "#F8FAFC",
-            borderRadius: "8px",
-            border: "1px dashed var(--border)",
-            textAlign: "center",
-            color: "var(--text-muted)",
-            
-          }}
+          className="text-center" style={{padding:"0.75rem 1rem",background:"#F8FAFC",borderRadius:"8px",border:"1px dashed var(--border)",color:"var(--text-muted)"}}
         >
           Aucun document attaché.
         </div>
@@ -42,16 +34,7 @@ const TaskConsultModal = ({
             e.target.selectedIndex = 0;
           }
         }}
-        className="input-field"
-        style={{
-          padding: "0.75rem",
-          borderRadius: "8px",
-          border: "1px solid var(--border)",
-          width: "100%",
-          background: "#FFF",
-          cursor: "pointer",
-          fontFamily: "inherit",
-        }}
+        className="input-field w-full cursor-pointer" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF",fontFamily:"inherit"}}
       >
         <option value="">
           -- Sélectionner un document pour le consulter --
@@ -68,41 +51,13 @@ const TaskConsultModal = ({
   return (
     <>
       <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "rgba(0,0,0,0.5)",
-          zIndex: 1000,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        className="fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
       >
         <div
-          className="fade-in"
-          style={{
-            background: "#FFF",
-            borderRadius: "12px",
-            padding: "2rem",
-            width: "90%",
-            maxWidth: "800px",
-            maxHeight: "90vh",
-            overflowY: "auto",
-            boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-          }}
+          className="fade-in p-8" style={{background:"#FFF",borderRadius:"12px",width:"90%",maxWidth:"800px",maxHeight:"90vh",overflowY:"auto",boxShadow:"0 10px 25px rgba(0,0,0,0.1)"}}
         >
           <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-              marginBottom: "2rem",
-              borderBottom: "1px solid var(--border)",
-              paddingBottom: "1.5rem",
-            }}
+            className="flex items-center gap-4 mb-8" style={{borderBottom:"1px solid var(--border)",paddingBottom:"1.5rem"}}
           >
             <button
               type="button"
@@ -112,17 +67,12 @@ const TaskConsultModal = ({
             >
               ← Retour
             </button>
-            <h2 style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600 }}>
+            <h2 className="font-semibold" style={{fontSize:"1.5rem"}}>
               {titlePrefix} {task.reference || task.id}
             </h2>
           </div>
           <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "1rem",
-              marginBottom: "1.5rem",
-            }}
+            className="flex flex-col gap-4 mb-6"
           >
             <ReadOnlyField
               label="Objet"
@@ -135,11 +85,7 @@ const TaskConsultModal = ({
               })()}
             />
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1rem",
-              }}
+              className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}
             >
               <ReadOnlyField
                 label="Créé par"
@@ -151,11 +97,7 @@ const TaskConsultModal = ({
               />
             </div>
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1rem",
-              }}
+              className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}
             >
               <ReadOnlyField
                 label="Date de création"
@@ -178,25 +120,12 @@ const TaskConsultModal = ({
             </div>
             <div>
               <span
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: 500,
-                  
-                }}
+                className="block mb-2 font-medium"
               >
                 Statut
               </span>
               <div
-                style={{
-                  padding: "0.5rem",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  background: "#F8FAFC",
-                  display: "flex",
-                  alignItems: "center",
-                  height: "44px",
-                }}
+                className="p-2 flex items-center" style={{borderRadius:"8px",border:"1px solid var(--border)",background:"#F8FAFC",height:"44px"}}
               >
                 {getStatusBadge(task.status)}
               </div>
@@ -204,21 +133,10 @@ const TaskConsultModal = ({
 
             {/* Documents section */}
             <div
-              style={{
-                borderTop: "1px solid var(--border)",
-                paddingTop: "1.25rem",
-                marginTop: "0.5rem",
-              }}
+              className="mt-2" style={{borderTop:"1px solid var(--border)",paddingTop:"1.25rem"}}
             >
               <h4
-                style={{
-                  margin: "0 0 0.75rem 0",
-                  fontSize: "0.95rem",
-                  fontWeight: 600,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                }}
+                className="font-semibold flex items-center gap-2" style={{margin:"0 0 0.75rem 0",fontSize:"0.95rem"}}
               >
                 <Paperclip size={15} /> Documents attachés
               </h4>

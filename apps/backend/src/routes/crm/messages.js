@@ -541,7 +541,7 @@ router.get("/messages", async (req, res) => {
       total = await prisma.messagePersonnel.count({ where });
       const records = await prisma.messagePersonnel.findMany({
         where,
-        orderBy: { receivedAt: "desc" },
+        orderBy: { createdAt: "desc" },
         skip,
         take: limit,
         include: { dossier: true, mission: true, Tache: true },

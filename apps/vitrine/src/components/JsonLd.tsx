@@ -7,7 +7,9 @@ interface JsonLdProps {
 export default function JsonLd({ isEn = false }: JsonLdProps) {
   return (
     <script
+      id="schema-org-jsonld"
       type="application/ld+json"
+      suppressHydrationWarning
       dangerouslySetInnerHTML={{
         __html: JSON.stringify({
           '@context': 'https://schema.org',

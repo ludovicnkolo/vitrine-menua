@@ -20,24 +20,10 @@ const FeedbackThread = ({ adminFeedback, managerFeedback, currentStatus }) => {
 
   return (
     <div
-      style={{
-        marginTop: "1.5rem",
-        borderTop: "2px dashed var(--border)",
-        paddingTop: "1.5rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.75rem",
-      }}
+      className="mt-6 flex flex-col" style={{borderTop:"2px dashed var(--border)",paddingTop:"1.5rem",gap:"0.75rem"}}
     >
       <h4
-        style={{
-          margin: "0 0 0.25rem 0",
-          fontSize: "0.9rem",
-          fontWeight: 700,
-          color: "var(--text-muted)",
-          textTransform: "uppercase",
-          letterSpacing: "0.05em",
-        }}
+        className="font-bold" style={{margin:"0 0 0.25rem 0",fontSize:"0.9rem",color:"var(--text-muted)",textTransform:"uppercase",letterSpacing:"0.05em"}}
       >
         Fil de corrections
       </h4>
@@ -55,27 +41,10 @@ const FeedbackThread = ({ adminFeedback, managerFeedback, currentStatus }) => {
           <button
             type="button"
             onClick={() => setOpenAdmin((v) => !v)}
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "0.75rem 1rem",
-              background: "#FEF2F2",
-              border: "none",
-              cursor: "pointer",
-              textAlign: "left",
-            }}
+            className="w-full flex items-center justify-between cursor-pointer text-left" style={{padding:"0.75rem 1rem",background:"#FEF2F2",border:"none"}}
           >
             <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                fontWeight: 600,
-                
-                color: "#B91C1C",
-              }}
+              className="flex items-center gap-2 font-semibold" style={{color:"#B91C1C"}}
             >
               <AlertTriangle size={15} color="#B91C1C" />
               Instructions de l'Administrateur
@@ -88,14 +57,7 @@ const FeedbackThread = ({ adminFeedback, managerFeedback, currentStatus }) => {
           </button>
           {openAdmin && (
             <div
-              style={{
-                padding: "1rem",
-                
-                color: "#1F2937",
-                whiteSpace: "pre-wrap",
-                lineHeight: 1.7,
-                borderTop: "1px solid #FCA5A5",
-              }}
+              className="p-4" style={{color:"#1F2937",whiteSpace:"pre-wrap",lineHeight:1.7,borderTop:"1px solid #FCA5A5"}}
             >
               {adminFeedback}
             </div>
@@ -116,27 +78,10 @@ const FeedbackThread = ({ adminFeedback, managerFeedback, currentStatus }) => {
           <button
             type="button"
             onClick={() => setOpenManager((v) => !v)}
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "0.75rem 1rem",
-              background: "#F5F3FF",
-              border: "none",
-              cursor: "pointer",
-              textAlign: "left",
-            }}
+            className="w-full flex items-center justify-between cursor-pointer text-left" style={{padding:"0.75rem 1rem",background:"#F5F3FF",border:"none"}}
           >
             <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                fontWeight: 600,
-                
-                color: "#6D28D9",
-              }}
+              className="flex items-center gap-2 font-semibold" style={{color:"#6D28D9"}}
             >
               <Wrench size={15} color="#6D28D9" />
               Corrections du Contrôleur
@@ -149,14 +94,7 @@ const FeedbackThread = ({ adminFeedback, managerFeedback, currentStatus }) => {
           </button>
           {openManager && (
             <div
-              style={{
-                padding: "1rem",
-                
-                color: "#1F2937",
-                whiteSpace: "pre-wrap",
-                lineHeight: 1.7,
-                borderTop: "1px solid #C4B5FD",
-              }}
+              className="p-4" style={{color:"#1F2937",whiteSpace:"pre-wrap",lineHeight:1.7,borderTop:"1px solid #C4B5FD"}}
             >
               {managerFeedback}
             </div>

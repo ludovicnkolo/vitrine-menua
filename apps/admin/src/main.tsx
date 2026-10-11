@@ -1,21 +1,37 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import App from "./App.jsx";
+import App from "./App";
 import "./index.css";
 import "./i18n.js";
+import { setupFetchInterceptor, redirectToLogin, clearAuthSession } from "./services/api";
 
-class ErrorBoundary extends React.Component {
-  constructor(props) {
+// Initialisation immédiate de l'intercepteur de requêtes
+setupFetchInterceptor(() => {
+  redirectToLogin("expired");
+});
+
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+  errorInfo: React.ErrorInfo | null;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null, errorInfo: null };
   }
 
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
+  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
+    return { hasError: true, error };
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.setState({ error, errorInfo });
     console.error("React Error Boundary caught an error:", error, errorInfo);
   }
@@ -24,34 +40,18 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div
-          style={{
-            padding: "2rem",
-            background: "#FEE2E2",
-            color: "#B91C1C",
-            minHeight: "100vh",
-            fontFamily: "sans-serif",
-          }}
+          className="p-8" style={{background:"#FEE2E2",color:"#B91C1C",minHeight:"100vh",fontFamily:"sans-serif"}}
         >
           <h1
-            style={{
-              fontSize: "1.5rem",
-              fontWeight: "bold",
-              marginBottom: "1rem",
-            }}
+            className="font-bold mb-4" style={{fontSize:"1.5rem"}}
           >
             Erreur critique de l'application
           </h1>
-          <p style={{ marginBottom: "1rem" }}>
+          <p className="mb-4">
             Une erreur s'est produite lors du rendu de la page :
           </p>
           <pre
-            style={{
-              background: "#fff",
-              padding: "1rem",
-              borderRadius: "8px",
-              overflowX: "auto",
-              border: "1px solid #F87171",
-            }}
+            className="p-4" style={{background:"#fff",borderRadius:"8px",overflowX:"auto",border:"1px solid #F87171"}}
           >
             {this.state.error?.toString()}
             <br />
@@ -60,18 +60,12 @@ class ErrorBoundary extends React.Component {
           <button
             type="button"
             onClick={() => {
+              clearAuthSession();
               localStorage.clear();
+              sessionStorage.clear();
               window.location.href = "/";
             }}
-            style={{
-              marginTop: "1rem",
-              padding: "0.5rem 1rem",
-              background: "#B91C1C",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
+            className="mt-4 text-white cursor-pointer" style={{padding:"0.5rem 1rem",background:"#B91C1C",border:"none",borderRadius:"4px"}}
           >
             Vider le cache et recommencer
           </button>

@@ -214,7 +214,7 @@ router.get("/verify/:token", async (req, res) => {
         "ACCES_LIEN_MAGIQUE",
         magicLink.id,
         "MAGIC_LINK",
-        `Accès au lien magique (${magicLink.type}) — IP: ${req.ip || "inconnue"}`,
+        `Accès au lien magique (${magicLink.type})`,
         magicLink.dossierId,
       );
     } catch (_) {}
@@ -239,7 +239,7 @@ router.post("/log-download/:token", async (req, res) => {
       "TELECHARGEMENT_DOCUMENT_MAGIQUE",
       magicLink.id,
       "MAGIC_LINK",
-      `Téléchargement via lien magique : "${documentName || "inconnu"}" — IP: ${req.ip || "inconnue"}`,
+      `Téléchargement via lien magique : "${documentName || "inconnu"}"`,
       magicLink.dossierId,
     );
     res.json({ success: true });

@@ -66,29 +66,14 @@ const ForgotPasswordPage = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        background: "var(--bg-main)",
-      }}
+      className="flex items-center justify-center" style={{minHeight:"100vh",background:"var(--bg-main)"}}
     >
       <div
-        className="card"
-        style={{ maxWidth: "400px", width: "100%", padding: "2rem" }}
+        className="card w-full p-8" style={{maxWidth:"400px"}}
       >
-        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+        <div className="text-center mb-8">
           <div
-            style={{
-              background: "var(--primary)",
-              padding: "1.5rem",
-              borderRadius: "12px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: "1.5rem",
-            }}
+            className="bg-[var(--primary)] p-6 flex items-center justify-center mb-6" style={{borderRadius:"12px"}}
           >
             <img
               src="/logo.png"
@@ -99,14 +84,13 @@ const ForgotPasswordPage = () => {
         </div>
 
         {successMessage ? (
-          <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <div style={{ padding: "1rem", background: "#D1FAE5", color: "#065F46", borderRadius: "8px", fontWeight: "500" }}>
+          <div className="text-center flex flex-col gap-4">
+            <div className="p-4 font-medium" style={{background:"#D1FAE5",color:"#065F46",borderRadius:"8px"}}>
               {successMessage}
             </div>
             <Link
               to="/"
-              className="btn btn-primary"
-              style={{ justifyContent: "center", width: "100%", padding: "0.85rem", fontSize: "1rem", textDecoration: "none" }}
+              className="btn btn-primary justify-center w-full" style={{padding:"0.85rem",fontSize:"1rem",textDecoration:"none"}}
             >
               Retour à la connexion
             </Link>
@@ -114,19 +98,19 @@ const ForgotPasswordPage = () => {
         ) : (
           <form
             onSubmit={handleSendOtp}
-            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+            className="flex flex-col gap-4"
           >
-            <h3 style={{ margin: 0, textAlign: "center" }}>Réinitialiser le mot de passe</h3>
+            <h3 className="text-center">Réinitialiser le mot de passe</h3>
             {error && (
               <div style={{ padding: "0.75rem", background: "#FEE2E2", color: "#B91C1C", borderRadius: "8px" }}>
                 {error}
               </div>
             )}
-            <p style={{ fontSize: "0.95rem", color: "var(--text-muted)", textAlign: "center", margin: 0 }}>
+            <p className="text-center" style={{fontSize:"0.95rem",color:"var(--text-muted)"}}>
               Saisissez votre adresse e-mail. Nous vous enverrons un lien unique sécurisé.
             </p>
             <div>
-              <label htmlFor="forgot-email" style={{ display: "block", marginBottom: "0.25rem", fontWeight: 500 }}>
+              <label htmlFor="forgot-email" className="block font-medium" style={{marginBottom:"0.25rem"}}>
                 Email
               </label>
               <input
@@ -135,21 +119,19 @@ const ForgotPasswordPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                style={{ width: "100%", padding: "0.75rem", borderRadius: "8px", border: "1px solid var(--border)" }}
+                className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary"
-              style={{ marginTop: "0.5rem", justifyContent: "center", width: "100%", padding: "0.85rem", fontSize: "1rem" }}
+              className="btn btn-primary mt-2 justify-center w-full" style={{padding:"0.85rem",fontSize:"1rem"}}
             >
               {loading ? "Envoi..." : "Envoyer le lien"}
             </button>
             <Link
               to="/"
-              className="btn"
-              style={{ justifyContent: "center", width: "100%", border: "1px solid var(--border)", background: "transparent", textDecoration: "none" }}
+              className="btn justify-center w-full" style={{border:"1px solid var(--border)",background:"transparent",textDecoration:"none"}}
             >
               Retour à la connexion
             </Link>

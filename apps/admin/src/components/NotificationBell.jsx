@@ -81,7 +81,7 @@ export default function NotificationBell() {
   const meta = (type) => TYPE_ICON[type] || { icon: "🔔", color: "#6366F1" };
 
   return (
-    <div ref={dropdownRef} style={{ position: "relative" }}>
+    <div ref={dropdownRef} className="relative">
       {/* Bell Button */}
       <button
         onClick={() => {
@@ -93,19 +93,7 @@ export default function NotificationBell() {
           }
         }}
         title="Notifications"
-        style={{
-          position: "relative",
-          background: "transparent",
-          border: "none",
-          cursor: "pointer",
-          padding: "0.5rem",
-          borderRadius: "0.5rem",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "var(--text-main, #1e293b)",
-          transition: "background 0.2s",
-        }}
+        className="relative cursor-pointer p-2 flex items-center justify-center" style={{background:"transparent",border:"none",borderRadius:"0.5rem",color:"var(--text-main, #1e293b)",transition:"background 0.2s"}}
         onMouseEnter={(e) =>
           (e.currentTarget.style.background = "var(--bg-hover, #f1f5f9)")
         }
@@ -114,23 +102,7 @@ export default function NotificationBell() {
         <Bell size={22} strokeWidth={1.8} />
         {unreadCount > 0 && (
           <span
-            style={{
-              position: "absolute",
-              top: 2,
-              right: 2,
-              background: "#EF4444",
-              color: "#fff",
-              borderRadius: "999px",
-              minWidth: 18,
-              height: 18,
-              fontSize: "0.65rem",
-              fontWeight: 700,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "0 4px",
-              lineHeight: 1,
-            }}
+            className="absolute font-bold flex items-center justify-center" style={{top:2,right:2,background:"#EF4444",color:"#fff",borderRadius:"999px",minWidth:18,height:18,fontSize:"0.65rem",padding:"0 4px",lineHeight:1}}
           >
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
@@ -140,35 +112,14 @@ export default function NotificationBell() {
       {/* Dropdown */}
       {open && (
         <div
-          style={{
-            position: "absolute",
-            top: "calc(100% + 8px)",
-            right: 0,
-            width: 370,
-            maxHeight: 480,
-            background: "#fff",
-            border: "1px solid #e2e8f0",
-            borderRadius: "0.75rem",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.12)",
-            zIndex: 9999,
-            overflow: "hidden",
-            display: "flex",
-            flexDirection: "column",
-          }}
+          className="absolute flex flex-col" style={{top:"calc(100% + 8px)",width:370,maxHeight:480,background:"#fff",border:"1px solid #e2e8f0",borderRadius:"0.75rem",boxShadow:"0 10px 40px rgba(0,0,0,0.12)",zIndex:9999,overflow:"hidden"}}
         >
           {/* Header */}
           <div
-            style={{
-              padding: "0.875rem 1rem",
-              borderBottom: "1px solid #f1f5f9",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              background: "#fafafa",
-            }}
+            className="flex justify-between items-center" style={{padding:"0.875rem 1rem",borderBottom:"1px solid #f1f5f9",background:"#fafafa"}}
           >
             <span
-              style={{ fontWeight: 600, fontSize: "0.9rem", color: "#1e293b" }}
+              className="font-semibold" style={{fontSize:"0.9rem",color:"#1e293b"}}
             >
               Notifications{" "}
               {unreadCount > 0 && (
@@ -179,17 +130,7 @@ export default function NotificationBell() {
               <button
                 onClick={markAllRead}
                 disabled={loading}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "#6366F1",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.25rem",
-                }}
+                className="cursor-pointer font-semibold flex items-center" style={{background:"none",border:"none",color:"#6366F1",fontSize:"0.75rem",gap:"0.25rem"}}
               >
                 <CheckCheck size={14} /> Tout marquer lu
               </button>
@@ -200,16 +141,11 @@ export default function NotificationBell() {
           <div style={{ overflowY: "auto", flex: 1 }}>
             {notifications.length === 0 ? (
               <div
-                style={{
-                  padding: "2rem",
-                  textAlign: "center",
-                  color: "#94a3b8",
-                  
-                }}
+                className="p-8 text-center" style={{color:"#94a3b8"}}
               >
                 <Bell
                   size={32}
-                  style={{ marginBottom: "0.5rem", opacity: 0.4 }}
+                  className="mb-2" style={{opacity:0.4}}
                 />
                 <p>Aucune notification</p>
               </div>
@@ -295,15 +231,7 @@ export default function NotificationBell() {
                       <button
                         onClick={() => markRead(n.id)}
                         title="Marquer comme lu"
-                        style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          color: "#6366F1",
-                          flexShrink: 0,
-                          padding: "0.25rem",
-                          borderRadius: "50%",
-                        }}
+                        className="cursor-pointer" style={{background:"none",border:"none",color:"#6366F1",padding:"0.25rem",borderRadius:"50%"}}
                       >
                         <Check size={14} />
                       </button>

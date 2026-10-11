@@ -20,6 +20,7 @@ import {
 import { getSafeApiUrl, apiFetch } from "../utils/helpers";
 import ConfirmModal from "../components/ConfirmModal";
 import TabsNavigation from "../components/TabsNavigation";
+import PaginationControls from "../components/PaginationControls";
 
 const EMPTY_SECTION = () => ({
   subtitle: "",
@@ -81,6 +82,8 @@ const CMSPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
   // Form states
   const [previewLang, setPreviewLang] = useState("FR");
@@ -483,28 +486,41 @@ const CMSPage = () => {
     }
   };
 
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, statusFilter, categoryFilter]);
+
   // Filtered actualités
   const filteredPubs = useMemo(() => {
-    return publications.filter((p) => {
-      if (p.type !== "ACTUALITE") return false;
+    return publications
+      .filter((p) => {
+        if (p.type !== "ACTUALITE") return false;
 
-      const q = searchQuery.toLowerCase().trim();
-      const matchesSearch =
-        !q ||
-        (p.title || "").toLowerCase().includes(q) ||
-        (p.title_en || "").toLowerCase().includes(q) ||
-        (p.author?.name || "").toLowerCase().includes(q) ||
-        (p.category || "").toLowerCase().includes(q);
+        const q = searchQuery.toLowerCase().trim();
+        const matchesSearch =
+          !q ||
+          (p.title || "").toLowerCase().includes(q) ||
+          (p.title_en || "").toLowerCase().includes(q) ||
+          (p.author?.name || "").toLowerCase().includes(q) ||
+          (p.category || "").toLowerCase().includes(q);
 
-      const matchesStatus =
-        statusFilter === "all" || p.status === statusFilter;
+        const matchesStatus =
+          statusFilter === "all" || p.status === statusFilter;
 
-      const matchesCategory =
-        categoryFilter === "all" || p.category === categoryFilter;
+        const matchesCategory =
+          categoryFilter === "all" || p.category === categoryFilter;
 
-      return matchesSearch && matchesStatus && matchesCategory;
-    });
+        return matchesSearch && matchesStatus && matchesCategory;
+      })
+      .sort((a, b) => new Date(b.publishedAt || b.createdAt || 0).getTime() - new Date(a.publishedAt || a.createdAt || 0).getTime());
   }, [publications, searchQuery, statusFilter, categoryFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredPubs.length / limit));
+
+  const paginatedPubs = useMemo(() => {
+    const startIndex = (page - 1) * limit;
+    return filteredPubs.slice(startIndex, startIndex + limit);
+  }, [filteredPubs, page, limit]);
 
   const onlineCount = useMemo(() => {
     return publications.filter((p) => p.type === "ACTUALITE" && p.status === "PUBLIE").length;
@@ -519,7 +535,7 @@ const CMSPage = () => {
   }, []);
 
   return (
-    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 1rem" }}>
+    <div className="mx-auto" style={{maxWidth:"1280px",padding:"0 1rem"}}>
       {/* Toast Notification */}
       {toast.show && (
         <div
@@ -543,15 +559,7 @@ const CMSPage = () => {
           <button
             type="button"
             onClick={() => setToast({ show: false, message: "", type: "success" })}
-            style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              color: "#FFF",
-              fontWeight: "bold",
-              fontSize: "1rem",
-              padding: "0 4px",
-            }}
+            className="cursor-pointer text-white font-bold" style={{background:"transparent",border:"none",fontSize:"1rem",padding:"0 4px"}}
           >
             ✕
           </button>
@@ -575,23 +583,11 @@ const CMSPage = () => {
         <>
           {/* Header */}
           <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "1.5rem",
-              flexWrap: "wrap",
-              gap: "1rem",
-            }}
+            className="flex justify-between items-center mb-6 flex-wrap gap-4"
           >
             <div>
               <h1
-                style={{
-                  fontSize: "1.5rem",
-                  fontWeight: 700,
-                  color: "var(--text-main)",
-                  margin: "0 0 0.25rem 0",
-                }}
+                className="font-bold text-[var(--text-main)]" style={{fontSize:"1.5rem",margin:"0 0 0.25rem 0"}}
               >
                 {t("cms.title", "Espace Site Web — Gestion des Publications")}
               </h1>
@@ -603,20 +599,7 @@ const CMSPage = () => {
               <button
                 type="button"
                 onClick={() => openModal()}
-                style={{
-                  background: "var(--text-main)",
-                  color: "#FFF",
-                  border: "none",
-                  borderRadius: "8px",
-                  padding: "0.65rem 1.25rem",
-                  fontWeight: 600,
-                  fontSize: "0.88rem",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  cursor: "pointer",
-                  transition: "background 0.2s",
-                }}
+                className="text-white font-semibold inline-flex items-center gap-2 cursor-pointer" style={{background:"var(--text-main)",border:"none",borderRadius:"8px",padding:"0.65rem 1.25rem",fontSize:"0.88rem",transition:"background 0.2s"}}
               >
                 {t("cms.newPost", "+ Nouvelle Actualité")}
               </button>
@@ -625,59 +608,26 @@ const CMSPage = () => {
 
           {/* Filter Bar */}
           <div
-            style={{
-              background: "#FFF",
-              border: "1px solid #E2E8F0",
-              borderRadius: "12px",
-              padding: "0.85rem 1.25rem",
-              marginBottom: "1.5rem",
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-              flexWrap: "wrap",
-            }}
+            className="mb-6 flex items-center gap-4 flex-wrap" style={{background:"#FFF",border:"1px solid #E2E8F0",borderRadius:"12px",padding:"0.85rem 1.25rem"}}
           >
-            <div style={{ position: "relative", flex: "1 1 260px" }}>
+            <div className="relative" style={{flex:"1 1 260px"}}>
               <Search
                 size={16}
-                style={{
-                  position: "absolute",
-                  left: "0.85rem",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  color: "#94A3B8",
-                }}
+                className="absolute" style={{left:"0.85rem",top:"50%",transform:"translateY(-50%)",color:"#94A3B8"}}
               />
               <input
                 type="text"
                 placeholder={t("cms.searchPlaceholder", "Rechercher par titre, auteur, mot-clé...")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "0.6rem 1rem 0.6rem 2.4rem",
-                  borderRadius: "8px",
-                  border: "1px solid #E2E8F0",
-                  fontSize: "0.85rem",
-                  outline: "none",
-                  color: "var(--text-main)",
-                }}
+                className="w-full text-[var(--text-main)]" style={{padding:"0.6rem 1rem 0.6rem 2.4rem",borderRadius:"8px",border:"1px solid #E2E8F0",fontSize:"0.85rem",outline:"none"}}
               />
             </div>
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              style={{
-                padding: "0.6rem 2rem 0.6rem 0.85rem",
-                borderRadius: "8px",
-                border: "1.5px solid #3B82F6",
-                background: "#FFF",
-                fontSize: "0.85rem",
-                color: "var(--text-main)",
-                cursor: "pointer",
-                outline: "none",
-              }}
+              className="text-[var(--text-main)] cursor-pointer" style={{padding:"0.6rem 2rem 0.6rem 0.85rem",borderRadius:"8px",border:"1.5px solid #3B82F6",background:"#FFF",fontSize:"0.85rem",outline:"none"}}
             >
               <option value="all">{t("common.allStatuses", "Tous les statuts")}</option>
               <option value="PUBLIE">{t("status.PUBLIE", "PUBLIÉ")}</option>
@@ -687,16 +637,7 @@ const CMSPage = () => {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              style={{
-                padding: "0.6rem 2rem 0.6rem 0.85rem",
-                borderRadius: "8px",
-                border: "1.5px solid #3B82F6",
-                background: "#FFF",
-                fontSize: "0.85rem",
-                color: "var(--text-main)",
-                cursor: "pointer",
-                outline: "none",
-              }}
+              className="text-[var(--text-main)] cursor-pointer" style={{padding:"0.6rem 2rem 0.6rem 0.85rem",borderRadius:"8px",border:"1.5px solid #3B82F6",background:"#FFF",fontSize:"0.85rem",outline:"none"}}
             >
               <option value="all">{t("cms.allCategories", "Toutes les catégories")}</option>
               {CATEGORIES.map((cat) => (
@@ -708,20 +649,7 @@ const CMSPage = () => {
 
             {/* Green count badge */}
             <div
-              style={{
-                background: "#ECFDF5",
-                color: "#059669",
-                border: "1px solid #A7F3D0",
-                padding: "0.45rem 1rem",
-                borderRadius: "8px",
-                fontWeight: 600,
-                fontSize: "0.82rem",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                whiteSpace: "nowrap",
-                marginLeft: "auto",
-              }}
+              className="font-semibold inline-flex items-center gap-2" style={{background:"#ECFDF5",color:"#059669",border:"1px solid #A7F3D0",padding:"0.45rem 1rem",borderRadius:"8px",fontSize:"0.82rem",whiteSpace:"nowrap",marginLeft:"auto"}}
             >
               <span style={{ fontSize: "0.7rem" }}>🟢</span>
               {t("cms.onlineCount", { count: onlineCount, defaultValue: `${onlineCount} Actualité${onlineCount > 1 ? "s" : ""} en ligne` })}
@@ -729,346 +657,211 @@ const CMSPage = () => {
           </div>
 
           {/* Table */}
-          <div
-            style={{
-              background: "#FFF",
-              border: "1px solid #E2E8F0",
-              borderRadius: "12px",
-              overflow: "hidden",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-            }}
-          >
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
-                <thead>
-                  <tr style={{ borderBottom: "1px solid #E2E8F0" }}>
-                    <th
-                      style={{
-                        padding: "0.85rem 1.25rem",
-                        textAlign: "left",
-                        fontSize: "0.72rem",
-                        fontWeight: 700,
-                        color: "#64748B",
-                        letterSpacing: "0.05em",
-                        textTransform: "uppercase",
-                        width: "36%",
-                      }}
+          <div className="table-wrapper">
+            <table className="w-full" style={{ tableLayout: "fixed" }}>
+              <thead>
+                <tr style={{ borderBottom: "1px solid #E2E8F0" }}>
+                  <th
+                    className="text-left font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"36%"}}
+                  >
+                    {t("cms.columns.title", "Titre de l'actualité")}
+                  </th>
+                  <th
+                    className="text-left font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"20%"}}
+                  >
+                    {t("cms.columns.author", "Auteur")}
+                  </th>
+                  <th
+                    className="text-left font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"15%"}}
+                  >
+                    {t("cms.columns.status", "Statut")}
+                  </th>
+                  <th
+                    className="table-date-cell text-left font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"190px"}}
+                  >
+                    {t("cms.columns.publishedAt", "Date de publication")}
+                  </th>
+                  <th
+                    className="text-right font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"130px"}}
+                  >
+                    {t("cms.columns.actions", "Actions")}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="text-center" style={{padding:"3rem",color:"#64748B",fontSize:"0.9rem"}}
                     >
-                      {t("cms.columns.title", "Titre de l'actualité")}
-                    </th>
-                    <th
-                      style={{
-                        padding: "0.85rem 1.25rem",
-                        textAlign: "left",
-                        fontSize: "0.72rem",
-                        fontWeight: 700,
-                        color: "#64748B",
-                        letterSpacing: "0.05em",
-                        textTransform: "uppercase",
-                        width: "20%",
-                      }}
-                    >
-                      {t("cms.columns.author", "Auteur")}
-                    </th>
-                    <th
-                      style={{
-                        padding: "0.85rem 1.25rem",
-                        textAlign: "left",
-                        fontSize: "0.72rem",
-                        fontWeight: 700,
-                        color: "#64748B",
-                        letterSpacing: "0.05em",
-                        textTransform: "uppercase",
-                        width: "15%",
-                      }}
-                    >
-                      {t("cms.columns.status", "Statut")}
-                    </th>
-                    <th
-                      className="table-date-cell"
-                      style={{
-                        padding: "0.85rem 1.25rem",
-                        textAlign: "left",
-                        fontSize: "0.72rem",
-                        fontWeight: 700,
-                        color: "#64748B",
-                        letterSpacing: "0.05em",
-                        textTransform: "uppercase",
-                        width: "190px",
-                      }}
-                    >
-                      {t("cms.columns.publishedAt", "Date de publication")}
-                    </th>
-                    <th
-                      style={{
-                        padding: "0.85rem 1.25rem",
-                        textAlign: "right",
-                        fontSize: "0.72rem",
-                        fontWeight: 700,
-                        color: "#64748B",
-                        letterSpacing: "0.05em",
-                        textTransform: "uppercase",
-                        width: "90px",
-                      }}
-                    >
-                      {t("cms.columns.actions", "Actions")}
-                    </th>
+                      {t("common.loading", "Chargement des actualités...")}
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td
-                        colSpan="5"
+                ) : filteredPubs.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="text-center" style={{padding:"3rem",color:"#64748B",fontSize:"0.9rem"}}
+                    >
+                      {t("common.noResult", "Aucune actualité trouvée.")}
+                    </td>
+                  </tr>
+                ) : (
+                  paginatedPubs.map((pub) => {
+                    const d = new Date(pub.publishedAt || pub.createdAt || Date.now());
+                    const dateStr = d.toLocaleDateString("fr-FR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    });
+                    const timeStr = d.toLocaleTimeString("fr-FR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    });
+
+                    const authorName = pub.author?.name || "Rosette Fouelefack";
+                    const authorInitial = authorName.charAt(0).toUpperCase();
+
+                    return (
+                      <tr
+                        key={pub.id}
                         style={{
-                          textAlign: "center",
-                          padding: "3rem",
-                          color: "#64748B",
-                          fontSize: "0.9rem",
+                          borderBottom: "1px solid #F1F5F9",
+                          transition: "background 0.15s",
                         }}
                       >
-                        {t("common.loading", "Chargement des actualités...")}
-                      </td>
-                    </tr>
-                  ) : filteredPubs.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan="5"
-                        style={{
-                          textAlign: "center",
-                          padding: "3rem",
-                          color: "#64748B",
-                          fontSize: "0.9rem",
-                        }}
-                      >
-                        {t("common.noResult", "Aucune actualité trouvée.")}
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredPubs.map((pub) => {
-                      const d = new Date(pub.publishedAt || pub.createdAt || Date.now());
-                      const dateStr = d.toLocaleDateString("fr-FR", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      });
-                      const timeStr = d.toLocaleTimeString("fr-FR", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      });
-
-                      const authorName = pub.author?.name || "Rosette Fouelefack";
-                      const authorInitial = authorName.charAt(0).toUpperCase();
-
-                      return (
-                        <tr
-                          key={pub.id}
-                          style={{
-                            borderBottom: "1px solid #F1F5F9",
-                            transition: "background 0.15s",
-                          }}
-                        >
-                          {/* Titre */}
-                          <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
-                              <div
-                                style={{
-                                  width: "36px",
-                                  height: "36px",
-                                  borderRadius: "8px",
-                                  background: "#EFF6FF",
-                                  border: "1px solid #BFDBFE",
-                                  color: "#2563EB",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  flexShrink: 0,
-                                }}
-                              >
-                                <FileText size={18} />
-                              </div>
-                              <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
-                                <div
-                                  className="truncate-name"
-                                  style={{ fontWeight: 700, fontSize: "0.88rem", color: "var(--text-main)", maxWidth: "100%" }}
-                                  title={pub.title}
-                                >
-                                  {pub.title}
-                                </div>
-                                <div
-                                  className="truncate-name"
-                                  style={{ fontSize: "0.75rem", color: "#64748B", marginTop: "2px", maxWidth: "100%" }}
-                                >
-                                  {t("cms.category", "Catégorie :")} {pub.category || "Organisation et Externalisation"} • {t("cms.languages", "Langues :")} FR | EN
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-
-                          {/* Auteur */}
-                          <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", minWidth: 0 }}>
-                              <div
-                                style={{
-                                  width: "28px",
-                                  height: "28px",
-                                  borderRadius: "50%",
-                                  background: "#F1F5F9",
-                                  color: "#334155",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  fontWeight: 700,
-                                  fontSize: "0.78rem",
-                                  flexShrink: 0,
-                                }}
-                              >
-                                {authorInitial}
-                              </div>
-                              <span
-                                className="truncate-name"
-                                style={{ fontWeight: 600, fontSize: "0.85rem", color: "var(--text-main)", maxWidth: "100%" }}
-                                title={authorName}
-                              >
-                                {authorName}
-                              </span>
-                            </div>
-                          </td>
-
-                          {/* Statut */}
-                          <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
-                            <span
-                              style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: "0.35rem",
-                                padding: "0.3rem 0.75rem",
-                                borderRadius: "20px",
-                                fontSize: "0.75rem",
-                                fontWeight: 700,
-                                background: pub.status === "PUBLIE" ? "#ECFDF5" : "#FEF3C7",
-                                color: pub.status === "PUBLIE" ? "#059669" : "#D97706",
-                                border: pub.status === "PUBLIE" ? "1px solid #A7F3D0" : "1px solid #FDE68A",
-                              }}
+                        {/* Titre */}
+                        <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
+                          <div className="flex items-center" style={{gap:"0.85rem"}}>
+                            <button
+                              type="button"
+                              onClick={() => openModal(pub)}
+                              className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
+                              style={{width:"36px",height:"36px",borderRadius:"8px",background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#2563EB"}}
+                              title={t("common.edit", "Ouvrir la publication")}
                             >
-                              <span style={{ fontSize: "0.65rem" }}>●</span>
-                              {pub.status === "PUBLIE" ? t("status.PUBLIE", "PUBLIÉ") : t("status.BROUILLON", "BROUILLON")}
-                            </span>
-                          </td>
-
-                          {/* Date de publication */}
-                          <td className="table-date-cell" style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle", width: "190px" }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--text-main)", fontSize: "0.85rem", whiteSpace: "nowrap" }}>
-                              <Calendar size={15} style={{ color: "#94A3B8", flexShrink: 0 }} />
-                              <span style={{ whiteSpace: "nowrap" }}>{dateStr} {timeStr}</span>
-                            </div>
-                          </td>
-
-                          {/* Actions */}
-                          <td style={{ padding: "0.85rem 1.25rem", textAlign: "right", verticalAlign: "middle" }}>
-                            <div style={{ display: "inline-flex", gap: "0.4rem" }}>
-                              {/* Edit */}
+                              <FileText size={18} />
+                            </button>
+                            <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
                               <button
                                 type="button"
                                 onClick={() => openModal(pub)}
-                                title={t("common.edit", "Modifier")}
-                                style={{
-                                  width: "32px",
-                                  height: "32px",
-                                  borderRadius: "6px",
-                                  background: "#EFF6FF",
-                                  border: "1px solid #BFDBFE",
-                                  color: "#2563EB",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  cursor: "pointer",
-                                }}
+                                className="truncate-name font-bold text-[var(--text-main)] text-left hover:text-[var(--primary)] hover:underline cursor-pointer block w-full"
+                                style={{fontSize:"0.88rem",background:"none",border:"none",padding:0,maxWidth:"100%"}}
+                                title={pub.title}
                               >
-                                <Edit2 size={14} />
+                                {pub.title}
                               </button>
-                              {/* Delete */}
-                              {isSuperAdmin && (
-                                <button
-                                  type="button"
-                                  onClick={() => handleDelete(pub.id)}
-                                  title={t("common.delete", "Supprimer")}
-                                  style={{
-                                    width: "32px",
-                                    height: "32px",
-                                    borderRadius: "6px",
-                                    background: "#FEF2F2",
-                                    border: "1px solid #FECACA",
-                                    color: "#DC2626",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  <Trash2 size={14} />
-                                </button>
-                              )}
-                              {/* View */}
+                              <div
+                                className="truncate-name"
+                                style={{ fontSize: "0.75rem", color: "#64748B", marginTop: "2px", maxWidth: "100%" }}
+                              >
+                                {t("cms.category", "Catégorie :")} {pub.category || "Organisation et Externalisation"} • {t("cms.languages", "Langues :")} FR | EN
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Auteur */}
+                        <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
+                          <div className="flex items-center" style={{gap:"0.6rem"}}>
+                            <div
+                              className="flex items-center justify-center font-bold" style={{width:"28px",height:"28px",borderRadius:"50%",background:"#F1F5F9",color:"#334155",fontSize:"0.78rem"}}
+                            >
+                              {authorInitial}
+                            </div>
+                            <span
+                              className="truncate-name font-semibold text-[var(--text-main)]" style={{fontSize:"0.85rem",maxWidth:"100%"}}
+                              title={authorName}
+                            >
+                              {authorName}
+                            </span>
+                          </div>
+                        </td>
+
+                        {/* Statut */}
+                        <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
+                          <span
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "0.35rem",
+                              padding: "0.3rem 0.75rem",
+                              borderRadius: "20px",
+                              fontSize: "0.75rem",
+                              fontWeight: 700,
+                              background: pub.status === "PUBLIE" ? "#ECFDF5" : "#FEF3C7",
+                              color: pub.status === "PUBLIE" ? "#059669" : "#D97706",
+                              border: pub.status === "PUBLIE" ? "1px solid #A7F3D0" : "1px solid #FDE68A",
+                            }}
+                          >
+                            <span style={{ fontSize: "0.65rem" }}>●</span>
+                            {pub.status === "PUBLIE" ? t("status.PUBLIE", "PUBLIÉ") : t("status.BROUILLON", "BROUILLON")}
+                          </span>
+                        </td>
+
+                        {/* Date de publication */}
+                        <td className="table-date-cell" style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle", width: "190px" }}>
+                          <div className="flex items-center gap-2 text-[var(--text-main)]" style={{fontSize:"0.85rem",whiteSpace:"nowrap"}}>
+                            <Calendar size={15} style={{ color: "#94A3B8", flexShrink: 0 }} />
+                            <span style={{ whiteSpace: "nowrap" }}>{dateStr} {timeStr}</span>
+                          </div>
+                        </td>
+
+                        {/* Actions */}
+                        <td className="text-right" style={{padding:"0.85rem 1.25rem",verticalAlign:"middle"}}>
+                          <div className="inline-flex items-center justify-end" style={{gap:"0.4rem"}}>
+                            {/* Modifier */}
+                            <button
+                              type="button"
+                              onClick={() => openModal(pub)}
+                              title={t("common.edit", "Modifier")}
+                              className="flex items-center justify-center cursor-pointer" style={{width:"32px",height:"32px",borderRadius:"6px",background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#2563EB"}}
+                            >
+                              <Edit2 size={15} />
+                            </button>
+                            {/* Voir / Aperçu */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const vitrineUrl =
+                                  window.location.hostname === "localhost"
+                                    ? "http://localhost:3000"
+                                    : "https://menuaconsulting.com";
+                                window.open(`${vitrineUrl}/fr/actualites/${pub.id}?preview=true`, "_blank");
+                              }}
+                              title={t("common.view", "Consulter l'article")}
+                              className="flex items-center justify-center cursor-pointer" style={{width:"32px",height:"32px",borderRadius:"6px",background:"#F1F5F9",border:"1px solid #E2E8F0",color:"#64748B"}}
+                            >
+                              <Eye size={15} />
+                            </button>
+                            {/* Supprimer */}
+                            {isSuperAdmin && (
                               <button
                                 type="button"
-                                onClick={() => {
-                                  const vitrineUrl =
-                                    window.location.hostname === "localhost"
-                                      ? "http://localhost:3000"
-                                      : "https://menuaconsulting.com";
-                                  window.open(`${vitrineUrl}/actualites/${pub.id}?preview=true`, "_blank");
-                                }}
-                                title={t("common.view", "Voir")}
-                                style={{
-                                  width: "32px",
-                                  height: "32px",
-                                  borderRadius: "6px",
-                                  background: "#F1F5F9",
-                                  border: "1px solid #E2E8F0",
-                                  color: "#64748B",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  cursor: "pointer",
-                                }}
+                                onClick={() => handleDelete(pub.id)}
+                                title={t("common.delete", "Supprimer")}
+                                className="flex items-center justify-center cursor-pointer" style={{width:"32px",height:"32px",borderRadius:"6px",background:"#FEF2F2",border:"1px solid #FECACA",color:"#DC2626"}}
                               >
-                                <Eye size={14} />
+                                <Trash2 size={15} />
                               </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Footer message */}
-            <div
-              style={{
-                padding: "1.25rem",
-                textAlign: "center",
-                color: "#94A3B8",
-                fontSize: "0.82rem",
-              }}
-            >
-              {t("cms.endOfArticles", "Fin des articles publiés sur le portail.")}
-            </div>
-
-            <div
-              style={{
-                padding: "0.75rem 1.25rem",
-                borderTop: "1px solid #F1F5F9",
-                background: "#FFF",
-                fontSize: "0.78rem",
-                color: "#94A3B8",
-              }}
-            >
-              {t("cms.displayCount", { count: filteredPubs.length, defaultValue: `Affichage de ${filteredPubs.length} actualité${filteredPubs.length !== 1 ? "s" : ""}` })}
-            </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
           </div>
+
+          <PaginationControls
+            page={page}
+            totalPages={totalPages}
+            setPage={setPage}
+          />
         </>
       )}
 
@@ -1078,14 +871,9 @@ const CMSPage = () => {
       {tab === "parametrage" && (
         <div style={{ maxWidth: "1280px" }}>
           {/* Header */}
-          <div style={{ marginBottom: "1.5rem" }}>
+          <div className="mb-6">
             <h1
-              style={{
-                fontSize: "1.5rem",
-                fontWeight: 700,
-                color: "var(--text-main)",
-                margin: "0 0 0.25rem 0",
-              }}
+              className="font-bold text-[var(--text-main)]" style={{fontSize:"1.5rem",margin:"0 0 0.25rem 0"}}
             >
               {t("cms.formSettingsTitle", "Paramètres des formulaires du site")}
             </h1>
@@ -1095,19 +883,14 @@ const CMSPage = () => {
           </div>
 
           {loadingSettings ? (
-            <div style={{ padding: "3rem", textAlign: "center", color: "#64748B" }}>
+            <div className="text-center" style={{padding:"3rem",color:"#64748B"}}>
               {t("common.loading", "Chargement des paramètres...")}
             </div>
           ) : (
             <div>
               {/* Form toggles */}
               <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "1.5rem",
-                  marginBottom: "1.5rem",
-                }}
+                className="grid gap-6 mb-6" style={{gridTemplateColumns:"1fr 1fr"}}
               >
                 {/* Contact Card */}
                 <div
@@ -1120,7 +903,7 @@ const CMSPage = () => {
                     boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
                   }}
                 >
-                  <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <h3 className="font-bold text-[var(--text-main)]" style={{margin:"0 0 0.2rem 0",fontSize:"0.95rem"}}>
                     {t("cms.contactCardTitle", "Formulaire de Contact Public")}
                   </h3>
                   <p style={{ margin: "0 0 1rem 0", fontSize: "0.78rem", color: "#64748B" }}>
@@ -1128,16 +911,7 @@ const CMSPage = () => {
                   </p>
 
                   <label
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                      padding: "0.85rem 1.25rem",
-                      background: "#F0FDF4",
-                      border: "1px solid #86EFAC",
-                      borderRadius: "8px",
-                      cursor: "pointer",
-                    }}
+                    className="flex items-center cursor-pointer" style={{gap:"0.75rem",padding:"0.85rem 1.25rem",background:"#F0FDF4",border:"1px solid #86EFAC",borderRadius:"8px"}}
                   >
                     <input
                       type="checkbox"
@@ -1145,10 +919,10 @@ const CMSPage = () => {
                       onChange={(e) =>
                         setFormSettings({ ...formSettings, contactFormEnabled: e.target.checked })
                       }
-                      style={{ width: "18px", height: "18px", cursor: "pointer", accentColor: "#2563EB" }}
+                      className="cursor-pointer" style={{width:"18px",height:"18px",accentColor:"#2563EB"}}
                     />
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#15803D" }}>
+                      <div className="font-bold" style={{fontSize:"0.85rem",color:"#15803D"}}>
                         {formSettings.contactFormEnabled
                           ? t("cms.contactEnabled", "Activé (Accepte les soumissions)")
                           : t("cms.contactDisabled", "Désactivé (Bloque les soumissions)")}
@@ -1171,7 +945,7 @@ const CMSPage = () => {
                     boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
                   }}
                 >
-                  <h3 style={{ margin: "0 0 0.2rem 0", fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <h3 className="font-bold text-[var(--text-main)]" style={{margin:"0 0 0.2rem 0",fontSize:"0.95rem"}}>
                     {t("cms.recruitmentCardTitle", "Formulaire Recrutement (Carrières)")}
                   </h3>
                   <p style={{ margin: "0 0 1rem 0", fontSize: "0.78rem", color: "#64748B" }}>
@@ -1179,16 +953,7 @@ const CMSPage = () => {
                   </p>
 
                   <label
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                      padding: "0.85rem 1.25rem",
-                      background: "#F0FDF4",
-                      border: "1px solid #86EFAC",
-                      borderRadius: "8px",
-                      cursor: "pointer",
-                    }}
+                    className="flex items-center cursor-pointer" style={{gap:"0.75rem",padding:"0.85rem 1.25rem",background:"#F0FDF4",border:"1px solid #86EFAC",borderRadius:"8px"}}
                   >
                     <input
                       type="checkbox"
@@ -1196,10 +961,10 @@ const CMSPage = () => {
                       onChange={(e) =>
                         setFormSettings({ ...formSettings, recrutementFormEnabled: e.target.checked })
                       }
-                      style={{ width: "18px", height: "18px", cursor: "pointer", accentColor: "#2563EB" }}
+                      className="cursor-pointer" style={{width:"18px",height:"18px",accentColor:"#2563EB"}}
                     />
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#15803D" }}>
+                      <div className="font-bold" style={{fontSize:"0.85rem",color:"#15803D"}}>
                         {formSettings.recrutementFormEnabled
                           ? t("cms.recruitmentEnabled", "Activé (Accepte les candidatures)")
                           : t("cms.recruitmentDisabled", "Désactivé (Bloque les candidatures)")}
@@ -1214,18 +979,11 @@ const CMSPage = () => {
 
               {/* Anti-Spam Section */}
               <div
-                style={{
-                  background: "#FFF",
-                  border: "1px solid #E2E8F0",
-                  borderRadius: "12px",
-                  padding: "1.5rem",
-                  marginBottom: "1.5rem",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-                }}
+                className="p-6 mb-6" style={{background:"#FFF",border:"1px solid #E2E8F0",borderRadius:"12px",boxShadow:"0 1px 3px rgba(0,0,0,0.02)"}}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.4rem" }}>
+                <div className="flex items-center gap-2" style={{marginBottom:"0.4rem"}}>
                   <span style={{ fontSize: "1rem" }}>🛑</span>
-                  <h3 style={{ margin: 0, fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <h3 className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {t("cms.antiSpamTitle", "Adresses Email bloquées (Protection Anti-Spam)")}
                   </h3>
                 </div>
@@ -1236,17 +994,11 @@ const CMSPage = () => {
                 <div style={{ height: "1px", background: "#F1F5F9", marginBottom: "1.25rem" }} />
 
                 <label
-                  style={{
-                    display: "block",
-                    fontSize: "0.8rem",
-                    fontWeight: 600,
-                    color: "#374151",
-                    marginBottom: "0.5rem",
-                  }}
+                  className="block font-semibold mb-2" style={{fontSize:"0.8rem",color:"#374151"}}
                 >
                   {t("cms.addBlacklistLabel", "Ajouter une nouvelle adresse indésirable :")}
                 </label>
-                <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.25rem" }}>
+                <div className="flex" style={{gap:"0.75rem",marginBottom:"1.25rem"}}>
                   <input
                     type="email"
                     placeholder="spam@example.com"
@@ -1282,43 +1034,23 @@ const CMSPage = () => {
                         setNewBlacklistEmail("");
                       }
                     }}
-                    style={{
-                      padding: "0.65rem 1.25rem",
-                      background: "var(--text-main)",
-                      color: "#FFF",
-                      border: "none",
-                      borderRadius: "8px",
-                      fontWeight: 600,
-                      fontSize: "0.875rem",
-                      cursor: "pointer",
-                      whiteSpace: "nowrap",
-                    }}
+                    className="text-white font-semibold cursor-pointer" style={{padding:"0.65rem 1.25rem",background:"var(--text-main)",border:"none",borderRadius:"8px",fontSize:"0.875rem",whiteSpace:"nowrap"}}
                   >
                     {t("cms.addBlacklistBtn", "+ Ajouter")}
                   </button>
                 </div>
 
-                <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#374151", marginBottom: "0.5rem" }}>
+                <div className="font-semibold mb-2" style={{fontSize:"0.8rem",color:"#374151"}}>
                   {t("cms.blockedCount", { count: formSettings.blacklistedEmails?.length || 0, defaultValue: `Adresses actuellement bloquées (${formSettings.blacklistedEmails?.length || 0} active(s)) :` })}
                 </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                <div className="flex flex-wrap gap-2">
                   {(formSettings.blacklistedEmails?.length === 0 || !formSettings.blacklistedEmails) && (
                     <span style={{ color: "#94A3B8", fontSize: "0.82rem" }}>{t("cms.noBlockedEmail", "Aucun email bloqué.")}</span>
                   )}
                   {formSettings.blacklistedEmails?.map((email) => (
                     <div
                       key={email}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        background: "#FEE2E2",
-                        color: "#DC2626",
-                        padding: "0.3rem 0.8rem",
-                        borderRadius: "20px",
-                        fontSize: "0.82rem",
-                        fontWeight: 500,
-                      }}
+                      className="inline-flex items-center gap-2 font-medium" style={{background:"#FEE2E2",color:"#DC2626",padding:"0.3rem 0.8rem",borderRadius:"20px",fontSize:"0.82rem"}}
                     >
                       {email}
                       <button
@@ -1329,15 +1061,7 @@ const CMSPage = () => {
                             blacklistedEmails: formSettings.blacklistedEmails.filter((e) => e !== email),
                           })
                         }
-                        style={{
-                          background: "none",
-                          border: "none",
-                          color: "#DC2626",
-                          cursor: "pointer",
-                          padding: 0,
-                          lineHeight: 1,
-                          fontSize: "0.85rem",
-                        }}
+                        className="cursor-pointer" style={{background:"none",border:"none",color:"#DC2626",lineHeight:1,fontSize:"0.85rem"}}
                       >
                         ✕
                       </button>
@@ -1348,13 +1072,7 @@ const CMSPage = () => {
 
               {/* Footer */}
               <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                  gap: "1rem",
-                }}
+                className="flex justify-between items-center flex-wrap gap-4"
               >
                 <span style={{ fontSize: "0.82rem", color: "#64748B" }}>
                   {t("cms.settingsNotice", "Toute modification des formulaires prend effet immédiatement sur le site public.")}
@@ -1362,16 +1080,7 @@ const CMSPage = () => {
                 <button
                   type="button"
                   onClick={saveFormSettings}
-                  style={{
-                    padding: "0.65rem 1.5rem",
-                    background: "var(--text-main)",
-                    color: "#FFF",
-                    border: "none",
-                    borderRadius: "8px",
-                    fontWeight: 600,
-                    fontSize: "0.88rem",
-                    cursor: "pointer",
-                  }}
+                  className="text-white font-semibold cursor-pointer" style={{padding:"0.65rem 1.5rem",background:"var(--text-main)",border:"none",borderRadius:"8px",fontSize:"0.88rem"}}
                 >
                   {t("cms.saveSettingsBtn", "Enregistrer les paramètres")}
                 </button>
@@ -1386,45 +1095,31 @@ const CMSPage = () => {
       {/* ───────────────────────────────────────────────────────────── */}
       {showModal && (
         <div
+          className="fixed inset-0 flex items-start justify-center"
           style={{
             position: "fixed",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "center",
-            zIndex: 1000,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.55)",
+            zIndex: 9999,
             overflowY: "auto",
             padding: "2rem 1rem",
+            backdropFilter: "blur(4px)",
           }}
         >
           <div
-            style={{
-              background: "#FFF",
-              borderRadius: "12px",
-              width: "100%",
-              maxWidth: "1150px",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
-              display: "flex",
-              flexDirection: "column",
-              overflow: "hidden",
-            }}
+            className="w-full flex flex-col" style={{background:"#FFF",borderRadius:"12px",maxWidth:"1150px",boxShadow:"0 20px 40px rgba(0,0,0,0.2)",overflow:"hidden"}}
           >
             {/* Modal Header */}
             <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "1.25rem 2rem",
-                borderBottom: "1px solid #E2E8F0",
-              }}
+              className="flex justify-between items-center" style={{padding:"1.25rem 2rem",borderBottom:"1px solid #E2E8F0"}}
             >
-              <div style={{ display: "flex", alignItems: "baseline", gap: "0.75rem" }}>
-                <h2 style={{ margin: 0, fontSize: "1.2rem", fontWeight: 700, color: "var(--text-main)" }}>
+              <div className="flex" style={{alignItems:"baseline",gap:"0.75rem"}}>
+                <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.2rem"}}>
                   {editingPub ? "Modifier la publication" : "Créer une publication"}
                 </h2>
                 <span style={{ fontSize: "0.82rem", color: "#64748B" }}>
@@ -1434,21 +1129,14 @@ const CMSPage = () => {
               <button
                 type="button"
                 onClick={closeModal}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "#94A3B8",
-                  fontSize: "1.2rem",
-                  padding: "0.2rem",
-                }}
+                className="cursor-pointer" style={{background:"transparent",border:"none",color:"#94A3B8",fontSize:"1.2rem",padding:"0.2rem"}}
               >
                 <X size={20} />
               </button>
             </div>
 
             {/* Modal Body - 2 Columns */}
-            <div style={{ display: "flex", flex: 1, minHeight: "600px", overflow: "hidden" }}>
+            <div className="flex" style={{flex:1,minHeight:"600px",overflow:"hidden"}}>
               {/* Left Column (Form) */}
               <div
                 style={{
@@ -1465,7 +1153,7 @@ const CMSPage = () => {
                   }}
                 >
                   {/* Titre FR & EN */}
-                  <div style={{ display: "flex", gap: "1rem", marginBottom: "1.25rem" }}>
+                  <div className="flex gap-4" style={{marginBottom:"1.25rem"}}>
                     <div style={{ flex: 1 }}>
                       <label style={fieldLabelStyle}>Titre (FR) *</label>
                       <input
@@ -1492,27 +1180,17 @@ const CMSPage = () => {
                   {/* Image de couverture */}
                   <div style={{ marginBottom: "1.25rem" }}>
                     <label style={fieldLabelStyle}>Image de couverture</label>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                    <div className="flex items-center" style={{gap:"0.75rem"}}>
                       <input
                         type="file"
                         accept="image/*"
                         onChange={handleImageUpload}
                         id="cms-image-upload"
-                        style={{ display: "none" }}
+                        className="hidden"
                       />
                       <label
                         htmlFor="cms-image-upload"
-                        style={{
-                          display: "inline-block",
-                          padding: "0.5rem 1rem",
-                          borderRadius: "8px",
-                          border: "1px solid #CBD5E1",
-                          background: "#FFF",
-                          fontSize: "0.85rem",
-                          fontWeight: 500,
-                          cursor: "pointer",
-                          color: "#334155",
-                        }}
+                        className="inline-block font-medium cursor-pointer" style={{padding:"0.5rem 1rem",borderRadius:"8px",border:"1px solid #CBD5E1",background:"#FFF",fontSize:"0.85rem",color:"#334155"}}
                       >
                         {uploadingImg ? "Upload..." : "Parcourir..."}
                       </label>
@@ -1523,7 +1201,7 @@ const CMSPage = () => {
                   </div>
 
                   {/* Catégories FR & EN */}
-                  <div style={{ display: "flex", gap: "1rem", marginBottom: "1.25rem" }}>
+                  <div className="flex gap-4" style={{marginBottom:"1.25rem"}}>
                     <div style={{ flex: 1 }}>
                       <label style={fieldLabelStyle}>Catégorie (FR) * (Select interactif)</label>
                       <select
@@ -1592,7 +1270,7 @@ const CMSPage = () => {
                   </div>
 
                   {/* Contenu EN */}
-                  <div style={{ marginBottom: "0.5rem" }}>
+                  <div className="mb-2">
                     <label style={fieldLabelStyle}>Contenu principal (EN) — Texte / HTML</label>
                     <div style={toolbarStyle}>
                       <button type="button" onClick={() => insertFormatting("b", true)} style={toolbarBtnStyle} title="Bold"><b>B</b></button>
@@ -1624,30 +1302,18 @@ const CMSPage = () => {
                   </p>
 
                   {/* Sections */}
-                  <div style={{ marginBottom: "1.5rem" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+                  <div className="mb-6">
+                    <div className="flex justify-between items-center" style={{marginBottom:"0.75rem"}}>
                       <label style={{ ...fieldLabelStyle, margin: 0 }}>
                         Sections{" "}
-                        <span style={{ fontWeight: 400, color: "#64748B", fontSize: "0.78rem" }}>
+                        <span className="font-normal" style={{color:"#64748B",fontSize:"0.78rem"}}>
                           (sous-titres + contenu + image optionnelle)
                         </span>
                       </label>
                       <button
                         type="button"
                         onClick={addSection}
-                        style={{
-                          background: "#EFF6FF",
-                          color: "#2563EB",
-                          border: "1px solid #BFDBFE",
-                          borderRadius: "8px",
-                          padding: "0.4rem 0.8rem",
-                          fontWeight: 600,
-                          fontSize: "0.8rem",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "0.4rem",
-                          cursor: "pointer",
-                        }}
+                        className="font-semibold inline-flex items-center cursor-pointer" style={{background:"#EFF6FF",color:"#2563EB",border:"1px solid #BFDBFE",borderRadius:"8px",padding:"0.4rem 0.8rem",fontSize:"0.8rem",gap:"0.4rem"}}
                       >
                         + Ajouter une section
                       </button>
@@ -1655,15 +1321,7 @@ const CMSPage = () => {
 
                     {sections.length === 0 ? (
                       <div
-                        style={{
-                          background: "#F8FAFC",
-                          border: "1px solid #E2E8F0",
-                          borderRadius: "8px",
-                          padding: "1.25rem",
-                          textAlign: "center",
-                          color: "#64748B",
-                          fontSize: "0.82rem",
-                        }}
+                        className="text-center" style={{background:"#F8FAFC",border:"1px solid #E2E8F0",borderRadius:"8px",padding:"1.25rem",color:"#64748B",fontSize:"0.82rem"}}
                       >
                         Aucune section ajoutée. Cliquez sur "Ajouter une section" pour enrichir l'article.
                       </div>
@@ -1671,19 +1329,13 @@ const CMSPage = () => {
                       sections.map((sec, idx) => (
                         <div
                           key={idx}
-                          style={{
-                            border: "1px solid #E2E8F0",
-                            borderRadius: "10px",
-                            padding: "1.25rem",
-                            marginBottom: "1rem",
-                            background: "#FAFBFC",
-                          }}
+                          className="mb-4" style={{border:"1px solid #E2E8F0",borderRadius:"10px",padding:"1.25rem",background:"#FAFBFC"}}
                         >
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-                            <span style={{ fontWeight: 600, fontSize: "0.85rem", color: "var(--text-main)" }}>
+                          <div className="flex justify-between items-center" style={{marginBottom:"0.75rem"}}>
+                            <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.85rem"}}>
                               Section {idx + 1}
                             </span>
-                            <div style={{ display: "flex", gap: "0.25rem" }}>
+                            <div className="flex" style={{gap:"0.25rem"}}>
                               <button
                                 type="button"
                                 onClick={() => moveSection(idx, -1)}
@@ -1713,7 +1365,7 @@ const CMSPage = () => {
                             </div>
                           </div>
 
-                          <div style={{ display: "flex", gap: "1rem", marginBottom: "0.75rem" }}>
+                          <div className="flex gap-4" style={{marginBottom:"0.75rem"}}>
                             <div style={{ flex: 1 }}>
                               <input
                                 type="text"
@@ -1734,7 +1386,7 @@ const CMSPage = () => {
                             </div>
                           </div>
 
-                          <div style={{ display: "flex", gap: "1rem", marginBottom: "0.75rem" }}>
+                          <div className="flex gap-4" style={{marginBottom:"0.75rem"}}>
                             <div style={{ flex: 1 }}>
                               <textarea
                                 rows={2}
@@ -1757,7 +1409,7 @@ const CMSPage = () => {
 
                           <div>
                             {sec.imagePreview ? (
-                              <div style={{ position: "relative", display: "inline-block" }}>
+                              <div className="relative inline-block">
                                 <img
                                   src={sec.imagePreview}
                                   alt="Section"
@@ -1766,21 +1418,7 @@ const CMSPage = () => {
                                 <button
                                   type="button"
                                   onClick={() => removeSectionImage(idx)}
-                                  style={{
-                                    position: "absolute",
-                                    top: "-6px",
-                                    right: "-6px",
-                                    background: "#EF4444",
-                                    color: "#FFF",
-                                    border: "none",
-                                    borderRadius: "50%",
-                                    width: "18px",
-                                    height: "18px",
-                                    cursor: "pointer",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                  }}
+                                  className="absolute text-white cursor-pointer flex items-center justify-center" style={{top:"-6px",right:"-6px",background:"#EF4444",border:"none",borderRadius:"50%",width:"18px",height:"18px"}}
                                 >
                                   <X size={12} />
                                 </button>
@@ -1792,21 +1430,11 @@ const CMSPage = () => {
                                   accept="image/*"
                                   id={`sec-img-${idx}`}
                                   onChange={(e) => handleSectionImageUpload(e, idx)}
-                                  style={{ display: "none" }}
+                                  className="hidden"
                                 />
                                 <label
                                   htmlFor={`sec-img-${idx}`}
-                                  style={{
-                                    cursor: "pointer",
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    gap: "0.4rem",
-                                    fontSize: "0.78rem",
-                                    padding: "0.35rem 0.75rem",
-                                    borderRadius: "6px",
-                                    border: "1px solid #CBD5E1",
-                                    background: "#FFF",
-                                  }}
+                                  className="cursor-pointer inline-flex items-center" style={{gap:"0.4rem",fontSize:"0.78rem",padding:"0.35rem 0.75rem",borderRadius:"6px",border:"1px solid #CBD5E1",background:"#FFF"}}
                                 >
                                   <ImageIcon size={13} /> {sec.uploading ? "Upload..." : "Choisir une image"}
                                 </label>
@@ -1822,24 +1450,14 @@ const CMSPage = () => {
 
               {/* Right Column (Aperçu) */}
               <div
-                style={{
-                  width: "420px",
-                  flexShrink: 0,
-                  borderLeft: "1px solid #E2E8F0",
-                  padding: "1.75rem",
-                  background: "#FFF",
-                  display: "flex",
-                  flexDirection: "column",
-                  overflowY: "auto",
-                  maxHeight: "75vh",
-                }}
+                className="flex flex-col" style={{width:"420px",borderLeft:"1px solid #E2E8F0",padding:"1.75rem",background:"#FFF",overflowY:"auto",maxHeight:"75vh"}}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontWeight: 700, fontSize: "0.95rem", color: "var(--text-main)" }}>
+                <div className="flex justify-between items-center mb-2">
+                  <div className="flex items-center font-bold text-[var(--text-main)]" style={{gap:"0.4rem",fontSize:"0.95rem"}}>
                     <Eye size={16} color="#2563EB" /> Aperçu de la Publication
                   </div>
                   {/* Lang Tabs */}
-                  <div style={{ display: "flex", background: "#F1F5F9", borderRadius: "6px", padding: "2px" }}>
+                  <div className="flex" style={{background:"#F1F5F9",borderRadius:"6px",padding:"2px"}}>
                     <button
                       type="button"
                       onClick={() => setPreviewLang("FR")}
@@ -1892,22 +1510,13 @@ const CMSPage = () => {
                 >
                   {/* Hero / Cover */}
                   <div
-                    style={{
-                      height: "150px",
-                      background: "#0A0F1D",
-                      position: "relative",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      overflow: "hidden",
-                    }}
+                    className="relative flex flex-col items-center justify-center" style={{height:"150px",background:"#0A0F1D",overflow:"hidden"}}
                   >
                     {previewImage ? (
                       <img
                         src={previewImage}
                         alt="Cover"
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                        className="w-full h-full" style={{objectFit:"cover"}}
                       />
                     ) : (
                       <>
@@ -1930,19 +1539,7 @@ const CMSPage = () => {
 
                     {/* Category badge */}
                     <div
-                      style={{
-                        position: "absolute",
-                        top: "10px",
-                        left: "10px",
-                        background: "#FFF",
-                        color: "var(--text-main)",
-                        padding: "3px 8px",
-                        fontSize: "0.62rem",
-                        fontWeight: 800,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.05em",
-                        borderRadius: "4px",
-                      }}
+                      className="absolute text-[var(--text-main)]" style={{top:"10px",left:"10px",background:"#FFF",padding:"3px 8px",fontSize:"0.62rem",fontWeight:800,textTransform:"uppercase",letterSpacing:"0.05em",borderRadius:"4px"}}
                     >
                       {(previewLang === "EN" ? category_en : category) || "ORGANISATION ET EXTERNALISATION"}
                     </div>
@@ -1950,35 +1547,16 @@ const CMSPage = () => {
 
                   {/* Body */}
                   <div style={{ padding: "1.25rem" }}>
-                    <div style={{ fontSize: "0.7rem", color: "#64748B", fontWeight: 600, letterSpacing: "0.05em", marginBottom: "0.4rem" }}>
+                    <div className="font-semibold" style={{fontSize:"0.7rem",color:"#64748B",letterSpacing:"0.05em",marginBottom:"0.4rem"}}>
                       {formattedCurrentDate}
                     </div>
                     <div
-                      style={{
-                        fontWeight: 700,
-                        fontSize: "1rem",
-                        color: "var(--text-main)",
-                        lineHeight: 1.3,
-                        marginBottom: "0.5rem",
-                        overflow: "hidden",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                      }}
+                      className="font-bold text-[var(--text-main)] mb-2" style={{fontSize:"1rem",lineHeight:1.3,overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}
                     >
                       {(previewLang === "EN" ? title_en : title) || "Illum maxime Nam ad"}
                     </div>
                     <div
-                      style={{
-                        fontSize: "0.78rem",
-                        color: "#64748B",
-                        lineHeight: 1.5,
-                        marginBottom: "1rem",
-                        overflow: "hidden",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: "vertical",
-                      }}
+                      className="mb-4" style={{fontSize:"0.78rem",color:"#64748B",lineHeight:1.5,overflow:"hidden",display:"-webkit-box",WebkitLineClamp:3,WebkitBoxOrient:"vertical"}}
                     >
                       {(() => {
                         const raw = (previewLang === "EN" ? contentHtml_en : contentHtml) || "";
@@ -1987,16 +1565,7 @@ const CMSPage = () => {
                       })()}
                     </div>
                     <div
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "0.35rem",
-                        color: "#2563EB",
-                        fontWeight: 700,
-                        fontSize: "0.75rem",
-                        letterSpacing: "0.05em",
-                        cursor: "pointer",
-                      }}
+                      className="inline-flex items-center font-bold cursor-pointer" style={{gap:"0.35rem",color:"#2563EB",fontSize:"0.75rem",letterSpacing:"0.05em"}}
                     >
                       LIRE L'ARTICLE →
                     </div>
@@ -2013,7 +1582,7 @@ const CMSPage = () => {
                     marginTop: "auto",
                   }}
                 >
-                  <div style={{ color: "#2563EB", fontWeight: 700, fontSize: "0.82rem" }}>
+                  <div className="font-bold" style={{color:"#2563EB",fontSize:"0.82rem"}}>
                     ✓ Synchronisation dynamique active
                   </div>
                   <div style={{ color: "#1E40AF", fontSize: "0.75rem", marginTop: "0.2rem" }}>
@@ -2025,64 +1594,27 @@ const CMSPage = () => {
 
             {/* Modal Footer */}
             <div
-              style={{
-                borderTop: "1px solid #E2E8F0",
-                padding: "1rem 2rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                background: "#FFF",
-              }}
+              className="flex justify-between items-center" style={{borderTop:"1px solid #E2E8F0",padding:"1rem 2rem",background:"#FFF"}}
             >
               <button
                 type="button"
                 onClick={closeModal}
-                style={{
-                  background: "#FFF",
-                  border: "1px solid #E2E8F0",
-                  borderRadius: "8px",
-                  padding: "0.6rem 1.25rem",
-                  fontWeight: 600,
-                  fontSize: "0.85rem",
-                  color: "#334155",
-                  cursor: "pointer",
-                }}
+                className="font-semibold cursor-pointer" style={{background:"#FFF",border:"1px solid #E2E8F0",borderRadius:"8px",padding:"0.6rem 1.25rem",fontSize:"0.85rem",color:"#334155"}}
               >
                 Fermer
               </button>
-              <div style={{ display: "flex", gap: "0.75rem" }}>
+              <div className="flex" style={{gap:"0.75rem"}}>
                 <button
                   type="button"
                   onClick={() => handleSaveAction(status === "PUBLIE" ? "PUBLIE" : "BROUILLON", true)}
-                  style={{
-                    background: "#FFF",
-                    border: "1.5px solid #3B82F6",
-                    borderRadius: "8px",
-                    padding: "0.6rem 1.25rem",
-                    fontWeight: 600,
-                    fontSize: "0.85rem",
-                    color: "#2563EB",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.4rem",
-                    cursor: "pointer",
-                  }}
+                  className="font-semibold inline-flex items-center cursor-pointer" style={{background:"#FFF",border:"1.5px solid #3B82F6",borderRadius:"8px",padding:"0.6rem 1.25rem",fontSize:"0.85rem",color:"#2563EB",gap:"0.4rem"}}
                 >
                   <Eye size={15} /> Aperçu
                 </button>
                 <button
                   type="button"
                   onClick={() => setSaveOptionsModal({ isOpen: true, isPreview: false })}
-                  style={{
-                    background: "#10B981",
-                    border: "none",
-                    borderRadius: "8px",
-                    padding: "0.6rem 1.5rem",
-                    fontWeight: 600,
-                    fontSize: "0.85rem",
-                    color: "#FFF",
-                    cursor: "pointer",
-                  }}
+                  className="font-semibold text-white cursor-pointer" style={{background:"#10B981",border:"none",borderRadius:"8px",padding:"0.6rem 1.5rem",fontSize:"0.85rem"}}
                 >
                   Enregistrer
                 </button>
@@ -2106,70 +1638,47 @@ const CMSPage = () => {
 
       {/* Save Options Modal */}
       {saveOptionsModal.isOpen && (
-        <div style={{
-          position: "fixed",
-          top: 0, left: 0, right: 0, bottom: 0,
-          background: "rgba(15, 23, 42, 0.75)",
-          backdropFilter: "blur(4px)",
-          zIndex: 9999,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          animation: "fadeIn 0.2s ease-out"
-        }}>
-          <div style={{
-            background: "#FFF",
-            borderRadius: "16px",
-            width: "100%",
-            maxWidth: "400px",
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-            overflow: "hidden",
-            animation: "slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)"
-          }}>
-            <div style={{
-              padding: "1.5rem 1.5rem 1rem",
-              borderBottom: "1px solid #F1F5F9",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center"
-            }}>
-              <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#1E293B", fontWeight: 600, display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <div
+          className="fixed inset-0 flex items-center justify-center"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(15, 23, 42, 0.75)",
+            backdropFilter: "blur(4px)",
+            zIndex: 10000,
+            animation: "fadeIn 0.2s ease-out",
+          }}
+        >
+          <div className="w-full" style={{background:"#FFF",borderRadius:"16px",maxWidth:"400px",boxShadow:"0 25px 50px -12px rgba(0, 0, 0, 0.25)",overflow:"hidden",animation:"slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)"}}>
+            <div className="flex justify-between items-center" style={{padding:"1.5rem 1.5rem 1rem",borderBottom:"1px solid #F1F5F9"}}>
+              <h3 className="font-semibold flex items-center gap-2" style={{fontSize:"1.1rem",color:"#1E293B"}}>
                 <Check size={20} color="#10B981" />
                 Options d'enregistrement
               </h3>
               <button
                 onClick={() => setSaveOptionsModal({ isOpen: false, isPreview: false })}
-                style={{ background: "none", border: "none", color: "#94A3B8", cursor: "pointer", padding: "0.25rem" }}
+                className="cursor-pointer" style={{background:"none",border:"none",color:"#94A3B8",padding:"0.25rem"}}
               >
                 <X size={20} />
               </button>
             </div>
-            <div style={{ padding: "1.5rem" }}>
+            <div className="p-6">
               <p style={{ margin: "0 0 1.5rem", color: "#475569", fontSize: "0.95rem", lineHeight: 1.5 }}>
                 Souhaitez-vous enregistrer cet article en tant que brouillon pour y revenir plus tard, ou le publier immédiatement sur le site public ?
               </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <div className="flex flex-col" style={{gap:"0.75rem"}}>
                 <button
                   type="button"
                   onClick={() => {
                     setSaveOptionsModal({ isOpen: false, isPreview: false });
                     handleSaveAction("BROUILLON", saveOptionsModal.isPreview);
                   }}
-                  style={{
-                    background: "#F8FAFC",
-                    border: "1px solid #CBD5E1",
-                    borderRadius: "8px",
-                    padding: "0.85rem",
-                    fontWeight: 600,
-                    fontSize: "0.95rem",
-                    color: "#334155",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "0.5rem",
-                    transition: "all 0.2s"
-                  }}
+                  className="font-semibold cursor-pointer flex items-center justify-center gap-2" style={{background:"#F8FAFC",border:"1px solid #CBD5E1",borderRadius:"8px",padding:"0.85rem",fontSize:"0.95rem",color:"#334155",transition:"all 0.2s"}}
                   onMouseOver={(e) => { e.currentTarget.style.background = "#F1F5F9"; e.currentTarget.style.borderColor = "#94A3B8"; }}
                   onMouseOut={(e) => { e.currentTarget.style.background = "#F8FAFC"; e.currentTarget.style.borderColor = "#CBD5E1"; }}
                 >
@@ -2182,21 +1691,7 @@ const CMSPage = () => {
                     setSaveOptionsModal({ isOpen: false, isPreview: false });
                     handleSaveAction("PUBLIE", saveOptionsModal.isPreview);
                   }}
-                  style={{
-                    background: "#10B981",
-                    border: "none",
-                    borderRadius: "8px",
-                    padding: "0.85rem",
-                    fontWeight: 600,
-                    fontSize: "0.95rem",
-                    color: "#FFF",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "0.5rem",
-                    transition: "all 0.2s"
-                  }}
+                  className="font-semibold text-white cursor-pointer flex items-center justify-center gap-2" style={{background:"#10B981",border:"none",borderRadius:"8px",padding:"0.85rem",fontSize:"0.95rem",transition:"all 0.2s"}}
                   onMouseOver={(e) => { e.currentTarget.style.background = "#059669"; }}
                   onMouseOut={(e) => { e.currentTarget.style.background = "#10B981"; }}
                 >

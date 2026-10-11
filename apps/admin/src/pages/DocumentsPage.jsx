@@ -695,39 +695,21 @@ export default function DocumentsPage() {
 
   if (loading)
     return (
-      <div style={{ padding: "2rem", color: "var(--text-main)" }}>
+      <div className="p-8 text-[var(--text-main)]">
         Chargement de la GED...
       </div>
     );
 
   return (
     <div
-      style={{
-        padding: "2rem",
-        color: "var(--text-main)",
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-      }}
+      className="p-8 text-[var(--text-main)] flex flex-col h-full"
     >
       <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "1.5rem",
-          flexWrap: "wrap",
-          gap: "1rem",
-        }}
+        className="flex justify-between items-center mb-6 flex-wrap gap-4"
       >
         <div>
           <h2
-            style={{
-              fontSize: "1.4rem",
-              fontWeight: 700,
-              color: "var(--text-main)",
-              margin: 0,
-            }}
+            className="font-bold text-[var(--text-main)]" style={{fontSize:"1.4rem"}}
           >
             Explorateur de Fichiers (GED)
           </h2>
@@ -737,51 +719,25 @@ export default function DocumentsPage() {
         </div>
 
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            flexWrap: "wrap",
-          }}
+          className="flex items-center flex-wrap" style={{gap:"0.75rem"}}
         >
-          <div style={{ position: "relative", width: "260px" }}>
+          <div className="relative" style={{width:"260px"}}>
             <Search
               size={16}
               color="var(--text-muted)"
-              style={{
-                position: "absolute",
-                left: "12px",
-                top: "50%",
-                transform: "translateY(-50%)",
-              }}
+              className="absolute" style={{left:"12px",top:"50%",transform:"translateY(-50%)"}}
             />
             <input
               type="text"
               placeholder="Rechercher dossiers, fichiers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "0.55rem 2rem 0.55rem 2.2rem",
-                borderRadius: "8px",
-                border: "1px solid #CBD5E1",
-                background: "#FFF",
-                fontSize: "0.85rem",
-              }}
+              className="w-full" style={{padding:"0.55rem 2rem 0.55rem 2.2rem",borderRadius:"8px",border:"1px solid #CBD5E1",background:"#FFF",fontSize:"0.85rem"}}
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "var(--text-muted)",
-                }}
+                className="absolute cursor-pointer" style={{right:"10px",top:"50%",transform:"translateY(-50%)",background:"none",border:"none",color:"var(--text-muted)"}}
               >
                 <X size={16} />
               </button>
@@ -792,19 +748,7 @@ export default function DocumentsPage() {
             <button
               type="button"
               onClick={() => setShowUploadModal(true)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.4rem",
-                background: "#1E3A8A",
-                color: "#FFF",
-                padding: "0.55rem 1.1rem",
-                borderRadius: "8px",
-                fontWeight: 600,
-                fontSize: "0.85rem",
-                border: "none",
-                cursor: "pointer",
-              }}
+              className="flex items-center text-white font-semibold cursor-pointer" style={{gap:"0.4rem",background:"#1E3A8A",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem",border:"none"}}
             >
               <Upload size={15} /> Importer
             </button>
@@ -814,19 +758,7 @@ export default function DocumentsPage() {
             <button
               type="button"
               onClick={() => setShowNewFolderModal(true)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.4rem",
-                background: "#FFF",
-                color: "var(--text-main)",
-                border: "1px solid #CBD5E1",
-                padding: "0.55rem 1.1rem",
-                borderRadius: "8px",
-                fontWeight: 600,
-                fontSize: "0.85rem",
-                cursor: "pointer",
-              }}
+              className="flex items-center text-[var(--text-main)] font-semibold cursor-pointer" style={{gap:"0.4rem",background:"#FFF",border:"1px solid #CBD5E1",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem"}}
             >
               <Plus size={15} /> Nouveau
             </button>
@@ -836,19 +768,7 @@ export default function DocumentsPage() {
             <button
               type="button"
               onClick={handleOpenTrash}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.4rem",
-                background: "#FFF",
-                color: "#DC2626",
-                border: "1px solid #FECACA",
-                padding: "0.55rem 1.1rem",
-                borderRadius: "8px",
-                fontWeight: 600,
-                fontSize: "0.85rem",
-                cursor: "pointer",
-              }}
+              className="flex items-center font-semibold cursor-pointer" style={{gap:"0.4rem",background:"#FFF",color:"#DC2626",border:"1px solid #FECACA",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem"}}
             >
               <Trash size={15} /> Corbeille
             </button>
@@ -860,17 +780,7 @@ export default function DocumentsPage() {
               setLoading(true);
               fetchDossiers();
             }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.4rem",
-              background: "#FFF",
-              color: "#475569",
-              border: "1px solid #CBD5E1",
-              padding: "0.55rem 0.75rem",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
+            className="flex items-center cursor-pointer" style={{gap:"0.4rem",background:"#FFF",color:"#475569",border:"1px solid #CBD5E1",padding:"0.55rem 0.75rem",borderRadius:"8px"}}
             title="Rafraîchir"
           >
             <RefreshCw size={15} />
@@ -881,20 +791,9 @@ export default function DocumentsPage() {
       {/* Breadcrumb Navigation (Hide when searching) */}
       {!isSearching && (
         <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            background: "#FFF",
-            padding: "0.75rem 1.25rem",
-            borderRadius: "8px",
-            marginBottom: "1.5rem",
-            border: "1px solid var(--border)",
-            flexWrap: "wrap",
-            gap: "0.5rem",
-          }}
+          className="flex justify-between items-center mb-6 flex-wrap gap-2" style={{background:"#FFF",padding:"0.75rem 1.25rem",borderRadius:"8px",border:"1px solid var(--border)"}}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={() => navigateUp(-1)}
               style={{
@@ -934,9 +833,9 @@ export default function DocumentsPage() {
             ))}
           </div>
 
-          <div style={{ fontSize: "0.85rem", color: "#64748B", fontWeight: 500 }}>
+          <div className="font-medium" style={{fontSize:"0.85rem",color:"#64748B"}}>
             Emplacement :{" "}
-            <span style={{ color: "var(--text-main)", fontWeight: 600 }}>
+            <span className="text-[var(--text-main)] font-semibold">
               {currentFolder
                 ? currentFolder.reference
                   ? `Dossier ${currentFolder.reference}`
@@ -949,52 +848,24 @@ export default function DocumentsPage() {
 
       {/* Explorer Content */}
       <div
-        style={{
-          background: "#FFF",
-          border: "1px solid var(--border)",
-          borderRadius: "0.5rem",
-          flex: 1,
-          padding: "1.5rem",
-          overflowY: "auto",
-        }}
+        className="p-6" style={{background:"#FFF",border:"1px solid var(--border)",borderRadius:"0.5rem",flex:1,overflowY:"auto"}}
         onContextMenu={(e) => handleContextMenu(e, null, "empty")}
       >
         {!isSearching &&
           childFolders.length === 0 &&
           documents.length === 0 && (
             <div
-              style={{
-                textAlign: "center",
-                color: "var(--text-muted)",
-                padding: "3rem",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "1rem",
-              }}
+              className="text-center flex flex-col items-center gap-4" style={{color:"var(--text-muted)",padding:"3rem"}}
             >
               <Folder size={48} color="#94A3B8" />
-              <p style={{ margin: 0, fontSize: "1rem", fontWeight: 500 }}>
+              <p className="font-medium" style={{fontSize:"1rem"}}>
                 Ce dossier est vide.
               </p>
               {canWriteCurrent && currentFolderId && (
                 <button
                   type="button"
                   onClick={() => setShowUploadModal(true)}
-                  className="btn btn-primary"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    background: "#141824",
-                    color: "#FFF",
-                    padding: "0.6rem 1.25rem",
-                    borderRadius: "0.5rem",
-                    fontWeight: 600,
-
-                    border: "none",
-                    cursor: "pointer",
-                  }}
+                  className="btn btn-primary inline-flex items-center gap-2 text-white font-semibold cursor-pointer" style={{background:"#141824",padding:"0.6rem 1.25rem",borderRadius:"0.5rem",border:"none"}}
                 >
                   <Upload size={16} /> Importer un document ici
                 </button>
@@ -1006,11 +877,7 @@ export default function DocumentsPage() {
           searchFolders.length === 0 &&
           searchFiles.length === 0 && (
             <div
-              style={{
-                textAlign: "center",
-                color: "var(--text-muted)",
-                padding: "3rem",
-              }}
+              className="text-center" style={{color:"var(--text-muted)",padding:"3rem"}}
             >
               Aucun résultat pour "{searchQuery}".
             </div>
@@ -1020,19 +887,14 @@ export default function DocumentsPage() {
         {isSearching && (
           <div>
             {searchFolders.length > 0 && (
-              <div style={{ marginBottom: "2rem" }}>
+              <div className="mb-8">
                 <h3
-                  style={{
-                    color: "var(--text-muted)",
-                    fontSize: "0.9rem",
-                    textTransform: "uppercase",
-                    marginBottom: "1rem",
-                  }}
+                  className="mb-4" style={{color:"var(--text-muted)",fontSize:"0.9rem",textTransform:"uppercase"}}
                 >
                   Dossiers trouvés
                 </h3>
                 <div
-                  style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem" }}
+                  className="flex flex-wrap gap-6"
                 >
                   {searchFolders.map((folder) => (
                     <div
@@ -1044,19 +906,7 @@ export default function DocumentsPage() {
                         e.stopPropagation();
                         handleContextMenu(e, folder, "folder");
                       }}
-                      style={{
-                        width: "150px",
-                        background: "#F8FAFC",
-                        border: "1px solid var(--border)",
-                        padding: "1rem 0.5rem",
-                        borderRadius: "0.5rem",
-                        cursor: "pointer",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        transition: "background 0.2s, border-color 0.2s",
-                      }}
+                      className="cursor-pointer flex flex-col items-center gap-2" style={{width:"150px",background:"#F8FAFC",border:"1px solid var(--border)",padding:"1rem 0.5rem",borderRadius:"0.5rem",transition:"background 0.2s, border-color 0.2s"}}
                       onMouseOver={(e) => {
                         e.currentTarget.style.background = "#F1F5F9";
                         e.currentTarget.style.borderColor = "var(--primary)";
@@ -1076,15 +926,7 @@ export default function DocumentsPage() {
                     >
                       <Folder size={40} color="#eab308" fill="#eab308" />
                       <div
-                        style={{
-                          textAlign: "center",
-                          wordBreak: "normal",
-                          overflowWrap: "anywhere",
-                          fontWeight: "500",
-                          color: "var(--text-main)",
-                          fontSize: "0.75rem",
-                          width: "100%",
-                        }}
+                        className="text-center font-medium text-[var(--text-main)] w-full" style={{wordBreak:"normal",overflowWrap:"anywhere",fontSize:"0.75rem"}}
                       >
                         {folder.name}
                       </div>
@@ -1097,17 +939,12 @@ export default function DocumentsPage() {
             {searchFiles.length > 0 && (
               <div>
                 <h3
-                  style={{
-                    color: "var(--text-muted)",
-                    fontSize: "0.9rem",
-                    textTransform: "uppercase",
-                    marginBottom: "1rem",
-                  }}
+                  className="mb-4" style={{color:"var(--text-muted)",fontSize:"0.9rem",textTransform:"uppercase"}}
                 >
                   Fichiers trouvés
                 </h3>
                 <div
-                  style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem" }}
+                  className="flex flex-wrap gap-6"
                 >
                   {searchFiles.map((doc) => {
                     const { Icon, color } = getFileIconAndColor(doc.name);
@@ -1119,32 +956,11 @@ export default function DocumentsPage() {
                           e.stopPropagation();
                           handleContextMenu(e, doc, "file");
                         }}
-                        style={{
-                          width: "150px",
-                          background: "#F8FAFC",
-                          border: "1px solid var(--border)",
-                          padding: "1rem 0.5rem",
-                          borderRadius: "0.5rem",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          gap: "0.5rem",
-                          cursor: "pointer",
-                        }}
+                        className="flex flex-col items-center gap-2 cursor-pointer" style={{width:"150px",background:"#F8FAFC",border:"1px solid var(--border)",padding:"1rem 0.5rem",borderRadius:"0.5rem"}}
                       >
                         <Icon size={40} color={color} />
                         <div
-                          style={{
-                            textAlign: "center",
-                            wordBreak: "normal",
-                            overflowWrap: "anywhere",
-                            fontSize: "0.75rem",
-                            color: "var(--text-main)",
-                            width: "100%",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
+                          className="text-center text-[var(--text-main)] w-full" style={{wordBreak:"normal",overflowWrap:"anywhere",fontSize:"0.75rem",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}
                           title={doc.name}
                         >
                           {doc.name}
@@ -1171,14 +987,9 @@ export default function DocumentsPage() {
           <div>
             {/* Render Subfolders */}
             {childFolders.length > 0 && (
-              <div style={{ marginBottom: "2rem" }}>
+              <div className="mb-8">
                 <h3
-                  style={{
-                    fontSize: "0.95rem",
-                    fontWeight: 700,
-                    color: "var(--text-main)",
-                    margin: "0 0 1rem 0",
-                  }}
+                  className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem",margin:"0 0 1rem 0"}}
                 >
                   {currentFolder
                     ? `Dossiers de la mission (${childFolders.length} sous-dossier${childFolders.length > 1 ? "s" : ""})`
@@ -1186,11 +997,7 @@ export default function DocumentsPage() {
                 </h3>
 
                 <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-                    gap: "1.25rem",
-                  }}
+                  className="grid" style={{gridTemplateColumns:"repeat(auto-fill, minmax(280px, 1fr))",gap:"1.25rem"}}
                 >
                   {childFolders.map((folder) => {
                     const badge = (() => {
@@ -1217,16 +1024,7 @@ export default function DocumentsPage() {
                           e.stopPropagation();
                           handleContextMenu(e, folder, "folder");
                         }}
-                        style={{
-                          background: "#FFF",
-                          border: "1px solid #E2E8F0",
-                          padding: "1.25rem",
-                          borderRadius: "10px",
-                          cursor: "pointer",
-                          position: "relative",
-                          transition: "all 0.2s",
-                          boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
-                        }}
+                        className="cursor-pointer relative" style={{background:"#FFF",border:"1px solid #E2E8F0",padding:"1.25rem",borderRadius:"10px",transition:"all 0.2s",boxShadow:"0 1px 3px rgba(0,0,0,0.03)"}}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.borderColor = "#2563EB";
                           e.currentTarget.style.boxShadow =
@@ -1239,11 +1037,7 @@ export default function DocumentsPage() {
                         }}
                       >
                         <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                          }}
+                          className="flex justify-between items-start"
                         >
                           <Folder size={32} color="#2563EB" fill="#2563EB" />
                           {badge && (
@@ -1262,13 +1056,7 @@ export default function DocumentsPage() {
                           )}
                         </div>
                         <div
-                          style={{
-                            fontWeight: 700,
-                            fontSize: "0.95rem",
-                            color: "var(--text-main)",
-                            marginTop: "0.75rem",
-                            wordBreak: "break-word",
-                          }}
+                          className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem",marginTop:"0.75rem",wordBreak:"break-word"}}
                         >
                           {folder.name}
                         </div>
@@ -1305,23 +1093,14 @@ export default function DocumentsPage() {
 
             {/* Render Documents */}
             {documents.length > 0 && (
-              <div style={{ marginBottom: "2rem" }}>
+              <div className="mb-8">
                 <h3
-                  style={{
-                    fontSize: "0.95rem",
-                    fontWeight: 700,
-                    color: "var(--text-main)",
-                    margin: "0 0 1rem 0",
-                  }}
+                  className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem",margin:"0 0 1rem 0"}}
                 >
                   Documents ({documents.length})
                 </h3>
                 <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-                    gap: "1rem",
-                  }}
+                  className="grid gap-4" style={{gridTemplateColumns:"repeat(auto-fill, minmax(220px, 1fr))"}}
                 >
                   {documents.map((doc) => {
                     const { Icon, color } = getFileIconAndColor(doc.name);
@@ -1333,18 +1112,7 @@ export default function DocumentsPage() {
                           e.stopPropagation();
                           handleContextMenu(e, doc, "file");
                         }}
-                        style={{
-                          background: "#FFF",
-                          border: "1px solid #E2E8F0",
-                          padding: "1rem",
-                          borderRadius: "10px",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.75rem",
-                          cursor: "pointer",
-                          transition: "all 0.2s",
-                          boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
-                        }}
+                        className="p-4 flex items-center cursor-pointer" style={{background:"#FFF",border:"1px solid #E2E8F0",borderRadius:"10px",gap:"0.75rem",transition:"all 0.2s",boxShadow:"0 1px 3px rgba(0,0,0,0.03)"}}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.borderColor = "#2563EB";
                         }}
@@ -1355,14 +1123,7 @@ export default function DocumentsPage() {
                         <Icon size={32} color={color} style={{ flexShrink: 0 }} />
                         <div style={{ overflow: "hidden", minWidth: 0, flex: 1 }}>
                           <div
-                            style={{
-                              fontSize: "0.85rem",
-                              fontWeight: 600,
-                              color: "var(--text-main)",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                            }}
+                            className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.85rem",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}
                             title={doc.name}
                           >
                             {doc.name}
@@ -1402,18 +1163,9 @@ export default function DocumentsPage() {
                     setShowUploadModal(true);
                   }
                 }}
-                style={{
-                  border: "2px dashed #CBD5E1",
-                  borderRadius: "10px",
-                  background: "#F8FAFC",
-                  padding: "3.5rem 1.5rem",
-                  textAlign: "center",
-                  marginTop: "1.5rem",
-                  cursor: "pointer",
-                  transition: "all 0.2s",
-                }}
+                className="text-center mt-6 cursor-pointer" style={{border:"2px dashed #CBD5E1",borderRadius:"10px",background:"#F8FAFC",padding:"3.5rem 1.5rem",transition:"all 0.2s"}}
               >
-                <div style={{ color: "#334155", fontWeight: 600, fontSize: "0.95rem" }}>
+                <div className="font-semibold" style={{color:"#334155",fontSize:"0.95rem"}}>
                   Glissez déposez des fichiers ici ou cliquez sur Importer pour ajouter des pièces
                 </div>
                 <div style={{ color: "#94A3B8", fontSize: "0.75rem", marginTop: "0.4rem" }}>
@@ -1452,19 +1204,7 @@ export default function DocumentsPage() {
                   closeContextMenu();
                   setShowNewFolderModal(true);
                 }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.75rem",
-                  width: "100%",
-                  padding: "0.5rem 1rem",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  textAlign: "left",
-
-                  color: "var(--text-main)",
-                }}
+                className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                 onMouseOver={(e) =>
                   (e.currentTarget.style.background = "#F1F5F9")
                 }
@@ -1484,19 +1224,7 @@ export default function DocumentsPage() {
                     closeContextMenu();
                     setShowUploadModal(true);
                   }}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.75rem",
-                    width: "100%",
-                    padding: "0.5rem 1rem",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    textAlign: "left",
-
-                    color: "var(--text-main)",
-                  }}
+                  className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                   onMouseOver={(e) =>
                     (e.currentTarget.style.background = "#F1F5F9")
                   }
@@ -1523,19 +1251,7 @@ export default function DocumentsPage() {
                   closeContextMenu();
                   navigateTo(contextMenu.item);
                 }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.75rem",
-                  width: "100%",
-                  padding: "0.5rem 1rem",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  textAlign: "left",
-
-                  color: "var(--text-main)",
-                }}
+                className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                 onMouseOver={(e) =>
                   (e.currentTarget.style.background = "#F1F5F9")
                 }
@@ -1558,19 +1274,7 @@ export default function DocumentsPage() {
                       setRenameName(contextMenu.item.name);
                       setShowRenameModal(true);
                     }}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                      width: "100%",
-                      padding: "0.5rem 1rem",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      textAlign: "left",
-
-                      color: "var(--text-main)",
-                    }}
+                    className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                     onMouseOver={(e) =>
                       (e.currentTarget.style.background = "#F1F5F9")
                     }
@@ -1591,19 +1295,7 @@ export default function DocumentsPage() {
                       closeContextMenu();
                       handleDeleteDossier(contextMenu.item);
                     }}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                      width: "100%",
-                      padding: "0.5rem 1rem",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      textAlign: "left",
-
-                      color: "var(--danger)",
-                    }}
+                    className="flex items-center w-full cursor-pointer text-left" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none",color:"var(--danger)"}}
                     onMouseOver={(e) =>
                       (e.currentTarget.style.background = "#FEF2F2")
                     }
@@ -1631,19 +1323,7 @@ export default function DocumentsPage() {
                   closeContextMenu();
                   setPreviewFile(contextMenu.item.url);
                 }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.75rem",
-                  width: "100%",
-                  padding: "0.5rem 1rem",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  textAlign: "left",
-
-                  color: "var(--text-main)",
-                }}
+                className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                 onMouseOver={(e) =>
                   (e.currentTarget.style.background = "#F1F5F9")
                 }
@@ -1662,19 +1342,7 @@ export default function DocumentsPage() {
                   closeContextMenu();
                   handleDownloadDocument(contextMenu.item.url);
                 }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.75rem",
-                  width: "100%",
-                  padding: "0.5rem 1rem",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  textAlign: "left",
-
-                  color: "var(--text-main)",
-                }}
+                className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                 onMouseOver={(e) =>
                   (e.currentTarget.style.background = "#F1F5F9")
                 }
@@ -1695,19 +1363,7 @@ export default function DocumentsPage() {
                       closeContextMenu();
                       handleReplaceDocument(contextMenu.item.id);
                     }}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                      width: "100%",
-                      padding: "0.5rem 1rem",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      textAlign: "left",
-
-                      color: "var(--text-main)",
-                    }}
+                    className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                     onMouseOver={(e) =>
                       (e.currentTarget.style.background = "#F1F5F9")
                     }
@@ -1728,19 +1384,7 @@ export default function DocumentsPage() {
                       closeContextMenu();
                       handleRenameDocument(contextMenu.item);
                     }}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                      width: "100%",
-                      padding: "0.5rem 1rem",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      textAlign: "left",
-
-                      color: "var(--text-main)",
-                    }}
+                    className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                     onMouseOver={(e) =>
                       (e.currentTarget.style.background = "#F1F5F9")
                     }
@@ -1761,19 +1405,7 @@ export default function DocumentsPage() {
                       closeContextMenu();
                       handleDeleteDocument(contextMenu.item.id);
                     }}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                      width: "100%",
-                      padding: "0.5rem 1rem",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      textAlign: "left",
-
-                      color: "var(--danger)",
-                    }}
+                    className="flex items-center w-full cursor-pointer text-left" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none",color:"var(--danger)"}}
                     onMouseOver={(e) =>
                       (e.currentTarget.style.background = "#FEF2F2")
                     }
@@ -1799,62 +1431,28 @@ export default function DocumentsPage() {
       {/* Modal Nouveau Dossier */}
       {showNewFolderModal && (
         <div
-          className="fade-in"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1100,
-          }}
+          className="fade-in fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1100}}
         >
           <div
-            style={{
-              background: "#FFF",
-              padding: "2rem",
-              borderRadius: "8px",
-              width: "90%",
-              maxWidth: "400px",
-              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-            }}
+            className="p-8" style={{background:"#FFF",borderRadius:"8px",width:"90%",maxWidth:"400px",boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}
           >
             <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "1.5rem",
-              }}
+              className="flex justify-between items-center mb-6"
             >
-              <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
+              <h3 className="font-semibold" style={{fontSize:"1.25rem"}}>
                 Nouveau dossier
               </h3>
               <button
                 onClick={() => setShowNewFolderModal(false)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "var(--text-muted)",
-                }}
+                className="cursor-pointer" style={{background:"none",border:"none",color:"var(--text-muted)"}}
               >
                 <X size={20} />
               </button>
             </div>
             <form onSubmit={handleCreateFolder}>
-              <div style={{ marginBottom: "1.5rem" }}>
+              <div className="mb-6">
                 <label
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    fontWeight: 500,
-
-                  }}
+                  className="block mb-2 font-medium"
                 >
                   Nom du dossier *
                 </label>
@@ -1864,21 +1462,11 @@ export default function DocumentsPage() {
                   type="text"
                   value={newFolderName}
                   onChange={(e) => setNewFolderName(e.target.value)}
-                  className="input-field"
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                  }}
+                  className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
                 />
               </div>
               <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "1rem",
-                }}
+                className="flex justify-end gap-4"
               >
                 <button
                   type="button"
@@ -1904,39 +1492,15 @@ export default function DocumentsPage() {
       {/* Modal Ajouter Fichier */}
       {showUploadModal && (
         <div
-          className="fade-in"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1100,
-          }}
+          className="fade-in fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1100}}
         >
           <div
-            style={{
-              background: "#FFF",
-              padding: "2rem",
-              borderRadius: "8px",
-              width: "90%",
-              maxWidth: "400px",
-              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-            }}
+            className="p-8" style={{background:"#FFF",borderRadius:"8px",width:"90%",maxWidth:"400px",boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}
           >
             <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "1.5rem",
-              }}
+              className="flex justify-between items-center mb-6"
             >
-              <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
+              <h3 className="font-semibold" style={{fontSize:"1.25rem"}}>
                 Ajouter un fichier
               </h3>
               <button
@@ -1944,32 +1508,22 @@ export default function DocumentsPage() {
                   setShowUploadModal(false);
                   setUploadFile(null);
                 }}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "var(--text-muted)",
-                }}
+                className="cursor-pointer" style={{background:"none",border:"none",color:"var(--text-muted)"}}
               >
                 <X size={20} />
               </button>
             </div>
             <form onSubmit={handleUploadFile}>
-              <div style={{ marginBottom: "1.5rem" }}>
+              <div className="mb-6">
                 <input
                   required
                   type="file"
                   onChange={(e) => setUploadFile(e.target.files[0])}
-                  className="input-field"
-                  style={{ width: "100%", padding: "0.75rem" }}
+                  className="input-field w-full" style={{padding:"0.75rem"}}
                 />
               </div>
               <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "1rem",
-                }}
+                className="flex justify-end gap-4"
               >
                 <button
                   type="button"
@@ -1998,62 +1552,28 @@ export default function DocumentsPage() {
       {/* Modal Renommer Dossier */}
       {showRenameModal && (
         <div
-          className="fade-in"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1100,
-          }}
+          className="fade-in fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1100}}
         >
           <div
-            style={{
-              background: "#FFF",
-              padding: "2rem",
-              borderRadius: "8px",
-              width: "90%",
-              maxWidth: "400px",
-              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-            }}
+            className="p-8" style={{background:"#FFF",borderRadius:"8px",width:"90%",maxWidth:"400px",boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}
           >
             <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "1.5rem",
-              }}
+              className="flex justify-between items-center mb-6"
             >
-              <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
+              <h3 className="font-semibold" style={{fontSize:"1.25rem"}}>
                 Renommer le dossier
               </h3>
               <button
                 onClick={() => setShowRenameModal(false)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "var(--text-muted)",
-                }}
+                className="cursor-pointer" style={{background:"none",border:"none",color:"var(--text-muted)"}}
               >
                 <X size={20} />
               </button>
             </div>
             <form onSubmit={handleRenameFolder}>
-              <div style={{ marginBottom: "1.5rem" }}>
+              <div className="mb-6">
                 <label
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    fontWeight: 500,
-
-                  }}
+                  className="block mb-2 font-medium"
                 >
                   Nouveau nom *
                 </label>
@@ -2063,21 +1583,11 @@ export default function DocumentsPage() {
                   type="text"
                   value={renameName}
                   onChange={(e) => setRenameName(e.target.value)}
-                  className="input-field"
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                  }}
+                  className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
                 />
               </div>
               <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "1rem",
-                }}
+                className="flex justify-end gap-4"
               >
                 <button
                   type="button"
@@ -2103,111 +1613,47 @@ export default function DocumentsPage() {
       {/* Modal Corbeille */}
       {showTrashModal && (
         <div
-          className="fade-in"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1100,
-            padding: "1rem",
-          }}
+          className="fade-in fixed flex items-center justify-center p-4" style={{background:"rgba(0,0,0,0.5)",zIndex:1100}}
         >
           <div
-            style={{
-              background: "#FFF",
-              borderRadius: "12px",
-              width: "100%",
-              maxWidth: "880px",
-              maxHeight: "90vh",
-              display: "flex",
-              flexDirection: "column",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
-              overflow: "hidden",
-            }}
+            className="w-full flex flex-col" style={{background:"#FFF",borderRadius:"12px",maxWidth:"880px",maxHeight:"90vh",boxShadow:"0 20px 40px rgba(0,0,0,0.15)",overflow:"hidden"}}
           >
             {/* Modal Header */}
             <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "1.25rem 1.75rem",
-                borderBottom: "1px solid #F1F5F9",
-              }}
+              className="flex justify-between items-center" style={{padding:"1.25rem 1.75rem",borderBottom:"1px solid #F1F5F9"}}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+              <div className="flex items-center" style={{gap:"0.6rem"}}>
                 <Trash2 size={22} color="#EF4444" />
                 <h3
-                  style={{
-                    margin: 0,
-                    fontSize: "1.25rem",
-                    fontWeight: 700,
-                    color: "var(--text-main)",
-                  }}
+                  className="font-bold text-[var(--text-main)]" style={{fontSize:"1.25rem"}}
                 >
                   Corbeille
                 </h3>
                 {normalizedTrashList.length === 0 ? (
                   <span
-                    style={{
-                      background: "#F1F5F9",
-                      color: "#64748B",
-                      fontSize: "0.75rem",
-                      fontWeight: 600,
-                      padding: "0.2rem 0.65rem",
-                      borderRadius: "20px",
-                    }}
+                    className="font-semibold" style={{background:"#F1F5F9",color:"#64748B",fontSize:"0.75rem",padding:"0.2rem 0.65rem",borderRadius:"20px"}}
                   >
                     0 élément
                   </span>
                 ) : (
                   <span
-                    style={{
-                      background: "#FEF3C7",
-                      color: "#D97706",
-                      fontSize: "0.75rem",
-                      fontWeight: 700,
-                      padding: "0.2rem 0.65rem",
-                      borderRadius: "20px",
-                    }}
+                    className="font-bold" style={{background:"#FEF3C7",color:"#D97706",fontSize:"0.75rem",padding:"0.2rem 0.65rem",borderRadius:"20px"}}
                   >
                     {normalizedTrashList.length} élément{normalizedTrashList.length > 1 ? "s" : ""}
                   </span>
                 )}
               </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <div className="flex items-center" style={{gap:"0.75rem"}}>
                 {normalizedTrashList.length === 0 ? (
                   <span
-                    style={{
-                      background: "#EFF6FF",
-                      border: "1px solid #BFDBFE",
-                      color: "#2563EB",
-                      fontSize: "0.75rem",
-                      fontWeight: 600,
-                      padding: "0.25rem 0.65rem",
-                      borderRadius: "6px",
-                    }}
+                    className="font-semibold" style={{background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#2563EB",fontSize:"0.75rem",padding:"0.25rem 0.65rem",borderRadius:"6px"}}
                   >
                     Etat vide optimisé
                   </span>
                 ) : (
                   <span
-                    style={{
-                      background: "#ECFDF5",
-                      border: "1px solid #A7F3D0",
-                      color: "#059669",
-                      fontSize: "0.75rem",
-                      fontWeight: 600,
-                      padding: "0.25rem 0.65rem",
-                      borderRadius: "6px",
-                    }}
+                    className="font-semibold" style={{background:"#ECFDF5",border:"1px solid #A7F3D0",color:"#059669",fontSize:"0.75rem",padding:"0.25rem 0.65rem",borderRadius:"6px"}}
                   >
                     Etat avec documents
                   </span>
@@ -2215,16 +1661,7 @@ export default function DocumentsPage() {
                 <button
                   type="button"
                   onClick={() => setShowTrashModal(false)}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "#94A3B8",
-                    padding: "0.2rem",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
+                  className="cursor-pointer flex items-center justify-center" style={{background:"none",border:"none",color:"#94A3B8",padding:"0.2rem"}}
                 >
                   <X size={18} />
                 </button>
@@ -2233,58 +1670,30 @@ export default function DocumentsPage() {
 
             {/* Modal Body */}
             <div
-              style={{
-                flex: 1,
-                overflowY: "auto",
-                padding: "1.75rem",
-                display: "flex",
-                flexDirection: "column",
-              }}
+              className="flex flex-col" style={{flex:1,overflowY:"auto",padding:"1.75rem"}}
             >
               {loadingTrash ? (
-                <div style={{ padding: "3rem", textAlign: "center", color: "#64748B" }}>
+                <div className="text-center" style={{padding:"3rem",color:"#64748B"}}>
                   Chargement de la corbeille...
                 </div>
               ) : normalizedTrashList.length === 0 ? (
                 /* ── ETAT VIDE OPTIMISE (CAPTURE GAUCHE) ── */
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "auto 0" }}>
+                <div className="flex flex-col items-center" style={{margin:"auto 0"}}>
                   {/* Big Pink Circle with Red Trash Icon */}
                   <div
-                    style={{
-                      width: "88px",
-                      height: "88px",
-                      borderRadius: "50%",
-                      background: "#FEF2F2",
-                      border: "1.5px solid #FECACA",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginBottom: "1.25rem",
-                    }}
+                    className="flex items-center justify-center" style={{width:"88px",height:"88px",borderRadius:"50%",background:"#FEF2F2",border:"1.5px solid #FECACA",marginBottom:"1.25rem"}}
                   >
                     <Trash2 size={40} color="#EF4444" strokeWidth={1.75} />
                   </div>
 
                   <h4
-                    style={{
-                      margin: "0 0 0.5rem 0",
-                      fontSize: "1.2rem",
-                      fontWeight: 700,
-                      color: "var(--text-main)",
-                    }}
+                    className="font-bold text-[var(--text-main)]" style={{margin:"0 0 0.5rem 0",fontSize:"1.2rem"}}
                   >
                     La corbeille est vide
                   </h4>
 
                   <p
-                    style={{
-                      margin: "0 0 1.75rem 0",
-                      fontSize: "0.82rem",
-                      color: "#64748B",
-                      textAlign: "center",
-                      maxWidth: "420px",
-                      lineHeight: 1.5,
-                    }}
+                    className="text-center" style={{margin:"0 0 1.75rem 0",fontSize:"0.82rem",color:"#64748B",maxWidth:"420px",lineHeight:1.5}}
                   >
                     Aucun document ou dossier n'a été supprimé récemment.<br />
                     Les éléments supprimés restent accessibles ici pendant 30 jours avant d'être définitivement purgés du système.
@@ -2292,25 +1701,10 @@ export default function DocumentsPage() {
 
                   {/* Policy Card */}
                   <div
-                    style={{
-                      background: "#F8FAFC",
-                      border: "1px solid #E2E8F0",
-                      borderRadius: "10px",
-                      padding: "1.25rem 1.5rem",
-                      width: "100%",
-                      maxWidth: "520px",
-                    }}
+                    className="w-full" style={{background:"#F8FAFC",border:"1px solid #E2E8F0",borderRadius:"10px",padding:"1.25rem 1.5rem",maxWidth:"520px"}}
                   >
                     <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        fontWeight: 700,
-                        fontSize: "0.82rem",
-                        color: "var(--text-main)",
-                        marginBottom: "0.6rem",
-                      }}
+                      className="flex items-center gap-2 font-bold text-[var(--text-main)]" style={{fontSize:"0.82rem",marginBottom:"0.6rem"}}
                     >
                       <Shield size={16} color="var(--text-main)" />
                       <span>Politique de sécurité & rétention des documents :</span>
@@ -2335,56 +1729,26 @@ export default function DocumentsPage() {
                 <>
                   {/* Search and Filters Bar */}
                   <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                      marginBottom: "1.25rem",
-                      flexWrap: "wrap",
-                    }}
+                    className="flex items-center flex-wrap" style={{gap:"0.75rem",marginBottom:"1.25rem"}}
                   >
-                    <div style={{ position: "relative", flex: 1, minWidth: "220px" }}>
+                    <div className="relative" style={{flex:1,minWidth:"220px"}}>
                       <Search
                         size={15}
-                        style={{
-                          position: "absolute",
-                          left: "0.85rem",
-                          top: "50%",
-                          transform: "translateY(-50%)",
-                          color: "#94A3B8",
-                        }}
+                        className="absolute" style={{left:"0.85rem",top:"50%",transform:"translateY(-50%)",color:"#94A3B8"}}
                       />
                       <input
                         type="text"
                         placeholder="Filtrer les éléments supprimés..."
                         value={trashSearchQuery}
                         onChange={(e) => setTrashSearchQuery(e.target.value)}
-                        style={{
-                          width: "100%",
-                          padding: "0.55rem 1rem 0.55rem 2.3rem",
-                          borderRadius: "8px",
-                          border: "1px solid #E2E8F0",
-                          background: "#FFF",
-                          fontSize: "0.85rem",
-                          outline: "none",
-                          color: "var(--text-main)",
-                        }}
+                        className="w-full text-[var(--text-main)]" style={{padding:"0.55rem 1rem 0.55rem 2.3rem",borderRadius:"8px",border:"1px solid #E2E8F0",background:"#FFF",fontSize:"0.85rem",outline:"none"}}
                       />
                     </div>
 
                     <select
                       value={trashTypeFilter}
                       onChange={(e) => setTrashTypeFilter(e.target.value)}
-                      style={{
-                        padding: "0.55rem 1.75rem 0.55rem 0.85rem",
-                        borderRadius: "8px",
-                        border: "1.5px solid #3B82F6",
-                        background: "#FFF",
-                        fontSize: "0.85rem",
-                        color: "var(--text-main)",
-                        cursor: "pointer",
-                        outline: "none",
-                      }}
+                      className="text-[var(--text-main)] cursor-pointer" style={{padding:"0.55rem 1.75rem 0.55rem 0.85rem",borderRadius:"8px",border:"1.5px solid #3B82F6",background:"#FFF",fontSize:"0.85rem",outline:"none"}}
                     >
                       <option value="all">Tous les types</option>
                       <option value="document">Documents</option>
@@ -2396,20 +1760,7 @@ export default function DocumentsPage() {
                     <button
                       type="button"
                       onClick={handleEmptyAllTrash}
-                      style={{
-                        background: "#FEF2F2",
-                        border: "1px solid #FECACA",
-                        color: "#DC2626",
-                        borderRadius: "8px",
-                        padding: "0.55rem 1rem",
-                        fontWeight: 600,
-                        fontSize: "0.82rem",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "0.4rem",
-                        cursor: "pointer",
-                        whiteSpace: "nowrap",
-                      }}
+                      className="font-semibold inline-flex items-center cursor-pointer" style={{background:"#FEF2F2",border:"1px solid #FECACA",color:"#DC2626",borderRadius:"8px",padding:"0.55rem 1rem",fontSize:"0.82rem",gap:"0.4rem",whiteSpace:"nowrap"}}
                     >
                       <Trash2 size={14} /> Vider la corbeille
                     </button>
@@ -2424,63 +1775,26 @@ export default function DocumentsPage() {
                       background: "#FFF",
                     }}
                   >
-                    <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+                    <table className="w-full" style={{borderCollapse:"collapse",tableLayout:"fixed"}}>
                       <thead>
                         <tr style={{ background: "#F8FAFC", borderBottom: "1px solid #E2E8F0" }}>
                           <th
-                            style={{
-                              padding: "0.75rem 1rem",
-                              textAlign: "left",
-                              fontSize: "0.72rem",
-                              fontWeight: 700,
-                              color: "#64748B",
-                              letterSpacing: "0.05em",
-                              textTransform: "uppercase",
-                              width: "45%",
-                            }}
+                            className="text-left font-bold" style={{padding:"0.75rem 1rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"45%"}}
                           >
                             DOCUMENT / DOSSIER
                           </th>
                           <th
-                            style={{
-                              padding: "0.75rem 1rem",
-                              textAlign: "left",
-                              fontSize: "0.72rem",
-                              fontWeight: 700,
-                              color: "#64748B",
-                              letterSpacing: "0.05em",
-                              textTransform: "uppercase",
-                              width: "20%",
-                            }}
+                            className="text-left font-bold" style={{padding:"0.75rem 1rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"20%"}}
                           >
                             ORIGINE
                           </th>
                           <th
-                            className="table-date-cell"
-                            style={{
-                              padding: "0.75rem 1rem",
-                              textAlign: "left",
-                              fontSize: "0.72rem",
-                              fontWeight: 700,
-                              color: "#64748B",
-                              letterSpacing: "0.05em",
-                              textTransform: "uppercase",
-                              width: "140px",
-                            }}
+                            className="table-date-cell text-left font-bold" style={{padding:"0.75rem 1rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"140px"}}
                           >
                             DATE
                           </th>
                           <th
-                            style={{
-                              padding: "0.75rem 1rem",
-                              textAlign: "right",
-                              fontSize: "0.72rem",
-                              fontWeight: 700,
-                              color: "#64748B",
-                              letterSpacing: "0.05em",
-                              textTransform: "uppercase",
-                              width: "15%",
-                            }}
+                            className="text-right font-bold" style={{padding:"0.75rem 1rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"15%"}}
                           >
                             ACTIONS
                           </th>
@@ -2491,12 +1805,7 @@ export default function DocumentsPage() {
                           <tr>
                             <td
                               colSpan="4"
-                              style={{
-                                textAlign: "center",
-                                padding: "2.5rem",
-                                color: "#64748B",
-                                fontSize: "0.85rem",
-                              }}
+                              className="text-center" style={{padding:"2.5rem",color:"#64748B",fontSize:"0.85rem"}}
                             >
                               Aucun élément ne correspond à votre filtre.
                             </td>
@@ -2524,7 +1833,7 @@ export default function DocumentsPage() {
                               >
                                 {/* DOCUMENT / DOSSIER */}
                                 <td style={{ padding: "0.75rem 1rem", verticalAlign: "middle" }}>
-                                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                                  <div className="flex items-center" style={{gap:"0.75rem"}}>
                                     {isFolder ? (
                                       <Folder size={18} color="#F59E0B" fill="#F59E0B" style={{ flexShrink: 0 }} />
                                     ) : (
@@ -2532,13 +1841,7 @@ export default function DocumentsPage() {
                                     )}
                                     <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
                                       <div
-                                        className="truncate-name"
-                                        style={{
-                                          fontWeight: 600,
-                                          fontSize: "0.85rem",
-                                          color: "var(--text-main)",
-                                          maxWidth: "100%",
-                                        }}
+                                        className="truncate-name font-semibold text-[var(--text-main)]" style={{fontSize:"0.85rem",maxWidth:"100%"}}
                                         title={item.name}
                                       >
                                         {item.name}
@@ -2553,20 +1856,7 @@ export default function DocumentsPage() {
                                 {/* ORIGINE */}
                                 <td style={{ padding: "0.75rem 1rem", verticalAlign: "middle" }}>
                                   <span
-                                    style={{
-                                      display: "inline-block",
-                                      background: "#F1F5F9",
-                                      border: "1px solid #E2E8F0",
-                                      color: "#334155",
-                                      fontSize: "0.72rem",
-                                      fontWeight: 500,
-                                      padding: "0.2rem 0.6rem",
-                                      borderRadius: "4px",
-                                      maxWidth: "180px",
-                                      whiteSpace: "nowrap",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                    }}
+                                    className="inline-block font-medium" style={{background:"#F1F5F9",border:"1px solid #E2E8F0",color:"#334155",fontSize:"0.72rem",padding:"0.2rem 0.6rem",borderRadius:"4px",maxWidth:"180px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}
                                   >
                                     {origin}
                                   </span>
@@ -2578,25 +1868,14 @@ export default function DocumentsPage() {
                                 </td>
 
                                 {/* ACTIONS */}
-                                <td style={{ padding: "0.75rem 1rem", textAlign: "right", verticalAlign: "middle" }}>
-                                  <div style={{ display: "inline-flex", gap: "0.4rem" }}>
+                                <td className="text-right" style={{padding:"0.75rem 1rem",verticalAlign:"middle"}}>
+                                  <div className="inline-flex" style={{gap:"0.4rem"}}>
                                     {/* Restore */}
                                     <button
                                       type="button"
                                       onClick={() => handleRestoreTrash(item)}
                                       title="Restaurer"
-                                      style={{
-                                        width: "32px",
-                                        height: "32px",
-                                        borderRadius: "6px",
-                                        background: "#EFF6FF",
-                                        border: "1px solid #BFDBFE",
-                                        color: "#2563EB",
-                                        display: "inline-flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        cursor: "pointer",
-                                      }}
+                                      className="inline-flex items-center justify-center cursor-pointer" style={{width:"32px",height:"32px",borderRadius:"6px",background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#2563EB"}}
                                     >
                                       <RotateCcw size={14} />
                                     </button>
@@ -2606,18 +1885,7 @@ export default function DocumentsPage() {
                                       type="button"
                                       onClick={() => handlePurgeTrash(item)}
                                       title="Purger définitivement"
-                                      style={{
-                                        width: "32px",
-                                        height: "32px",
-                                        borderRadius: "6px",
-                                        background: "#FEF2F2",
-                                        border: "1px solid #FECACA",
-                                        color: "#DC2626",
-                                        display: "inline-flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        cursor: "pointer",
-                                      }}
+                                      className="inline-flex items-center justify-center cursor-pointer" style={{width:"32px",height:"32px",borderRadius:"6px",background:"#FEF2F2",border:"1px solid #FECACA",color:"#DC2626"}}
                                     >
                                       <X size={14} />
                                     </button>
@@ -2643,7 +1911,7 @@ export default function DocumentsPage() {
                       fontSize: "0.8rem",
                     }}
                   >
-                    <span style={{ fontWeight: 700 }}>Astuce :</span> Cliquez sur Restaurer pour réintégrer un fichier dans son dossier d'origine.
+                    <span className="font-bold">Astuce :</span> Cliquez sur Restaurer pour réintégrer un fichier dans son dossier d'origine.
                   </div>
                 </>
               )}
@@ -2651,14 +1919,7 @@ export default function DocumentsPage() {
 
             {/* Modal Footer */}
             <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "1rem 1.75rem",
-                borderTop: "1px solid #F1F5F9",
-                background: "#FFF",
-              }}
+              className="flex justify-between items-center" style={{padding:"1rem 1.75rem",borderTop:"1px solid #F1F5F9",background:"#FFF"}}
             >
               {normalizedTrashList.length === 0 ? (
                 <>
@@ -2668,16 +1929,7 @@ export default function DocumentsPage() {
                   <button
                     type="button"
                     onClick={() => setShowTrashModal(false)}
-                    style={{
-                      border: "1px solid #E2E8F0",
-                      borderRadius: "8px",
-                      background: "#FFF",
-                      color: "var(--text-main)",
-                      fontWeight: 600,
-                      padding: "0.55rem 1.4rem",
-                      fontSize: "0.85rem",
-                      cursor: "pointer",
-                    }}
+                    className="text-[var(--text-main)] font-semibold cursor-pointer" style={{border:"1px solid #E2E8F0",borderRadius:"8px",background:"#FFF",padding:"0.55rem 1.4rem",fontSize:"0.85rem"}}
                   >
                     Fermer
                   </button>
@@ -2687,36 +1939,18 @@ export default function DocumentsPage() {
                   <div style={{ fontSize: "0.78rem", color: "#64748B" }}>
                     {normalizedTrashList.length} élément{normalizedTrashList.length > 1 ? "s" : ""} • Espace occupé : {trashTotalSize}
                   </div>
-                  <div style={{ display: "flex", gap: "0.75rem" }}>
+                  <div className="flex" style={{gap:"0.75rem"}}>
                     <button
                       type="button"
                       onClick={handleRestoreAllTrash}
-                      style={{
-                        background: "#EFF6FF",
-                        border: "1px solid #BFDBFE",
-                        color: "#2563EB",
-                        fontWeight: 600,
-                        fontSize: "0.85rem",
-                        padding: "0.55rem 1.25rem",
-                        borderRadius: "8px",
-                        cursor: "pointer",
-                      }}
+                      className="font-semibold cursor-pointer" style={{background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#2563EB",fontSize:"0.85rem",padding:"0.55rem 1.25rem",borderRadius:"8px"}}
                     >
                       Tout restaurer
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowTrashModal(false)}
-                      style={{
-                        border: "1px solid #E2E8F0",
-                        borderRadius: "8px",
-                        background: "#FFF",
-                        color: "var(--text-main)",
-                        fontWeight: 600,
-                        padding: "0.55rem 1.4rem",
-                        fontSize: "0.85rem",
-                        cursor: "pointer",
-                      }}
+                      className="text-[var(--text-main)] font-semibold cursor-pointer" style={{border:"1px solid #E2E8F0",borderRadius:"8px",background:"#FFF",padding:"0.55rem 1.4rem",fontSize:"0.85rem"}}
                     >
                       Fermer
                     </button>

@@ -28,28 +28,12 @@ const GedExplorer = ({
 
   return (
     <div
-      style={{
-        border: "1px solid var(--border)",
-        borderRadius: "8px",
-        padding: "1rem",
-        background: "#F8FAFC",
-      }}
+      className="p-4" style={{border:"1px solid var(--border)",borderRadius:"8px",background:"#F8FAFC"}}
     >
       {/* Breadcrumb */}
       {!hideBreadcrumb && (
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: "0.5rem",
-            marginBottom: "1rem",
-            
-            padding: "0.5rem",
-            background: "#FFF",
-            borderRadius: "4px",
-            border: "1px solid #e2e8f0",
-          }}
+          className="flex items-center flex-wrap gap-2 mb-4 p-2" style={{background:"#FFF",borderRadius:"4px",border:"1px solid #e2e8f0"}}
         >
           {path.map((folder, index) => (
             <React.Fragment key={folder.id}>
@@ -80,7 +64,7 @@ const GedExplorer = ({
       )}
 
       {/* Grid of Folders */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+      <div className="flex flex-wrap gap-4">
         {children.map((child) => {
           const isSelected = multiSelect
             ? selectedIds.includes(child.id)
@@ -88,15 +72,10 @@ const GedExplorer = ({
           return (
             <div
               key={child.id}
-              style={{ position: "relative", width: "110px" }}
+              className="relative" style={{width:"110px"}}
             >
               <div
-                style={{
-                  position: "absolute",
-                  top: "4px",
-                  left: "4px",
-                  zIndex: 10,
-                }}
+                className="absolute" style={{top:"4px",left:"4px",zIndex:10}}
               >
                 {!disabledIds.includes(child.id) && (
                   <input
@@ -107,7 +86,7 @@ const GedExplorer = ({
                         ? onToggleChildren(child)
                         : onSelectId(child.id)
                     }
-                    style={{ cursor: "pointer" }}
+                    className="cursor-pointer"
                   />
                 )}
               </div>
@@ -157,13 +136,7 @@ const GedExplorer = ({
                   fill={isSelected ? "#fef08a" : "none"}
                 />
                 <div
-                  style={{
-                    fontSize: "0.75rem",
-                    marginTop: "0.5rem",
-                    wordBreak: "break-word",
-                    fontWeight: 500,
-                    color: "var(--text)",
-                  }}
+                  className="mt-2 font-medium" style={{fontSize:"0.75rem",wordBreak:"break-word",color:"var(--text)"}}
                 >
                   {child.name}
                 </div>
@@ -173,13 +146,7 @@ const GedExplorer = ({
         })}
         {children.length === 0 && (
           <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              padding: "1rem",
-              color: "#94a3b8",
-              
-            }}
+            className="w-full text-center p-4" style={{color:"#94a3b8"}}
           >
             Ce dossier est vide.
           </div>

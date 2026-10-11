@@ -2,26 +2,37 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { User, UserData, Role } from "../types/auth";
 import { ALLOWED_ROLES } from "../constants/roles";
 import { getSafeApiUrl } from "../utils/helpers";
-import { setupFetchInterceptor } from "../services/api";
+import {
+  getStoredUser,
+  getStoredToken,
+  saveAuthSession,
+  clearAuthSession,
+  redirectToLogin,
+  setupFetchInterceptor,
+} from "../services/api";
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (userData: UserData) => void;
+  login: (userData: UserData, token?: string) => void;
   logout: (reason?: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    !!sessionStorage.getItem("adminUser")
-  );
-  
   const [user, setUser] = useState<User | null>(() => {
-    const saved = sessionStorage.getItem("adminUser");
-    return saved ? JSON.parse(saved) : null;
+    const token = getStoredToken();
+    const storedUser = getStoredUser();
+    if (!token || !storedUser) {
+      clearAuthSession();
+      return null;
+    }
+    return storedUser;
   });
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+    () => Boolean(getStoredToken() && getStoredUser())
+  );
 
   const handleLogout = async (reason = "") => {
     try {
@@ -32,25 +43,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (e) {
       // Ignorer l'erreur réseau — on se déconnecte quand même
     }
-    sessionStorage.removeItem("adminUser");
     setIsAuthenticated(false);
     setUser(null);
-    window.location.href = reason ? `/?logout=${reason}` : "/";
+    redirectToLogin(reason || "logout");
   };
 
-  // Configuration initiale (Intercepteur)
+  // Synchronisation et validation initiale
   useEffect(() => {
     setupFetchInterceptor(() => {
-      sessionStorage.removeItem("adminUser");
-      window.location.href = "/?logout=expired";
+      setIsAuthenticated(false);
+      setUser(null);
+      redirectToLogin("expired");
     });
-    
+
     if (localStorage.getItem("adminTheme") === "dark") {
       document.body.classList.add("dark");
     }
-    if (localStorage.getItem("adminToken") || localStorage.getItem("adminUser")) {
-      localStorage.removeItem("adminToken");
-      localStorage.removeItem("adminUser");
+
+    // Si utilisateur ou token manquant lors du montage -> déconnexion immédiate
+    const currentToken = getStoredToken();
+    const currentUser = getStoredUser();
+    if ((!currentToken || !currentUser) && (user || isAuthenticated)) {
+      console.warn("[AUTH] Session incomplète (token ou utilisateur manquant). Redirection...");
+      handleLogout("expired");
     }
   }, []);
 
@@ -82,6 +97,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.warn("Rôle modifié par l'administrateur. Reconnexion requise.");
             handleLogout("role_changed");
           }
+        } else if (res.status === 401 || res.status === 403) {
+          console.warn("Vérification de session échouée. Déconnexion immédiate.");
+          handleLogout("expired");
         }
       } catch (e) {
         // network err
@@ -95,7 +113,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [user]);
 
-  const login = (userData: UserData) => {
+  const login = (userData: UserData, token?: string) => {
     const role = String(userData?.role || "SANS ROLE").trim() as Role;
     if (!ALLOWED_ROLES.includes(role)) {
       console.error("Rôle utilisateur non autorisé.");
@@ -118,8 +136,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const name = String(userData?.name || "").trim().replace(/[<>]/g, "");
 
     const cleanUserData: User = { id, email, name, role };
-    sessionStorage.setItem("adminUser", JSON.stringify(cleanUserData));
-    setIsAuthenticated(true);
+    const validToken = token || getStoredToken() || "";
+    saveAuthSession(cleanUserData, validToken);
+    setIsAuthenticated(Boolean(validToken));
     setUser(cleanUserData);
   };
 

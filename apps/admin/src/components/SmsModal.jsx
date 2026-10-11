@@ -136,52 +136,21 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
 
   return (
     <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: "rgba(0,0,0,0.5)",
-        zIndex: 1000,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      className="fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
     >
       <div
-        className="fade-in"
-        style={{
-          background: "#FFF",
-          width: "90%",
-          maxWidth: "600px",
-          borderRadius: "12px",
-          padding: "2rem",
-          boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
-        }}
+        className="fade-in p-8" style={{background:"#FFF",width:"90%",maxWidth:"600px",borderRadius:"12px",boxShadow:"0 10px 25px rgba(0,0,0,0.2)"}}
       >
         <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "1.5rem",
-            borderBottom: "1px solid var(--border)",
-            paddingBottom: "1rem",
-          }}
+          className="flex justify-between items-center mb-6" style={{borderBottom:"1px solid var(--border)",paddingBottom:"1rem"}}
         >
-          <h2 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
+          <h2 className="font-semibold" style={{fontSize:"1.25rem"}}>
             Envoyer un SMS Collaborateur
           </h2>
           <button
             type="button"
             onClick={onClose}
-            style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              color: "var(--text-muted)",
-            }}
+            className="cursor-pointer" style={{background:"transparent",border:"none",color:"var(--text-muted)"}}
           >
             <X size={24} />
           </button>
@@ -189,18 +158,13 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
 
         <form
           onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+          className="flex flex-col gap-4"
         >
           {!isAutoAssigned && (
             <div>
               <label
                 htmlFor="smsDestinataire"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: 500,
-                  
-                }}
+                className="block mb-2 font-medium"
               >
                 Destinataire (Collaborateur)
               </label>
@@ -209,14 +173,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
                 value={targetUserId}
                 onChange={(e) => setTargetUserId(e.target.value)}
                 required
-                className="input-field"
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  background: "#FFF",
-                }}
+                className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF"}}
               >
                 <option value="">-- Sélectionner un collaborateur --</option>
                 {users.map((u) => (
@@ -232,12 +189,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
             <div>
               <label
                 htmlFor="smsSubject"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: 500,
-                  
-                }}
+                className="block mb-2 font-medium"
               >
                 Objet
               </label>
@@ -248,14 +200,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
                 onChange={(e) => setSubject(e.target.value)}
                 required
                 placeholder="Sujet du SMS"
-                className="input-field"
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  background: "#FFF",
-                }}
+                className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF"}}
               />
             </div>
           )}
@@ -263,12 +208,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
           <div>
             <label
               htmlFor="smsContent"
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                fontWeight: 500,
-                
-              }}
+              className="block mb-2 font-medium"
             >
               Contenu du message
             </label>
@@ -278,28 +218,15 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
               onChange={(e) => setContent(e.target.value)}
               required
               placeholder="Tapez votre message ici..."
-              className="input-field"
               rows={5}
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                borderRadius: "8px",
-                border: "1px solid var(--border)",
-                background: "#FFF",
-                resize: "vertical",
-              }}
+              className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF",resize:"vertical"}}
             />
           </div>
 
           <div>
             <label
               htmlFor="smsFile"
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                fontWeight: 500,
-                
-              }}
+              className="block mb-2 font-medium"
             >
               Fichier joint (Optionnel)
             </label>
@@ -307,24 +234,12 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
               id="smsFile"
               type="file"
               onChange={(e) => setFile(e.target.files[0])}
-              className="input-field"
-              style={{
-                width: "100%",
-                padding: "0.5rem",
-                borderRadius: "8px",
-                border: "1px solid var(--border)",
-                background: "#FFF",
-              }}
+              className="input-field w-full p-2" style={{borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF"}}
             />
           </div>
 
           <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: "1rem",
-              marginTop: "1rem",
-            }}
+            className="flex justify-end gap-4 mt-4"
           >
             <button
               type="button"
@@ -337,13 +252,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary"
-              style={{
-                padding: "0.75rem 1.5rem",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
+              className="btn btn-primary flex items-center gap-2" style={{padding:"0.75rem 1.5rem"}}
             >
               <Send size={16} />
               {loading ? "Envoi..." : "Envoyer SMS"}

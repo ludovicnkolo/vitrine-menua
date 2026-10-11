@@ -53,16 +53,10 @@ const SetupPasswordPage = () => {
   if (!token) {
     return (
       <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh",
-          background: "#F8FAFC",
-        }}
+        className="flex items-center justify-center" style={{height:"100vh",background:"#F8FAFC"}}
       >
-        <div className="card" style={{ maxWidth: 400, textAlign: "center" }}>
-          <h2 style={{ color: "#E53E3E", marginBottom: "1rem" }}>
+        <div className="card text-center" style={{maxWidth:400}}>
+          <h2 className="mb-4" style={{color:"#E53E3E"}}>
             Lien invalide
           </h2>
           <p>Le lien d'activation est manquant ou incorrect.</p>
@@ -73,27 +67,14 @@ const SetupPasswordPage = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        background: "#F8FAFC",
-      }}
+      className="flex items-center justify-center" style={{height:"100vh",background:"#F8FAFC"}}
     >
       <div
-        className="card"
-        style={{ maxWidth: 400, width: "100%", padding: "2rem" }}
+        className="card w-full p-8" style={{maxWidth:400}}
       >
-        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+        <div className="text-center mb-8">
           <div
-            style={{
-              background: "var(--primary)",
-              color: "white",
-              padding: "1rem",
-              borderRadius: "8px",
-              marginBottom: "1.5rem",
-            }}
+            className="bg-[var(--primary)] text-white p-4 mb-6" style={{borderRadius:"8px"}}
           >
             <h1
               style={{
@@ -106,15 +87,11 @@ const SetupPasswordPage = () => {
               MENUA CONSULTING
             </h1>
           </div>
-          <h2 style={{ fontSize: "1.5rem", fontWeight: 600 }}>
+          <h2 className="font-semibold" style={{fontSize:"1.5rem"}}>
             Activer votre compte
           </h2>
           <p
-            style={{
-              color: "var(--text-muted)",
-              
-              marginTop: "0.5rem",
-            }}
+            className="mt-2" style={{color:"var(--text-muted)"}}
           >
             Veuillez configurer votre mot de passe pour accéder au CRM.
           </p>
@@ -122,15 +99,7 @@ const SetupPasswordPage = () => {
 
         {error && (
           <div
-            style={{
-              background: "#FEE2E2",
-              color: "#DC2626",
-              padding: "1rem",
-              borderRadius: "8px",
-              marginBottom: "1rem",
-              
-              textAlign: "center",
-            }}
+            className="p-4 mb-4 text-center" style={{background:"#FEE2E2",color:"#DC2626",borderRadius:"8px"}}
           >
             {error}
           </div>
@@ -138,13 +107,7 @@ const SetupPasswordPage = () => {
 
         {success ? (
           <div
-            style={{
-              background: "#D1FAE5",
-              color: "#059669",
-              padding: "1rem",
-              borderRadius: "8px",
-              textAlign: "center",
-            }}
+            className="p-4 text-center" style={{background:"#D1FAE5",color:"#059669",borderRadius:"8px"}}
           >
             <h3 style={{ margin: "0 0 0.5rem 0" }}>Compte activé !</h3>
             <p style={{ margin: 0,  }}>
@@ -154,17 +117,12 @@ const SetupPasswordPage = () => {
         ) : (
           <form
             onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+            className="flex flex-col gap-4"
           >
             <div>
               <label
                 htmlFor="setup-password"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: 500,
-                  
-                }}
+                className="block mb-2 font-medium"
               >
                 Nouveau mot de passe
               </label>
@@ -175,24 +133,13 @@ const SetupPasswordPage = () => {
                 minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  background: "#F8FAFC",
-                }}
+                className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#F8FAFC"}}
               />
             </div>
             <div>
               <label
                 htmlFor="setup-confirm-password"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: 500,
-                  
-                }}
+                className="block mb-2 font-medium"
               >
                 Confirmer le mot de passe
               </label>
@@ -203,26 +150,14 @@ const SetupPasswordPage = () => {
                 minLength={8}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  background: "#F8FAFC",
-                }}
+                className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#F8FAFC"}}
               />
             </div>
 
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn btn-primary w-full mt-4 justify-center p-3"
               disabled={loading}
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                marginTop: "1rem",
-                justifyContent: "center",
-              }}
             >
               {loading ? "Enregistrement..." : "Activer mon compte"}
             </button>

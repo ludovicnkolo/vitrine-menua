@@ -119,39 +119,21 @@ function getPriorityBadge(priority) {
   const map = {
     URGENT: (
       <span
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "4px",
-          color: "var(--danger)",
-          fontWeight: 400,
-        }}
+        className="inline-flex items-center font-normal" style={{gap:"4px",color:"var(--danger)"}}
       >
         <AlertCircle size={14} /> Urgent
       </span>
     ),
     NORMAL: (
       <span
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "4px",
-          color: "var(--success)",
-          fontWeight: 400,
-        }}
+        className="inline-flex items-center font-normal" style={{gap:"4px",color:"var(--success)"}}
       >
         <CheckCircle size={14} /> Normal
       </span>
     ),
     LOW: (
       <span
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "4px",
-          color: "var(--text-muted)",
-          fontWeight: 400,
-        }}
+        className="inline-flex items-center font-normal" style={{gap:"4px",color:"var(--text-muted)"}}
       >
         <Clock size={14} /> Faible
       </span>
@@ -162,7 +144,7 @@ function getPriorityBadge(priority) {
 
 function getRoleBadge(role) {
   return (
-    <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
+    <span className="font-medium text-[var(--text-main)]">
       {role}
     </span>
   );
@@ -222,7 +204,9 @@ function getSafeApiUrl(path) {
  * @param {object|null} body - Corps JSON optionnel
  */
 async function apiFetch(endpoint, method = "GET", body = null) {
-  const token = sessionStorage.getItem("adminToken");
+  const token = typeof window !== "undefined"
+    ? (sessionStorage.getItem("adminToken") || localStorage.getItem("adminToken"))
+    : null;
   const options = {
     method,
     credentials: "include",

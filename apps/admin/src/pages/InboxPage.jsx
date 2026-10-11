@@ -6,6 +6,7 @@ import {
   extractFieldFromHtml,
   extractBlockFromHtml,
 } from "../utils/helpers";
+import { redirectToLogin } from "../services/api";
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import InboxRappelModal from "../components/InboxRappelModal";
@@ -45,14 +46,7 @@ const MessageDetailCard = ({ label, value, children, sublabel, inline }) => (
     }}
   >
     <div
-      style={{
-        fontSize: "0.75rem",
-        color: "#64748B",
-        fontWeight: 500,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}
+      className="font-medium flex items-center justify-between" style={{fontSize:"0.75rem",color:"#64748B"}}
     >
       <span>{label} :</span>
       {sublabel && (
@@ -60,12 +54,7 @@ const MessageDetailCard = ({ label, value, children, sublabel, inline }) => (
       )}
     </div>
     <div
-      style={{
-        fontSize: "0.88rem",
-        fontWeight: 600,
-        color: "var(--text-main)",
-        wordBreak: "break-word",
-      }}
+      className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.88rem",wordBreak:"break-word"}}
     >
       {children || value}
     </div>
@@ -75,28 +64,12 @@ const MessageDetailCard = ({ label, value, children, sublabel, inline }) => (
 const DetailField = ({ label, value, children }) => (
   <div>
     <span
-      style={{
-        display: "block",
-        marginBottom: "0.25rem",
-        
-        fontWeight: 500,
-        color: "var(--text-muted)",
-      }}
+      className="block font-medium" style={{marginBottom:"0.25rem",color:"var(--text-muted)"}}
     >
       {label}
     </span>
     <div
-      style={{
-        width: "100%",
-        padding: "0.5rem",
-        background: "#F8FAFC",
-        borderRadius: "4px",
-        border: "1px solid var(--border)",
-        minHeight: "38px",
-        whiteSpace: "normal",
-        overflowWrap: "break-word",
-        wordBreak: "break-word",
-      }}
+      className="w-full p-2" style={{background:"#F8FAFC",borderRadius:"4px",border:"1px solid var(--border)",minHeight:"38px",whiteSpace:"normal",overflowWrap:"break-word",wordBreak:"break-word"}}
     >
       {children || value}
     </div>
@@ -105,20 +78,15 @@ const DetailField = ({ label, value, children }) => (
 
 const InlineDetailField = ({ label, value, children }) => (
   <div
-    style={{
-      display: "flex",
-      alignItems: "flex-start",
-      gap: "0.5rem",
-      
-    }}
+    className="flex items-start gap-2"
   >
     <span
-      style={{ fontWeight: 500, color: "var(--text-muted)", flexShrink: 0 }}
+      className="font-medium" style={{color:"var(--text-muted)"}}
     >
       {label} :
     </span>
     <div
-      style={{ color: "var(--text-main)", flex: 1, wordBreak: "break-word" }}
+      className="text-[var(--text-main)]" style={{flex:1,wordBreak:"break-word"}}
     >
       {children || value}
     </div>
@@ -322,20 +290,20 @@ const InboxPage = ({ userRole }) => {
 
       if (resMsgs.ok) {
         const result = await resMsgs.json();
+        const rawMsgs = result.data || (Array.isArray(result) ? result : []);
+        const sortedMsgs = [...rawMsgs].sort(
+          (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+        );
         if (result.data) {
-          setMessages(result.data);
+          setMessages(sortedMsgs);
           setTotalPages(result.totalPages || 1);
         } else {
-          setMessages(result);
+          setMessages(sortedMsgs);
           setTotalPages(1);
         }
       } else if (resMsgs.status === 401) {
-        showToast(
-          "Votre session a expiré. Veuillez vous reconnecter.",
-          "error",
-        );
-        sessionStorage.removeItem("adminToken");
-        window.location.href = "/login";
+        redirectToLogin("expired");
+        return;
       }
 
       if (resUsers.ok) setUsers(await resUsers.json());
@@ -1035,7 +1003,7 @@ const InboxPage = ({ userRole }) => {
           <option value="" disabled style={{ color: "#F59E0B" }}>● Sélectionnez une étiquette...</option>
         ) : (
           options.map((opt) => (
-            <option key={opt.value} value={opt.value} style={{ color: "var(--text-main)" }}>
+            <option key={opt.value} value={opt.value} className="text-[var(--text-main)]">
               ● {opt.label}
             </option>
           ))
@@ -1048,13 +1016,7 @@ const InboxPage = ({ userRole }) => {
     return (
       <div>
         <span
-          style={{
-            display: "block",
-            marginBottom: "1rem",
-            
-            fontWeight: 500,
-            color: "var(--text-muted)",
-          }}
+          className="block mb-4 font-medium" style={{color:"var(--text-muted)"}}
         >
           Statut
         </span>
@@ -1068,12 +1030,7 @@ const InboxPage = ({ userRole }) => {
       {!isAnyModalOpen && (
         <>
           <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "1rem",
-              marginBottom: "1.5rem",
-            }}
+            className="flex flex-col gap-4 mb-6"
           >
             <TabsNavigation
               tabs={
@@ -1091,59 +1048,27 @@ const InboxPage = ({ userRole }) => {
             />
             {tab !== "interne" && (
               <div
-                style={{
-                  display: "flex",
-                  gap: "1rem",
-                  width: "100%",
-                  alignItems: "center",
-                }}
+                className="flex gap-4 w-full items-center"
               >
-                <div style={{ flex: 1, position: "relative" }}>
+                <div className="relative" style={{flex:1}}>
                   <input
                     type="text"
                     placeholder="Rechercher par nom ou email..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    style={{
-                      width: "100%",
-                      padding: "0.5rem 1rem",
-                      borderRadius: "8px",
-                      border: "1px solid var(--border)",
-                      
-                      outline: "none",
-                      background: "#F8FAFC",
-                    }}
+                    className="w-full" style={{padding:"0.5rem 1rem",borderRadius:"8px",border:"1px solid var(--border)",outline:"none",background:"#F8FAFC"}}
                   />
                 </div>
                 <input
                   type="date"
                   value={filterDate}
                   onChange={(e) => setFilterDate(e.target.value)}
-                  style={{
-                    padding: "0.5rem 1rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                    background: "#FFF",
-                    
-                    color: "var(--text-main)",
-                    outline: "none",
-                    cursor: "pointer",
-                  }}
+                  className="text-[var(--text-main)] cursor-pointer" style={{padding:"0.5rem 1rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF",outline:"none"}}
                 />
                 <select
                   value={filterTraite}
                   onChange={(e) => setFilterTraite(e.target.value)}
-                  style={{
-                    padding: "0.5rem 1rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                    background: "#FFF",
-                    
-                    color: "var(--text-main)",
-                    outline: "none",
-                    cursor: "pointer",
-                    minWidth: "150px",
-                  }}
+                  className="text-[var(--text-main)] cursor-pointer" style={{padding:"0.5rem 1rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF",outline:"none",minWidth:"150px"}}
                 >
                   <option value="all">{t("common.allStatuses", "Tous les statuts")}</option>
                   {tab === "contact" && (
@@ -1192,15 +1117,7 @@ const InboxPage = ({ userRole }) => {
                     setLimit(Number(e.target.value));
                     setPage(1);
                   }}
-                  style={{
-                    padding: "0.5rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                    background: "#FFF",
-                    
-                    outline: "none",
-                    cursor: "pointer",
-                  }}
+                  className="p-2 cursor-pointer" style={{borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF",outline:"none"}}
                 >
                   <option value={12}>{t("common.perPage", { count: 12, defaultValue: "12 par page" })}</option>
                   <option value={25}>{t("common.perPage", { count: 25, defaultValue: "25 par page" })}</option>
@@ -1212,13 +1129,7 @@ const InboxPage = ({ userRole }) => {
                     type="button"
                     onClick={handleSyncEmails}
                     disabled={isSyncing}
-                    className="btn btn-primary"
-                    style={{
-                      padding: "0.5rem 1rem",
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                    }}
+                    className="btn btn-primary flex gap-2 items-center" style={{padding:"0.5rem 1rem"}}
                   >
                     <Mail size={16} />
                     {isSyncing ? "Synchronisation..." : "Synchroniser Emails"}
@@ -1236,7 +1147,7 @@ const InboxPage = ({ userRole }) => {
           ) : (
             <>
               <div className="table-wrapper">
-                <table style={{ tableLayout: "fixed", width: "100%" }}>
+                <table className="w-full" style={{tableLayout:"fixed"}}>
                   <thead>
                     <tr>
                       <th style={{ width: "50px" }}>{t("inbox.columns.no")}</th>
@@ -1262,7 +1173,7 @@ const InboxPage = ({ userRole }) => {
                         </th>
                       )}
                       <th className="table-date-cell" style={{ width: "165px" }}>{t("inbox.columns.date")}</th>
-                      <th style={{ width: "95px", textAlign: "center", whiteSpace: "nowrap" }}>
+                      <th className="text-center" style={{width:"95px",whiteSpace:"nowrap"}}>
                         {t("inbox.columns.actions")}
                       </th>
                     </tr>
@@ -1274,7 +1185,7 @@ const InboxPage = ({ userRole }) => {
                           <tr>
                             <td
                               colSpan="10"
-                              style={{ textAlign: "center", padding: "2rem" }}
+                              className="text-center p-8"
                             >
                               {t("common.loading", "Chargement des messages...")}
                             </td>
@@ -1318,10 +1229,7 @@ const InboxPage = ({ userRole }) => {
                             className={isExpired(m) ? "row-expired" : ""}
                           >
                             <td
-                              style={{
-                                fontWeight: 500,
-                                color: "var(--text-muted)",
-                              }}
+                              className="font-medium" style={{color:"var(--text-muted)"}}
                             >
                               {index + 1}
                             </td>
@@ -1433,23 +1341,12 @@ const InboxPage = ({ userRole }) => {
                             </td>
                             <td>
                               <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  gap: "0.25rem",
-                                  alignItems: "center",
-                                }}
+                                className="flex flex-col items-center" style={{gap:"0.25rem"}}
                               >
                                 <button
                                   type="button"
                                   onClick={() => setProcessMsg(m)}
-                                  style={{
-                                    background: "none",
-                                    border: "none",
-                                    cursor: "pointer",
-                                    color: "var(--primary)",
-                                    padding: "4px",
-                                  }}
+                                  className="cursor-pointer" style={{background:"none",border:"none",color:"var(--primary)",padding:"4px"}}
                                   title="Consulter le message"
                                 >
                                   <Eye size={18} />
@@ -1457,13 +1354,7 @@ const InboxPage = ({ userRole }) => {
                                 <button
                                   type="button"
                                   onClick={() => handleDeleteMessage(m)}
-                                  style={{
-                                    background: "none",
-                                    border: "none",
-                                    cursor: "pointer",
-                                    color: "#EF4444",
-                                    padding: "4px",
-                                  }}
+                                  className="cursor-pointer" style={{background:"none",border:"none",color:"#EF4444",padding:"4px"}}
                                   title="Supprimer le message"
                                 >
                                   <Trash size={18} />
@@ -1474,8 +1365,12 @@ const InboxPage = ({ userRole }) => {
                         );
                       };
 
+                      const sortedMessages = [...messages].sort(
+                        (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+                      );
+
                       if (tab === "contact") {
-                        return messages.map((m, i) =>
+                        return sortedMessages.map((m, i) =>
                           renderMessageRow(
                             m,
                             i,
@@ -1491,7 +1386,7 @@ const InboxPage = ({ userRole }) => {
                       }
 
                       if (tab === "recrutement") {
-                        return messages.map((m, i) =>
+                        return sortedMessages.map((m, i) =>
                           renderMessageRow(
                             m,
                             i,
@@ -1510,14 +1405,14 @@ const InboxPage = ({ userRole }) => {
                         const groupedMessages = [];
                         const seenGroups = new Set();
 
-                        messages.forEach((m) => {
+                        sortedMessages.forEach((m) => {
                           const groupId =
                             m.tacheId || m.missionId || m.dossierId || m.id;
                           if (!seenGroups.has(groupId)) {
                             seenGroups.add(groupId);
 
                             // Find all messages in this group
-                            const groupMsgs = messages.filter(
+                            const groupMsgs = sortedMessages.filter(
                               (x) =>
                                 (x.tacheId && x.tacheId === groupId) ||
                                 (x.missionId && x.missionId === groupId) ||
@@ -1541,6 +1436,10 @@ const InboxPage = ({ userRole }) => {
                             });
                           }
                         });
+
+                        groupedMessages.sort(
+                          (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+                        );
 
                         return groupedMessages.map((m, i) =>
                           renderMessageRow(
@@ -1566,8 +1465,8 @@ const InboxPage = ({ userRole }) => {
                         );
                       }
 
-                      // Fallback
-                      return messages.map((m, i) =>
+                      // Fallback (tab === "personnel" / Boîte e-mail)
+                      return sortedMessages.map((m, i) =>
                         renderMessageRow(
                           m,
                           i,
@@ -1579,7 +1478,6 @@ const InboxPage = ({ userRole }) => {
                           m.objet,
                           {
                             fontWeight: m.status === "NOUVEAU" ? 600 : 400,
-                            
                           },
                         ),
                       );
@@ -1603,66 +1501,29 @@ const InboxPage = ({ userRole }) => {
         !createTaskModal &&
         !showActionChoiceModal &&
         !showTraitePopup && (
-          <div className="fade-in" style={{ padding: "1rem" }}>
-            <div className="" style={{ width: "100%", padding: "0" }}>
+          <div className="fade-in p-4">
+            <div className="w-full" style={{padding:"0"}}>
               {/* En-tête supérieur de consultation */}
               <div
-                style={{
-                  background: "#FFF",
-                  border: "1px solid var(--border)",
-                  borderRadius: "12px",
-                  padding: "1.25rem 1.5rem",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "1.5rem",
-                  gap: "1rem",
-                }}
+                className="flex justify-between items-center mb-6 gap-4" style={{background:"#FFF",border:"1px solid var(--border)",borderRadius:"12px",padding:"1.25rem 1.5rem"}}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <div className="flex items-center gap-4">
                   {tab === "recrutement" ? (
                     <div
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        borderRadius: "10px",
-                        background: "#FAF5FF",
-                        border: "1px solid #F3E8FF",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontWeight: 700,
-                        color: "#9333EA",
-                        fontSize: "1rem",
-                      }}
+                      className="flex items-center justify-center font-bold" style={{width:"48px",height:"48px",borderRadius:"10px",background:"#FAF5FF",border:"1px solid #F3E8FF",color:"#9333EA",fontSize:"1rem"}}
                     >
                       CV
                     </div>
                   ) : (
                     <div
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        borderRadius: "10px",
-                        background: "#EFF6FF",
-                        border: "1px solid #DBEAFE",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
+                      className="flex items-center justify-center" style={{width:"48px",height:"48px",borderRadius:"10px",background:"#EFF6FF",border:"1px solid #DBEAFE"}}
                     >
                       <Mail size={24} color="#2563EB" />
                     </div>
                   )}
                   <div>
                     <h2
-                      style={{
-                        margin: 0,
-                        fontSize: "1.15rem",
-                        fontWeight: 800,
-                        color: "var(--text-main)",
-                        letterSpacing: "0.02em",
-                      }}
+                      className="text-[var(--text-main)]" style={{fontSize:"1.15rem",fontWeight:800,letterSpacing:"0.02em"}}
                     >
                       {(() => {
                         if (tab === "contact")
@@ -1707,20 +1568,12 @@ const InboxPage = ({ userRole }) => {
                   </div>
                 </div>
 
-                <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+                <div className="flex items-center" style={{gap:"0.75rem"}}>
                   {processMsg.dossierId && (
                     <button
                       type="button"
                       onClick={() => (window.location.href = `/dossiers?open=${processMsg.dossierId}`)}
-                      className="btn btn-outline-success"
-                      style={{
-                        padding: "0.55rem 1rem",
-                        fontSize: "0.85rem",
-                        fontWeight: 600,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.4rem",
-                      }}
+                      className="btn btn-outline-success font-semibold flex items-center" style={{padding:"0.55rem 1rem",fontSize:"0.85rem",gap:"0.4rem"}}
                     >
                       <Files size={16} /> Dossier Lié
                     </button>
@@ -1759,16 +1612,7 @@ const InboxPage = ({ userRole }) => {
                   <button
                     type="button"
                     onClick={() => setProcessMsg(null)}
-                    style={{
-                      padding: "0.55rem 1.4rem",
-                      borderRadius: "6px",
-                      background: "var(--text-main)",
-                      color: "#FFF",
-                      fontWeight: 600,
-                      fontSize: "0.85rem",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
+                    className="text-white font-semibold cursor-pointer" style={{padding:"0.55rem 1.4rem",borderRadius:"6px",background:"var(--text-main)",fontSize:"0.85rem",border:"none"}}
                   >
                     ← Retour
                   </button>
@@ -1812,10 +1656,7 @@ const InboxPage = ({ userRole }) => {
                       </div>
                       {(processMsg.dateRappel || processMsg.dateEntretien) && (
                         <div
-                          style={{
-                            color: "var(--text-main)",
-                            marginBottom: "0.25rem",
-                          }}
+                          className="text-[var(--text-main)]" style={{marginBottom:"0.25rem"}}
                         >
                           <strong>Date :</strong>{" "}
                           {new Date(
@@ -1866,16 +1707,7 @@ const InboxPage = ({ userRole }) => {
                     <button
                       type="button"
                       onClick={() => setShowRappelBanner(false)}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        color: "var(--text-muted)",
-                        fontSize: "1.1rem",
-                        padding: "0",
-                        flexShrink: 0,
-                        lineHeight: 1,
-                      }}
+                      className="cursor-pointer" style={{background:"none",border:"none",color:"var(--text-muted)",fontSize:"1.1rem",padding:"0",lineHeight:1}}
                       title="Fermer"
                     >
                       &#x2715;
@@ -1885,7 +1717,7 @@ const InboxPage = ({ userRole }) => {
               {(processMsg.status === "A_RAPPELER" ||
                 processMsg.status === "ENTRETIEN") &&
                 !showRappelBanner && (
-                  <div style={{ textAlign: "right", marginBottom: "0.5rem" }}>
+                  <div className="text-right mb-2">
                     <button
                       type="button"
                       onClick={() => setShowRappelBanner(true)}
@@ -1911,15 +1743,10 @@ const InboxPage = ({ userRole }) => {
               {/* Vue Contact (Image 2) */}
               {tab === "contact" && (
                 <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "1.5rem",
-                    marginBottom: "1.5rem",
-                  }}
+                  className="grid gap-6 mb-6" style={{gridTemplateColumns:"1fr 1fr"}}
                 >
                   {/* Colonne gauche */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                  <div className="flex flex-col gap-6">
                     {/* INFORMATIONS DU CONTACT */}
                     <div
                       style={{
@@ -1930,18 +1757,11 @@ const InboxPage = ({ userRole }) => {
                       }}
                     >
                       <div
-                        style={{
-                          fontWeight: 800,
-                          fontSize: "0.8rem",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: "var(--text-main)",
-                          marginBottom: "1rem",
-                        }}
+                        className="text-[var(--text-main)] mb-4" style={{fontWeight:800,fontSize:"0.8rem",textTransform:"uppercase",letterSpacing:"0.05em"}}
                       >
                         INFORMATIONS DU CONTACT
                       </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                      <div className="flex flex-col" style={{gap:"0.6rem"}}>
                         <MessageDetailCard
                           label="Type de contact"
                           value={(
@@ -2016,24 +1836,17 @@ const InboxPage = ({ userRole }) => {
                       }}
                     >
                       <div
-                        style={{
-                          fontWeight: 800,
-                          fontSize: "0.8rem",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: "var(--text-main)",
-                          marginBottom: "1rem",
-                        }}
+                        className="text-[var(--text-main)] mb-4" style={{fontWeight:800,fontSize:"0.8rem",textTransform:"uppercase",letterSpacing:"0.05em"}}
                       >
                         QUALIFICATION DE LA DEMANDE
                       </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                      <div className="flex flex-col" style={{gap:"0.6rem"}}>
                         <MessageDetailCard
                           inline
                           label="Statut vérification email"
                           value={
                             processMsg.verifaliaStatus ? (
-                              <span style={{ color: "#059669", fontWeight: 700 }}>
+                              <span className="font-bold" style={{color:"#059669"}}>
                                 {getVerifaliaBadge(processMsg.verifaliaStatus).text}
                               </span>
                             ) : (
@@ -2109,40 +1922,20 @@ const InboxPage = ({ userRole }) => {
                   </div>
 
                   {/* Colonne droite : Description / Contenu */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  <div className="flex flex-col gap-4">
                     <div
-                      style={{
-                        background: "#FFF",
-                        border: "1px solid var(--border)",
-                        borderRadius: "10px",
-                        padding: "1.25rem",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "1rem",
-                        height: "100%",
-                      }}
+                      className="flex flex-col gap-4 h-full" style={{background:"#FFF",border:"1px solid var(--border)",borderRadius:"10px",padding:"1.25rem"}}
                     >
                       <div
-                        style={{
-                          fontWeight: 800,
-                          fontSize: "0.8rem",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: "var(--text-main)",
-                        }}
+                        className="text-[var(--text-main)]" style={{fontWeight:800,fontSize:"0.8rem",textTransform:"uppercase",letterSpacing:"0.05em"}}
                       >
                         Description / Contenu
                       </div>
 
                       <div
-                        style={{
-                          background: "#F8FAFC",
-                          borderRadius: "8px",
-                          padding: "1rem",
-                          border: "1px solid #F1F5F9",
-                        }}
+                        className="p-4" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid #F1F5F9"}}
                       >
-                        <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#2563EB", marginBottom: "0.25rem" }}>
+                        <div className="font-bold" style={{fontSize:"0.95rem",color:"#2563EB",marginBottom:"0.25rem"}}>
                           Objet : {processMsg.objet || "Demande de contact"}
                         </div>
                         <div style={{ fontSize: "0.75rem", color: "#64748B" }}>
@@ -2160,14 +1953,14 @@ const InboxPage = ({ userRole }) => {
                           minHeight: "220px",
                         }}
                       >
-                        <div style={{ fontSize: "0.95rem", color: "var(--text-main)", lineHeight: "1.6", whiteSpace: "pre-wrap" }}>
+                        <div className="text-[var(--text-main)]" style={{fontSize:"0.95rem",lineHeight:"1.6",whiteSpace:"pre-wrap"}}>
                           {extractBlockFromHtml(processMsg.bodyHtml, "Description du besoin") ||
                            processMsg.description ||
                            processMsg.bodyText ||
                            (processMsg.bodyHtml && !processMsg.bodyHtml.includes("<") ? processMsg.bodyHtml : null) ||
                            "Assumenda aliquip in"}
                         </div>
-                        <div style={{ fontSize: "0.75rem", color: "#94A3B8", marginTop: "1rem" }}>
+                        <div className="mt-4" style={{fontSize:"0.75rem",color:"#94A3B8"}}>
                           (Message complet transmis par le visiteur)
                         </div>
                       </div>
@@ -2179,15 +1972,10 @@ const InboxPage = ({ userRole }) => {
               {/* Vue Recrutement (Image 3) */}
               {tab === "recrutement" && (
                 <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "1.5rem",
-                    marginBottom: "1.5rem",
-                  }}
+                  className="grid gap-6 mb-6" style={{gridTemplateColumns:"1fr 1fr"}}
                 >
                   {/* Colonne gauche */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                  <div className="flex flex-col gap-6">
                     {/* INFORMATIONS DU CONTACT */}
                     <div
                       style={{
@@ -2198,18 +1986,11 @@ const InboxPage = ({ userRole }) => {
                       }}
                     >
                       <div
-                        style={{
-                          fontWeight: 800,
-                          fontSize: "0.8rem",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: "var(--text-main)",
-                          marginBottom: "1rem",
-                        }}
+                        className="text-[var(--text-main)] mb-4" style={{fontWeight:800,fontSize:"0.8rem",textTransform:"uppercase",letterSpacing:"0.05em"}}
                       >
                         INFORMATIONS DU CONTACT
                       </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                      <div className="flex flex-col" style={{gap:"0.6rem"}}>
                         <MessageDetailCard
                           label="Type de contact"
                           value={
@@ -2299,29 +2080,17 @@ const InboxPage = ({ userRole }) => {
                       }}
                     >
                       <div
-                        style={{
-                          fontWeight: 800,
-                          fontSize: "0.8rem",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: "var(--text-main)",
-                          marginBottom: "1rem",
-                        }}
+                        className="text-[var(--text-main)] mb-4" style={{fontWeight:800,fontSize:"0.8rem",textTransform:"uppercase",letterSpacing:"0.05em"}}
                       >
                         Description / Contenu
                       </div>
                       <div
-                        style={{
-                          background: "#F8FAFC",
-                          borderRadius: "8px",
-                          padding: "1rem",
-                          border: "1px solid #F1F5F9",
-                        }}
+                        className="p-4" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid #F1F5F9"}}
                       >
-                        <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#2563EB", marginBottom: "0.5rem" }}>
+                        <div className="font-bold mb-2" style={{fontSize:"0.95rem",color:"#2563EB"}}>
                           Objet : {processMsg.objet || "Demande de collaboration"}
                         </div>
-                        <div style={{ fontSize: "0.9rem", color: "var(--text-main)", lineHeight: "1.5", whiteSpace: "pre-wrap" }}>
+                        <div className="text-[var(--text-main)]" style={{fontSize:"0.9rem",lineHeight:"1.5",whiteSpace:"pre-wrap"}}>
                           {extractBlockFromHtml(processMsg.bodyHtml, "Message / Motivations") ||
                            processMsg.description ||
                            processMsg.bodyText ||
@@ -2332,7 +2101,7 @@ const InboxPage = ({ userRole }) => {
                   </div>
 
                   {/* Colonne droite */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                  <div className="flex flex-col gap-6">
                     {/* PROFIL PROFESSIONNEL */}
                     <div
                       style={{
@@ -2343,24 +2112,17 @@ const InboxPage = ({ userRole }) => {
                       }}
                     >
                       <div
-                        style={{
-                          fontWeight: 800,
-                          fontSize: "0.8rem",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: "var(--text-main)",
-                          marginBottom: "1rem",
-                        }}
+                        className="text-[var(--text-main)] mb-4" style={{fontWeight:800,fontSize:"0.8rem",textTransform:"uppercase",letterSpacing:"0.05em"}}
                       >
                         PROFIL PROFESSIONNEL
                       </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                      <div className="flex flex-col" style={{gap:"0.6rem"}}>
                         <MessageDetailCard
                           inline
                           label="Statut vérification email"
                           value={
                             processMsg.verifaliaStatus ? (
-                              <span style={{ color: "#059669", fontWeight: 700 }}>
+                              <span className="font-bold" style={{color:"#059669"}}>
                                 {getVerifaliaBadge(processMsg.verifaliaStatus).text}
                               </span>
                             ) : (
@@ -2413,17 +2175,7 @@ const InboxPage = ({ userRole }) => {
                             onChange={(e) =>
                               setPendingChange("priorite", e.target.value)
                             }
-                            style={{
-                              width: "100%",
-                              padding: "0.5rem 0.75rem",
-                              borderRadius: "6px",
-                              border: "1px solid #CBD5E1",
-                              outline: "none",
-                              background: "#FFF",
-                              fontWeight: 700,
-                              fontSize: "0.85rem",
-                              cursor: "pointer",
-                            }}
+                            className="w-full font-bold cursor-pointer" style={{padding:"0.5rem 0.75rem",borderRadius:"6px",border:"1px solid #CBD5E1",outline:"none",background:"#FFF",fontSize:"0.85rem"}}
                           >
                             <option value="Normal">● Normal</option>
                             <option value="Prioritaire">● Prioritaire</option>
@@ -2462,15 +2214,10 @@ const InboxPage = ({ userRole }) => {
               {/* Vue Personnel (Image 4) & Interne */}
               {(tab === "personnel" || tab === "interne") && (
                 <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "1.5rem",
-                    marginBottom: "1.5rem",
-                  }}
+                  className="grid gap-6 mb-6" style={{gridTemplateColumns:"1fr 1fr"}}
                 >
                   {/* Colonne gauche : Métadonnées & Sélecteurs du Message */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                  <div className="flex flex-col gap-6">
                     <div
                       style={{
                         background: "#FFF",
@@ -2480,18 +2227,11 @@ const InboxPage = ({ userRole }) => {
                       }}
                     >
                       <div
-                        style={{
-                          fontWeight: 800,
-                          fontSize: "0.8rem",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: "var(--text-main)",
-                          marginBottom: "1rem",
-                        }}
+                        className="text-[var(--text-main)] mb-4" style={{fontWeight:800,fontSize:"0.8rem",textTransform:"uppercase",letterSpacing:"0.05em"}}
                       >
                         Métadonnées & Sélecteurs du Message
                       </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                      <div className="flex flex-col" style={{gap:"0.6rem"}}>
                         <MessageDetailCard
                           label="Nom"
                           value={processMsg.nomPrenom || "Non renseigné"}
@@ -2528,18 +2268,7 @@ const InboxPage = ({ userRole }) => {
                                 onChange={(e) =>
                                   setPendingChange("etiquette", e.target.value)
                                 }
-                                style={{
-                                  width: "100%",
-                                  padding: "0.5rem 0.75rem",
-                                  borderRadius: "6px",
-                                  border: "1px solid #2563EB",
-                                  outline: "none",
-                                  background: "#FFF",
-                                  fontWeight: 700,
-                                  fontSize: "0.85rem",
-                                  color: "#2563EB",
-                                  cursor: "pointer",
-                                }}
+                                className="w-full font-bold cursor-pointer" style={{padding:"0.5rem 0.75rem",borderRadius:"6px",border:"1px solid #2563EB",outline:"none",background:"#FFF",fontSize:"0.85rem",color:"#2563EB"}}
                               >
                                 <option value="">● Général</option>
                                 <option value="Contact">● Contact</option>
@@ -2565,17 +2294,7 @@ const InboxPage = ({ userRole }) => {
                                 onChange={(e) =>
                                   setPendingChange("priorite", e.target.value)
                                 }
-                                style={{
-                                  width: "100%",
-                                  padding: "0.5rem 0.75rem",
-                                  borderRadius: "6px",
-                                  border: "1px solid #CBD5E1",
-                                  outline: "none",
-                                  background: "#FFF",
-                                  fontWeight: 700,
-                                  fontSize: "0.85rem",
-                                  cursor: "pointer",
-                                }}
+                                className="w-full font-bold cursor-pointer" style={{padding:"0.5rem 0.75rem",borderRadius:"6px",border:"1px solid #CBD5E1",outline:"none",background:"#FFF",fontSize:"0.85rem"}}
                               >
                                 <option value="Normal">● Normal</option>
                                 <option value="Prioritaire">● Prioritaire</option>
@@ -2596,17 +2315,7 @@ const InboxPage = ({ userRole }) => {
                                   onChange={(e) =>
                                     setPendingChange("assignedToId", e.target.value)
                                   }
-                                  style={{
-                                    width: "100%",
-                                    padding: "0.5rem 0.75rem",
-                                    borderRadius: "6px",
-                                    border: "1px solid #CBD5E1",
-                                    outline: "none",
-                                    background: "#FFF",
-                                    fontWeight: 500,
-                                    fontSize: "0.85rem",
-                                    cursor: "pointer",
-                                  }}
+                                  className="w-full font-medium cursor-pointer" style={{padding:"0.5rem 0.75rem",borderRadius:"6px",border:"1px solid #CBD5E1",outline:"none",background:"#FFF",fontSize:"0.85rem"}}
                                 >
                                   <option value="">Aucun</option>
                                   {users
@@ -2626,40 +2335,20 @@ const InboxPage = ({ userRole }) => {
                   </div>
 
                   {/* Colonne droite : Fil de conversation */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  <div className="flex flex-col gap-4">
                     <div
-                      style={{
-                        background: "#FFF",
-                        border: "1px solid var(--border)",
-                        borderRadius: "10px",
-                        padding: "1.25rem",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "1rem",
-                        height: "100%",
-                      }}
+                      className="flex flex-col gap-4 h-full" style={{background:"#FFF",border:"1px solid var(--border)",borderRadius:"10px",padding:"1.25rem"}}
                     >
                       <div
-                        style={{
-                          fontWeight: 800,
-                          fontSize: "0.8rem",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: "var(--text-main)",
-                        }}
+                        className="text-[var(--text-main)]" style={{fontWeight:800,fontSize:"0.8rem",textTransform:"uppercase",letterSpacing:"0.05em"}}
                       >
                         Fil de conversation
                       </div>
 
                       <div
-                        style={{
-                          background: "#F8FAFC",
-                          borderRadius: "8px",
-                          padding: "1rem",
-                          border: "1px solid #F1F5F9",
-                        }}
+                        className="p-4" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid #F1F5F9"}}
                       >
-                        <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#2563EB", marginBottom: "0.25rem" }}>
+                        <div className="font-bold" style={{fontSize:"0.95rem",color:"#2563EB",marginBottom:"0.25rem"}}>
                           Objet : {processMsg.objet || "Fil de conversation"}
                         </div>
                         <div style={{ fontSize: "0.75rem", color: "#64748B" }}>
@@ -2679,7 +2368,7 @@ const InboxPage = ({ userRole }) => {
                         }}
                       >
                         {tab === "interne" ? (
-                          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                          <div className="flex flex-col gap-4">
                             {conversationMessages.map((m) => {
                               const isMe = m.email === currentUser?.email || m.nomPrenom === currentUser?.name;
                               return (
@@ -2695,7 +2384,7 @@ const InboxPage = ({ userRole }) => {
                                     maxWidth: "80%",
                                   }}
                                 >
-                                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem", fontSize: "0.75rem", gap: "1rem", opacity: 0.8 }}>
+                                  <div className="flex justify-between gap-4" style={{marginBottom:"0.25rem",fontSize:"0.75rem",opacity:0.8}}>
                                     <strong>{m.nomPrenom}</strong>
                                     <span>{formatDate(m.createdAt)}</span>
                                   </div>
@@ -2707,7 +2396,7 @@ const InboxPage = ({ userRole }) => {
                             })}
                           </div>
                         ) : (
-                          <div style={{ fontSize: "0.95rem", color: "var(--text-main)", lineHeight: "1.6", whiteSpace: "pre-wrap" }}>
+                          <div className="text-[var(--text-main)]" style={{fontSize:"0.95rem",lineHeight:"1.6",whiteSpace:"pre-wrap"}}>
                             {processMsg.description || processMsg.bodyText || (processMsg.bodyHtml && !processMsg.bodyHtml.includes("<") ? processMsg.bodyHtml : null) || "Bonjour,\n\nMessage lié à ce fil."}
                           </div>
                         )}
@@ -2723,37 +2412,14 @@ const InboxPage = ({ userRole }) => {
       {/* Modale de confirmation d'enregistrement */}
       {showSaveConfirm && (
         <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 2100,
-          }}
+          className="fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:2100}}
         >
           <div
-            style={{
-              background: "#FFF",
-              borderRadius: "16px",
-              padding: "2rem",
-              width: "90%",
-              maxWidth: "400px",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
-            }}
+            className="p-8" style={{background:"#FFF",borderRadius:"16px",width:"90%",maxWidth:"400px",boxShadow:"0 20px 60px rgba(0,0,0,0.2)"}}
           >
-            <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+            <div className="text-center mb-6">
               <h3
-                style={{
-                  margin: 0,
-                  fontSize: "1.1rem",
-                  fontWeight: 700,
-                  color: "var(--text-main)",
-                }}
+                className="font-bold text-[var(--text-main)]" style={{fontSize:"1.1rem"}}
               >
                 Confirmer l'enregistrement
               </h3>
@@ -2772,26 +2438,14 @@ const InboxPage = ({ userRole }) => {
               </p>
             </div>
             <div
-              style={{
-                background: "#F8FAFC",
-                borderRadius: "8px",
-                padding: "0.75rem 1rem",
-                marginBottom: "1.5rem",
-                fontSize: "0.85rem",
-                color: "var(--text-main)",
-              }}
+              className="mb-6 text-[var(--text-main)]" style={{background:"#F8FAFC",borderRadius:"8px",padding:"0.75rem 1rem",fontSize:"0.85rem"}}
             >
               {Object.entries(pendingChanges).map(([k, v]) => (
                 <div
                   key={k}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    padding: "0.25rem 0",
-                    borderBottom: "1px solid var(--border)",
-                  }}
+                  className="flex justify-between" style={{padding:"0.25rem 0",borderBottom:"1px solid var(--border)"}}
                 >
-                  <span style={{ color: "var(--text-muted)", fontWeight: 500 }}>
+                  <span className="font-medium" style={{color:"var(--text-muted)"}}>
                     {k === "status"
                       ? "Statut"
                       : k === "priorite"
@@ -2808,16 +2462,12 @@ const InboxPage = ({ userRole }) => {
                                   ? "Lien visio"
                                   : k}
                   </span>
-                  <span style={{ fontWeight: 600 }}>{String(v)}</span>
+                  <span className="font-semibold">{String(v)}</span>
                 </div>
               ))}
             </div>
             <div
-              style={{
-                display: "flex",
-                gap: "0.75rem",
-                justifyContent: "center",
-              }}
+              className="flex justify-center" style={{gap:"0.75rem"}}
             >
               <button
                 type="button"
@@ -2829,8 +2479,7 @@ const InboxPage = ({ userRole }) => {
               <button
                 type="button"
                 onClick={handleSaveAll}
-                className="btn btn-primary"
-                style={{ fontWeight: 700 }}
+                className="btn btn-primary font-bold"
               >
                 Confirmer
               </button>
@@ -2841,17 +2490,10 @@ const InboxPage = ({ userRole }) => {
 
       {/* Create Task Modal */}
       {createTaskModal && (
-        <div className="fade-in" style={{ width: "100%", padding: "0" }}>
-          <div className="" style={{ width: "100%", padding: "0" }}>
+        <div className="fade-in w-full" style={{padding:"0"}}>
+          <div className="w-full" style={{padding:"0"}}>
             <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-                marginBottom: "2rem",
-                borderBottom: "1px solid var(--border)",
-                paddingBottom: "1.5rem",
-              }}
+              className="flex items-center gap-4 mb-8" style={{borderBottom:"1px solid var(--border)",paddingBottom:"1.5rem"}}
             >
               <button
                 type="button"
@@ -2859,30 +2501,24 @@ const InboxPage = ({ userRole }) => {
                   setCreateTaskModal(false);
                   setNewTaskFile(null);
                 }}
-                className="btn btn-outline"
-                style={{ padding: "0.5rem 1rem", color: "var(--text-main)" }}
+                className="btn btn-outline text-[var(--text-main)]" style={{padding:"0.5rem 1rem"}}
               >
                 ← Retour
               </button>
-              <h3 style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600 }}>
+              <h3 className="font-semibold" style={{fontSize:"1.5rem"}}>
                 {tab === "interne" ? "Répondre au message" : "Nouveau Dossier"}
               </h3>
             </div>
 
             <div
-              style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+              className="flex flex-col gap-4"
             >
               {tab === "interne" && (
                 <>
                   <div>
                     <label
                       htmlFor="task-subject"
-                      style={{
-                        display: "block",
-                        marginBottom: "0.5rem",
-                        fontWeight: 500,
-                        
-                      }}
+                      className="block mb-2 font-medium"
                     >
                       Objet de la réponse
                     </label>
@@ -2892,24 +2528,13 @@ const InboxPage = ({ userRole }) => {
                       value={taskSubject}
                       onChange={(e) => setTaskSubject(e.target.value)}
                       placeholder="Sujet..."
-                      className="input-field"
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        borderRadius: "8px",
-                        border: "1px solid var(--border)",
-                      }}
+                      className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="task-message"
-                      style={{
-                        display: "block",
-                        marginBottom: "0.5rem",
-                        fontWeight: 500,
-                        
-                      }}
+                      className="block mb-2 font-medium"
                     >
                       Message
                     </label>
@@ -2918,15 +2543,7 @@ const InboxPage = ({ userRole }) => {
                       value={taskDescription}
                       onChange={(e) => setTaskDescription(e.target.value)}
                       placeholder="Votre réponse..."
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        borderRadius: "8px",
-                        border: "1px solid var(--border)",
-                        minHeight: "120px",
-                        resize: "vertical",
-                        fontFamily: "inherit",
-                      }}
+                      className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",minHeight:"120px",resize:"vertical",fontFamily:"inherit"}}
                     ></textarea>
                   </div>
                 </>
@@ -2936,22 +2553,12 @@ const InboxPage = ({ userRole }) => {
                 <div>
                   <label
                     htmlFor="task-dossier"
-                    style={{
-                      display: "block",
-                      marginBottom: "0.5rem",
-                      fontWeight: 500,
-                      
-                    }}
+                    className="block mb-2 font-medium"
                   >
                     Dossier associé
                   </label>
                   <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1.5fr 2fr",
-                      gap: "1rem",
-                      alignItems: "start",
-                    }}
+                    className="grid gap-4" style={{gridTemplateColumns:"1fr 1.5fr 2fr",alignItems:"start"}}
                   >
                     <select
                       value={taskDossierSection}
@@ -2959,14 +2566,7 @@ const InboxPage = ({ userRole }) => {
                         setTaskDossierSection(e.target.value);
                         setTaskDossierCible("");
                       }}
-                      className="input-field"
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        borderRadius: "8px",
-                        border: "1px solid var(--border)",
-                        background: "#FFF",
-                      }}
+                      className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF"}}
                     >
                       <option value="">-- Section --</option>
                       <option value="equipe">Équipe</option>
@@ -3010,25 +2610,14 @@ const InboxPage = ({ userRole }) => {
                       value={taskNewDossierName}
                       onChange={(e) => setTaskNewDossierName(e.target.value)}
                       placeholder="Nom du nouveau dossier..."
-                      className="input-field"
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        borderRadius: "8px",
-                        border: "1px solid var(--border)",
-                      }}
+                      className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
                     />
                   </div>
 
                   {/* File upload for dossier */}
                   <div style={{ marginTop: "0.75rem" }}>
                     <label
-                      style={{
-                        display: "block",
-                        marginBottom: "0.35rem",
-                        fontWeight: 500,
-                        
-                      }}
+                      className="block font-medium" style={{marginBottom:"0.35rem"}}
                     >
                       <Paperclip
                         size={13}
@@ -3042,14 +2631,7 @@ const InboxPage = ({ userRole }) => {
                       onChange={(e) =>
                         setDossierFile(e.target.files?.[0] || null)
                       }
-                      style={{
-                        width: "100%",
-                        padding: "0.5rem",
-                        borderRadius: "8px",
-                        border: "1px solid var(--border)",
-                        background: "#F8FAFC",
-                        
-                      }}
+                      className="w-full p-2" style={{borderRadius:"8px",border:"1px solid var(--border)",background:"#F8FAFC"}}
                     />
                     {dossierFile && (
                       <p
@@ -3067,54 +2649,25 @@ const InboxPage = ({ userRole }) => {
 
                   {processMsg?.attachment && (
                     <div
-                      style={{
-                        marginTop: "1rem",
-                        padding: "0.75rem",
-                        background: "#F0F9FF",
-                        borderRadius: "8px",
-                        border: "1px solid #BAE6FD",
-                      }}
+                      className="mt-4" style={{padding:"0.75rem",background:"#F0F9FF",borderRadius:"8px",border:"1px solid #BAE6FD"}}
                     >
                       <label
-                        style={{
-                          display: "block",
-                          marginBottom: "0.5rem",
-                          fontWeight: 500,
-                          
-                          color: "var(--primary-dark)",
-                        }}
+                        className="block mb-2 font-medium" style={{color:"var(--primary-dark)"}}
                       >
                         Inclure les pièces jointes du message :
                       </label>
                       <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "0.5rem",
-                        }}
+                        className="flex flex-col gap-2"
                       >
                         {processMsg.attachment.split(",").map((att) => {
                           const fileName = att.split("/").pop();
                           return (
                             <div
                               key={att}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "1rem",
-                              }}
+                              className="flex items-center gap-4"
                             >
                               <label
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: "0.5rem",
-                                  cursor: "pointer",
-                                  margin: 0,
-                                  
-                                  fontWeight: 500,
-                                  color: "var(--text-main)",
-                                }}
+                                className="flex items-center gap-2 cursor-pointer font-medium text-[var(--text-main)]"
                               >
                                 <input
                                   type="checkbox"
@@ -3132,7 +2685,7 @@ const InboxPage = ({ userRole }) => {
                                         ),
                                       );
                                   }}
-                                  style={{ cursor: "pointer" }}
+                                  className="cursor-pointer"
                                 />
                                 <Paperclip
                                   size={14}
@@ -3146,14 +2699,7 @@ const InboxPage = ({ userRole }) => {
                                   e.preventDefault();
                                   setPreviewFile(att);
                                 }}
-                                style={{
-                                  background: "none",
-                                  border: "none",
-                                  cursor: "pointer",
-                                  color: "var(--primary)",
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
+                                className="cursor-pointer flex items-center" style={{background:"none",border:"none",color:"var(--primary)"}}
                                 title="Prévisualiser"
                               >
                                 <Eye size={16} />
@@ -3170,42 +2716,25 @@ const InboxPage = ({ userRole }) => {
               {tab === "interne" && (
                 <div>
                   <span
-                    style={{
-                      display: "block",
-                      marginBottom: "0.5rem",
-                      fontWeight: 500,
-                      
-                    }}
+                    className="block mb-2 font-medium"
                   >
                     Pièces jointes
                   </span>
                   <div
-                    style={{
-                      background: "#F8FAFC",
-                      padding: "1rem",
-                      borderRadius: "8px",
-                      border: "1px solid var(--border)",
-                    }}
+                    className="p-4" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)"}}
                   >
                     <label
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        cursor: "pointer",
-                        color: "var(--primary)",
-                        marginBottom: 0,
-                      }}
+                      className="flex items-center gap-2 cursor-pointer" style={{color:"var(--primary)"}}
                     >
                       <Files size={16} />
-                      <span style={{  fontWeight: 500 }}>
+                      <span className="font-medium">
                         {newTaskFile
                           ? newTaskFile.name
                           : "Joindre un fichier..."}
                       </span>
                       <input
                         type="file"
-                        style={{ display: "none" }}
+                        className="hidden"
                         onChange={(e) => {
                           if (e.target.files && e.target.files.length > 0) {
                             setNewTaskFile(e.target.files[0]);
@@ -3219,12 +2748,7 @@ const InboxPage = ({ userRole }) => {
             </div>
 
             <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "1rem",
-                marginTop: "1.5rem",
-              }}
+              className="flex justify-end gap-4 mt-6"
             >
               <button
                 type="button"
@@ -3266,59 +2790,26 @@ const InboxPage = ({ userRole }) => {
       {/* Assign Confirmation Modal */}
       {assignMsg && (
         <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
+          className="fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
         >
           <div
-            style={{
-              background: "#FFF",
-              padding: "2rem",
-              borderRadius: "8px",
-              width: "90%",
-              maxWidth: "400px",
-              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-            }}
+            className="p-8" style={{background:"#FFF",borderRadius:"8px",width:"90%",maxWidth:"400px",boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}
           >
             <h3
-              style={{
-                marginTop: 0,
-                marginBottom: "1rem",
-                color: "var(--text-main)",
-                fontSize: "1.25rem",
-              }}
+              className="mb-4 text-[var(--text-main)]" style={{fontSize:"1.25rem"}}
             >
               Mettre en copie le message
             </h3>
-            <div style={{ marginBottom: "1.5rem" }}>
+            <div className="mb-6">
               <label
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: 500,
-                }}
+                className="block mb-2 font-medium"
               >
                 Sélectionner le destinataire :
               </label>
               <select
                 value={selectedAssignee}
                 onChange={(e) => setSelectedAssignee(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  background: "#FFF",
-                }}
+                className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF"}}
               >
                 <option value="">-- Choisir un utilisateur --</option>
                 {users.map((u) => (
@@ -3329,11 +2820,7 @@ const InboxPage = ({ userRole }) => {
               </select>
             </div>
             <div
-              style={{
-                display: "flex",
-                gap: "1rem",
-                justifyContent: "flex-end",
-              }}
+              className="flex gap-4 justify-end"
             >
               <button
                 type="button"
@@ -3394,18 +2881,7 @@ const InboxPage = ({ userRole }) => {
             onClick={() =>
               setToast({ show: false, message: "", type: "success" })
             }
-            style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              color: "inherit",
-              fontWeight: "bold",
-              fontSize: "1.1rem",
-              padding: "0 4px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            className="cursor-pointer font-bold flex items-center justify-center" style={{background:"transparent",border:"none",color:"inherit",fontSize:"1.1rem",padding:"0 4px"}}
             title="Fermer"
           >
             ✕

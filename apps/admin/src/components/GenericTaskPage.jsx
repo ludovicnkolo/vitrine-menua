@@ -71,12 +71,7 @@ const TaskField = ({
     <div>
       <label
         htmlFor={id}
-        style={{
-          display: "block",
-          marginBottom: "0.5rem",
-          fontWeight: 500,
-          
-        }}
+        className="block mb-2 font-medium"
       >
         {label}
       </label>
@@ -766,44 +761,15 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     if (!createTaskModal) return null;
     return (
       <div
-        className="fade-in"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(15, 23, 42, 0.6)",
-          backdropFilter: "blur(4px)",
-          zIndex: 9999,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "1rem",
-        }}
+        className="fade-in fixed flex items-center justify-center p-4" style={{backgroundColor:"rgba(15, 23, 42, 0.6)",backdropFilter:"blur(4px)",zIndex:9999}}
       >
         <div
-          style={{
-            background: "#FFF",
-            padding: "2rem",
-            borderRadius: "12px",
-            boxShadow:
-              "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-            width: "100%",
-            maxWidth: "750px",
-            maxHeight: "90vh",
-            overflowY: "auto",
-          }}
+          className="p-8 w-full" style={{background:"#FFF",borderRadius:"12px",boxShadow:"0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",maxWidth:"750px",maxHeight:"90vh",overflowY:"auto"}}
         >
           <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "1.5rem",
-            }}
+            className="flex justify-between items-center mb-6"
           >
-            <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
+            <h3 className="font-semibold" style={{fontSize:"1.25rem"}}>
               Créer une tâche
             </h3>
             <button
@@ -814,17 +780,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 setSelectedParentDocs([]);
                 setSelectedMissionDocs([]);
               }}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                color: "var(--text-muted)",
-                fontSize: "0.75rem",
-                gap: "2px",
-              }}
+              className="cursor-pointer flex flex-col items-center" style={{background:"none",border:"none",color:"var(--text-muted)",fontSize:"0.75rem",gap:"2px"}}
             >
               <X size={20} />
               <span>Fermer</span>
@@ -832,16 +788,12 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           </div>
 
           <div
-            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+            className="flex flex-col gap-4"
           >
             <div>
               <label
                 htmlFor="new-task-subject"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: 500,
-                }}
+                className="block mb-2 font-medium"
               >
                 Objet de la tâche *
               </label>
@@ -851,46 +803,26 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 value={newTaskSubject}
                 onChange={(e) => setNewTaskSubject(e.target.value)}
                 placeholder="Sujet de la tâche..."
-                className="input-field"
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                }}
+                className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
               />
             </div>
 
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1rem",
-              }}
+              className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}
             >
               <div>
                 <label
                   htmlFor="new-task-assigned-to"
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    fontWeight: 500,
-                  }}
+                  className="block mb-2 font-medium"
                 >
                   Assigné à *
                 </label>
                 <select
                   id="new-task-assigned-to"
-                  className="input-field"
+                  className="input-field w-full"
                   value={newTaskAssignedTo}
                   onChange={(e) => setNewTaskAssignedTo(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                    background: "#FFF",
-                  }}
+                  style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF"}}
                 >
                   <option value="">-- Sélectionner un membre --</option>
                   {users
@@ -912,26 +844,16 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               <div>
                 <label
                   htmlFor="new-task-relecteur"
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    fontWeight: 500,
-                  }}
+                  className="block mb-2 font-medium"
                 >
                   Relecteur (Contrôleur)
                 </label>
                 <select
                   id="new-task-relecteur"
-                  className="input-field"
+                  className="input-field w-full"
                   value={newTaskRelecteur}
                   onChange={(e) => setNewTaskRelecteur(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                    background: "#FFF",
-                  }}
+                  style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF"}}
                 >
                   <option value="">-- Aucun relecteur --</option>
                   {users
@@ -950,20 +872,12 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             </div>
 
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1rem",
-              }}
+              className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}
             >
               <div>
                 <label
                   htmlFor="new-task-echeance"
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    fontWeight: 500,
-                  }}
+                  className="block mb-2 font-medium"
                 >
                   Échéance *
                 </label>
@@ -979,24 +893,14 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   }
                   value={newTaskEcheance}
                   onChange={(e) => setNewTaskEcheance(e.target.value)}
-                  className="input-field"
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                  }}
+                  className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="new-task-mission-associee"
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    fontWeight: 500,
-                  }}
+                  className="block mb-2 font-medium"
                 >
                   Mission associée
                 </label>
@@ -1011,16 +915,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                         : ""
                   }
                   readOnly
-                  className="input-field"
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                    background: "#F8FAFC",
-                    color: "var(--text-muted)",
-                    fontWeight: 600,
-                  }}
+                  className="input-field w-full font-semibold" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#F8FAFC",color:"var(--text-muted)"}}
                 />
               </div>
             </div>
@@ -1028,11 +923,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             <div>
               <label
                 htmlFor="new-task-message"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: 500,
-                }}
+                className="block mb-2 font-medium"
               >
                 Message / Consignes *
               </label>
@@ -1041,26 +932,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 value={newTaskMessage}
                 onChange={(e) => setNewTaskMessage(e.target.value)}
                 placeholder="Détails de la tâche à effectuer..."
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  minHeight: "120px",
-                  resize: "vertical",
-                  fontFamily: "inherit",
-                }}
+                className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",minHeight:"120px",resize:"vertical",fontFamily:"inherit"}}
               ></textarea>
             </div>
           </div>
 
           <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: "1rem",
-              marginTop: "2rem",
-            }}
+            className="flex justify-end gap-4 mt-8"
           >
             <button
               type="button"
@@ -1091,16 +969,9 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
   if (editTask) {
     return (
-      <div className="fade-in" style={{ width: "100%", padding: "0" }}>
+      <div className="fade-in w-full" style={{padding:"0"}}>
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "1rem",
-            marginBottom: "2rem",
-            borderBottom: "1px solid var(--border)",
-            paddingBottom: "1.5rem",
-          }}
+          className="flex items-center gap-4 mb-8" style={{borderBottom:"1px solid var(--border)",paddingBottom:"1.5rem"}}
         >
           <button
             type="button"
@@ -1113,26 +984,17 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           >
             ← Retour
           </button>
-          <h2 style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600 }}>
+          <h2 className="font-semibold" style={{fontSize:"1.5rem"}}>
             {mode === "MISSION" ? "Modifier mission :" : "Modifier tâche :"}{" "}
             {editTask.reference || editTask.id}
           </h2>
         </div>
 
         <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "1rem",
-            marginBottom: "1.5rem",
-          }}
+          className="flex flex-col gap-4 mb-6"
         >
           <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-            }}
+            className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}
           >
             <TaskField
               label={"Créé par"}
@@ -1141,18 +1003,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             <div>
               <label
                 htmlFor="edit-task-assigned-to"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: 500,
-                  
-                }}
+                className="block mb-2 font-medium"
               >
                 Assigné à
               </label>
               <select
                 id="edit-task-assigned-to"
-                className="input-field"
+                className="input-field w-full"
                 value={editFormData.assignedToId}
                 onChange={(e) =>
                   setEditFormData({
@@ -1160,13 +1017,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     assignedToId: e.target.value,
                   })
                 }
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  borderRadius: "8px",
-                  border: "1px solid var(--primary)",
-                  background: "#FFF",
-                }}
+                style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--primary)",background:"#FFF"}}
               >
                 <option value="">-- Sélectionner un membre --</option>
                 {users
@@ -1187,27 +1038,18 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           </div>
 
           <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-            }}
+            className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}
           >
             <div>
               <label
                 htmlFor="edit-task-relecteur"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: 500,
-                  
-                }}
+                className="block mb-2 font-medium"
               >
                 Relecteur
               </label>
               <select
                 id="edit-task-relecteur"
-                className="input-field"
+                className="input-field w-full"
                 value={editFormData.relecteurId || ""}
                 onChange={(e) =>
                   setEditFormData({
@@ -1215,13 +1057,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     relecteurId: e.target.value,
                   })
                 }
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  borderRadius: "8px",
-                  border: "1px solid var(--primary)",
-                  background: "#FFF",
-                }}
+                style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--primary)",background:"#FFF"}}
               >
                 <option value="">-- Aucun relecteur --</option>
                 {users
@@ -1250,12 +1086,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           <div>
             <label
               htmlFor="edit-task-echeance"
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                fontWeight: 500,
-                
-              }}
+              className="block mb-2 font-medium"
             >
               Échéance
             </label>
@@ -1267,13 +1098,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               onChange={(e) =>
                 setEditFormData({ ...editFormData, echeance: e.target.value })
               }
-              className="input-field"
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                borderRadius: "8px",
-                border: "1px solid var(--primary)",
-              }}
+              className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--primary)"}}
             />
           </div>
 
@@ -1299,24 +1124,11 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           />
 
           <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "2rem",
-              padding: "0.75rem 1rem",
-              background: "#F8FAFC",
-              borderRadius: "8px",
-              border: "1px solid var(--border)",
-              width: "fit-content",
-            }}
+            className="flex items-center w-fit" style={{gap:"2rem",padding:"0.75rem 1rem",background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)"}}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <div className="flex items-center gap-4">
               <span
-                style={{
-                  fontWeight: 500,
-                  
-                  color: "var(--text-main)",
-                }}
+                className="font-medium text-[var(--text-main)]"
               >
                 {mode === "MISSION"
                   ? "Statut de la mission :"
@@ -1328,19 +1140,11 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           </div>
 
           <div
-            style={{
-              marginTop: "1rem",
-              borderTop: "1px solid var(--border)",
-              paddingTop: "1.5rem",
-            }}
+            className="mt-4" style={{borderTop:"1px solid var(--border)",paddingTop:"1.5rem"}}
           >
             {mode === "MISSION" && (
               <h4
-                style={{
-                  margin: "0 0 1rem 0",
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                }}
+                className="font-semibold" style={{margin:"0 0 1rem 0",fontSize:"1rem"}}
               >
                 Gérer les tâches liées
               </h4>
@@ -1349,11 +1153,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             editTask.taches &&
             editTask.taches.length > 0 ? (
               <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-                  gap: "1rem",
-                }}
+                className="grid gap-4" style={{gridTemplateColumns:"repeat(auto-fill, minmax(250px, 1fr))"}}
               >
                 {editTask.taches.map((sub) => (
                   <button
@@ -1372,28 +1172,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     onBlur={(e) =>
                       (e.currentTarget.style.borderColor = "var(--border)")
                     }
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      padding: "1rem",
-                      background: "#F8FAFC",
-                      borderRadius: "8px",
-                      border: "1px solid var(--border)",
-                      cursor: "pointer",
-                      transition: "border-color 0.2s",
-                      width: "100%",
-                      textAlign: "left",
-                      fontFamily: "inherit",
-                      fontSize: "inherit",
-                    }}
+                    className="flex justify-between items-center p-4 cursor-pointer w-full text-left" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)",transition:"border-color 0.2s",fontFamily:"inherit",fontSize:"inherit"}}
                   >
                     <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "0.25rem",
-                      }}
+                      className="flex flex-col" style={{gap:"0.25rem"}}
                     >
                       <strong
                         className="truncate-text"
@@ -1401,16 +1183,12 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                       >
                         {sub.reference || "Sans réf"}
                       </strong>
-                      <span style={{ display: "flex", alignItems: "center" }}>
+                      <span className="flex items-center">
                         {getStatusBadge(sub.status)}
                       </span>
                     </div>
                     <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "1rem",
-                      }}
+                      className="flex items-center gap-4"
                     >
                       <button
                         type="button"
@@ -1420,12 +1198,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                             `Tâche ${sub.id} supprimée avec succès !`,
                           );
                         }}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          color: "var(--danger)",
-                        }}
+                        className="cursor-pointer" style={{background:"none",border:"none",color:"var(--danger)"}}
                         title="Supprimer la tâche liée"
                       >
                         <Trash size={18} />
@@ -1436,15 +1209,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               </div>
             ) : (
               <div
-                style={{
-                  padding: "1rem",
-                  background: "#F8FAFC",
-                  borderRadius: "8px",
-                  border: "1px dashed var(--border)",
-                  textAlign: "center",
-                  color: "var(--text-muted)",
-                  
-                }}
+                className="p-4 text-center" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px dashed var(--border)",color:"var(--text-muted)"}}
               >
                 Aucune tâche liée pour le moment.
               </div>
@@ -1453,7 +1218,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         </div>
 
         <div
-          style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
+          className="flex justify-end gap-4"
         >
           <button
             type="button"
@@ -1586,25 +1351,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     };
 
     return (
-      <div className="fade-in" style={{ width: "100%", padding: "0" }}>
+      <div className="fade-in w-full" style={{padding:"0"}}>
         {/* Header Card conforming to Screenshots 2 & 3 */}
         <div
-          style={{
-            background: "#FFF",
-            border: "1px solid var(--border)",
-            borderRadius: "12px",
-            padding: "1.25rem 1.5rem",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "1.5rem",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-            flexWrap: "wrap",
-            gap: "1rem",
-          }}
+          className="flex justify-between items-center mb-6 flex-wrap gap-4" style={{background:"#FFF",border:"1px solid var(--border)",borderRadius:"12px",padding:"1.25rem 1.5rem",boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}
         >
           {/* Left info with colored icon */}
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <div className="flex items-center gap-4">
             <div
               style={{
                 width: "48px",
@@ -1625,14 +1378,9 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               )}
             </div>
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+              <div className="flex items-center flex-wrap" style={{gap:"0.75rem"}}>
                 <h2
-                  style={{
-                    margin: 0,
-                    fontSize: "1.35rem",
-                    fontWeight: 700,
-                    color: "var(--text-main)",
-                  }}
+                  className="font-bold text-[var(--text-main)]" style={{fontSize:"1.35rem"}}
                 >
                   {mode === "MISSION" ? "Consultation mission :" : "Consultation tâche :"}{" "}
                   {consultTask.reference || consultTask.id}
@@ -1655,7 +1403,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           </div>
 
           {/* Right Action buttons */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+          <div className="flex items-center flex-wrap" style={{gap:"0.75rem"}}>
             {mode === "MISSION" &&
               !["TERMINE", "ARCHIVE", "BLOQUE", "EN_ATTENTE"].includes(consultTask.status) &&
               !["BLOQUE", "EN_ATTENTE"].includes(consultTask.dossier?.status) &&
@@ -1663,19 +1411,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 <button
                   type="button"
                   onClick={() => setCreateTaskModal(true)}
-                  style={{
-                    background: "#1E3A8A",
-                    border: "none",
-                    color: "#FFF",
-                    padding: "0.55rem 1.1rem",
-                    borderRadius: "8px",
-                    fontWeight: 600,
-                    fontSize: "0.85rem",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.4rem",
-                  }}
+                  className="text-white font-semibold cursor-pointer flex items-center" style={{background:"#1E3A8A",border:"none",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem",gap:"0.4rem"}}
                 >
                   + Créer une tâche
                 </button>
@@ -1699,19 +1435,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   });
                   setConsultTask(null);
                 }}
-                style={{
-                  background: "#FFF",
-                  border: "1px solid #F59E0B",
-                  color: "#D97706",
-                  padding: "0.55rem 1rem",
-                  borderRadius: "8px",
-                  fontWeight: 600,
-                  fontSize: "0.85rem",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.4rem",
-                }}
+                className="font-semibold cursor-pointer flex items-center" style={{background:"#FFF",border:"1px solid #F59E0B",color:"#D97706",padding:"0.55rem 1rem",borderRadius:"8px",fontSize:"0.85rem",gap:"0.4rem"}}
               >
                 <Pencil size={15} /> Modifier
               </button>
@@ -1723,16 +1447,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 setConsultTask(null);
                 setTaskFile(null);
               }}
-              style={{
-                background: "var(--text-main)",
-                border: "none",
-                color: "#FFF",
-                padding: "0.55rem 1.1rem",
-                borderRadius: "8px",
-                fontWeight: 600,
-                fontSize: "0.85rem",
-                cursor: "pointer",
-              }}
+              className="text-white font-semibold cursor-pointer" style={{background:"var(--text-main)",border:"none",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem"}}
             >
               ← Retour
             </button>
@@ -1741,41 +1456,23 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
         {/* Two-Column Grid Conforming to Screenshots 2 & 3 */}
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1.1fr",
-            gap: "1.5rem",
-            alignItems: "start",
-          }}
+          className="grid gap-6" style={{gridTemplateColumns:"1fr 1.1fr",alignItems:"start"}}
         >
           {/* Left Column */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <div className="flex flex-col gap-6">
             {/* Card 1: IDENTIFICATION */}
             <div
-              style={{
-                background: "#FFF",
-                border: "1px solid var(--border)",
-                borderRadius: "12px",
-                padding: "1.5rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
-              }}
+              className="p-6" style={{background:"#FFF",border:"1px solid var(--border)",borderRadius:"12px",boxShadow:"0 1px 3px rgba(0,0,0,0.03)"}}
             >
               <div
-                style={{
-                  fontWeight: 700,
-                  fontSize: "0.85rem",
-                  letterSpacing: "0.05em",
-                  textTransform: "uppercase",
-                  color: "var(--text-main)",
-                  marginBottom: "1.25rem",
-                }}
+                className="font-bold text-[var(--text-main)]" style={{fontSize:"0.85rem",letterSpacing:"0.05em",textTransform:"uppercase",marginBottom:"1.25rem"}}
               >
                 {mode === "MISSION"
                   ? "Identification de la mission"
                   : "Identification de la tâche"}
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+              <div className="flex flex-col" style={{gap:"0.85rem"}}>
                 {/* Nom */}
                 <div
                   style={{
@@ -1785,10 +1482,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Nom :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {consultTask.reference || consultTask.id}
                   </div>
                 </div>
@@ -1802,10 +1499,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Objet :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)", wordBreak: "break-word" }}>
+                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem",wordBreak:"break-word"}}>
                     {subj || "-"}
                   </div>
                 </div>
@@ -1819,10 +1516,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     {mode === "MISSION" ? "Dossier associé :" : "Mission Liée :"}
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {dossierAssociated}
                   </div>
                 </div>
@@ -1837,10 +1534,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                       padding: "0.75rem 1rem",
                     }}
                   >
-                    <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                    <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                       Dossier tâche :
                     </div>
-                    <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                    <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                       {consultTask.dossierTache.name}
                     </div>
                   </div>
@@ -1858,10 +1555,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                         padding: "0.75rem 1rem",
                       }}
                     >
-                      <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                      <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                         Dossiers autorisés :
                       </div>
-                      <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                      <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                         {consultTask.authorizedDossiers.map((d) => d.name).join(", ")}
                       </div>
                     </div>
@@ -1871,21 +1568,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
             {/* Card 2: Consignes / Description */}
             <div
-              style={{
-                background: "#FFF",
-                border: "1px solid var(--border)",
-                borderRadius: "12px",
-                padding: "1.5rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
-              }}
+              className="p-6" style={{background:"#FFF",border:"1px solid var(--border)",borderRadius:"12px",boxShadow:"0 1px 3px rgba(0,0,0,0.03)"}}
             >
               <div
-                style={{
-                  fontWeight: 700,
-                  fontSize: "0.95rem",
-                  color: "var(--text-main)",
-                  marginBottom: "0.75rem",
-                }}
+                className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem",marginBottom:"0.75rem"}}
               >
                 Consignes / Description
               </div>
@@ -1899,21 +1585,12 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 }}
               >
                 <div
-                  style={{
-                    whiteSpace: "pre-wrap",
-                    color: "var(--text-main)",
-                    fontSize: "0.9rem",
-                    fontWeight: 500,
-                  }}
+                  className="text-[var(--text-main)] font-medium" style={{whiteSpace:"pre-wrap",fontSize:"0.9rem"}}
                 >
                   {msg || (mode === "MISSION" ? "Aucune consigne fournie pour cette mission." : "Aucune consigne fournie pour cette tâche.")}
                 </div>
                 <div
-                  style={{
-                    fontSize: "0.75rem",
-                    color: "#94A3B8",
-                    marginTop: "0.5rem",
-                  }}
+                  className="mt-2" style={{fontSize:"0.75rem",color:"#94A3B8"}}
                 >
                   {mode === "MISSION"
                     ? "Consignes opérationnelles enregistrées pour la réalisation de cette mission."
@@ -1924,33 +1601,20 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           </div>
 
           {/* Right Column */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <div className="flex flex-col gap-6">
             {/* Card 3: GESTION */}
             <div
-              style={{
-                background: "#FFF",
-                border: "1px solid var(--border)",
-                borderRadius: "12px",
-                padding: "1.5rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
-              }}
+              className="p-6" style={{background:"#FFF",border:"1px solid var(--border)",borderRadius:"12px",boxShadow:"0 1px 3px rgba(0,0,0,0.03)"}}
             >
               <div
-                style={{
-                  fontWeight: 700,
-                  fontSize: "0.85rem",
-                  letterSpacing: "0.05em",
-                  textTransform: "uppercase",
-                  color: "var(--text-main)",
-                  marginBottom: "1.25rem",
-                }}
+                className="font-bold text-[var(--text-main)]" style={{fontSize:"0.85rem",letterSpacing:"0.05em",textTransform:"uppercase",marginBottom:"1.25rem"}}
               >
                 {mode === "MISSION"
                   ? "Gestion de la mission"
                   : "Gestion de la tâche"}
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+              <div className="flex flex-col" style={{gap:"0.85rem"}}>
                 {/* Créé par */}
                 <div
                   style={{
@@ -1960,12 +1624,12 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Créé par :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {createdByName}{" "}
-                    <span style={{ color: "#64748B", fontWeight: 500, fontSize: "0.85rem" }}>
+                    <span className="font-medium" style={{color:"#64748B",fontSize:"0.85rem"}}>
                       ({createdByRole})
                     </span>
                   </div>
@@ -1980,12 +1644,12 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Assigné à :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {assignedToName}{" "}
-                    <span style={{ color: "#64748B", fontWeight: 500, fontSize: "0.85rem" }}>
+                    <span className="font-medium" style={{color:"#64748B",fontSize:"0.85rem"}}>
                       ({assignedToRole})
                     </span>
                   </div>
@@ -2000,10 +1664,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Relecteur :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {relecteurName}
                   </div>
                 </div>
@@ -2017,10 +1681,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Date de création :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {createdAtFormatted}
                   </div>
                 </div>
@@ -2034,10 +1698,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Échéance :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {echeanceFormatted}
                   </div>
                 </div>
@@ -2051,10 +1715,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.35rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.35rem"}}>
                     Statut :
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+                  <div className="flex items-center flex-wrap" style={{gap:"0.6rem"}}>
                     <select
                       value={pendingStatus || consultTask.status || "NOUVEAU"}
                       onChange={(e) => setPendingStatus(e.target.value)}
@@ -2092,19 +1756,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                             handleWorkflowAction(consultTask.id, pendingStatus);
                           }
                         }}
-                        style={{
-                          padding: "0.45rem 0.85rem",
-                          fontSize: "0.8rem",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.35rem",
-                          background: "#1E3A8A",
-                          color: "#FFF",
-                          borderRadius: "6px",
-                          border: "none",
-                          cursor: "pointer",
-                          fontWeight: 600,
-                        }}
+                        className="flex items-center text-white cursor-pointer font-semibold" style={{padding:"0.45rem 0.85rem",fontSize:"0.8rem",gap:"0.35rem",background:"#1E3A8A",borderRadius:"6px",border:"none"}}
                       >
                         <CheckSquare size={14} /> Enregistrer
                       </button>
@@ -2127,7 +1779,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   color: "#6B21A8",
                 }}
               >
-                <div style={{ fontWeight: 700, fontSize: "0.9rem", marginBottom: "0.25rem" }}>
+                <div className="font-bold" style={{fontSize:"0.9rem",marginBottom:"0.25rem"}}>
                   Statut : En attente d'approbation par le Relecteur
                 </div>
                 <div style={{ fontSize: "0.8rem", color: "#7E22CE" }}>
@@ -2144,7 +1796,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   color: "#854D0E",
                 }}
               >
-                <div style={{ fontWeight: 700, fontSize: "0.9rem", marginBottom: "0.25rem" }}>
+                <div className="font-bold" style={{fontSize:"0.9rem",marginBottom:"0.25rem"}}>
                   Attention : Relecteur qualité non assigné (-)
                 </div>
                 <div style={{ fontSize: "0.8rem", color: "#A16207" }}>
@@ -2165,38 +1817,19 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 }}
               >
                 <div
-                  style={{
-                    fontWeight: 700,
-                    fontSize: "0.85rem",
-                    color: "var(--text-main)",
-                    marginBottom: "0.75rem",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
+                  className="font-bold text-[var(--text-main)] flex items-center gap-2" style={{fontSize:"0.85rem",marginBottom:"0.75rem"}}
                 >
                   <Paperclip size={15} /> Documents attachés ({consultTask.documents.length})
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <div className="flex flex-col gap-2">
                   {consultTask.documents.map((doc) => (
                     <div
                       key={doc.id}
                       onClick={() => setPreviewFile(doc.url)}
-                      style={{
-                        padding: "0.6rem 0.85rem",
-                        background: "#F8FAFC",
-                        borderRadius: "6px",
-                        border: "1px solid var(--border)",
-                        fontSize: "0.85rem",
-                        color: "var(--primary)",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                      }}
+                      className="cursor-pointer flex items-center gap-2" style={{padding:"0.6rem 0.85rem",background:"#F8FAFC",borderRadius:"6px",border:"1px solid var(--border)",fontSize:"0.85rem",color:"var(--primary)"}}
                     >
                       <FileText size={16} />
-                      <span style={{ fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      <span className="font-medium" style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
                         {doc.name}
                       </span>
                     </div>
@@ -2208,7 +1841,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         </div>
 
         {/* Fil de corrections — visible selon le rôle et le statut */}
-        <div style={{ marginTop: "1.5rem" }}>
+        <div className="mt-6">
           <FeedbackThread
             adminFeedback={consultTask.adminFeedback}
             managerFeedback={consultTask.managerFeedback}
@@ -2269,20 +1902,11 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   return (
     <div>
       <div
-        className="flex justify-between items-center mb-6"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "1.5rem",
-        }}
+        className="flex justify-between items-center mb-6 flex justify-between mb-6"
       >
         <div>
           <h1
-            style={{
-              fontSize: "1.5rem",
-              fontWeight: 600,
-              color: "var(--text-main)",
-            }}
+            className="font-semibold text-[var(--text-main)]" style={{fontSize:"1.5rem"}}
           >
             {mode === "MISSION" ? t("workspace.tabs.missions", "Missions") : t("workspace.tabs.taches", "Tâches")}
           </h1>
@@ -2293,39 +1917,19 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       </div>
 
       <div
-        style={{
-          display: "flex",
-          gap: "1rem",
-          marginBottom: "1.5rem",
-          background: "#F8FAFC",
-          padding: "1rem",
-          borderRadius: "8px",
-          border: "1px solid var(--border)",
-        }}
+        className="flex gap-4 mb-6 p-4" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)"}}
       >
-        <div style={{ flex: 1, position: "relative" }}>
+        <div className="relative" style={{flex:1}}>
           <Search
             size={18}
-            style={{
-              position: "absolute",
-              left: "1rem",
-              top: "50%",
-              transform: "translateY(-50%)",
-              color: "var(--text-muted)",
-            }}
+            className="absolute" style={{left:"1rem",top:"50%",transform:"translateY(-50%)",color:"var(--text-muted)"}}
           />
           <input
             type="text"
             placeholder={t("task.searchPlaceholder", "Rechercher par référence, responsable...")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input-field"
-            style={{
-              width: "100%",
-              padding: "0.75rem 1rem 0.75rem 2.5rem",
-              borderRadius: "8px",
-              border: "1px solid var(--border)",
-            }}
+            className="input-field w-full" style={{padding:"0.75rem 1rem 0.75rem 2.5rem",borderRadius:"8px",border:"1px solid var(--border)"}}
           />
         </div>
         <select
@@ -2365,26 +1969,22 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         </select>
       </div>
       <div className="table-wrapper">
-        <table style={{ tableLayout: "fixed", width: "100%" }}>
+        <table className="w-full" style={{tableLayout:"fixed"}}>
           <thead>
             <tr>
-              <th style={{ width: "110px", textAlign: "left", paddingLeft: "1.25rem" }}>{t("task.columns.id", "ID")}</th>
-              <th style={{ width: "26%", textAlign: "left" }}>
+              <th className="text-left" style={{width:"110px",paddingLeft:"1.25rem"}}>{t("task.columns.id", "ID")}</th>
+              <th className="text-left" style={{width:"26%"}}>
                 {mode === "MISSION" ? t("task.columns.missionFolder", "Dossier / Mission") : t("task.columns.missionId", "Mission")}
               </th>
-              <th style={{ width: "22%", textAlign: "left" }}>{t("task.columns.assignedTo", "Assigné à")}</th>
+              <th className="text-left" style={{width:"22%"}}>{t("task.columns.assignedTo", "Assigné à")}</th>
               <th
-                className="table-date-cell"
-                style={{
-                  width: "135px",
-                  textAlign: "center",
-                }}
+                className="table-date-cell text-center" style={{width:"135px"}}
               >
                 {t("task.columns.dueDate", "Échéance")}
               </th>
-              <th style={{ width: "120px", textAlign: "center" }}>{t("task.columns.status", "Statut")}</th>
-              <th className="table-date-cell" style={{ width: "165px", textAlign: "center" }}>{t("task.columns.date", "Date de création")}</th>
-              <th style={{ width: "80px", textAlign: "center" }}>{t("task.columns.actions", "Actions")}</th>
+              <th className="text-center" style={{width:"120px"}}>{t("task.columns.status", "Statut")}</th>
+              <th className="table-date-cell text-center" style={{width:"165px"}}>{t("task.columns.date", "Date de création")}</th>
+              <th className="text-center" style={{width:"80px"}}>{t("task.columns.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -2406,29 +2006,17 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
               };
               return (
                 <tr key={t.id} className={isExpired(t) ? "row-expired" : ""}>
-                  <td style={{ textAlign: "left", paddingLeft: "1.25rem" }}>
+                  <td className="text-left" style={{paddingLeft:"1.25rem"}}>
                     <div
-                      className="truncate-name"
-                      style={{
-                        color: "var(--text-main)",
-                        margin: 0,
-                        fontWeight: 400,
-                        maxWidth: "100%",
-                      }}
+                      className="truncate-name text-[var(--text-main)] font-normal" style={{maxWidth:"100%"}}
                       title={t.reference || t.id}
                     >
                       {t.reference || t.id.slice(0, 8)}
                     </div>
                   </td>
-                  <td style={{ textAlign: "left" }}>
+                  <td className="text-left">
                     <div
-                      className="truncate-name"
-                      style={{
-                        color: "var(--primary)",
-                        fontWeight: 400,
-                        margin: 0,
-                        maxWidth: "100%",
-                      }}
+                      className="truncate-name font-normal" style={{color:"var(--primary)",maxWidth:"100%"}}
                       title={
                         mode === "MISSION"
                           ? t.dossier?.name || t.dossierId
@@ -2441,7 +2029,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     </div>
                   </td>
 
-                  <td style={{ textAlign: "left" }}>
+                  <td className="text-left">
                     <div
                       className="truncate-name"
                       style={{ margin: 0, maxWidth: "100%" }}
@@ -2450,7 +2038,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                       {t.assignedTo?.name || "Non assigné"}
                     </div>
                   </td>
-                  <td className="table-date-cell" style={{ textAlign: "center" }}>
+                  <td className="table-date-cell text-center">
                     <span
                       style={{
                         color: t.echeance
@@ -2465,38 +2053,22 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                         : "Aucune"}
                     </span>
                   </td>
-                  <td style={{ textAlign: "center" }}>
+                  <td className="text-center">
                     {getStatusBadge(t.status)}
                   </td>
                   <td
-                    className="table-date-cell"
-                    style={{
-                      textAlign: "center",
-                      color: "var(--text-muted)",
-                    }}
+                    className="table-date-cell text-center" style={{color:"var(--text-muted)"}}
                   >
                     {formatDate(t.createdAt)}
                   </td>
                   <td>
                     <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "0.25rem",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
+                      className="flex flex-col items-center justify-center" style={{gap:"0.25rem"}}
                     >
                       <button
                         type="button"
                         onClick={() => setConsultTask(t)}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          color: "var(--primary)",
-                          padding: "4px",
-                        }}
+                        className="cursor-pointer" style={{background:"none",border:"none",color:"var(--primary)",padding:"4px"}}
                         title="Consulter la mission"
                       >
                         <Eye size={18} />
@@ -2539,13 +2111,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                               }
                             }
                           }}
-                          style={{
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            color: "#EF4444",
-                            padding: "4px",
-                          }}
+                          className="cursor-pointer" style={{background:"none",border:"none",color:"#EF4444",padding:"4px"}}
                           title="Supprimer la mission"
                         >
                           <Trash size={18} />
@@ -2562,13 +2128,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
       {totalPages >= 1 && (
         <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "1.5rem",
-            gap: "1rem",
-            alignItems: "center",
-          }}
+          className="flex justify-center mt-6 gap-4 items-center"
         >
           <button
             type="button"
@@ -2606,53 +2166,24 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
       {confirmingStatus && (
         <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0,0,0,0.5)",
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+          className="fixed w-full h-full flex items-center justify-center" style={{backgroundColor:"rgba(0,0,0,0.5)",zIndex:9999}}
         >
           <div
-            style={{
-              background: "#FFF",
-              padding: "2rem",
-              borderRadius: "12px",
-              boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
-              width: "100%",
-              maxWidth: "400px",
-              textAlign: "center",
-            }}
+            className="p-8 w-full text-center" style={{background:"#FFF",borderRadius:"12px",boxShadow:"0 10px 25px rgba(0,0,0,0.2)",maxWidth:"400px"}}
           >
-            <h3 style={{ marginTop: 0, color: "var(--primary-dark)", fontSize: "1.2rem", marginBottom: "0.5rem" }}>
+            <h3 className="mb-2" style={{color:"var(--primary-dark)",fontSize:"1.2rem"}}>
               Confirmer l'enregistrement
             </h3>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginBottom: "1.5rem" }}>
+            <p className="mb-6" style={{color:"var(--text-muted)",fontSize:"0.9rem"}}>
               Vous allez enregistrer <strong>1 modification(s)</strong> sur ce(tte) {mode === "MISSION" ? "mission" : "tâche"}.
             </p>
             <div
-              style={{
-                background: "#F8FAFC",
-                borderRadius: "8px",
-                padding: "0.75rem 1rem",
-                marginBottom: "1.5rem",
-                fontSize: "0.9rem",
-                color: "var(--text-main)",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
+              className="mb-6 text-[var(--text-main)] flex justify-between items-center" style={{background:"#F8FAFC",borderRadius:"8px",padding:"0.75rem 1rem",fontSize:"0.9rem"}}
             >
-              <span style={{ color: "var(--text-muted)", fontWeight: 500 }}>Statut</span>
-              <span style={{ fontWeight: 600 }}>{TACHE_STATUS_LABELS[confirmingStatus] || confirmingStatus}</span>
+              <span className="font-medium" style={{color:"var(--text-muted)"}}>Statut</span>
+              <span className="font-semibold">{TACHE_STATUS_LABELS[confirmingStatus] || confirmingStatus}</span>
             </div>
-            <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+            <div className="flex gap-4 justify-center">
               <button
                 type="button"
                 className="btn btn-outline"

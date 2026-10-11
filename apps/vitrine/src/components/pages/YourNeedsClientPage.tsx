@@ -54,9 +54,9 @@ const DarkNeedSection = ({ id, bgClass, topDecoClass, titleDecoClass, title, int
         <h2 className={`${bgClass.includes("bg-[#141824]") ? "text-white" : "text-[#141824]"} text-[1.3rem] md:text-[1.5rem] font-bold uppercase mb-8 leading-tight`}>
           {title}
         </h2>
-        <p className={`${bgClass.includes("bg-[#141824]") ? "text-[#e5e9f0]" : "text-[#141824]/80 font-medium"} font-light text-[1.1rem] leading-relaxed mb-${disclaimer ? "8" : "12"}`}>
+        <div className={`${bgClass.includes("bg-[#141824]") ? "text-[#e5e9f0]" : "text-[#141824]/80 font-medium"} font-light text-[1.1rem] leading-relaxed mb-${disclaimer ? "8" : "12"}`}>
           {intro}
-        </p>
+        </div>
         {disclaimer && (
           <div className="p-6 border-l-4 border-[#e8e1d7] bg-white/5 relative">
             <p className="text-[#e8e1d7] font-medium text-[0.95rem] leading-relaxed">{disclaimer}</p>

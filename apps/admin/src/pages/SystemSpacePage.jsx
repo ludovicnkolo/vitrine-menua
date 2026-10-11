@@ -60,16 +60,11 @@ const SystemSpacePage = ({ userRole }) => {
         <>
           {tab === "audit" && canSeeAudit && <AuditPage />}
           {tab === "configuration" && (
-            <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+            <div className="mx-auto" style={{maxWidth:"1280px"}}>
               {/* Header */}
-              <div style={{ marginBottom: "1.5rem" }}>
+              <div className="mb-6">
                 <h1
-                  style={{
-                    fontSize: "1.6rem",
-                    fontWeight: 700,
-                    color: "var(--text-main)",
-                    margin: "0 0 0.25rem 0",
-                  }}
+                  className="font-bold text-[var(--text-main)]" style={{fontSize:"1.6rem",margin:"0 0 0.25rem 0"}}
                 >
                   {t("systemSpace.title", "Configuration de la Plateforme")}
                 </h1>
@@ -80,30 +75,14 @@ const SystemSpacePage = ({ userRole }) => {
 
               {/* 2 Cards Grid */}
               <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "1.5rem",
-                  marginBottom: "1.5rem",
-                }}
+                className="grid gap-6 mb-6" style={{gridTemplateColumns:"1fr 1fr"}}
               >
                 {/* Card 1: Apparence */}
                 <div
-                  style={{
-                    background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "12px",
-                    padding: "1.5rem",
-                    boxShadow: "var(--shadow-sm)",
-                  }}
+                  className="bg-[var(--surface)] p-6" style={{border:"1px solid var(--border)",borderRadius:"12px",boxShadow:"var(--shadow-sm)"}}
                 >
                   <h3
-                    style={{
-                      margin: "0 0 0.25rem 0",
-                      fontSize: "1rem",
-                      fontWeight: 700,
-                      color: "var(--text-main)",
-                    }}
+                    className="font-bold text-[var(--text-main)]" style={{margin:"0 0 0.25rem 0",fontSize:"1rem"}}
                   >
                     {t("systemSpace.appearance", "Apparence de l'interface")}
                   </h3>
@@ -111,7 +90,7 @@ const SystemSpacePage = ({ userRole }) => {
                     {t("systemSpace.appearanceDesc", "Choisissez le thème d'affichage adapté à votre confort visuel")}
                   </p>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                  <div className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}>
                     {/* Mode Clair */}
                     <div
                       onClick={() => handleThemeChange("light")}
@@ -128,36 +107,17 @@ const SystemSpacePage = ({ userRole }) => {
                     >
                       {theme === "light" && (
                         <div
-                          style={{
-                            position: "absolute",
-                            top: "8px",
-                            right: "8px",
-                            width: "18px",
-                            height: "18px",
-                            borderRadius: "50%",
-                            background: "#2563EB",
-                            color: "#FFF",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "11px",
-                          }}
+                          className="absolute text-white flex items-center justify-center" style={{top:"8px",right:"8px",width:"18px",height:"18px",borderRadius:"50%",background:"#2563EB",fontSize:"11px"}}
                         >
                           <Check size={12} strokeWidth={3} />
                         </div>
                       )}
                       <div
-                        style={{
-                          fontSize: "1.75rem",
-                          color: "#F59E0B",
-                          display: "flex",
-                          justifyContent: "center",
-                          marginBottom: "0.5rem",
-                        }}
+                        className="flex justify-center mb-2" style={{fontSize:"1.75rem",color:"#F59E0B"}}
                       >
                         <Sun size={28} />
                       </div>
-                      <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-main)" }}>
+                      <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                         {t("systemSpace.lightMode", "Mode Clair")}
                       </div>
                       <div
@@ -188,36 +148,17 @@ const SystemSpacePage = ({ userRole }) => {
                     >
                       {theme === "dark" && (
                         <div
-                          style={{
-                            position: "absolute",
-                            top: "8px",
-                            right: "8px",
-                            width: "18px",
-                            height: "18px",
-                            borderRadius: "50%",
-                            background: "#2563EB",
-                            color: "#FFF",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "11px",
-                          }}
+                          className="absolute text-white flex items-center justify-center" style={{top:"8px",right:"8px",width:"18px",height:"18px",borderRadius:"50%",background:"#2563EB",fontSize:"11px"}}
                         >
                           <Check size={12} strokeWidth={3} />
                         </div>
                       )}
                       <div
-                        style={{
-                          fontSize: "1.75rem",
-                          color: "#8B5CF6",
-                          display: "flex",
-                          justifyContent: "center",
-                          marginBottom: "0.5rem",
-                        }}
+                        className="flex justify-center mb-2" style={{fontSize:"1.75rem",color:"#8B5CF6"}}
                       >
                         <Moon size={28} />
                       </div>
-                      <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-main)" }}>
+                      <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                         {t("systemSpace.darkMode", "Mode Sombre")}
                       </div>
                       <div
@@ -236,21 +177,10 @@ const SystemSpacePage = ({ userRole }) => {
 
                 {/* Card 2: Langue / Language */}
                 <div
-                  style={{
-                    background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "12px",
-                    padding: "1.5rem",
-                    boxShadow: "var(--shadow-sm)",
-                  }}
+                  className="bg-[var(--surface)] p-6" style={{border:"1px solid var(--border)",borderRadius:"12px",boxShadow:"var(--shadow-sm)"}}
                 >
                   <h3
-                    style={{
-                      margin: "0 0 0.25rem 0",
-                      fontSize: "1rem",
-                      fontWeight: 700,
-                      color: "var(--text-main)",
-                    }}
+                    className="font-bold text-[var(--text-main)]" style={{margin:"0 0 0.25rem 0",fontSize:"1rem"}}
                   >
                     {t("systemSpace.language", "Langue / Language")}
                   </h3>
@@ -259,74 +189,36 @@ const SystemSpacePage = ({ userRole }) => {
                   </p>
 
                   <label
-                    style={{
-                      display: "block",
-                      fontSize: "0.8rem",
-                      fontWeight: 600,
-                      color: "var(--text-main)",
-                      marginBottom: "0.5rem",
-                    }}
+                    className="block font-semibold text-[var(--text-main)] mb-2" style={{fontSize:"0.8rem"}}
                   >
                     {t("systemSpace.languageSelect", "Langue d'affichage du portail (Select interactif) :")}
                   </label>
 
                   {/* Dropdown Container */}
-                  <div style={{ position: "relative", marginBottom: "1rem" }}>
+                  <div className="relative mb-4">
                     <div
-                      style={{
-                        position: "absolute",
-                        left: "0.75rem",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        background: "#2563EB",
-                        color: "#FFF",
-                        fontWeight: 700,
-                        fontSize: "0.75rem",
-                        padding: "0.2rem 0.45rem",
-                        borderRadius: "4px",
-                        pointerEvents: "none",
-                        zIndex: 1,
-                      }}
+                      className="absolute text-white font-bold" style={{left:"0.75rem",top:"50%",transform:"translateY(-50%)",background:"#2563EB",fontSize:"0.75rem",padding:"0.2rem 0.45rem",borderRadius:"4px",pointerEvents:"none",zIndex:1}}
                     >
                       {lang.toUpperCase()}
                     </div>
                     <select
                       value={lang}
                       onChange={(e) => handleLangChange(e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: "0.65rem 2.5rem 0.65rem 3.5rem",
-                        borderRadius: "8px",
-                        border: "1.5px solid #3B82F6",
-                        background: "var(--surface)",
-                        color: "var(--text-main)",
-                        fontSize: "0.88rem",
-                        fontWeight: 500,
-                        cursor: "pointer",
-                        outline: "none",
-                        appearance: "none",
-                      }}
+                      className="w-full bg-[var(--surface)] text-[var(--text-main)] font-medium cursor-pointer" style={{padding:"0.65rem 2.5rem 0.65rem 3.5rem",borderRadius:"8px",border:"1.5px solid #3B82F6",fontSize:"0.88rem",outline:"none",appearance:"none"}}
                     >
                       <option value="fr">{t("systemSpace.frenchOption", "Français (France) - Langue par défaut")}</option>
                       <option value="en">{t("systemSpace.englishOption", "English (US) - Second language")}</option>
                     </select>
                     <ChevronDown
                       size={18}
-                      style={{
-                        position: "absolute",
-                        right: "0.85rem",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        color: "var(--text-main)",
-                        pointerEvents: "none",
-                      }}
+                      className="absolute text-[var(--text-main)]" style={{right:"0.85rem",top:"50%",transform:"translateY(-50%)",pointerEvents:"none"}}
                     />
                   </div>
 
                   <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginBottom: "0.4rem" }}>
                     {t("systemSpace.availableOptions", "Options disponibles dans la liste déroulante :")}
                   </div>
-                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={() => handleLangChange("fr")}
@@ -365,40 +257,21 @@ const SystemSpacePage = ({ userRole }) => {
 
               {/* Bottom Card / Footer */}
               <div
-                style={{
-                  background: "var(--surface)",
-                  border: "1px solid var(--border)",
-                  borderRadius: "10px",
-                  padding: "1rem 1.5rem",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                  gap: "1rem",
-                }}
+                className="bg-[var(--surface)] flex justify-between items-center flex-wrap gap-4" style={{border:"1px solid var(--border)",borderRadius:"10px",padding:"1rem 1.5rem"}}
               >
                 <div style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
                   {t("systemSpace.infoNotice", "Info : Les modifications des paramètres généraux sont appliquées immédiatement pour votre session.")}
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <div className="flex items-center gap-4">
                   {savedFeedback && (
-                    <span style={{ fontSize: "0.82rem", color: "#16A34A", fontWeight: 600 }}>
+                    <span className="font-semibold" style={{fontSize:"0.82rem",color:"#16A34A"}}>
                       {t("systemSpace.preferencesSaved", "✓ Préférences enregistrées")}
                     </span>
                   )}
                   <button
                     type="button"
                     onClick={handleSavePreferences}
-                    style={{
-                      background: "var(--text-main)",
-                      color: "#FFF",
-                      border: "none",
-                      borderRadius: "8px",
-                      padding: "0.65rem 1.5rem",
-                      fontWeight: 600,
-                      fontSize: "0.88rem",
-                      cursor: "pointer",
-                    }}
+                    className="text-white font-semibold cursor-pointer" style={{background:"var(--text-main)",border:"none",borderRadius:"8px",padding:"0.65rem 1.5rem",fontSize:"0.88rem"}}
                   >
                     {t("systemSpace.savePreferences", "Enregistrer les préférences")}
                   </button>

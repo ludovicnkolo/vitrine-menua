@@ -33,37 +33,22 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       {isOpen && <div className="sidebar-overlay" onClick={onClose}></div>}
       
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-        <div className="sidebar-header" style={{ justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+        <div className="sidebar-header justify-between">
+          <div className="flex items-center" style={{gap:"0.75rem"}}>
             <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 8,
-                background: "var(--secondary)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "var(--primary)",
-                fontWeight: "bold",
-              }}
+              className="flex items-center justify-center font-bold" style={{width:32,height:32,borderRadius:8,background:"var(--secondary)",color:"var(--primary)"}}
             >
               M
             </div>
             <span
-              style={{
-                fontWeight: 600,
-                fontSize: "1.1rem",
-                letterSpacing: "-0.5px",
-              }}
+              className="font-semibold" style={{fontSize:"1.1rem",letterSpacing:"-0.5px"}}
             >
               MENUA CRM
             </span>
           </div>
           <button 
-            className="sidebar-close-btn" 
+            className="sidebar-close-btn text-white cursor-pointer bg-transparent border-none"
             onClick={onClose}
-            style={{ background: "none", border: "none", color: "white", cursor: "pointer" }}
           >
             <X size={24} />
           </button>
@@ -132,36 +117,18 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </nav>
 
         <div
-          style={{
-            padding: "1.5rem",
-            borderTop: "1px solid rgba(255,255,255,0.1)",
-            marginTop: "1.5rem",
-          }}
+          className="p-6 mt-6" style={{borderTop:"1px solid rgba(255,255,255,0.1)"}}
         >
           <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-              marginBottom: "1rem",
-            }}
+            className="flex items-center mb-4" style={{gap:"0.75rem"}}
           >
             <div
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                background: "rgba(255,255,255,0.2)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: "bold",
-              }}
+              className="flex items-center justify-center font-bold" style={{width:36,height:36,borderRadius:"50%",background:"rgba(255,255,255,0.2)"}}
             >
               {user.name.charAt(0)}
             </div>
             <div>
-              <div style={{ fontSize: "0.875rem", fontWeight: 500 }}>
+              <div className="font-medium" style={{fontSize:"0.875rem"}}>
                 {user.name}
               </div>
               <div
@@ -175,16 +142,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <button
             type="button"
             onClick={() => logout()}
-            className="btn btn-outline"
-            style={{
-              width: "100%",
-              borderColor: "rgba(255,255,255,0.2)",
-              color: "white",
-              display: "flex",
-              gap: "0.5rem",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            className="btn btn-outline w-full text-white flex gap-2 justify-center items-center" style={{borderColor:"rgba(255,255,255,0.2)"}}
           >
             <LogOut size={16} /> {t("nav.logout")}
           </button>

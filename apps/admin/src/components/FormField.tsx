@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent, HTMLInputTypeAttribute } from "react";
 
 /** Style partagé pour tous les inputs/textareas du back-office admin */
 const inputStyle = {
@@ -8,17 +8,19 @@ const inputStyle = {
   border: "1px solid var(--border)",
 };
 
+interface FormFieldProps {
+  label: string;
+  type?: HTMLInputTypeAttribute | "textarea";
+  value: string | number;
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+  required?: boolean;
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
+}
+
 /**
  * Champ de formulaire générique — input, textarea ou select.
- *
- * @param {string}   label       - Libellé affiché
- * @param {string}   type        - Type HTML (text, email, tel, url, …) ou "textarea"
- * @param {*}        value       - Valeur contrôlée
- * @param {Function} onChange    - Handler onChange
- * @param {boolean}  required    - Affiche l'astérisque rouge et ajoute required
- * @param {object}   inputProps  - Props supplémentaires passées à l'élément input/textarea
  */
-const FormField = ({
+const FormField: React.FC<FormFieldProps> = ({
   label,
   type = "text",
   value,
@@ -28,12 +30,7 @@ const FormField = ({
 }) => {
   const labelEl = (
     <label
-      style={{
-        display: "block",
-        marginBottom: "0.25rem",
-        
-        fontWeight: 500,
-      }}
+      className="block font-medium" style={{marginBottom:"0.25rem"}}
     >
       {label} {required && <span style={{ color: "red" }}>*</span>}
     </label>
@@ -49,7 +46,7 @@ const FormField = ({
           onChange={onChange}
           required={required}
           style={{ ...inputStyle, resize: "vertical", fontFamily: "inherit" }}
-          {...inputProps}
+          {...(inputProps as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
         />
       </div>
     );
@@ -64,7 +61,7 @@ const FormField = ({
         onChange={onChange}
         required={required}
         style={inputStyle}
-        {...inputProps}
+        {...(inputProps as React.InputHTMLAttributes<HTMLInputElement>)}
       />
     </div>
   );

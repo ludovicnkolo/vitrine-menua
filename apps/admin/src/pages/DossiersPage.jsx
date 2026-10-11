@@ -68,10 +68,9 @@ const SearchableDropdown = ({ options, value, onChange, placeholder }) => {
   );
 
   return (
-    <div ref={wrapperRef} style={{ position: "relative", width: "100%" }}>
+    <div ref={wrapperRef} className="relative w-full">
       <input
         type="text"
-        className="input-field"
         placeholder={placeholder}
         value={searchTerm}
         onChange={(e) => {
@@ -82,40 +81,17 @@ const SearchableDropdown = ({ options, value, onChange, placeholder }) => {
           setIsOpen(true);
           setSearchTerm(""); // clear to show all options on focus
         }}
-        style={{
-          width: "100%",
-          padding: "0.75rem",
-          borderRadius: "8px",
-          border: "1px solid var(--border)",
-          background: "#FFF",
-        }}
+        className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF"}}
       />
       {isOpen && (
         <div
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: 0,
-            right: 0,
-            zIndex: 1000,
-            background: "#FFF",
-            border: "1px solid var(--border)",
-            borderRadius: "8px",
-            marginTop: "0.25rem",
-            maxHeight: "200px",
-            overflowY: "auto",
-            boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-          }}
+          className="absolute" style={{top:"100%",zIndex:1000,background:"#FFF",border:"1px solid var(--border)",borderRadius:"8px",marginTop:"0.25rem",maxHeight:"200px",overflowY:"auto",boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}
         >
           {filteredOptions.length > 0 ? (
             filteredOptions.map((opt) => (
               <div
                 key={opt.value}
-                style={{
-                  padding: "0.75rem",
-                  cursor: "pointer",
-                  borderBottom: "1px solid #f1f5f9",
-                }}
+                className="cursor-pointer" style={{padding:"0.75rem",borderBottom:"1px solid #f1f5f9"}}
                 onMouseDown={(e) => {
                   e.preventDefault();
                   onChange(opt.value);
@@ -859,14 +835,7 @@ const DossiersPage = () => {
                 handleStatusAction(dossier.id, pendingStatus);
               }
             }}
-            className="btn btn-primary"
-            style={{
-              padding: "0.4rem 0.75rem",
-              fontSize: "0.75rem",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.25rem",
-            }}
+            className="btn btn-primary flex items-center" style={{padding:"0.4rem 0.75rem",fontSize:"0.75rem",gap:"0.25rem"}}
           >
             <CheckSquare size={14} /> Enregistrer
           </button>
@@ -878,54 +847,23 @@ const DossiersPage = () => {
   const renderDossierFields = (dossier, isEdit) => (
     <>
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "1rem",
-          marginBottom: "1.5rem",
-          background: "#F8FAFC",
-          padding: "1.25rem 1.5rem",
-          borderRadius: "8px",
-          border: "1px solid var(--border)",
-        }}
+        className="grid gap-4 mb-6" style={{gridTemplateColumns:"1fr 1fr",background:"#F8FAFC",padding:"1.25rem 1.5rem",borderRadius:"8px",border:"1px solid var(--border)"}}
       >
         {/* Colonne 1 — Identification du dossier */}
         <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.85rem",
-            borderRight: "1px solid var(--border)",
-            paddingRight: "1rem",
-          }}
+          className="flex flex-col" style={{gap:"0.85rem",borderRight:"1px solid var(--border)",paddingRight:"1rem"}}
         >
           <div
-            style={{
-              fontWeight: 700,
-              fontSize: "0.75rem",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-              color: "var(--primary)",
-              marginBottom: "0.25rem",
-            }}
+            className="font-bold" style={{fontSize:"0.75rem",textTransform:"uppercase",letterSpacing:"0.05em",color:"var(--primary)",marginBottom:"0.25rem"}}
           >
             Identification du dossier
           </div>
 
           <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "0.5rem",
-              
-            }}
+            className="flex items-start gap-2"
           >
             <strong
-              style={{
-                color: "var(--text-muted)",
-                fontWeight: 600,
-                flexShrink: 0,
-              }}
+              className="font-semibold" style={{color:"var(--text-muted)"}}
             >
               Nom du dossier :
             </strong>
@@ -947,11 +885,7 @@ const DossiersPage = () => {
               />
             ) : (
               <span
-                style={{
-                  fontWeight: 500,
-                  color: "var(--text-main)",
-                  wordBreak: "break-word",
-                }}
+                className="font-medium text-[var(--text-main)]" style={{wordBreak:"break-word"}}
               >
                 {dossier.name || "-"}
               </span>
@@ -959,45 +893,27 @@ const DossiersPage = () => {
           </div>
 
           <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              
-            }}
+            className="flex items-center gap-2"
           >
             <strong
-              style={{
-                color: "var(--text-muted)",
-                fontWeight: 600,
-                flexShrink: 0,
-              }}
+              className="font-semibold" style={{color:"var(--text-muted)"}}
             >
               Origine :
             </strong>
-            <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
+            <span className="font-medium text-[var(--text-main)]">
               {dossier.origin || "INTERNE"}
             </span>
           </div>
 
           <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "0.5rem",
-              
-            }}
+            className="flex items-start gap-2"
           >
             <strong
-              style={{
-                color: "var(--text-muted)",
-                fontWeight: 600,
-                flexShrink: 0,
-              }}
+              className="font-semibold" style={{color:"var(--text-muted)"}}
             >
               Propriétaire :
             </strong>
-            <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
+            <span className="font-medium text-[var(--text-main)]">
               {dossier.origin === "CLIENT"
                 ? dossier.client?.name ||
                   dossier.client?.companyName ||
@@ -1016,40 +932,19 @@ const DossiersPage = () => {
 
         {/* Colonne 2 — Gestion du dossier */}
         <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.85rem",
-            paddingLeft: "0.5rem",
-          }}
+          className="flex flex-col" style={{gap:"0.85rem",paddingLeft:"0.5rem"}}
         >
           <div
-            style={{
-              fontWeight: 700,
-              fontSize: "0.75rem",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-              color: "var(--secondary-dark)",
-              marginBottom: "0.25rem",
-            }}
+            className="font-bold" style={{fontSize:"0.75rem",textTransform:"uppercase",letterSpacing:"0.05em",color:"var(--secondary-dark)",marginBottom:"0.25rem"}}
           >
             Gestion du dossier
           </div>
 
           <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              
-            }}
+            className="flex items-center gap-2"
           >
             <strong
-              style={{
-                color: "var(--text-muted)",
-                fontWeight: 600,
-                flexShrink: 0,
-              }}
+              className="font-semibold" style={{color:"var(--text-muted)"}}
             >
               Traitant :
             </strong>
@@ -1084,30 +979,21 @@ const DossiersPage = () => {
                   ))}
               </select>
             ) : (
-              <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
+              <span className="font-medium text-[var(--text-main)]">
                 {dossier.traitant?.name || "Aucun"}
               </span>
             )}
           </div>
 
           <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              
-            }}
+            className="flex items-center gap-2"
           >
             <strong
-              style={{
-                color: "var(--text-muted)",
-                fontWeight: 600,
-                flexShrink: 0,
-              }}
+              className="font-semibold" style={{color:"var(--text-muted)"}}
             >
               Créé par :
             </strong>
-            <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
+            <span className="font-medium text-[var(--text-main)]">
               {dossier.createdBy?.name || "Inconnu"}
               {dossier.createdBy?.role?.name ? (
                 <span
@@ -1126,23 +1012,14 @@ const DossiersPage = () => {
           </div>
 
           <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              
-            }}
+            className="flex items-center gap-2"
           >
             <strong
-              style={{
-                color: "var(--text-muted)",
-                fontWeight: 600,
-                flexShrink: 0,
-              }}
+              className="font-semibold" style={{color:"var(--text-muted)"}}
             >
               Date de création :
             </strong>
-            <span style={{ fontWeight: 500, color: "var(--text-main)" }}>
+            <span className="font-medium text-[var(--text-main)]">
               {new Date(dossier.createdAt).toLocaleString("fr-FR", {
                 day: "2-digit",
                 month: "2-digit",
@@ -1155,19 +1032,10 @@ const DossiersPage = () => {
 
           {renderWorkflowButtons(isEdit ? editDossier : dossier) || (
             <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                
-              }}
+              className="flex items-center gap-2"
             >
               <strong
-                style={{
-                  color: "var(--text-muted)",
-                  fontWeight: 600,
-                  flexShrink: 0,
-                }}
+                className="font-semibold" style={{color:"var(--text-muted)"}}
               >
                 Statut :
               </strong>
@@ -1186,14 +1054,14 @@ const DossiersPage = () => {
   );
 
   const renderAssociatedTasks = (tasks, isEdit) => (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <h4 style={{ margin: "0 0 1rem 0", fontSize: "1rem", fontWeight: 600 }}>
+    <div className="h-full flex flex-col">
+      <h4 className="font-semibold" style={{margin:"0 0 1rem 0",fontSize:"1rem"}}>
         {isEdit
           ? "Gérer les missions associées"
           : "Vues des missions associées"}
       </h4>
       {tasks.length > 0 ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <div className="flex flex-col gap-4">
           {tasks.map((task) => (
             <button
               type="button"
@@ -1211,27 +1079,10 @@ const DossiersPage = () => {
               onBlur={(e) =>
                 (e.currentTarget.style.borderColor = "var(--border)")
               }
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "1rem",
-                background: "#F8FAFC",
-                borderRadius: "8px",
-                border: "1px solid var(--border)",
-                cursor: "pointer",
-                transition: "border-color 0.2s",
-                width: "100%",
-                textAlign: "left",
-                fontFamily: "inherit",
-              }}
+              className="flex justify-between items-center p-4 cursor-pointer w-full text-left" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)",transition:"border-color 0.2s",fontFamily:"inherit"}}
             >
               <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.25rem",
-                }}
+                className="flex flex-col" style={{gap:"0.25rem"}}
               >
                 <strong
                   className="truncate-text"
@@ -1239,13 +1090,13 @@ const DossiersPage = () => {
                 >
                   {task.subject || `Mission ${task.reference || task.id}`}
                 </strong>
-                <span style={{ display: "flex", alignItems: "center" }}>
+                <span className="flex items-center">
                   {getStatusBadge(task.status)}
                 </span>
               </div>
               {isEdit && (
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "1rem" }}
+                  className="flex items-center gap-4"
                 >
                   <button
                     type="button"
@@ -1255,12 +1106,7 @@ const DossiersPage = () => {
                         `Mission ${task.id} supprimée avec succès !`,
                       );
                     }}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      color: "var(--danger)",
-                    }}
+                    className="cursor-pointer" style={{background:"none",border:"none",color:"var(--danger)"}}
                     title="Supprimer la mission"
                   >
                     <Trash size={18} />
@@ -1272,15 +1118,7 @@ const DossiersPage = () => {
         </div>
       ) : (
         <div
-          style={{
-            padding: "1rem",
-            background: "#F8FAFC",
-            borderRadius: "8px",
-            border: "1px dashed var(--border)",
-            textAlign: "center",
-            color: "var(--text-muted)",
-            
-          }}
+          className="p-4 text-center" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px dashed var(--border)",color:"var(--text-muted)"}}
         >
           Aucune mission associée pour le moment.
         </div>
@@ -1290,21 +1128,10 @@ const DossiersPage = () => {
 
   const renderDocuments = (documents, label = "Documents attachés") => (
     <div
-      style={{
-        marginTop: "1rem",
-        borderTop: "1px solid var(--border)",
-        paddingTop: "1.5rem",
-      }}
+      className="mt-4" style={{borderTop:"1px solid var(--border)",paddingTop:"1.5rem"}}
     >
       <h4
-        style={{
-          margin: "0 0 1rem 0",
-          fontSize: "1rem",
-          fontWeight: 600,
-          display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-        }}
+        className="font-semibold flex items-center gap-2" style={{margin:"0 0 1rem 0",fontSize:"1rem"}}
       >
         <Paperclip size={16} /> {label}
       </h4>
@@ -1316,16 +1143,7 @@ const DossiersPage = () => {
               e.target.selectedIndex = 0;
             }
           }}
-          className="input-field"
-          style={{
-            padding: "0.75rem",
-            borderRadius: "8px",
-            border: "1px solid var(--border)",
-            width: "100%",
-            background: "#FFF",
-            cursor: "pointer",
-            fontFamily: "inherit",
-          }}
+          className="input-field w-full cursor-pointer" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF",fontFamily:"inherit"}}
         >
           <option value="">
             -- Sélectionner un document pour le consulter --
@@ -1338,15 +1156,7 @@ const DossiersPage = () => {
         </select>
       ) : (
         <div
-          style={{
-            padding: "1rem",
-            background: "#F8FAFC",
-            borderRadius: "8px",
-            border: "1px dashed var(--border)",
-            textAlign: "center",
-            color: "var(--text-muted)",
-            
-          }}
+          className="p-4 text-center" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px dashed var(--border)",color:"var(--text-muted)"}}
         >
           Aucun document attaché.
         </div>
@@ -1522,49 +1332,22 @@ const DossiersPage = () => {
     };
 
     return (
-      <div className="fade-in" style={{ width: "100%", padding: "0" }}>
+      <div className="fade-in w-full" style={{padding:"0"}}>
         {/* Header Card conforming to Screenshot 1 */}
         <div
-          style={{
-            background: "#FFF",
-            border: "1px solid var(--border)",
-            borderRadius: "12px",
-            padding: "1.25rem 1.5rem",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "1.5rem",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-            flexWrap: "wrap",
-            gap: "1rem",
-          }}
+          className="flex justify-between items-center mb-6 flex-wrap gap-4" style={{background:"#FFF",border:"1px solid var(--border)",borderRadius:"12px",padding:"1.25rem 1.5rem",boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}
         >
           {/* Left info with folder icon */}
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <div className="flex items-center gap-4">
             <div
-              style={{
-                width: "48px",
-                height: "48px",
-                borderRadius: "10px",
-                background: "#EFF6FF",
-                border: "1px solid #DBEAFE",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
+              className="flex items-center justify-center" style={{width:"48px",height:"48px",borderRadius:"10px",background:"#EFF6FF",border:"1px solid #DBEAFE"}}
             >
               <Folder size={24} color="#2563EB" fill="#2563EB" />
             </div>
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+              <div className="flex items-center flex-wrap" style={{gap:"0.75rem"}}>
                 <h2
-                  style={{
-                    margin: 0,
-                    fontSize: "1.35rem",
-                    fontWeight: 700,
-                    color: "var(--text-main)",
-                  }}
+                  className="font-bold text-[var(--text-main)]" style={{fontSize:"1.35rem"}}
                 >
                   Consultation du dossier : {consultDossier.reference || consultDossier.id}
                 </h2>
@@ -1583,7 +1366,7 @@ const DossiersPage = () => {
           </div>
 
           {/* Right Action buttons */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+          <div className="flex items-center flex-wrap" style={{gap:"0.75rem"}}>
             {!["TERMINE", "ARCHIVE", "BLOQUE", "EN_ATTENTE"].includes(consultDossier.status) && (
               <>
                 <button
@@ -1593,19 +1376,7 @@ const DossiersPage = () => {
                     setGeneratedMagicUrl("");
                     setMagicFiles([]);
                   }}
-                  style={{
-                    background: "#FFF",
-                    border: "1px solid #CBD5E1",
-                    color: "#334155",
-                    padding: "0.55rem 1rem",
-                    borderRadius: "8px",
-                    fontWeight: 500,
-                    fontSize: "0.85rem",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.4rem",
-                  }}
+                  className="font-medium cursor-pointer flex items-center" style={{background:"#FFF",border:"1px solid #CBD5E1",color:"#334155",padding:"0.55rem 1rem",borderRadius:"8px",fontSize:"0.85rem",gap:"0.4rem"}}
                 >
                   Générer Lien Magique
                 </button>
@@ -1617,19 +1388,7 @@ const DossiersPage = () => {
                       setCreateMissionModal(true);
                       setMissionDossierId(consultDossier.id);
                     }}
-                    style={{
-                      background: "#1E3A8A",
-                      border: "none",
-                      color: "#FFF",
-                      padding: "0.55rem 1.1rem",
-                      borderRadius: "8px",
-                      fontWeight: 600,
-                      fontSize: "0.85rem",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.4rem",
-                    }}
+                    className="text-white font-semibold cursor-pointer flex items-center" style={{background:"#1E3A8A",border:"none",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem",gap:"0.4rem"}}
                   >
                     + Créer une mission
                   </button>
@@ -1641,19 +1400,7 @@ const DossiersPage = () => {
               <button
                 type="button"
                 onClick={startEdit}
-                style={{
-                  background: "#FFF",
-                  border: "1px solid #F59E0B",
-                  color: "#D97706",
-                  padding: "0.55rem 1rem",
-                  borderRadius: "8px",
-                  fontWeight: 600,
-                  fontSize: "0.85rem",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.4rem",
-                }}
+                className="font-semibold cursor-pointer flex items-center" style={{background:"#FFF",border:"1px solid #F59E0B",color:"#D97706",padding:"0.55rem 1rem",borderRadius:"8px",fontSize:"0.85rem",gap:"0.4rem"}}
               >
                 <Pencil size={15} /> Modifier
               </button>
@@ -1664,32 +1411,14 @@ const DossiersPage = () => {
                 <button
                   type="button"
                   onClick={cancelEdit}
-                  style={{
-                    background: "#FFF",
-                    border: "1px solid #CBD5E1",
-                    color: "#475569",
-                    padding: "0.55rem 1rem",
-                    borderRadius: "8px",
-                    fontWeight: 600,
-                    fontSize: "0.85rem",
-                    cursor: "pointer",
-                  }}
+                  className="font-semibold cursor-pointer" style={{background:"#FFF",border:"1px solid #CBD5E1",color:"#475569",padding:"0.55rem 1rem",borderRadius:"8px",fontSize:"0.85rem"}}
                 >
                   Annuler
                 </button>
                 <button
                   type="button"
                   onClick={saveEdit}
-                  style={{
-                    background: "#1E3A8A",
-                    border: "none",
-                    color: "#FFF",
-                    padding: "0.55rem 1.1rem",
-                    borderRadius: "8px",
-                    fontWeight: 600,
-                    fontSize: "0.85rem",
-                    cursor: "pointer",
-                  }}
+                  className="text-white font-semibold cursor-pointer" style={{background:"#1E3A8A",border:"none",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem"}}
                 >
                   Enregistrer
                 </button>
@@ -1702,16 +1431,7 @@ const DossiersPage = () => {
                 setConsultDossier(null);
                 setPendingStatus("");
               }}
-              style={{
-                background: "var(--text-main)",
-                border: "none",
-                color: "#FFF",
-                padding: "0.55rem 1.1rem",
-                borderRadius: "8px",
-                fontWeight: 600,
-                fontSize: "0.85rem",
-                cursor: "pointer",
-              }}
+              className="text-white font-semibold cursor-pointer" style={{background:"var(--text-main)",border:"none",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem"}}
             >
               ← Retour
             </button>
@@ -1720,39 +1440,21 @@ const DossiersPage = () => {
 
         {/* Two-Column Grid Conforming to Screenshot 1 */}
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1.1fr",
-            gap: "1.5rem",
-            alignItems: "start",
-          }}
+          className="grid gap-6" style={{gridTemplateColumns:"1fr 1.1fr",alignItems:"start"}}
         >
           {/* Left Column */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <div className="flex flex-col gap-6">
             {/* Card 1: IDENTIFICATION DU DOSSIER */}
             <div
-              style={{
-                background: "#FFF",
-                border: "1px solid var(--border)",
-                borderRadius: "12px",
-                padding: "1.5rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
-              }}
+              className="p-6" style={{background:"#FFF",border:"1px solid var(--border)",borderRadius:"12px",boxShadow:"0 1px 3px rgba(0,0,0,0.03)"}}
             >
               <div
-                style={{
-                  fontWeight: 700,
-                  fontSize: "0.85rem",
-                  letterSpacing: "0.05em",
-                  textTransform: "uppercase",
-                  color: "var(--text-main)",
-                  marginBottom: "1.25rem",
-                }}
+                className="font-bold text-[var(--text-main)]" style={{fontSize:"0.85rem",letterSpacing:"0.05em",textTransform:"uppercase",marginBottom:"1.25rem"}}
               >
                 Identification du dossier
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+              <div className="flex flex-col" style={{gap:"0.85rem"}}>
                 {/* Nom du dossier */}
                 <div
                   style={{
@@ -1762,10 +1464,10 @@ const DossiersPage = () => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Nom du dossier :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)", wordBreak: "break-word" }}>
+                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem",wordBreak:"break-word"}}>
                     {consultDossier.name || "-"}
                   </div>
                 </div>
@@ -1779,10 +1481,10 @@ const DossiersPage = () => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Origine :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {consultDossier.origin || "GENERAL"}
                   </div>
                 </div>
@@ -1796,10 +1498,10 @@ const DossiersPage = () => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Propriétaire :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {ownerName}
                   </div>
                 </div>
@@ -1808,28 +1510,15 @@ const DossiersPage = () => {
 
             {/* Card 2: GESTION DU DOSSIER */}
             <div
-              style={{
-                background: "#FFF",
-                border: "1px solid var(--border)",
-                borderRadius: "12px",
-                padding: "1.5rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
-              }}
+              className="p-6" style={{background:"#FFF",border:"1px solid var(--border)",borderRadius:"12px",boxShadow:"0 1px 3px rgba(0,0,0,0.03)"}}
             >
               <div
-                style={{
-                  fontWeight: 700,
-                  fontSize: "0.85rem",
-                  letterSpacing: "0.05em",
-                  textTransform: "uppercase",
-                  color: "var(--text-main)",
-                  marginBottom: "1.25rem",
-                }}
+                className="font-bold text-[var(--text-main)]" style={{fontSize:"0.85rem",letterSpacing:"0.05em",textTransform:"uppercase",marginBottom:"1.25rem"}}
               >
                 Gestion du dossier
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+              <div className="flex flex-col" style={{gap:"0.85rem"}}>
                 {/* Traitant */}
                 <div
                   style={{
@@ -1839,7 +1528,7 @@ const DossiersPage = () => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Traitant :
                   </div>
                   {isEditMode && isSuperAdmin ? (
@@ -1851,17 +1540,7 @@ const DossiersPage = () => {
                           traitantId: e.target.value,
                         })
                       }
-                      style={{
-                        width: "100%",
-                        padding: "0.45rem 0.6rem",
-                        borderRadius: "6px",
-                        border: "1px solid var(--border)",
-                        background: "#FFF",
-                        fontSize: "0.9rem",
-                        fontWeight: 500,
-                        color: "var(--text-main)",
-                        marginTop: "0.25rem",
-                      }}
+                      className="w-full font-medium text-[var(--text-main)]" style={{padding:"0.45rem 0.6rem",borderRadius:"6px",border:"1px solid var(--border)",background:"#FFF",fontSize:"0.9rem",marginTop:"0.25rem"}}
                     >
                       <option value="">-- Aucun traitant --</option>
                       {dbUsers
@@ -1877,7 +1556,7 @@ const DossiersPage = () => {
                         ))}
                     </select>
                   ) : (
-                    <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                    <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                       {traitantName}
                     </div>
                   )}
@@ -1892,10 +1571,10 @@ const DossiersPage = () => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Créé par :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {creatorName}
                   </div>
                 </div>
@@ -1909,10 +1588,10 @@ const DossiersPage = () => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.25rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Date de création :
                   </div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {createdAtFormatted}
                   </div>
                 </div>
@@ -1926,10 +1605,10 @@ const DossiersPage = () => {
                     padding: "0.75rem 1rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginBottom: "0.35rem" }}>
+                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.35rem"}}>
                     Statut :
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+                  <div className="flex items-center flex-wrap" style={{gap:"0.6rem"}}>
                     <select
                       value={pendingStatus || consultDossier.status || "NOUVEAU"}
                       onChange={(e) => setPendingStatus(e.target.value)}
@@ -1967,19 +1646,7 @@ const DossiersPage = () => {
                             handleStatusAction(consultDossier.id, pendingStatus);
                           }
                         }}
-                        style={{
-                          padding: "0.45rem 0.85rem",
-                          fontSize: "0.8rem",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.35rem",
-                          background: "#1E3A8A",
-                          color: "#FFF",
-                          borderRadius: "6px",
-                          border: "none",
-                          cursor: "pointer",
-                          fontWeight: 600,
-                        }}
+                        className="flex items-center text-white cursor-pointer font-semibold" style={{padding:"0.45rem 0.85rem",fontSize:"0.8rem",gap:"0.35rem",background:"#1E3A8A",borderRadius:"6px",border:"none"}}
                       >
                         <CheckSquare size={14} /> Enregistrer
                       </button>
@@ -1991,24 +1658,13 @@ const DossiersPage = () => {
           </div>
 
           {/* Right Column */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <div className="flex flex-col gap-6">
             {/* Card 3: Description du dossier */}
             <div
-              style={{
-                background: "#FFF",
-                border: "1px solid var(--border)",
-                borderRadius: "12px",
-                padding: "1.5rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
-              }}
+              className="p-6" style={{background:"#FFF",border:"1px solid var(--border)",borderRadius:"12px",boxShadow:"0 1px 3px rgba(0,0,0,0.03)"}}
             >
               <div
-                style={{
-                  fontWeight: 700,
-                  fontSize: "0.95rem",
-                  color: "var(--text-main)",
-                  marginBottom: "0.75rem",
-                }}
+                className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem",marginBottom:"0.75rem"}}
               >
                 Description du dossier
               </div>
@@ -2022,18 +1678,7 @@ const DossiersPage = () => {
                       description: e.target.value,
                     })
                   }
-                  style={{
-                    width: "100%",
-                    padding: "1rem",
-                    background: "#FFF",
-                    borderRadius: "8px",
-                    border: "1px solid var(--primary)",
-                    color: "var(--text-main)",
-                    minHeight: "100px",
-                    resize: "vertical",
-                    fontFamily: "inherit",
-                    boxSizing: "border-box",
-                  }}
+                  className="w-full p-4 text-[var(--text-main)]" style={{background:"#FFF",borderRadius:"8px",border:"1px solid var(--primary)",minHeight:"100px",resize:"vertical",fontFamily:"inherit",boxSizing:"border-box"}}
                   placeholder="Description du dossier..."
                 />
               ) : (
@@ -2046,21 +1691,12 @@ const DossiersPage = () => {
                   }}
                 >
                   <div
-                    style={{
-                      whiteSpace: "pre-wrap",
-                      color: "var(--text-main)",
-                      fontSize: "0.9rem",
-                      fontWeight: 500,
-                    }}
+                    className="text-[var(--text-main)] font-medium" style={{whiteSpace:"pre-wrap",fontSize:"0.9rem"}}
                   >
                     {consultDossier.description || "Aucune description enregistrée pour ce dossier."}
                   </div>
                   <div
-                    style={{
-                      fontSize: "0.75rem",
-                      color: "#94A3B8",
-                      marginTop: "0.5rem",
-                    }}
+                    className="mt-2" style={{fontSize:"0.75rem",color:"#94A3B8"}}
                   >
                     Notes et directives générales enregistrées pour ce dossier opérationnel.
                   </div>
@@ -2070,48 +1706,26 @@ const DossiersPage = () => {
 
             {/* Card 4: Vues des missions associées */}
             <div
-              style={{
-                background: "#FFF",
-                border: "1px solid var(--border)",
-                borderRadius: "12px",
-                padding: "1.5rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
-              }}
+              className="p-6" style={{background:"#FFF",border:"1px solid var(--border)",borderRadius:"12px",boxShadow:"0 1px 3px rgba(0,0,0,0.03)"}}
             >
               <div
-                style={{
-                  fontWeight: 700,
-                  fontSize: "0.95rem",
-                  color: "var(--text-main)",
-                  marginBottom: "0.2rem",
-                }}
+                className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem",marginBottom:"0.2rem"}}
               >
                 Vues des missions associées
               </div>
               <div
-                style={{
-                  fontSize: "0.75rem",
-                  color: "#94A3B8",
-                  marginBottom: "1rem",
-                }}
+                className="mb-4" style={{fontSize:"0.75rem",color:"#94A3B8"}}
               >
                 Suivi direct des missions rattachées à ce dossier
               </div>
 
               {associatedTasks.length > 0 ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                <div className="flex flex-col" style={{gap:"0.75rem"}}>
                   {associatedTasks.map((task) => (
                     <div
                       key={task.id}
                       onClick={() => setLocalConsultTask(task)}
-                      style={{
-                        background: "#FFF",
-                        border: "1px solid #E2E8F0",
-                        borderRadius: "8px",
-                        padding: "0.85rem 1.1rem",
-                        cursor: "pointer",
-                        transition: "all 0.2s",
-                      }}
+                      className="cursor-pointer" style={{background:"#FFF",border:"1px solid #E2E8F0",borderRadius:"8px",padding:"0.85rem 1.1rem",transition:"all 0.2s"}}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.borderColor = "#2563EB";
                         e.currentTarget.style.boxShadow = "0 2px 6px rgba(37,99,235,0.08)";
@@ -2122,14 +1736,9 @@ const DossiersPage = () => {
                       }}
                     >
                       <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          marginBottom: "0.35rem",
-                        }}
+                        className="flex justify-between items-center" style={{marginBottom:"0.35rem"}}
                       >
-                        <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-main)" }}>
+                        <span className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                           Mission {task.reference || task.id}
                         </span>
                         {renderDossierPillBadge(task.status)}
@@ -2143,15 +1752,7 @@ const DossiersPage = () => {
                 </div>
               ) : (
                 <div
-                  style={{
-                    padding: "1.5rem",
-                    background: "#F8FAFC",
-                    border: "1px dashed var(--border)",
-                    borderRadius: "8px",
-                    textAlign: "center",
-                    color: "var(--text-muted)",
-                    fontSize: "0.85rem",
-                  }}
+                  className="p-6 text-center" style={{background:"#F8FAFC",border:"1px dashed var(--border)",borderRadius:"8px",color:"var(--text-muted)",fontSize:"0.85rem"}}
                 >
                   Aucune mission associée pour le moment.
                 </div>
@@ -2170,13 +1771,7 @@ const DossiersPage = () => {
                   }}
                 >
                   <div
-                    style={{
-                      fontWeight: 700,
-                      fontSize: "0.875rem",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.4rem",
-                    }}
+                    className="font-bold flex items-center" style={{fontSize:"0.875rem",gap:"0.4rem"}}
                   >
                     ✓ État d'avancement global : {activeTasks.length} mission{activeTasks.length > 1 ? "s" : ""} active{activeTasks.length > 1 ? "s" : ""}
                   </div>
@@ -2199,38 +1794,19 @@ const DossiersPage = () => {
                 }}
               >
                 <div
-                  style={{
-                    fontWeight: 700,
-                    fontSize: "0.85rem",
-                    color: "var(--text-main)",
-                    marginBottom: "0.75rem",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
+                  className="font-bold text-[var(--text-main)] flex items-center gap-2" style={{fontSize:"0.85rem",marginBottom:"0.75rem"}}
                 >
                   <Paperclip size={15} /> Documents attachés ({consultDossier.documents.length})
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <div className="flex flex-col gap-2">
                   {consultDossier.documents.map((doc) => (
                     <div
                       key={doc.id}
                       onClick={() => setPreviewFile(doc.url)}
-                      style={{
-                        padding: "0.6rem 0.85rem",
-                        background: "#F8FAFC",
-                        borderRadius: "6px",
-                        border: "1px solid var(--border)",
-                        fontSize: "0.85rem",
-                        color: "var(--primary)",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                      }}
+                      className="cursor-pointer flex items-center gap-2" style={{padding:"0.6rem 0.85rem",background:"#F8FAFC",borderRadius:"6px",border:"1px solid var(--border)",fontSize:"0.85rem",color:"var(--primary)"}}
                     >
                       <FileText size={16} />
-                      <span style={{ fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      <span className="font-medium" style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
                         {doc.name}
                       </span>
                     </div>
@@ -2244,29 +1820,10 @@ const DossiersPage = () => {
         {/* Modal Magic Link */}
         {showMagicModal && (
           <div
-            className="fade-in"
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: "rgba(0,0,0,0.5)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 1000,
-            }}
+            className="fade-in fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
           >
             <div
-              className="card"
-              style={{
-                width: "90%",
-                maxWidth: "500px",
-                padding: "2rem",
-                maxHeight: "90vh",
-                overflowY: "auto"
-              }}
+              className="card p-8" style={{width:"90%",maxWidth:"500px",maxHeight:"90vh",overflowY:"auto"}}
             >
               <h3
                 style={{
@@ -2282,25 +1839,14 @@ const DossiersPage = () => {
               {/* Destinataire du lien */}
               {(consultDossier.client?.email || consultDossier.targetUser?.email) && (
                 <div
-                  style={{
-                    marginBottom: "1.5rem",
-                    padding: "0.75rem 1rem",
-                    background: "#EFF6FF",
-                    borderRadius: "8px",
-                    border: "1px solid #BFDBFE",
-                    fontSize: "0.85rem",
-                    color: "#1E40AF",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
+                  className="mb-6 flex items-center gap-2" style={{padding:"0.75rem 1rem",background:"#EFF6FF",borderRadius:"8px",border:"1px solid #BFDBFE",fontSize:"0.85rem",color:"#1E40AF"}}
                 >
                   <span>📧</span>
                   <span>
                     Destinataire :{" "}
                     <a
                       href={`mailto:${consultDossier.client?.email || consultDossier.targetUser?.email}`}
-                      style={{ color: "#1D4ED8", fontWeight: 600 }}
+                      className="font-semibold" style={{color:"#1D4ED8"}}
                     >
                       {consultDossier.client?.email || consultDossier.targetUser?.email}
                     </a>
@@ -2310,28 +1856,17 @@ const DossiersPage = () => {
 
               {!generatedMagicUrl ? (
                 <>
-                  <div style={{ marginBottom: "1.5rem" }}>
+                  <div className="mb-6">
 
                     <label
-                      style={{
-                        display: "block",
-                        marginBottom: "0.5rem",
-                        fontWeight: 500,
-                        
-                      }}
+                      className="block mb-2 font-medium"
                     >
                       Type de lien
                     </label>
                     <select
                       value={magicType}
                       onChange={(e) => setMagicType(e.target.value)}
-                      className="input-field"
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        borderRadius: "8px",
-                        border: "1px solid var(--border)",
-                      }}
+                      className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
                     >
                       <option value="ACQUISITION">
                         📤 Lien de dépôt (Le client nous envoie des fichiers)
@@ -2342,27 +1877,16 @@ const DossiersPage = () => {
                       </option>
                     </select>
                   </div>
-                  <div style={{ marginBottom: "1.5rem" }}>
+                  <div className="mb-6">
                     <label
-                      style={{
-                        display: "block",
-                        marginBottom: "0.5rem",
-                        fontWeight: 500,
-                        
-                      }}
+                      className="block mb-2 font-medium"
                     >
                       Validité (jours)
                     </label>
                     <select
                       value={magicExpires}
                       onChange={(e) => setMagicExpires(e.target.value)}
-                      className="input-field"
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        borderRadius: "8px",
-                        border: "1px solid var(--border)",
-                      }}
+                      className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
                     >
                       <option value="1">1 jour</option>
                       <option value="7">7 jours</option>
@@ -2372,22 +1896,10 @@ const DossiersPage = () => {
 
                   {/* Instructions pour le client */}
                   <div
-                    style={{
-                      marginBottom: "1.5rem",
-                      padding: "1rem",
-                      background: "#F8FAFC",
-                      borderRadius: "8px",
-                      border: "1px solid var(--border)",
-                    }}
+                    className="mb-6 p-4" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)"}}
                   >
                     <label
-                      style={{
-                        display: "block",
-                        marginBottom: "0.5rem",
-                        fontWeight: 600,
-                        
-                        color: "var(--primary-dark)",
-                      }}
+                      className="block mb-2 font-semibold" style={{color:"var(--primary-dark)"}}
                     >
                       {magicType === "ACQUISITION"
                         ? "📋 Quels fichiers demandez-vous au client ?"
@@ -2401,24 +1913,10 @@ const DossiersPage = () => {
                           ? "Ex: Merci de nous transmettre votre dernier bilan comptable, vos relevés bancaires des 3 derniers mois et une copie de votre pièce d'identité."
                           : "Ex: Veuillez trouver ci-joint les documents préparés dans le cadre de votre dossier. N'hésitez pas à nous contacter si vous avez des questions."
                       }
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        borderRadius: "8px",
-                        border: "1px solid var(--border)",
-                        minHeight: "100px",
-                        resize: "vertical",
-                        fontFamily: "inherit",
-                        
-                        boxSizing: "border-box",
-                      }}
+                      className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",minHeight:"100px",resize:"vertical",fontFamily:"inherit",boxSizing:"border-box"}}
                     />
                     <small
-                      style={{
-                        color: "var(--text-muted)",
-                        display: "block",
-                        marginTop: "0.25rem",
-                      }}
+                      className="block" style={{color:"var(--text-muted)",marginTop:"0.25rem"}}
                     >
                       {magicType === "ACQUISITION"
                         ? "Ces instructions seront affichées au client sur la page de dépôt."
@@ -2427,26 +1925,14 @@ const DossiersPage = () => {
                   </div>
                   {/* Zone d'upload pour LIVRAISON */}
                   {magicType === "LIVRAISON" && (
-                    <div style={{ marginBottom: "1.5rem" }}>
+                    <div className="mb-6">
                       <label
-                        style={{
-                          display: "block",
-                          marginBottom: "0.5rem",
-                          fontWeight: 600,
-                          color: "var(--primary-dark)",
-                        }}
+                        className="block mb-2 font-semibold" style={{color:"var(--primary-dark)"}}
                       >
                         📎 Fichiers à mettre à disposition du client
                       </label>
                       <div
-                        style={{
-                          border: "2px dashed var(--border)",
-                          borderRadius: "8px",
-                          padding: "1.5rem",
-                          textAlign: "center",
-                          background: "#F8FAFC",
-                          cursor: "pointer",
-                        }}
+                        className="p-6 text-center cursor-pointer" style={{border:"2px dashed var(--border)",borderRadius:"8px",background:"#F8FAFC"}}
                         onDragOver={(e) => e.preventDefault()}
                         onDrop={(e) => {
                           e.preventDefault();
@@ -2459,7 +1945,7 @@ const DossiersPage = () => {
                           id="magicFileInput"
                           type="file"
                           multiple
-                          style={{ display: "none" }}
+                          className="hidden"
                           onChange={(e) => {
                             const selected = Array.from(e.target.files);
                             setMagicFiles((prev) => [...prev, ...selected]);
@@ -2474,19 +1960,13 @@ const DossiersPage = () => {
                           {magicFiles.map((f, i) => (
                             <li
                               key={i}
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                fontSize: "0.8rem",
-                                padding: "0.25rem 0",
-                              }}
+                              className="flex justify-between items-center" style={{fontSize:"0.8rem",padding:"0.25rem 0"}}
                             >
                               <span>📄 {f.name}</span>
                               <button
                                 type="button"
                                 onClick={() => setMagicFiles((prev) => prev.filter((_, idx) => idx !== i))}
-                                style={{ background: "none", border: "none", color: "var(--danger)", cursor: "pointer", fontSize: "1rem" }}
+                                className="cursor-pointer" style={{background:"none",border:"none",color:"var(--danger)",fontSize:"1rem"}}
                               >
                                 ×
                               </button>
@@ -2494,18 +1974,13 @@ const DossiersPage = () => {
                           ))}
                         </ul>
                       )}
-                      <small style={{ color: "var(--text-muted)", display: "block", marginTop: "0.5rem" }}>
+                      <small className="block mt-2" style={{color:"var(--text-muted)"}}>
                         Ces fichiers seront stockés dans la GED du dossier et accessibles au client via le lien.
                       </small>
                     </div>
                   )}
                   <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      gap: "1rem",
-                      marginTop: "2rem",
-                    }}
+                    className="flex justify-end gap-4 mt-8"
                   >
                     <button
                       type="button"
@@ -2517,12 +1992,7 @@ const DossiersPage = () => {
                     <button
                       type="button"
                       onClick={handleGenerateMagicLink}
-                      className="btn btn-primary"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                      }}
+                      className="btn btn-primary flex items-center gap-2"
                     >
                       <LinkIcon size={16} /> Générer
                     </button>
@@ -2531,21 +2001,10 @@ const DossiersPage = () => {
               ) : (
                 <>
                   <div
-                    style={{
-                      padding: "1.5rem",
-                      background: "#F0FDF4",
-                      border: "1px solid #BBF7D0",
-                      borderRadius: "8px",
-                      marginBottom: "1.5rem",
-                    }}
+                    className="p-6 mb-6" style={{background:"#F0FDF4",border:"1px solid #BBF7D0",borderRadius:"8px"}}
                   >
                     <p
-                      style={{
-                        margin: "0 0 0.5rem 0",
-                        color: "#166534",
-                        fontWeight: 600,
-                        fontSize: "0.95rem",
-                      }}
+                      className="font-semibold" style={{margin:"0 0 0.5rem 0",color:"#166534",fontSize:"0.95rem"}}
                     >
                       ✅ Lien généré avec succès !
                     </p>
@@ -2556,10 +2015,10 @@ const DossiersPage = () => {
                     </p>
 
                     {/* URL client */}
-                    <label style={{ display: "block", marginBottom: "0.35rem", fontWeight: 500, fontSize: "0.85rem", color: "#166534" }}>
+                    <label className="block font-medium" style={{marginBottom:"0.35rem",fontSize:"0.85rem",color:"#166534"}}>
                       🔗 URL à envoyer au client :
                     </label>
-                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <div className="flex gap-2">
                       <input
                         type="text"
                         readOnly
@@ -2592,14 +2051,14 @@ const DossiersPage = () => {
                     )}
 
                     {/* ── Envoi par email ── */}
-                    <div style={{ marginTop: "1.5rem", padding: "1rem", background: "#fff", border: "1px solid #E2E8F0", borderRadius: "8px" }}>
-                      <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 600, fontSize: "0.85rem", color: "#141824" }}>
+                    <div className="mt-6 p-4" style={{background:"#fff",border:"1px solid #E2E8F0",borderRadius:"8px"}}>
+                      <label className="block mb-2 font-semibold" style={{fontSize:"0.85rem",color:"#141824"}}>
                         ✉️ Envoyer le lien directement par email
                       </label>
                       {magicEmailSent ? (
                         <p style={{ color: "#166534", fontSize: "0.85rem", margin: 0 }}>✅ Email envoyé avec succès !</p>
                       ) : (
-                        <div style={{ display: "flex", gap: "0.5rem" }}>
+                        <div className="flex gap-2">
                           <input
                             type="email"
                             value={magicEmailRecipient}
@@ -2636,7 +2095,7 @@ const DossiersPage = () => {
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", justifyContent: "center" }}>
+                  <div className="flex justify-center">
                     <button
                       type="button"
                       onClick={() => setShowMagicModal(false)}
@@ -2661,46 +2120,16 @@ const DossiersPage = () => {
               : [];
             return (
               <div
-                className="fade-in"
-                style={{
-                  position: "fixed",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: "rgba(0,0,0,0.5)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  zIndex: 1000,
-                }}
+                className="fade-in fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
               >
                 <div
-                  style={{
-                    background: "#FFF",
-                    padding: "2rem",
-                    borderRadius: "8px",
-                    width: "90%",
-                    maxWidth: "800px",
-                    maxHeight: "90vh",
-                    overflowY: "auto",
-                    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                  }}
+                  className="p-8" style={{background:"#FFF",borderRadius:"8px",width:"90%",maxWidth:"800px",maxHeight:"90vh",overflowY:"auto",boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}
                 >
                   <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      marginBottom: "1.5rem",
-                    }}
+                    className="flex justify-between items-center mb-6"
                   >
                     <h3
-                      style={{
-                        margin: 0,
-                        fontSize: "1.25rem",
-                        fontWeight: 600,
-                      }}
+                      className="font-semibold" style={{fontSize:"1.25rem"}}
                     >
                       Nouvelle Mission
                     </h3>
@@ -2712,17 +2141,7 @@ const DossiersPage = () => {
                         setMissionDossierId("");
                         setAuthorizedDossierIds([]);
                       }}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        color: "var(--text-muted)",
-                        fontSize: "0.75rem",
-                        gap: "2px",
-                      }}
+                      className="cursor-pointer flex flex-col items-center" style={{background:"none",border:"none",color:"var(--text-muted)",fontSize:"0.75rem",gap:"2px"}}
                     >
                       <X size={20} />
                       <span>Fermer</span>
@@ -2730,19 +2149,11 @@ const DossiersPage = () => {
                   </div>
 
                   <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "1rem",
-                    }}
+                    className="flex flex-col gap-4"
                   >
                     <div>
                       <label
-                        style={{
-                          display: "block",
-                          marginBottom: "0.5rem",
-                          fontWeight: 500,
-                        }}
+                        className="block mb-2 font-medium"
                       >
                         Objet de la mission *
                       </label>
@@ -2751,44 +2162,20 @@ const DossiersPage = () => {
                         value={missionSubject}
                         onChange={(e) => setMissionSubject(e.target.value)}
                         placeholder="Sujet de la mission..."
-                        className="input-field"
-                        style={{
-                          width: "100%",
-                          padding: "0.75rem",
-                          borderRadius: "8px",
-                          border: "1px solid var(--border)",
-                        }}
+                        className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
                       />
                     </div>
 
                     {operationalTree && (
                       <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "1rem",
-                          background: "#F8FAFC",
-                          padding: "1rem",
-                          borderRadius: "8px",
-                          border: "1px solid var(--border)",
-                        }}
+                        className="flex flex-col gap-4 p-4" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)"}}
                       >
                         <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "2rem",
-                          }}
+                          className="flex flex-col" style={{gap:"2rem"}}
                         >
                           <div>
                             <label
-                              style={{
-                                display: "block",
-                                marginBottom: "0.5rem",
-                                fontWeight: 600,
-                                
-                                color: "var(--primary-dark)",
-                              }}
+                              className="block mb-2 font-semibold" style={{color:"var(--primary-dark)"}}
                             >
                               Dossier mission (Sélection unique) *
                             </label>
@@ -2816,21 +2203,11 @@ const DossiersPage = () => {
                             return (
                               <div>
                                 <label
-                                  style={{
-                                    display: "block",
-                                    marginBottom: "0.5rem",
-                                    fontWeight: 600,
-                                    
-                                    color: "var(--primary-dark)",
-                                  }}
+                                  className="block mb-2 font-semibold" style={{color:"var(--primary-dark)"}}
                                 >
                                   Dossiers autorisés{" "}
                                   <span
-                                    style={{
-                                      fontWeight: 400,
-                                      color: "var(--text-muted)",
-                                      fontSize: "0.8rem",
-                                    }}
+                                    className="font-normal" style={{color:"var(--text-muted)",fontSize:"0.8rem"}}
                                   >
                                     (lecture seule)
                                   </span>
@@ -2892,43 +2269,20 @@ const DossiersPage = () => {
                                     if (selectedNames.length === 0) return null;
                                     return (
                                       <div
-                                        style={{
-                                          padding: "0.75rem",
-                                          background: "#e0f2fe",
-                                          borderRadius: "8px",
-                                          
-                                          border: "1px solid #bae6fd",
-                                          marginTop: "0.5rem",
-                                        }}
+                                        className="mt-2" style={{padding:"0.75rem",background:"#e0f2fe",borderRadius:"8px",border:"1px solid #bae6fd"}}
                                       >
                                         <strong
-                                          style={{
-                                            display: "block",
-                                            marginBottom: "0.25rem",
-                                            color: "#0369a1",
-                                          }}
+                                          className="block" style={{marginBottom:"0.25rem",color:"#0369a1"}}
                                         >
                                           Panier des dossiers autorisés :
                                         </strong>
                                         <div
-                                          style={{
-                                            display: "flex",
-                                            flexWrap: "wrap",
-                                            gap: "0.5rem",
-                                          }}
+                                          className="flex flex-wrap gap-2"
                                         >
                                           {selectedNames.map((name, i) => (
                                             <span
                                               key={i}
-                                              style={{
-                                                background: "#FFF",
-                                                color: "#0369a1",
-                                                padding: "0.25rem 0.5rem",
-                                                borderRadius: "4px",
-                                                fontSize: "0.75rem",
-                                                fontWeight: 500,
-                                                border: "1px solid #7dd3fc",
-                                              }}
+                                              className="font-medium" style={{background:"#FFF",color:"#0369a1",padding:"0.25rem 0.5rem",borderRadius:"4px",fontSize:"0.75rem",border:"1px solid #7dd3fc"}}
                                             >
                                               {name}
                                             </span>
@@ -2945,33 +2299,18 @@ const DossiersPage = () => {
                     )}
 
                     <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gap: "1rem",
-                      }}
+                      className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}
                     >
                       <div>
                         <label
-                          style={{
-                            display: "block",
-                            marginBottom: "0.5rem",
-                            fontWeight: 500,
-                          }}
+                          className="block mb-2 font-medium"
                         >
                           Assigné à *
                         </label>
                         <select
                           value={missionAssignedTo}
                           onChange={(e) => setMissionAssignedTo(e.target.value)}
-                          className="input-field"
-                          style={{
-                            width: "100%",
-                            padding: "0.75rem",
-                            borderRadius: "8px",
-                            border: "1px solid var(--border)",
-                            background: "#FFF",
-                          }}
+                          className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF"}}
                         >
                           <option value="">Sélectionner un membre...</option>
                           {dbUsers
@@ -2989,12 +2328,7 @@ const DossiersPage = () => {
                       </div>
                       <div>
                         <label
-                          style={{
-                            display: "block",
-                            marginBottom: "0.5rem",
-                            fontWeight: 500,
-                            
-                          }}
+                          className="block mb-2 font-medium"
                         >
                           Échéance *
                         </label>
@@ -3003,26 +2337,14 @@ const DossiersPage = () => {
                           min={new Date().toISOString().split("T")[0]}
                           value={missionEcheance}
                           onChange={(e) => setMissionEcheance(e.target.value)}
-                          className="input-field"
-                          style={{
-                            width: "100%",
-                            padding: "0.75rem",
-                            borderRadius: "8px",
-                            border: "1px solid var(--border)",
-                            background: "#FFF",
-                          }}
+                          className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF"}}
                         />
                       </div>
                     </div>
 
                     <div>
                       <label
-                        style={{
-                          display: "block",
-                          marginBottom: "0.5rem",
-                          fontWeight: 500,
-                          
-                        }}
+                        className="block mb-2 font-medium"
                       >
                         Message / Consignes *
                       </label>
@@ -3030,15 +2352,7 @@ const DossiersPage = () => {
                         value={missionDescription}
                         onChange={(e) => setMissionDescription(e.target.value)}
                         placeholder="Détails de la mission..."
-                        style={{
-                          width: "100%",
-                          padding: "0.75rem",
-                          borderRadius: "8px",
-                          border: "1px solid var(--border)",
-                          minHeight: "120px",
-                          resize: "vertical",
-                          fontFamily: "inherit",
-                        }}
+                        className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",minHeight:"120px",resize:"vertical",fontFamily:"inherit"}}
                       ></textarea>
                     </div>
 
@@ -3046,12 +2360,7 @@ const DossiersPage = () => {
                   </div>
 
                   <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      gap: "1rem",
-                      marginTop: "2rem",
-                    }}
+                    className="flex justify-end gap-4 mt-8"
                   >
                     <button
                       type="button"
@@ -3094,16 +2403,9 @@ const DossiersPage = () => {
       (t) => t.dossierId === editDossier.id,
     );
     return (
-      <div className="fade-in" style={{ width: "100%", padding: "0" }}>
+      <div className="fade-in w-full" style={{padding:"0"}}>
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "1rem",
-            marginBottom: "2rem",
-            borderBottom: "1px solid var(--border)",
-            paddingBottom: "1.5rem",
-          }}
+          className="flex items-center gap-4 mb-8" style={{borderBottom:"1px solid var(--border)",paddingBottom:"1.5rem"}}
         >
           <button
             type="button"
@@ -3113,29 +2415,18 @@ const DossiersPage = () => {
           >
             ← Retour
           </button>
-          <h2 style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600 }}>
+          <h2 className="font-semibold" style={{fontSize:"1.5rem"}}>
             Modifier le Dossier: {editDossier.reference || editDossier.id}
           </h2>
         </div>
 
         {renderDossierFields(editDossier, true)}
         <div
-          style={{
-            display: "flex",
-            gap: "2rem",
-            marginTop: "1rem",
-            borderTop: "1px solid var(--border)",
-            paddingTop: "1.5rem",
-            alignItems: "flex-start",
-          }}
+          className="flex mt-4 items-start" style={{gap:"2rem",borderTop:"1px solid var(--border)",paddingTop:"1.5rem"}}
         >
           <div style={{ flex: "0 0 70%" }}>
             <h4
-              style={{
-                margin: "0 0 1rem 0",
-                fontSize: "1rem",
-                fontWeight: 600,
-              }}
+              className="font-semibold" style={{margin:"0 0 1rem 0",fontSize:"1rem"}}
             >
               Description du dossier
             </h4>
@@ -3144,19 +2435,7 @@ const DossiersPage = () => {
               onChange={(e) =>
                 setEditDossier({ ...editDossier, description: e.target.value })
               }
-              className="input-field"
-              style={{
-                width: "100%",
-                padding: "1.5rem",
-                background: "#FFF",
-                borderRadius: "8px",
-                border: "1px solid var(--primary)",
-                
-                color: "var(--text-main)",
-                minHeight: "120px",
-                resize: "vertical",
-                fontFamily: "inherit",
-              }}
+              className="input-field w-full p-6 text-[var(--text-main)]" style={{background:"#FFF",borderRadius:"8px",border:"1px solid var(--primary)",minHeight:"120px",resize:"vertical",fontFamily:"inherit"}}
               placeholder="Description du dossier..."
             />
           </div>
@@ -3166,21 +2445,12 @@ const DossiersPage = () => {
         </div>
 
         <div
-          style={{
-            marginTop: "2rem",
-            borderTop: "1px solid var(--border)",
-            paddingTop: "1.5rem",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: "1rem",
-          }}
+          className="mt-8 flex justify-between items-center flex-wrap gap-4" style={{borderTop:"1px solid var(--border)",paddingTop:"1.5rem"}}
         >
-          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+          <div className="flex gap-4 flex-wrap">
             {renderWorkflowButtons(editDossier)}
           </div>
-          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+          <div className="flex gap-4 flex-wrap">
             <button
               type="button"
               onClick={() => setEditDossier(null)}
@@ -3212,21 +2482,11 @@ const DossiersPage = () => {
   return (
     <div>
       <div
-        className="flex justify-between items-center mb-6"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "1.5rem",
-          alignItems: "center",
-        }}
+        className="flex justify-between items-center mb-6 flex justify-between mb-6 items-center"
       >
         <div>
           <h1
-            style={{
-              fontSize: "1.5rem",
-              fontWeight: 600,
-              color: "var(--text-main)",
-            }}
+            className="font-semibold text-[var(--text-main)]" style={{fontSize:"1.5rem"}}
           >
             Tous les Dossiers
           </h1>
@@ -3250,8 +2510,7 @@ const DossiersPage = () => {
               });
               setShowCreateDossierModal(true);
             }}
-            className="btn btn-primary"
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            className="btn btn-primary flex items-center gap-2"
           >
             <Plus size={18} /> {t("dossier.new", "Nouveau Dossier")}
           </button>
@@ -3259,40 +2518,19 @@ const DossiersPage = () => {
       </div>
 
       <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "1rem",
-          marginBottom: "1.5rem",
-          background: "#F8FAFC",
-          padding: "1rem",
-          borderRadius: "8px",
-          border: "1px solid var(--border)",
-        }}
+        className="flex flex-wrap gap-4 mb-6 p-4" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)"}}
       >
-        <div style={{ flex: "1 1 250px", position: "relative" }}>
+        <div className="relative" style={{flex:"1 1 250px"}}>
           <Search
             size={18}
-            style={{
-              position: "absolute",
-              left: "1rem",
-              top: "50%",
-              transform: "translateY(-50%)",
-              color: "var(--text-muted)",
-            }}
+            className="absolute" style={{left:"1rem",top:"50%",transform:"translateY(-50%)",color:"var(--text-muted)"}}
           />
           <input
             type="text"
             placeholder="Rechercher par ID, Nom ou Créateur..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input-field"
-            style={{
-              width: "100%",
-              padding: "0.75rem 1rem 0.75rem 2.5rem",
-              borderRadius: "8px",
-              border: "1px solid var(--border)",
-            }}
+            className="input-field w-full" style={{padding:"0.75rem 1rem 0.75rem 2.5rem",borderRadius:"8px",border:"1px solid var(--border)"}}
           />
         </div>
         <select
@@ -3337,16 +2575,16 @@ const DossiersPage = () => {
         </select>
       </div>
       <div className="table-wrapper">
-        <table style={{ tableLayout: "fixed", width: "100%" }}>
+        <table className="w-full" style={{tableLayout:"fixed"}}>
           <thead>
             <tr>
-              <th style={{ width: "50px", textAlign: "center" }}>N°</th>
-              <th style={{ width: "28%", textAlign: "left", paddingLeft: "1.25rem" }}>{t("dossier.folderName", "Nom du dossier")}</th>
-              <th style={{ width: "120px", textAlign: "center" }}>{t("dossier.origin", "Origine")}</th>
-              <th style={{ width: "24%", textAlign: "center" }}>{t("dossier.owner", "Propriétaire")}</th>
-              <th style={{ width: "120px", textAlign: "center" }}>{t("common.status", "Statut")}</th>
-              <th className="table-date-cell" style={{ width: "165px", textAlign: "center" }}>{t("common.createdAt", "Date de création")}</th>
-              <th style={{ width: "80px", textAlign: "center" }}>{t("common.actions", "Actions")}</th>
+              <th className="text-center" style={{width:"50px"}}>N°</th>
+              <th className="text-left" style={{width:"28%",paddingLeft:"1.25rem"}}>{t("dossier.folderName", "Nom du dossier")}</th>
+              <th className="text-center" style={{width:"120px"}}>{t("dossier.origin", "Origine")}</th>
+              <th className="text-center" style={{width:"24%"}}>{t("dossier.owner", "Propriétaire")}</th>
+              <th className="text-center" style={{width:"120px"}}>{t("common.status", "Statut")}</th>
+              <th className="table-date-cell text-center" style={{width:"165px"}}>{t("common.createdAt", "Date de création")}</th>
+              <th className="text-center" style={{width:"80px"}}>{t("common.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -3354,7 +2592,7 @@ const DossiersPage = () => {
               <tr>
                 <td
                   colSpan="7"
-                  style={{ textAlign: "center", padding: "2rem" }}
+                  className="text-center p-8"
                 >
                   Chargement des dossiers...
                 </td>
@@ -3363,7 +2601,7 @@ const DossiersPage = () => {
               <tr>
                 <td
                   colSpan="7"
-                  style={{ textAlign: "center", padding: "2rem" }}
+                  className="text-center p-8"
                 >
                   Aucun dossier principal trouvé.
                 </td>
@@ -3411,74 +2649,46 @@ const DossiersPage = () => {
                       key={d.id}
                       className={isExpired(d) ? "row-expired" : ""}
                     >
-                      <td style={{ textAlign: "center" }}>
+                      <td className="text-center">
                         <div
-                          className="truncate-name"
-                          style={{
-                            fontWeight: 400,
-                            maxWidth: "100%",
-                            textAlign: "center",
-                          }}
+                          className="truncate-name font-normal text-center" style={{maxWidth:"100%"}}
                           title={String(index + 1).padStart(2, "0")}
                         >
                           {String(index + 1).padStart(2, "0")}
                         </div>
                       </td>
-                      <td style={{ textAlign: "left", paddingLeft: "1.25rem" }}>
+                      <td className="text-left" style={{paddingLeft:"1.25rem"}}>
                         <span
-                          className="truncate-name"
-                          style={{
-                            color: "var(--text-main)",
-                            maxWidth: "100%",
-                            display: "block",
-                          }}
+                          className="truncate-name text-[var(--text-main)] block" style={{maxWidth:"100%"}}
                           title={d.name}
                         >
                           {d.name}
                         </span>
                       </td>
-                      <td style={{ textAlign: "center" }}>
+                      <td className="text-center">
                         <div
-                          className="truncate-name"
-                          style={{
-                            color: "var(--text-muted)",
-                            textTransform: "uppercase",
-                            maxWidth: "100%",
-                            fontSize: "0.85rem",
-                            textAlign: "center",
-                          }}
+                          className="truncate-name text-center" style={{color:"var(--text-muted)",textTransform:"uppercase",maxWidth:"100%",fontSize:"0.85rem"}}
                           title={dOrigin}
                         >
                           {dOrigin}
                         </div>
                       </td>
-                      <td style={{ textAlign: "center" }}>
+                      <td className="text-center">
                         <div
-                          className="truncate-name"
-                          style={{
-                            maxWidth: "100%",
-                            fontSize: "0.85rem",
-                            textAlign: "center",
-                          }}
+                          className="truncate-name text-center" style={{maxWidth:"100%",fontSize:"0.85rem"}}
                           title={dOwner}
                         >
                           {dOwner}
                         </div>
                       </td>
-                      <td style={{ textAlign: "center" }}>
-                        <div style={{ display: "inline-flex", justifyContent: "center" }}>
+                      <td className="text-center">
+                        <div className="inline-flex justify-center">
                           {getStatusBadge(d.status)}
                         </div>
                       </td>
 
                       <td
-                        className="table-date-cell"
-                        style={{
-                          color: "var(--text-muted)",
-                          fontSize: "0.85rem",
-                          textAlign: "center",
-                          width: "165px",
-                        }}
+                        className="table-date-cell text-center" style={{color:"var(--text-muted)",fontSize:"0.85rem",width:"165px"}}
                       >
                         {new Date(d.createdAt).toLocaleString("fr-FR", {
                           day: "2-digit",
@@ -3488,15 +2698,9 @@ const DossiersPage = () => {
                           minute: "2-digit",
                         })}
                       </td>
-                      <td style={{ textAlign: "center" }}>
+                      <td className="text-center">
                         <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "0.25rem",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
+                          className="flex flex-col items-center justify-center" style={{gap:"0.25rem"}}
                         >
                           <button
                             type="button"
@@ -3504,13 +2708,7 @@ const DossiersPage = () => {
                               setConsultDossier(d);
                               setShowMagicModal(false);
                             }}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              cursor: "pointer",
-                              color: "var(--primary)",
-                              padding: "4px",
-                            }}
+                            className="cursor-pointer" style={{background:"none",border:"none",color:"var(--primary)",padding:"4px"}}
                             title="Consulter le dossier"
                           >
                             <Eye size={18} />
@@ -3524,13 +2722,7 @@ const DossiersPage = () => {
                             <button
                               type="button"
                               onClick={() => handleDeleteDossier(d)}
-                              style={{
-                                background: "none",
-                                border: "none",
-                                cursor: "pointer",
-                                color: "#EF4444",
-                                padding: "4px",
-                              }}
+                              className="cursor-pointer" style={{background:"none",border:"none",color:"#EF4444",padding:"4px"}}
                               title="Supprimer le dossier"
                             >
                               <Trash size={18} />
@@ -3559,51 +2751,20 @@ const DossiersPage = () => {
       {/* Modal Création Dossier */}
       {showCreateDossierModal && (
         <div
-          className="fade-in"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
+          className="fade-in fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
         >
           <div
-            style={{
-              background: "#FFF",
-              padding: "2rem",
-              borderRadius: "8px",
-              width: "90%",
-              maxWidth: "500px",
-              maxHeight: "90vh",
-              overflowY: "auto",
-              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-            }}
+            className="p-8" style={{background:"#FFF",borderRadius:"8px",width:"90%",maxWidth:"500px",maxHeight:"90vh",overflowY:"auto",boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}
           >
             <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "1.5rem",
-              }}
+              className="flex justify-between items-center mb-6"
             >
-              <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
+              <h3 className="font-semibold" style={{fontSize:"1.25rem"}}>
                 Nouveau Dossier
               </h3>
               <button
                 onClick={() => setShowCreateDossierModal(false)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "var(--text-muted)",
-                }}
+                className="cursor-pointer" style={{background:"none",border:"none",color:"var(--text-muted)"}}
               >
                 <X size={20} />
               </button>
@@ -3611,29 +2772,14 @@ const DossiersPage = () => {
 
             <form onSubmit={handleCreateDossier}>
               <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1.5rem",
-                }}
+                className="flex flex-col gap-6"
               >
                 {/* BLOC 1: ORIGINE ET CIBLE */}
                 <div
-                  style={{
-                    padding: "1.5rem",
-                    background: "#F8FAFC",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                  }}
+                  className="p-6" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)"}}
                 >
                   <label
-                    style={{
-                      display: "block",
-                      marginBottom: "1rem",
-                      fontWeight: 600,
-                      fontSize: "0.95rem",
-                      color: "var(--primary-dark)",
-                    }}
+                    className="block mb-4 font-semibold" style={{fontSize:"0.95rem",color:"var(--primary-dark)"}}
                   >
                     1. Type de dossier (Origine) *
                   </label>
@@ -3684,21 +2830,7 @@ const DossiersPage = () => {
                     >
                       {newDossierData.origin === "CLIENT" && (
                         <div
-                          style={{
-                            position: "absolute",
-                            top: "8px",
-                            right: "8px",
-                            background: "#1e3a8a",
-                            color: "#FFF",
-                            borderRadius: "50%",
-                            width: "18px",
-                            height: "18px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "11px",
-                            fontWeight: "bold",
-                          }}
+                          className="absolute text-white flex items-center justify-center font-bold" style={{top:"8px",right:"8px",background:"#1e3a8a",borderRadius:"50%",width:"18px",height:"18px",fontSize:"11px"}}
                         >
                           ✓
                         </div>
@@ -3745,21 +2877,7 @@ const DossiersPage = () => {
                     >
                       {newDossierData.origin === "COLLABORATEUR" && (
                         <div
-                          style={{
-                            position: "absolute",
-                            top: "8px",
-                            right: "8px",
-                            background: "#1e3a8a",
-                            color: "#FFF",
-                            borderRadius: "50%",
-                            width: "18px",
-                            height: "18px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "11px",
-                            fontWeight: "bold",
-                          }}
+                          className="absolute text-white flex items-center justify-center font-bold" style={{top:"8px",right:"8px",background:"#1e3a8a",borderRadius:"50%",width:"18px",height:"18px",fontSize:"11px"}}
                         >
                           ✓
                         </div>
@@ -3779,13 +2897,7 @@ const DossiersPage = () => {
                       }}
                     >
                       <label
-                        style={{
-                          display: "block",
-                          marginBottom: "0.5rem",
-                          fontWeight: 600,
-                          fontSize: "0.95rem",
-                          color: "var(--primary-dark)",
-                        }}
+                        className="block mb-2 font-semibold" style={{fontSize:"0.95rem",color:"var(--primary-dark)"}}
                       >
                         {newDossierData.origin === "CLIENT"
                           ? "2. Rechercher le Client cible *"
@@ -3828,32 +2940,16 @@ const DossiersPage = () => {
 
                 {/* BLOC 2: INFOS GENERALES */}
                 <div
-                  style={{
-                    padding: "1.5rem",
-                    background: "#F8FAFC",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                  }}
+                  className="p-6" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)"}}
                 >
                   <label
-                    style={{
-                      display: "block",
-                      marginBottom: "1rem",
-                      fontWeight: 600,
-                      fontSize: "0.95rem",
-                      color: "var(--primary-dark)",
-                    }}
+                    className="block mb-4 font-semibold" style={{fontSize:"0.95rem",color:"var(--primary-dark)"}}
                   >
                     2. Informations générales
                   </label>
                   <div>
                     <label
-                      style={{
-                        display: "block",
-                        marginBottom: "0.5rem",
-                        fontWeight: 500,
-                        
-                      }}
+                      className="block mb-2 font-medium"
                     >
                       Description *
                     </label>
@@ -3866,47 +2962,22 @@ const DossiersPage = () => {
                           description: e.target.value,
                         })
                       }
-                      className="input-field"
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        borderRadius: "8px",
-                        border: "1px solid var(--border)",
-                        minHeight: "80px",
-                        resize: "vertical",
-                        fontFamily: "inherit",
-                      }}
+                      className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",minHeight:"80px",resize:"vertical",fontFamily:"inherit"}}
                     ></textarea>
                   </div>
                 </div>
 
                 <div
-                  style={{
-                    padding: "1.5rem",
-                    background: "#F8FAFC",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                  }}
+                  className="p-6" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)"}}
                 >
                   <label
-                    style={{
-                      display: "block",
-                      marginBottom: "1rem",
-                      fontWeight: 600,
-                      fontSize: "0.95rem",
-                      color: "var(--primary-dark)",
-                    }}
+                    className="block mb-4 font-semibold" style={{fontSize:"0.95rem",color:"var(--primary-dark)"}}
                   >
                     3. Attribution
                   </label>
                   <div>
                     <label
-                      style={{
-                        display: "block",
-                        marginBottom: "0.5rem",
-                        fontWeight: 500,
-                        
-                      }}
+                      className="block mb-2 font-medium"
                     >
                       Responsable du dossier (Traitant) *
                     </label>
@@ -3919,14 +2990,7 @@ const DossiersPage = () => {
                           traitantId: e.target.value,
                         })
                       }
-                      className="input-field"
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        borderRadius: "8px",
-                        border: "1px solid var(--border)",
-                        background: "#FFF",
-                      }}
+                      className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF"}}
                     >
                       <option value="" disabled>
                         -- Sélectionner un traitant --
@@ -3948,12 +3012,7 @@ const DossiersPage = () => {
               </div>
 
               <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "1rem",
-                  marginTop: "2rem",
-                }}
+                className="flex justify-end gap-4 mt-8"
               >
                 <button
                   type="button"
@@ -4011,53 +3070,24 @@ const DossiersPage = () => {
 
       {confirmingStatus && confirmingDossierId && (
         <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0,0,0,0.5)",
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+          className="fixed w-full h-full flex items-center justify-center" style={{backgroundColor:"rgba(0,0,0,0.5)",zIndex:9999}}
         >
           <div
-            style={{
-              background: "#FFF",
-              padding: "2rem",
-              borderRadius: "12px",
-              boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
-              width: "100%",
-              maxWidth: "400px",
-              textAlign: "center",
-            }}
+            className="p-8 w-full text-center" style={{background:"#FFF",borderRadius:"12px",boxShadow:"0 10px 25px rgba(0,0,0,0.2)",maxWidth:"400px"}}
           >
-            <h3 style={{ marginTop: 0, color: "var(--primary-dark)", fontSize: "1.2rem", marginBottom: "0.5rem" }}>
+            <h3 className="mb-2" style={{color:"var(--primary-dark)",fontSize:"1.2rem"}}>
               Confirmer l'enregistrement
             </h3>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginBottom: "1.5rem" }}>
+            <p className="mb-6" style={{color:"var(--text-muted)",fontSize:"0.9rem"}}>
               Vous allez enregistrer <strong>1 modification(s)</strong> sur ce dossier.
             </p>
             <div
-              style={{
-                background: "#F8FAFC",
-                borderRadius: "8px",
-                padding: "0.75rem 1rem",
-                marginBottom: "1.5rem",
-                fontSize: "0.9rem",
-                color: "var(--text-main)",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
+              className="mb-6 text-[var(--text-main)] flex justify-between items-center" style={{background:"#F8FAFC",borderRadius:"8px",padding:"0.75rem 1rem",fontSize:"0.9rem"}}
             >
-              <span style={{ color: "var(--text-muted)", fontWeight: 500 }}>Statut</span>
-              <span style={{ fontWeight: 600 }}>{DOSSIER_STATUS_LABELS[confirmingStatus] || confirmingStatus}</span>
+              <span className="font-medium" style={{color:"var(--text-muted)"}}>Statut</span>
+              <span className="font-semibold">{DOSSIER_STATUS_LABELS[confirmingStatus] || confirmingStatus}</span>
             </div>
-            <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+            <div className="flex gap-4 justify-center">
               <button
                 type="button"
                 className="btn btn-outline"

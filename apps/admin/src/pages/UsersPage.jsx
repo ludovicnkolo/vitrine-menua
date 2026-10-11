@@ -220,25 +220,12 @@ const UsersPage = ({ forceTab }) => {
   const renderReadOnlyField = (label, value) => (
     <div>
       <label
-        style={{
-          display: "block",
-          marginBottom: "0.25rem",
-          
-          fontWeight: 500,
-          color: "var(--text-muted)",
-        }}
+        className="block font-medium" style={{marginBottom:"0.25rem",color:"var(--text-muted)"}}
       >
         {label}
       </label>
       <div
-        style={{
-          width: "100%",
-          padding: "0.5rem",
-          background: "#F8FAFC",
-          borderRadius: "4px",
-          border: "1px solid var(--border)",
-          minHeight: "38px",
-        }}
+        className="w-full p-2" style={{background:"#F8FAFC",borderRadius:"4px",border:"1px solid var(--border)",minHeight:"38px"}}
       >
         {value || ""}
       </div>
@@ -659,50 +646,29 @@ const UsersPage = ({ forceTab }) => {
     <div>
       {/* Modal Ajouter Externe */}
       {showExternalModal && tab === "externe" && (
-        <div className="fade-in" style={{ padding: "1rem" }}>
-          <div className="" style={{ width: "100%", padding: "0" }}>
+        <div className="fade-in p-4">
+          <div className="w-full" style={{padding:"0"}}>
             <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-                marginBottom: "2rem",
-                borderBottom: "1px solid var(--border)",
-                paddingBottom: "1.5rem",
-              }}
+              className="flex items-center gap-4 mb-8" style={{borderBottom:"1px solid var(--border)",paddingBottom:"1.5rem"}}
             >
               <button
                 type="button"
                 onClick={() => setShowExternalModal(false)}
-                className="btn btn-outline"
-                style={{ padding: "0.5rem 1rem", color: "var(--text-main)" }}
+                className="btn btn-outline text-[var(--text-main)]" style={{padding:"0.5rem 1rem"}}
               >
                 ← Retour
               </button>
-              <h2 style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600 }}>
+              <h2 className="font-semibold" style={{fontSize:"1.5rem"}}>
                 Ajouter un Client
               </h2>
             </div>
 
             <div
-              style={{
-                display: "flex",
-                gap: "1.5rem",
-                marginBottom: "1.5rem",
-                padding: "0.5rem",
-                background: "#F8FAFC",
-                borderRadius: "8px",
-                width: "fit-content",
-              }}
+              className="flex gap-6 mb-6 p-2 w-fit" style={{background:"#F8FAFC",borderRadius:"8px"}}
             >
               <label
                 htmlFor="ext-type-particulier"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  cursor: "pointer",
-                }}
+                className="flex items-center gap-2 cursor-pointer"
               >
                 <input
                   id="ext-type-particulier"
@@ -711,16 +677,11 @@ const UsersPage = ({ forceTab }) => {
                   checked={externalType === "Particulier"}
                   onChange={() => setExternalType("Particulier")}
                 />
-                <span style={{ fontWeight: 500 }}>Particulier</span>
+                <span className="font-medium">Particulier</span>
               </label>
               <label
                 htmlFor="ext-type-societe"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  cursor: "pointer",
-                }}
+                className="flex items-center gap-2 cursor-pointer"
               >
                 <input
                   id="ext-type-societe"
@@ -729,13 +690,13 @@ const UsersPage = ({ forceTab }) => {
                   checked={externalType === "Société"}
                   onChange={() => setExternalType("Société")}
                 />
-                <span style={{ fontWeight: 500 }}>Société</span>
+                <span className="font-medium">Société</span>
               </label>
             </div>
 
             <form
               onSubmit={handleCreateClient}
-              style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+              className="flex flex-col gap-4"
             >
               {errorMsg && (
                 <div style={{ color: "red",  }}>
@@ -749,12 +710,7 @@ const UsersPage = ({ forceTab }) => {
                 isEdit={false}
               />
               <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "0.5rem",
-                  marginTop: "1rem",
-                }}
+                className="flex justify-end gap-2 mt-4"
               >
                 <button
                   type="button"
@@ -803,26 +759,14 @@ const UsersPage = ({ forceTab }) => {
         return (
           <form
             onSubmit={handleUpdateClient}
-            className="fade-in"
-            style={{ padding: "0.5rem 0", display: "flex", flexDirection: "column", gap: "1.5rem" }}
+            className="fade-in flex flex-col gap-6" style={{padding:"0.5rem 0"}}
           >
             {/* Header Card */}
             <div
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderRadius: "12px",
-                border: "1px solid var(--border)",
-                padding: "1.25rem 1.5rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: "1rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-              }}
+              className="flex justify-between items-center flex-wrap gap-4" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",padding:"1.25rem 1.5rem",boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}
             >
               <div>
-                <h1 style={{ margin: 0, fontSize: "1.35rem", fontWeight: 700, color: "var(--text-main)" }}>
+                <h1 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.35rem"}}>
                   Modifier le Client : {clientTitle}
                 </h1>
                 <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.85rem", color: "var(--text-muted)" }}>
@@ -830,38 +774,18 @@ const UsersPage = ({ forceTab }) => {
                 </p>
               </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+              <div className="flex items-center flex-wrap" style={{gap:"0.75rem"}}>
                 <button
                   type="button"
                   onClick={() => setEditExternal(null)}
-                  className="btn btn-outline"
-                  style={{
-                    padding: "0.5rem 1.25rem",
-                    borderRadius: "8px",
-                    fontWeight: 500,
-                    backgroundColor: "#FFFFFF",
-                    color: "var(--text-main)",
-                    fontSize: "0.85rem",
-                  }}
+                  className="btn btn-outline font-medium text-[var(--text-main)]" style={{padding:"0.5rem 1.25rem",borderRadius:"8px",backgroundColor:"#FFFFFF",fontSize:"0.85rem"}}
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.45rem",
-                    padding: "0.5rem 1.25rem",
-                    backgroundColor: "#1E3A8A",
-                    color: "#FFFFFF",
-                    border: "none",
-                    borderRadius: "8px",
-                    fontWeight: 600,
-                    fontSize: "0.85rem",
-                    cursor: "pointer",
-                  }}
+                  className="inline-flex items-center font-semibold cursor-pointer" style={{gap:"0.45rem",padding:"0.5rem 1.25rem",backgroundColor:"#1E3A8A",color:"#FFFFFF",border:"none",borderRadius:"8px",fontSize:"0.85rem"}}
                 >
                   <Check size={16} strokeWidth={2.5} />
                   {loading ? "Enregistrement..." : "Enregistrer les modifications"}
@@ -886,30 +810,16 @@ const UsersPage = ({ forceTab }) => {
 
             {/* Body: Two columns layout */}
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1.5rem",
-                alignItems: "start",
-              }}
+              className="grid gap-6" style={{gridTemplateColumns:"1fr 1fr",alignItems:"start"}}
             >
               {/* Left Column: Entreprise + Notes */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+              <div className="flex flex-col gap-6">
                 {/* Card 1: Informations de l'Entreprise (Structure) */}
                 <div
-                  style={{
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: "12px",
-                    border: "1px solid var(--border)",
-                    padding: "1.5rem",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.25rem",
-                  }}
+                  className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
                 >
                   <div>
-                    <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                    <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                       1. Informations de l'Entreprise (Structure)
                     </h2>
                     <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -917,7 +827,7 @@ const UsersPage = ({ forceTab }) => {
                     </p>
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  <div className="flex flex-col gap-4">
                     <div>
                       <label style={labelStyle}>
                         Nom de la société / Raison Sociale <span style={{ color: "#EF4444" }}>*</span>
@@ -965,7 +875,7 @@ const UsersPage = ({ forceTab }) => {
                       />
                     </div>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                    <div className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}>
                       <div>
                         <label style={labelStyle}>Email entreprise</label>
                         <input
@@ -992,19 +902,10 @@ const UsersPage = ({ forceTab }) => {
 
                 {/* Card 2: Notes & Description Client */}
                 <div
-                  style={{
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: "12px",
-                    border: "1px solid var(--border)",
-                    padding: "1.5rem",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.25rem",
-                  }}
+                  className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
                 >
                   <div>
-                    <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                    <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                       3. Notes & Description Client
                     </h2>
                     <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -1027,19 +928,10 @@ const UsersPage = ({ forceTab }) => {
 
               {/* Right Column: Contacts & Interlocuteurs Référents */}
               <div
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: "12px",
-                  border: "1px solid var(--border)",
-                  padding: "1.5rem",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1.25rem",
-                }}
+                className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
               >
                 <div>
-                  <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                     2. Contacts & Interlocuteurs Référents
                   </h2>
                   <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -1049,17 +941,9 @@ const UsersPage = ({ forceTab }) => {
 
                 {/* Subcard 1: Contact Principal */}
                 <div
-                  style={{
-                    backgroundColor: "#F8FAFC",
-                    border: "1px solid #E2E8F0",
-                    borderRadius: "8px",
-                    padding: "1.25rem",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.85rem",
-                  }}
+                  className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #E2E8F0",borderRadius:"8px",padding:"1.25rem",gap:"0.85rem"}}
                 >
-                  <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#1E3A8A", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <span className="font-bold" style={{fontSize:"0.75rem",color:"#1E3A8A",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                     CONTACT PRINCIPAL (RÉFÉRENT)
                   </span>
 
@@ -1103,17 +987,9 @@ const UsersPage = ({ forceTab }) => {
 
                 {/* Subcard 2: Contact Secondaire */}
                 <div
-                  style={{
-                    backgroundColor: "#F8FAFC",
-                    border: "1px solid #E2E8F0",
-                    borderRadius: "8px",
-                    padding: "1.25rem",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.85rem",
-                  }}
+                  className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #E2E8F0",borderRadius:"8px",padding:"1.25rem",gap:"0.85rem"}}
                 >
-                  <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <span className="font-bold" style={{fontSize:"0.75rem",color:"#475569",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                     CONTACT SECONDAIRE / SUPPLÉANT
                   </span>
 
@@ -1162,66 +1038,30 @@ const UsersPage = ({ forceTab }) => {
           : null;
 
         return (
-          <div className="fade-in" style={{ padding: "0.5rem 0", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <div className="fade-in flex flex-col gap-6" style={{padding:"0.5rem 0"}}>
             {/* Header Card */}
             <div
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderRadius: "12px",
-                border: "1px solid var(--border)",
-                padding: "1.25rem 1.5rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: "1rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-              }}
+              className="flex justify-between items-center flex-wrap gap-4" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",padding:"1.25rem 1.5rem",boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}
             >
               {/* Left: Avatar + Title + Subtitle */}
-              <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <div className="flex items-center gap-4">
                 <div
-                  style={{
-                    width: "52px",
-                    height: "52px",
-                    borderRadius: "50%",
-                    backgroundColor: "#EFF6FF",
-                    border: "2px solid #DBEAFE",
-                    color: "#1D4ED8",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "1.25rem",
-                    fontWeight: 700,
-                    letterSpacing: "0.02em",
-                    flexShrink: 0,
-                  }}
+                  className="flex items-center justify-center font-bold" style={{width:"52px",height:"52px",borderRadius:"50%",backgroundColor:"#EFF6FF",border:"2px solid #DBEAFE",color:"#1D4ED8",fontSize:"1.25rem",letterSpacing:"0.02em"}}
                 >
                   {getUserInitials(clientDisplayName)}
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.65rem", flexWrap: "wrap" }}>
-                    <h1 style={{ margin: 0, fontSize: "1.35rem", fontWeight: 700, color: "var(--text-main)" }}>
+                <div className="flex flex-col" style={{gap:"0.2rem"}}>
+                  <div className="flex items-center flex-wrap" style={{gap:"0.65rem"}}>
+                    <h1 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.35rem"}}>
                       {clientDisplayName}
                     </h1>
                     <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "0.35rem",
-                        backgroundColor: "#EFF6FF",
-                        border: "1px solid #DBEAFE",
-                        color: "#2563EB",
-                        padding: "0.15rem 0.65rem",
-                        borderRadius: "16px",
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                      }}
+                      className="inline-flex items-center font-semibold" style={{gap:"0.35rem",backgroundColor:"#EFF6FF",border:"1px solid #DBEAFE",color:"#2563EB",padding:"0.15rem 0.65rem",borderRadius:"16px",fontSize:"0.75rem"}}
                     >
                       {isSociete ? "Compte Client" : "Compte Client (Particulier)"}
                     </span>
                   </div>
-                  <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+                  <div className="flex items-center gap-2 flex-wrap" style={{fontSize:"0.85rem",color:"var(--text-muted)"}}>
                     <span>{clientEmail}</span>
                     <span>•</span>
                     <span>Téléphone : {clientPhone || "Non renseigné"}</span>
@@ -1236,23 +1076,11 @@ const UsersPage = ({ forceTab }) => {
               </div>
 
               {/* Right: Actions */}
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+              <div className="flex items-center flex-wrap" style={{gap:"0.75rem"}}>
                 <button
                   type="button"
                   onClick={() => setConsultExternal(null)}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.35rem",
-                    fontSize: "0.85rem",
-                    padding: "0.5rem 1.25rem",
-                    backgroundColor: "var(--text-main)",
-                    color: "#FFFFFF",
-                    border: "none",
-                    borderRadius: "8px",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                  }}
+                  className="inline-flex items-center font-semibold cursor-pointer" style={{gap:"0.35rem",fontSize:"0.85rem",padding:"0.5rem 1.25rem",backgroundColor:"var(--text-main)",color:"#FFFFFF",border:"none",borderRadius:"8px"}}
                 >
                   ← Retour
                 </button>
@@ -1261,28 +1089,14 @@ const UsersPage = ({ forceTab }) => {
 
             {/* Body: Two columns layout */}
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1.5rem",
-                alignItems: "start",
-              }}
+              className="grid gap-6" style={{gridTemplateColumns:"1fr 1fr",alignItems:"start"}}
             >
               {/* Left Column: Informations Administratives & Légales */}
               <div
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: "12px",
-                  border: "1px solid var(--border)",
-                  padding: "1.5rem",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1.25rem",
-                }}
+                className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
               >
                 <div>
-                  <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                     Informations Administratives & Légales
                   </h2>
                   <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -1290,40 +1104,24 @@ const UsersPage = ({ forceTab }) => {
                   </p>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                <div className="flex flex-col" style={{gap:"0.85rem"}}>
                   {/* NOM DE LA SOCIETE / NOM COMPLET */}
                   <div
-                    style={{
-                      backgroundColor: "#F8FAFC",
-                      border: "1px solid #F1F5F9",
-                      borderRadius: "8px",
-                      padding: "0.75rem 1rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.25rem",
-                    }}
+                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                   >
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                       {isSociete ? "Nom de la société" : "Nom complet"}
                     </span>
-                    <span style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text-main)" }}>
+                    <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                       {clientDisplayName}
                     </span>
                   </div>
 
                   {/* NUMERO SIRET */}
                   <div
-                    style={{
-                      backgroundColor: "#F8FAFC",
-                      border: "1px solid #F1F5F9",
-                      borderRadius: "8px",
-                      padding: "0.75rem 1rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.25rem",
-                    }}
+                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                   >
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                       Numéro SIRET
                     </span>
                     <span style={{ fontSize: "0.95rem", fontWeight: clientSiret ? 600 : 400, color: clientSiret ? "var(--text-main)" : "#94A3B8" }}>
@@ -1333,17 +1131,9 @@ const UsersPage = ({ forceTab }) => {
 
                   {/* SECTEUR D'ACTIVITÉ */}
                   <div
-                    style={{
-                      backgroundColor: "#F8FAFC",
-                      border: "1px solid #F1F5F9",
-                      borderRadius: "8px",
-                      padding: "0.75rem 1rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.25rem",
-                    }}
+                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                   >
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                       Secteur d'activité
                     </span>
                     <span style={{ fontSize: "0.95rem", fontWeight: consultExternal.secteurActivite ? 600 : 400, color: consultExternal.secteurActivite ? "var(--text-main)" : "#94A3B8" }}>
@@ -1353,17 +1143,9 @@ const UsersPage = ({ forceTab }) => {
 
                   {/* CONTACT SECONDAIRE */}
                   <div
-                    style={{
-                      backgroundColor: "#F8FAFC",
-                      border: "1px solid #F1F5F9",
-                      borderRadius: "8px",
-                      padding: "0.75rem 1rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.25rem",
-                    }}
+                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                   >
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                       Contact secondaire
                     </span>
                     <span style={{ fontSize: "0.95rem", fontWeight: consultExternal.contactSecondaire ? 600 : 400, color: consultExternal.contactSecondaire ? "var(--text-main)" : "#94A3B8" }}>
@@ -1374,22 +1156,13 @@ const UsersPage = ({ forceTab }) => {
               </div>
 
               {/* Right Column: Coordonnées de Contact & Présentation */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+              <div className="flex flex-col gap-6">
                 {/* Top Card: Coordonnées de Contact */}
                 <div
-                  style={{
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: "12px",
-                    border: "1px solid var(--border)",
-                    padding: "1.5rem",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.25rem",
-                  }}
+                  className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
                 >
                   <div>
-                    <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                    <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                       Coordonnées de Contact
                     </h2>
                     <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -1397,40 +1170,24 @@ const UsersPage = ({ forceTab }) => {
                     </p>
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                  <div className="flex flex-col" style={{gap:"0.85rem"}}>
                     {/* EMAIL */}
                     <div
-                      style={{
-                        backgroundColor: "#F8FAFC",
-                        border: "1px solid #F1F5F9",
-                        borderRadius: "8px",
-                        padding: "0.75rem 1rem",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "0.25rem",
-                      }}
+                      className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                     >
-                      <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                      <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                         Email de l'entreprise
                       </span>
-                      <span style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text-main)" }}>
+                      <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                         {clientEmail}
                       </span>
                     </div>
 
                     {/* TELEPHONE */}
                     <div
-                      style={{
-                        backgroundColor: "#F8FAFC",
-                        border: "1px solid #F1F5F9",
-                        borderRadius: "8px",
-                        padding: "0.75rem 1rem",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "0.25rem",
-                      }}
+                      className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                     >
-                      <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                      <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                         Téléphone de l'entreprise
                       </span>
                       <span style={{ fontSize: "0.95rem", fontWeight: clientPhone ? 600 : 400, color: clientPhone ? "var(--text-main)" : "#94A3B8" }}>
@@ -1442,19 +1199,10 @@ const UsersPage = ({ forceTab }) => {
 
                 {/* Bottom Card: Présentation & Notes Client */}
                 <div
-                  style={{
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: "12px",
-                    border: "1px solid var(--border)",
-                    padding: "1.5rem",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.25rem",
-                  }}
+                  className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
                 >
                   <div>
-                    <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                    <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                       Présentation & Notes Client
                     </h2>
                     <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -1463,22 +1211,13 @@ const UsersPage = ({ forceTab }) => {
                   </div>
 
                   <div
-                    style={{
-                      backgroundColor: "#F8FAFC",
-                      border: "1px solid #F1F5F9",
-                      borderRadius: "8px",
-                      padding: "0.85rem 1rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.4rem",
-                      minHeight: "100px",
-                    }}
+                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.85rem 1rem",gap:"0.4rem",minHeight:"100px"}}
                   >
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                       Description de l'entreprise
                     </span>
                     {consultExternal.description ? (
-                      <span style={{ fontSize: "0.95rem", color: "var(--text-main)", whiteSpace: "pre-wrap", lineHeight: 1.5 }}>
+                      <span className="text-[var(--text-main)]" style={{fontSize:"0.95rem",whiteSpace:"pre-wrap",lineHeight:1.5}}>
                         {consultExternal.description}
                       </span>
                     ) : (
@@ -1492,25 +1231,11 @@ const UsersPage = ({ forceTab }) => {
               </div>
 
               {/* Bottom Action: Activity Stats */}
-              <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
+              <div className="flex justify-center mt-4">
                 <button
                   type="button"
                   onClick={() => handleOpenActivityStats("client", consultExternal)}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    fontSize: "0.9rem",
-                    padding: "0.75rem 1.5rem",
-                    backgroundColor: "#EFF6FF",
-                    color: "#1D4ED8",
-                    border: "1px solid #BFDBFE",
-                    borderRadius: "8px",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                    transition: "all 0.2s",
-                  }}
+                  className="inline-flex items-center gap-2 font-semibold cursor-pointer" style={{fontSize:"0.9rem",padding:"0.75rem 1.5rem",backgroundColor:"#EFF6FF",color:"#1D4ED8",border:"1px solid #BFDBFE",borderRadius:"8px",boxShadow:"0 1px 2px rgba(0,0,0,0.05)",transition:"all 0.2s"}}
                   onMouseOver={(e) => {
                     e.currentTarget.style.backgroundColor = "#DBEAFE";
                   }}
@@ -1529,33 +1254,25 @@ const UsersPage = ({ forceTab }) => {
 
       {/* Modal Ajouter Interne */}
       {showModal && tab === "interne" && (
-        <div className="fade-in" style={{ padding: "1rem" }}>
-          <div className="" style={{ width: "100%", padding: "0" }}>
+        <div className="fade-in p-4">
+          <div className="w-full" style={{padding:"0"}}>
             <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-                marginBottom: "2rem",
-                borderBottom: "1px solid var(--border)",
-                paddingBottom: "1.5rem",
-              }}
+              className="flex items-center gap-4 mb-8" style={{borderBottom:"1px solid var(--border)",paddingBottom:"1.5rem"}}
             >
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="btn btn-outline"
-                style={{ padding: "0.5rem 1rem", color: "var(--text-main)" }}
+                className="btn btn-outline text-[var(--text-main)]" style={{padding:"0.5rem 1rem"}}
               >
                 ← Retour
               </button>
-              <h2 style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600 }}>
+              <h2 className="font-semibold" style={{fontSize:"1.5rem"}}>
                 Ajouter un Membre Interne
               </h2>
             </div>
             <form
               onSubmit={handleCreateUser}
-              style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+              className="flex flex-col gap-4"
             >
               {errorMsg && (
                 <div style={{ color: "red",  }}>
@@ -1571,12 +1288,7 @@ const UsersPage = ({ forceTab }) => {
               />
 
               <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "0.5rem",
-                  marginTop: "1rem",
-                }}
+                className="flex justify-end gap-2 mt-4"
               >
                 <button
                   type="button"
@@ -1639,26 +1351,14 @@ const UsersPage = ({ forceTab }) => {
         return (
           <form
             onSubmit={handleUpdateUser}
-            className="fade-in"
-            style={{ padding: "0.5rem 0", display: "flex", flexDirection: "column", gap: "1.5rem" }}
+            className="fade-in flex flex-col gap-6" style={{padding:"0.5rem 0"}}
           >
             {/* Header Card */}
             <div
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderRadius: "12px",
-                border: "1px solid var(--border)",
-                padding: "1.25rem 1.5rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: "1rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-              }}
+              className="flex justify-between items-center flex-wrap gap-4" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",padding:"1.25rem 1.5rem",boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}
             >
               <div>
-                <h1 style={{ margin: 0, fontSize: "1.35rem", fontWeight: 700, color: "var(--text-main)" }}>
+                <h1 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.35rem"}}>
                   Modifier le Collaborateur : {editUser.name || "Collaborateur"}
                 </h1>
                 <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.85rem", color: "var(--text-muted)" }}>
@@ -1666,41 +1366,21 @@ const UsersPage = ({ forceTab }) => {
                 </p>
               </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+              <div className="flex items-center flex-wrap" style={{gap:"0.75rem"}}>
                 <button
                   type="button"
                   onClick={() => {
                     setEditUser(null);
                     setEditUserLangOpen(false);
                   }}
-                  className="btn btn-outline"
-                  style={{
-                    padding: "0.5rem 1.25rem",
-                    borderRadius: "8px",
-                    fontWeight: 500,
-                    backgroundColor: "#FFFFFF",
-                    color: "var(--text-main)",
-                    fontSize: "0.85rem",
-                  }}
+                  className="btn btn-outline font-medium text-[var(--text-main)]" style={{padding:"0.5rem 1.25rem",borderRadius:"8px",backgroundColor:"#FFFFFF",fontSize:"0.85rem"}}
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.45rem",
-                    padding: "0.5rem 1.25rem",
-                    backgroundColor: "#1E3A8A",
-                    color: "#FFFFFF",
-                    border: "none",
-                    borderRadius: "8px",
-                    fontWeight: 600,
-                    fontSize: "0.85rem",
-                    cursor: "pointer",
-                  }}
+                  className="inline-flex items-center font-semibold cursor-pointer" style={{gap:"0.45rem",padding:"0.5rem 1.25rem",backgroundColor:"#1E3A8A",color:"#FFFFFF",border:"none",borderRadius:"8px",fontSize:"0.85rem"}}
                 >
                   <Check size={16} strokeWidth={2.5} />
                   {loading ? "Enregistrement..." : "Enregistrer les modifications"}
@@ -1725,30 +1405,16 @@ const UsersPage = ({ forceTab }) => {
 
             {/* Body: Two columns layout */}
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1.5rem",
-                alignItems: "start",
-              }}
+              className="grid gap-6" style={{gridTemplateColumns:"1fr 1fr",alignItems:"start"}}
             >
               {/* Left Column: Coordonnées & Statut d'Accès */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+              <div className="flex flex-col gap-6">
                 {/* Card 1: Coordonnées & Données Personnelles */}
                 <div
-                  style={{
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: "12px",
-                    border: "1px solid var(--border)",
-                    padding: "1.5rem",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.25rem",
-                  }}
+                  className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
                 >
                   <div>
-                    <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                    <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                       1. Coordonnées & Données Personnelles
                     </h2>
                     <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -1756,7 +1422,7 @@ const UsersPage = ({ forceTab }) => {
                     </p>
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  <div className="flex flex-col gap-4">
                     <div>
                       <label style={labelStyle}>
                         Nom complet <span style={{ color: "#EF4444" }}>*</span>
@@ -1812,7 +1478,7 @@ const UsersPage = ({ forceTab }) => {
                     </div>
 
                     {/* Langues parlées */}
-                    <div style={{ position: "relative" }}>
+                    <div className="relative">
                       <label style={labelStyle}>
                         Langues parlées <span style={{ color: "#EF4444" }}>*</span>
                       </label>
@@ -1843,21 +1509,7 @@ const UsersPage = ({ forceTab }) => {
 
                       {editUserLangOpen && (
                         <div
-                          style={{
-                            position: "absolute",
-                            top: "100%",
-                            left: 0,
-                            right: 0,
-                            background: "#FFFFFF",
-                            border: "1px solid #CBD5E1",
-                            borderRadius: "8px",
-                            marginTop: "4px",
-                            maxHeight: "190px",
-                            overflowY: "auto",
-                            zIndex: 50,
-                            boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-                            padding: "0.25rem",
-                          }}
+                          className="absolute" style={{top:"100%",background:"#FFFFFF",border:"1px solid #CBD5E1",borderRadius:"8px",marginTop:"4px",maxHeight:"190px",overflowY:"auto",zIndex:50,boxShadow:"0 10px 15px -3px rgba(0, 0, 0, 0.1)",padding:"0.25rem"}}
                         >
                           {AVAILABLE_LANGUAGES.map((lang) => (
                             <label
@@ -1889,19 +1541,10 @@ const UsersPage = ({ forceTab }) => {
 
                 {/* Card 2: Compte & Statut d'Accès */}
                 <div
-                  style={{
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: "12px",
-                    border: "1px solid var(--border)",
-                    padding: "1.5rem",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.25rem",
-                  }}
+                  className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
                 >
                   <div>
-                    <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                    <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                       2. Compte & Statut d'Accès
                     </h2>
                     <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -1909,7 +1552,7 @@ const UsersPage = ({ forceTab }) => {
                     </p>
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  <div className="flex flex-col gap-4">
                     <div>
                       <label style={labelStyle}>
                         Rôle attribué <span style={{ color: "#EF4444" }}>*</span>
@@ -1950,22 +1593,13 @@ const UsersPage = ({ forceTab }) => {
               </div>
 
               {/* Right Column: Parcours Professionnel & Info */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+              <div className="flex flex-col gap-6">
                 {/* Card 3: Parcours Professionnel & Description */}
                 <div
-                  style={{
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: "12px",
-                    border: "1px solid var(--border)",
-                    padding: "1.5rem",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.25rem",
-                  }}
+                  className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
                 >
                   <div>
-                    <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                    <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                       3. Parcours Professionnel & Description
                     </h2>
                     <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -1973,7 +1607,7 @@ const UsersPage = ({ forceTab }) => {
                     </p>
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  <div className="flex flex-col gap-4">
                     <div>
                       <label style={labelStyle}>
                         Expérience clé <span style={{ color: "#EF4444" }}>*</span>
@@ -2014,19 +1648,10 @@ const UsersPage = ({ forceTab }) => {
 
                 {/* Card 4: Organisation & Fiche Interne (V3) */}
                 <div
-                  style={{
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: "12px",
-                    border: "1px solid var(--border)",
-                    padding: "1.5rem",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.25rem",
-                  }}
+                  className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
                 >
                   <div>
-                    <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                    <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                       4. Organisation & Fiche Interne
                     </h2>
                     <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -2034,7 +1659,7 @@ const UsersPage = ({ forceTab }) => {
                     </p>
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  <div className="flex flex-col gap-4">
                     {/* Pôle d'activité */}
                     <div>
                       <label style={labelStyle}>Pôle d'activité</label>
@@ -2055,7 +1680,7 @@ const UsersPage = ({ forceTab }) => {
                     </div>
 
                     {/* Matricule & Fonction */}
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                    <div className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}>
                       <div>
                         <label style={labelStyle}>Matricule interne</label>
                         <input
@@ -2096,19 +1721,11 @@ const UsersPage = ({ forceTab }) => {
 
                 {/* Info Callout */}
                 <div
-                  style={{
-                    backgroundColor: "#EFF6FF",
-                    border: "1px solid #BFDBFE",
-                    borderRadius: "8px",
-                    padding: "1rem",
-                    display: "flex",
-                    gap: "0.75rem",
-                    alignItems: "flex-start",
-                  }}
+                  className="p-4 flex items-start" style={{backgroundColor:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:"8px",gap:"0.75rem"}}
                 >
                   <Info size={18} style={{ color: "#2563EB", flexShrink: 0, marginTop: "2px" }} />
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "#1E40AF", marginBottom: "0.25rem" }}>
+                    <div className="font-semibold" style={{fontSize:"0.85rem",color:"#1E40AF",marginBottom:"0.25rem"}}>
                       Information sur les champs obligatoires
                     </div>
                     <div style={{ fontSize: "0.8rem", color: "#2563EB", lineHeight: 1.45 }}>
@@ -2122,67 +1739,31 @@ const UsersPage = ({ forceTab }) => {
 
       {/* Consultation d'un Collaborateur Interne */}
       {consultUser && (
-        <div className="fade-in" style={{ padding: "0.5rem 0", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+        <div className="fade-in flex flex-col gap-6" style={{padding:"0.5rem 0"}}>
           {/* Header Card */}
           <div
-            style={{
-              backgroundColor: "#FFFFFF",
-              borderRadius: "12px",
-              border: "1px solid var(--border)",
-              padding: "1.25rem 1.5rem",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              flexWrap: "wrap",
-              gap: "1rem",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-            }}
+            className="flex justify-between items-center flex-wrap gap-4" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",padding:"1.25rem 1.5rem",boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}
           >
             {/* Left: Avatar + Name + Subtitle */}
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <div className="flex items-center gap-4">
               <div
-                style={{
-                  width: "52px",
-                  height: "52px",
-                  borderRadius: "50%",
-                  backgroundColor: "#EFF6FF",
-                  border: "2px solid #DBEAFE",
-                  color: "#1D4ED8",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "1.25rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.02em",
-                  flexShrink: 0,
-                }}
+                className="flex items-center justify-center font-bold" style={{width:"52px",height:"52px",borderRadius:"50%",backgroundColor:"#EFF6FF",border:"2px solid #DBEAFE",color:"#1D4ED8",fontSize:"1.25rem",letterSpacing:"0.02em"}}
               >
                 {getUserInitials(consultUser.name)}
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.65rem", flexWrap: "wrap" }}>
-                  <h1 style={{ margin: 0, fontSize: "1.35rem", fontWeight: 700, color: "var(--text-main)" }}>
+              <div className="flex flex-col" style={{gap:"0.2rem"}}>
+                <div className="flex items-center flex-wrap" style={{gap:"0.65rem"}}>
+                  <h1 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.35rem"}}>
                     {consultUser.name}
                   </h1>
                   <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "0.35rem",
-                      backgroundColor: "#ECFDF5",
-                      border: "1px solid #A7F3D0",
-                      color: "#059669",
-                      padding: "0.15rem 0.65rem",
-                      borderRadius: "16px",
-                      fontSize: "0.75rem",
-                      fontWeight: 600,
-                    }}
+                    className="inline-flex items-center font-semibold" style={{gap:"0.35rem",backgroundColor:"#ECFDF5",border:"1px solid #A7F3D0",color:"#059669",padding:"0.15rem 0.65rem",borderRadius:"16px",fontSize:"0.75rem"}}
                   >
                     <span style={{ fontSize: "0.65rem" }}>●</span>
                     {consultUser.status || "Actif"}
                   </span>
                 </div>
-                <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <div className="flex items-center gap-2" style={{fontSize:"0.85rem",color:"var(--text-muted)"}}>
                   <span>{consultUser.email}</span>
                   <span>•</span>
                   <span>Rôle : <strong>{consultUser.role?.name || consultUser.role || "Non renseigné"}</strong></span>
@@ -2191,22 +1772,11 @@ const UsersPage = ({ forceTab }) => {
             </div>
 
             {/* Right: Actions */}
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+            <div className="flex items-center flex-wrap" style={{gap:"0.75rem"}}>
               <button
                 type="button"
                 onClick={() => handleTriggerPasswordReset(consultUser.id)}
-                className="btn btn-outline"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "0.45rem",
-                  fontSize: "0.85rem",
-                  padding: "0.5rem 1rem",
-                  color: "#334155",
-                  borderColor: "#CBD5E1",
-                  backgroundColor: "#FFFFFF",
-                  fontWeight: 500,
-                }}
+                className="btn btn-outline inline-flex items-center font-medium" style={{gap:"0.45rem",fontSize:"0.85rem",padding:"0.5rem 1rem",color:"#334155",borderColor:"#CBD5E1",backgroundColor:"#FFFFFF"}}
               >
                 <Lock size={14} />
                 Réinitialiser mot de passe
@@ -2214,18 +1784,7 @@ const UsersPage = ({ forceTab }) => {
               <button
                 type="button"
                 onClick={() => handleOpenActivityStats("user", consultUser)}
-                className="btn btn-outline"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "0.45rem",
-                  fontSize: "0.85rem",
-                  padding: "0.5rem 1rem",
-                  borderColor: "#0284C7",
-                  color: "#0284C7",
-                  backgroundColor: "#FFFFFF",
-                  fontWeight: 600,
-                }}
+                className="btn btn-outline inline-flex items-center font-semibold" style={{gap:"0.45rem",fontSize:"0.85rem",padding:"0.5rem 1rem",borderColor:"#0284C7",color:"#0284C7",backgroundColor:"#FFFFFF"}}
               >
                 <BarChart3 size={15} />
                 Bilan d'activité
@@ -2233,19 +1792,7 @@ const UsersPage = ({ forceTab }) => {
               <button
                 type="button"
                 onClick={() => setConsultUser(null)}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "0.35rem",
-                  fontSize: "0.85rem",
-                  padding: "0.5rem 1.25rem",
-                  backgroundColor: "var(--text-main)",
-                  color: "#FFFFFF",
-                  border: "none",
-                  borderRadius: "8px",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
+                className="inline-flex items-center font-semibold cursor-pointer" style={{gap:"0.35rem",fontSize:"0.85rem",padding:"0.5rem 1.25rem",backgroundColor:"var(--text-main)",color:"#FFFFFF",border:"none",borderRadius:"8px"}}
               >
                 ← Retour
               </button>
@@ -2254,28 +1801,14 @@ const UsersPage = ({ forceTab }) => {
 
           {/* Body: Two columns layout */}
           <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1.3fr",
-              gap: "1.5rem",
-              alignItems: "start",
-            }}
+            className="grid gap-6" style={{gridTemplateColumns:"1fr 1.3fr",alignItems:"start"}}
           >
             {/* Left Card: Coordonnées & Informations Personnelles */}
             <div
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderRadius: "12px",
-                border: "1px solid var(--border)",
-                padding: "1.5rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "1.25rem",
-              }}
+              className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
             >
               <div>
-                <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                   Coordonnées & Informations Personnelles
                 </h2>
                 <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -2283,60 +1816,36 @@ const UsersPage = ({ forceTab }) => {
                 </p>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+              <div className="flex flex-col" style={{gap:"0.85rem"}}>
                 {/* NOM COMPLET */}
                 <div
-                  style={{
-                    backgroundColor: "#F8FAFC",
-                    border: "1px solid #F1F5F9",
-                    borderRadius: "8px",
-                    padding: "0.75rem 1rem",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.25rem",
-                  }}
+                  className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                 >
-                  <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                     Nom complet
                   </span>
-                  <span style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text-main)" }}>
+                  <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {consultUser.name}
                   </span>
                 </div>
 
                 {/* EMAIL PROFESSIONNEL */}
                 <div
-                  style={{
-                    backgroundColor: "#F8FAFC",
-                    border: "1px solid #F1F5F9",
-                    borderRadius: "8px",
-                    padding: "0.75rem 1rem",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.25rem",
-                  }}
+                  className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                 >
-                  <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                     Email professionnel
                   </span>
-                  <span style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text-main)" }}>
+                  <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                     {consultUser.email}
                   </span>
                 </div>
 
                 {/* NUMÉRO DE TÉLÉPHONE */}
                 <div
-                  style={{
-                    backgroundColor: "#F8FAFC",
-                    border: "1px solid #F1F5F9",
-                    borderRadius: "8px",
-                    padding: "0.75rem 1rem",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.25rem",
-                  }}
+                  className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                 >
-                  <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                     Numéro de téléphone
                   </span>
                   <span style={{ fontSize: "0.95rem", fontWeight: consultUser.telephone ? 600 : 400, color: consultUser.telephone ? "var(--text-main)" : "#94A3B8" }}>
@@ -2346,17 +1855,9 @@ const UsersPage = ({ forceTab }) => {
 
                 {/* LIEU DE RÉSIDENCE */}
                 <div
-                  style={{
-                    backgroundColor: "#F8FAFC",
-                    border: "1px solid #F1F5F9",
-                    borderRadius: "8px",
-                    padding: "0.75rem 1rem",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.25rem",
-                  }}
+                  className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                 >
-                  <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                     Lieu de résidence
                   </span>
                   <span style={{ fontSize: "0.95rem", fontWeight: consultUser.lieuResidence ? 600 : 400, color: consultUser.lieuResidence ? "var(--text-main)" : "#94A3B8" }}>
@@ -2366,17 +1867,9 @@ const UsersPage = ({ forceTab }) => {
 
                 {/* LANGUES PARLÉES */}
                 <div
-                  style={{
-                    backgroundColor: "#F8FAFC",
-                    border: "1px solid #F1F5F9",
-                    borderRadius: "8px",
-                    padding: "0.75rem 1rem",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.25rem",
-                  }}
+                  className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                 >
-                  <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                     Langues parlées
                   </span>
                   <span style={{ fontSize: "0.95rem", fontWeight: consultUser.langues ? 600 : 400, color: consultUser.langues ? "var(--text-main)" : "#94A3B8" }}>
@@ -2387,22 +1880,13 @@ const UsersPage = ({ forceTab }) => {
             </div>
 
             {/* Right Column: Two stacked cards */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+            <div className="flex flex-col gap-6">
               {/* Card 2A: Rôle & Permissions Système */}
               <div
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: "12px",
-                  border: "1px solid var(--border)",
-                  padding: "1.5rem",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1.25rem",
-                }}
+                className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
               >
                 <div>
-                  <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                     Rôle & Permissions Système
                   </h2>
                   <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -2410,22 +1894,13 @@ const UsersPage = ({ forceTab }) => {
                   </p>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                <div className="flex flex-col gap-4">
                   <div>
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.4rem" }}>
+                    <span className="font-bold block" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:"0.4rem"}}>
                       Rôle attribué
                     </span>
                     <div
-                      style={{
-                        backgroundColor: "#F8FAFC",
-                        border: "1px solid #E2E8F0",
-                        borderRadius: "8px",
-                        padding: "0.45rem 1rem",
-                        fontSize: "0.9rem",
-                        fontWeight: 700,
-                        color: "var(--text-main)",
-                        display: "inline-block",
-                      }}
+                      className="font-bold text-[var(--text-main)] inline-block" style={{backgroundColor:"#F8FAFC",border:"1px solid #E2E8F0",borderRadius:"8px",padding:"0.45rem 1rem",fontSize:"0.9rem"}}
                     >
                       {consultUser.role?.name || consultUser.role || "Non renseigné"}
                     </div>
@@ -2436,26 +1911,15 @@ const UsersPage = ({ forceTab }) => {
                       const perms = getParsedPermissionsList(consultUser.role?.permissions);
                       return (
                         <>
-                          <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.5rem" }}>
+                          <span className="font-bold block mb-2" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                             Permissions accordées ({perms.length})
                           </span>
                           {perms.length > 0 ? (
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                            <div className="flex flex-wrap gap-2">
                               {perms.map((p, idx) => (
                                 <span
                                   key={idx}
-                                  style={{
-                                    backgroundColor: "#EFF6FF",
-                                    border: "1px solid #BFDBFE",
-                                    color: "#1D4ED8",
-                                    borderRadius: "20px",
-                                    padding: "0.3rem 0.85rem",
-                                    fontSize: "0.78rem",
-                                    fontWeight: 600,
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    gap: "0.35rem",
-                                  }}
+                                  className="font-semibold inline-flex items-center" style={{backgroundColor:"#EFF6FF",border:"1px solid #BFDBFE",color:"#1D4ED8",borderRadius:"20px",padding:"0.3rem 0.85rem",fontSize:"0.78rem",gap:"0.35rem"}}
                                 >
                                   <Check size={12} strokeWidth={3} />
                                   {p}
@@ -2476,19 +1940,10 @@ const UsersPage = ({ forceTab }) => {
 
               {/* Card 2B: Parcours & Description du Collaborateur */}
               <div
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: "12px",
-                  border: "1px solid var(--border)",
-                  padding: "1.5rem",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1.25rem",
-                }}
+                className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
               >
                 <div>
-                  <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                     Parcours & Description du Collaborateur
                   </h2>
                   <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -2496,9 +1951,9 @@ const UsersPage = ({ forceTab }) => {
                   </p>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                <div className="flex flex-col gap-4">
                   <div>
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.4rem" }}>
+                    <span className="font-bold block" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:"0.4rem"}}>
                       Expérience clé
                     </span>
                     <div
@@ -2517,7 +1972,7 @@ const UsersPage = ({ forceTab }) => {
                   </div>
 
                   <div>
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.4rem" }}>
+                    <span className="font-bold block" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:"0.4rem"}}>
                       Description du profil
                     </span>
                     <div
@@ -2543,51 +1998,45 @@ const UsersPage = ({ forceTab }) => {
           {/* Card V3: Organisation & Fiche Interne — displayed if any field has data */}
           {(consultUser.poleActivite || consultUser.matricule || consultUser.emailPro || consultUser.fonction || consultUser.manager) && (
             <div
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderRadius: "12px",
-                border: "1px solid var(--border)",
-                padding: "1.5rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-              }}
+              className="p-6" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}
             >
-              <div style={{ marginBottom: "1rem" }}>
-                <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+              <div className="mb-4">
+                <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                   Organisation & Fiche Interne
                 </h2>
                 <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
                   Rattachement organisationnel et données administratives internes
                 </p>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem" }}>
+              <div className="grid gap-4" style={{gridTemplateColumns:"repeat(auto-fit, minmax(180px, 1fr))"}}>
                 {consultUser.poleActivite && (
                   <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.75rem 1rem" }}>
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.3rem" }}>Pôle d'activité</span>
-                    <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--text-main)" }}>{consultUser.poleActivite}</span>
+                    <span className="font-bold block" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:"0.3rem"}}>Pôle d'activité</span>
+                    <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.92rem"}}>{consultUser.poleActivite}</span>
                   </div>
                 )}
                 {consultUser.fonction && (
                   <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.75rem 1rem" }}>
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.3rem" }}>Fonction</span>
-                    <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--text-main)" }}>{consultUser.fonction}</span>
+                    <span className="font-bold block" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:"0.3rem"}}>Fonction</span>
+                    <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.92rem"}}>{consultUser.fonction}</span>
                   </div>
                 )}
                 {consultUser.matricule && (
                   <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.75rem 1rem" }}>
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.3rem" }}>Matricule</span>
-                    <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--text-main)", fontFamily: "monospace" }}>{consultUser.matricule}</span>
+                    <span className="font-bold block" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:"0.3rem"}}>Matricule</span>
+                    <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.92rem",fontFamily:"monospace"}}>{consultUser.matricule}</span>
                   </div>
                 )}
                 {consultUser.emailPro && (
                   <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.75rem 1rem" }}>
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.3rem" }}>Email Pro (CRM)</span>
-                    <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--text-main)" }}>{consultUser.emailPro}</span>
+                    <span className="font-bold block" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:"0.3rem"}}>Email Pro (CRM)</span>
+                    <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.92rem"}}>{consultUser.emailPro}</span>
                   </div>
                 )}
                 {consultUser.manager && (
                   <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.75rem 1rem" }}>
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", display: "block", marginBottom: "0.3rem" }}>Manager direct</span>
-                    <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--text-main)" }}>{consultUser.manager.name}</span>
+                    <span className="font-bold block" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:"0.3rem"}}>Manager direct</span>
+                    <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.92rem"}}>{consultUser.manager.name}</span>
                   </div>
                 )}
               </div>
@@ -2599,13 +2048,9 @@ const UsersPage = ({ forceTab }) => {
       {!isAnyModalOpen && (
         <>
           {!forceTab && (
-            <div style={{ marginBottom: "1.5rem" }}>
+            <div className="mb-6">
               <h1
-                style={{
-                  fontSize: "1.5rem",
-                  fontWeight: 600,
-                  color: "var(--text-main)",
-                }}
+                className="font-semibold text-[var(--text-main)]" style={{fontSize:"1.5rem"}}
               >
                 Membres
               </h1>
@@ -2617,14 +2062,9 @@ const UsersPage = ({ forceTab }) => {
 
           {!forceTab && (
             <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "1.5rem",
-              }}
+              className="flex justify-between items-center mb-6"
             >
-              <div style={{ display: "flex", gap: "0.5rem" }}>
+              <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => { setTab("interne"); setSearchTerm(""); setFilterUserStatus("all"); }}
@@ -2678,19 +2118,12 @@ const UsersPage = ({ forceTab }) => {
               </div>
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-primary w-fit"
                 onClick={() => {
                   if (tab === "interne") setShowModal(true);
                   else setShowExternalModal(true);
                 }}
-                style={{
-                  width: "fit-content",
-                  whiteSpace: "nowrap",
-                  padding: "0 0.75rem",
-                  
-                  height: "28px",
-                  lineHeight: 1,
-                }}
+                style={{whiteSpace:"nowrap",padding:"0 0.75rem",height:"28px",lineHeight:1}}
               >
                 {tab === "interne"
                   ? "Ajouter en Interne"
@@ -2701,27 +2134,16 @@ const UsersPage = ({ forceTab }) => {
 
           {forceTab && (
             <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginBottom: "1.5rem",
-              }}
+              className="flex justify-end mb-6"
             >
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-primary w-fit"
                 onClick={() => {
                   if (tab === "interne") setShowModal(true);
                   else setShowExternalModal(true);
                 }}
-                style={{
-                  width: "fit-content",
-                  whiteSpace: "nowrap",
-                  padding: "0 0.75rem",
-                  
-                  height: "28px",
-                  lineHeight: 1,
-                }}
+                style={{whiteSpace:"nowrap",padding:"0 0.75rem",height:"28px",lineHeight:1}}
               >
                 {tab === "interne" ? t("users.addMember", "Ajouter un Membre") : t("users.addClient", "Ajouter un Client")}
               </button>
@@ -2730,39 +2152,19 @@ const UsersPage = ({ forceTab }) => {
 
           {/* Search + filter bar */}
           <div
-            style={{
-              display: "flex",
-              gap: "0.75rem",
-              marginBottom: "1rem",
-              flexWrap: "wrap",
-              alignItems: "center",
-            }}
+            className="flex mb-4 flex-wrap items-center" style={{gap:"0.75rem"}}
           >
-            <div style={{ flex: 1, position: "relative", minWidth: "200px" }}>
+            <div className="relative" style={{flex:1,minWidth:"200px"}}>
               <Search
                 size={15}
-                style={{
-                  position: "absolute",
-                  left: "0.75rem",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  color: "var(--text-muted)",
-                }}
+                className="absolute" style={{left:"0.75rem",top:"50%",transform:"translateY(-50%)",color:"var(--text-muted)"}}
               />
               <input
                 type="text"
                 placeholder={tab === "interne" ? t("users.searchPlaceholder", "Rechercher par nom, email ou rôle...") : t("users.searchClientPlaceholder", "Rechercher par nom, email ou secteur...")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "0.55rem 1rem 0.55rem 2.25rem",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  background: "#FFF",
-                  fontSize: "0.875rem",
-                  outline: "none",
-                }}
+                className="w-full" style={{padding:"0.55rem 1rem 0.55rem 2.25rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF",fontSize:"0.875rem",outline:"none"}}
               />
             </div>
             <select
@@ -2785,15 +2187,15 @@ const UsersPage = ({ forceTab }) => {
 
           <div className="table-wrapper">
             {tab === "interne" ? (
-              <table style={{ tableLayout: "fixed", width: "100%" }}>
+              <table className="w-full" style={{tableLayout:"fixed"}}>
                 <thead>
                   <tr>
-                    <th style={{ textAlign: "left", paddingLeft: "1.25rem", width: "24%" }}>{t("users.columns.name", "Nom")}</th>
+                    <th className="text-left" style={{paddingLeft:"1.25rem",width:"24%"}}>{t("users.columns.name", "Nom")}</th>
                     <th style={{ width: "26%" }}>{t("users.columns.email", "Email")}</th>
                     <th style={{ width: "20%" }}>{t("users.columns.role", "Rôle")}</th>
-                    <th style={{ width: "110px", textAlign: "center" }}>{t("users.columns.status", "Statut")}</th>
-                    <th className="table-date-cell" style={{ width: "165px", textAlign: "center" }}>{t("users.columns.lastLogin", "Dernière Connexion")}</th>
-                    <th style={{ width: "80px", textAlign: "center" }}>{t("common.actions", "Actions")}</th>
+                    <th className="text-center" style={{width:"110px"}}>{t("users.columns.status", "Statut")}</th>
+                    <th className="table-date-cell text-center" style={{width:"165px"}}>{t("users.columns.lastLogin", "Dernière Connexion")}</th>
+                    <th className="text-center" style={{width:"80px"}}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2811,7 +2213,7 @@ const UsersPage = ({ forceTab }) => {
                     })
                     .map((u) => (
                     <tr key={u.id}>
-                      <td style={{ textAlign: "left", paddingLeft: "1.25rem" }}>
+                      <td className="text-left" style={{paddingLeft:"1.25rem"}}>
                         <div className="truncate-name" style={{ maxWidth: "100%" }} title={u.name}>
                           {u.name}
                         </div>
@@ -2828,7 +2230,7 @@ const UsersPage = ({ forceTab }) => {
                           {u.email}
                         </div>
                       </td>
-                      <td style={{ textAlign: "center" }}>
+                      <td className="text-center">
                         {getRoleBadge(u.role?.name || "Non défini")}
                       </td>
                       <td>
@@ -2843,12 +2245,7 @@ const UsersPage = ({ forceTab }) => {
                         </span>
                       </td>
                       <td
-                        className="table-date-cell"
-                        style={{
-                          color: "var(--text-muted)",
-                          width: "165px",
-                          textAlign: "center",
-                        }}
+                        className="table-date-cell text-center" style={{color:"var(--text-muted)",width:"165px"}}
                       >
                         {u.lastLogin
                           ? formatDate(u.lastLogin)
@@ -2856,13 +2253,9 @@ const UsersPage = ({ forceTab }) => {
                       </td>
                       <td style={{ overflow: "visible", position: "relative", zIndex: openMenuId === u.id ? 1000 : 1 }}>
                         <div
-                          style={{
-                            display: "flex",
-                            gap: "0.5rem",
-                            justifyContent: "center",
-                          }}
+                          className="flex gap-2 justify-center"
                         >
-                          <div style={{ position: "relative" }}>
+                          <div className="relative">
                             <button
                               type="button"
                               className="action-menu-trigger"
@@ -2892,16 +2285,16 @@ const UsersPage = ({ forceTab }) => {
                 </tbody>
               </table>
             ) : (
-              <table style={{ tableLayout: "fixed", width: "100%" }}>
+              <table className="w-full" style={{tableLayout:"fixed"}}>
                 <thead>
                   <tr>
-                    <th style={{ textAlign: "left", paddingLeft: "1.25rem", width: "22%" }}>{t("users.columns.name", "Société / Nom")}</th>
+                    <th className="text-left" style={{paddingLeft:"1.25rem",width:"22%"}}>{t("users.columns.name", "Société / Nom")}</th>
                     <th style={{ width: "24%" }}>{t("users.columns.email", "Email")}</th>
-                    <th style={{ width: "110px", textAlign: "center" }}>{t("users.columns.type", "Type")}</th>
-                    <th style={{ width: "100px", textAlign: "center" }}>{t("users.columns.status", "État")}</th>
+                    <th className="text-center" style={{width:"110px"}}>{t("users.columns.type", "Type")}</th>
+                    <th className="text-center" style={{width:"100px"}}>{t("users.columns.status", "État")}</th>
                     <th style={{ width: "18%" }}>{t("users.columns.activity", "Activité")}</th>
-                    <th className="table-date-cell" style={{ width: "165px", textAlign: "center" }}>{t("users.columns.createdAt", "Date de création")}</th>
-                    <th style={{ width: "80px", textAlign: "center" }}>{t("common.actions", "Actions")}</th>
+                    <th className="table-date-cell text-center" style={{width:"165px"}}>{t("users.columns.createdAt", "Date de création")}</th>
+                    <th className="text-center" style={{width:"80px"}}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2950,7 +2343,7 @@ const UsersPage = ({ forceTab }) => {
                           {c.email}
                         </div>
                       </td>
-                      <td style={{ textAlign: "center" }}>
+                      <td className="text-center">
                         <span
                           style={{
                             color:
@@ -2970,7 +2363,7 @@ const UsersPage = ({ forceTab }) => {
                                 : c.type || t("users.types.individual", "Particulier")}
                         </span>
                       </td>
-                      <td style={{ textAlign: "center" }}>
+                      <td className="text-center">
                         <span
                           style={{
                             color: !c.isBlocked ? "var(--success)" : "var(--danger)",
@@ -2988,20 +2381,16 @@ const UsersPage = ({ forceTab }) => {
                           {c.secteurActivite || "N/A"}
                         </div>
                       </td>
-                      <td className="table-date-cell" style={{ textAlign: "center", width: "165px" }}>
+                      <td className="table-date-cell text-center" style={{width:"165px"}}>
                         <span style={{ color: "var(--text-muted)" }}>
                           {c.createdAt ? formatDate(c.createdAt) : "N/A"}
                         </span>
                       </td>
                       <td style={{ overflow: "visible", position: "relative", zIndex: openMenuId === c.id ? 1000 : 1 }}>
                         <div
-                          style={{
-                            display: "flex",
-                            gap: "0.5rem",
-                            justifyContent: "center",
-                          }}
+                          className="flex gap-2 justify-center"
                         >
-                          <div style={{ position: "relative" }}>
+                          <div className="relative">
                             <button
                               type="button"
                               className="action-menu-trigger"
@@ -3038,41 +2427,15 @@ const UsersPage = ({ forceTab }) => {
       {/* Image/PDF Viewer Modal using <object> for better PDF support */}
       {viewImage && (
         <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0,0,0,0.8)",
-            zIndex: 1100,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+          className="fixed flex items-center justify-center" style={{backgroundColor:"rgba(0,0,0,0.8)",zIndex:1100}}
         >
           <div
-            style={{
-              position: "relative",
-              width: "90vw",
-              height: "90vh",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            className="relative flex justify-center items-center" style={{width:"90vw",height:"90vh"}}
           >
             <button
               type="button"
               onClick={() => setViewImage(null)}
-              style={{
-                position: "absolute",
-                top: "-40px",
-                right: "0",
-                background: "none",
-                border: "none",
-                color: "white",
-                cursor: "pointer",
-              }}
+              className="absolute text-white cursor-pointer" style={{top:"-40px",right:"0",background:"none",border:"none"}}
             >
               <X size={24} />
             </button>
@@ -3094,13 +2457,7 @@ const UsersPage = ({ forceTab }) => {
               <object
                 data={viewImage}
                 type="application/pdf"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  border: "none",
-                  backgroundColor: "white",
-                  borderRadius: "8px",
-                }}
+                className="w-full h-full" style={{border:"none",backgroundColor:"white",borderRadius:"8px"}}
               >
                 <p>
                   Impossible d'afficher ce fichier directement.{" "}
@@ -3117,59 +2474,18 @@ const UsersPage = ({ forceTab }) => {
       {/* Modal Bilan d'activité (Interne) / Suivi d'activité (Client) */}
       {activityStatsModal.open && activityStatsModal.target && (
         <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(15, 23, 42, 0.65)",
-            backdropFilter: "blur(4px)",
-            zIndex: 1100,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "1rem",
-          }}
+          className="fixed flex items-center justify-center p-4" style={{backgroundColor:"rgba(15, 23, 42, 0.65)",backdropFilter:"blur(4px)",zIndex:1100}}
         >
           <div
-            className="fade-in"
-            style={{
-              backgroundColor: "#FFFFFF",
-              borderRadius: "12px",
-              width: "100%",
-              maxWidth: "800px",
-              maxHeight: "90vh",
-              overflowY: "auto",
-              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
-              padding: "1.75rem",
-              display: "flex",
-              flexDirection: "column",
-              gap: "1.25rem",
-            }}
+            className="fade-in w-full flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",maxWidth:"800px",maxHeight:"90vh",overflowY:"auto",boxShadow:"0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",padding:"1.75rem",gap:"1.25rem"}}
           >
             {/* Header */}
             <div
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-                justifyContent: "space-between",
-                borderBottom: "1px solid var(--border)",
-                paddingBottom: "1rem",
-              }}
+              className="flex items-start justify-between" style={{borderBottom:"1px solid var(--border)",paddingBottom:"1rem"}}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <div className="flex items-center" style={{gap:"0.75rem"}}>
                 <div
-                  style={{
-                    width: "44px",
-                    height: "44px",
-                    borderRadius: "10px",
-                    backgroundColor: "rgba(201, 156, 92, 0.12)",
-                    color: "var(--primary, #c99c5c)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
+                  className="flex items-center justify-center" style={{width:"44px",height:"44px",borderRadius:"10px",backgroundColor:"rgba(201, 156, 92, 0.12)",color:"var(--primary, #c99c5c)"}}
                 >
                   {activityStatsModal.type === "user" ? (
                     <BarChart3 size={24} />
@@ -3178,7 +2494,7 @@ const UsersPage = ({ forceTab }) => {
                   )}
                 </div>
                 <div>
-                  <h2 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.25rem"}}>
                     {activityStatsModal.type === "user"
                       ? `Bilan d'activité : ${activityStatsModal.target.name}`
                       : `Suivi d'activité : ${activityStatsModal.target.entreprise?.raisonSociale || activityStatsModal.target.name}`}
@@ -3193,17 +2509,7 @@ const UsersPage = ({ forceTab }) => {
               <button
                 type="button"
                 onClick={handleCloseActivityStats}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "var(--text-muted)",
-                  padding: "0.25rem",
-                  borderRadius: "6px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                className="cursor-pointer flex items-center justify-center" style={{background:"transparent",border:"none",color:"var(--text-muted)",padding:"0.25rem",borderRadius:"6px"}}
               >
                 <X size={20} />
               </button>
@@ -3211,30 +2517,16 @@ const UsersPage = ({ forceTab }) => {
 
             {/* Barre de filtrage par date */}
             <div
-              style={{
-                backgroundColor: "#F8FAFC",
-                border: "1px solid var(--border)",
-                borderRadius: "8px",
-                padding: "0.85rem 1rem",
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.6rem",
-              }}
+              className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid var(--border)",borderRadius:"8px",padding:"0.85rem 1rem",gap:"0.6rem"}}
             >
               <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  flexWrap: "wrap",
-                  gap: "0.75rem",
-                }}
+                className="flex items-center justify-between flex-wrap" style={{gap:"0.75rem"}}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
-                  <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-main)", display: "flex", alignItems: "center", gap: "0.35rem" }}>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-semibold text-[var(--text-main)] flex items-center" style={{fontSize:"0.85rem",gap:"0.35rem"}}>
                     <Calendar size={15} /> Période :
                   </span>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+                  <div className="flex items-center" style={{gap:"0.35rem"}}>
                     <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Du</span>
                     <input
                       type="date"
@@ -3252,7 +2544,7 @@ const UsersPage = ({ forceTab }) => {
                       }}
                     />
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+                  <div className="flex items-center" style={{gap:"0.35rem"}}>
                     <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Au</span>
                     <input
                       type="date"
@@ -3274,14 +2566,7 @@ const UsersPage = ({ forceTab }) => {
                     type="button"
                     onClick={handleApplyStatsFilter}
                     disabled={statsLoading}
-                    className="btn btn-primary"
-                    style={{
-                      padding: "0.35rem 0.85rem",
-                      fontSize: "0.85rem",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "0.35rem",
-                    }}
+                    className="btn btn-primary inline-flex items-center" style={{padding:"0.35rem 0.85rem",fontSize:"0.85rem",gap:"0.35rem"}}
                   >
                     <Filter size={14} /> Filtrer
                   </button>
@@ -3289,21 +2574,14 @@ const UsersPage = ({ forceTab }) => {
                     type="button"
                     onClick={handleResetStatsFilter}
                     disabled={statsLoading}
-                    className="btn btn-outline"
-                    style={{
-                      padding: "0.35rem 0.85rem",
-                      fontSize: "0.85rem",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "0.35rem",
-                    }}
+                    className="btn btn-outline inline-flex items-center" style={{padding:"0.35rem 0.85rem",fontSize:"0.85rem",gap:"0.35rem"}}
                   >
                     <RotateCcw size={14} /> Réinitialiser
                   </button>
                 </div>
 
                 {/* Filtres rapides */}
-                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                <div className="flex items-center" style={{gap:"0.4rem"}}>
                   <button
                     type="button"
                     onClick={() => handlePresetStatsPeriod("all")}
@@ -3368,90 +2646,47 @@ const UsersPage = ({ forceTab }) => {
             {/* Contenu des statistiques */}
             {statsLoading ? (
               <div
-                style={{
-                  padding: "3rem 1rem",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "0.75rem",
-                  color: "var(--text-muted)",
-                }}
+                className="flex flex-col items-center justify-center" style={{padding:"3rem 1rem",gap:"0.75rem",color:"var(--text-muted)"}}
               >
                 <Loader size={30} className="spin" />
                 <span>Chargement des statistiques...</span>
               </div>
             ) : activityStatsModal.type === "user" ? (
               /* Vue INTERNE : Dossiers, Missions, Tâches (Assigné / Terminé) */
-              <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <div className="flex flex-col gap-4">
                 <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                    gap: "1rem",
-                  }}
+                  className="grid gap-4" style={{gridTemplateColumns:"repeat(auto-fit, minmax(220px, 1fr))"}}
                 >
                   {/* Carte Dossiers Interne */}
                   <div
-                    style={{
-                      background: "#FFFFFF",
-                      border: "1px solid var(--border)",
-                      borderTop: "4px solid #2563EB",
-                      borderRadius: "10px",
-                      padding: "1.2rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.85rem",
-                      boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                    }}
+                    className="flex flex-col" style={{background:"#FFFFFF",border:"1px solid var(--border)",borderTop:"4px solid #2563EB",borderRadius:"10px",padding:"1.2rem",gap:"0.85rem",boxShadow:"0 1px 3px rgba(0,0,0,0.05)"}}
                   >
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <span style={{ fontWeight: 700, fontSize: "1rem", color: "var(--text-main)" }}>
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[var(--text-main)]" style={{fontSize:"1rem"}}>
                         Dossiers
                       </span>
                       <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "8px",
-                          background: "#EFF6FF",
-                          color: "#2563EB",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
+                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#EFF6FF",color:"#2563EB"}}
                       >
                         <Folder size={18} />
                       </div>
                     </div>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem" }}>
+                    <div className="grid" style={{gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
                       <div
-                        style={{
-                          background: "#F8FAFC",
-                          border: "1px solid var(--border)",
-                          borderRadius: "8px",
-                          padding: "0.65rem",
-                          textAlign: "center",
-                        }}
+                        className="text-center" style={{background:"#F8FAFC",border:"1px solid var(--border)",borderRadius:"8px",padding:"0.65rem"}}
                       >
-                        <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", display: "block", textTransform: "uppercase", fontWeight: 600 }}>
+                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"var(--text-muted)",textTransform:"uppercase"}}>
                           Assignés
                         </span>
-                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "var(--text-main)" }}>
+                        <span className="text-[var(--text-main)]" style={{fontSize:"1.5rem",fontWeight:800}}>
                           {statsData?.dossiers?.assignes ?? 0}
                         </span>
                       </div>
                       <div
-                        style={{
-                          background: "#ECFDF5",
-                          border: "1px solid #A7F3D0",
-                          borderRadius: "8px",
-                          padding: "0.65rem",
-                          textAlign: "center",
-                        }}
+                        className="text-center" style={{background:"#ECFDF5",border:"1px solid #A7F3D0",borderRadius:"8px",padding:"0.65rem"}}
                       >
-                        <span style={{ fontSize: "0.72rem", color: "#065F46", display: "block", textTransform: "uppercase", fontWeight: 600 }}>
+                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#065F46",textTransform:"uppercase"}}>
                           Terminés
                         </span>
                         <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
@@ -3463,33 +2698,14 @@ const UsersPage = ({ forceTab }) => {
 
                   {/* Carte Missions Interne */}
                   <div
-                    style={{
-                      background: "#FFFFFF",
-                      border: "1px solid var(--border)",
-                      borderTop: "4px solid #0D9488",
-                      borderRadius: "10px",
-                      padding: "1.2rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.85rem",
-                      boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                    }}
+                    className="flex flex-col" style={{background:"#FFFFFF",border:"1px solid var(--border)",borderTop:"4px solid #0D9488",borderRadius:"10px",padding:"1.2rem",gap:"0.85rem",boxShadow:"0 1px 3px rgba(0,0,0,0.05)"}}
                   >
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <span style={{ fontWeight: 700, fontSize: "1rem", color: "var(--text-main)" }}>
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[var(--text-main)]" style={{fontSize:"1rem"}}>
                         Missions
                       </span>
                       <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "8px",
-                          background: "#F0FDFA",
-                          color: "#0D9488",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
+                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#F0FDFA",color:"#0D9488"}}
                       >
                         <CheckSquare size={18} />
                       </div>
@@ -3499,65 +2715,34 @@ const UsersPage = ({ forceTab }) => {
 
                   {/* Carte Tâches Interne */}
                   <div
-                    style={{
-                      background: "#FFFFFF",
-                      border: "1px solid var(--border)",
-                      borderTop: "4px solid #7C3AED",
-                      borderRadius: "10px",
-                      padding: "1.2rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.85rem",
-                      boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                    }}
+                    className="flex flex-col" style={{background:"#FFFFFF",border:"1px solid var(--border)",borderTop:"4px solid #7C3AED",borderRadius:"10px",padding:"1.2rem",gap:"0.85rem",boxShadow:"0 1px 3px rgba(0,0,0,0.05)"}}
                   >
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <span style={{ fontWeight: 700, fontSize: "1rem", color: "var(--text-main)" }}>
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[var(--text-main)]" style={{fontSize:"1rem"}}>
                         Tâches
                       </span>
                       <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "8px",
-                          background: "#F5F3FF",
-                          color: "#7C3AED",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
+                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#F5F3FF",color:"#7C3AED"}}
                       >
                         <ListTodo size={18} />
                       </div>
                     </div>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem" }}>
+                    <div className="grid" style={{gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
                       <div
-                        style={{
-                          background: "#F8FAFC",
-                          border: "1px solid var(--border)",
-                          borderRadius: "8px",
-                          padding: "0.65rem",
-                          textAlign: "center",
-                        }}
+                        className="text-center" style={{background:"#F8FAFC",border:"1px solid var(--border)",borderRadius:"8px",padding:"0.65rem"}}
                       >
-                        <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", display: "block", textTransform: "uppercase", fontWeight: 600 }}>
+                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"var(--text-muted)",textTransform:"uppercase"}}>
                           Assignées
                         </span>
-                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "var(--text-main)" }}>
+                        <span className="text-[var(--text-main)]" style={{fontSize:"1.5rem",fontWeight:800}}>
                           {statsData?.taches?.assignees ?? 0}
                         </span>
                       </div>
                       <div
-                        style={{
-                          background: "#ECFDF5",
-                          border: "1px solid #A7F3D0",
-                          borderRadius: "8px",
-                          padding: "0.65rem",
-                          textAlign: "center",
-                        }}
+                        className="text-center" style={{background:"#ECFDF5",border:"1px solid #A7F3D0",borderRadius:"8px",padding:"0.65rem"}}
                       >
-                        <span style={{ fontSize: "0.72rem", color: "#065F46", display: "block", textTransform: "uppercase", fontWeight: 600 }}>
+                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#065F46",textTransform:"uppercase"}}>
                           Terminées
                         </span>
                         <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
@@ -3569,17 +2754,7 @@ const UsersPage = ({ forceTab }) => {
                 </div>
 
                 <div
-                  style={{
-                    backgroundColor: "#F8FAFC",
-                    border: "1px solid var(--border)",
-                    borderRadius: "8px",
-                    padding: "0.6rem 0.85rem",
-                    fontSize: "0.8rem",
-                    color: "var(--text-muted)",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
+                  className="flex items-center gap-2" style={{backgroundColor:"#F8FAFC",border:"1px solid var(--border)",borderRadius:"8px",padding:"0.6rem 0.85rem",fontSize:"0.8rem",color:"var(--text-muted)"}}
                 >
                   <CheckCircle2 size={16} color="#059669" />
                   <span>Nombre d'éléments directement assignés et finalisés pour cet utilisateur interne.</span>
@@ -3587,31 +2762,17 @@ const UsersPage = ({ forceTab }) => {
               </div>
             ) : (
               /* Vue CLIENT : Dossiers, Missions, Tâches créés (En cours / Terminé) */
-              <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <div className="flex flex-col gap-4">
                 <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                    gap: "1rem",
-                  }}
+                  className="grid gap-4" style={{gridTemplateColumns:"repeat(auto-fit, minmax(220px, 1fr))"}}
                 >
                   {/* Carte Dossiers Client */}
                   <div
-                    style={{
-                      background: "#FFFFFF",
-                      border: "1px solid var(--border)",
-                      borderTop: "4px solid #2563EB",
-                      borderRadius: "10px",
-                      padding: "1.2rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.85rem",
-                      boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                    }}
+                    className="flex flex-col" style={{background:"#FFFFFF",border:"1px solid var(--border)",borderTop:"4px solid #2563EB",borderRadius:"10px",padding:"1.2rem",gap:"0.85rem",boxShadow:"0 1px 3px rgba(0,0,0,0.05)"}}
                   >
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div className="flex items-center justify-between">
                       <div>
-                        <span style={{ fontWeight: 700, fontSize: "1rem", color: "var(--text-main)", display: "block" }}>
+                        <span className="font-bold text-[var(--text-main)] block" style={{fontSize:"1rem"}}>
                           Dossiers
                         </span>
                         <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
@@ -3619,32 +2780,17 @@ const UsersPage = ({ forceTab }) => {
                         </span>
                       </div>
                       <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "8px",
-                          background: "#EFF6FF",
-                          color: "#2563EB",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
+                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#EFF6FF",color:"#2563EB"}}
                       >
                         <Folder size={18} />
                       </div>
                     </div>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem" }}>
+                    <div className="grid" style={{gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
                       <div
-                        style={{
-                          background: "#FFFBEB",
-                          border: "1px solid #FDE68A",
-                          borderRadius: "8px",
-                          padding: "0.65rem",
-                          textAlign: "center",
-                        }}
+                        className="text-center" style={{background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:"8px",padding:"0.65rem"}}
                       >
-                        <span style={{ fontSize: "0.72rem", color: "#92400E", display: "block", textTransform: "uppercase", fontWeight: 600 }}>
+                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#92400E",textTransform:"uppercase"}}>
                           En cours
                         </span>
                         <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#D97706" }}>
@@ -3652,15 +2798,9 @@ const UsersPage = ({ forceTab }) => {
                         </span>
                       </div>
                       <div
-                        style={{
-                          background: "#ECFDF5",
-                          border: "1px solid #A7F3D0",
-                          borderRadius: "8px",
-                          padding: "0.65rem",
-                          textAlign: "center",
-                        }}
+                        className="text-center" style={{background:"#ECFDF5",border:"1px solid #A7F3D0",borderRadius:"8px",padding:"0.65rem"}}
                       >
-                        <span style={{ fontSize: "0.72rem", color: "#065F46", display: "block", textTransform: "uppercase", fontWeight: 600 }}>
+                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#065F46",textTransform:"uppercase"}}>
                           Terminés
                         </span>
                         <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
@@ -3672,21 +2812,11 @@ const UsersPage = ({ forceTab }) => {
 
                   {/* Carte Missions Client */}
                   <div
-                    style={{
-                      background: "#FFFFFF",
-                      border: "1px solid var(--border)",
-                      borderTop: "4px solid #0D9488",
-                      borderRadius: "10px",
-                      padding: "1.2rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.85rem",
-                      boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                    }}
+                    className="flex flex-col" style={{background:"#FFFFFF",border:"1px solid var(--border)",borderTop:"4px solid #0D9488",borderRadius:"10px",padding:"1.2rem",gap:"0.85rem",boxShadow:"0 1px 3px rgba(0,0,0,0.05)"}}
                   >
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div className="flex items-center justify-between">
                       <div>
-                        <span style={{ fontWeight: 700, fontSize: "1rem", color: "var(--text-main)", display: "block" }}>
+                        <span className="font-bold text-[var(--text-main)] block" style={{fontSize:"1rem"}}>
                           Missions
                         </span>
                         <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
@@ -3694,16 +2824,7 @@ const UsersPage = ({ forceTab }) => {
                         </span>
                       </div>
                       <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "8px",
-                          background: "#F0FDFA",
-                          color: "#0D9488",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
+                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#F0FDFA",color:"#0D9488"}}
                       >
                         <CheckSquare size={18} />
                       </div>
@@ -3713,21 +2834,11 @@ const UsersPage = ({ forceTab }) => {
 
                   {/* Carte Tâches Client */}
                   <div
-                    style={{
-                      background: "#FFFFFF",
-                      border: "1px solid var(--border)",
-                      borderTop: "4px solid #7C3AED",
-                      borderRadius: "10px",
-                      padding: "1.2rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.85rem",
-                      boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                    }}
+                    className="flex flex-col" style={{background:"#FFFFFF",border:"1px solid var(--border)",borderTop:"4px solid #7C3AED",borderRadius:"10px",padding:"1.2rem",gap:"0.85rem",boxShadow:"0 1px 3px rgba(0,0,0,0.05)"}}
                   >
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div className="flex items-center justify-between">
                       <div>
-                        <span style={{ fontWeight: 700, fontSize: "1rem", color: "var(--text-main)", display: "block" }}>
+                        <span className="font-bold text-[var(--text-main)] block" style={{fontSize:"1rem"}}>
                           Tâches
                         </span>
                         <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
@@ -3735,32 +2846,17 @@ const UsersPage = ({ forceTab }) => {
                         </span>
                       </div>
                       <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "8px",
-                          background: "#F5F3FF",
-                          color: "#7C3AED",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
+                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#F5F3FF",color:"#7C3AED"}}
                       >
                         <ListTodo size={18} />
                       </div>
                     </div>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem" }}>
+                    <div className="grid" style={{gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
                       <div
-                        style={{
-                          background: "#FFFBEB",
-                          border: "1px solid #FDE68A",
-                          borderRadius: "8px",
-                          padding: "0.65rem",
-                          textAlign: "center",
-                        }}
+                        className="text-center" style={{background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:"8px",padding:"0.65rem"}}
                       >
-                        <span style={{ fontSize: "0.72rem", color: "#92400E", display: "block", textTransform: "uppercase", fontWeight: 600 }}>
+                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#92400E",textTransform:"uppercase"}}>
                           En cours
                         </span>
                         <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#D97706" }}>
@@ -3768,15 +2864,9 @@ const UsersPage = ({ forceTab }) => {
                         </span>
                       </div>
                       <div
-                        style={{
-                          background: "#ECFDF5",
-                          border: "1px solid #A7F3D0",
-                          borderRadius: "8px",
-                          padding: "0.65rem",
-                          textAlign: "center",
-                        }}
+                        className="text-center" style={{background:"#ECFDF5",border:"1px solid #A7F3D0",borderRadius:"8px",padding:"0.65rem"}}
                       >
-                        <span style={{ fontSize: "0.72rem", color: "#065F46", display: "block", textTransform: "uppercase", fontWeight: 600 }}>
+                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#065F46",textTransform:"uppercase"}}>
                           Terminées
                         </span>
                         <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
@@ -3788,17 +2878,7 @@ const UsersPage = ({ forceTab }) => {
                 </div>
 
                 <div
-                  style={{
-                    backgroundColor: "#EFF6FF",
-                    border: "1px solid #BFDBFE",
-                    borderRadius: "8px",
-                    padding: "0.65rem 0.85rem",
-                    fontSize: "0.8rem",
-                    color: "#1E40AF",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
+                  className="flex items-center gap-2" style={{backgroundColor:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:"8px",padding:"0.65rem 0.85rem",fontSize:"0.8rem",color:"#1E40AF"}}
                 >
                   <Clock size={16} />
                   <span>
@@ -3810,12 +2890,7 @@ const UsersPage = ({ forceTab }) => {
 
             {/* Footer */}
             <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                borderTop: "1px solid var(--border)",
-                paddingTop: "1rem",
-              }}
+              className="flex justify-end" style={{borderTop:"1px solid var(--border)",paddingTop:"1rem"}}
             >
               <button
                 type="button"

@@ -12,6 +12,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { getSafeApiUrl } from "../utils/helpers";
+import { getStoredToken, redirectToLogin } from "../services/api";
 
 const PAGE_SIZE = 15;
 
@@ -49,20 +50,6 @@ function getActionBadgeStyle(action) {
   return "bg-slate-100 text-slate-700 border-slate-200";
 }
 
-function getSecurityBadge(log) {
-  if (log.ipAddress) return `IP: ${log.ipAddress}`;
-  if (log.ip) return `IP: ${log.ip}`;
-  if (log.details) {
-    const match = log.details.match(/\b(?:\d{1,3}\.){3}\d{1,3}\b/);
-    if (match) return `IP: ${match[0]}`;
-  }
-  const act = (log.action || "").toLowerCase();
-  if (act.includes("deconnexion") || act.includes("logout")) return "Session close";
-  if (act.includes("reinit") || act.includes("otp") || act.includes("mdp")) {
-    return log.details?.toLowerCase().includes("tentative") ? "Tentative OTP" : "OTP Envoyé";
-  }
-  return "Traçabilité interne";
-}
 
 // --- Composant Principal ---
 
@@ -92,13 +79,23 @@ export default function AuditPage() {
   const fetchLogs = useCallback(async () => {
     try {
       setLoading(true);
-      const token = typeof window !== "undefined" ? sessionStorage.getItem("adminToken") : null;
+      const token = getStoredToken();
+      if (!token) {
+        redirectToLogin("expired");
+        return;
+      }
       const res = await fetch(getSafeApiUrl("/api/crm/audit"), {
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          Authorization: `Bearer ${token}`,
         },
       });
+
+      if (res.status === 401) {
+        redirectToLogin("expired");
+        return;
+      }
 
       if (res.status === 403) {
         triggerError("Accès refusé : permissions insuffisantes.");
@@ -290,21 +287,20 @@ export default function AuditPage() {
                 <th className="w-[170px] px-4 py-3">Horodatage</th>
                 <th className="w-[22%] px-4 py-3">Utilisateur</th>
                 <th className="w-[18%] px-4 py-3">Action</th>
-                <th className="w-[30%] px-4 py-3">Cible / Détails</th>
-                <th className="w-[15%] px-4 py-3 text-right">Sécurité</th>
+                <th className="w-[45%] px-4 py-3">Cible / Détails</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-sm">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-slate-500">
+                  <td colSpan={4} className="py-12 text-center text-slate-500">
                     <Loader2 className="mx-auto h-6 w-6 animate-spin text-slate-400 mb-2" />
                     Chargement du journal d'audit...
                   </td>
                 </tr>
               ) : paginatedLogs.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-slate-500">
+                  <td colSpan={4} className="py-12 text-center text-slate-500">
                     Aucun événement correspondant aux critères.
                   </td>
                 </tr>
@@ -330,7 +326,6 @@ export default function AuditPage() {
                     <tr key={log.id} className="hover:bg-slate-50/50 transition-colors">
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="flex items-center gap-2 text-slate-700">
-                          <Clock className="h-4 w-4 text-slate-400 shrink-0" />
                           <div>
                             <div className="font-medium text-xs text-slate-900">{dateStr}</div>
                             <div className="text-[11px] text-slate-500">{timeStr}</div>
@@ -340,9 +335,6 @@ export default function AuditPage() {
 
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
-                            {userName.charAt(0).toUpperCase()}
-                          </div>
                           <div className="min-w-0 flex-1 truncate">
                             <div className="truncate font-medium text-slate-900" title={userName}>
                               {userName}
@@ -362,7 +354,6 @@ export default function AuditPage() {
 
                       <td className="px-4 py-3">
                         <div className="flex items-start gap-2 min-w-0">
-                          <FileText className="h-4 w-4 text-slate-400 shrink-0 mt-0.5" />
                           <div className="min-w-0 flex-1">
                             {targetLabel && (
                               <div className="truncate font-medium text-xs text-slate-800" title={targetLabel}>
@@ -376,11 +367,6 @@ export default function AuditPage() {
                         </div>
                       </td>
 
-                      <td className="px-4 py-3 text-right">
-                        <span className="inline-block rounded border border-slate-200 bg-slate-50 px-2 py-0.5 font-mono text-[11px] text-slate-600">
-                          {getSecurityBadge(log)}
-                        </span>
-                      </td>
                     </tr>
                   );
                 })

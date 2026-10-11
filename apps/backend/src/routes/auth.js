@@ -15,12 +15,6 @@ const crypto = require("crypto");
 router.post("/login", async (req, res) => {
   try {
     let { email, password } = req.body;
-    const clientIp =
-      req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
-      req.socket.remoteAddress ||
-      req.ip ||
-      "127.0.0.1";
-
     if (!email || !password) {
       return res.status(400).json({ error: "Email et mot de passe requis." });
     }
@@ -56,7 +50,7 @@ router.post("/login", async (req, res) => {
           action: "CONNEXION_REUSSIE",
           targetId: realUserId,
           targetType: "USER",
-          details: `Connexion Master-Admin réussie depuis ${clientIp}`,
+          details: `Connexion Master-Admin réussie`,
         },
       });
 
@@ -69,6 +63,7 @@ router.post("/login", async (req, res) => {
 
       return res.json({
         success: true,
+        token,
         user: {
           id: realUserId,
           name: process.env.MASTER_ADMIN_NAME || "Super Administrateur",
@@ -89,7 +84,7 @@ router.post("/login", async (req, res) => {
         data: {
           action: "ECHEC_CONNEXION",
           targetType: "AUTH",
-          details: `Tentative de connexion avec email inconnu : ${email} depuis ${clientIp}`,
+          details: `Tentative de connexion avec email inconnu : ${email}`,
         },
       });
       return res.status(401).json({ error: "Identifiants invalides." });
@@ -102,7 +97,7 @@ router.post("/login", async (req, res) => {
           action: "ECHEC_CONNEXION",
           targetId: user.id,
           targetType: "USER",
-          details: `Tentative de connexion sur un compte bloqué : ${user.email} depuis ${clientIp}`,
+          details: `Tentative de connexion sur un compte bloqué : ${user.email}`,
         },
       });
       return res.status(403).json({ error: "Ce compte a été bloqué." });
@@ -118,7 +113,7 @@ router.post("/login", async (req, res) => {
           action: "ECHEC_CONNEXION",
           targetId: user.id,
           targetType: "USER",
-          details: `Mot de passe erroné pour ${user.email} depuis ${clientIp}`,
+          details: `Mot de passe erroné pour ${user.email}`,
         },
       });
       return res.status(401).json({ error: "Identifiants invalides." });
@@ -145,7 +140,7 @@ router.post("/login", async (req, res) => {
         action: "CONNEXION_REUSSIE",
         targetId: user.id,
         targetType: "USER",
-        details: `Connexion au CRM depuis ${clientIp}`,
+        details: `Connexion au CRM`,
       },
     });
 
@@ -179,12 +174,6 @@ router.post("/login", async (req, res) => {
 // Route de déconnexion (Logout)
 router.post("/logout", authenticateJWT, async (req, res) => {
   try {
-    const clientIp =
-      req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
-      req.socket.remoteAddress ||
-      req.ip ||
-      "127.0.0.1";
-
     if (req.user.id && req.user.id !== "MASTER-ADMIN") {
       await prisma.auditLog.create({
         data: {
@@ -192,7 +181,7 @@ router.post("/logout", authenticateJWT, async (req, res) => {
           action: "DECONNEXION",
           targetId: req.user.id,
           targetType: "USER",
-          details: `Déconnexion manuelle du CRM depuis ${clientIp}`,
+          details: `Déconnexion manuelle du CRM`,
         },
       });
     }
@@ -356,12 +345,6 @@ router.post("/reset-password-otp", async (req, res) => {
 router.post("/setup-password", async (req, res) => {
   try {
     const { token, password } = req.body;
-    const clientIp =
-      req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
-      req.socket.remoteAddress ||
-      req.ip ||
-      "127.0.0.1";
-
     if (!token || !password) {
       return res.status(400).json({ error: "Jeton d'activation et mot de passe requis." });
     }
@@ -382,7 +365,7 @@ router.post("/setup-password", async (req, res) => {
         data: {
           action: "ECHEC_ACTIVATION_COMPTE",
           targetType: "AUTH",
-          details: `Tentative d'activation avec token invalide ou expiré depuis ${clientIp}`,
+          details: `Tentative d'activation avec token invalide ou expiré`,
         },
       });
       return res.status(400).json({
@@ -409,7 +392,7 @@ router.post("/setup-password", async (req, res) => {
         action: "ACTIVATION_COMPTE",
         targetId: user.id,
         targetType: "USER",
-        details: `Compte activé et mot de passe initialisé pour ${user.email} depuis ${clientIp}`,
+        details: `Compte activé et mot de passe initialisé pour ${user.email}`,
       },
     });
 

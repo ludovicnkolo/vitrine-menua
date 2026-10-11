@@ -113,7 +113,7 @@ export default function Header() {
       label: t("Actualités", "News"),
       href: "/actualites",
       links: [
-        { label: t("À la une", "Featured articles"), href: "/actualites#articles" },
+        { label: t("À la une", "Featured articles"), href: "/actualites#a-la-une" },
         { label: t("Toutes les actualités", "All news"), href: "/actualites#articles" },
         { label: t("Nos publications LinkedIn", "Our LinkedIn publications"), href: "/actualites#linkedin" },
       ],
@@ -219,7 +219,7 @@ export default function Header() {
                       </div>
                       <ul>
                         {menus[key]!.links.map((link) => (
-                          <li key={link.href}>
+                          <li key={`${link.label}-${link.href}`}>
                             <Link
                               href={link.href}
                               onClick={() => setOpenMenu(null)}
@@ -322,7 +322,7 @@ export default function Header() {
                       </Link>
                       {menus[key]!.links.map((link) => (
                         <Link
-                          key={link.href}
+                          key={`mobile-${link.label}-${link.href}`}
                           href={link.href}
                           onClick={() => setIsMobileMenuOpen(false)}
                           className="text-[#6e7891] text-[0.9rem] hover:text-[#141824] transition-colors"

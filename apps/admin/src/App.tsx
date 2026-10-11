@@ -12,14 +12,14 @@ import { socket } from "./utils/socket";
 function MainApp() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
     setIsSidebarOpen(false);
   }, [location.pathname]);
 
   useEffect(() => {
-    if (user) {
+    if (isAuthenticated && user) {
       socket.connect();
     } else {
       socket.disconnect();
@@ -27,43 +27,45 @@ function MainApp() {
     return () => {
       socket.disconnect();
     };
-  }, [user]);
+  }, [isAuthenticated, user]);
+
+  // Si l'utilisateur n'est pas connecté : afficher UNIQUEMENT les vues publiques (login, etc.)
+  // Pas de sidebar, pas de topbar, pas de conteneur CRM
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="auth-wrapper min-h-screen w-full flex flex-col">
+        <GlobalAlerts />
+        <AppRoutes />
+      </div>
+    );
+  }
 
   return (
     <div className="app-layout">
       <GlobalAlerts />
       
-      {user && (
-        <Sidebar 
-          isOpen={isSidebarOpen} 
-          onClose={() => setIsSidebarOpen(false)} 
-        />
-      )}
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onClose={() => setIsSidebarOpen(false)} 
+      />
 
       <main className="main-content">
-        {user && (
-          <div
-            className="topbar-header"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "0.75rem 1.5rem 0",
-              position: "sticky",
-              top: 0,
-              zIndex: 100,
-              background: "var(--bg-main, #f8fafc)",
-              borderBottom: "1px solid transparent",
-            }}
-          >
-            <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(true)}>
-              <Menu size={24} />
-            </button>
-            <div style={{ marginLeft: "auto" }}>
-              <NotificationBell />
-            </div>
+        <div
+          className="topbar-header flex justify-between items-center sticky"
+          style={{
+            padding: "0.75rem 1.5rem 0",
+            zIndex: 100,
+            background: "var(--bg-main, #f8fafc)",
+            borderBottom: "1px solid transparent",
+          }}
+        >
+          <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(true)}>
+            <Menu size={24} />
+          </button>
+          <div style={{ marginLeft: "auto" }}>
+            <NotificationBell />
           </div>
-        )}
+        </div>
         <div className="page-content">
           <AppRoutes />
         </div>

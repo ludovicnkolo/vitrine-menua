@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
@@ -43,6 +43,7 @@ export default function ClientPageArticle({ id, initialData }: ClientPageArticle
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { lang, t } = useLanguage();
+  const [imageError, setImageError] = useState(false);
 
   const isEN = lang === 'EN';
   const displayTitle = (isEN && initialData.title_en) ? initialData.title_en : initialData.title;
@@ -128,14 +129,16 @@ export default function ClientPageArticle({ id, initialData }: ClientPageArticle
           
           {/* Image de couverture */}
           <div className="w-full h-[350px] md:h-[450px] bg-[#1a1f2e] relative overflow-hidden">
-            {initialData.coverImageUrl ? (
+            {initialData.coverImageUrl && !imageError ? (
               <Image
                 src={initialData.coverImageUrl}
                 alt={displayTitle}
                 fill
                 priority
+                unoptimized
                 className="object-cover opacity-95"
                 sizes="(max-width: 1024px) 100vw, 896px"
+                onError={() => setImageError(true)}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
@@ -195,6 +198,7 @@ export default function ClientPageArticle({ id, initialData }: ClientPageArticle
                             src={imageSrc}
                             alt={sec.subtitle || `Section ${idx + 1}`}
                             fill
+                            unoptimized
                             className="object-cover"
                             sizes="(max-width: 1024px) 100vw, 896px"
                           />

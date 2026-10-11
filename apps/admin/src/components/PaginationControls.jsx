@@ -7,13 +7,7 @@ const PaginationControls = ({ page, totalPages, setPage }) => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        marginTop: "1.5rem",
-        gap: "1rem",
-        alignItems: "center",
-      }}
+      className="flex justify-center mt-6 gap-4 items-center"
     >
       <button
         type="button"

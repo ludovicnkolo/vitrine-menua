@@ -191,40 +191,27 @@ const RolesPage = () => {
   };
 
   const renderRoleForm = (title, roleData, setRoleData, onSubmit, onCancel) => (
-    <div className="fade-in" style={{ padding: "1rem" }}>
-      <div className="" style={{ width: "100%", position: "relative" }}>
+    <div className="fade-in p-4">
+      <div className="w-full relative">
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "1rem",
-            marginBottom: "2rem",
-            borderBottom: "1px solid var(--border)",
-            paddingBottom: "1.5rem",
-          }}
+          className="flex items-center gap-4 mb-8" style={{borderBottom:"1px solid var(--border)",paddingBottom:"1.5rem"}}
         >
           <button
             type="button"
             onClick={onCancel}
-            className="btn btn-outline"
-            style={{ padding: "0.5rem 1rem", color: "var(--text-main)" }}
+            className="btn btn-outline text-[var(--text-main)]" style={{padding:"0.5rem 1rem"}}
           >
             {t("common.back", "← Retour")}
           </button>
-          <h2 style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600 }}>
+          <h2 className="font-semibold" style={{fontSize:"1.5rem"}}>
             {title}
           </h2>
         </div>
 
-        <form style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <form className="flex flex-col gap-4">
           <div>
             <label
-              style={{
-                display: "block",
-                marginBottom: "0.25rem",
-                
-                fontWeight: 500,
-              }}
+              className="block font-medium" style={{marginBottom:"0.25rem"}}
             >
               Intitulé du rôle
             </label>
@@ -235,43 +222,20 @@ const RolesPage = () => {
                 setRoleData({ ...roleData, name: e.target.value })
               }
               placeholder="Ex: GESTIONNAIRE"
-              style={{
-                width: "100%",
-                padding: "0.5rem",
-                borderRadius: "4px",
-                border: "1px solid var(--border)",
-              }}
+              className="w-full p-2" style={{borderRadius:"4px",border:"1px solid var(--border)"}}
             />
           </div>
           <div>
             <label
-              style={{
-                display: "block",
-                marginBottom: "0.25rem",
-                
-                fontWeight: 500,
-              }}
+              className="block font-medium" style={{marginBottom:"0.25rem"}}
             >
               Permissions
             </label>
-            <div style={{ position: "relative" }} ref={dropdownRef}>
+            <div className="relative" ref={dropdownRef}>
               <button
                 type="button"
                 onClick={() => setPermissionsOpen(!permissionsOpen)}
-                style={{
-                  width: "100%",
-                  padding: "0.5rem",
-                  minHeight: "38px",
-                  borderRadius: "4px",
-                  border: "1px solid var(--border)",
-                  background: "white",
-                  cursor: "pointer",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  fontFamily: "inherit",
-                  fontSize: "inherit",
-                }}
+                className="w-full p-2 cursor-pointer flex justify-between items-center" style={{minHeight:"38px",borderRadius:"4px",border:"1px solid var(--border)",background:"white",fontFamily:"inherit",fontSize:"inherit"}}
               >
                 <span
                   style={{
@@ -298,35 +262,12 @@ const RolesPage = () => {
               </button>
               {permissionsOpen && (
                 <div
-                  style={{
-                    position: "absolute",
-                    top: "100%",
-                    left: 0,
-                    right: 0,
-                    marginTop: "4px",
-                    background: "white",
-                    border: "1px solid var(--border)",
-                    borderRadius: "4px",
-                    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                    zIndex: 10,
-                    maxHeight: "200px",
-                    overflowY: "auto",
-                    padding: "0.5rem",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.5rem",
-                  }}
+                  className="absolute p-2 flex flex-col gap-2" style={{top:"100%",marginTop:"4px",background:"white",border:"1px solid var(--border)",borderRadius:"4px",boxShadow:"0 4px 6px rgba(0,0,0,0.1)",zIndex:10,maxHeight:"200px",overflowY:"auto"}}
                 >
                   {availablePermissions.map((p) => (
                     <label
                       key={p.value}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        cursor: "pointer",
-                        
-                      }}
+                      className="flex items-center gap-2 cursor-pointer"
                     >
                       <input
                         type="checkbox"
@@ -342,12 +283,7 @@ const RolesPage = () => {
           </div>
           <div>
             <label
-              style={{
-                display: "block",
-                marginBottom: "0.25rem",
-                
-                fontWeight: 500,
-              }}
+              className="block font-medium" style={{marginBottom:"0.25rem"}}
             >
               Description du rôle
             </label>
@@ -358,24 +294,12 @@ const RolesPage = () => {
                 setRoleData({ ...roleData, description: e.target.value })
               }
               placeholder="Description des responsabilités..."
-              style={{
-                width: "100%",
-                padding: "0.5rem",
-                borderRadius: "4px",
-                border: "1px solid var(--border)",
-                resize: "vertical",
-                fontFamily: "inherit",
-              }}
+              className="w-full p-2" style={{borderRadius:"4px",border:"1px solid var(--border)",resize:"vertical",fontFamily:"inherit"}}
             ></textarea>
           </div>
           <div>
             <label
-              style={{
-                display: "block",
-                marginBottom: "0.25rem",
-                
-                fontWeight: 500,
-              }}
+              className="block font-medium" style={{marginBottom:"0.25rem"}}
             >
               Statut
             </label>
@@ -384,25 +308,14 @@ const RolesPage = () => {
               onChange={(e) =>
                 setRoleData({ ...roleData, status: e.target.value })
               }
-              style={{
-                width: "100%",
-                padding: "0.5rem",
-                borderRadius: "4px",
-                border: "1px solid var(--border)",
-                background: "white",
-              }}
+              className="w-full p-2" style={{borderRadius:"4px",border:"1px solid var(--border)",background:"white"}}
             >
               <option value="Actif">Actif</option>
               <option value="Inactif">Inactif</option>
             </select>
           </div>
           <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: "0.5rem",
-              marginTop: "1rem",
-            }}
+            className="flex justify-end gap-2 mt-4"
           >
             <button
               type="button"
@@ -429,34 +342,17 @@ const RolesPage = () => {
       {!isTableViewHidden && (
         <>
           <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "1.5rem",
-            }}
+            className="flex justify-between items-center mb-6"
           >
             <h1
-              style={{
-                fontSize: "1.5rem",
-                fontWeight: 600,
-                color: "var(--text-main)",
-              }}
+              className="font-semibold text-[var(--text-main)]" style={{fontSize:"1.5rem"}}
             >
               {t("roles.title", "Rôles")}
             </h1>
             <button
               type="button"
               onClick={() => setShowRoleModal(true)}
-              className="btn btn-primary"
-              style={{
-                display: "flex",
-                gap: "0.5rem",
-                alignItems: "center",
-                height: "28px",
-                padding: "0 0.75rem",
-                
-              }}
+              className="btn btn-primary flex gap-2 items-center" style={{height:"28px",padding:"0 0.75rem"}}
             >
               {t("roles.createRole", "Créer un rôle")}
             </button>
@@ -464,10 +360,10 @@ const RolesPage = () => {
 
           <div className="card" style={{ padding: 0, overflow: "visible" }}>
             <div className="table-wrapper">
-              <table style={{ tableLayout: "fixed", width: "100%" }}>
+              <table className="w-full" style={{tableLayout:"fixed"}}>
                 <thead>
                   <tr>
-                    <th style={{ width: "5%", textAlign: "left", paddingLeft: "1.25rem" }}>N°</th>
+                    <th className="text-left" style={{width:"5%",paddingLeft:"1.25rem"}}>N°</th>
                     <th style={{ width: "25%" }}>Intitulé</th>
                     <th style={{ width: "25%" }}>Date de création</th>
                     <th style={{ width: "30%" }}>Statut</th>
@@ -477,13 +373,13 @@ const RolesPage = () => {
                 <tbody>
                   {roles.map((r, index) => (
                     <tr key={r.id}>
-                      <td style={{ textAlign: "left", paddingLeft: "1.25rem", color: "var(--text-muted)", fontSize: "0.85rem" }}>
+                      <td className="text-left" style={{paddingLeft:"1.25rem",color:"var(--text-muted)",fontSize:"0.85rem"}}>
                         <div className="truncate-name" style={{ maxWidth: "100%" }}>
                           {String(index + 1).padStart(2, '0')}
                         </div>
                       </td>
                       <td>
-                        <div className="truncate-name" style={{ maxWidth: "100%", fontWeight: 500 }} title={r.name}>
+                        <div className="truncate-name font-medium" style={{maxWidth:"100%"}} title={r.name}>
                           {r.name}
                         </div>
                       </td>
@@ -503,13 +399,9 @@ const RolesPage = () => {
                       </td>
                       <td style={{ overflow: "visible", position: "relative", zIndex: openMenuId === r.id ? 1000 : 1 }}>
                         <div
-                          style={{
-                            display: "flex",
-                            gap: "0.5rem",
-                            justifyContent: "center",
-                          }}
+                          className="flex gap-2 justify-center"
                         >
-                          <div style={{ position: "relative" }}>
+                          <div className="relative">
                             <button
                               type="button"
                               className="action-menu-trigger"
@@ -680,26 +572,14 @@ const RolesPage = () => {
         return (
           <form
             onSubmit={handleSaveRole}
-            className="fade-in"
-            style={{ padding: "0.5rem 0", display: "flex", flexDirection: "column", gap: "1.5rem" }}
+            className="fade-in flex flex-col gap-6" style={{padding:"0.5rem 0"}}
           >
             {/* Header Card */}
             <div
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderRadius: "12px",
-                border: "1px solid var(--border)",
-                padding: "1.25rem 1.5rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: "1rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-              }}
+              className="flex justify-between items-center flex-wrap gap-4" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",padding:"1.25rem 1.5rem",boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}
             >
               <div>
-                <h1 style={{ margin: 0, fontSize: "1.35rem", fontWeight: 700, color: "var(--text-main)" }}>
+                <h1 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.35rem"}}>
                   Modifier le Rôle : {editRole.name || "Rôle"}
                 </h1>
                 <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.85rem", color: "var(--text-muted)" }}>
@@ -707,37 +587,17 @@ const RolesPage = () => {
                 </p>
               </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+              <div className="flex items-center flex-wrap" style={{gap:"0.75rem"}}>
                 <button
                   type="button"
                   onClick={() => setEditRole(null)}
-                  className="btn btn-outline"
-                  style={{
-                    padding: "0.5rem 1.25rem",
-                    borderRadius: "8px",
-                    fontWeight: 500,
-                    backgroundColor: "#FFFFFF",
-                    color: "var(--text-main)",
-                    fontSize: "0.85rem",
-                  }}
+                  className="btn btn-outline font-medium text-[var(--text-main)]" style={{padding:"0.5rem 1.25rem",borderRadius:"8px",backgroundColor:"#FFFFFF",fontSize:"0.85rem"}}
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.45rem",
-                    padding: "0.5rem 1.25rem",
-                    backgroundColor: "#1E3A8A",
-                    color: "#FFFFFF",
-                    border: "none",
-                    borderRadius: "8px",
-                    fontWeight: 600,
-                    fontSize: "0.85rem",
-                    cursor: "pointer",
-                  }}
+                  className="inline-flex items-center font-semibold cursor-pointer" style={{gap:"0.45rem",padding:"0.5rem 1.25rem",backgroundColor:"#1E3A8A",color:"#FFFFFF",border:"none",borderRadius:"8px",fontSize:"0.85rem"}}
                 >
                   <Check size={16} strokeWidth={2.5} />
                   Enregistrer les modifications
@@ -747,30 +607,16 @@ const RolesPage = () => {
 
             {/* Body: Two columns layout */}
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1.6fr",
-                gap: "1.5rem",
-                alignItems: "start",
-              }}
+              className="grid gap-6" style={{gridTemplateColumns:"1fr 1.6fr",alignItems:"start"}}
             >
               {/* Left Column: Propriétés Générales + Alerte */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+              <div className="flex flex-col gap-6">
                 {/* Card 1: Propriétés Générales du Rôle */}
                 <div
-                  style={{
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: "12px",
-                    border: "1px solid var(--border)",
-                    padding: "1.5rem",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.25rem",
-                  }}
+                  className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
                 >
                   <div>
-                    <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                    <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                       1. Propriétés Générales du Rôle
                     </h2>
                     <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -778,7 +624,7 @@ const RolesPage = () => {
                     </p>
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  <div className="flex flex-col gap-4">
                     <div>
                       <label style={labelStyle}>
                         Intitulé du rôle <span style={{ color: "#EF4444" }}>*</span>
@@ -822,19 +668,11 @@ const RolesPage = () => {
                 {/* Alert Box for Critical Role */}
                 {isCriticalRole && (
                   <div
-                    style={{
-                      backgroundColor: "#FEF2F2",
-                      border: "1px solid #FECACA",
-                      borderRadius: "8px",
-                      padding: "1rem",
-                      display: "flex",
-                      gap: "0.75rem",
-                      alignItems: "flex-start",
-                    }}
+                    className="p-4 flex items-start" style={{backgroundColor:"#FEF2F2",border:"1px solid #FECACA",borderRadius:"8px",gap:"0.75rem"}}
                   >
                     <AlertTriangle size={18} style={{ color: "#DC2626", flexShrink: 0, marginTop: "2px" }} />
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#991B1B", marginBottom: "0.25rem" }}>
+                      <div className="font-bold" style={{fontSize:"0.85rem",color:"#991B1B",marginBottom:"0.25rem"}}>
                         Rôle Système Critique
                       </div>
                       <div style={{ fontSize: "0.8rem", color: "#B91C1C", lineHeight: 1.45 }}>
@@ -847,19 +685,10 @@ const RolesPage = () => {
 
               {/* Right Column: Matrice des Permissions Système */}
               <div
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: "12px",
-                  border: "1px solid var(--border)",
-                  padding: "1.5rem",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1.5rem",
-                }}
+                className="p-6 flex flex-col gap-6" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}
               >
                 <div>
-                  <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                     2. Matrice des Permissions Système
                   </h2>
                   <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -867,7 +696,7 @@ const RolesPage = () => {
                   </p>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                <div className="flex flex-col gap-6">
                   {domainGroups.map((group) => {
                     const groupSelectedCount = group.permValues.filter((pv) =>
                       selectedPermissions.includes(pv),
@@ -877,34 +706,22 @@ const RolesPage = () => {
                       groupSelectedCount === group.permValues.length;
 
                     return (
-                      <div key={group.title} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#1E3A8A", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                      <div key={group.title} className="flex flex-col" style={{gap:"0.75rem"}}>
+                        <div className="flex justify-between items-center">
+                          <span className="font-bold" style={{fontSize:"0.75rem",color:"#1E3A8A",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                             {group.title} ({groupSelectedCount})
                           </span>
                           <button
                             type="button"
                             onClick={() => toggleGroup(group.permValues)}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              color: "#0284C7",
-                              fontSize: "0.78rem",
-                              fontWeight: 600,
-                              cursor: "pointer",
-                              padding: "0.15rem 0.35rem",
-                            }}
+                            className="font-semibold cursor-pointer" style={{background:"none",border:"none",color:"#0284C7",fontSize:"0.78rem",padding:"0.15rem 0.35rem"}}
                           >
                             {allInGroupSelected ? "Tout décocher" : "Tout cocher"}
                           </button>
                         </div>
 
                         <div
-                          style={{
-                            display: "grid",
-                            gridTemplateColumns: "1fr 1fr",
-                            gap: "0.65rem",
-                          }}
+                          className="grid" style={{gridTemplateColumns:"1fr 1fr",gap:"0.65rem"}}
                         >
                           {group.permValues.map((val) => {
                             const isSelected = selectedPermissions.includes(val);
@@ -1043,67 +860,31 @@ const RolesPage = () => {
         ];
 
         return (
-          <div className="fade-in" style={{ padding: "0.5rem 0", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <div className="fade-in flex flex-col gap-6" style={{padding:"0.5rem 0"}}>
             {/* Header Card */}
             <div
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderRadius: "12px",
-                border: "1px solid var(--border)",
-                padding: "1.25rem 1.5rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: "1rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-              }}
+              className="flex justify-between items-center flex-wrap gap-4" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",padding:"1.25rem 1.5rem",boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}
             >
               {/* Left: Avatar + Title + Subtitle */}
-              <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <div className="flex items-center gap-4">
                 <div
-                  style={{
-                    width: "52px",
-                    height: "52px",
-                    borderRadius: "50%",
-                    backgroundColor: "#FEE2E2",
-                    border: "2px solid #FECACA",
-                    color: "#DC2626",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "1.25rem",
-                    fontWeight: 700,
-                    letterSpacing: "0.02em",
-                    flexShrink: 0,
-                  }}
+                  className="flex items-center justify-center font-bold" style={{width:"52px",height:"52px",borderRadius:"50%",backgroundColor:"#FEE2E2",border:"2px solid #FECACA",color:"#DC2626",fontSize:"1.25rem",letterSpacing:"0.02em"}}
                 >
                   {getRoleInitials(roleName)}
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.65rem", flexWrap: "wrap" }}>
-                    <h1 style={{ margin: 0, fontSize: "1.35rem", fontWeight: 700, color: "var(--text-main)" }}>
+                <div className="flex flex-col" style={{gap:"0.2rem"}}>
+                  <div className="flex items-center flex-wrap" style={{gap:"0.65rem"}}>
+                    <h1 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.35rem"}}>
                       {roleName}
                     </h1>
                     <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "0.35rem",
-                        backgroundColor: "#ECFDF5",
-                        border: "1px solid #A7F3D0",
-                        color: "#059669",
-                        padding: "0.15rem 0.65rem",
-                        borderRadius: "16px",
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                      }}
+                      className="inline-flex items-center font-semibold" style={{gap:"0.35rem",backgroundColor:"#ECFDF5",border:"1px solid #A7F3D0",color:"#059669",padding:"0.15rem 0.65rem",borderRadius:"16px",fontSize:"0.75rem"}}
                     >
                       <span style={{ fontSize: "0.65rem" }}>●</span>
                       {roleStatus}
                     </span>
                   </div>
-                  <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+                  <div className="flex items-center gap-2 flex-wrap" style={{fontSize:"0.85rem",color:"var(--text-muted)"}}>
                     <span>Niveau d'accès : {accessLevel}</span>
                     <span>•</span>
                     <span>{totalActivePerms} permission{totalActivePerms > 1 ? "s" : ""} active{totalActivePerms > 1 ? "s" : ""}</span>
@@ -1118,19 +899,7 @@ const RolesPage = () => {
                 <button
                   type="button"
                   onClick={() => setConsultRole(null)}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.35rem",
-                    fontSize: "0.85rem",
-                    padding: "0.5rem 1.25rem",
-                    backgroundColor: "var(--text-main)",
-                    color: "#FFFFFF",
-                    border: "none",
-                    borderRadius: "8px",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                  }}
+                  className="inline-flex items-center font-semibold cursor-pointer" style={{gap:"0.35rem",fontSize:"0.85rem",padding:"0.5rem 1.25rem",backgroundColor:"var(--text-main)",color:"#FFFFFF",border:"none",borderRadius:"8px"}}
                 >
                   ← Retour
                 </button>
@@ -1139,28 +908,14 @@ const RolesPage = () => {
 
             {/* Body: Two columns layout */}
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1.4fr",
-                gap: "1.5rem",
-                alignItems: "start",
-              }}
+              className="grid gap-6" style={{gridTemplateColumns:"1fr 1.4fr",alignItems:"start"}}
             >
               {/* Left Column: Définition & Périmètre du Rôle */}
               <div
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: "12px",
-                  border: "1px solid var(--border)",
-                  padding: "1.5rem",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1.25rem",
-                }}
+                className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
               >
                 <div>
-                  <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                     Définition & Périmètre du Rôle
                   </h2>
                   <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -1168,80 +923,48 @@ const RolesPage = () => {
                   </p>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                <div className="flex flex-col" style={{gap:"0.85rem"}}>
                   {/* INTITULÉ DU RÔLE */}
                   <div
-                    style={{
-                      backgroundColor: "#F8FAFC",
-                      border: "1px solid #F1F5F9",
-                      borderRadius: "8px",
-                      padding: "0.75rem 1rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.25rem",
-                    }}
+                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                   >
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                       Intitulé du rôle
                     </span>
-                    <span style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text-main)" }}>
+                    <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                       {roleName}
                     </span>
                   </div>
 
                   {/* STATUT DU RÔLE */}
                   <div
-                    style={{
-                      backgroundColor: "#F8FAFC",
-                      border: "1px solid #F1F5F9",
-                      borderRadius: "8px",
-                      padding: "0.75rem 1rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.25rem",
-                    }}
+                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                   >
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                       Statut du rôle
                     </span>
-                    <span style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text-main)" }}>
+                    <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                       {roleStatus}
                     </span>
                   </div>
 
                   {/* NIVEAU DE SÉCURITÉ */}
                   <div
-                    style={{
-                      backgroundColor: "#F8FAFC",
-                      border: "1px solid #F1F5F9",
-                      borderRadius: "8px",
-                      padding: "0.75rem 1rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.25rem",
-                    }}
+                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
                   >
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                       Niveau de sécurité
                     </span>
-                    <span style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text-main)" }}>
+                    <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
                       {securityLevel}
                     </span>
                   </div>
 
                   {/* DESCRIPTION DU RÔLE */}
                   <div
-                    style={{
-                      backgroundColor: "#F8FAFC",
-                      border: "1px solid #F1F5F9",
-                      borderRadius: "8px",
-                      padding: "0.85rem 1rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.35rem",
-                    }}
+                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.85rem 1rem",gap:"0.35rem"}}
                   >
-                    <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                       Description du rôle
                     </span>
                     <span style={{ fontSize: "0.9rem", color: consultRole.description ? "var(--text-main)" : "#94A3B8", lineHeight: 1.5, whiteSpace: "pre-wrap" }}>
@@ -1253,19 +976,10 @@ const RolesPage = () => {
 
               {/* Right Column: Matrice des Permissions Système */}
               <div
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: "12px",
-                  border: "1px solid var(--border)",
-                  padding: "1.5rem",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1.5rem",
-                }}
+                className="p-6 flex flex-col gap-6" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}
               >
                 <div>
-                  <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)" }}>
+                  <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
                     Matrice des Permissions Système
                   </h2>
                   <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
@@ -1273,19 +987,19 @@ const RolesPage = () => {
                   </p>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                <div className="flex flex-col gap-6">
                   {domainGroups.map((group) => {
                     const activeInGroup = group.permValues.filter((pv) =>
                       parsedPermissions.includes(pv),
                     );
 
                     return (
-                      <div key={group.title} style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                        <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                      <div key={group.title} className="flex flex-col" style={{gap:"0.6rem"}}>
+                        <span className="font-bold" style={{fontSize:"0.72rem",color:"#475569",textTransform:"uppercase",letterSpacing:"0.05em"}}>
                           {group.title}
                         </span>
                         {activeInGroup.length > 0 ? (
-                          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                          <div className="flex flex-wrap gap-2">
                             {activeInGroup.map((pv) => (
                               <span
                                 key={pv}
@@ -1323,48 +1037,20 @@ const RolesPage = () => {
       {/* Modal Supprimer un Rôle */}
       {deleteRole && (
         <div
-          className="modal-backdrop"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
+          className="modal-backdrop fixed flex items-center justify-center" style={{backgroundColor:"rgba(0,0,0,0.5)",zIndex:1000}}
         >
           <div
-            className="card fade-in"
-            style={{ width: "100%", maxWidth: "400px", padding: "1.5rem" }}
+            className="card fade-in w-full p-6" style={{maxWidth:"400px"}}
           >
             <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                textAlign: "center",
-                gap: "1rem",
-              }}
+              className="flex flex-col items-center text-center gap-4"
             >
               <div
-                style={{
-                  width: "48px",
-                  height: "48px",
-                  borderRadius: "50%",
-                  backgroundColor: "#FEE2E2",
-                  color: "#DC2626",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                className="flex items-center justify-center" style={{width:"48px",height:"48px",borderRadius:"50%",backgroundColor:"#FEE2E2",color:"#DC2626"}}
               >
                 <Trash size={24} />
               </div>
-              <h2 style={{ fontSize: "1.25rem", fontWeight: 600 }}>
+              <h2 className="font-semibold" style={{fontSize:"1.25rem"}}>
                 Supprimer le rôle
               </h2>
               <p style={{ color: "var(--text-muted)" }}>
@@ -1373,12 +1059,7 @@ const RolesPage = () => {
                 irréversible et pourrait affecter les utilisateurs associés.
               </p>
               <div
-                style={{
-                  display: "flex",
-                  gap: "1rem",
-                  width: "100%",
-                  marginTop: "1rem",
-                }}
+                className="flex gap-4 w-full mt-4"
               >
                 <button
                   type="button"

@@ -16,12 +16,12 @@ const SolutionSection = ({ id, title, intro, desc, isReversed, listTitle, listIt
           <h2 className={`${bgClass.includes('bg-[#141824]') ? 'text-white' : 'text-[#141824]'} text-[1.3rem] md:text-[1.5rem] font-bold uppercase mb-8 leading-tight`}>
             {title}
           </h2>
-          <p className={`${bgClass.includes('bg-[#141824]') ? 'text-[#e5e9f0]' : 'text-[#141824]/80 font-medium'} font-light text-[1.1rem] leading-relaxed mb-6`}>
+          <div className={`${bgClass.includes('bg-[#141824]') ? 'text-[#e5e9f0]' : 'text-[#141824]/80 font-medium'} font-light text-[1.1rem] leading-relaxed mb-6`}>
             {intro}
-          </p>
-          <p className={`${bgClass.includes('bg-[#141824]') ? 'text-[#e5e9f0]' : 'text-[#141824]/80 font-medium'} font-light text-[1.1rem] leading-relaxed mb-12`}>
+          </div>
+          <div className={`${bgClass.includes('bg-[#141824]') ? 'text-[#e5e9f0]' : 'text-[#141824]/80 font-medium'} font-light text-[1.1rem] leading-relaxed mb-12`}>
             {desc}
-          </p>
+          </div>
         </div>
         <div className="w-full lg:w-7/12 relative">
           <div className={`relative bg-white p-10 lg:p-14 shadow-2xl border ${borderClass}`}>

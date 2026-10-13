@@ -53,7 +53,11 @@ export default function ContactInfoFields({ emailError }: ContactInfoFieldsProps
               type="email"
               name="email"
               placeholder="votre.email@exemple.com"
-              className={`w-full border-b-2 ${emailError ? 'border-red-500' : 'border-[#d1d5db]'} bg-transparent px-0 py-3 text-[1.05rem] ${emailError ? 'text-red-600' : 'text-[#141824]'} focus:outline-none transition-all duration-300 placeholder:text-[#a0aabf]`}
+              className={`w-full border-b ${
+                emailError
+                  ? 'border-red-500 text-red-600 focus:border-red-500'
+                  : 'border-[#d1d5db] text-[#141824] focus:border-[#141824]'
+              } bg-transparent px-0 py-3 text-[1.05rem] focus:outline-none transition-colors placeholder:text-[#a0aabf]`}
               required
             />
           </div>

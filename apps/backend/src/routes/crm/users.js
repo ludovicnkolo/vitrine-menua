@@ -448,11 +448,13 @@ router.post(
       );
 
       // Send email — Use ADMIN_FRONTEND_URL env var (the CRM admin frontend, NOT the backend)
+      let emailSent = false;
+      let emailError = null;
       try {
         const adminFrontend = process.env.ADMIN_FRONTEND_URL || "http://localhost:5173";
         const activationLink = `${adminFrontend}/setup-password?token=${token}`;
 
-        await transporter.sendMail({
+        const info = await transporter.sendMail({
           from: process.env.SMTP_FROM || "contact@menuaconsulting.com",
           to: cleanEmail,
           subject: "Invitation à rejoindre le CRM Menua Consulting — Activez votre compte",
@@ -472,14 +474,21 @@ router.post(
           </div>
         `,
         });
+        emailSent = true;
+        console.log(`[+] Email d'activation envoyé à ${cleanEmail} (ID: ${info.messageId})`);
       } catch (emailErr) {
+        emailError = emailErr.message || String(emailErr);
         console.error(
           "Erreur lors de l'envoi de l'email de configuration:",
           emailErr,
         );
       }
 
-      res.json(user);
+      res.json({
+        ...user,
+        emailSent,
+        ...(emailError && { emailWarning: `L'utilisateur a été créé, mais l'envoi de l'e-mail a échoué: ${emailError}` }),
+      });
     } catch (error) {
       console.error("Erreur création utilisateur:", error);
       if (error.code === "P2002") {

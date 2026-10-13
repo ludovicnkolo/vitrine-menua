@@ -346,7 +346,8 @@ const UsersPage = ({ forceTab }) => {
         body: JSON.stringify(payload),
       });
       if (res.ok) {
-        onSuccess();
+        const resData = await res.json().catch(() => null);
+        onSuccess(resData);
         fetchData();
       } else {
         // Read the actual API error message
@@ -406,7 +407,7 @@ const UsersPage = ({ forceTab }) => {
       "/api/crm/users",
       "POST",
       { ...newUser, langues: finalLangues, email: emailTrimmed, lastLogin: "Jamais connecté" },
-      () => {
+      (resData) => {
         setShowModal(false);
         setNewUser({
           name: "",
@@ -423,7 +424,14 @@ const UsersPage = ({ forceTab }) => {
           emailPro: "",
           fonction: "",
         });
-        if (window.customAlert) {
+        if (resData?.emailWarning) {
+          if (window.customAlert) {
+            window.customAlert(
+              `Membre interne ajouté avec succès.\n\n⚠️ ${resData.emailWarning}`,
+              "Membre créé (Alerte e-mail)"
+            );
+          }
+        } else if (window.customAlert) {
           window.customAlert("Membre interne ajouté avec succès ! Un e-mail d'activation a été envoyé.", "Succès");
         }
       },

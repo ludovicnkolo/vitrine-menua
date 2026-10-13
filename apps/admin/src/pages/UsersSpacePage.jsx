@@ -48,14 +48,14 @@ export const UsersSpacePage = () => {
   const renderTabContent = (activeTabId) => {
     switch (activeTabId) {
       case "equipe":
-        return <UsersPage forceTab="interne" />;
+        return <UsersPage key="equipe" forceTab="interne" />;
       case "client":
-        return <UsersPage forceTab="externe" />;
+        return <UsersPage key="client" forceTab="externe" />;
       case "role":
       case "roles":
-        return <RolesPage />;
+        return <RolesPage key="roles" />;
       case "poles":
-        return <PolesPage />;
+        return <PolesPage key="poles" />;
       default:
         return null;
     }

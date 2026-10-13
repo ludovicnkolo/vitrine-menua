@@ -2690,7 +2690,6 @@ const DossiersPage = () => {
                   return (
                     <tr
                       key={d.id}
-                      className={isExpired(d) ? "row-critical row-expired" : ""}
                     >
                       <td className="text-center">
                         <div

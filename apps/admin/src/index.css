@@ -331,21 +331,20 @@ tr:hover td {
 
 .row-expired,
 .row-critical {
-  background-color: #FEF2F2 !important;
-  border-left: 4px solid #EF4444 !important;
+  background-color: transparent !important;
+  border-left: none !important;
   animation: none !important;
-  transition: background-color 0.15s ease;
 }
 
 .row-expired:hover,
 .row-critical:hover {
-  background-color: #FEE2E2 !important;
+  background-color: rgba(0, 0, 0, 0.02) !important;
 }
 
 body.dark .row-expired,
 body.dark .row-critical {
-  background-color: rgba(239, 68, 68, 0.14) !important;
-  border-left: 4px solid #EF4444 !important;
+  background-color: transparent !important;
+  border-left: none !important;
   animation: none !important;
 }
 

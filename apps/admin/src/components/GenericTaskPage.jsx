@@ -2024,7 +2024,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             {tasks.map((t) => {
               const deadline = getDeadlineEvaluation(t);
               return (
-                <tr key={t.id} className={deadline.isCritical ? "row-critical row-expired" : ""}>
+                <tr key={t.id}>
                   <td className="text-left" style={{paddingLeft:"1.25rem"}}>
                     <div
                       className="truncate-name text-[var(--text-main)] font-normal" style={{maxWidth:"100%"}}

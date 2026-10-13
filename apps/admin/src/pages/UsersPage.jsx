@@ -85,14 +85,20 @@ const UsersPage = ({ forceTab }) => {
   const { t } = useTranslation();
   const [tab, setTab] = useState(forceTab || "interne");
 
-  // Quand le parent change d'onglet (Équipe ↔ Client), React réutilise la même instance :
-  // on resynchronise l'onglet interne et on réinitialise les filtres.
+  // Quand le parent change d'onglet (Équipe ↔ Client), réinitialiser tous les formulaires et filtres
   useEffect(() => {
     if (forceTab) {
       setTab(forceTab);
       setSearchTerm("");
       setFilterUserStatus("all");
       setOpenMenuId(null);
+      setShowModal(false);
+      setShowExternalModal(false);
+      setConsultUser(null);
+      setConsultExternal(null);
+      setEditUser(null);
+      setEditExternal(null);
+      setErrorMsg(null);
     }
   }, [forceTab]);
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -264,7 +270,7 @@ const UsersPage = ({ forceTab }) => {
     lieuResidence: "",
     experienceCle: "",
     status: "Invitation envoyée",
-    langues: "",
+    langues: "Français",
     profile: "",
     // Champs V3 — Organisation & Fiche interne
     poleActivite: "",
@@ -320,7 +326,7 @@ const UsersPage = ({ forceTab }) => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [forceTab, tab]);
   const submitApiRequest = async (
     url,
     method,
@@ -363,8 +369,25 @@ const UsersPage = ({ forceTab }) => {
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
-    if (!newUser.name || !newUser.email || !newUser.telephone || !newUser.roleId || !newUser.lieuResidence || !newUser.experienceCle || !newUser.langues || !newUser.poleActivite)
-      return setErrorMsg("Veuillez remplir tous les champs obligatoires (marqués d'un astérisque rouge).");
+    const finalLangues = (newUser.langues || "").trim() || "Français";
+
+    const missing = [];
+    if (!newUser.name?.trim()) missing.push("Nom complet");
+    if (!newUser.email?.trim()) missing.push("Email");
+    if (!newUser.telephone?.trim()) missing.push("Numéro de téléphone");
+    if (!newUser.roleId) missing.push("Rôle");
+    if (!newUser.lieuResidence?.trim()) missing.push("Lieu de résidence");
+    if (!newUser.experienceCle?.trim()) missing.push("Expérience clé");
+    if (!newUser.poleActivite?.trim()) missing.push("Pôle d'activité");
+
+    if (missing.length > 0) {
+      const msg = `Veuillez renseigner les champs obligatoires suivants : ${missing.join(", ")}.`;
+      setErrorMsg(msg);
+      if (window.customAlert) {
+        window.customAlert(msg, "Champs obligatoires manquants");
+      }
+      return;
+    }
 
     const emailTrimmed = newUser.email.trim().toLowerCase();
     const existing = users.find(
@@ -373,14 +396,16 @@ const UsersPage = ({ forceTab }) => {
     if (existing) {
       const msg = `Impossible d'inscrire ce membre : l'adresse email "${newUser.email.trim()}" est déjà attribuée à ${existing.name}.`;
       setErrorMsg(msg);
-      window.customAlert(msg, "Email déjà existant");
+      if (window.customAlert) {
+        window.customAlert(msg, "Email déjà existant");
+      }
       return;
     }
 
     await submitApiRequest(
       "/api/crm/users",
       "POST",
-      { ...newUser, email: emailTrimmed, lastLogin: "Jamais connecté" },
+      { ...newUser, langues: finalLangues, email: emailTrimmed, lastLogin: "Jamais connecté" },
       () => {
         setShowModal(false);
         setNewUser({
@@ -391,23 +416,31 @@ const UsersPage = ({ forceTab }) => {
           lieuResidence: "",
           experienceCle: "",
           status: "Invitation envoyée",
-          langues: "",
+          langues: "Français",
           profile: "",
-          // Champs V3 — Organisation & Fiche interne
           poleActivite: "",
           matricule: "",
           emailPro: "",
           fonction: "",
         });
+        if (window.customAlert) {
+          window.customAlert("Membre interne ajouté avec succès ! Un e-mail d'activation a été envoyé.", "Succès");
+        }
       },
-      "Erreur lors de la création",
+      "Erreur lors de la création du membre",
     );
   };
 
   const handleCreateClient = async (e) => {
     e.preventDefault();
-    if (!newClient.name || !newClient.email)
-      return setErrorMsg("Veuillez remplir le nom et l'email au minimum.");
+    if (!newClient.name?.trim() || !newClient.email?.trim()) {
+      const msg = "Veuillez renseigner au minimum le nom et l'email du client.";
+      setErrorMsg(msg);
+      if (window.customAlert) {
+        window.customAlert(msg, "Champs obligatoires manquants");
+      }
+      return;
+    }
     await submitApiRequest(
       "/api/crm/clients",
       "POST",
@@ -426,8 +459,11 @@ const UsersPage = ({ forceTab }) => {
           emailEntreprise: "",
           telephoneEntreprise: "",
         });
+        if (window.customAlert) {
+          window.customAlert("Client ajouté avec succès !", "Succès");
+        }
       },
-      "Erreur lors de la création",
+      "Erreur lors de la création du client",
     );
   };
 

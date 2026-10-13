@@ -1334,7 +1334,6 @@ const InboxPage = ({ userRole }) => {
                         return (
                           <tr
                             key={m.id}
-                            className={isExpired(m) ? "row-expired" : ""}
                           >
                             <td
                               className="font-medium" style={{color:"var(--text-muted)"}}

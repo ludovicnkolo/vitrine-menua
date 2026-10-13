@@ -57,13 +57,13 @@ const WorkspacePage = ({ userRole }) => {
   const renderTabContent = (tabId) => {
     switch (tabId) {
       case "dossiers":
-        return !isCollaborateur ? <DossiersPage /> : null;
+        return !isCollaborateur ? <DossiersPage key="dossiers" /> : null;
       case "missions":
-        return !isCollaborateur ? <MissionsPage /> : null;
+        return !isCollaborateur ? <MissionsPage key="missions" /> : null;
       case "taches":
-        return <TachesPage />;
+        return <TachesPage key="taches" />;
       case "documents":
-        return <DocumentsPage />;
+        return <DocumentsPage key="documents" />;
       default:
         return null;
     }

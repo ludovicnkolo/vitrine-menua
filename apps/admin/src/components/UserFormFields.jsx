@@ -43,6 +43,12 @@ const UserFormFields = ({
 
   const selectedLanguages = user.langues ? user.langues.split(',').map(s => s.trim()).filter(Boolean) : [];
 
+  useEffect(() => {
+    if (!isEdit && (!user.langues || user.langues.trim() === "")) {
+      setUser((prev) => ({ ...prev, langues: "Français" }));
+    }
+  }, [isEdit]);
+
   const toggleLanguage = (lang) => {
     if (selectedLanguages.includes(lang)) {
       setUser({ ...user, langues: selectedLanguages.filter(l => l !== lang).join(', ') });
@@ -138,15 +144,20 @@ const UserFormFields = ({
           </label>
           <div
             onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-            className="w-full p-2 cursor-pointer flex justify-between items-center" style={{borderRadius:"4px",border:"1px solid var(--border)",background:"white"}}
+            className="w-full p-2 cursor-pointer flex justify-between items-center"
+            style={{
+              borderRadius: "4px",
+              border: selectedLanguages.length === 0 ? "1px solid #EF4444" : "1px solid var(--border)",
+              background: "white"
+            }}
           >
             <span style={{ 
               whiteSpace: "nowrap", 
               overflow: "hidden", 
               textOverflow: "ellipsis", 
-              color: selectedLanguages.length ? "inherit" : "var(--text-muted)" 
+              color: selectedLanguages.length ? "inherit" : "#DC2626" 
             }}>
-              {selectedLanguages.length > 0 ? selectedLanguages.join(', ') : "Sélectionner des langues..."}
+              {selectedLanguages.length > 0 ? selectedLanguages.join(', ') : "⚠️ Sélectionner au moins une langue (obligatoire)"}
             </span>
             <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>▼</span>
           </div>

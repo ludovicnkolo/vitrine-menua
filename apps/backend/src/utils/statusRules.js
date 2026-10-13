@@ -3,7 +3,23 @@ const isResp = (role) => role === "Responsable opérationnel";
 const isRelecteur = (role) => role === "Relecteur";
 const isCollab = (role) => role === "Collaborateur";
 
+/**
+ * Normalise un statut en supprimant tout accent, en passant en majuscules
+ * et en retirant les espaces superflus.
+ * Exemples : "TRAITÉ" -> "TRAITE", "GAGNÉ" -> "GAGNE", "REFUSÉ" -> "REFUSE"
+ */
+const normalizeStatus = (status) => {
+  if (!status || typeof status !== "string") return status;
+  return status
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase()
+    .trim();
+};
+
 const validateTacheStatus = (fromStatus, toStatus, role) => {
+  fromStatus = normalizeStatus(fromStatus);
+  toStatus = normalizeStatus(toStatus);
   if (!toStatus || fromStatus === toStatus) return true;
   const isSA = isSuperAdmin(role);
   const isRO = isResp(role);
@@ -59,6 +75,8 @@ const validateTacheStatus = (fromStatus, toStatus, role) => {
 };
 
 const validateMissionStatus = (fromStatus, toStatus, role) => {
+  fromStatus = normalizeStatus(fromStatus);
+  toStatus = normalizeStatus(toStatus);
   if (!toStatus || fromStatus === toStatus) return true;
   const isSA = isSuperAdmin(role);
   const isRO = isResp(role);
@@ -93,6 +111,8 @@ const validateMissionStatus = (fromStatus, toStatus, role) => {
 };
 
 const validateMessageStatus = (fromStatus, toStatus, category, role) => {
+  fromStatus = normalizeStatus(fromStatus);
+  toStatus = normalizeStatus(toStatus);
   if (!toStatus || fromStatus === toStatus) return true;
   const isSA = isSuperAdmin(role);
   const isRO = isResp(role);
@@ -134,6 +154,7 @@ const validateMessageStatus = (fromStatus, toStatus, category, role) => {
 };
 
 module.exports = {
+  normalizeStatus,
   validateTacheStatus,
   validateMissionStatus,
   validateMessageStatus

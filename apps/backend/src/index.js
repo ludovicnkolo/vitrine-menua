@@ -267,4 +267,17 @@ httpServer.listen(PORT, () => {
   } catch (err) {
     console.error("Failed to start Local S3 Sync Cron:", err);
   }
+
+  // Alignement automatique : les anciens emails importés avec EN_ATTENTE passent au statut standard NOUVEAU
+  prisma.messagePersonnel
+    .updateMany({
+      where: { status: "EN_ATTENTE" },
+      data: { status: "NOUVEAU" },
+    })
+    .then((res) => {
+      if (res.count > 0) {
+        console.log(`[Migration] ${res.count} email(s) aligné(s) vers le statut NOUVEAU.`);
+      }
+    })
+    .catch((err) => console.error("Erreur alignement statuts emails:", err.message));
 });

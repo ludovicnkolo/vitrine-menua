@@ -21,6 +21,7 @@ const {
   buildDossierAccessFilter,
 } = require("../../services/dossierFilterService");
 const { transporter } = require("../../utils/mailer");
+const { normalizeStatus } = require("../../utils/statusRules");
 const emitEntityUpdate = (req, entityType, entityId, action, payload = {}) => {
   const io = req.app.get('io');
   if (io) {
@@ -587,6 +588,9 @@ router.patch("/dossiers/:id", async (req, res) => {
     });
     if (!currentDossier)
       return res.status(404).json({ error: "Dossier introuvable." });
+    if (req.body.status) {
+      req.body.status = normalizeStatus(req.body.status);
+    }
     if (req.body.status && currentDossier.status === req.body.status) {
       return res
         .status(400)

@@ -4,9 +4,8 @@ const crypto = require("node:crypto");
 const imaps = require("imap-simple");
 const simpleParser = require("mailparser").simpleParser;
 const fs = require("node:fs");
-const path = require("node:path");
 const router = express.Router();
-const { validateMissionStatus } = require('../../utils/statusRules');
+const { validateMissionStatus, normalizeStatus } = require('../../utils/statusRules');
 
 
 const {
@@ -566,6 +565,9 @@ router.patch("/tasks/:id", async (req, res) => {
         .json({ error: "Action impossible : le dossier parent est clôturé." });
     }
 
+    if (req.body.status) {
+      req.body.status = normalizeStatus(req.body.status);
+    }
     if (req.body.status && currentMissionForAuth.status === req.body.status) {
       return res
         .status(400)

@@ -6,7 +6,7 @@ const simpleParser = require("mailparser").simpleParser;
 const fs = require("node:fs");
 const path = require("node:path");
 const router = express.Router();
-const { validateTacheStatus } = require('../../utils/statusRules');
+const { validateTacheStatus, normalizeStatus } = require('../../utils/statusRules');
 
 
 const {
@@ -449,7 +449,7 @@ router.post("/taches", async (req, res) => {
 router.patch("/taches/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const {
+    let {
       status,
       adminFeedback,
       managerFeedback,
@@ -458,6 +458,10 @@ router.patch("/taches/:id", async (req, res) => {
       relecteurId,
       ...rest
     } = req.body;
+
+    if (status !== undefined) {
+      status = normalizeStatus(status);
+    }
 
     const currentTache = await prisma.tache.findUnique({
       where: { id },

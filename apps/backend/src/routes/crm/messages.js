@@ -4,9 +4,8 @@ const crypto = require("node:crypto");
 const imaps = require("imap-simple");
 const simpleParser = require("mailparser").simpleParser;
 const fs = require("node:fs");
-const path = require("node:path");
 const router = express.Router();
-const { validateMessageStatus } = require('../../utils/statusRules');
+const { validateMessageStatus, normalizeStatus } = require('../../utils/statusRules');
 
 
 const {
@@ -653,7 +652,7 @@ router.post("/messages/:id/assign", async (req, res) => {
 router.patch("/messages/:id/status", async (req, res) => {
   try {
     const { id } = req.params;
-    const {
+    let {
       status,
       dossierId,
       lieuTraitement,
@@ -666,6 +665,10 @@ router.patch("/messages/:id/status", async (req, res) => {
       dateEntretien,
       lienVisio,
     } = req.body;
+
+    if (status !== undefined) {
+      status = normalizeStatus(status);
+    }
 
     // Charger le message UNE SEULE FOIS au debut pour eviter le bug de scope
     console.log("[PATCH status] id:", id, "body:", JSON.stringify(req.body));

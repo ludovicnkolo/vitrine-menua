@@ -23,10 +23,13 @@ const CollaboratorWeather: React.FC<CollaboratorWeatherProps> = ({
   const { t } = useTranslation();
 
   const getInitials = (collab: CollaboratorData) => {
-    const r = (collab.role || collab.roleCategory || "").toLowerCase();
-    if (r.includes("responsable") || r.includes("relecteur")) return "RE";
-    if (r.includes("collab") || r.includes("production")) return "CO";
-    return collab.name.substring(0, 2).toUpperCase();
+    const name = (collab.name || "").trim();
+    if (!name) return "CO";
+    const words = name.split(/\s+/).filter((w) => w && !/^[.\-–—]+$/.test(w));
+    if (words.length >= 2) {
+      return (words[0][0] + words[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
   };
 
   return (
@@ -70,15 +73,20 @@ const CollaboratorWeather: React.FC<CollaboratorWeatherProps> = ({
               className={`flex items-center justify-between bg-white border border-slate-100 border-l-4 ${stripeColor} rounded-lg py-2.5 px-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)]`}
             >
               {/* Left: Avatar + Details */}
-              <div className="flex items-center gap-3">
-                <div className="font-bold flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-700 text-[0.75rem]">
-                  {initials}
+              <div className="flex items-center gap-3 min-w-0">
+                <div
+                  translate="no"
+                  className="notranslate font-bold flex items-center justify-center w-8 h-8 min-w-[32px] max-w-[32px] rounded-full bg-slate-100 text-slate-700 text-[0.75rem] shrink-0 overflow-hidden select-none"
+                >
+                  <span translate="no" className="notranslate truncate">
+                    {initials}
+                  </span>
                 </div>
-                <div>
-                  <div className="font-bold text-[var(--text-main)] text-[0.85rem]">
+                <div className="min-w-0">
+                  <div className="font-bold text-[var(--text-main)] text-[0.85rem] truncate">
                     {collab.name}
                   </div>
-                  <div className="text-[0.72rem] text-slate-500 mt-[1px]">
+                  <div className="text-[0.72rem] text-slate-500 mt-[1px] truncate">
                     {t("common.role", "Rôle")} :{" "}
                     {t(
                       `role.${collab.role || collab.roleCategory}`,
@@ -89,7 +97,7 @@ const CollaboratorWeather: React.FC<CollaboratorWeatherProps> = ({
               </div>
 
               {/* Right: Badges */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 shrink-0">
                 {hasTasks ? (
                   <span className="font-semibold inline-flex items-center bg-blue-50 text-blue-600 rounded-full py-1 px-2.5 text-[0.75rem] gap-1">
                     <span className="text-[0.65rem]">●</span> {t("dashboard.inActivity", "En activité")}

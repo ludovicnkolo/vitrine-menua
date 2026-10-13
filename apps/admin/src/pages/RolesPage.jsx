@@ -815,7 +815,8 @@ const RolesPage = () => {
             >
               <div className="flex items-center gap-4">
                 <div
-                  className="flex items-center justify-center font-bold"
+                  translate="no"
+                  className="notranslate flex items-center justify-center font-bold shrink-0 overflow-hidden select-none"
                   style={{
                     width: "52px",
                     height: "52px",
@@ -827,7 +828,7 @@ const RolesPage = () => {
                     letterSpacing: "0.02em",
                   }}
                 >
-                  {getRoleInitials(roleName)}
+                  <span translate="no" className="notranslate">{getRoleInitials(roleName)}</span>
                 </div>
                 <div className="flex flex-col" style={{ gap: "0.2rem" }}>
                   <div className="flex items-center flex-wrap" style={{ gap: "0.65rem" }}>

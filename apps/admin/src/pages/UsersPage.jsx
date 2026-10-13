@@ -1109,9 +1109,11 @@ const UsersPage = ({ forceTab }) => {
               {/* Left: Avatar + Title + Subtitle */}
               <div className="flex items-center gap-4">
                 <div
-                  className="flex items-center justify-center font-bold" style={{width:"52px",height:"52px",borderRadius:"50%",backgroundColor:"#EFF6FF",border:"2px solid #DBEAFE",color:"#1D4ED8",fontSize:"1.25rem",letterSpacing:"0.02em"}}
+                  translate="no"
+                  className="notranslate flex items-center justify-center font-bold shrink-0 overflow-hidden select-none"
+                  style={{width:"52px",height:"52px",borderRadius:"50%",backgroundColor:"#EFF6FF",border:"2px solid #DBEAFE",color:"#1D4ED8",fontSize:"1.25rem",letterSpacing:"0.02em"}}
                 >
-                  {getUserInitials(clientDisplayName)}
+                  <span translate="no" className="notranslate">{getUserInitials(clientDisplayName)}</span>
                 </div>
                 <div className="flex flex-col" style={{gap:"0.2rem"}}>
                   <div className="flex items-center flex-wrap" style={{gap:"0.65rem"}}>
@@ -1811,9 +1813,11 @@ const UsersPage = ({ forceTab }) => {
             {/* Left: Avatar + Name + Subtitle */}
             <div className="flex items-center gap-4">
               <div
-                className="flex items-center justify-center font-bold" style={{width:"52px",height:"52px",borderRadius:"50%",backgroundColor:"#EFF6FF",border:"2px solid #DBEAFE",color:"#1D4ED8",fontSize:"1.25rem",letterSpacing:"0.02em"}}
+                translate="no"
+                className="notranslate flex items-center justify-center font-bold shrink-0 overflow-hidden select-none"
+                style={{width:"52px",height:"52px",borderRadius:"50%",backgroundColor:"#EFF6FF",border:"2px solid #DBEAFE",color:"#1D4ED8",fontSize:"1.25rem",letterSpacing:"0.02em"}}
               >
-                {getUserInitials(consultUser.name)}
+                <span translate="no" className="notranslate">{getUserInitials(consultUser.name)}</span>
               </div>
               <div className="flex flex-col" style={{gap:"0.2rem"}}>
                 <div className="flex items-center flex-wrap" style={{gap:"0.65rem"}}>

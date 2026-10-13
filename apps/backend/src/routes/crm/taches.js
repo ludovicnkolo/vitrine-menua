@@ -296,8 +296,8 @@ router.get("/taches", async (req, res) => {
 router.post("/taches", async (req, res) => {
   try {
     const userRole = req.user.role;
-    // Relecteur et Collaborateur ne peuvent pas créer de tâches
-    if (userRole === "Relecteur" || userRole === "Collaborateur") {
+    // Relecteur, Collaborateur et Administrateur technique ne peuvent pas créer de tâches
+    if (userRole === "Relecteur" || userRole === "Collaborateur" || userRole === "Administrateur technique") {
       return res
         .status(403)
         .json({
@@ -463,12 +463,21 @@ router.patch("/taches/:id", async (req, res) => {
       status = normalizeStatus(status);
     }
 
+    const userRole = req.user?.role || "";
+    const userId = req.user?.id;
+    if (userRole === "Administrateur technique") {
+      return res.status(403).json({
+        error: "Accès refusé. L'administrateur technique n'a pas accès à la gestion des tâches.",
+      });
+    }
+
     const currentTache = await prisma.tache.findUnique({
       where: { id },
       include: {
         mission: {
           include: { dossier: { select: { traitantId: true, status: true } } },
         },
+        dossierTache: { select: { traitantId: true, status: true } },
       },
     });
     if (!currentTache)
@@ -477,7 +486,8 @@ router.patch("/taches/:id", async (req, res) => {
     const isTacheLocked = ["BLOQUE", "EN_ATTENTE"].includes(currentTache.status);
     const isParentLocked = 
       ["BLOQUE", "EN_ATTENTE"].includes(currentTache.mission?.status) || 
-      ["BLOQUE", "EN_ATTENTE"].includes(currentTache.mission?.dossier?.status);
+      ["BLOQUE", "EN_ATTENTE"].includes(currentTache.mission?.dossier?.status) ||
+      ["BLOQUE", "EN_ATTENTE"].includes(currentTache.dossierTache?.status);
 
     if (isParentLocked) {
       return res.status(403).json({ error: "Action impossible : le parent (mission ou dossier) est bloqué ou en attente. Veuillez le débloquer d'abord." });
@@ -492,7 +502,8 @@ router.patch("/taches/:id", async (req, res) => {
 
     if (
       ["TERMINE", "ARCHIVE"].includes(currentTache.mission?.status) ||
-      ["TERMINE", "ARCHIVE"].includes(currentTache.mission?.dossier?.status)
+      ["TERMINE", "ARCHIVE"].includes(currentTache.mission?.dossier?.status) ||
+      ["TERMINE", "ARCHIVE"].includes(currentTache.dossierTache?.status)
     ) {
       return res
         .status(403)
@@ -512,14 +523,12 @@ router.patch("/taches/:id", async (req, res) => {
         });
     }
 
-    const userRole = req.user?.role || "";
-    const userId = req.user?.id;
     const isSA = isSuperAdmin(userRole);
-    const dossierTraitantId = currentTache.mission?.dossier?.traitantId;
+    const dossierTraitantId = currentTache.mission?.dossier?.traitantId || currentTache.dossierTache?.traitantId;
 
     // ── Vérification Zero-Trust (Accès en Modification) ──────────────────────
     const isAuthorized =
-      isSuperAdmin(userRole) ||
+      isSA ||
       isAdmin(userRole) ||
       currentTache.assignedToId === userId ||
       currentTache.createdById === userId ||
@@ -544,36 +553,47 @@ router.patch("/taches/:id", async (req, res) => {
       const isAssigned = currentTache.assignedToId === userId;
       const isRelecteurAssigned = currentTache.relecteurId === userId;
       const isMissionResp = currentTache.mission?.assignedToId === userId;
-      const isDossierResp = currentTache.mission?.dossier?.traitantId === userId || currentTache.dossierTache?.traitantId === userId;
-      const canManageTaskAdmin = isSA || isRelecteurAssigned || isMissionResp || isDossierResp;
+      
+      // Seul le Super-administrateur ou l'assigné à la mission parente peut mettre en attente ou lever l'attente
+      const canPutOrResumeAttente = isSA || isMissionResp;
 
       if (from === "BLOQUE") {
         if (!isSA) {
           return res.status(403).json({ error: "Seul un Super-Administrateur peut débloquer une tâche." });
         }
-        if (to !== currentTache.previousStatus) {
-          return res.status(403).json({ error: `Une tâche bloquée ne peut retourner qu'à son statut précédent (${currentTache.previousStatus}).` });
+        const expectedPrevious = currentTache.previousStatus || "NOUVEAU";
+        if (to !== expectedPrevious) {
+          return res.status(403).json({ error: `Une tâche bloquée ne peut retourner qu'à son statut précédent (${expectedPrevious}).` });
         }
         allowed = true;
       } else if (from === "EN_ATTENTE") {
-        if (!canManageTaskAdmin && !isAssigned) {
-          return res.status(403).json({ error: "Accès refusé. Seul l'assigné, le relecteur, le responsable de mission/dossier ou le Super-Admin peut lever l'attente." });
+        if (!canPutOrResumeAttente) {
+          return res.status(403).json({
+            error: "Accès refusé. Seul le Super-administrateur ou le responsable assigné à la mission peut lever la mise en attente de cette tâche.",
+          });
         }
         if (to === "BLOQUE") {
           if (!isSA) return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut bloquer une tâche." });
           allowed = true;
-        } else if (to === currentTache.previousStatus) {
-          allowed = true;
         } else {
-          return res.status(403).json({ error: `Une tâche en attente ne peut retourner qu'à son statut précédent (${currentTache.previousStatus}) ou être bloquée.` });
+          const expectedPrevious = currentTache.previousStatus || "NOUVEAU";
+          if (to === expectedPrevious) {
+            allowed = true;
+          } else {
+            return res.status(403).json({
+              error: `Une tâche en attente ne peut retourner qu'à son statut précédent (${expectedPrevious}).`,
+            });
+          }
         }
       } else {
         if (to === "BLOQUE") {
           if (!isSA) return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut bloquer une tâche." });
           allowed = true;
         } else if (to === "EN_ATTENTE") {
-          if (!canManageTaskAdmin) {
-            return res.status(403).json({ error: "Accès refusé. Seul le relecteur, le responsable de mission/dossier ou le Super-Admin peut mettre en attente." });
+          if (!canPutOrResumeAttente) {
+            return res.status(403).json({
+              error: "Accès refusé. Seul le Super-administrateur ou le responsable assigné à la mission peut mettre cette tâche en attente.",
+            });
           }
           allowed = true;
         } else {
@@ -673,7 +693,11 @@ router.patch("/taches/:id", async (req, res) => {
       if (status === "EN_VALIDATION_FINALE" || status === "A_CORRIGER") {
         if (adminFeedback) dataToUpdate.adminFeedback = adminFeedback.trim();
       }
-      dataToUpdate.previousStatus = currentTache.status;
+      if (currentTache.status === "EN_ATTENTE") {
+        dataToUpdate.previousStatus = null;
+      } else {
+        dataToUpdate.previousStatus = currentTache.status;
+      }
       dataToUpdate.status = status;
     } else if (status !== undefined) {
       if (adminFeedback !== undefined)
@@ -704,6 +728,25 @@ router.patch("/taches/:id", async (req, res) => {
         include: { dossier: { select: { traitantId: true } } },
       });
       const traitantId = missionWithDossier?.dossier?.traitantId;
+
+      if (status === "EN_ATTENTE" && tache.assignedToId) {
+        await notify(tache.assignedToId, {
+          type: "TACHE_EN_ATTENTE",
+          title: "Tâche mise en attente",
+          message: `Votre tâche ${tacheRef} a été mise en attente.`,
+          targetId: tache.id,
+          targetType: "TACHE",
+        });
+      }
+      if (currentTache.status === "EN_ATTENTE" && tache.assignedToId) {
+        await notify(tache.assignedToId, {
+          type: "TACHE_REPRISE",
+          title: "Tâche réactivée",
+          message: `L'attente sur votre tâche ${tacheRef} a été levée. Reprise au statut : ${tache.status}.`,
+          targetId: tache.id,
+          targetType: "TACHE",
+        });
+      }
 
       if (status === "A_VERIFIER" && tache.assignedToId) {
         // Notifier le relecteur/responsable : tâche soumise pour relecture
@@ -777,6 +820,12 @@ router.patch("/taches/:id", async (req, res) => {
 
 router.delete("/taches/:id", async (req, res) => {
   try {
+    if (req.user?.role === "Administrateur technique") {
+      return res.status(403).json({
+        error: "Accès refusé. L'administrateur technique n'a pas accès à la suppression de tâches.",
+      });
+    }
+
     const existingTache = await prisma.tache.findUnique({
       where: { id: req.params.id },
       include: {

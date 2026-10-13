@@ -17,51 +17,81 @@ const normalizeStatus = (status) => {
     .trim();
 };
 
-const validateTacheStatus = (fromStatus, toStatus, role) => {
+const validateTacheStatus = (fromStatus, toStatus, role, previousStatus = null) => {
   fromStatus = normalizeStatus(fromStatus);
   toStatus = normalizeStatus(toStatus);
   if (!toStatus || fromStatus === toStatus) return true;
+  
+  // L'Administrateur technique ne gère pas les tâches opérationnelles
+  if (role === "Administrateur technique") return false;
+
   const isSA = isSuperAdmin(role);
   const isRO = isResp(role);
   const isRel = isRelecteur(role);
   const isCol = isCollab(role);
   const isRespOrAdmin = isSA || isRO;
 
+  // Règle d'or : depuis EN_ATTENTE, on ne peut que retourner au previousStatus (ou BLOQUE par SA)
+  if (fromStatus === "EN_ATTENTE") {
+    if (toStatus === "BLOQUE") return isSA;
+    if (previousStatus && toStatus === normalizeStatus(previousStatus)) {
+      return isRespOrAdmin; // Seul SA ou Responsable
+    }
+    return false;
+  }
+
+  // Depuis BLOQUE : uniquement previousStatus par Super-Admin
+  if (fromStatus === "BLOQUE") {
+    if (previousStatus && toStatus === normalizeStatus(previousStatus)) {
+      return isSA;
+    }
+    return false;
+  }
+
   const VALID_TRANSITIONS = {
     NOUVEAU: {
       allowed: ["EN_COURS", "EN_ATTENTE", "BLOQUE"],
-      check: () => true
+      check: (t) => {
+        if (t === "EN_ATTENTE") return isRespOrAdmin;
+        if (t === "BLOQUE") return isSA;
+        return true;
+      }
     },
     EN_COURS: {
       allowed: ["EN_RELECTURE", "BLOQUE", "EN_ATTENTE"],
       check: (t) => {
-        if (t === "BLOQUE" && isCol) return false;
+        if (t === "EN_ATTENTE") return isRespOrAdmin;
+        if (t === "BLOQUE") return isSA;
         return true;
       }
     },
     EN_RELECTURE: {
-      allowed: ["EN_APPROBATION", "A_CORRIGER", "EN_ATTENTE"],
-      check: () => isSA || isRel
+      allowed: ["EN_APPROBATION", "A_CORRIGER", "EN_ATTENTE", "BLOQUE"],
+      check: (t) => {
+        if (t === "EN_ATTENTE") return isRespOrAdmin;
+        if (t === "BLOQUE") return isSA;
+        return isSA || isRel;
+      }
     },
     EN_APPROBATION: {
-      allowed: ["APPROUVEE", "A_CORRIGER", "EN_COURS"],
-      check: () => isSA || isRO
+      allowed: ["APPROUVEE", "A_CORRIGER", "EN_COURS", "EN_ATTENTE", "BLOQUE"],
+      check: (t) => {
+        if (t === "EN_ATTENTE") return isRespOrAdmin;
+        if (t === "BLOQUE") return isSA;
+        return isSA || isRO;
+      }
     },
     APPROUVEE: {
-      allowed: ["EN_COURS"],
+      allowed: ["TERMINE", "EN_COURS", "BLOQUE"],
       check: () => isSA
     },
     A_CORRIGER: {
-      allowed: ["EN_COURS", "BLOQUE"],
-      check: () => true
-    },
-    BLOQUE: {
-      allowed: ["EN_COURS"],
-      check: () => true
-    },
-    EN_ATTENTE: {
-      allowed: ["EN_COURS"],
-      check: () => true
+      allowed: ["EN_COURS", "EN_ATTENTE", "BLOQUE"],
+      check: (t) => {
+        if (t === "EN_ATTENTE") return isRespOrAdmin;
+        if (t === "BLOQUE") return isSA;
+        return true;
+      }
     },
     TERMINE: {
       allowed: ["EN_COURS"],
@@ -74,13 +104,31 @@ const validateTacheStatus = (fromStatus, toStatus, role) => {
   return rule.check(toStatus);
 };
 
-const validateMissionStatus = (fromStatus, toStatus, role) => {
+const validateMissionStatus = (fromStatus, toStatus, role, previousStatus = null) => {
   fromStatus = normalizeStatus(fromStatus);
   toStatus = normalizeStatus(toStatus);
   if (!toStatus || fromStatus === toStatus) return true;
+
+  if (role === "Administrateur technique") return false;
+
   const isSA = isSuperAdmin(role);
   const isRO = isResp(role);
   const isRespOrAdmin = isSA || isRO;
+
+  if (fromStatus === "EN_ATTENTE") {
+    if (toStatus === "BLOQUE") return isSA;
+    if (previousStatus && toStatus === normalizeStatus(previousStatus)) {
+      return isRespOrAdmin;
+    }
+    return false;
+  }
+
+  if (fromStatus === "BLOQUE") {
+    if (previousStatus && toStatus === normalizeStatus(previousStatus)) {
+      return isSA;
+    }
+    return false;
+  }
 
   const VALID_TRANSITIONS = {
     NOUVEAU: {
@@ -89,14 +137,6 @@ const validateMissionStatus = (fromStatus, toStatus, role) => {
     },
     EN_COURS: {
       allowed: ["TERMINE", "BLOQUE", "EN_ATTENTE"],
-      check: () => isRespOrAdmin
-    },
-    BLOQUE: {
-      allowed: ["EN_COURS"],
-      check: () => isRespOrAdmin
-    },
-    EN_ATTENTE: {
-      allowed: ["EN_COURS"],
       check: () => isRespOrAdmin
     },
     TERMINE: {

@@ -489,8 +489,8 @@ router.get("/dossiers", async (req, res) => {
 router.post("/dossiers", async (req, res) => {
   try {
     const userRole = req.user.role;
-    // Super-Admin, Admin Tech, Administrateur, Responsable Op. peuvent créer un dossier
-    if (!isManager(userRole)) {
+    // Super-Admin, Administrateur, Responsable Op. peuvent créer un dossier (Administrateur technique exclu)
+    if (userRole === "Administrateur technique" || !isManager(userRole)) {
       return res
         .status(403)
         .json({
@@ -581,6 +581,12 @@ router.patch("/dossiers/:id", async (req, res) => {
   try {
     const userRole = req.user.role;
     const userId = req.user.id;
+
+    if (userRole === "Administrateur technique") {
+      return res.status(403).json({
+        error: "Accès refusé. L'administrateur technique n'a pas accès à la gestion des dossiers.",
+      });
+    }
 
     // Prévention des actions concurrentes sur le statut
     const currentDossier = await prisma.dossier.findUnique({
@@ -755,7 +761,11 @@ router.patch("/dossiers/:id", async (req, res) => {
     const updateData = {};
     if (status !== undefined && status !== currentDossier.status) {
       updateData.status = status;
-      updateData.previousStatus = currentDossier.status;
+      if (currentDossier.status === "EN_ATTENTE") {
+        updateData.previousStatus = null;
+      } else {
+        updateData.previousStatus = currentDossier.status;
+      }
     }
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description;
@@ -774,6 +784,9 @@ router.patch("/dossiers/:id", async (req, res) => {
     if (updateData.status === "EN_ATTENTE") {
       const { cascadePauseDossier } = require("../../utils/statusCascade");
       await cascadePauseDossier(dossier.id);
+    } else if (currentDossier.status === "EN_ATTENTE") {
+      const { cascadeResumeDossier } = require("../../utils/statusCascade");
+      await cascadeResumeDossier(dossier.id);
     }
 
     await logAudit(

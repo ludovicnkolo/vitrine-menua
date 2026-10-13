@@ -294,8 +294,8 @@ router.get("/tasks", async (req, res) => {
 router.post("/tasks", async (req, res) => {
   try {
     const userRole = req.user.role;
-    // Relecteur et Collaborateur ne peuvent pas créer de missions
-    if (userRole === "Relecteur" || userRole === "Collaborateur") {
+    // Relecteur, Collaborateur et Administrateur technique ne peuvent pas créer de missions
+    if (userRole === "Relecteur" || userRole === "Collaborateur" || userRole === "Administrateur technique") {
       return res
         .status(403)
         .json({
@@ -532,6 +532,12 @@ router.patch("/tasks/:id", async (req, res) => {
   try {
     const userRole = req.user.role;
     const userId = req.user.id;
+
+    if (userRole === "Administrateur technique") {
+      return res.status(403).json({
+        error: "Accès refusé. L'administrateur technique n'a pas accès à la gestion des missions.",
+      });
+    }
 
     // ── Vérification Zero-Trust (Accès en Modification) ──────────────────────
     const currentMissionForAuth = await prisma.mission.findUnique({
@@ -780,7 +786,11 @@ router.patch("/tasks/:id", async (req, res) => {
       });
       if (currentTask && currentTask.status !== status) {
         dataToUpdate.status = status;
-        dataToUpdate.previousStatus = currentTask.status;
+        if (currentTask.status === "EN_ATTENTE") {
+          dataToUpdate.previousStatus = null;
+        } else {
+          dataToUpdate.previousStatus = currentTask.status;
+        }
       }
     }
 
@@ -792,6 +802,9 @@ router.patch("/tasks/:id", async (req, res) => {
     if (dataToUpdate.status === "EN_ATTENTE") {
       const { cascadePauseMission } = require("../../utils/statusCascade");
       await cascadePauseMission(task.id);
+    } else if (currentMissionForAuth.status === "EN_ATTENTE") {
+      const { cascadeResumeMission } = require("../../utils/statusCascade");
+      await cascadeResumeMission(task.id);
     }
 
     // ── Notifications Zero-Trust ────────────────────────────────────────────
@@ -857,6 +870,12 @@ router.patch("/tasks/:id", async (req, res) => {
 
 router.delete("/tasks/:id", async (req, res) => {
   try {
+    if (req.user?.role === "Administrateur technique") {
+      return res.status(403).json({
+        error: "Accès refusé. L'administrateur technique n'a pas accès à la suppression de missions.",
+      });
+    }
+
     const existingMission = await prisma.mission.findUnique({
       where: { id: req.params.id },
       include: { dossier: true },

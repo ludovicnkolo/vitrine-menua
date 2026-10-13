@@ -261,6 +261,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   // Super-admin / Responsable opérationnel, et aucun élément parent bloqué ou en attente.
   const canEditTaskRow = (task) => {
     if (!task) return false;
+    if (role === "Administrateur technique") return false;
     const isManager =
       role === "Super-administrateur" || role === "Responsable opérationnel";
     const locked = ["BLOQUE", "EN_ATTENTE"];
@@ -523,32 +524,40 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     };
     const lockedOnCurrent = () => make([currentStatus]);
 
+    if (role === "Administrateur technique") {
+      return lockedOnCurrent();
+    }
+
     if (entityMode === "TACHE") {
       const isAssigned = taskObj && taskObj.assignedToId === currentUser?.id;
       const isRelecteurAssigned = taskObj && taskObj.relecteurId === currentUser?.id;
       const isMissionResp = taskObj && taskObj.mission?.assignedToId === currentUser?.id;
 
+      // Seul le Super-administrateur ou le responsable assigné à la mission parente
+      const canPutOrResumeAttente = isSuperAdmin || isMissionResp;
+
       const isParentLocked = 
         taskObj && (
           ["BLOQUE", "EN_ATTENTE"].includes(taskObj.mission?.status) || 
-          ["BLOQUE", "EN_ATTENTE"].includes(taskObj.mission?.dossier?.status)
+          ["BLOQUE", "EN_ATTENTE"].includes(taskObj.mission?.dossier?.status) ||
+          ["BLOQUE", "EN_ATTENTE"].includes(taskObj.dossierTache?.status)
         );
-
-      const isDossierResp = taskObj && (taskObj.mission?.dossier?.traitantId === currentUser?.id || taskObj.dossierTache?.traitantId === currentUser?.id);
-      const canManageTaskAdmin = isSuperAdmin || isRelecteurAssigned || isMissionResp || isDossierResp;
 
       if (isParentLocked) return lockedOnCurrent();
 
       if (currentStatus === "BLOQUE") {
         if (isSuperAdmin && taskObj) {
-          return withCurrent([taskObj.previousStatus || "EN_COURS"]);
+          return withCurrent([taskObj.previousStatus || "NOUVEAU"]);
         }
         return lockedOnCurrent();
       }
 
       if (currentStatus === "EN_ATTENTE") {
-        if (canManageTaskAdmin || isAssigned) {
-          return withCurrent([taskObj?.previousStatus || "EN_COURS"]);
+        if (canPutOrResumeAttente) {
+          const targets = [];
+          if (isSuperAdmin) targets.push("BLOQUE");
+          targets.push(taskObj?.previousStatus || "NOUVEAU");
+          return withCurrent(targets);
         }
         return lockedOnCurrent();
       }
@@ -556,7 +565,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       const allowed = [];
       if (isSuperAdmin) allowed.push("BLOQUE");
 
-      if (canManageTaskAdmin) {
+      if (canPutOrResumeAttente) {
         allowed.push("EN_ATTENTE");
       }
 
@@ -1314,22 +1323,20 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       ? new Date(consultTask.echeance).toLocaleDateString("fr-FR")
       : "Non définie";
 
+    const role = currentUser?.role?.name || currentUser?.role || "";
+
     const canEditTask =
-      (currentUser?.role === "Super-administrateur" ||
-        currentUser?.role?.name === "Super-administrateur" ||
-        currentUser?.role === "Responsable opérationnel" ||
-        currentUser?.role?.name === "Responsable opérationnel") &&
+      role !== "Administrateur technique" &&
+      (role === "Super-administrateur" ||
+        role === "Responsable opérationnel") &&
       !(
         (consultTask?.status === "EN_FINALISATION" ||
           consultTask?.status === "EN_CONTROLE" ||
           consultTask?.status === "TERMINE") &&
         !(
-          currentUser?.role === "Relecteur" ||
-          currentUser?.role?.name === "Relecteur" ||
-          currentUser?.role === "Responsable opérationnel" ||
-          currentUser?.role?.name === "Responsable opérationnel" ||
-          currentUser?.role === "Super-administrateur" ||
-          currentUser?.role?.name === "Super-administrateur"
+          role === "Relecteur" ||
+          role === "Responsable opérationnel" ||
+          role === "Super-administrateur"
         )
       ) &&
       !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.status) &&
@@ -1337,7 +1344,6 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.dossier?.status) &&
       !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.mission?.dossier?.status);
 
-    const role = currentUser?.role?.name || currentUser?.role || "";
     const statusOptions = getAllowedStatuses(
       consultTask.status || "NOUVEAU",
       role,
@@ -1449,7 +1455,24 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 </button>
               )}
 
-
+            {canEditTask && (
+              <button
+                type="button"
+                onClick={() => openEditTask(consultTask)}
+                className="text-white font-semibold cursor-pointer flex items-center"
+                style={{
+                  background: "#2563EB",
+                  border: "none",
+                  padding: "0.55rem 1.1rem",
+                  borderRadius: "8px",
+                  fontSize: "0.85rem",
+                  gap: "0.4rem",
+                }}
+                title={mode === "MISSION" ? "Modifier la mission" : "Modifier la tâche"}
+              >
+                <Pencil size={15} /> Modifier
+              </button>
+            )}
 
             <button
               type="button"
@@ -1800,7 +1823,26 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             </div>
 
             {/* Alert Banner conforming to Screenshots 2 & 3 */}
-            {mode === "TACHE" &&
+            {consultTask.status === "EN_ATTENTE" ? (
+              <div
+                style={{
+                  background: "#FEF9C3",
+                  border: "1px solid #FEF08A",
+                  borderRadius: "8px",
+                  padding: "1.1rem 1.25rem",
+                  color: "#854D0E",
+                }}
+              >
+                <div className="font-bold flex items-center gap-2" style={{fontSize:"0.9rem",marginBottom:"0.25rem"}}>
+                  <span>⏸️</span> {mode === "MISSION" ? "Mission en attente" : "Tâche en attente"}
+                </div>
+                <div style={{ fontSize: "0.82rem", color: "#A16207" }}>
+                  {(isSuperAdmin || (mode === "TACHE" && consultTask.mission?.assignedToId === currentUser?.id) || (mode === "MISSION" && consultTask.dossier?.traitantId === currentUser?.id))
+                    ? `Cette ${mode === "MISSION" ? "mission" : "tâche"} est actuellement en attente. Statut avant suspension : "${consultTask.previousStatus || "Nouveau"}". Vous êtes autorisé à reprendre l'activité en rétablissant ce statut.`
+                    : `Cette ${mode === "MISSION" ? "mission" : "tâche"} est en attente. Seul le Super-administrateur ou le responsable opérationnel assigné à la mission peut lever l'attente.`}
+                </div>
+              </div>
+            ) : mode === "TACHE" &&
             (consultTask.status === "EN_APPROBATION" ||
               consultTask.status === "EN_RELECTURE") ? (
               <div
@@ -2023,8 +2065,22 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           <tbody>
             {tasks.map((t) => {
               const deadline = getDeadlineEvaluation(t);
+              const isLocked =
+                ["BLOQUE", "EN_ATTENTE"].includes(t.status) ||
+                ["BLOQUE", "EN_ATTENTE"].includes(t.mission?.status) ||
+                ["BLOQUE", "EN_ATTENTE"].includes(t.mission?.dossier?.status) ||
+                ["BLOQUE", "EN_ATTENTE"].includes(t.dossier?.status);
               return (
-                <tr key={t.id}>
+                <tr
+                  key={t.id}
+                  style={
+                    t.status === "EN_ATTENTE"
+                      ? { backgroundColor: "#FFFDF0", opacity: 0.88 }
+                      : isLocked
+                      ? { backgroundColor: "#F8FAFC", opacity: 0.75 }
+                      : {}
+                  }
+                >
                   <td className="text-left" style={{paddingLeft:"1.25rem"}}>
                     <div
                       className="truncate-name text-[var(--text-main)] font-normal" style={{maxWidth:"100%"}}

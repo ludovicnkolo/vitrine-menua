@@ -1,5 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma = require("../prisma");
 
 async function notifyUsers(recipients, payload) {
   if (!recipients || recipients.length === 0) return;
@@ -9,53 +8,55 @@ async function notifyUsers(recipients, payload) {
       userId,
       ...payload,
     })),
-  });
+  }).catch(() => {});
 }
 
 async function cascadePauseDossier(dossierId) {
-  // Find active missions
+  // Mettre en attente les missions actives
   const missionsToPause = await prisma.mission.findMany({
-     where: { dossierId: dossierId, status: { notIn: ["TERMINE", "ANNULEE", "CORBEILLE", "BLOQUE", "EN_ATTENTE"] } },
-     select: { id: true, status: true, reference: true, assignedToId: true }
+    where: {
+      dossierId: dossierId,
+      status: { notIn: ["TERMINE", "ANNULEE", "CORBEILLE", "BLOQUE", "EN_ATTENTE"] },
+    },
+    select: { id: true, status: true, reference: true, assignedToId: true },
   });
-  
+
   const missionRecipients = [];
-  
+
   for (const m of missionsToPause) {
-     await prisma.mission.update({
-        where: { id: m.id },
-        data: { status: "EN_ATTENTE", previousStatus: m.status }
-     });
-     if (m.assignedToId) {
-       missionRecipients.push(m.assignedToId);
-     }
+    await prisma.mission.update({
+      where: { id: m.id },
+      data: { status: "EN_ATTENTE", previousStatus: m.status },
+    });
+    if (m.assignedToId) {
+      missionRecipients.push(m.assignedToId);
+    }
   }
 
-  // Find active tasks
+  // Mettre en attente les tâches actives
   const tachesToPause = await prisma.tache.findMany({
-     where: { 
-        OR: [
-          { mission: { dossierId: dossierId } },
-          { dossierTacheId: dossierId }
-        ], 
-        status: { notIn: ["TERMINE", "ANNULEE", "CORBEILLE", "BLOQUE", "EN_ATTENTE", "VALIDEE"] } 
-     },
-     select: { id: true, status: true, reference: true, assignedToId: true }
+    where: {
+      OR: [
+        { mission: { dossierId: dossierId } },
+        { dossierTacheId: dossierId },
+      ],
+      status: { notIn: ["TERMINE", "ANNULEE", "CORBEILLE", "BLOQUE", "EN_ATTENTE"] },
+    },
+    select: { id: true, status: true, reference: true, assignedToId: true },
   });
-  
+
   const tacheRecipients = [];
 
   for (const t of tachesToPause) {
-     await prisma.tache.update({
-        where: { id: t.id },
-        data: { status: "EN_ATTENTE", previousStatus: t.status }
-     });
-     if (t.assignedToId) {
-       tacheRecipients.push(t.assignedToId);
-     }
+    await prisma.tache.update({
+      where: { id: t.id },
+      data: { status: "EN_ATTENTE", previousStatus: t.status },
+    });
+    if (t.assignedToId) {
+      tacheRecipients.push(t.assignedToId);
+    }
   }
 
-  // Notify affected users
   if (missionRecipients.length > 0) {
     await notifyUsers(missionRecipients, {
       type: "MISSION_EN_ATTENTE",
@@ -69,35 +70,91 @@ async function cascadePauseDossier(dossierId) {
     await notifyUsers(tacheRecipients, {
       type: "TACHE_EN_ATTENTE",
       title: "Tâche mise en attente",
-      message: `Une tâche sur laquelle vous êtes assigné a été mise en attente.`,
+      message: `Une tâche sur laquelle vous êtes assigné a été mise en attente suite à la mise en attente de son dossier parent.`,
+      targetType: "TACHE",
+    });
+  }
+}
+
+async function cascadeResumeDossier(dossierId) {
+  // Débloquer et restaurer les missions
+  const missionsToResume = await prisma.mission.findMany({
+    where: { dossierId, status: "EN_ATTENTE" },
+    select: { id: true, previousStatus: true, assignedToId: true },
+  });
+
+  const missionRecipients = [];
+  for (const m of missionsToResume) {
+    const restoredStatus = m.previousStatus || "NOUVEAU";
+    await prisma.mission.update({
+      where: { id: m.id },
+      data: { status: restoredStatus, previousStatus: null },
+    });
+    if (m.assignedToId) missionRecipients.push(m.assignedToId);
+  }
+
+  // Débloquer et restaurer les tâches
+  const tachesToResume = await prisma.tache.findMany({
+    where: {
+      OR: [
+        { mission: { dossierId } },
+        { dossierTacheId: dossierId },
+      ],
+      status: "EN_ATTENTE",
+    },
+    select: { id: true, previousStatus: true, assignedToId: true },
+  });
+
+  const tacheRecipients = [];
+  for (const t of tachesToResume) {
+    const restoredStatus = t.previousStatus || "NOUVEAU";
+    await prisma.tache.update({
+      where: { id: t.id },
+      data: { status: restoredStatus, previousStatus: null },
+    });
+    if (t.assignedToId) tacheRecipients.push(t.assignedToId);
+  }
+
+  if (missionRecipients.length > 0) {
+    await notifyUsers(missionRecipients, {
+      type: "MISSION_REPRISE",
+      title: "Mission réactivée",
+      message: `Votre mission a été réactivée suite au déblocage de son dossier parent.`,
+      targetType: "MISSION",
+    });
+  }
+
+  if (tacheRecipients.length > 0) {
+    await notifyUsers(tacheRecipients, {
+      type: "TACHE_REPRISE",
+      title: "Tâche réactivée",
+      message: `Votre tâche a été réactivée suite au déblocage de son dossier parent.`,
       targetType: "TACHE",
     });
   }
 }
 
 async function cascadePauseMission(missionId) {
-  // Find active tasks
   const tachesToPause = await prisma.tache.findMany({
-     where: { 
-        missionId: missionId,
-        status: { notIn: ["TERMINE", "ANNULEE", "CORBEILLE", "BLOQUE", "EN_ATTENTE", "VALIDEE"] } 
-     },
-     select: { id: true, status: true, reference: true, assignedToId: true }
+    where: {
+      missionId: missionId,
+      status: { notIn: ["TERMINE", "ANNULEE", "CORBEILLE", "BLOQUE", "EN_ATTENTE"] },
+    },
+    select: { id: true, status: true, reference: true, assignedToId: true },
   });
-  
+
   const tacheRecipients = [];
 
   for (const t of tachesToPause) {
-     await prisma.tache.update({
-        where: { id: t.id },
-        data: { status: "EN_ATTENTE", previousStatus: t.status }
-     });
-     if (t.assignedToId) {
-       tacheRecipients.push(t.assignedToId);
-     }
+    await prisma.tache.update({
+      where: { id: t.id },
+      data: { status: "EN_ATTENTE", previousStatus: t.status },
+    });
+    if (t.assignedToId) {
+      tacheRecipients.push(t.assignedToId);
+    }
   }
 
-  // Notify affected users
   if (tacheRecipients.length > 0) {
     await notifyUsers(tacheRecipients, {
       type: "TACHE_EN_ATTENTE",
@@ -108,7 +165,41 @@ async function cascadePauseMission(missionId) {
   }
 }
 
+async function cascadeResumeMission(missionId) {
+  const tachesToResume = await prisma.tache.findMany({
+    where: {
+      missionId: missionId,
+      status: "EN_ATTENTE",
+    },
+    select: { id: true, previousStatus: true, assignedToId: true },
+  });
+
+  const tacheRecipients = [];
+
+  for (const t of tachesToResume) {
+    const restoredStatus = t.previousStatus || "NOUVEAU";
+    await prisma.tache.update({
+      where: { id: t.id },
+      data: { status: restoredStatus, previousStatus: null },
+    });
+    if (t.assignedToId) {
+      tacheRecipients.push(t.assignedToId);
+    }
+  }
+
+  if (tacheRecipients.length > 0) {
+    await notifyUsers(tacheRecipients, {
+      type: "TACHE_REPRISE",
+      title: "Tâche réactivée",
+      message: `Votre tâche a été réactivée suite au déblocage de sa mission parente.`,
+      targetType: "TACHE",
+    });
+  }
+}
+
 module.exports = {
   cascadePauseDossier,
-  cascadePauseMission
+  cascadeResumeDossier,
+  cascadePauseMission,
+  cascadeResumeMission,
 };

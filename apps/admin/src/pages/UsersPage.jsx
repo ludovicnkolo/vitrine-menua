@@ -584,8 +584,11 @@ const UsersPage = ({ forceTab }) => {
       `/api/crm/users/${encodeURIComponent(userId)}/trigger-password-reset`,
       "POST",
       {},
-      () => {
-        window.customAlert("Un lien de réinitialisation a été envoyé à l'utilisateur.", "Succès");
+      (resData) => {
+        window.customAlert(
+          resData?.message || "Un lien de réinitialisation a été envoyé à l'utilisateur.",
+          "Succès"
+        );
         setConsultUser(null);
       },
       "Erreur lors du déclenchement de la réinitialisation",

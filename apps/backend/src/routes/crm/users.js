@@ -676,29 +676,45 @@ router.post(
       );
 
       const adminFrontend = getAdminUrl(req);
+      const setupLink = `${adminFrontend}/setup-password?token=${token}`;
 
-      await transporter.sendMail({
-        from: process.env.SMTP_FROM || "contact@menuaconsulting.com",
-        to: user.email,
-        subject: "Réinitialisation de votre mot de passe CRM Menua",
-        html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
-          <h2 style="color: #c99c5c;">Réinitialisation de mot de passe</h2>
-          <p>Bonjour ${user.name},</p>
-          <p>Un administrateur a déclenché une réinitialisation de votre mot de passe pour accéder au CRM Menua.</p>
-          <p>Veuillez vous rendre sur la page de connexion et utiliser la fonction <strong>"Mot de passe oublié ?"</strong> pour créer un nouveau mot de passe de façon sécurisée via OTP.</p>
-          <div style="text-align: center; margin: 20px 0;">
-            <a href="${adminFrontend}" style="background-color: #c99c5c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">Accéder au CRM</a>
+      try {
+        await transporter.sendMail({
+          from: process.env.SMTP_FROM || "contact@menuaconsulting.com",
+          to: user.email,
+          subject: "Réinitialisation de votre mot de passe CRM Menua Consulting",
+          html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 8px;">
+            <h2 style="color: #141824; margin-top: 0;">Réinitialisation de votre mot de passe</h2>
+            <p>Bonjour ${user.name},</p>
+            <p>Un administrateur a généré une demande de configuration / réinitialisation de votre mot de passe pour accéder au CRM <strong>MENUA CONSULTING</strong>.</p>
+            <p>Pour définir votre nouveau mot de passe, veuillez cliquer sur le bouton ci-dessous :</p>
+            <div style="text-align: center; margin: 25px 0;">
+              <a href="${setupLink}" style="display:inline-block;padding:12px 28px;background:#141824;color:#ffffff;text-decoration:none;border-radius:4px;font-weight:bold;">Définir mon mot de passe</a>
+            </div>
+            <p style="color: #64748b; font-size: 0.9em;">Ce lien est strictement personnel et reste valable pendant <strong>24 heures</strong>.</p>
+            <p style="color: #94a3b8; font-size: 0.85em; word-break: break-all;">Si le bouton ne fonctionne pas, copiez-collez ce lien :<br>${setupLink}</p>
+            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+            <p style="color: #64748b; font-size: 0.8em; margin-bottom: 0;">Équipe Support & Administration — MENUA CONSULTING</p>
           </div>
-          <p>Cordialement,<br>L'équipe Menua Consulting</p>
-        </div>
-        `,
-      });
+          `,
+        });
 
-      res.json({ success: true, message: "Lien de réinitialisation envoyé avec succès." });
+        res.json({
+          success: true,
+          message: `Lien de réinitialisation envoyé avec succès à ${user.email}.`,
+          resetLink: setupLink,
+        });
+      } catch (mailErr) {
+        console.error("Erreur SMTP lors de l'envoi du mail de réinitialisation:", mailErr);
+        res.status(502).json({
+          error: `Le lien a été généré mais l'e-mail n'a pas pu être délivré par le serveur mail (${mailErr.message}).`,
+          resetLink: setupLink,
+        });
+      }
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Erreur lors du déclenchement de la réinitialisation." });
+      console.error("Erreur trigger-password-reset:", error);
+      res.status(500).json({ error: "Erreur lors du déclenchement de la réinitialisation : " + error.message });
     }
   }
 );

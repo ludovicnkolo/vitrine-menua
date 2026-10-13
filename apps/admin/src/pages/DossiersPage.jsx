@@ -33,7 +33,9 @@ import GedExplorer, { flattenFolderIds } from "../components/GedExplorer";
 const DOSSIER_STATUS_LABELS = {
   NOUVEAU: "Nouveau",
   EN_COURS: "En cours",
+  EN_ATTENTE: "En attente",
   TERMINE: "Terminé",
+  CLOTURE: "Clôturé",
   ARCHIVE: "Archivé",
   BLOQUE: "Bloqué"
 };
@@ -864,7 +866,7 @@ const DossiersPage = () => {
           <button
             type="button"
             onClick={async () => {
-              if (await window.customConfirm(`Vous allez enregistrer 1 modification(s) sur ce dossier.\n\nStatut : ${pendingStatus}`, "Confirmer l'enregistrement")) {
+              if (await window.customConfirm(`Vous allez enregistrer 1 modification(s) sur ce dossier.\n\nStatut : ${DOSSIER_STATUS_LABELS[pendingStatus] || pendingStatus}`, "Confirmer l'enregistrement")) {
                 handleStatusAction(dossier.id, pendingStatus);
               }
             }}

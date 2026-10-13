@@ -214,31 +214,12 @@ httpServer.listen(PORT, () => {
     console.error("Failed to run seed_admin.js on startup:", err);
   }
 
-  // Lancement de l'export de la base de données toutes les 10 minutes
+  // Démarrage du planificateur de sauvegarde unifié (cycle 6h + OVH Object Storage privé)
   try {
-    const exportDatabase = require("../export_db");
-    // On fait un premier export au démarrage (optionnel, mais utile)
-    exportDatabase();
-
-    const intervalMinStr = process.env.DB_BACKUP_INTERVAL_MINUTES || "10";
-    const intervalMin = parseInt(intervalMinStr, 10);
-    if (intervalMin > 0) {
-      const intervalMs = intervalMin * 60 * 1000;
-      setInterval(() => {
-        const date = new Date().toLocaleString();
-        console.log(`[${date}] Nouvelle exécution planifiée de l'export...`);
-        exportDatabase();
-      }, intervalMs);
-      console.log(
-        `Tâche d'export automatique de la base de données configurée (toutes les ${intervalMin} min).`,
-      );
-    } else {
-      console.log(
-        `Export automatique désactivé (DB_BACKUP_INTERVAL_MINUTES=${intervalMinStr}).`,
-      );
-    }
+    const { startBackupScheduler } = require("./services/backupService");
+    startBackupScheduler();
   } catch (err) {
-    console.error("Erreur lors du paramétrage de l'export automatique :", err);
+    console.error("Erreur lors du démarrage du planificateur de sauvegarde :", err);
   }
 
   // Start Verifalia Cron

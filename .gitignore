@@ -58,3 +58,5 @@ apps/vitrine/public/uploads/
 storage/
 cypress/screenshots/
 cypress/videos/
+apps/backend/backups/db_backup_*.json
+apps/backend/backups/latest.json

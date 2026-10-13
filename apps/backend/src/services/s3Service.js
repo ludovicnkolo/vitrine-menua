@@ -5,6 +5,7 @@ const {
   DeleteObjectCommand,
   DeleteObjectsCommand,
   ListObjectVersionsCommand,
+  ListObjectsV2Command,
   HeadObjectCommand,
   CopyObjectCommand,
 } = require("@aws-sdk/client-s3");
@@ -244,9 +245,38 @@ async function renameInS3(oldKey, newKey) {
   return newKey;
 }
 
+/**
+ * Liste les objets du bucket S3 privé avec un préfixe donné (ex: backups/database/)
+ */
+async function listObjectsFromS3(prefix = "") {
+  const command = new ListObjectsV2Command({
+    Bucket: BUCKET_NAME,
+    Prefix: prefix,
+  });
+  const res = await s3Client.send(command);
+  return res.Contents || [];
+}
+
+/**
+ * Télécharge un objet S3 sous forme de Buffer
+ */
+async function getObjectBufferFromS3(key) {
+  const command = new GetObjectCommand({
+    Bucket: BUCKET_NAME,
+    Key: key,
+  });
+  const res = await s3Client.send(command);
+  const chunks = [];
+  for await (const chunk of res.Body) {
+    chunks.push(chunk instanceof Buffer ? chunk : Buffer.from(chunk));
+  }
+  return Buffer.concat(chunks);
+}
+
 module.exports = {
   s3Client,
   s3PublicClient,
+  BUCKET_NAME,
   PUBLIC_BUCKET_NAME,
   uploadToS3,
   uploadToPublicS3,
@@ -256,4 +286,6 @@ module.exports = {
   deleteFromS3,
   purgeFromS3,
   renameInS3,
+  listObjectsFromS3,
+  getObjectBufferFromS3,
 };

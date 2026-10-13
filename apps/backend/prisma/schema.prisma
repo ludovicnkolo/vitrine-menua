@@ -176,17 +176,18 @@ model FormulaireContact {
 
 // ─── DOSSIERS (Catégorisation des requêtes clients) ───────────────────────────
 model Dossier {
-  origin         String       @default("INTERNE")
-  createdById    String?
-  createdBy      Utilisateur? @relation(fields: [createdById], references: [id], onDelete: SetNull)
-  id             String       @id @default(uuid())
-  reference      String?      @unique
-  name           String
-  description    String?
-  status         String       @default("NOUVEAU")
-  previousStatus String?
-  priority       String       @default("NORMAL")
-  categorie      String?
+  origin            String         @default("INTERNE")
+  createdById       String?
+  createdBy         Utilisateur?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  id                String         @id @default(uuid())
+  reference         String?        @unique
+  name              String
+  description       String?
+  status            String         @default("NOUVEAU")
+  previousStatus    String?
+  statusBeforeTrash String?
+  priority          String         @default("NORMAL")
+  categorie         String?
 
   clientId String?
   client   Client? @relation(fields: [clientId], references: [id], onDelete: Cascade)
@@ -236,11 +237,12 @@ model Mission {
   createdById String
   createdBy   Utilisateur @relation("CreatedMissions", fields: [createdById], references: [id])
 
-  description    String
-  echeance       DateTime?
-  status         String    @default("TO_ASSIGN")
-  previousStatus String?
-  attachment     String?
+  description       String
+  echeance          DateTime?
+  status            String         @default("NOUVEAU")
+  previousStatus    String?
+  statusBeforeTrash String?
+  attachment        String?
 
   dossierMissionId String?
   dossierMission   Dossier? @relation("MissionDossierLinked", fields: [dossierMissionId], references: [id], onDelete: SetNull)
@@ -276,13 +278,14 @@ model Tache {
   createdById String
   createdBy   Utilisateur @relation("CreatedTaches", fields: [createdById], references: [id])
 
-  description     String
-  echeance        DateTime?
-  status          String    @default("TO_ASSIGN")
-  previousStatus  String?
-  attachment      String?
-  adminFeedback   String?
-  managerFeedback String?
+  description       String
+  echeance          DateTime?
+  status            String       @default("NOUVEAU")
+  previousStatus    String?
+  statusBeforeTrash String?
+  attachment        String?
+  adminFeedback     String?
+  managerFeedback   String?
 
   dossierTacheId String?
   dossierTache   Dossier? @relation("TacheDossierLinked", fields: [dossierTacheId], references: [id], onDelete: SetNull)

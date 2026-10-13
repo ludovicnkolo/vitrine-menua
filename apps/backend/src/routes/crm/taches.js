@@ -6,7 +6,7 @@ const simpleParser = require("mailparser").simpleParser;
 const fs = require("node:fs");
 const path = require("node:path");
 const router = express.Router();
-const { validateTacheStatus, normalizeStatus } = require('../../utils/statusRules');
+const { canTransitionTache, normalizeStatus } = require('../../utils/statusRules');
 
 
 const {
@@ -548,81 +548,17 @@ router.patch("/taches/:id", async (req, res) => {
     if (status !== undefined && status !== currentTache.status) {
       const from = currentTache.status;
       const to = status;
-      let allowed = false;
 
-      const isAssigned = currentTache.assignedToId === userId;
-      const isRelecteurAssigned = currentTache.relecteurId === userId;
-      const isMissionResp = currentTache.mission?.assignedToId === userId;
-      
-      // Seul le Super-administrateur ou l'assigné à la mission parente peut mettre en attente ou lever l'attente
-      const canPutOrResumeAttente = isSA || isMissionResp;
+      // ── Contexte déterministe — délégation totale à statusRules.js ──────────
+      const context = {
+        role: userRole,
+        isSA,
+        isAssigned: currentTache.assignedToId === userId,
+        isRelecteurAssigned: currentTache.relecteurId === userId,
+        isMissionManager: currentTache.mission?.assignedToId === userId || dossierTraitantId === userId,
+      };
 
-      if (from === "BLOQUE") {
-        if (!isSA) {
-          return res.status(403).json({ error: "Seul un Super-Administrateur peut débloquer une tâche." });
-        }
-        const expectedPrevious = currentTache.previousStatus || "NOUVEAU";
-        if (to !== expectedPrevious) {
-          return res.status(403).json({ error: `Une tâche bloquée ne peut retourner qu'à son statut précédent (${expectedPrevious}).` });
-        }
-        allowed = true;
-      } else if (from === "EN_ATTENTE") {
-        if (!canPutOrResumeAttente) {
-          return res.status(403).json({
-            error: "Accès refusé. Seul le Super-administrateur ou le responsable assigné à la mission peut lever la mise en attente de cette tâche.",
-          });
-        }
-        if (to === "BLOQUE") {
-          if (!isSA) return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut bloquer une tâche." });
-          allowed = true;
-        } else {
-          const expectedPrevious = currentTache.previousStatus || "NOUVEAU";
-          if (to === expectedPrevious) {
-            allowed = true;
-          } else {
-            return res.status(403).json({
-              error: `Une tâche en attente ne peut retourner qu'à son statut précédent (${expectedPrevious}).`,
-            });
-          }
-        }
-      } else {
-        if (to === "BLOQUE") {
-          if (!isSA) return res.status(403).json({ error: "Accès refusé. Seul un Super-Administrateur peut bloquer une tâche." });
-          allowed = true;
-        } else if (to === "EN_ATTENTE") {
-          if (!canPutOrResumeAttente) {
-            return res.status(403).json({
-              error: "Accès refusé. Seul le Super-administrateur ou le responsable assigné à la mission peut mettre cette tâche en attente.",
-            });
-          }
-          allowed = true;
-        } else {
-          switch (from) {
-            case "NOUVEAU":
-            case "A_CORRIGER":
-              if (to === "EN_COURS" && (isSA || isAssigned)) allowed = true;
-              break;
-            case "EN_COURS":
-              if (to === "EN_RELECTURE" && (isSA || isAssigned)) allowed = true;
-              break;
-            case "EN_RELECTURE":
-              if (to === "EN_APPROBATION" && (isSA || isRelecteurAssigned)) allowed = true;
-              if (to === "A_CORRIGER" && (isSA || isRelecteurAssigned)) allowed = true;
-              break;
-            case "EN_APPROBATION":
-              if (to === "APPROUVEE" && isSA) allowed = true;
-              if (to === "A_CORRIGER" && (isSA || isRelecteurAssigned)) allowed = true;
-              break;
-            case "APPROUVEE":
-              if (to === "TERMINE" && isSA) allowed = true;
-              break;
-            case "TERMINE":
-              break;
-          }
-        }
-      }
-
-      if (!allowed) {
+      if (!canTransitionTache(from, to, currentTache.previousStatus, context)) {
         return res.status(403).json({
           error: `Accès refusé. Vous ne pouvez pas passer cette tâche de '${from}' à '${to}'.`,
         });

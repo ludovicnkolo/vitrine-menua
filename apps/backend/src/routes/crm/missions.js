@@ -5,7 +5,7 @@ const imaps = require("imap-simple");
 const simpleParser = require("mailparser").simpleParser;
 const fs = require("node:fs");
 const router = express.Router();
-const { validateMissionStatus, normalizeStatus } = require('../../utils/statusRules');
+const { canTransitionMission, normalizeStatus } = require('../../utils/statusRules');
 
 
 const {
@@ -686,91 +686,33 @@ router.patch("/tasks/:id", async (req, res) => {
       dataToUpdate.relecteurId = relecteurId;
     }
 
-    // Statut BLOQUÉ réservé aux Super-Admin / Admin Tech
-    if (status === "BLOQUE" && !isSuperAdmin(userRole)) {
-      return res
-        .status(403)
-        .json({
-          error:
-            "Accès refusé. Seul un Super-Administrateur peut bloquer une mission.",
-        });
-    }
 
     if (status !== undefined) {
       const from = currentMissionForAuth.status;
       const to = status;
       const isSA = isSuperAdmin(userRole);
-      const isRO = userRole === "Responsable opérationnel";
-      const isRespOrAdmin = isSA || isRO;
-
-      // ── Règles Spécifiques de Mission ─────────────────────────────────────
       const isAssigned = currentMissionForAuth.assignedToId === userId;
       const isDossierResp = currentMissionForAuth.dossier?.traitantId === userId;
-      const canManageMission = isSA || isAssigned || isDossierResp;
-      let allowed = false;
 
-      // Auto states that cannot be manually set
-      if ((to === "NOUVEAU" || to === "EN_COURS" || to === "TERMINE") && from !== "BLOQUE" && from !== "EN_ATTENTE") {
-         return res.status(403).json({ error: `Le statut '${to}' est automatique et ne peut pas être forcé manuellement.` });
-      }
+      // ── Contexte déterministe — délégation totale à statusRules.js ──────────
+      const context = {
+        role: userRole,
+        isSA,
+        isMissionManager: isSA || isAssigned || isDossierResp,
+        isDossierManager: isSA || isDossierResp,
+      };
 
-      if (from === "BLOQUE") {
-        if (!isSA) {
-          return res.status(403).json({ error: "Seul un Super-Administrateur peut débloquer." });
-        }
-        if (to !== currentMissionForAuth.previousStatus) {
-          return res.status(403).json({ error: `Une mission bloquée ne peut retourner qu'à son statut précédent (${currentMissionForAuth.previousStatus}).` });
-        }
-        allowed = true;
-      } else if (from === "EN_ATTENTE") {
-        if (!canManageMission) {
-          return res.status(403).json({ error: "Accès refusé. Seul l'assigné, le responsable du dossier ou le Super-Admin peut lever l'attente." });
-        }
-        if (to === "BLOQUE") {
-          if (!isSA) return res.status(403).json({ error: "Seul un Super-Admin peut bloquer." });
-          allowed = true;
-        } else if (to === currentMissionForAuth.previousStatus) {
-          allowed = true;
-        } else if (to === "ANNULEE" || to === "ANNULEE") {
-          allowed = true;
-        } else {
-          return res.status(403).json({ error: `Une mission en attente ne peut retourner qu'à son statut précédent (${currentMissionForAuth.previousStatus}) ou être bloquée/annulée.` });
-        }
-      } else {
-        // Target is BLOQUE
-        if (to === "BLOQUE") {
-          if (!isSA) return res.status(403).json({ error: "Seul un Super-Admin peut bloquer." });
-          allowed = true;
-        } 
-        // Target is EN_ATTENTE
-        else if (to === "EN_ATTENTE") {
-          if (!canManageMission) {
-             return res.status(403).json({ error: "Accès refusé pour mettre en attente." });
-          }
-          allowed = true;
-        }
-        // Target is ANNULEE
-        else if (to === "ANNULEE" || to === "ANNULEE") {
-          if (!canManageMission) {
-             return res.status(403).json({ error: "Accès refusé pour annuler." });
-          }
-          allowed = true;
-        }
-      }
-
-      if (!allowed) {
+      if (!canTransitionMission(from, to, currentMissionForAuth.previousStatus, context)) {
         return res.status(403).json({
           error: `Transition invalide ou non autorisée : de '${from}' à '${to}'.`,
         });
       }
 
-
-
-      if (status === "TERMINE" || status === "TERMINE") {
+      if (status === "TERMINE") {
         const incompleteTaches = await prisma.tache.count({
           where: {
             missionId: req.params.id,
-            status: { notIn: ["TERMINE", "TERMINE", "ANNULEE", "ANNULEE"] },
+            status: { notIn: ["TERMINE", "ANNULEE"] },
           },
         });
         if (incompleteTaches > 0) {

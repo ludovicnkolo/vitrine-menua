@@ -1,116 +1,25 @@
 import React from "react";
 import { AlertCircle, CheckCircle, Clock } from "lucide-react";
+import { STATUS_CONFIG } from "./constants";
 // --- HELPERS (Badges) ---
 function getStatusBadge(status) {
-  const map = {
-    // ─── DICTIONNAIRE STRICT DES STATUTS ───
-
-    // STATUTS COMMUNS (Dossier, Mission, Tache)
-    NOUVEAU: { text: "Nouveau", class: "badge-new" },
-    
-    EN_COURS: { text: "En cours", class: "badge-progress" }, // Tache
-    EN_ATTENTE: { text: "En attente", class: "badge-warning" },
-    BLOQUE: {
-      text: "Bloqué",
-      style: {
-        backgroundColor: "#FEE2E2",
-        color: "#B91C1C",
+  const cfg = STATUS_CONFIG[status];
+  if (!cfg) {
+    return <span className="badge badge-new">{status}</span>;
+  }
+  const style = cfg.badgeClass
+    ? {}
+    : {
+        backgroundColor: cfg.bg,
+        color: cfg.color,
         padding: "0.25rem 0.6rem",
         borderRadius: "9999px",
         fontSize: "0.75rem",
         fontWeight: 400,
-      },
-    },
-    TERMINE: { text: "Terminé", class: "badge-success" },
-    ARCHIVE: {
-      text: "Archivé",
-      style: {
-        backgroundColor: "#F3F4F6",
-        color: "#4B5563",
-        padding: "0.25rem 0.6rem",
-        borderRadius: "9999px",
-        fontSize: "0.75rem",
-        fontWeight: 400,
-      },
-    },
-    ANNULEE: {
-      text: "Annulé",
-      style: {
-        backgroundColor: "#FEE2E2",
-        color: "#B91C1C",
-        padding: "0.25rem 0.6rem",
-        borderRadius: "9999px",
-        fontSize: "0.75rem",
-        fontWeight: 400,
-      },
-    },
-
-    // SPECIFIQUES CONTROLE QUALITE (Tache)
-    VERIFIER: { text: "À vérifier", class: "badge-warning" },
-    A_CORRIGER: {
-      text: "À corriger",
-      style: {
-        backgroundColor: "#FEF2F2",
-        color: "#DC2626",
-        padding: "0.25rem 0.6rem",
-        borderRadius: "9999px",
-        fontSize: "0.75rem",
-        fontWeight: 400,
-      },
-    },
-    FINALISER: {
-      text: "Finalisé (Attente Clôture)",
-      style: {
-        backgroundColor: "#EDE9FE",
-        color: "#6D28D9",
-        padding: "0.25rem 0.6rem",
-        borderRadius: "9999px",
-        fontSize: "0.75rem",
-        fontWeight: 400,
-      },
-    },
-    REATTRIBUE: { text: "Réattribuée", class: "badge-warning" },
-
-    // NOUVEAUX STATUTS TACHE / MISSION / DOSSIER
-    EN_RELECTURE: {
-      text: "En relecture",
-      style: {
-        backgroundColor: "#FEF3C7",
-        color: "#D97706",
-        padding: "0.25rem 0.6rem",
-        borderRadius: "9999px",
-        fontSize: "0.75rem",
-        fontWeight: 400,
-      },
-    },
-    EN_APPROBATION: {
-      text: "En approbation",
-      style: {
-        backgroundColor: "#FEF3C7",
-        color: "#D97706",
-        padding: "0.25rem 0.6rem",
-        borderRadius: "9999px",
-        fontSize: "0.75rem",
-        fontWeight: 400,
-      },
-    },
-    APPROUVEE: { text: "Approuvée", class: "badge-success" },
-    CLOTURE: { text: "Clôturé", class: "badge-success" },
-
-    // STATUTS SYSTEMES OU FALLBACKS
-    Actif: {
-      text: "Actif",
-      style: { backgroundColor: "#DEF7EC", color: "#03543F" },
-    },
-    Inactif: {
-      text: "Inactif",
-      style: { backgroundColor: "#FDE8E8", color: "#9B1C1C" },
-    },
-  };
-  const s = map[status] || { text: status, class: "badge-new" };
+      };
   return (
-    <span className={`badge ${s.class || ""}`} style={s.style || {}}>
-      {s.text}
+    <span className={`badge ${cfg.badgeClass || ""}`} style={style}>
+      {cfg.label}
     </span>
   );
 }

@@ -11,9 +11,9 @@ async function notifyUsers(recipients, payload) {
   }).catch(() => {});
 }
 
-async function cascadePauseDossier(dossierId) {
-  // Mettre en attente les missions actives
-  const missionsToPause = await prisma.mission.findMany({
+async function cascadePauseDossier(dossierId, tx = prisma) {
+  // 1. Mettre en attente les missions actives
+  const missionsToPause = await tx.mission.findMany({
     where: {
       dossierId: dossierId,
       status: { notIn: ["TERMINE", "ANNULEE", "CORBEILLE", "BLOQUE", "EN_ATTENTE"] },
@@ -24,7 +24,7 @@ async function cascadePauseDossier(dossierId) {
   const missionRecipients = [];
 
   for (const m of missionsToPause) {
-    await prisma.mission.update({
+    await tx.mission.update({
       where: { id: m.id },
       data: { status: "EN_ATTENTE", previousStatus: m.status },
     });
@@ -33,8 +33,8 @@ async function cascadePauseDossier(dossierId) {
     }
   }
 
-  // Mettre en attente les tâches actives
-  const tachesToPause = await prisma.tache.findMany({
+  // 2. Mettre en attente les tâches actives
+  const tachesToPause = await tx.tache.findMany({
     where: {
       OR: [
         { mission: { dossierId: dossierId } },
@@ -48,7 +48,7 @@ async function cascadePauseDossier(dossierId) {
   const tacheRecipients = [];
 
   for (const t of tachesToPause) {
-    await prisma.tache.update({
+    await tx.tache.update({
       where: { id: t.id },
       data: { status: "EN_ATTENTE", previousStatus: t.status },
     });
@@ -76,25 +76,25 @@ async function cascadePauseDossier(dossierId) {
   }
 }
 
-async function cascadeResumeDossier(dossierId) {
-  // Débloquer et restaurer les missions
-  const missionsToResume = await prisma.mission.findMany({
+async function cascadeResumeDossier(dossierId, tx = prisma) {
+  // 1. Débloquer et restaurer les missions
+  const missionsToResume = await tx.mission.findMany({
     where: { dossierId, status: "EN_ATTENTE" },
     select: { id: true, previousStatus: true, assignedToId: true },
   });
 
   const missionRecipients = [];
   for (const m of missionsToResume) {
-    const restoredStatus = m.previousStatus || "NOUVEAU";
-    await prisma.mission.update({
+    const targetStatus = m.previousStatus || "EN_COURS";
+    await tx.mission.update({
       where: { id: m.id },
-      data: { status: restoredStatus, previousStatus: null },
+      data: { status: targetStatus, previousStatus: "EN_ATTENTE" },
     });
     if (m.assignedToId) missionRecipients.push(m.assignedToId);
   }
 
-  // Débloquer et restaurer les tâches
-  const tachesToResume = await prisma.tache.findMany({
+  // 2. Débloquer et restaurer les tâches à leur étape opérationnelle exacte
+  const tachesToResume = await tx.tache.findMany({
     where: {
       OR: [
         { mission: { dossierId } },
@@ -107,10 +107,10 @@ async function cascadeResumeDossier(dossierId) {
 
   const tacheRecipients = [];
   for (const t of tachesToResume) {
-    const restoredStatus = t.previousStatus || "NOUVEAU";
-    await prisma.tache.update({
+    const targetStatus = t.previousStatus || "EN_COURS";
+    await tx.tache.update({
       where: { id: t.id },
-      data: { status: restoredStatus, previousStatus: null },
+      data: { status: targetStatus, previousStatus: "EN_ATTENTE" },
     });
     if (t.assignedToId) tacheRecipients.push(t.assignedToId);
   }
@@ -134,8 +134,8 @@ async function cascadeResumeDossier(dossierId) {
   }
 }
 
-async function cascadePauseMission(missionId) {
-  const tachesToPause = await prisma.tache.findMany({
+async function cascadePauseMission(missionId, tx = prisma) {
+  const tachesToPause = await tx.tache.findMany({
     where: {
       missionId: missionId,
       status: { notIn: ["TERMINE", "ANNULEE", "CORBEILLE", "BLOQUE", "EN_ATTENTE"] },
@@ -146,7 +146,7 @@ async function cascadePauseMission(missionId) {
   const tacheRecipients = [];
 
   for (const t of tachesToPause) {
-    await prisma.tache.update({
+    await tx.tache.update({
       where: { id: t.id },
       data: { status: "EN_ATTENTE", previousStatus: t.status },
     });
@@ -165,8 +165,8 @@ async function cascadePauseMission(missionId) {
   }
 }
 
-async function cascadeResumeMission(missionId) {
-  const tachesToResume = await prisma.tache.findMany({
+async function cascadeResumeMission(missionId, tx = prisma) {
+  const tachesToResume = await tx.tache.findMany({
     where: {
       missionId: missionId,
       status: "EN_ATTENTE",
@@ -177,10 +177,10 @@ async function cascadeResumeMission(missionId) {
   const tacheRecipients = [];
 
   for (const t of tachesToResume) {
-    const restoredStatus = t.previousStatus || "NOUVEAU";
-    await prisma.tache.update({
+    const targetStatus = t.previousStatus || "EN_COURS";
+    await tx.tache.update({
       where: { id: t.id },
-      data: { status: restoredStatus, previousStatus: null },
+      data: { status: targetStatus, previousStatus: "EN_ATTENTE" },
     });
     if (t.assignedToId) {
       tacheRecipients.push(t.assignedToId);

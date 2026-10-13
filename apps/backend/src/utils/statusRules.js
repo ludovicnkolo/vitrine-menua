@@ -1,7 +1,10 @@
-const isSuperAdmin = (role) => role === "Super-administrateur";
-const isResp = (role) => role === "Responsable opérationnel";
-const isRelecteur = (role) => role === "Relecteur";
-const isCollab = (role) => role === "Collaborateur";
+const ROLES = {
+  SUPER_ADMIN: "Super-administrateur",
+  RESPONSABLE: "Responsable opérationnel",
+  RELECTEUR: "Relecteur",
+  COLLABORATEUR: "Collaborateur",
+  ADMIN_TECH: "Administrateur technique",
+};
 
 /**
  * Normalise un statut en supprimant tout accent, en passant en majuscules
@@ -17,145 +20,164 @@ const normalizeStatus = (status) => {
     .trim();
 };
 
+/**
+ * Matrice déterministe pour TÂCHE :
+ * context = { role, isSA, isAssigned, isRelecteurAssigned, isMissionManager }
+ */
+const TACHE_TRANSITIONS = {
+  NOUVEAU: {
+    EN_COURS: (ctx) => ctx.isSA || ctx.isAssigned,
+    EN_ATTENTE: (ctx) => ctx.isSA || ctx.isMissionManager,
+    BLOQUE: (ctx) => ctx.isSA,
+  },
+  EN_COURS: {
+    EN_RELECTURE: (ctx) => ctx.isSA || ctx.isAssigned,
+    EN_ATTENTE: (ctx) => ctx.isSA || ctx.isMissionManager,
+    BLOQUE: (ctx) => ctx.isSA,
+  },
+  EN_RELECTURE: {
+    EN_APPROBATION: (ctx) => ctx.isSA || ctx.isRelecteurAssigned,
+    A_CORRIGER: (ctx) => ctx.isSA || ctx.isRelecteurAssigned,
+    EN_ATTENTE: (ctx) => ctx.isSA || ctx.isMissionManager,
+    BLOQUE: (ctx) => ctx.isSA,
+  },
+  EN_APPROBATION: {
+    APPROUVEE: (ctx) => ctx.isSA || ctx.isMissionManager,
+    A_CORRIGER: (ctx) => ctx.isSA || ctx.isMissionManager || ctx.isRelecteurAssigned,
+    EN_ATTENTE: (ctx) => ctx.isSA || ctx.isMissionManager,
+    BLOQUE: (ctx) => ctx.isSA,
+  },
+  APPROUVEE: {
+    TERMINE: (ctx) => ctx.isSA || ctx.isMissionManager,
+    BLOQUE: (ctx) => ctx.isSA,
+  },
+  A_CORRIGER: {
+    EN_COURS: (ctx) => ctx.isSA || ctx.isAssigned,
+    EN_ATTENTE: (ctx) => ctx.isSA || ctx.isMissionManager,
+    BLOQUE: (ctx) => ctx.isSA,
+  },
+  EN_ATTENTE: {
+    RESUME: (ctx) => ctx.isSA || ctx.isMissionManager,
+    BLOQUE: (ctx) => ctx.isSA,
+  },
+  BLOQUE: {
+    RESUME: (ctx) => ctx.isSA,
+  },
+  TERMINE: {
+    EN_COURS: (ctx) => ctx.isSA,
+  },
+};
+
+function canTransitionTache(from, to, previousStatus, context) {
+  if (!context || context.role === ROLES.ADMIN_TECH) return false;
+  from = normalizeStatus(from);
+  to = normalizeStatus(to);
+
+  if (!to || from === to) return true;
+
+  // Gestion des retours d'attente / blocage
+  if (from === "EN_ATTENTE" || from === "BLOQUE") {
+    if (to === "BLOQUE" && context.isSA) return true;
+    const expected = normalizeStatus(previousStatus) || "NOUVEAU";
+    if (to === expected) {
+      return from === "BLOQUE"
+        ? TACHE_TRANSITIONS.BLOQUE.RESUME(context)
+        : TACHE_TRANSITIONS.EN_ATTENTE.RESUME(context);
+    }
+    return false;
+  }
+
+  const allowedRule = TACHE_TRANSITIONS[from]?.[to];
+  return typeof allowedRule === "function" ? allowedRule(context) : false;
+}
+
+/**
+ * Matrice déterministe pour MISSION :
+ * context = { role, isSA, isMissionManager, isDossierManager }
+ */
+const MISSION_TRANSITIONS = {
+  NOUVEAU: {
+    EN_COURS: (ctx) => ctx.isSA || ctx.isMissionManager || ctx.isDossierManager,
+    EN_ATTENTE: (ctx) => ctx.isSA || ctx.isMissionManager || ctx.isDossierManager,
+    BLOQUE: (ctx) => ctx.isSA,
+  },
+  EN_COURS: {
+    TERMINE: (ctx) => ctx.isSA || ctx.isMissionManager || ctx.isDossierManager,
+    EN_ATTENTE: (ctx) => ctx.isSA || ctx.isMissionManager || ctx.isDossierManager,
+    BLOQUE: (ctx) => ctx.isSA,
+    ANNULEE: (ctx) => ctx.isSA || ctx.isMissionManager || ctx.isDossierManager,
+  },
+  EN_ATTENTE: {
+    RESUME: (ctx) => ctx.isSA || ctx.isMissionManager || ctx.isDossierManager,
+    BLOQUE: (ctx) => ctx.isSA,
+    ANNULEE: (ctx) => ctx.isSA || ctx.isMissionManager || ctx.isDossierManager,
+  },
+  BLOQUE: {
+    RESUME: (ctx) => ctx.isSA,
+  },
+  TERMINE: {
+    EN_COURS: (ctx) => ctx.isSA,
+  },
+};
+
+function canTransitionMission(from, to, previousStatus, context) {
+  if (!context || context.role === ROLES.ADMIN_TECH) return false;
+  from = normalizeStatus(from);
+  to = normalizeStatus(to);
+
+  if (!to || from === to) return true;
+
+  if (from === "EN_ATTENTE" || from === "BLOQUE") {
+    if (to === "BLOQUE" && context.isSA) return true;
+    if (to === "ANNULEE" && (context.isSA || context.isMissionManager || context.isDossierManager)) return true;
+    const expected = normalizeStatus(previousStatus) || "NOUVEAU";
+    if (to === expected) {
+      return from === "BLOQUE"
+        ? MISSION_TRANSITIONS.BLOQUE.RESUME(context)
+        : MISSION_TRANSITIONS.EN_ATTENTE.RESUME(context);
+    }
+    return false;
+  }
+
+  const allowedRule = MISSION_TRANSITIONS[from]?.[to];
+  return typeof allowedRule === "function" ? allowedRule(context) : false;
+}
+
+// Helpers de rétro-compatibilité
+const isSuperAdminRole = (role) => role === ROLES.SUPER_ADMIN;
+const isRespRole = (role) => role === ROLES.RESPONSABLE;
+
 const validateTacheStatus = (fromStatus, toStatus, role, previousStatus = null) => {
-  fromStatus = normalizeStatus(fromStatus);
-  toStatus = normalizeStatus(toStatus);
-  if (!toStatus || fromStatus === toStatus) return true;
-  
-  // L'Administrateur technique ne gère pas les tâches opérationnelles
-  if (role === "Administrateur technique") return false;
-
-  const isSA = isSuperAdmin(role);
-  const isRO = isResp(role);
-  const isRel = isRelecteur(role);
-  const isCol = isCollab(role);
-  const isRespOrAdmin = isSA || isRO;
-
-  // Règle d'or : depuis EN_ATTENTE, on ne peut que retourner au previousStatus (ou BLOQUE par SA)
-  if (fromStatus === "EN_ATTENTE") {
-    if (toStatus === "BLOQUE") return isSA;
-    if (previousStatus && toStatus === normalizeStatus(previousStatus)) {
-      return isRespOrAdmin; // Seul SA ou Responsable
-    }
-    return false;
-  }
-
-  // Depuis BLOQUE : uniquement previousStatus par Super-Admin
-  if (fromStatus === "BLOQUE") {
-    if (previousStatus && toStatus === normalizeStatus(previousStatus)) {
-      return isSA;
-    }
-    return false;
-  }
-
-  const VALID_TRANSITIONS = {
-    NOUVEAU: {
-      allowed: ["EN_COURS", "EN_ATTENTE", "BLOQUE"],
-      check: (t) => {
-        if (t === "EN_ATTENTE") return isRespOrAdmin;
-        if (t === "BLOQUE") return isSA;
-        return true;
-      }
-    },
-    EN_COURS: {
-      allowed: ["EN_RELECTURE", "BLOQUE", "EN_ATTENTE"],
-      check: (t) => {
-        if (t === "EN_ATTENTE") return isRespOrAdmin;
-        if (t === "BLOQUE") return isSA;
-        return true;
-      }
-    },
-    EN_RELECTURE: {
-      allowed: ["EN_APPROBATION", "A_CORRIGER", "EN_ATTENTE", "BLOQUE"],
-      check: (t) => {
-        if (t === "EN_ATTENTE") return isRespOrAdmin;
-        if (t === "BLOQUE") return isSA;
-        return isSA || isRel;
-      }
-    },
-    EN_APPROBATION: {
-      allowed: ["APPROUVEE", "A_CORRIGER", "EN_COURS", "EN_ATTENTE", "BLOQUE"],
-      check: (t) => {
-        if (t === "EN_ATTENTE") return isRespOrAdmin;
-        if (t === "BLOQUE") return isSA;
-        return isSA || isRO;
-      }
-    },
-    APPROUVEE: {
-      allowed: ["TERMINE", "EN_COURS", "BLOQUE"],
-      check: () => isSA
-    },
-    A_CORRIGER: {
-      allowed: ["EN_COURS", "EN_ATTENTE", "BLOQUE"],
-      check: (t) => {
-        if (t === "EN_ATTENTE") return isRespOrAdmin;
-        if (t === "BLOQUE") return isSA;
-        return true;
-      }
-    },
-    TERMINE: {
-      allowed: ["EN_COURS"],
-      check: () => isSA
-    }
+  const isSA = isSuperAdminRole(role);
+  const isRO = isRespRole(role);
+  const ctx = {
+    role,
+    isSA,
+    isAssigned: isSA || role === ROLES.COLLABORATEUR,
+    isRelecteurAssigned: isSA || role === ROLES.RELECTEUR,
+    isMissionManager: isSA || isRO,
   };
-
-  const rule = VALID_TRANSITIONS[fromStatus];
-  if (!rule || !rule.allowed.includes(toStatus)) return false;
-  return rule.check(toStatus);
+  return canTransitionTache(fromStatus, toStatus, previousStatus, ctx);
 };
 
 const validateMissionStatus = (fromStatus, toStatus, role, previousStatus = null) => {
-  fromStatus = normalizeStatus(fromStatus);
-  toStatus = normalizeStatus(toStatus);
-  if (!toStatus || fromStatus === toStatus) return true;
-
-  if (role === "Administrateur technique") return false;
-
-  const isSA = isSuperAdmin(role);
-  const isRO = isResp(role);
-  const isRespOrAdmin = isSA || isRO;
-
-  if (fromStatus === "EN_ATTENTE") {
-    if (toStatus === "BLOQUE") return isSA;
-    if (previousStatus && toStatus === normalizeStatus(previousStatus)) {
-      return isRespOrAdmin;
-    }
-    return false;
-  }
-
-  if (fromStatus === "BLOQUE") {
-    if (previousStatus && toStatus === normalizeStatus(previousStatus)) {
-      return isSA;
-    }
-    return false;
-  }
-
-  const VALID_TRANSITIONS = {
-    NOUVEAU: {
-      allowed: ["EN_COURS", "EN_ATTENTE", "BLOQUE"],
-      check: () => isRespOrAdmin
-    },
-    EN_COURS: {
-      allowed: ["TERMINE", "BLOQUE", "EN_ATTENTE"],
-      check: () => isRespOrAdmin
-    },
-    TERMINE: {
-      allowed: ["EN_COURS"],
-      check: () => isSA
-    }
+  const isSA = isSuperAdminRole(role);
+  const isRO = isRespRole(role);
+  const ctx = {
+    role,
+    isSA,
+    isMissionManager: isSA || isRO,
+    isDossierManager: isSA || isRO,
   };
-
-  const rule = VALID_TRANSITIONS[fromStatus];
-  if (!rule || !rule.allowed.includes(toStatus)) return false;
-  return rule.check(toStatus);
+  return canTransitionMission(fromStatus, toStatus, previousStatus, ctx);
 };
 
 const validateMessageStatus = (fromStatus, toStatus, category, role) => {
   fromStatus = normalizeStatus(fromStatus);
   toStatus = normalizeStatus(toStatus);
   if (!toStatus || fromStatus === toStatus) return true;
-  const isSA = isSuperAdmin(role);
-  const isRO = isResp(role);
+  const isSA = isSuperAdminRole(role);
+  const isRO = isRespRole(role);
 
   if (!isSA && !isRO && category !== "interne") return false;
 
@@ -166,7 +188,7 @@ const validateMessageStatus = (fromStatus, toStatus, category, role) => {
       A_RAPPELER: ["DISCUSSION", "SANS_SUITE", "GAGNE"],
       DISCUSSION: ["A_RAPPELER", "SANS_SUITE", "GAGNE"],
       SANS_SUITE: ["DISCUSSION"],
-      GAGNE: []
+      GAGNE: [],
     };
   } else if (category === "recrutement") {
     rule = {
@@ -174,18 +196,18 @@ const validateMessageStatus = (fromStatus, toStatus, category, role) => {
       A_RAPPELER: ["ENTRETIEN", "REFUSE"],
       ENTRETIEN: ["A_RAPPELER", "RETENU", "REFUSE"],
       RETENU: [],
-      REFUSE: []
+      REFUSE: [],
     };
   } else if (category === "interne") {
     rule = {
       NON_CONSULTE: ["CONSULTE"],
-      CONSULTE: ["NON_CONSULTE"]
+      CONSULTE: ["NON_CONSULTE"],
     };
   } else {
     rule = {
       NOUVEAU: ["A_RAPPELER", "TRAITE"],
       A_RAPPELER: ["TRAITE"],
-      TRAITE: ["NOUVEAU"]
+      TRAITE: ["NOUVEAU"],
     };
   }
 
@@ -194,8 +216,13 @@ const validateMessageStatus = (fromStatus, toStatus, category, role) => {
 };
 
 module.exports = {
+  ROLES,
   normalizeStatus,
+  TACHE_TRANSITIONS,
+  canTransitionTache,
+  MISSION_TRANSITIONS,
+  canTransitionMission,
   validateTacheStatus,
   validateMissionStatus,
-  validateMessageStatus
+  validateMessageStatus,
 };

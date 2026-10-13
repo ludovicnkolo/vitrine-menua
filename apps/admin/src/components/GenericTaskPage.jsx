@@ -504,7 +504,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     const isCollab = role === "Collaborateur";
     const isRespOrAdmin = isResp || isSuperAdmin;
 
-    const ALL_LABELS = {
+    const ALL_LABELS_TACHE = {
       NOUVEAU: "Nouveau",
       EN_COURS: "En cours",
       EN_RELECTURE: "En relecture",
@@ -513,9 +513,17 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       A_CORRIGER: "À corriger",
       BLOQUE: "Bloqué",
       EN_ATTENTE: "En attente",
-      
       TERMINE: "Terminé",
     };
+    const ALL_LABELS_MISSION = {
+      NOUVEAU: "Nouveau",
+      EN_COURS: "En cours",
+      EN_ATTENTE: "En attente",
+      BLOQUE: "Bloqué",
+      TERMINE: "Terminé",
+      ANNULEE: "Annulée",
+    };
+    const ALL_LABELS = entityMode === "TACHE" ? ALL_LABELS_TACHE : ALL_LABELS_MISSION;
     const make = (vals) =>
       vals.map((v) => ({ value: v, label: ALL_LABELS[v] || v }));
     const withCurrent = (vals) => {
@@ -531,9 +539,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     if (entityMode === "TACHE") {
       const isAssigned = taskObj && taskObj.assignedToId === currentUser?.id;
       const isRelecteurAssigned = taskObj && taskObj.relecteurId === currentUser?.id;
-      const isMissionResp = taskObj && taskObj.mission?.assignedToId === currentUser?.id;
+      const isMissionResp = taskObj && (
+        taskObj.mission?.assignedToId === currentUser?.id ||
+        taskObj.dossierTache?.traitantId === currentUser?.id ||
+        taskObj.mission?.dossier?.traitantId === currentUser?.id
+      );
 
-      // Seul le Super-administrateur ou le responsable assigné à la mission parente
+      // Miroir exact de TACHE_TRANSITIONS.EN_ATTENTE.RESUME / BLOQUE.RESUME
       const canPutOrResumeAttente = isSuperAdmin || isMissionResp;
 
       const isParentLocked = 
@@ -562,13 +574,15 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         return lockedOnCurrent();
       }
 
-      const allowed = [];
-      if (isSuperAdmin) allowed.push("BLOQUE");
-
-      if (canPutOrResumeAttente) {
-        allowed.push("EN_ATTENTE");
+      if (currentStatus === "TERMINE") {
+        return lockedOnCurrent();
       }
 
+      const allowed = [];
+      if (isSuperAdmin) allowed.push("BLOQUE");
+      if (canPutOrResumeAttente) allowed.push("EN_ATTENTE");
+
+      // Miroir exact de TACHE_TRANSITIONS (statusRules.js)
       switch (currentStatus) {
         case "NOUVEAU":
         case "A_CORRIGER":
@@ -581,15 +595,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           if (isSuperAdmin || isRelecteurAssigned) allowed.push("EN_APPROBATION", "A_CORRIGER");
           break;
         case "EN_APPROBATION":
-          if (isSuperAdmin) allowed.push("APPROUVEE");
-          if (isSuperAdmin || isRelecteurAssigned) allowed.push("A_CORRIGER");
+          // isMissionManager = isSA || isMissionResp (miroir statusRules.js)
+          if (isSuperAdmin || isMissionResp) allowed.push("APPROUVEE");
+          if (isSuperAdmin || isMissionResp || isRelecteurAssigned) allowed.push("A_CORRIGER");
           break;
         case "APPROUVEE":
-          if (isSuperAdmin) allowed.push("TERMINE");
+          if (isSuperAdmin || isMissionResp) allowed.push("TERMINE");
           break;
-        case "TERMINE":
-          // Remove EN_ATTENTE and BLOQUE if already TERMINE (usually terminal)
-          return lockedOnCurrent();
       }
 
       if (allowed.length > 0) return withCurrent([...new Set(allowed)]);

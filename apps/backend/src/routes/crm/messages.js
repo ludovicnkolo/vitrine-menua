@@ -418,6 +418,13 @@ router.get("/messages", async (req, res) => {
         where.status = statusFilter;
       }
 
+      andConditions.push({
+        nomPrenom: { not: { contains: "MENUA CONSULTING" } },
+      });
+      andConditions.push({
+        nomPrenom: { not: { contains: "Menua Consulting" } },
+      });
+
       if (dateFilter) {
         const filterDate = new Date(dateFilter);
         filterDate.setHours(0, 0, 0, 0);
@@ -452,35 +459,40 @@ router.get("/messages", async (req, res) => {
         include: { contact: true, recrutement: true },
       });
 
-      messages = records.map((f) => ({
-        id: f.id,
-        type: f.type,
-        status: f.status,
-        statusSubmitter: f.statusSubmitter,
-        nomPrenom: f.nomPrenom,
-        email: f.email,
-        telephone: f.telephone,
-        raisonSocial: f.raisonSocial,
-        description: f.description,
-        objet:
-          f.objet ||
-          (f.type === "CONTACT" ? "Demande de contact" : "Candidature"),
-        bodyHtml: f.bodyHtml,
-        createdAt: f.createdAt,
-        contact: f.contact,
-        recrutement: f.recrutement,
-        verifaliaStatus: f.verifaliaStatus,
-        priorite:
-          f.priority && f.priority.toUpperCase() === "URGENT"
-            ? "Urgent"
-            : f.priority && f.priority.toUpperCase() === "PRIORITAIRE"
-            ? "Prioritaire"
-            : "Normal",
-        dateRappel: f.dateRappel,
-        noteRappel: f.noteRappel,
-        dateEntretien: f.dateEntretien,
-        lienVisio: f.lienVisio,
-      }));
+      messages = records
+        .filter((f) => {
+          const nom = (f.nomPrenom || "").trim().toUpperCase();
+          return !nom.includes("MENUA CONSULTING");
+        })
+        .map((f) => ({
+          id: f.id,
+          type: f.type,
+          status: f.status,
+          statusSubmitter: f.statusSubmitter,
+          nomPrenom: f.nomPrenom,
+          email: f.email,
+          telephone: f.telephone,
+          raisonSocial: f.raisonSocial,
+          description: f.description,
+          objet:
+            f.objet ||
+            (f.type === "CONTACT" ? "Demande de contact" : "Candidature"),
+          bodyHtml: f.bodyHtml,
+          createdAt: f.createdAt,
+          contact: f.contact,
+          recrutement: f.recrutement,
+          verifaliaStatus: f.verifaliaStatus,
+          priorite:
+            f.priority && f.priority.toUpperCase() === "URGENT"
+              ? "Urgent"
+              : f.priority && f.priority.toUpperCase() === "PRIORITAIRE"
+              ? "Prioritaire"
+              : "Normal",
+          dateRappel: f.dateRappel,
+          noteRappel: f.noteRappel,
+          dateEntretien: f.dateEntretien,
+          lienVisio: f.lienVisio,
+        }));
     } else {
       let where = { type: tabType, isDeleted: false };
 
@@ -505,6 +517,13 @@ router.get("/messages", async (req, res) => {
       }
 
       const andConditions = [];
+      andConditions.push({
+        nomPrenom: { not: { contains: "MENUA CONSULTING" } },
+      });
+      andConditions.push({
+        nomPrenom: { not: { contains: "Menua Consulting" } },
+      });
+
       if (dateFilter) {
         const filterDate = new Date(dateFilter);
         filterDate.setHours(0, 0, 0, 0);
@@ -546,7 +565,12 @@ router.get("/messages", async (req, res) => {
         include: { dossier: true, mission: true, Tache: true },
       });
 
-      messages = records.map((e) => ({
+      messages = records
+        .filter((e) => {
+          const nom = (e.nomPrenom || "").trim().toUpperCase();
+          return !nom.includes("MENUA CONSULTING");
+        })
+        .map((e) => ({
         id: e.id,
         type: e.type,
         status: e.status,

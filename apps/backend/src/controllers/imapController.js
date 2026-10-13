@@ -107,6 +107,22 @@ const syncMessages = async (req, res) => {
       if (!existing) {
         const { subject, nomPrenom, email, bodyText, date } =
           extractEmailData(parsed);
+
+        const nomUpper = (nomPrenom || "").trim().toUpperCase();
+        const fromUpper = (parsed.from?.text || "").toUpperCase();
+        const emailLower = (email || "").toLowerCase();
+        const imapUserLower = (process.env.IMAP_USER || "contact@menuaconsulting.com").toLowerCase();
+
+        // Exclure tout mail ayant le nom MENUA CONSULTING ou émis par le compte du site
+        if (
+          nomUpper.includes("MENUA CONSULTING") ||
+          fromUpper.includes("MENUA CONSULTING") ||
+          emailLower === imapUserLower
+        ) {
+          console.log(`[IMAP Sync] Mail MENUA CONSULTING ignoré : ${subject}`);
+          continue;
+        }
+
         // Upload asynchrone sur S3
         const attachmentKeys = await saveAttachments(parsed.attachments);
 

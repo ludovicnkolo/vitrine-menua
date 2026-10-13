@@ -245,6 +245,10 @@ router.get("/dashboard-stats", async (req, res) => {
       status: { notIn: ["TRAITE", "TERMINE", "ARCHIVE", "GAGNE"] },
       priorite: { in: ["URGENT", "Urgent"] },
       isDeleted: false,
+      AND: [
+        { nomPrenom: { not: { contains: "MENUA CONSULTING" } } },
+        { nomPrenom: { not: { contains: "Menua Consulting" } } },
+      ],
     };
     const urgentsMessages = await prisma.messagePersonnel.count({
       where: whereUrgentsMsg,
@@ -354,6 +358,10 @@ router.get("/dashboard-stats", async (req, res) => {
         type: "PERSONNEL",
         status: { in: ["REPONDU", "TRAITE", "SANS_SUITE", "GAGNE", "TERMINE", "ARCHIVE", "CONSULTE"] },
         isDeleted: false,
+        AND: [
+          { nomPrenom: { not: { contains: "MENUA CONSULTING" } } },
+          { nomPrenom: { not: { contains: "Menua Consulting" } } },
+        ],
         createdAt: { gte: startPeriod, lte: endPeriod },
       },
     });

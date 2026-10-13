@@ -55,8 +55,8 @@ async function main() {
         }
     }
 
-    const adminEmail = process.env.MASTER_ADMIN_EMAIL || 'admin@menua.local';
-    const adminPass = process.env.MASTER_ADMIN_PASSWORD || 'ChangeMe123!';
+    const adminEmail = process.env.MASTER_ADMIN_EMAIL || 'r.fouelefack@menuaconsulting.com';
+    const adminPass = process.env.MASTER_ADMIN_PASSWORD || 'Menua2026?consulting';
     const hashedPassword = await bcrypt.hash(adminPass, 10);
     
     let u = await prisma.utilisateur.findUnique({ where: { email: adminEmail } });
@@ -65,11 +65,15 @@ async function main() {
             data: { 
                 email: adminEmail, 
                 password: hashedPassword, 
-                name: process.env.MASTER_ADMIN_NAME || 'Super Administrateur', 
-                telephone: process.env.MASTER_ADMIN_PHONE || '',
-                lieuResidence: process.env.MASTER_ADMIN_RESIDENCE || '',
-                experienceCle: process.env.MASTER_ADMIN_EXPERIENCE || '',
-                profile: process.env.MASTER_ADMIN_PROFILE || '',
+                name: process.env.MASTER_ADMIN_NAME || 'Rosette Fouelefack', 
+                telephone: process.env.MASTER_ADMIN_PHONE || '+33659207511',
+                lieuResidence: process.env.MASTER_ADMIN_RESIDENCE || 'Paris, France',
+                experienceCle: process.env.MASTER_ADMIN_EXPERIENCE || 'Back & Middle Office Agile, Conformité et gestion des risques patrimoniaux',
+                profile: process.env.MASTER_ADMIN_PROFILE || 'Directrice de Menua Consulting, experte en finance, risques et conformité.',
+                langues: 'Français',
+                status: 'Actif',
+                poleActivite: 'Direction Générale',
+                fonction: 'Directrice Générale',
                 roleId: adminRole.id 
             }
         });
@@ -78,16 +82,35 @@ async function main() {
         await prisma.utilisateur.update({
             where: { id: u.id },
             data: { 
-                name: process.env.MASTER_ADMIN_NAME || 'Super Administrateur', 
-                telephone: process.env.MASTER_ADMIN_PHONE || '',
-                lieuResidence: process.env.MASTER_ADMIN_RESIDENCE || '',
-                experienceCle: process.env.MASTER_ADMIN_EXPERIENCE || '',
-                profile: process.env.MASTER_ADMIN_PROFILE || '',
+                name: process.env.MASTER_ADMIN_NAME || 'Rosette Fouelefack', 
+                telephone: process.env.MASTER_ADMIN_PHONE || '+33659207511',
+                lieuResidence: process.env.MASTER_ADMIN_RESIDENCE || 'Paris, France',
+                experienceCle: process.env.MASTER_ADMIN_EXPERIENCE || 'Back & Middle Office Agile, Conformité et gestion des risques patrimoniaux',
+                profile: process.env.MASTER_ADMIN_PROFILE || 'Directrice de Menua Consulting, experte en finance, risques et conformité.',
+                langues: 'Français',
+                status: 'Actif',
                 roleId: adminRole.id, 
                 password: hashedPassword 
             }
         });
         console.log("Admin already exists, role updated:", u.email);
+    }
+
+    // Pôles d'activité par défaut
+    const POLES_DEFAULT = [
+        { name: 'Finance & Comptabilité', description: 'Gestion financière, trésorerie et comptabilité agile' },
+        { name: 'Assurance & Prévoyance', description: 'Souscription, gestion des contrats et sinistres' },
+        { name: 'Gestion de Patrimoine (CGP)', description: 'Conseil en investissement et ingénierie patrimoniale' },
+        { name: 'Juridique & Conformité', description: 'Audit réglementaire, conformité ACPR/AMF et contrats' },
+        { name: 'Direction Générale', description: 'Pilotage stratégique et gouvernance' }
+    ];
+
+    for (const p of POLES_DEFAULT) {
+        const existing = await prisma.poleActivite.findUnique({ where: { name: p.name } }).catch(() => null);
+        if (!existing) {
+            await prisma.poleActivite.create({ data: p }).catch(() => null);
+            console.log("Pole created:", p.name);
+        }
     }
 }
 main().then(() => process.exit(0)).catch(e => { console.error(e); process.exit(1); });

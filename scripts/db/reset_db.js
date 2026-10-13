@@ -49,41 +49,61 @@ async function reset() {
   console.log('\n🗑️  Suppression de toutes les données...\n');
 
   // Ordre impératif : d'abord les feuilles, puis les racines
-  await prisma.document.deleteMany({});
+  if (prisma.document) await prisma.document.deleteMany({});
   console.log('  ✓ Documents supprimés');
 
-  await prisma.auditLog.deleteMany({});
+  if (prisma.auditLog) await prisma.auditLog.deleteMany({});
   console.log('  ✓ AuditLogs supprimés');
 
-  await prisma.tache.deleteMany({});
+  if (prisma.tache) await prisma.tache.deleteMany({});
   console.log('  ✓ Tâches supprimées');
 
-  await prisma.messagePersonnel.deleteMany({});
+  if (prisma.messagePersonnel) await prisma.messagePersonnel.deleteMany({});
   console.log('  ✓ MessagePersonnels supprimés');
 
-  await prisma.mission.deleteMany({});
+  if (prisma.notification) await prisma.notification.deleteMany({}).catch(() => {});
+  console.log('  ✓ Notifications supprimées');
+
+  if (prisma.lienMagique) await prisma.lienMagique.deleteMany({}).catch(() => {});
+  console.log('  ✓ Liens magiques supprimés');
+
+  if (prisma.publication) await prisma.publication.deleteMany({}).catch(() => {});
+  console.log('  ✓ Publications CMS supprimées');
+
+  if (prisma.mission) await prisma.mission.deleteMany({});
   console.log('  ✓ Missions supprimées');
 
-  await prisma.formulaireRecrutement.deleteMany({});
-  await prisma.formulaireContact.deleteMany({});
-  await prisma.formulaire.deleteMany({});
+  if (prisma.formulaireRecrutement) await prisma.formulaireRecrutement.deleteMany({});
+  if (prisma.formulaireContact) await prisma.formulaireContact.deleteMany({});
+  if (prisma.formulaire) await prisma.formulaire.deleteMany({});
   console.log('  ✓ Formulaires supprimés');
 
-  await prisma.dossier.deleteMany({});
+  if (prisma.dossier) await prisma.dossier.deleteMany({});
   console.log('  ✓ Dossiers supprimés');
 
-  await prisma.clientEntreprise.deleteMany({});
-  await prisma.client.deleteMany({});
+  if (prisma.clientEntreprise) await prisma.clientEntreprise.deleteMany({});
+  if (prisma.client) await prisma.client.deleteMany({});
   console.log('  ✓ Clients supprimés');
 
-  await prisma.utilisateur.deleteMany({});
+  if (prisma.poleActivite) await prisma.poleActivite.deleteMany({}).catch(() => {});
+  console.log('  ✓ Pôles d\'activité supprimés');
+
+  if (prisma.utilisateur) await prisma.utilisateur.deleteMany({});
   console.log('  ✓ Utilisateurs supprimés');
 
-  await prisma.role.deleteMany({});
+  if (prisma.role) await prisma.role.deleteMany({});
   console.log('  ✓ Rôles supprimés');
 
   console.log('\n✅ Base de données vidée.\n');
 }
+
+const POLES_DEFAULT = [
+  { name: 'Finance & Comptabilité', description: 'Gestion financière, trésorerie et comptabilité agile' },
+  { name: 'Assurance & Prévoyance', description: 'Souscription, gestion des contrats et sinistres' },
+  { name: 'Gestion de Patrimoine (CGP)', description: 'Conseil en investissement et ingénierie patrimoniale' },
+  { name: 'Juridique & Conformité', description: 'Audit réglementaire, conformité ACPR/AMF et contrats' },
+  { name: 'Direction Générale', description: 'Pilotage stratégique et gouvernance' }
+];
 
 async function seed() {
   console.log('🌱 Création des rôles par défaut...\n');
@@ -100,6 +120,16 @@ async function seed() {
     console.log(`  ✓ Rôle créé : ${role.name}`);
     if (r.name === 'Super-administrateur') {
       adminRole = role;
+    }
+  }
+
+  console.log('\n🌱 Création des pôles d\'activité par défaut...\n');
+  for (const p of POLES_DEFAULT) {
+    try {
+      await prisma.poleActivite.create({ data: p });
+      console.log(`  ✓ Pôle créé : ${p.name}`);
+    } catch (err) {
+      console.log(`  - Pôle déjà présent : ${p.name}`);
     }
   }
 
@@ -124,6 +154,10 @@ async function seed() {
       lieuResidence: adminResidence,
       experienceCle: adminExp,
       profile: adminProfile,
+      langues: 'Français',
+      status: 'Actif',
+      poleActivite: 'Direction Générale',
+      fonction: 'Directrice Générale',
       roleId: adminRole.id
     }
   });
@@ -132,6 +166,7 @@ async function seed() {
   console.log(`    - Email    : ${admin.email}`);
   console.log(`    - Nom      : ${admin.name}`);
   console.log(`    - Rôle     : ${adminRole.name}`);
+  console.log(`    - Statut   : ${admin.status}`);
   console.log(`    - Mot de passe (clair) : ${adminPass}\n`);
   console.log('🎉 Initialisation terminée avec succès.\n');
 }

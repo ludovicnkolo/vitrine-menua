@@ -58,6 +58,21 @@ async function main() {
     if (parsed.replyTo && parsed.replyTo.value && parsed.replyTo.value.length > 0) {
       email = parsed.replyTo.value[0].address;
     }
+
+    const nomUpper = (nomPrenom || "").trim().toUpperCase();
+    const fromUpper = (parsed.from?.text || "").toUpperCase();
+    const emailLower = (email || "").toLowerCase();
+    const imapUserLower = (process.env.IMAP_USER || "contact@menuaconsulting.com").toLowerCase();
+
+    // Exclure tout mail ayant le nom MENUA CONSULTING ou émis par le compte du site
+    if (
+      nomUpper.includes("MENUA CONSULTING") ||
+      fromUpper.includes("MENUA CONSULTING") ||
+      emailLower === imapUserLower
+    ) {
+      console.log(`[-] Mail MENUA CONSULTING ignoré : ${subject}`);
+      continue;
+    }
     
     const bodyText = parsed.text || "Aucun contenu";
     const date = parsed.date || new Date();

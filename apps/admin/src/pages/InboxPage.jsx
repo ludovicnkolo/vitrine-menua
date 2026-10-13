@@ -317,7 +317,11 @@ const InboxPage = ({ userRole }) => {
       if (resMsgs.ok) {
         const result = await resMsgs.json();
         const rawMsgs = result.data || (Array.isArray(result) ? result : []);
-        const sortedMsgs = [...rawMsgs].sort(
+        const filteredMsgs = rawMsgs.filter((m) => {
+          const nom = (m.nomPrenom || m.nom || "").trim().toUpperCase();
+          return !nom.includes("MENUA CONSULTING");
+        });
+        const sortedMsgs = [...filteredMsgs].sort(
           (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
         );
         if (result.data) {

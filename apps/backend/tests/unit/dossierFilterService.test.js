@@ -43,26 +43,24 @@ describe("Dossier Filter Service & RBAC Pyramid Tests", () => {
       expect(filter).toEqual({});
     });
 
-    test("Collaborateur standard voit ses dossiers et ceux de ses missions, mais PAS ceux où il n'a qu'une tâche", () => {
+    test("Collaborateur standard ne voit QUE les dossiers où il est traitant ou créateur (aucune remontée ascendante de mission ou tâche)", () => {
       const filter = buildDossierAccessFilter(collaborateurUser);
       expect(filter.OR).toBeDefined();
       expect(Array.isArray(filter.OR)).toBe(true);
 
-      // Doit inclure traitantId et createdById
-      expect(filter.OR).toEqual(
-        expect.arrayContaining([
-          { traitantId: collaborateurUser.id },
-          { createdById: collaborateurUser.id },
-        ])
-      );
+      // Doit inclure STRICTEMENT traitantId et createdById
+      expect(filter.OR).toEqual([
+        { traitantId: collaborateurUser.id },
+        { createdById: collaborateurUser.id },
+      ]);
 
-      // Doit inclure l'assignation via mission
+      // Ne doit JAMAIS inclure les missions (pas de fuite ascendante de dossier)
       const hasMissionCheck = filter.OR.some(
         (c) => c.missions && c.missions.some
       );
-      expect(hasMissionCheck).toBe(true);
+      expect(hasMissionCheck).toBe(false);
 
-      // Ne doit PAS inclure les tâches seules pour un non-relecteur
+      // Ne doit PAS inclure les tâches pour un non-relecteur
       const hasTacheUpward = filter.OR.some(
         (c) => c.missions?.some?.taches !== undefined || c.tachesLinked !== undefined
       );
@@ -85,13 +83,12 @@ describe("Dossier Filter Service & RBAC Pyramid Tests", () => {
       expect(filter).toEqual({
         OR: [
           { assignes: { some: { id: collaborateurUser.id } } },
-          { missions: { some: { assignes: { some: { id: collaborateurUser.id } } } } },
         ],
       });
 
       const relFilter = buildDossierAccessFilter(relecteurUser, { genericSchema: true });
-      expect(relFilter.OR.length).toBe(3);
-      expect(relFilter.OR[2]).toEqual({
+      expect(relFilter.OR.length).toBe(2);
+      expect(relFilter.OR[1]).toEqual({
         missions: {
           some: {
             taches: {

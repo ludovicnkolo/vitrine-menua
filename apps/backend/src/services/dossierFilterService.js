@@ -39,12 +39,9 @@ function buildDossierAccessFilter(user, options = {}) {
     const conditions = [
       // Règle racine : assigné directement au dossier
       { assignes: { some: { id: userId } } },
-
-      // Règle intermédiaire : assigné à une mission du dossier
-      { missions: { some: { assignes: { some: { id: userId } } } } },
     ];
 
-    // Exception Relecteur : visibilité ascendante si assigné à une tâche
+    // Exception Relecteur : visibilité ascendante exceptionnelle si assigné en relecture
     if (isUserRelecteur) {
       conditions.push({
         missions: {
@@ -63,38 +60,23 @@ function buildDossierAccessFilter(user, options = {}) {
   }
 
   // Mode schéma réel (compatibilité base SQLite / schema.prisma)
+  // Règle pyramidale descendante stricte :
+  // Le dossier n'est visible que par son Traitant ou son Créateur (ou Super-admin).
+  // L'assignation à une mission ou tâche ne fait JAMAIS remonter le dossier parent pour un collaborateur/responsable.
   const conditions = [
-    // Règle racine : assigné directement au dossier (traitant ou créateur)
     { traitantId: userId },
     { createdById: userId },
-
-    // Règle intermédiaire : assigné à une mission du dossier
-    {
-      missions: {
-        some: {
-          OR: [
-            { assignedToId: userId },
-            { relecteurId: userId },
-            { createdById: userId },
-          ],
-        },
-      },
-    },
   ];
 
-  // Exception Relecteur : visibilité ascendante si assigné à une tâche
+  // Exception Relecteur : visibilité ascendante de contrôle qualité si assigné en relecture
   if (isUserRelecteur) {
     conditions.push({
       missions: {
         some: {
-          taches: {
-            some: {
-              OR: [
-                { relecteurId: userId },
-                { assignedToId: userId },
-              ],
-            },
-          },
+          OR: [
+            { relecteurId: userId },
+            { taches: { some: { relecteurId: userId } } },
+          ],
         },
       },
     });
@@ -102,10 +84,7 @@ function buildDossierAccessFilter(user, options = {}) {
     conditions.push({
       tachesLinked: {
         some: {
-          OR: [
-            { relecteurId: userId },
-            { assignedToId: userId },
-          ],
+          relecteurId: userId,
         },
       },
     });

@@ -217,6 +217,10 @@ router.get("/dossiers", async (req, res) => {
     }
     // Super-Admin, Admin Tech, Administrateur : pas de filtre sur le propriétaire
 
+    if (req.query.rootOnly === "true") {
+      where.AND.push({ parentDossierId: null });
+    }
+
     // ── Filtre BLOQUÉ ─────────────────────────────────────────────────────────
     if (status && status !== "all") {
       where.AND.push({ status: status });

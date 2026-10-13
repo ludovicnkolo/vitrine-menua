@@ -4,6 +4,7 @@ import {
   formatDate,
   getStatusBadge,
   getPriorityBadge,
+  getDeadlineEvaluation,
 } from "../utils/helpers";
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -22,6 +23,7 @@ import {
   Target,
   Paperclip,
   X,
+  AlertTriangle,
 } from "lucide-react";
 import ActionDropdown from "../components/ActionDropdown";
 import FilePreviewModal from "../components/FilePreviewModal";
@@ -1698,21 +1700,44 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 </div>
 
                 {/* Échéance */}
-                <div
-                  style={{
-                    background: "#F8FAFC",
-                    border: "1px solid #F1F5F9",
-                    borderRadius: "8px",
-                    padding: "0.75rem 1rem",
-                  }}
-                >
-                  <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
-                    Échéance :
-                  </div>
-                  <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
-                    {echeanceFormatted}
-                  </div>
-                </div>
+                {(() => {
+                  const consultDeadline = getDeadlineEvaluation(consultTask);
+                  return (
+                    <div
+                      style={{
+                        background: consultDeadline.isCritical ? "#FEF2F2" : "#F8FAFC",
+                        border: consultDeadline.isCritical ? "1px solid #FECACA" : "1px solid #F1F5F9",
+                        borderRadius: "8px",
+                        padding: "0.75rem 1rem",
+                      }}
+                    >
+                      <div className="font-medium flex items-center justify-between" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
+                        <span>Échéance :</span>
+                        {consultDeadline.isCritical && (
+                          <span className="flex items-center gap-1 font-bold text-red-700 text-[0.72rem]">
+                            <AlertTriangle size={12} style={{ color: "#DC2626" }} /> Critique (&le; 24h)
+                          </span>
+                        )}
+                      </div>
+                      <div
+                        className="font-bold flex items-center gap-1.5"
+                        style={{
+                          fontSize: "0.95rem",
+                          color: consultDeadline.isCritical
+                            ? "#991B1B"
+                            : consultDeadline.status === "OK"
+                              ? "#166534"
+                              : "var(--text-main)",
+                        }}
+                      >
+                        {consultDeadline.isCritical && (
+                          <AlertTriangle size={14} style={{ color: "#DC2626" }} />
+                        )}
+                        <span>{echeanceFormatted}</span>
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 {/* Statut avec select et bouton Enregistrer conditionnel */}
                 <div
@@ -1997,23 +2022,9 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
           </thead>
           <tbody>
             {tasks.map((t) => {
-              const isExpired = (task) => {
-                const d = task.echeance;
-                if (!d) return false;
-                if (
-                  ["TERMINE", "TERMINE", "ARCHIVE", "ANNULEE"].includes(
-                    task.status,
-                  )
-                )
-                  return false;
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                const date = new Date(d);
-                date.setHours(0, 0, 0, 0);
-                return date <= today;
-              };
+              const deadline = getDeadlineEvaluation(t);
               return (
-                <tr key={t.id} className={isExpired(t) ? "row-expired" : ""}>
+                <tr key={t.id} className={deadline.isCritical ? "row-critical row-expired" : ""}>
                   <td className="text-left" style={{paddingLeft:"1.25rem"}}>
                     <div
                       className="truncate-name text-[var(--text-main)] font-normal" style={{maxWidth:"100%"}}
@@ -2047,19 +2058,65 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     </div>
                   </td>
                   <td className="table-date-cell text-center">
-                    <span
-                      style={{
-                        color: t.echeance
-                          ? "var(--text-main)"
-                          : "var(--danger)",
-                        fontWeight: 400,
-                        margin: 0,
-                      }}
-                    >
-                      {t.echeance
-                        ? new Date(t.echeance).toLocaleDateString()
-                        : "Aucune"}
-                    </span>
+                    {(() => {
+                      if (deadline.status === "NONE") {
+                        return (
+                          <span style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontStyle: "italic" }}>
+                            Aucune
+                          </span>
+                        );
+                      }
+                      if (deadline.status === "DONE") {
+                        return (
+                          <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>
+                            {deadline.label}
+                          </span>
+                        );
+                      }
+                      if (deadline.isCritical) {
+                        return (
+                          <span
+                            className="inline-flex items-center justify-center gap-1.5 px-2.5 py-1 rounded"
+                            style={{
+                              backgroundColor: "#FEE2E2",
+                              border: "1px solid #FECACA",
+                              color: "#991B1B",
+                              fontWeight: 700,
+                              fontSize: "0.82rem",
+                              lineHeight: 1.2,
+                            }}
+                            title={
+                              deadline.isOverdue
+                                ? "Échéance dépassée (en retard)"
+                                : "Échéance critique : arrive à terme sous 24h ou moins"
+                            }
+                          >
+                            <AlertTriangle
+                              size={13}
+                              style={{ color: "#DC2626", strokeWidth: 2.5, flexShrink: 0 }}
+                              aria-hidden="true"
+                            />
+                            <span>{deadline.label}</span>
+                          </span>
+                        );
+                      }
+                      return (
+                        <span
+                          className="inline-flex items-center justify-center gap-1.5 px-2.5 py-1 rounded"
+                          style={{
+                            backgroundColor: "#F0FDF4",
+                            border: "1px solid #DCFCE7",
+                            color: "#166534",
+                            fontWeight: 700,
+                            fontSize: "0.82rem",
+                            lineHeight: 1.2,
+                          }}
+                          title="Échéance dans les délais (> 24h)"
+                        >
+                          <span>{deadline.label}</span>
+                        </span>
+                      );
+                    })()}
                   </td>
                   <td className="text-center">
                     {getStatusBadge(t.status)}

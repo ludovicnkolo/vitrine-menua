@@ -19,8 +19,9 @@ import {
   Square,
   Link as LinkIcon,
   Loader2,
+  AlertTriangle,
 } from "lucide-react";
-import { getSafeApiUrl, uploadFile, formatDate } from "../utils/helpers";
+import { getSafeApiUrl, uploadFile, formatDate, getDeadlineEvaluation } from "../utils/helpers";
 import ConfirmModal from "../components/ConfirmModal";
 import ActionDropdown from "../components/ActionDropdown";
 import { getStatusBadge } from "../utils/helpers";
@@ -1769,9 +1770,31 @@ const DossiersPage = () => {
                         </span>
                         {renderDossierPillBadge(task.status)}
                       </div>
-                      <div style={{ fontSize: "0.8rem", color: "#64748B" }}>
-                        Objet : {getTaskSubject(task.description) || task.subject || "-"}{" "}
-                        • {task.echeance ? `Échéance : ${new Date(task.echeance).toLocaleDateString("fr-FR")}` : `Créé le ${new Date(task.createdAt).toLocaleDateString("fr-FR")}`}
+                      <div className="flex items-center gap-2 flex-wrap" style={{ fontSize: "0.8rem", color: "#64748B" }}>
+                        <span>Objet : {getTaskSubject(task.description) || task.subject || "-"}</span>
+                        <span>•</span>
+                        {(() => {
+                          const dl = getDeadlineEvaluation(task);
+                          if (dl.status === "NONE") {
+                            return <span>Créé le {new Date(task.createdAt).toLocaleDateString("fr-FR")}</span>;
+                          }
+                          if (dl.isCritical) {
+                            return (
+                              <span
+                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded font-bold text-red-700 bg-red-100"
+                                title={dl.isOverdue ? "Échéance dépassée (en retard)" : "Échéance critique (< 24h)"}
+                              >
+                                <AlertTriangle size={12} style={{ color: "#DC2626" }} />
+                                Échéance : {dl.label}
+                              </span>
+                            );
+                          }
+                          return (
+                            <span className="font-semibold text-green-700">
+                              Échéance : {dl.label}
+                            </span>
+                          );
+                        })()}
                       </div>
                     </div>
                   ))}
@@ -2662,28 +2685,12 @@ const DossiersPage = () => {
                         : "MENUA CONSULTING (Interne)";
                   const dCreatorRole = d.createdBy?.role?.name || "-";
                   const isExpired = (dossier) => {
-                    const d = dossier.echeance;
-                    if (!d) return false;
-                    if (
-                      [
-                        "TERMINE",
-                        "TERMINE",
-                        "ARCHIVE",
-                        "ANNULEE",
-                        "BLOQUE",
-                      ].includes(dossier.status)
-                    )
-                      return false;
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    const date = new Date(d);
-                    date.setHours(0, 0, 0, 0);
-                    return date <= today;
+                    return getDeadlineEvaluation(dossier).isCritical;
                   };
                   return (
                     <tr
                       key={d.id}
-                      className={isExpired(d) ? "row-expired" : ""}
+                      className={isExpired(d) ? "row-critical row-expired" : ""}
                     >
                       <td className="text-center">
                         <div

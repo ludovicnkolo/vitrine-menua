@@ -267,7 +267,59 @@ function formatDate(date) {
   });
 }
 
-export { getSafeApiUrl, apiFetch, uploadFile, formatDate };
+/**
+ * Évalue l'échéance d'une tâche, mission ou dossier :
+ * - Sous 24h ou dépassée : isCritical = true (alerte, rouge fixe)
+ * - Au-delà de 24h : isCritical = false, isOk = true (dans les temps, vert)
+ * - Terminée / annulée ou sans échéance : neutre
+ *
+ * @param {Object} item - Tâche, mission ou dossier
+ * @returns {{ status: string, isCritical: boolean, isOverdue: boolean, label: string }}
+ */
+function getDeadlineEvaluation(item) {
+  if (!item?.echeance) {
+    return {
+      status: "NONE",
+      isCritical: false,
+      isOverdue: false,
+      label: "Aucune",
+    };
+  }
+
+  // Statuts terminaux / clôturés : l'alerte est éteinte
+  if (["TERMINE", "ARCHIVE", "ANNULEE", "CLOTURE"].includes(item.status)) {
+    return {
+      status: "DONE",
+      isCritical: false,
+      isOverdue: false,
+      label: new Date(item.echeance).toLocaleDateString("fr-FR"),
+    };
+  }
+
+  const now = new Date();
+  const due = new Date(item.echeance);
+  const diffMs = due.getTime() - now.getTime();
+  const diffHours = diffMs / (1000 * 60 * 60);
+
+  // Critique si arrive à échéance sous 24h (ou déjà en retard)
+  if (diffHours <= 24) {
+    return {
+      status: "CRITICAL",
+      isCritical: true,
+      isOverdue: diffMs < 0,
+      label: new Date(item.echeance).toLocaleDateString("fr-FR"),
+    };
+  }
+
+  return {
+    status: "OK",
+    isCritical: false,
+    isOverdue: false,
+    label: new Date(item.echeance).toLocaleDateString("fr-FR"),
+  };
+}
+
+export { getSafeApiUrl, apiFetch, uploadFile, formatDate, getDeadlineEvaluation };
 
 /**
  * Extrait une valeur depuis du HTML structuré (utilisé pour les formulaires de contact/recrutement).

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReadOnlyField from "./ReadOnlyField";
-import { getStatusBadge, getSafeApiUrl } from "../utils/helpers";
-import { Paperclip, FileText, Eye, Download } from "lucide-react";
+import { getStatusBadge, getSafeApiUrl, getDeadlineEvaluation } from "../utils/helpers";
+import { Paperclip, FileText, Eye, Download, AlertTriangle } from "lucide-react";
 import FilePreviewModal from "./FilePreviewModal";
 import FeedbackThread from "./FeedbackThread";
 
@@ -109,14 +109,56 @@ const TaskConsultModal = ({
                   minute: "2-digit",
                 })}
               />
-              <ReadOnlyField
-                label="Échéance"
-                value={
-                  task.echeance
-                    ? new Date(task.echeance).toLocaleDateString("fr-FR")
-                    : "Non définie"
-                }
-              />
+              <div>
+                <label className="block mb-2 font-medium">
+                  Échéance
+                </label>
+                {(() => {
+                  const dl = getDeadlineEvaluation(task);
+                  if (dl.status === "NONE") {
+                    return (
+                      <input
+                        type="text"
+                        value="Non définie"
+                        readOnly
+                        className="input-field w-full text-[var(--text-muted)]"
+                        style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid var(--border)", background: "#F8FAFC" }}
+                      />
+                    );
+                  }
+                  if (dl.isCritical) {
+                    return (
+                      <div
+                        className="flex items-center gap-2 font-bold px-3 py-2 rounded-lg"
+                        style={{
+                          background: "#FEF2F2",
+                          border: "1px solid #FECACA",
+                          color: "#991B1B",
+                          height: "44px",
+                        }}
+                        title={dl.isOverdue ? "Échéance dépassée (en retard)" : "Échéance critique (< 24h)"}
+                      >
+                        <AlertTriangle size={16} style={{ color: "#DC2626" }} />
+                        <span>{dl.label} (Critique &le; 24h)</span>
+                      </div>
+                    );
+                  }
+                  return (
+                    <div
+                      className="flex items-center gap-2 font-bold px-3 py-2 rounded-lg"
+                      style={{
+                        background: "#F0FDF4",
+                        border: "1px solid #DCFCE7",
+                        color: "#166534",
+                        height: "44px",
+                      }}
+                      title="Échéance dans les délais (> 24h)"
+                    >
+                      <span>{dl.label}</span>
+                    </div>
+                  );
+                })()}
+              </div>
             </div>
             <div>
               <span

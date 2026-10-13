@@ -156,7 +156,7 @@ const SetupPasswordPage = () => {
                 htmlFor="setup-password"
                 className="block mb-1.5 text-xs font-semibold text-slate-700"
               >
-                Nouveau mot de passe <span className="text-red-500">*</span>
+                <span>Nouveau mot de passe <span className="text-red-500">*</span></span>
               </label>
               <div className="relative">
                 <input
@@ -176,7 +176,9 @@ const SetupPasswordPage = () => {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
                   title={showPassword ? "Masquer" : "Afficher"}
                 >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  <span className="flex items-center">
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </span>
                 </button>
               </div>
             </div>
@@ -186,7 +188,7 @@ const SetupPasswordPage = () => {
                 htmlFor="setup-confirm-password"
                 className="block mb-1.5 text-xs font-semibold text-slate-700"
               >
-                Confirmer le mot de passe <span className="text-red-500">*</span>
+                <span>Confirmer le mot de passe <span className="text-red-500">*</span></span>
               </label>
               <div className="relative">
                 <input
@@ -206,33 +208,37 @@ const SetupPasswordPage = () => {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
                   title={showConfirmPassword ? "Masquer" : "Afficher"}
                 >
-                  {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  <span className="flex items-center">
+                    {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </span>
                 </button>
               </div>
             </div>
 
             {/* Aide visuelle sur la correspondance */}
-            {confirmPassword && (
-              <div className="text-xs flex items-center gap-1.5 mt-0.5">
-                {password === confirmPassword ? (
+            <div className="text-xs flex items-center gap-1.5 mt-0.5 min-h-[20px]">
+              {confirmPassword ? (
+                password === confirmPassword ? (
                   <span className="text-emerald-600 font-medium flex items-center gap-1">
-                    <CheckCircle2 size={13} /> Les mots de passe correspondent
+                    <CheckCircle2 size={13} />
+                    <span>Les mots de passe correspondent</span>
                   </span>
                 ) : (
                   <span className="text-amber-600 font-medium flex items-center gap-1">
-                    <AlertCircle size={13} /> Les mots de passe sont différents
+                    <AlertCircle size={13} />
+                    <span>Les mots de passe sont différents</span>
                   </span>
-                )}
-              </div>
-            )}
+                )
+              ) : null}
+            </div>
 
             <button
               type="submit"
               className="btn btn-primary w-full mt-4 justify-center py-2.5 text-sm font-semibold flex items-center gap-2 shadow-sm"
               disabled={loading}
             >
-              {loading && <Loader2 size={16} className="animate-spin" />}
-              {loading ? "Enregistrement en cours..." : "Activer mon compte"}
+              {loading ? <Loader2 size={16} className="animate-spin" /> : null}
+              <span>{loading ? "Enregistrement en cours..." : "Activer mon compte"}</span>
             </button>
           </form>
         )}

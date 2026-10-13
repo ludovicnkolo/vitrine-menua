@@ -6,6 +6,26 @@ import "./index.css";
 import "./i18n.js";
 import { setupFetchInterceptor, redirectToLogin, clearAuthSession } from "./services/api";
 
+// Patch de résilience React contre les extensions et outils de traduction automatique (Google Translate, Chrome Translate)
+// Empêche le crash "NotFoundError: Failed to execute 'insertBefore' on 'Node'"
+if (typeof Node === "function" && Node.prototype) {
+  const originalInsertBefore = Node.prototype.insertBefore;
+  Node.prototype.insertBefore = function <T extends Node>(newNode: T, referenceNode: Node | null): T {
+    if (referenceNode && referenceNode.parentNode !== this) {
+      return originalInsertBefore.call(this, newNode, null) as T;
+    }
+    return originalInsertBefore.call(this, newNode, referenceNode) as T;
+  };
+
+  const originalRemoveChild = Node.prototype.removeChild;
+  Node.prototype.removeChild = function <T extends Node>(child: T): T {
+    if (child.parentNode !== this) {
+      return child;
+    }
+    return originalRemoveChild.call(this, child) as T;
+  };
+}
+
 // Initialisation immédiate de l'intercepteur de requêtes
 setupFetchInterceptor(() => {
   redirectToLogin("expired");
@@ -57,18 +77,27 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
             <br />
             {this.state.errorInfo?.componentStack}
           </pre>
-          <button
-            type="button"
-            onClick={() => {
-              clearAuthSession();
-              localStorage.clear();
-              sessionStorage.clear();
-              window.location.href = "/";
-            }}
-            className="mt-4 text-white cursor-pointer" style={{padding:"0.5rem 1rem",background:"#B91C1C",border:"none",borderRadius:"4px"}}
-          >
-            Vider le cache et recommencer
-          </button>
+          <div className="flex flex-wrap gap-3 mt-4">
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="text-white cursor-pointer px-4 py-2 bg-red-700 hover:bg-red-800 rounded font-medium"
+            >
+              Recharger la page
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                clearAuthSession();
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = "/";
+              }}
+              className="text-white cursor-pointer px-4 py-2 bg-slate-700 hover:bg-slate-800 rounded"
+            >
+              Vider le cache et aller à l'accueil
+            </button>
+          </div>
         </div>
       );
     }

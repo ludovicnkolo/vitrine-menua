@@ -24,7 +24,10 @@ async function verifyTurnstile(token, ip) {
       response: token,
     };
     if (ip) {
-      body.remoteip = ip;
+      const cleanIp = typeof ip === "string" ? ip.split(",")[0].trim() : ip;
+      if (cleanIp) {
+        body.remoteip = cleanIp;
+      }
     }
 
     const res = await fetch(

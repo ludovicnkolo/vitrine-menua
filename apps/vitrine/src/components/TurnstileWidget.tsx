@@ -32,7 +32,7 @@ export default function TurnstileWidget() {
           widgetId = window.turnstile.render(containerRef.current, {
             sitekey: siteKey,
             theme: "light",
-            appearance: "interaction-only",
+            "refresh-expired": "auto",
           });
         } catch (err) {
           console.warn("Turnstile render note:", err);
@@ -53,6 +53,6 @@ export default function TurnstileWidget() {
   }, [siteKey]);
 
   return (
-    <div ref={containerRef} className="cf-turnstile"></div>
+    <div ref={containerRef} className="cf-turnstile my-4 flex justify-center"></div>
   );
 }

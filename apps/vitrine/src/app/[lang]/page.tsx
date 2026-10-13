@@ -8,11 +8,11 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   const isEn = lang === "en";
 
-  const titleEn = 'Menua Consulting | Back & Middle Office Outsourcing Firm in Paris';
-  const descriptionEn = 'Operational outsourcing firm based in Paris: Menua Consulting supports financial, accounting, insurance and investment management teams across back & middle office functions.';
+  const titleEn = 'Menua Consulting | Back & Middle Office Outsourcing';
+  const descriptionEn = 'Menua Consulting supports finance, accounting, insurance, wealth management, compliance, data and IT teams with operational outsourcing across back and middle office functions.';
   
-  const titleFr = 'Menua Consulting | Cabinet d’Externalisation Back & Middle Office à Paris';
-  const descriptionFr = 'Cabinet d’externalisation opérationnelle à Paris : Menua Consulting accompagne les directions financières, comptables, bancaires et gestion d’actifs sur leurs fonctions back & middle office.';
+  const titleFr = 'Menua Consulting | Externalisation Back & Middle Office';
+  const descriptionFr = 'Menua Consulting accompagne les équipes finance, comptabilité, assurance, gestion de patrimoine, conformité, data et IT dans l’externalisation opérationnelle de fonctions back & middle office.';
 
   const canonicalUrl = isEn ? `${SITE_URL}/en` : `${SITE_URL}/fr`;
   const ogImageUrl = `${SITE_URL}/img/accueil-actus.webp`;
@@ -23,6 +23,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     alternates: {
       canonical: canonicalUrl,
       languages: {
+        'fr': `${SITE_URL}/fr`,
+        'en': `${SITE_URL}/en`,
         'fr-FR': `${SITE_URL}/fr`,
         'en-GB': `${SITE_URL}/en`,
         'x-default': `${SITE_URL}/fr`,

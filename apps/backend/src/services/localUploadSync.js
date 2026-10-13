@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const fs = require("fs");
 const path = require("path");
-const { uploadToS3 } = require("./s3Service");
+const { uploadToPublicS3 } = require("./s3Service");
 
 const prisma = new PrismaClient();
 
@@ -139,9 +139,9 @@ async function processFileToS3(fileName) {
     else if (ext === ".svg") mimetype = "image/svg+xml";
 
     const s3Key = `cms/images/${fileName}`;
-    await uploadToS3(buffer, s3Key, mimetype);
-    console.log(`[S3 Sync] Succès de l'upload vers S3 : ${s3Key}`);
-    return s3Key;
+    const publicUrl = await uploadToPublicS3(buffer, s3Key, mimetype);
+    console.log(`[S3 Sync] Succès de l'upload vers S3 public : ${publicUrl}`);
+    return publicUrl;
   } catch (err) {
     console.error(`[S3 Sync] Échec de l'upload pour ${fileName}:`, err.message);
     return null;

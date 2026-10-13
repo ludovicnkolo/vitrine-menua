@@ -8,14 +8,14 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   const isEn = lang === "en";
 
-  const titleEn = 'Menua Consulting | Back & Middle Office Outsourcing | Menua Consulting';
-  const descriptionEn = 'Menua Consulting supports finance, accounting, insurance, wealth management, compliance, data and IT teams with operational outsourcing across back and middle office functions.';
+  const titleEn = 'Menua Consulting | Back & Middle Office Outsourcing Firm in Paris';
+  const descriptionEn = 'Operational outsourcing firm based in Paris: Menua Consulting supports financial, accounting, insurance and investment management teams across back & middle office functions.';
   
-  const titleFr = 'Menua Consulting | Externalisation Back & Middle Office';
-  const descriptionFr = 'Menua Consulting accompagne les équipes finance, comptabilité, assurance, gestion de patrimoine, conformité, data et IT dans l’externalisation opérationnelle de fonctions back & middle office.';
+  const titleFr = 'Menua Consulting | Cabinet d’Externalisation Back & Middle Office à Paris';
+  const descriptionFr = 'Cabinet d’externalisation opérationnelle à Paris : Menua Consulting accompagne les directions financières, comptables, bancaires et gestion d’actifs sur leurs fonctions back & middle office.';
 
   const canonicalUrl = isEn ? `${SITE_URL}/en` : `${SITE_URL}/fr`;
-  const ogImageUrl = isEn ? `${SITE_URL}/img/accueil-actus.webp` : `${SITE_URL}/fr`; // keeping the original logic, maybe ogImageUrl for fr wasn't set but we can use default or ogImageUrl
+  const ogImageUrl = `${SITE_URL}/img/accueil-actus.webp`;
 
   return {
     title: { absolute: isEn ? titleEn : titleFr },
@@ -34,15 +34,22 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       locale: isEn ? 'en_GB' : 'fr_FR',
       url: canonicalUrl,
       type: 'website',
-      images: isEn ? [{ url: ogImageUrl, alt: titleEn }] : undefined,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: isEn ? titleEn : titleFr,
+        },
+      ],
       siteName: 'Menua Consulting',
     },
-    twitter: isEn ? {
+    twitter: {
       card: 'summary_large_image',
-      title: titleEn,
-      description: descriptionEn,
+      title: isEn ? titleEn : titleFr,
+      description: isEn ? descriptionEn : descriptionFr,
       images: [ogImageUrl],
-    } : undefined,
+    },
   };
 }
 

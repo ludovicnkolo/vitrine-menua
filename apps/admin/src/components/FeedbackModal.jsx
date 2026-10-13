@@ -56,7 +56,7 @@ const FeedbackModal = ({
 
   return (
     <div
-      className="fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.55)",zIndex:2000}}
+      className="fixed inset-0 flex items-center justify-center" style={{background:"rgba(0,0,0,0.55)",zIndex:2000}}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}

@@ -6,6 +6,9 @@ const {
   DeleteObjectCommand,
 } = require("@aws-sdk/client-s3");
 
+const { NodeHttpHandler } = require("@smithy/node-http-handler");
+const https = require("https");
+
 const s3Client = new S3Client({
   endpoint: process.env.S3_ENDPOINT,
   region: process.env.S3_REGION || "eu-west-par",
@@ -13,13 +16,17 @@ const s3Client = new S3Client({
     accessKeyId: process.env.S3_ACCESS_KEY,
     secretAccessKey: process.env.S3_SECRET_KEY,
   },
+  forcePathStyle: true,
+  requestHandler: new NodeHttpHandler({
+    httpsAgent: new https.Agent({ family: 4, keepAlive: true }),
+  }),
 });
 
 const BUCKET_NAME = process.env.S3_BUCKET;
 
 async function processStorageCleanup() {
   console.log(
-    "[Storage Cron] Démarrage du nettoyage des fichiers orphelins (GED & CMS)...",
+    "[Storage Cron] Démarrage du nettoyage des fichiers orphelins (GED)...",
   );
   try {
     if (!BUCKET_NAME) {
@@ -56,47 +63,22 @@ async function processStorageCleanup() {
     };
 
     const gedKeys = await listS3Files("ged/");
-    const cmsKeys = await listS3Files("cms/images/");
 
     console.log(
-      `[Storage Cron] Trouvés dans S3 (> 24h) : ${gedKeys.length} GED, ${cmsKeys.length} CMS.`,
+      `[Storage Cron] Trouvés dans S3 (> 24h) : ${gedKeys.length} GED.`,
     );
 
     // ─── 2. RÉCUPÉRER LES RÉFÉRENCES BDD ───
 
-    // A. Documents (GED)
+    // Documents (GED)
     const documents = await prisma.document.findMany({ select: { url: true } });
     const dbGedUrls = new Set(documents.map((doc) => doc.url).filter(Boolean));
 
-    // B. Publications (CMS)
-    const publications = await prisma.publication.findMany({
-      select: { coverImage: true, sections: true },
-    });
-    const dbCmsUrls = new Set();
-    publications.forEach((pub) => {
-      if (pub.coverImage) dbCmsUrls.add(pub.coverImage);
-      if (pub.sections) {
-        try {
-          const secs =
-            typeof pub.sections === "string"
-              ? JSON.parse(pub.sections)
-              : pub.sections;
-          if (Array.isArray(secs)) {
-            secs.forEach((s) => {
-              if (s.imageKey) dbCmsUrls.add(s.imageKey);
-            });
-          }
-        } catch (e) {}
-      }
-    });
-
     // ─── 3. IDENTIFIER LES ORPHELINS ───
-    const gedOrphans = gedKeys.filter((key) => !dbGedUrls.has(key));
-    const cmsOrphans = cmsKeys.filter((key) => !dbCmsUrls.has(key));
-    const allOrphans = [...gedOrphans, ...cmsOrphans];
+    const allOrphans = gedKeys.filter((key) => !dbGedUrls.has(key));
 
     console.log(
-      `[Storage Cron] Orphelins identifiés : ${gedOrphans.length} GED, ${cmsOrphans.length} CMS.`,
+      `[Storage Cron] Orphelins identifiés : ${allOrphans.length} GED.`,
     );
 
     if (allOrphans.length === 0) return;

@@ -21,70 +21,133 @@ const FunnelCard: React.FC<FunnelCardProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const dossiersCloturesVal = useMemo(() => {
-    return entonnoirData.find((d) => d.name.includes("Dossier"))?.value ?? 1;
-  }, [entonnoirData]);
+  const isDetailed = funnelView === "mensuelle";
 
-  const stages = [
-    {
-      title: t("dashboard.processedMessages", "Messages Traités"),
-      subtitle: t("dashboard.processedMessagesSub", "Demandes & formulaires qualifiés"),
-      colorClass: "bg-blue-600",
-      value: entonnoirData[0]?.value || 0,
-    },
-    {
-      title: t("dashboard.startedMissions", "Missions Démarrées"),
-      subtitle: t("dashboard.startedMissionsSub", "Missions opérationnelles en cours"),
-      colorClass: "bg-purple-500",
-      value: entonnoirData[1]?.value || 0,
-    },
-    {
-      title: t("dashboard.completedTasks", "Tâches Terminées"),
-      subtitle: t("dashboard.completedTasksSub", "Livrables validés et contrôlés"),
-      colorClass: "bg-emerald-500",
-      value: entonnoirData[2]?.value || 0,
-    },
-    {
-      title: t("dashboard.closedDossiers", "Dossiers Clôturés"),
-      subtitle: t("dashboard.closedDossiersSub", "Prestations finalisées et archivées"),
-      colorClass: "bg-amber-500",
-      value: entonnoirData[3]?.value || 0,
-    },
-  ];
+  const valDemandes = entonnoirData[0]?.value || 0;
+  const valMissions = entonnoirData[1]?.value || 0;
+  const valTaches = entonnoirData[2]?.value || 0;
+  const valDossiers = entonnoirData[3]?.value || 0;
+
+  const baseVolume = useMemo(() => {
+    return valDemandes > 0 ? valDemandes : Math.max(valMissions, 1);
+  }, [valDemandes, valMissions]);
+
+  const globalConversionRate = useMemo(() => {
+    if (baseVolume <= 0) return 0;
+    return Math.round((valDossiers / baseVolume) * 100);
+  }, [valDossiers, baseVolume]);
+
+  const stages = useMemo(() => {
+    const rateDemandes = valDemandes > 0 ? 100 : 0;
+    const rateMissions = baseVolume > 0 ? Math.round((valMissions / baseVolume) * 100) : 0;
+    const rateTaches = baseVolume > 0 ? Math.round((valTaches / baseVolume) * 100) : 0;
+    const rateDossiers = baseVolume > 0 ? Math.round((valDossiers / baseVolume) * 100) : 0;
+
+    return [
+      {
+        title: t("dashboard.processedMessages", "Messages Traités"),
+        subtitle: isDetailed
+          ? `Flux entrant qualifié (100% de la base d'entrée)`
+          : t("dashboard.processedMessagesSub", "Demandes & formulaires qualifiés"),
+        colorClass: "bg-blue-600",
+        value: valDemandes,
+        rate: rateDemandes,
+      },
+      {
+        title: t("dashboard.startedMissions", "Missions Démarrées"),
+        subtitle: isDetailed
+          ? `${rateMissions}% de conversion des demandes en missions`
+          : t("dashboard.startedMissionsSub", "Missions opérationnelles en cours"),
+        colorClass: "bg-purple-500",
+        value: valMissions,
+        rate: rateMissions,
+      },
+      {
+        title: t("dashboard.completedTasks", "Tâches Terminées"),
+        subtitle: isDetailed
+          ? `${rateTaches}% d'exécution par rapport au flux initial`
+          : t("dashboard.completedTasksSub", "Livrables validés et contrôlés"),
+        colorClass: "bg-emerald-500",
+        value: valTaches,
+        rate: rateTaches,
+      },
+      {
+        title: t("dashboard.closedDossiers", "Dossiers Clôturés"),
+        subtitle: isDetailed
+          ? `${rateDossiers}% de concrétisation finale archivée`
+          : t("dashboard.closedDossiersSub", "Prestations finalisées et archivées"),
+        colorClass: "bg-amber-500",
+        value: valDossiers,
+        rate: rateDossiers,
+      },
+    ];
+  }, [t, isDetailed, valDemandes, valMissions, valTaches, valDossiers, baseVolume]);
+
+  // Dynamic axis ticks for cumulative volume view
+  const volumeTicks = useMemo(() => {
+    const max = Math.max(maxFunnelVolume, 4);
+    return [
+      0,
+      Math.max(1, Math.round(max * 0.25)),
+      Math.max(2, Math.round(max * 0.5)),
+      Math.max(3, Math.round(max * 0.75)),
+      `${max} (Volume)`,
+    ];
+  }, [maxFunnelVolume]);
 
   return (
     <div className="flex flex-col bg-white border border-[#E2E8F0] border-t-4 border-t-pink-500 rounded-xl py-5 px-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
       {/* Header */}
-      <div className="flex justify-between items-start mb-5">
+      <div className="flex justify-between items-start mb-5 gap-3">
         <div>
           <h3 className="font-bold text-[var(--text-main)] m-0 mb-1 text-[1rem]">
             {t("dashboard.productionFunnel", "Entonnoir de Production (Période)")}
           </h3>
           <p className="m-0 text-[0.78rem] text-slate-500">
-            {t(
-              "dashboard.funnelSub",
-              "Flux d'avancement des volumes du traitement client à la clôture"
-            )}
+            {isDetailed
+              ? "Taux de transformation et ratios d'avancement opérationnels"
+              : t(
+                  "dashboard.funnelSub",
+                  "Flux d'avancement des volumes du traitement client à la clôture"
+                )}
           </p>
         </div>
         <select
           value={funnelView}
           onChange={(e) => onFunnelViewChange(e.target.value)}
-          className="text-[var(--text-main)] cursor-pointer py-1.5 pl-3 pr-6 rounded-lg border-[1.5px] border-blue-500 bg-white text-[0.8rem] outline-none"
+          className="text-[var(--text-main)] font-semibold cursor-pointer py-1.5 pl-3 pr-6 rounded-lg border-[1.5px] border-blue-500 bg-white text-[0.8rem] outline-none shadow-sm hover:border-blue-600 transition-colors"
         >
-          <option value="cumulee">{t("dashboard.cumulativeView", "Vue cumulée")}</option>
-          <option value="mensuelle">{t("dashboard.detailedView", "Vue détaillée")}</option>
+          <option value="cumulee">
+            {t("dashboard.cumulativeView", "Vue cumulée (Volumes)")}
+          </option>
+          <option value="mensuelle">
+            {t("dashboard.detailedView", "Vue détaillée (Taux & Ratios)")}
+          </option>
         </select>
       </div>
 
       {/* 4 Funnel Bars */}
       <div className="flex flex-col gap-4 flex-1">
         {stages.map((stage, i) => {
-          const widthPct = stage.value > 0 ? Math.max(12, (stage.value / maxFunnelVolume) * 100) : 0;
+          const widthPct = isDetailed
+            ? stage.value > 0 || stage.rate > 0
+              ? Math.max(14, Math.min(100, stage.rate))
+              : 0
+            : stage.value > 0
+            ? Math.max(12, (stage.value / maxFunnelVolume) * 100)
+            : 0;
+
           return (
             <div key={i}>
-              <div className="font-bold text-[var(--text-main)] text-[0.85rem]">
-                {stage.title}
+              <div className="flex justify-between items-center mb-0.5">
+                <span className="font-bold text-[var(--text-main)] text-[0.85rem]">
+                  {stage.title}
+                </span>
+                {isDetailed && (
+                  <span className="text-[0.75rem] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                    {stage.rate}% transf.
+                  </span>
+                )}
               </div>
               <div className="text-[0.72rem] text-slate-500 mb-1.5">
                 {stage.subtitle}
@@ -94,14 +157,20 @@ const FunnelCard: React.FC<FunnelCardProps> = ({
                   className={`${stage.colorClass} flex items-center justify-end text-white font-bold text-[0.82rem] h-full rounded-md transition-all duration-300 ease-in-out`}
                   style={{
                     width: `${widthPct}%`,
-                    paddingRight: stage.value > 0 ? "10px" : "0px",
+                    paddingRight: (isDetailed ? stage.rate > 0 : stage.value > 0) ? "10px" : "0px",
                   }}
                 >
-                  {stage.value > 0 && stage.value}
+                  {isDetailed
+                    ? stage.value > 0
+                      ? `${stage.value} (${stage.rate}%)`
+                      : ""
+                    : stage.value > 0
+                    ? stage.value
+                    : ""}
                 </div>
-                {stage.value === 0 && (
+                {((isDetailed && stage.rate === 0) || (!isDetailed && stage.value === 0)) && (
                   <span className="absolute font-bold left-3 text-slate-400 text-[0.82rem]">
-                    0
+                    {isDetailed ? "0% (0)" : "0"}
                   </span>
                 )}
               </div>
@@ -109,20 +178,43 @@ const FunnelCard: React.FC<FunnelCardProps> = ({
           );
         })}
 
-        {/* Axis scale */}
-        <div className="flex justify-between px-1 text-[0.72rem] text-slate-400 mt-1">
-          <span>0</span>
-          <span>1</span>
-          <span>2</span>
-          <span>3</span>
-          <span>4 (Volume)</span>
+        {/* Dynamic Axis scale */}
+        <div className="flex justify-between px-1 text-[0.72rem] text-slate-400 mt-1 font-medium">
+          {isDetailed ? (
+            <>
+              <span>0%</span>
+              <span>25%</span>
+              <span>50%</span>
+              <span>75%</span>
+              <span>100% (Taux de conversion)</span>
+            </>
+          ) : (
+            volumeTicks.map((tick, idx) => <span key={idx}>{tick}</span>)
+          )}
         </div>
       </div>
 
-      {/* Note de pilotage */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg py-2.5 px-4 mt-5 text-blue-600 text-[0.78rem]">
-        <span className="font-bold">Note de pilotage :</span> Ratio de clôture équilibré •{" "}
-        {dossiersCloturesVal} dossier{dossiersCloturesVal > 1 ? "s" : ""} finalisé{dossiersCloturesVal > 1 ? "s" : ""} sur la période sélectionnée.
+      {/* Note de pilotage dynamique */}
+      <div
+        className={`border rounded-lg py-2.5 px-4 mt-5 text-[0.78rem] transition-colors ${
+          isDetailed
+            ? "bg-purple-50 border-purple-200 text-purple-700"
+            : "bg-blue-50 border-blue-200 text-blue-700"
+        }`}
+      >
+        {isDetailed ? (
+          <div>
+            <span className="font-bold">Efficacité de conversion : </span>
+            {globalConversionRate}% de concrétisation globale de bout en bout (demande client →
+            dossier clôturé).
+          </div>
+        ) : (
+          <div>
+            <span className="font-bold">Note de pilotage : </span>
+            Flux opérationnel sur la période • {valDossiers} dossier
+            {valDossiers > 1 ? "s" : ""} finalisé{valDossiers > 1 ? "s" : ""}.
+          </div>
+        )}
       </div>
     </div>
   );

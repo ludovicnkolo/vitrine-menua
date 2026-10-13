@@ -1,8 +1,8 @@
 import { getSafeApiUrl } from "../utils/helpers";
 import { saveAuthSession } from "../services/api";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState("");
@@ -11,160 +11,176 @@ const LoginPage = ({ onLogin }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  React.useEffect(() => {
+  const errorTimeoutRef = useRef(null);
+
+  const setTimedError = (msg) => {
+    if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
+    setError(msg);
+    errorTimeoutRef.current = setTimeout(() => setError(""), 4000);
+  };
+
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("logout") === "expired") {
-      setError("Votre session a expiré. Veuillez vous reconnecter.");
-      window.history.replaceState({}, document.title, "/");
+      setTimedError("Votre session a expiré. Veuillez vous reconnecter.");
+      window.history.replaceState({}, document.title, window.location.pathname);
     }
+    return () => {
+      if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
+    };
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
+    const cleanEmail = email.trim();
 
-    const form = e.currentTarget;
-    const formEmail = (email || form.elements?.["login-email"]?.value || form.elements?.["email"]?.value || "").trim();
-    const formPassword = password || form.elements?.["login-password"]?.value || form.elements?.["password"]?.value || "";
-
-    if (!formEmail || !formPassword) {
-      setError("Veuillez renseigner votre email et mot de passe.");
-      setLoading(false);
+    if (!cleanEmail || !password) {
+      setTimedError("Veuillez renseigner votre email et mot de passe.");
       return;
     }
+
+    setLoading(true);
+    setError("");
 
     try {
       const res = await fetch(getSafeApiUrl("/api/auth/login"), {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: formEmail, password: formPassword }),
+        body: JSON.stringify({ email: cleanEmail, password }),
       });
-      const responseText = await res.text();
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch {
-        throw new Error(`Réponse inattendue du serveur (${res.status})`);
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok || !data?.success) {
+        setTimedError(data?.error || "Identifiants invalides.");
+        return;
       }
-      if (data.success && data.user) {
-        const token = data.token || "authenticated";
-        saveAuthSession(data.user, token);
-        onLogin(data.user, token);
-      } else {
-        setError(data.error || "Identifiants invalides");
-        setTimeout(() => setError(""), 3000);
+
+      if (!data.user || !data.token) {
+        setTimedError("Réponse d'authentification incomplète du serveur.");
+        return;
       }
+
+      saveAuthSession(data.user, data.token);
+      onLogin(data.user, data.token);
     } catch (err) {
-      console.error(err);
-      setError("Erreur réseau ou serveur: " + err.message);
-      setTimeout(() => setError(""), 3000);
+      console.error("Erreur de connexion:", err);
+      setTimedError("Impossible de contacter le serveur d'authentification.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
     <div
-      className="flex items-center justify-center" style={{minHeight:"100vh",background:"var(--bg-main)"}}
+      className="flex items-center justify-center min-h-screen bg-[var(--bg-main)] p-4"
     >
       <div
-        className="card w-full p-8" style={{maxWidth:"400px"}}
+        className="card w-full max-w-sm p-8 bg-white border border-slate-200 rounded-2xl shadow-sm"
       >
         <div className="text-center mb-8">
           <div
-            className="bg-[var(--primary)] p-6 flex items-center justify-center mb-6" style={{borderRadius:"12px"}}
+            className="bg-[var(--primary)] p-6 flex items-center justify-center mb-6 rounded-xl shadow-sm"
           >
             <img
               src="/logo.png"
               alt="Menua Consulting"
-              style={{ height: "70px", objectFit: "contain" }}
+              style={{ height: "64px", objectFit: "contain" }}
             />
           </div>
+          <h1 className="text-xl font-bold text-slate-800">
+            Espace d'Administration
+          </h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Connectez-vous pour accéder au portail CRM
+          </p>
         </div>
-        
-        <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-4"
-          >
-            {error && (
-              <div
-                style={{
-                  padding: "0.75rem",
-                  background: "#FEE2E2",
-                  color: "#B91C1C",
-                  borderRadius: "8px",
-                  
-                }}
-              >
-                {error}
-              </div>
-            )}
-            <div>
-              <label
-                htmlFor="login-email"
-                className="block font-medium" style={{marginBottom:"0.25rem"}}
-              >
-                Email
-              </label>
-              <input
-                id="login-email"
-                name="email"
-                type="email"
-                autoComplete="username"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="login-password"
-                className="block font-medium" style={{marginBottom:"0.25rem"}}
-              >
-                Mot de passe
-              </label>
-              <div className="relative">
-                <input
-                  id="login-password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full" style={{padding:"0.75rem",paddingRight:"2.5rem",borderRadius:"8px",border:"1px solid var(--border)"}}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute cursor-pointer flex items-center justify-center" style={{right:"0.75rem",top:"50%",transform:"translateY(-50%)",background:"none",border:"none",color:"var(--text-light, #6e7891)"}}
-                  title={showPassword ? "Cacher le mot de passe" : "Afficher le mot de passe"}
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn btn-primary mt-2 justify-center w-full" style={{padding:"0.85rem",fontSize:"1rem"}}
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {error && (
+            <div
+              className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg text-center font-medium"
             >
-              {loading ? "Connexion..." : "Se connecter"}
-            </button>
-            <div className="text-center mt-2">
-              <Link
-                to="/forgot-password"
-                className="inline-block font-medium p-2" style={{color:"var(--primary)",textDecoration:"underline",fontSize:"0.95rem"}}
-              >
-                Mot de passe oublié ?
-              </Link>
+              {error}
             </div>
-          </form>
+          )}
+
+          <div>
+            <label
+              htmlFor="login-email"
+              className="block text-xs font-semibold text-slate-700 mb-1"
+            >
+              Email
+            </label>
+            <input
+              id="login-email"
+              name="email"
+              type="email"
+              autoComplete="username"
+              required
+              disabled={loading}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="adresse@menuaconsulting.com"
+              className="w-full p-2.5 text-sm rounded-lg border border-slate-300 bg-white text-slate-800 outline-none focus:border-blue-700 disabled:bg-slate-50 transition"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="login-password"
+              className="block text-xs font-semibold text-slate-700 mb-1"
+            >
+              Mot de passe
+            </label>
+            <div className="relative">
+              <input
+                id="login-password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                required
+                disabled={loading}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Votre mot de passe"
+                className="w-full p-2.5 pr-10 text-sm rounded-lg border border-slate-300 bg-white text-slate-800 outline-none focus:border-blue-700 disabled:bg-slate-50 transition"
+              />
+              <button
+                type="button"
+                tabIndex={-1}
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                title={showPassword ? "Masquer" : "Afficher"}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn btn-primary w-full mt-2 py-3 text-sm font-semibold flex items-center justify-center gap-2 shadow-sm"
+          >
+            {loading && <Loader2 size={16} className="animate-spin" />}
+            {loading ? "Connexion en cours..." : "Se connecter"}
+          </button>
+
+          <div className="text-center mt-2">
+            <Link
+              to="/forgot-password"
+              className="text-xs text-[var(--primary)] hover:underline font-medium p-1 inline-block"
+            >
+              Mot de passe oublié ?
+            </Link>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
 
 export default LoginPage;
+

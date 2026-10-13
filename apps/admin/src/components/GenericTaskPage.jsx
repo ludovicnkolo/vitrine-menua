@@ -255,6 +255,36 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const isResp = role === "Responsable opérationnel" || isSuperAdmin;
   const isController = role === "Relecteur" || isResp;
 
+  // Règle d'édition (identique à l'ancien bouton « Modifier » de la consultation) :
+  // Super-admin / Responsable opérationnel, et aucun élément parent bloqué ou en attente.
+  const canEditTaskRow = (task) => {
+    if (!task) return false;
+    const isManager =
+      role === "Super-administrateur" || role === "Responsable opérationnel";
+    const locked = ["BLOQUE", "EN_ATTENTE"];
+    return (
+      isManager &&
+      !locked.includes(task.status) &&
+      !locked.includes(task.mission?.status) &&
+      !locked.includes(task.dossier?.status) &&
+      !locked.includes(task.mission?.dossier?.status)
+    );
+  };
+
+  const openEditTask = (task) => {
+    setEditTask(task);
+    setEditFormData({
+      subject: getSubjectFromTask(task.description),
+      message: getMessageFromTask(task.description),
+      status: task.status,
+      attachment: task.attachment || "",
+      assignedToId: task.assignedToId || "",
+      relecteurId: task.relecteurId || "",
+      echeance: task.echeance ? task.echeance.substring(0, 10) : "",
+    });
+    setConsultTask(null);
+  };
+
   // Feedback workflow modals
   const [showAdminFeedbackModal, setShowAdminFeedbackModal] = useState(false);
   const [showManagerFeedbackModal, setShowManagerFeedbackModal] =
@@ -761,7 +791,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     if (!createTaskModal) return null;
     return (
       <div
-        className="fade-in fixed flex items-center justify-center p-4" style={{backgroundColor:"rgba(15, 23, 42, 0.6)",backdropFilter:"blur(4px)",zIndex:9999}}
+        className="fade-in fixed inset-0 flex items-center justify-center p-4" style={{backgroundColor:"rgba(15, 23, 42, 0.6)",backdropFilter:"blur(4px)",zIndex:9999}}
       >
         <div
           className="p-8 w-full" style={{background:"#FFF",borderRadius:"12px",boxShadow:"0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",maxWidth:"750px",maxHeight:"90vh",overflowY:"auto"}}
@@ -1417,29 +1447,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 </button>
               )}
 
-            {canEditTask && (
-              <button
-                type="button"
-                onClick={() => {
-                  setEditTask(consultTask);
-                  setEditFormData({
-                    subject: subj,
-                    message: msg,
-                    status: consultTask.status,
-                    attachment: consultTask.attachment || "",
-                    assignedToId: consultTask.assignedToId || "",
-                    relecteurId: consultTask.relecteurId || "",
-                    echeance: consultTask.echeance
-                      ? consultTask.echeance.substring(0, 10)
-                      : "",
-                  });
-                  setConsultTask(null);
-                }}
-                className="font-semibold cursor-pointer flex items-center" style={{background:"#FFF",border:"1px solid #F59E0B",color:"#D97706",padding:"0.55rem 1rem",borderRadius:"8px",fontSize:"0.85rem",gap:"0.4rem"}}
-              >
-                <Pencil size={15} /> Modifier
-              </button>
-            )}
+
 
             <button
               type="button"
@@ -2061,17 +2069,30 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   >
                     {formatDate(t.createdAt)}
                   </td>
-                  <td>
-                    <div
-                      className="flex flex-col items-center justify-center" style={{gap:"0.25rem"}}
-                    >
+                  <td style={{ padding: "0.5rem", verticalAlign: "middle" }}>
+                    <div className="flex flex-col items-center" style={{ gap: "3px" }}>
+                      {/* Sommet de la pyramide : Modifier */}
+                      {canEditTaskRow(t) && (
+                        <button
+                          type="button"
+                          onClick={() => openEditTask(t)}
+                          className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                          style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#EFF6FF", border: "1px solid #BFDBFE", color: "#2563EB" }}
+                          title={mode === "MISSION" ? "Modifier la mission" : "Modifier la tâche"}
+                        >
+                          <Pencil size={14} />
+                        </button>
+                      )}
+                      {/* Base de la pyramide : Consulter + Supprimer */}
+                      <div className="flex items-center justify-center" style={{ gap: "4px" }}>
                       <button
                         type="button"
                         onClick={() => setConsultTask(t)}
-                        className="cursor-pointer" style={{background:"none",border:"none",color:"var(--primary)",padding:"4px"}}
-                        title="Consulter la mission"
+                        className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                        style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#F1F5F9", border: "1px solid #E2E8F0", color: "#64748B" }}
+                        title={mode === "MISSION" ? "Consulter la mission" : "Consulter la tâche"}
                       >
-                        <Eye size={18} />
+                        <Eye size={14} />
                       </button>
                       {(currentUser?.role === "Super-administrateur" ||
                         currentUser?.role?.name === "Super-administrateur" ||
@@ -2111,12 +2132,14 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                               }
                             }
                           }}
-                          className="cursor-pointer" style={{background:"none",border:"none",color:"#EF4444",padding:"4px"}}
-                          title="Supprimer la mission"
+                          className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                          style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#FEF2F2", border: "1px solid #FECACA", color: "#DC2626" }}
+                          title={mode === "MISSION" ? "Supprimer la mission" : "Supprimer la tâche"}
                         >
-                          <Trash size={18} />
+                          <Trash size={14} />
                         </button>
                       )}
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -2166,7 +2189,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
       {confirmingStatus && (
         <div
-          className="fixed w-full h-full flex items-center justify-center" style={{backgroundColor:"rgba(0,0,0,0.5)",zIndex:9999}}
+          className="fixed inset-0 w-full h-full flex items-center justify-center" style={{backgroundColor:"rgba(0,0,0,0.5)",zIndex:9999}}
         >
           <div
             className="p-8 w-full text-center" style={{background:"#FFF",borderRadius:"12px",boxShadow:"0 10px 25px rgba(0,0,0,0.2)",maxWidth:"400px"}}

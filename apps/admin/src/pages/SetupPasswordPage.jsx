@@ -1,6 +1,7 @@
 import { getSafeApiUrl } from "../utils/helpers";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Lock, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 
 const SetupPasswordPage = () => {
   const [searchParams] = useSearchParams();
@@ -9,15 +10,38 @@ const SetupPasswordPage = () => {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
+  // Nettoyage sécurisé des minuteurs pour éviter les fuites de mémoire
+  useEffect(() => {
+    if (!error) return;
+    const timer = setTimeout(() => setError(null), 4000);
+    return () => clearTimeout(timer);
+  }, [error]);
+
+  useEffect(() => {
+    if (!success) return;
+    const redirectTimer = setTimeout(() => {
+      navigate("/");
+    }, 2500);
+    return () => clearTimeout(redirectTimer);
+  }, [success, navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (password.length < 8) {
+      setError("Le mot de passe doit comporter au moins 8 caractères.");
+      return;
+    }
+
     if (password !== confirmPassword) {
-      setError("Les mots de passe ne correspondent pas.");
-      setTimeout(() => setError(null), 3000);
+      setError("Les mots de passe saisis ne correspondent pas.");
       return;
     }
 
@@ -31,20 +55,15 @@ const SetupPasswordPage = () => {
         body: JSON.stringify({ token, password }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error || "Une erreur est survenue.");
-        setTimeout(() => setError(null), 3000);
+        setError(data.error || "Une erreur est survenue lors de l'activation.");
       } else {
         setSuccess(true);
-        setTimeout(() => {
-          navigate("/");
-        }, 3000);
       }
     } catch (err) {
-      setError("Impossible de contacter le serveur.");
-      setTimeout(() => setError(null), 3000);
+      setError("Impossible de contacter le serveur. Vérifiez votre connexion.");
     } finally {
       setLoading(false);
     }
@@ -53,13 +72,25 @@ const SetupPasswordPage = () => {
   if (!token) {
     return (
       <div
-        className="flex items-center justify-center" style={{height:"100vh",background:"#F8FAFC"}}
+        className="flex items-center justify-center min-h-screen bg-slate-50 p-4"
       >
-        <div className="card text-center" style={{maxWidth:400}}>
-          <h2 className="mb-4" style={{color:"#E53E3E"}}>
-            Lien invalide
+        <div className="card text-center max-w-md w-full p-8 bg-white border border-slate-200 rounded-xl shadow-sm">
+          <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-red-100 text-red-600 flex items-center justify-center">
+            <AlertCircle size={26} />
+          </div>
+          <h2 className="text-xl font-bold text-slate-800 mb-2">
+            Lien d'activation manquant ou invalide
           </h2>
-          <p>Le lien d'activation est manquant ou incorrect.</p>
+          <p className="text-sm text-slate-500 mb-6 leading-relaxed">
+            Le lien d'invitation est incomplet ou a expiré. Veuillez contacter un administrateur pour recevoir une nouvelle invitation.
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="btn btn-outline w-full py-2.5 text-sm"
+          >
+            Retourner à l'accueil
+          </button>
         </div>
       </div>
     );
@@ -67,52 +98,53 @@ const SetupPasswordPage = () => {
 
   return (
     <div
-      className="flex items-center justify-center" style={{height:"100vh",background:"#F8FAFC"}}
+      className="flex items-center justify-center min-h-screen bg-slate-50 p-4"
     >
       <div
-        className="card w-full p-8" style={{maxWidth:400}}
+        className="w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-lg p-8"
       >
         <div className="text-center mb-8">
           <div
-            className="bg-[var(--primary)] text-white p-4 mb-6" style={{borderRadius:"8px"}}
+            className="bg-[var(--primary)] text-white p-3.5 mb-6 rounded-xl shadow-sm"
           >
             <h1
-              style={{
-                margin: 0,
-                fontSize: "1.2rem",
-                textTransform: "uppercase",
-                letterSpacing: "2px",
-              }}
+              className="text-sm font-extrabold uppercase tracking-widest"
+              style={{ margin: 0 }}
             >
               MENUA CONSULTING
             </h1>
           </div>
-          <h2 className="font-semibold" style={{fontSize:"1.5rem"}}>
+          <h2 className="text-2xl font-bold text-slate-900">
             Activer votre compte
           </h2>
           <p
-            className="mt-2" style={{color:"var(--text-muted)"}}
+            className="mt-2 text-sm text-slate-500"
           >
-            Veuillez configurer votre mot de passe pour accéder au CRM.
+            Configurez votre mot de passe pour accéder à votre espace CRM.
           </p>
         </div>
 
         {error && (
           <div
-            className="p-4 mb-4 text-center" style={{background:"#FEE2E2",color:"#DC2626",borderRadius:"8px"}}
+            className="flex items-start gap-2.5 p-3.5 mb-5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm"
           >
-            {error}
+            <AlertCircle size={18} className="shrink-0 mt-0.5" />
+            <span>{error}</span>
           </div>
         )}
 
         {success ? (
           <div
-            className="p-4 text-center" style={{background:"#D1FAE5",color:"#059669",borderRadius:"8px"}}
+            className="flex flex-col items-center p-6 text-center rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800"
           >
-            <h3 style={{ margin: "0 0 0.5rem 0" }}>Compte activé !</h3>
-            <p style={{ margin: 0,  }}>
-              Redirection vers la page de connexion...
+            <div className="w-12 h-12 mb-3 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+              <CheckCircle2 size={28} />
+            </div>
+            <h3 className="text-lg font-bold mb-1">Compte activé avec succès !</h3>
+            <p className="text-sm text-emerald-700">
+              Redirection automatique vers la page de connexion...
             </p>
+            <Loader2 size={18} className="animate-spin mt-4 text-emerald-600" />
           </div>
         ) : (
           <form
@@ -122,44 +154,85 @@ const SetupPasswordPage = () => {
             <div>
               <label
                 htmlFor="setup-password"
-                className="block mb-2 font-medium"
+                className="block mb-1.5 text-xs font-semibold text-slate-700"
               >
-                Nouveau mot de passe
+                Nouveau mot de passe <span className="text-red-500">*</span>
               </label>
-              <input
-                id="setup-password"
-                type="password"
-                required
-                minLength={8}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#F8FAFC"}}
-              />
+              <div className="relative">
+                <input
+                  id="setup-password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  minLength={8}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Minimum 8 caractères"
+                  className="w-full pr-10 pl-3.5 py-2.5 text-sm rounded-lg border border-slate-300 bg-white text-slate-800 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition"
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                  title={showPassword ? "Masquer" : "Afficher"}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
+
             <div>
               <label
                 htmlFor="setup-confirm-password"
-                className="block mb-2 font-medium"
+                className="block mb-1.5 text-xs font-semibold text-slate-700"
               >
-                Confirmer le mot de passe
+                Confirmer le mot de passe <span className="text-red-500">*</span>
               </label>
-              <input
-                id="setup-confirm-password"
-                type="password"
-                required
-                minLength={8}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#F8FAFC"}}
-              />
+              <div className="relative">
+                <input
+                  id="setup-confirm-password"
+                  type={showConfirmPassword ? "text" : "password"}
+                  required
+                  minLength={8}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Répétez le mot de passe"
+                  className="w-full pr-10 pl-3.5 py-2.5 text-sm rounded-lg border border-slate-300 bg-white text-slate-800 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition"
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                  title={showConfirmPassword ? "Masquer" : "Afficher"}
+                >
+                  {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
+
+            {/* Aide visuelle sur la correspondance */}
+            {confirmPassword && (
+              <div className="text-xs flex items-center gap-1.5 mt-0.5">
+                {password === confirmPassword ? (
+                  <span className="text-emerald-600 font-medium flex items-center gap-1">
+                    <CheckCircle2 size={13} /> Les mots de passe correspondent
+                  </span>
+                ) : (
+                  <span className="text-amber-600 font-medium flex items-center gap-1">
+                    <AlertCircle size={13} /> Les mots de passe sont différents
+                  </span>
+                )}
+              </div>
+            )}
 
             <button
               type="submit"
-              className="btn btn-primary w-full mt-4 justify-center p-3"
+              className="btn btn-primary w-full mt-4 justify-center py-2.5 text-sm font-semibold flex items-center gap-2 shadow-sm"
               disabled={loading}
             >
-              {loading ? "Enregistrement..." : "Activer mon compte"}
+              {loading && <Loader2 size={16} className="animate-spin" />}
+              {loading ? "Enregistrement en cours..." : "Activer mon compte"}
             </button>
           </form>
         )}
@@ -169,3 +242,4 @@ const SetupPasswordPage = () => {
 };
 
 export default SetupPasswordPage;
+

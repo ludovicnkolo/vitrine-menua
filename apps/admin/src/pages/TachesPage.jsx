@@ -1,8 +1,13 @@
 import React from "react";
 import GenericTaskPage from "../components/GenericTaskPage";
 
-const TachesPage = () => {
-  return <GenericTaskPage mode="TACHE" />;
+/**
+ * TachesPage sert de vue dédiée à la gestion opérationnelle des tâches individuelles.
+ * Note architecturale : exécute GenericTaskPage en mode "TACHE".
+ */
+export const TachesPage = (props) => {
+  return <GenericTaskPage mode="TACHE" {...props} />;
 };
 
-export default TachesPage;
+export default React.memo(TachesPage);
+

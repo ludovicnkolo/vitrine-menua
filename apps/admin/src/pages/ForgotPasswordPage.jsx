@@ -1,139 +1,118 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { getSafeApiUrl } from "../utils/helpers";
-import { Link, useNavigate } from "react-router-dom";
 
 const ForgotPasswordPage = () => {
-  const [resetStep, setResetStep] = useState(1); // 1=ask email+pass, 2=verify otp
   const [email, setEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [otp, setOtp] = useState(["", "", "", ""]);
-  const inputRefs = useRef([]);
   const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
-  const handleSendOtp = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const cleanEmail = email.trim();
+
+    if (!cleanEmail) {
+      setError("Veuillez renseigner votre adresse e-mail.");
+      return;
+    }
+
     setLoading(true);
     setError("");
-    setSuccessMessage("");
+
     try {
       const res = await fetch(getSafeApiUrl("/api/auth/forgot-password"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: cleanEmail }),
       });
-      const data = await res.json();
-      if (data.success) {
-        setSuccessMessage("Un lien de réinitialisation sécurisé vous a été envoyé par e-mail.");
-      } else {
-        setError(data.error || "Erreur lors de la demande");
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Erreur réseau ou serveur: " + err.message);
-    }
-    setLoading(false);
-  };
 
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccessMessage("");
-    try {
-      const res = await fetch(getSafeApiUrl("/api/auth/reset-password-otp"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp: otp.join(""), newPassword }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setSuccessMessage("Mot de passe réinitialisé avec succès ! Vous allez être redirigé vers la connexion.");
-        setTimeout(() => {
-          navigate("/");
-        }, 3000);
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.success) {
+        setSubmitted(true);
       } else {
-        setError(data.error || "OTP invalide ou expiré");
+        setError(data.error || "Impossible d'envoyer le lien de réinitialisation.");
       }
-    } catch (err) {
-      console.error(err);
-      setError("Erreur réseau ou serveur: " + err.message);
+    } catch {
+      setError("Erreur réseau. Impossible de contacter le serveur d'authentification.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
-    <div
-      className="flex items-center justify-center" style={{minHeight:"100vh",background:"var(--bg-main)"}}
-    >
-      <div
-        className="card w-full p-8" style={{maxWidth:"400px"}}
-      >
-        <div className="text-center mb-8">
-          <div
-            className="bg-[var(--primary)] p-6 flex items-center justify-center mb-6" style={{borderRadius:"12px"}}
-          >
-            <img
-              src="/logo.png"
-              alt="Menua Consulting"
-              style={{ height: "70px", objectFit: "contain" }}
-            />
-          </div>
+    <div className="flex items-center justify-center min-h-screen bg-[var(--bg-main)] p-4">
+      <div className="w-full max-w-sm bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+        <div className="bg-[var(--primary)] p-5 rounded-xl flex items-center justify-center mb-6 shadow-sm">
+          <img
+            src="/logo.png"
+            alt="Menua Consulting"
+            style={{ height: "56px", objectFit: "contain" }}
+          />
         </div>
 
-        {successMessage ? (
-          <div className="text-center flex flex-col gap-4">
-            <div className="p-4 font-medium" style={{background:"#D1FAE5",color:"#065F46",borderRadius:"8px"}}>
-              {successMessage}
-            </div>
+        {submitted ? (
+          <div className="text-center flex flex-col items-center gap-4 py-2">
+            <CheckCircle2 size={48} className="text-emerald-600" />
+            <h2 className="text-base font-bold text-slate-800">E-mail de réinitialisation envoyé</h2>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Si un compte est associé à <strong>{email}</strong>, un lien sécurisé vous a été transmis par courrier électronique.
+            </p>
             <Link
               to="/"
-              className="btn btn-primary justify-center w-full" style={{padding:"0.85rem",fontSize:"1rem",textDecoration:"none"}}
+              className="btn btn-primary w-full mt-2 py-2.5 text-sm font-semibold text-center justify-center"
             >
               Retour à la connexion
             </Link>
           </div>
         ) : (
-          <form
-            onSubmit={handleSendOtp}
-            className="flex flex-col gap-4"
-          >
-            <h3 className="text-center">Réinitialiser le mot de passe</h3>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div className="text-center mb-2">
+              <h1 className="text-lg font-bold text-slate-800">Mot de passe oublié</h1>
+              <p className="text-xs text-slate-500 mt-1">
+                Saisissez votre e-mail pour recevoir un lien d'activation sécurisé.
+              </p>
+            </div>
+
             {error && (
-              <div style={{ padding: "0.75rem", background: "#FEE2E2", color: "#B91C1C", borderRadius: "8px" }}>
-                {error}
+              <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg font-medium">
+                <AlertCircle size={16} className="shrink-0" />
+                <span>{error}</span>
               </div>
             )}
-            <p className="text-center" style={{fontSize:"0.95rem",color:"var(--text-muted)"}}>
-              Saisissez votre adresse e-mail. Nous vous enverrons un lien unique sécurisé.
-            </p>
+
             <div>
-              <label htmlFor="forgot-email" className="block font-medium" style={{marginBottom:"0.25rem"}}>
-                Email
+              <label htmlFor="forgot-email" className="block text-xs font-semibold text-slate-700 mb-1">
+                Adresse e-mail
               </label>
               <input
                 id="forgot-email"
                 type="email"
+                required
+                disabled={loading}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
+                className="w-full p-2.5 text-sm rounded-lg border border-slate-300 bg-white text-slate-800 outline-none focus:border-blue-700 disabled:bg-slate-50"
+                placeholder="nom@menuaconsulting.com"
               />
             </div>
+
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary mt-2 justify-center w-full" style={{padding:"0.85rem",fontSize:"1rem"}}
+              className="btn btn-primary w-full mt-2 py-2.5 text-sm font-semibold flex items-center justify-center gap-2"
             >
-              {loading ? "Envoi..." : "Envoyer le lien"}
+              {loading && <Loader2 size={16} className="animate-spin" />}
+              {loading ? "Envoi en cours..." : "Envoyer le lien"}
             </button>
+
             <Link
               to="/"
-              className="btn justify-center w-full" style={{border:"1px solid var(--border)",background:"transparent",textDecoration:"none"}}
+              className="w-full py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 text-center"
             >
-              Retour à la connexion
+              Annuler
             </Link>
           </form>
         )}
@@ -143,3 +122,4 @@ const ForgotPasswordPage = () => {
 };
 
 export default ForgotPasswordPage;
+

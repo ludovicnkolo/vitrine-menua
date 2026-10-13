@@ -9,7 +9,13 @@ const {
   CopyObjectCommand,
 } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { NodeHttpHandler } = require("@smithy/node-http-handler");
+const https = require("https");
 require("dotenv").config({ path: "../../.env" }); // Adjust according to execution context
+
+const ipv4RequestHandler = new NodeHttpHandler({
+  httpsAgent: new https.Agent({ family: 4, keepAlive: true }),
+});
 
 const s3Client = new S3Client({
   endpoint: process.env.S3_ENDPOINT,
@@ -19,6 +25,7 @@ const s3Client = new S3Client({
     secretAccessKey: process.env.S3_SECRET_KEY,
   },
   forcePathStyle: true, // often required for non-AWS S3-compatible APIs
+  requestHandler: ipv4RequestHandler,
 });
 
 const BUCKET_NAME = process.env.S3_BUCKET || "menua-ged-prod";
@@ -32,6 +39,7 @@ const s3PublicClient = new S3Client({
     secretAccessKey: process.env.S3_PUBLIC_SECRET_KEY,
   },
   forcePathStyle: true,
+  requestHandler: ipv4RequestHandler,
 });
 
 const PUBLIC_BUCKET_NAME = process.env.S3_PUBLIC_BUCKET || "menua-site-public-assets";
@@ -239,6 +247,7 @@ async function renameInS3(oldKey, newKey) {
 module.exports = {
   s3Client,
   s3PublicClient,
+  PUBLIC_BUCKET_NAME,
   uploadToS3,
   uploadToPublicS3,
   getPresignedUrl,

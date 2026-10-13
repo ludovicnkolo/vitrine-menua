@@ -564,4 +564,59 @@ router.delete("/trash/purge/:type/:id", authenticateJWT, async (req, res) => {
   }
 });
 
+router.delete("/trash/empty-all", authenticateJWT, async (req, res) => {
+  try {
+    const docs = await prisma.document.findMany({ where: { isDeleted: true } });
+    const { purgeFromS3 } = require("../../services/s3Service");
+    for (const doc of docs) {
+      if (doc.url) {
+        try {
+          await purgeFromS3(doc.url);
+        } catch (err) {
+          console.error("Purge S3 doc error:", err);
+        }
+      }
+    }
+    await prisma.document.deleteMany({ where: { isDeleted: true } });
+    await prisma.dossier.deleteMany({ where: { status: "CORBEILLE" } });
+    await prisma.mission.deleteMany({ where: { status: "CORBEILLE" } });
+    await prisma.tache.deleteMany({ where: { status: "CORBEILLE" } });
+
+    await logAudit(
+      req.user.id,
+      "PURGE_DEFINITIVE",
+      "CORBEILLE",
+      "Vidage intégral de la corbeille",
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress
+    );
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Erreur empty-all:", error);
+    res.status(500).json({ error: "Erreur lors du vidage de la corbeille." });
+  }
+});
+
+router.post("/trash/restore-all", authenticateJWT, async (req, res) => {
+  try {
+    await prisma.document.updateMany({ where: { isDeleted: true }, data: { isDeleted: false } });
+    await prisma.dossier.updateMany({ where: { status: "CORBEILLE" }, data: { status: "NOUVEAU" } });
+    await prisma.mission.updateMany({ where: { status: "CORBEILLE" }, data: { status: "NOUVEAU" } });
+    await prisma.tache.updateMany({ where: { status: "CORBEILLE" }, data: { status: "NOUVEAU" } });
+
+    await logAudit(
+      req.user.id,
+      "RESTORE_CORBEILLE",
+      "CORBEILLE",
+      "Restauration intégrale de la corbeille",
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress
+    );
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Erreur restore-all:", error);
+    res.status(500).json({ error: "Erreur lors de la restauration intégrale." });
+  }
+});
+
 module.exports = router;

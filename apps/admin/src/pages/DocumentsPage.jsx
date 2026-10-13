@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { getSafeApiUrl } from "../utils/helpers";
 import {
@@ -83,6 +83,8 @@ export default function DocumentsPage() {
   const [loading, setLoading] = useState(true);
   const [currentPath, setCurrentPath] = useState([]); // [{id, name}]
   const [searchQuery, setSearchQuery] = useState("");
+  const replaceFileInputRef = useRef(null);
+  const [replaceTargetId, setReplaceTargetId] = useState(null);
 
   // Modals state
   const [showNewFolderModal, setShowNewFolderModal] = useState(false);
@@ -184,27 +186,27 @@ export default function DocumentsPage() {
     setSearchQuery("");
   };
 
-  // Search Logic
+  // Search Logic (Memoized)
   const isSearching = searchQuery.trim() !== "";
-  let searchFolders = [];
-  let searchFiles = [];
+  const { searchFolders, searchFiles } = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return { searchFolders: [], searchFiles: [] };
 
-  if (isSearching) {
-    const q = searchQuery.toLowerCase();
-    searchFolders = dossiers.filter(
+    const fldrs = dossiers.filter(
       (d) => d.name && d.name.toLowerCase().includes(q),
     );
-
+    const fls = [];
     dossiers.forEach((d) => {
       if (d.documents) {
         d.documents.forEach((doc) => {
           if (doc.name && doc.name.toLowerCase().includes(q)) {
-            searchFiles.push({ ...doc, dossierName: d.name });
+            fls.push({ ...doc, dossierName: d.name });
           }
         });
       }
     });
-  }
+    return { searchFolders: fldrs, searchFiles: fls };
+  }, [searchQuery, dossiers]);
 
   // Context Menu Handlers
   const handleContextMenu = (e, item, type) => {
@@ -238,9 +240,11 @@ export default function DocumentsPage() {
   };
 
   useEffect(() => {
-    document.addEventListener("click", closeContextMenu);
-    return () => document.removeEventListener("click", closeContextMenu);
-  }, []);
+    if (!contextMenu) return;
+    const handleClick = () => setContextMenu(null);
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+  }, [contextMenu]);
 
   const handleDeleteDossier = async (folder) => {
     // Bloquer les dossiers racines (dossiers mères : pas de parent)
@@ -290,30 +294,10 @@ export default function DocumentsPage() {
     }
   };
 
-  const handleRenameDocument = async (doc) => {
-    const currentName = doc.name;
-    const newName = prompt("Entrez le nouveau nom pour ce document :", currentName);
-    if (!newName || newName === currentName) return;
-
-    try {
-      const token = sessionStorage.getItem("adminToken");
-      const res = await fetch(getSafeApiUrl(`/api/crm/documents/${doc.id}`), {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name: newName }),
-      });
-      if (res.ok) {
-        fetchDossiers();
-      } else {
-        const err = await res.json().catch(() => ({}));
-        window.customAlert("Erreur lors du renommage: " + (err.error || res.status));
-      }
-    } catch (e) {
-      console.error(e);
-    }
+  const handleRenameDocument = (doc) => {
+    setRenameItem({ ...doc, type: "file" });
+    setRenameName(doc.name);
+    setShowRenameModal(true);
   };
 
   const handleDeleteDocument = async (id) => {
@@ -353,85 +337,121 @@ export default function DocumentsPage() {
     }
   };
 
-  const handleDownloadDocument = (url) => {
-    const token = sessionStorage.getItem("adminToken");
-    const parts = url.split("/");
-    let bucket = "formulaires";
-    let filename = url;
-    if (parts.length > 1) {
-      bucket = parts.shift();
-      filename = parts.join("/");
+  const handleDownloadDocument = async (url, filename) => {
+    try {
+      const token = sessionStorage.getItem("adminToken");
+      const parts = url.split("/");
+      let bucket = "formulaires";
+      let fileKey = url;
+      if (parts.length > 1) {
+        bucket = parts.shift();
+        fileKey = parts.join("/");
+      }
+
+      const downloadUrl = getSafeApiUrl(
+        `/api/files/download/${encodeURIComponent(bucket)}/${encodeURIComponent(fileKey)}`
+      );
+
+      const res = await fetch(downloadUrl, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) throw new Error("Échec du téléchargement");
+
+      const blob = await res.blob();
+      const objectUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = filename || fileKey.split("/").pop();
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(objectUrl);
+    } catch (err) {
+      console.error(err);
+      window.customAlert("Impossible de télécharger le fichier.");
     }
-    const downloadUrl = getSafeApiUrl(
-      `/api/files/download/${encodeURIComponent(bucket)}/${encodeURIComponent(filename)}?token=${token}`,
-    );
-    window.open(downloadUrl, "_blank");
   };
 
   const handleReplaceDocument = (id) => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.onchange = async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      setIsSubmitting(true);
-      const formData = new FormData();
-      formData.append("file", file);
-
-      try {
-        const token = sessionStorage.getItem("adminToken");
-        const res = await fetch(getSafeApiUrl(`/api/files/replace/${id}`), {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        });
-
-        if (res.ok) {
-          fetchDossiers();
-          window.customAlert("Fichier remplacé avec succès", "success");
-        } else {
-          const errData = await res.json().catch(() => ({}));
-          window.customAlert(
-            "Erreur lors du remplacement : " +
-            (errData.error || res.statusText),
-          );
-        }
-      } catch (err) {
-        console.error(err);
-        window.customAlert("Erreur de connexion");
-      } finally {
-        setIsSubmitting(false);
-      }
-    };
-    input.click();
+    setReplaceTargetId(id);
+    if (replaceFileInputRef.current) {
+      replaceFileInputRef.current.value = "";
+      replaceFileInputRef.current.click();
+    }
   };
 
-  const handleRenameFolder = async (e) => {
+  const handleReplaceFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !replaceTargetId) return;
+
+    setIsSubmitting(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const token = sessionStorage.getItem("adminToken");
+      const res = await fetch(getSafeApiUrl(`/api/files/replace/${replaceTargetId}`), {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+
+      if (res.ok) {
+        fetchDossiers();
+        window.customAlert("Fichier remplacé avec succès", "success");
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        window.customAlert(
+          "Erreur lors du remplacement : " +
+            (errData.error || res.statusText),
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      window.customAlert("Erreur de connexion");
+    } finally {
+      setIsSubmitting(false);
+      setReplaceTargetId(null);
+      if (replaceFileInputRef.current) {
+        replaceFileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleRenameSubmit = async (e) => {
     e.preventDefault();
     if (!renameItem || !renameName.trim()) return;
     setIsSubmitting(true);
+
+    const isDoc = renameItem.type === "file" || !!renameItem.dossierId;
+    const endpoint = isDoc
+      ? `/api/crm/documents/${renameItem.id}`
+      : `/api/crm/dossiers/${renameItem.id}`;
+
     try {
       const token = sessionStorage.getItem("adminToken");
-      const res = await fetch(
-        getSafeApiUrl(`/api/crm/dossiers/${renameItem.id}`),
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ name: renameName.trim() }),
+      const res = await fetch(getSafeApiUrl(endpoint), {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+        body: JSON.stringify({ name: renameName.trim() }),
+      });
+
       if (res.ok) {
         setShowRenameModal(false);
         setRenameItem(null);
         setRenameName("");
         fetchDossiers();
-      } else window.customAlert("Erreur lors du renommage");
+      } else {
+        const err = await res.json().catch(() => ({}));
+        window.customAlert(err.error || "Erreur lors du renommage");
+      }
     } catch (e) {
       console.error(e);
+      window.customAlert("Erreur de communication.");
     } finally {
       setIsSubmitting(false);
     }
@@ -553,46 +573,85 @@ export default function DocumentsPage() {
       ))
     )
       return;
+    setIsSubmitting(true);
     try {
       const token = sessionStorage.getItem("adminToken");
-      await Promise.all(
-        normalizedTrashList.map((item) => {
-          const type = item.type || "document";
-          return fetch(getSafeApiUrl(`/api/crm/trash/purge/${type}/${item.id}`), {
-            method: "DELETE",
-            headers: { Authorization: `Bearer ${token}` },
-          });
-        }),
-      );
-      fetchTrash();
-      if (window.customAlert) {
+      const res = await fetch(getSafeApiUrl("/api/crm/trash/empty-all"), {
+        method: "DELETE",
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (res.ok) {
+        fetchTrash();
+        window.customAlert("La corbeille a été vidée avec succès.");
+      } else {
+        // Fallback séquentiel par petits lots
+        for (let i = 0; i < normalizedTrashList.length; i += 5) {
+          const chunk = normalizedTrashList.slice(i, i + 5);
+          await Promise.all(
+            chunk.map((item) => {
+              const type = item.type || "document";
+              return fetch(getSafeApiUrl(`/api/crm/trash/purge/${type}/${item.id}`), {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` },
+              });
+            })
+          );
+        }
+        fetchTrash();
         window.customAlert("La corbeille a été vidée avec succès.");
       }
     } catch (e) {
       console.error(e);
+      window.customAlert("Erreur réseau.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleRestoreAllTrash = async () => {
     if (!normalizedTrashList.length) return;
+    setIsSubmitting(true);
     try {
       const token = sessionStorage.getItem("adminToken");
-      await Promise.all(
-        normalizedTrashList.map((item) => {
-          const type = item.type || "document";
-          return fetch(getSafeApiUrl(`/api/crm/trash/restore/${type}/${item.id}`), {
-            method: "POST",
-            headers: { Authorization: `Bearer ${token}` },
-          });
-        }),
-      );
-      if (window.customAlert) {
+      const res = await fetch(getSafeApiUrl("/api/crm/trash/restore-all"), {
+        method: "POST",
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (res.ok) {
         window.customAlert("Tous les éléments ont été restaurés avec succès.");
+        fetchTrash();
+        fetchDossiers();
+      } else {
+        // Fallback séquentiel par petits lots
+        for (let i = 0; i < normalizedTrashList.length; i += 5) {
+          const chunk = normalizedTrashList.slice(i, i + 5);
+          await Promise.all(
+            chunk.map((item) => {
+              const type = item.type || "document";
+              return fetch(getSafeApiUrl(`/api/crm/trash/restore/${type}/${item.id}`), {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+              });
+            })
+          );
+        }
+        window.customAlert("Tous les éléments ont été restaurés avec succès.");
+        fetchTrash();
+        fetchDossiers();
       }
-      fetchTrash();
-      fetchDossiers();
     } catch (e) {
       console.error(e);
+      window.customAlert("Erreur réseau.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -634,7 +693,7 @@ export default function DocumentsPage() {
       if (bytes >= 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + " Mo";
       return (bytes / 1024).toFixed(1) + " Ko";
     }
-    return normalizedTrashList.length > 0 ? "14.2 Mo" : "0 Ko";
+    return normalizedTrashList.length > 0 ? "—" : "0 Ko";
   }, [normalizedTrashList]);
 
   const getTrashOrigin = (item) => {
@@ -645,7 +704,7 @@ export default function DocumentsPage() {
   };
 
   const getTrashAuthorAndRemaining = (item) => {
-    const author = item.uploadedBy?.name || item.author || "Rosette Fouelefack";
+    const author = item.uploadedBy?.name || item.author || "Système";
     const parts = author.split(" ");
     const shortAuthor = parts.length > 1 ? `${parts[0]} ${parts[1].charAt(0)}.` : author;
 
@@ -1431,7 +1490,7 @@ export default function DocumentsPage() {
       {/* Modal Nouveau Dossier */}
       {showNewFolderModal && (
         <div
-          className="fade-in fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1100}}
+          className="fade-in fixed inset-0 flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1100}}
         >
           <div
             className="p-8" style={{background:"#FFF",borderRadius:"8px",width:"90%",maxWidth:"400px",boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}
@@ -1492,7 +1551,7 @@ export default function DocumentsPage() {
       {/* Modal Ajouter Fichier */}
       {showUploadModal && (
         <div
-          className="fade-in fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1100}}
+          className="fade-in fixed inset-0 flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1100}}
         >
           <div
             className="p-8" style={{background:"#FFF",borderRadius:"8px",width:"90%",maxWidth:"400px",boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}
@@ -1552,7 +1611,7 @@ export default function DocumentsPage() {
       {/* Modal Renommer Dossier */}
       {showRenameModal && (
         <div
-          className="fade-in fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1100}}
+          className="fade-in fixed inset-0 flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1100}}
         >
           <div
             className="p-8" style={{background:"#FFF",borderRadius:"8px",width:"90%",maxWidth:"400px",boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}
@@ -1561,7 +1620,7 @@ export default function DocumentsPage() {
               className="flex justify-between items-center mb-6"
             >
               <h3 className="font-semibold" style={{fontSize:"1.25rem"}}>
-                Renommer le dossier
+                {renameItem?.type === "file" || renameItem?.dossierId ? "Renommer le document" : "Renommer le dossier"}
               </h3>
               <button
                 onClick={() => setShowRenameModal(false)}
@@ -1570,12 +1629,12 @@ export default function DocumentsPage() {
                 <X size={20} />
               </button>
             </div>
-            <form onSubmit={handleRenameFolder}>
+            <form onSubmit={handleRenameSubmit}>
               <div className="mb-6">
                 <label
                   className="block mb-2 font-medium"
                 >
-                  Nouveau nom *
+                  {renameItem?.type === "file" || renameItem?.dossierId ? "Nouveau nom du document *" : "Nouveau nom du dossier *"}
                 </label>
                 <input
                   autoFocus
@@ -1613,7 +1672,7 @@ export default function DocumentsPage() {
       {/* Modal Corbeille */}
       {showTrashModal && (
         <div
-          className="fade-in fixed flex items-center justify-center p-4" style={{background:"rgba(0,0,0,0.5)",zIndex:1100}}
+          className="fade-in fixed inset-0 flex items-center justify-center p-4" style={{background:"rgba(0,0,0,0.5)",zIndex:1100}}
         >
           <div
             className="w-full flex flex-col" style={{background:"#FFF",borderRadius:"12px",maxWidth:"880px",maxHeight:"90vh",boxShadow:"0 20px 40px rgba(0,0,0,0.15)",overflow:"hidden"}}
@@ -1965,6 +2024,15 @@ export default function DocumentsPage() {
       <FilePreviewModal
         previewFile={previewFile}
         onClose={() => setPreviewFile(null)}
+      />
+
+      {/* Hidden input for replacing documents safely without orphan DOM nodes */}
+      <input
+        type="file"
+        ref={replaceFileInputRef}
+        onChange={handleReplaceFileChange}
+        className="hidden"
+        style={{ display: "none" }}
       />
     </div>
   );

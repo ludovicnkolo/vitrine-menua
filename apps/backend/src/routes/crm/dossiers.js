@@ -246,7 +246,11 @@ router.get("/dossiers", async (req, res) => {
     }
 
     if (origin && origin !== "all") {
-      where.AND.push({ origin: origin });
+      if (origin === "EQUIPE" || origin === "COLLABORATEUR") {
+        where.AND.push({ origin: { in: ["COLLABORATEUR", "EQUIPE"] } });
+      } else {
+        where.AND.push({ origin: origin });
+      }
     }
     if (role && role !== "all") {
       where.AND.push({ createdBy: { role: { name: role } } });

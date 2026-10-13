@@ -136,7 +136,7 @@ const SmsModal = ({ isOpen, onClose, contextData }) => {
 
   return (
     <div
-      className="fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
+      className="fixed inset-0 flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
     >
       <div
         className="fade-in p-8" style={{background:"#FFF",width:"90%",maxWidth:"600px",borderRadius:"12px",boxShadow:"0 10px 25px rgba(0,0,0,0.2)"}}

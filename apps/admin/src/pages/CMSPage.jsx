@@ -105,6 +105,8 @@ const CMSPage = () => {
     message: "",
     onConfirm: null,
     type: "warning",
+    confirmText: "Confirmer",
+    cancelText: "Annuler",
   });
 
   const [saveOptionsModal, setSaveOptionsModal] = useState({
@@ -186,10 +188,123 @@ const CMSPage = () => {
     }
   };
 
+  const handleRemoveBlacklistEmail = (emailToRemove) => {
+    setConfirmModal({
+      isOpen: true,
+      title: "Confirmation de déblocage",
+      message: (
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          <p style={{ margin: 0, color: "var(--text-main)", fontSize: "0.95rem" }}>
+            Êtes-vous sûr de vouloir retirer cette adresse de la liste des emails indésirables ?
+          </p>
+          <div
+            style={{
+              padding: "0.5rem 0.75rem",
+              background: "#FEE2E2",
+              borderRadius: "6px",
+              color: "#DC2626",
+              fontWeight: 600,
+              fontSize: "0.9rem",
+              wordBreak: "break-all",
+            }}
+          >
+            {emailToRemove}
+          </div>
+          <p style={{ margin: 0, fontSize: "0.82rem", color: "#64748B" }}>
+            Cette adresse sera immédiatement débloquée et autorisée à nouveau à soumettre des formulaires de contact et de recrutement.
+          </p>
+        </div>
+      ),
+      type: "danger",
+      confirmText: "Débloquer l'adresse",
+      cancelText: "Annuler",
+      onConfirm: async () => {
+        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+        const updatedList = (formSettings.blacklistedEmails || []).filter(
+          (e) => e.toLowerCase() !== emailToRemove.toLowerCase(),
+        );
+        const updatedSettings = {
+          ...formSettings,
+          blacklistedEmails: updatedList,
+        };
+
+        // 1. Mise à jour immédiate de l'affichage local
+        setFormSettings(updatedSettings);
+
+        // 2. Persistance immédiate sur le serveur pour garantir qu'elle ne réapparaît jamais après actualisation
+        try {
+          const res = await apiFetch(
+            "/api/cms/settings/forms",
+            "PUT",
+            updatedSettings,
+          );
+          if (res.ok) {
+            const data = await res.json().catch(() => ({}));
+            if (data.data) setFormSettings(data.data);
+            showToast(`L'adresse ${emailToRemove} a été débloquée avec succès.`);
+          } else {
+            showToast("Erreur lors de la mise à jour des paramètres sur le serveur.", "error");
+          }
+        } catch (err) {
+          console.error("Erreur déblocage email:", err);
+          showToast("Erreur réseau lors de la suppression.", "error");
+        }
+      },
+    });
+  };
+
+  const handleAddBlacklistEmail = async () => {
+    const trimmed = (newBlacklistEmail || "").trim().toLowerCase();
+    if (!trimmed) return;
+    if (formSettings.blacklistedEmails?.some((e) => e.toLowerCase() === trimmed)) {
+      showToast("Cette adresse email est déjà dans la liste de blocage.", "error");
+      return;
+    }
+    const updatedList = [...(formSettings.blacklistedEmails || []), trimmed];
+    const updatedSettings = {
+      ...formSettings,
+      blacklistedEmails: updatedList,
+    };
+    setFormSettings(updatedSettings);
+    setNewBlacklistEmail("");
+
+    try {
+      const res = await apiFetch(
+        "/api/cms/settings/forms",
+        "PUT",
+        updatedSettings,
+      );
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        if (data.data) setFormSettings(data.data);
+        showToast(`L'adresse ${trimmed} a été ajoutée et bloquée.`);
+      } else {
+        showToast("Erreur lors de l'enregistrement de l'adresse.", "error");
+      }
+    } catch (err) {
+      console.error("Erreur ajout email blacklist:", err);
+      showToast("Erreur réseau.", "error");
+    }
+  };
+
   useEffect(() => {
     fetchPublications();
     if (tab === "parametrage") fetchFormSettings();
   }, [tab]);
+
+  // Cleanup object URLs on unmount
+  useEffect(() => {
+    return () => {
+      if (previewImage && previewImage.startsWith("blob:")) {
+        URL.revokeObjectURL(previewImage);
+      }
+      sections.forEach((sec) => {
+        if (sec.imagePreview && sec.imagePreview.startsWith("blob:")) {
+          URL.revokeObjectURL(sec.imagePreview);
+        }
+      });
+    };
+  }, [previewImage, sections]);
 
   const openModal = (pub = null) => {
     if (pub) {
@@ -264,19 +379,27 @@ const CMSPage = () => {
   };
 
   const closeModal = () => {
+    if (previewImage && previewImage.startsWith("blob:")) {
+      URL.revokeObjectURL(previewImage);
+    }
+    sections.forEach((sec) => {
+      if (sec.imagePreview && sec.imagePreview.startsWith("blob:")) {
+        URL.revokeObjectURL(sec.imagePreview);
+      }
+    });
     setShowModal(false);
     setEditingPub(null);
   };
 
   const handleSaveAction = async (targetStatus = "PUBLIE", showPreview = false) => {
-    if (!title) {
+    if (!title || !title.trim()) {
       showToast("Le titre (FR) est requis", "error");
       return;
     }
 
     const data = {
-      title,
-      title_en,
+      title: title.trim(),
+      title_en: title_en.trim(),
       type: "ACTUALITE",
       category,
       category_en,
@@ -285,20 +408,27 @@ const CMSPage = () => {
       coverImage,
       status: targetStatus,
       sections: sections.map((s) => ({
-        subtitle: s.subtitle,
-        text: s.text,
-        imageKey: s.imageKey,
+        subtitle: s.subtitle || "",
+        text: s.text || "",
+        imageKey: s.imageKey || "",
       })),
       sections_en: sections.map((s) => ({
-        subtitle: s.subtitle_en,
-        text: s.text_en,
-        imageKey: s.imageKey,
+        subtitle: s.subtitle_en || "",
+        text: s.text_en || "",
+        imageKey: s.imageKey || "",
       })),
     };
 
     let previewWindow = null;
     if (showPreview) {
-      previewWindow = window.open("about:blank", "_blank");
+      try {
+        previewWindow = window.open("", "_blank");
+        if (previewWindow) {
+          previewWindow.document.write("<!DOCTYPE html><html><head><title>Aperçu — MENUA CONSULTING</title><style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#0A0F1D;color:#E2E8F0;text-align:center;}</style></head><body><div><h3 style='margin-bottom:8px;'>Chargement de l'aperçu...</h3><p style='color:#94A3B8;font-size:14px;margin:0;'>Préparation de la publication en cours</p></div></body></html>");
+        }
+      } catch (e) {
+        console.warn("Popup bloquée par le navigateur", e);
+      }
     }
 
     try {
@@ -310,13 +440,19 @@ const CMSPage = () => {
       }
       if (res.ok) {
         const savedData = await res.json();
-        const savedPub = savedData.data;
-        if (showPreview && previewWindow) {
-          const vitrineUrl =
-            window.location.hostname === "localhost"
-              ? "http://localhost:3000"
-              : "https://menuaconsulting.com";
-          previewWindow.location.href = `${vitrineUrl}/actualites/${savedPub.id}?preview=true`;
+        const savedPub = savedData.data || savedData;
+        const vitrineUrl =
+          window.location.hostname === "localhost"
+            ? "http://localhost:3000"
+            : "https://menuaconsulting.com";
+        const previewUrl = `${vitrineUrl}/fr/actualites/${savedPub.id}?preview=true`;
+
+        if (showPreview) {
+          if (previewWindow && !previewWindow.closed) {
+            previewWindow.location.href = previewUrl;
+          } else {
+            window.open(previewUrl, "_blank", "noopener,noreferrer");
+          }
           setEditingPub(savedPub);
           showToast("Aperçu ouvert dans un nouvel onglet.");
         } else {
@@ -327,12 +463,13 @@ const CMSPage = () => {
         }
         fetchPublications();
       } else {
-        if (previewWindow) previewWindow.close();
-        showToast("Erreur lors de la sauvegarde.", "error");
+        if (previewWindow && !previewWindow.closed) previewWindow.close();
+        const err = await res.json().catch(() => ({}));
+        showToast(err.error || "Erreur lors de la sauvegarde.", "error");
       }
     } catch (err) {
       console.error(err);
-      if (previewWindow) previewWindow.close();
+      if (previewWindow && !previewWindow.closed) previewWindow.close();
       showToast("Erreur lors de la sauvegarde.", "error");
     }
   };
@@ -359,12 +496,18 @@ const CMSPage = () => {
     });
   };
 
-  // Upload cover image
+  // Upload cover image with ObjectURL cleanup
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (!file) return;
-    setPreviewImage(URL.createObjectURL(file));
+
+    if (previewImage && previewImage.startsWith("blob:")) {
+      URL.revokeObjectURL(previewImage);
+    }
+    const localBlob = URL.createObjectURL(file);
+    setPreviewImage(localBlob);
     setUploadingImg(true);
+
     const formData = new FormData();
     formData.append("image", file);
     try {
@@ -374,19 +517,28 @@ const CMSPage = () => {
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
-      const data = await res.json();
-      if (data.success) {
+      const data = await res.json().catch(() => ({}));
+      if (data.success && data.url) {
         setCoverImage(data.url);
         showToast("Image uploadée avec succès");
       } else {
-        showToast("Erreur lors de l'upload.", "error");
+        showToast(data.error || "Erreur lors de l'upload.", "error");
+        if (localBlob.startsWith("blob:")) {
+          URL.revokeObjectURL(localBlob);
+        }
         setPreviewImage(
-          coverImage ? (coverImage.startsWith("http") ? coverImage : "") : "",
+          coverImage ? (coverImage.startsWith("http") || coverImage.startsWith("/uploads") ? coverImage : "") : "",
         );
       }
     } catch (err) {
       console.error(err);
       showToast("Erreur réseau.", "error");
+      if (localBlob.startsWith("blob:")) {
+        URL.revokeObjectURL(localBlob);
+      }
+      setPreviewImage(
+        coverImage ? (coverImage.startsWith("http") || coverImage.startsWith("/uploads") ? coverImage : "") : "",
+      );
     } finally {
       setUploadingImg(false);
     }
@@ -395,8 +547,13 @@ const CMSPage = () => {
   // Sections helpers
   const addSection = () => setSections((prev) => [...prev, EMPTY_SECTION()]);
 
-  const removeSection = (idx) =>
+  const removeSection = (idx) => {
+    const sec = sections[idx];
+    if (sec?.imagePreview && sec.imagePreview.startsWith("blob:")) {
+      URL.revokeObjectURL(sec.imagePreview);
+    }
     setSections((prev) => prev.filter((_, i) => i !== idx));
+  };
 
   const moveSection = (idx, dir) => {
     setSections((prev) => {
@@ -415,11 +572,18 @@ const CMSPage = () => {
   };
 
   const handleSectionImageUpload = async (e, idx) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (!file) return;
+
+    const oldBlob = sections[idx]?.imagePreview;
+    if (oldBlob && oldBlob.startsWith("blob:")) {
+      URL.revokeObjectURL(oldBlob);
+    }
+
     const localUrl = URL.createObjectURL(file);
     updateSection(idx, "imagePreview", localUrl);
     updateSection(idx, "uploading", true);
+
     const formData = new FormData();
     formData.append("image", file);
     try {
@@ -429,12 +593,12 @@ const CMSPage = () => {
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
-      const data = await res.json();
-      if (data.success) {
+      const data = await res.json().catch(() => ({}));
+      if (data.success && data.url) {
         updateSection(idx, "imageKey", data.url);
         showToast("Image de section uploadée");
       } else {
-        showToast("Erreur upload image de section.", "error");
+        showToast(data.error || "Erreur upload image de section.", "error");
         removeSectionImage(idx);
       }
     } catch (err) {
@@ -447,6 +611,10 @@ const CMSPage = () => {
   };
 
   const removeSectionImage = (idx) => {
+    const sec = sections[idx];
+    if (sec?.imagePreview && sec.imagePreview.startsWith("blob:")) {
+      URL.revokeObjectURL(sec.imagePreview);
+    }
     updateSection(idx, "imageKey", "");
     updateSection(idx, "imagePreview", "");
   };
@@ -720,7 +888,7 @@ const CMSPage = () => {
                       minute: "2-digit",
                     });
 
-                    const authorName = pub.author?.name || "Rosette Fouelefack";
+                    const authorName = pub.author?.name || "Équipe";
                     const authorInitial = authorName.charAt(0).toUpperCase();
 
                     return (
@@ -733,51 +901,33 @@ const CMSPage = () => {
                       >
                         {/* Titre */}
                         <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
-                          <div className="flex items-center" style={{gap:"0.85rem"}}>
+                          <div style={{ minWidth: 0, overflow: "hidden" }}>
                             <button
                               type="button"
                               onClick={() => openModal(pub)}
-                              className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
-                              style={{width:"36px",height:"36px",borderRadius:"8px",background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#2563EB"}}
-                              title={t("common.edit", "Ouvrir la publication")}
+                              className="truncate-name font-bold text-[var(--text-main)] text-left hover:text-[var(--primary)] hover:underline cursor-pointer block w-full"
+                              style={{fontSize:"0.88rem",background:"none",border:"none",padding:0,maxWidth:"100%"}}
+                              title={pub.title}
                             >
-                              <FileText size={18} />
+                              {pub.title}
                             </button>
-                            <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
-                              <button
-                                type="button"
-                                onClick={() => openModal(pub)}
-                                className="truncate-name font-bold text-[var(--text-main)] text-left hover:text-[var(--primary)] hover:underline cursor-pointer block w-full"
-                                style={{fontSize:"0.88rem",background:"none",border:"none",padding:0,maxWidth:"100%"}}
-                                title={pub.title}
-                              >
-                                {pub.title}
-                              </button>
-                              <div
-                                className="truncate-name"
-                                style={{ fontSize: "0.75rem", color: "#64748B", marginTop: "2px", maxWidth: "100%" }}
-                              >
-                                {t("cms.category", "Catégorie :")} {pub.category || "Organisation et Externalisation"} • {t("cms.languages", "Langues :")} FR | EN
-                              </div>
+                            <div
+                              className="truncate-name"
+                              style={{ fontSize: "0.75rem", color: "#64748B", marginTop: "2px", maxWidth: "100%" }}
+                            >
+                              {t("cms.category", "Catégorie :")} {pub.category || "Organisation et Externalisation"} • {t("cms.languages", "Langues :")} FR | EN
                             </div>
                           </div>
                         </td>
 
                         {/* Auteur */}
                         <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
-                          <div className="flex items-center" style={{gap:"0.6rem"}}>
-                            <div
-                              className="flex items-center justify-center font-bold" style={{width:"28px",height:"28px",borderRadius:"50%",background:"#F1F5F9",color:"#334155",fontSize:"0.78rem"}}
-                            >
-                              {authorInitial}
-                            </div>
-                            <span
-                              className="truncate-name font-semibold text-[var(--text-main)]" style={{fontSize:"0.85rem",maxWidth:"100%"}}
-                              title={authorName}
-                            >
-                              {authorName}
-                            </span>
-                          </div>
+                          <span
+                            className="truncate-name font-semibold text-[var(--text-main)]" style={{fontSize:"0.85rem",maxWidth:"100%"}}
+                            title={authorName}
+                          >
+                            {authorName}
+                          </span>
                         </td>
 
                         {/* Statut */}
@@ -803,50 +953,55 @@ const CMSPage = () => {
 
                         {/* Date de publication */}
                         <td className="table-date-cell" style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle", width: "190px" }}>
-                          <div className="flex items-center gap-2 text-[var(--text-main)]" style={{fontSize:"0.85rem",whiteSpace:"nowrap"}}>
-                            <Calendar size={15} style={{ color: "#94A3B8", flexShrink: 0 }} />
-                            <span style={{ whiteSpace: "nowrap" }}>{dateStr} {timeStr}</span>
-                          </div>
+                          <span className="text-[var(--text-main)]" style={{fontSize:"0.85rem",whiteSpace:"nowrap"}}>
+                            {dateStr} {timeStr}
+                          </span>
                         </td>
 
                         {/* Actions */}
-                        <td className="text-right" style={{padding:"0.85rem 1.25rem",verticalAlign:"middle"}}>
-                          <div className="inline-flex items-center justify-end" style={{gap:"0.4rem"}}>
-                            {/* Modifier */}
+                        <td className="text-right" style={{ padding: "0.55rem 1.25rem", verticalAlign: "middle" }}>
+                          <div className="inline-flex flex-col items-center" style={{ gap: "3px" }}>
+                            {/* Sommet de la pyramide : Modifier */}
                             <button
                               type="button"
                               onClick={() => openModal(pub)}
                               title={t("common.edit", "Modifier")}
-                              className="flex items-center justify-center cursor-pointer" style={{width:"32px",height:"32px",borderRadius:"6px",background:"#EFF6FF",border:"1px solid #BFDBFE",color:"#2563EB"}}
+                              className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                              style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#EFF6FF", border: "1px solid #BFDBFE", color: "#2563EB" }}
                             >
-                              <Edit2 size={15} />
+                              <Edit2 size={14} />
                             </button>
-                            {/* Voir / Aperçu */}
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const vitrineUrl =
-                                  window.location.hostname === "localhost"
-                                    ? "http://localhost:3000"
-                                    : "https://menuaconsulting.com";
-                                window.open(`${vitrineUrl}/fr/actualites/${pub.id}?preview=true`, "_blank");
-                              }}
-                              title={t("common.view", "Consulter l'article")}
-                              className="flex items-center justify-center cursor-pointer" style={{width:"32px",height:"32px",borderRadius:"6px",background:"#F1F5F9",border:"1px solid #E2E8F0",color:"#64748B"}}
-                            >
-                              <Eye size={15} />
-                            </button>
-                            {/* Supprimer */}
-                            {isSuperAdmin && (
+                            {/* Base de la pyramide : Voir + Supprimer */}
+                            <div className="flex items-center justify-center" style={{ gap: "4px" }}>
+                              {/* Voir / Aperçu */}
                               <button
                                 type="button"
-                                onClick={() => handleDelete(pub.id)}
-                                title={t("common.delete", "Supprimer")}
-                                className="flex items-center justify-center cursor-pointer" style={{width:"32px",height:"32px",borderRadius:"6px",background:"#FEF2F2",border:"1px solid #FECACA",color:"#DC2626"}}
+                                onClick={() => {
+                                  const vitrineUrl =
+                                    window.location.hostname === "localhost"
+                                      ? "http://localhost:3000"
+                                      : "https://menuaconsulting.com";
+                                  window.open(`${vitrineUrl}/fr/actualites/${pub.id}?preview=true`, "_blank");
+                                }}
+                                title={t("common.view", "Consulter l'article")}
+                                className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                                style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#F1F5F9", border: "1px solid #E2E8F0", color: "#64748B" }}
                               >
-                                <Trash2 size={15} />
+                                <Eye size={14} />
                               </button>
-                            )}
+                              {/* Supprimer */}
+                              {isSuperAdmin && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleDelete(pub.id)}
+                                  title={t("common.delete", "Supprimer")}
+                                  className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                                  style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#FEF2F2", border: "1px solid #FECACA", color: "#DC2626" }}
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              )}
+                            </div>
                           </div>
                         </td>
                       </tr>
@@ -1005,13 +1160,9 @@ const CMSPage = () => {
                     value={newBlacklistEmail}
                     onChange={(e) => setNewBlacklistEmail(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter" && newBlacklistEmail) {
+                      if (e.key === "Enter") {
                         e.preventDefault();
-                        setFormSettings({
-                          ...formSettings,
-                          blacklistedEmails: [...(formSettings.blacklistedEmails || []), newBlacklistEmail],
-                        });
-                        setNewBlacklistEmail("");
+                        handleAddBlacklistEmail();
                       }
                     }}
                     style={{
@@ -1025,15 +1176,7 @@ const CMSPage = () => {
                   />
                   <button
                     type="button"
-                    onClick={() => {
-                      if (newBlacklistEmail) {
-                        setFormSettings({
-                          ...formSettings,
-                          blacklistedEmails: [...(formSettings.blacklistedEmails || []), newBlacklistEmail],
-                        });
-                        setNewBlacklistEmail("");
-                      }
-                    }}
+                    onClick={handleAddBlacklistEmail}
                     className="text-white font-semibold cursor-pointer" style={{padding:"0.65rem 1.25rem",background:"var(--text-main)",border:"none",borderRadius:"8px",fontSize:"0.875rem",whiteSpace:"nowrap"}}
                   >
                     {t("cms.addBlacklistBtn", "+ Ajouter")}
@@ -1052,16 +1195,13 @@ const CMSPage = () => {
                       key={email}
                       className="inline-flex items-center gap-2 font-medium" style={{background:"#FEE2E2",color:"#DC2626",padding:"0.3rem 0.8rem",borderRadius:"20px",fontSize:"0.82rem"}}
                     >
-                      {email}
+                      <span>{email}</span>
                       <button
                         type="button"
-                        onClick={() =>
-                          setFormSettings({
-                            ...formSettings,
-                            blacklistedEmails: formSettings.blacklistedEmails.filter((e) => e !== email),
-                          })
-                        }
-                        className="cursor-pointer" style={{background:"none",border:"none",color:"#DC2626",lineHeight:1,fontSize:"0.85rem"}}
+                        onClick={() => handleRemoveBlacklistEmail(email)}
+                        className="cursor-pointer" style={{background:"none",border:"none",color:"#DC2626",lineHeight:1,fontSize:"0.85rem",fontWeight:700,padding:"0 2px"}}
+                        title={`Débloquer ${email}`}
+                        aria-label={`Débloquer ${email}`}
                       >
                         ✕
                       </button>
@@ -1551,23 +1691,9 @@ const CMSPage = () => {
                       {formattedCurrentDate}
                     </div>
                     <div
-                      className="font-bold text-[var(--text-main)] mb-2" style={{fontSize:"1rem",lineHeight:1.3,overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}
+                      className="font-bold text-[var(--text-main)]" style={{fontSize:"1rem",lineHeight:1.3,overflow:"hidden",display:"-webkit-box",WebkitLineClamp:3,WebkitBoxOrient:"vertical"}}
                     >
                       {(previewLang === "EN" ? title_en : title) || "Illum maxime Nam ad"}
-                    </div>
-                    <div
-                      className="mb-4" style={{fontSize:"0.78rem",color:"#64748B",lineHeight:1.5,overflow:"hidden",display:"-webkit-box",WebkitLineClamp:3,WebkitBoxOrient:"vertical"}}
-                    >
-                      {(() => {
-                        const raw = (previewLang === "EN" ? contentHtml_en : contentHtml) || "";
-                        const plain = raw.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-                        return plain || "Voluptatem enim bla";
-                      })()}
-                    </div>
-                    <div
-                      className="inline-flex items-center font-bold cursor-pointer" style={{gap:"0.35rem",color:"#2563EB",fontSize:"0.75rem",letterSpacing:"0.05em"}}
-                    >
-                      LIRE L'ARTICLE →
                     </div>
                   </div>
                 </div>
@@ -1630,8 +1756,8 @@ const CMSPage = () => {
         title={confirmModal.title}
         message={confirmModal.message}
         type={confirmModal.type || "warning"}
-        confirmText="Confirmer"
-        cancelText="Annuler"
+        confirmText={confirmModal.confirmText || "Confirmer"}
+        cancelText={confirmModal.cancelText || "Annuler"}
         onConfirm={confirmModal.onConfirm}
         onCancel={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
       />

@@ -1,6 +1,7 @@
 {
   "blacklistedEmails": [
-    "lruti@gmail.com"
+    "lueie@gmail.com",
+    "dbjb@gmail.com"
   ],
   "blacklistedDomains": [],
   "allowedFormTypes": [
@@ -10,6 +11,6 @@
   "maxSubmissionsPerDay": 3,
   "contactFormEnabled": true,
   "recrutementFormEnabled": true,
-  "updatedAt": "2026-09-25T14:10:08.633Z",
-  "updatedBy": "c0f2f22c-361e-471a-a82b-9745281fc4fa"
+  "updatedAt": "2026-10-13T07:39:12.073Z",
+  "updatedBy": "2541799f-86de-4071-86c7-7110615bf37b"
 }

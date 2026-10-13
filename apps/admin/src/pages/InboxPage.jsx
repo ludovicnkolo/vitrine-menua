@@ -7,7 +7,7 @@ import {
   extractBlockFromHtml,
 } from "../utils/helpers";
 import { redirectToLogin } from "../services/api";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import InboxRappelModal from "../components/InboxRappelModal";
 import {
@@ -22,6 +22,7 @@ import {
   Paperclip,
   FileText,
   Send,
+  Loader2,
 } from "lucide-react";
 import TabsNavigation from "../components/TabsNavigation";
 import ActionDropdown from "../components/ActionDropdown";
@@ -30,6 +31,26 @@ import FilePreviewModal from "../components/FilePreviewModal";
 import AttachmentSelect from "../components/AttachmentSelect";
 
 import InternalChatTab from "../components/InternalChatTab";
+
+// --- Utilitaires de normalisation RBAC ---
+const normalizeRole = (r) => {
+  const str = typeof r === "string" ? r : r?.name || "";
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[-_]/g, " ")
+    .trim();
+};
+const isSuperAdmin = (r) => normalizeRole(r).includes("super admin");
+const isOperationalManager = (r) => {
+  const norm = normalizeRole(r);
+  return norm.includes("responsable operationnel") || norm.includes("operationnel");
+};
+const isAdminOrSuperAdmin = (r) => {
+  const norm = normalizeRole(r);
+  return norm.includes("admin");
+};
 
 const MessageDetailCard = ({ label, value, children, sublabel, inline }) => (
   <div
@@ -166,8 +187,9 @@ const InboxPage = ({ userRole }) => {
   const { t } = useTranslation();
   const storageKey = `active_tab_${window.location.pathname}`;
   const [tab, setTab] = useState(() => {
+    const norm = normalizeRole(userRole);
     const defaultTab =
-      userRole === "Collaborateur" || userRole === "Relecteur"
+      norm.includes("collaborateur") || norm.includes("relecteur")
         ? "interne"
         : "contact";
     const saved = sessionStorage.getItem(storageKey);
@@ -177,6 +199,9 @@ const InboxPage = ({ userRole }) => {
   const handleTabChange = (newTab) => {
     setTab(newTab);
     sessionStorage.setItem(storageKey, newTab);
+    setProcessMsg(null);
+    setPendingChanges({});
+    setShowSaveConfirm(false);
   };
   const [filterTraite, setFilterTraite] = useState("all");
   const [filterDate, setFilterDate] = useState("");
@@ -226,6 +251,7 @@ const InboxPage = ({ userRole }) => {
   // Système de brouillon local — les modifications ne sont envoyées qu'à l'appui sur "Enregistrer"
   const [pendingChanges, setPendingChanges] = useState({});
   const [showSaveConfirm, setShowSaveConfirm] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const hasPendingChanges = Object.keys(pendingChanges).length > 0;
 
   const [taskDescription, setTaskDescription] = useState("");
@@ -234,23 +260,29 @@ const InboxPage = ({ userRole }) => {
   const isAnyModalOpen =
     processMsg || createTaskModal || showActionChoiceModal || showTraitePopup;
 
+  const toastTimeoutRef = useRef(null);
   const [toast, setToast] = useState({
     show: false,
     message: "",
     type: "success",
   });
 
-  const showToast = (message, type = "success") => {
+  const showToast = useCallback((message, type = "success") => {
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
     setToast({ show: true, message, type });
-    if (type === "success") {
-      setTimeout(
-        () => setToast({ show: false, message: "", type: "success" }),
-        18000,
-      );
-    }
-  };
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast({ show: false, message: "", type: "success" });
+    }, 5000);
+  }, []);
 
-  const fetchMessages = async () => {
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    };
+  }, []);
+
+  // 1. Chargement ciblé des messages et utilisateurs de base
+  const fetchMessages = useCallback(async () => {
     try {
       setLoading(true);
       const token = sessionStorage.getItem("adminToken");
@@ -261,7 +293,7 @@ const InboxPage = ({ userRole }) => {
 
       const urlMessages = new URL(getSafeApiUrl(`/api/crm/messages`));
       urlMessages.searchParams.append("type", tab);
-      urlMessages.searchParams.append("page", page);
+      urlMessages.searchParams.append("page", page.toString());
       urlMessages.searchParams.append("limit", limit.toString());
       urlMessages.searchParams.append("status", filterTraite);
       urlMessages.searchParams.append("search", searchQuery);
@@ -269,23 +301,17 @@ const InboxPage = ({ userRole }) => {
         urlMessages.searchParams.append("date", filterDate);
       }
 
-      const [resMsgs, resUsers, resDossiers, resClients] = await Promise.all([
+      const [resMsgs, resUsers] = await Promise.all([
         fetch(urlMessages.toString(), {
           headers,
           credentials: "include",
         }),
-        fetch(new URL(getSafeApiUrl(`/api/crm/users`)).toString(), {
-          headers,
-          credentials: "include",
-        }),
-        fetch(
-          new URL(getSafeApiUrl(`/api/crm/dossiers?limit=1000`)).toString(),
-          { headers, credentials: "include" },
-        ),
-        fetch(
-          new URL(getSafeApiUrl(`/api/crm/clients?limit=1000`)).toString(),
-          { headers, credentials: "include" },
-        ),
+        users.length === 0
+          ? fetch(new URL(getSafeApiUrl(`/api/crm/users`)).toString(), {
+              headers,
+              credentials: "include",
+            })
+          : Promise.resolve(null),
       ]);
 
       if (resMsgs.ok) {
@@ -306,21 +332,46 @@ const InboxPage = ({ userRole }) => {
         return;
       }
 
-      if (resUsers.ok) setUsers(await resUsers.json());
-      if (resDossiers.ok) {
-        const doss = await resDossiers.json();
-        setDossiers(doss.data || doss);
-      }
-      if (resClients.ok) {
-        const cl = await resClients.json();
-        setClients(cl.data || cl);
+      if (resUsers && resUsers.ok) {
+        const rawUsers = await resUsers.json();
+        setUsers(Array.isArray(rawUsers) ? rawUsers : (rawUsers.data || rawUsers.users || []));
       }
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [tab, page, limit, filterTraite, searchQuery, filterDate, users.length]);
+
+  // 2. Chargement différé (Lazy) des dossiers/clients uniquement à l'ouverture du modal
+  const loadDossiersAndClients = useCallback(async () => {
+    try {
+      const token = sessionStorage.getItem("adminToken");
+      const headers = token && token !== "null" && token !== "undefined"
+        ? { Authorization: `Bearer ${token}` }
+        : {};
+      const [resDoss, resClients] = await Promise.all([
+        fetch(getSafeApiUrl(`/api/crm/dossiers?limit=500`), { headers, credentials: "include" }),
+        fetch(getSafeApiUrl(`/api/crm/clients?limit=500`), { headers, credentials: "include" }),
+      ]);
+      if (resDoss.ok) {
+        const d = await resDoss.json();
+        setDossiers(d.data || d);
+      }
+      if (resClients.ok) {
+        const cl = await resClients.json();
+        setClients(cl.data || cl);
+      }
+    } catch (err) {
+      console.error("Erreur lazy-loading dossiers/clients :", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (createTaskModal && tab !== "interne" && (dossiers.length === 0 || clients.length === 0)) {
+      loadDossiersAndClients();
+    }
+  }, [createTaskModal, tab, dossiers.length, clients.length, loadDossiersAndClients]);
 
   useEffect(() => {
     setPage(1);
@@ -328,21 +379,52 @@ const InboxPage = ({ userRole }) => {
 
   useEffect(() => {
     fetchMessages();
-  }, [tab, filterTraite, filterDate, page, searchQuery, limit]);
+  }, [fetchMessages]);
+
+  // Chargement garanti des utilisateurs lors de la consultation d'un message
+  useEffect(() => {
+    if (processMsg && users.length === 0) {
+      const loadUsers = async () => {
+        try {
+          const token = sessionStorage.getItem("adminToken");
+          const headers = token && token !== "null" && token !== "undefined"
+            ? { Authorization: `Bearer ${token}` }
+            : {};
+          const res = await fetch(getSafeApiUrl("/api/crm/users"), {
+            headers,
+            credentials: "include",
+          });
+          if (res.ok) {
+            const rawUsers = await res.json();
+            setUsers(Array.isArray(rawUsers) ? rawUsers : (rawUsers.data || rawUsers.users || []));
+          }
+        } catch (err) {
+          console.error("Erreur chargement utilisateurs pour copie :", err);
+        }
+      };
+      loadUsers();
+    }
+  }, [processMsg, users.length]);
+
+  // 3. Socket isolé sans dépendance cyclique
+  const fetchMessagesRef = useRef(fetchMessages);
+  fetchMessagesRef.current = fetchMessages;
 
   useEffect(() => {
+    let activeSocket = null;
     const handleUpdate = () => {
-      fetchMessages();
+      fetchMessagesRef.current();
     };
     import("../utils/socket").then(({ socket }) => {
-      socket.on("entity_updated_global", handleUpdate);
+      activeSocket = socket;
+      activeSocket.on("entity_updated_global", handleUpdate);
     });
     return () => {
-      import("../utils/socket").then(({ socket }) => {
-        socket.off("entity_updated_global", handleUpdate);
-      });
+      if (activeSocket) {
+        activeSocket.off("entity_updated_global", handleUpdate);
+      }
     };
-  }, [tab, filterTraite, filterDate, page, searchQuery, limit]);
+  }, []);
 
   useEffect(() => {
     try {
@@ -351,14 +433,22 @@ const InboxPage = ({ userRole }) => {
     } catch (e) {}
   }, []);
 
+  // 4. Synchronisation de processMsg sans comparaison JSON lourde
   useEffect(() => {
     if (processMsg && messages.length > 0) {
-      const updated = messages.find(m => m.id === processMsg.id);
-      if (updated && JSON.stringify(updated) !== JSON.stringify(processMsg)) {
-        setProcessMsg({ ...updated });
+      const updated = messages.find((m) => m.id === processMsg.id);
+      if (
+        updated &&
+        (updated.status !== processMsg.status ||
+          updated.updatedAt !== processMsg.updatedAt ||
+          updated.priorite !== processMsg.priorite ||
+          updated.etiquette !== processMsg.etiquette ||
+          updated.assignedToId !== processMsg.assignedToId)
+      ) {
+        setProcessMsg((prev) => ({ ...prev, ...updated }));
       }
     }
-  }, [messages]);
+  }, [messages, processMsg?.id, processMsg?.status, processMsg?.updatedAt, processMsg?.priorite, processMsg?.etiquette, processMsg?.assignedToId]);
 
   // Auto-afficher la bannière de rappel/entretien à l'ouverture d'un message
   useEffect(() => {
@@ -750,9 +840,14 @@ const InboxPage = ({ userRole }) => {
     });
   };
 
-  // Envoie toutes les modifications en attente
+  // Envoie toutes les modifications en attente directement
   const handleSaveAll = async () => {
-    if (!processMsg || !hasPendingChanges) return;
+    if (!processMsg) return;
+    if (!hasPendingChanges) {
+      showToast("Aucune modification à enregistrer.", "info");
+      return;
+    }
+    setIsSaving(true);
     try {
       const res = await apiFetch(
         `/api/crm/messages/${encodeURIComponent(processMsg.id)}/status`,
@@ -767,12 +862,15 @@ const InboxPage = ({ userRole }) => {
       showToast("Modifications enregistrées avec succès.", "success");
       const updated = { ...processMsg, ...pendingChanges };
       setProcessMsg(updated);
-      setMessages(messages.map((m) => (m.id === processMsg.id ? updated : m)));
+      setMessages((prev) => prev.map((m) => (m.id === processMsg.id ? updated : m)));
       setPendingChanges({});
       setShowSaveConfirm(false);
+      fetchMessages();
     } catch (err) {
       console.error("[handleSaveAll] Exception:", err);
-      showToast("Impossible de sauvegarder les modifications.", "error");
+      showToast(err.message || "Impossible de sauvegarder les modifications.", "error");
+    } finally {
+      setIsSaving(false);
       setShowSaveConfirm(false);
     }
   };
@@ -801,10 +899,22 @@ const InboxPage = ({ userRole }) => {
   };
 
   const handleUpdateMultiple = async (fields) => {
+    // Sécurité supplémentaire : vérifier qu'aucune date passée n'est ajoutée
+    if (fields.dateRappel && new Date(fields.dateRappel).getTime() < Date.now() - 60000) {
+      showToast("La date de rappel ne peut pas être antérieure à aujourd'hui.", "error");
+      return;
+    }
+    if (fields.dateEntretien && new Date(fields.dateEntretien).getTime() < Date.now() - 60000) {
+      showToast("La date de l'entretien ne peut pas être antérieure à aujourd'hui.", "error");
+      return;
+    }
     // Pour la modale de rappel : buffer les champs, ne pas envoyer immédiatement
     setPendingChanges((prev) => ({ ...prev, ...fields }));
+    const isEntretien = fields.dateEntretien || fields.status === "ENTRETIEN";
     showToast(
-      "Rappel planifié — cliquez sur « Enregistrer » pour confirmer.",
+      isEntretien
+        ? "Entretien planifié — cliquez sur « Enregistrer » pour confirmer."
+        : "Rappel planifié — cliquez sur « Enregistrer » pour confirmer.",
       "success",
     );
   };
@@ -848,9 +958,7 @@ const InboxPage = ({ userRole }) => {
         menuRef={menuRef}
         width="150px"
       >
-        {(userRole === "Administrateur" ||
-          userRole === "Super-administrateur" || 
-          userRole === "Super administrateur") && (
+        {isAdminOrSuperAdmin(userRole) && (
           <button
             type="button"
             className="dropdown-item"
@@ -904,8 +1012,8 @@ const InboxPage = ({ userRole }) => {
         : [];
 
   const getAllowedMessageStatuses = (currentStatus, category, role) => {
-    const isSA = role === "Super-administrateur";
-    const isRO = role === "Responsable opérationnel";
+    const isSA = isSuperAdmin(role);
+    const isRO = isOperationalManager(role);
     
     const ALL_LABELS = {
       NOUVEAU: "Nouveau",
@@ -1034,7 +1142,7 @@ const InboxPage = ({ userRole }) => {
           >
             <TabsNavigation
               tabs={
-                userRole === "Collaborateur" || userRole === "Relecteur"
+                normalizeRole(userRole).includes("collaborateur") || normalizeRole(userRole).includes("relecteur")
                   ? [{ id: "interne", label: "Interne" }]
                   : [
                       { id: "contact", label: "Contact" },
@@ -1124,7 +1232,7 @@ const InboxPage = ({ userRole }) => {
                   <option value={50}>{t("common.perPage", { count: 50, defaultValue: "50 par page" })}</option>
                 </select>
 
-                {tab === "personnel" && (currentUser?.role?.name === "Super-administrateur" || currentUser?.role === "Super-administrateur") && (
+                {tab === "personnel" && isSuperAdmin(currentUser?.role?.name || currentUser?.role || userRole) && (
                   <button
                     type="button"
                     onClick={handleSyncEmails}
@@ -1345,7 +1453,11 @@ const InboxPage = ({ userRole }) => {
                               >
                                 <button
                                   type="button"
-                                  onClick={() => setProcessMsg(m)}
+                                  onClick={() => {
+                                    setProcessMsg(m);
+                                    setPendingChanges({});
+                                    setShowSaveConfirm(false);
+                                  }}
                                   className="cursor-pointer" style={{background:"none",border:"none",color:"var(--primary)",padding:"4px"}}
                                   title="Consulter le message"
                                 >
@@ -1365,9 +1477,7 @@ const InboxPage = ({ userRole }) => {
                         );
                       };
 
-                      const sortedMessages = [...messages].sort(
-                        (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
-                      );
+                      const sortedMessages = messages;
 
                       if (tab === "contact") {
                         return sortedMessages.map((m, i) =>
@@ -1568,37 +1678,44 @@ const InboxPage = ({ userRole }) => {
                   </div>
                 </div>
 
-                <div className="flex items-center" style={{gap:"0.75rem"}}>
+                <div className="flex items-center shrink-0" style={{gap:"0.75rem", flexShrink: 0}}>
                   {processMsg.dossierId && (
                     <button
                       type="button"
                       onClick={() => (window.location.href = `/dossiers?open=${processMsg.dossierId}`)}
-                      className="btn btn-outline-success font-semibold flex items-center" style={{padding:"0.55rem 1rem",fontSize:"0.85rem",gap:"0.4rem"}}
+                      className="btn btn-outline-success font-semibold flex items-center whitespace-nowrap shrink-0" style={{padding:"0.55rem 1rem",fontSize:"0.85rem",gap:"0.4rem",whiteSpace:"nowrap",flexShrink:0}}
                     >
                       <Files size={16} /> Dossier Lié
                     </button>
                   )}
                   <button
                     type="button"
-                    onClick={() => setShowSaveConfirm(true)}
+                    onClick={handleSaveAll}
+                    disabled={isSaving}
+                    className="whitespace-nowrap shrink-0"
                     style={{
                       padding: "0.55rem 1.4rem",
                       borderRadius: "6px",
-                      background: "#1E3A8A",
+                      background: hasPendingChanges ? "#1E3A8A" : "#64748B",
                       color: "#FFF",
                       fontWeight: 600,
                       fontSize: "0.85rem",
                       border: "none",
-                      cursor: "pointer",
-                      transition: "opacity 0.2s",
-                      opacity: hasPendingChanges ? 1 : 0.85,
+                      cursor: isSaving ? "not-allowed" : "pointer",
+                      transition: "all 0.2s",
+                      opacity: isSaving ? 0.7 : (hasPendingChanges ? 1 : 0.85),
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "0.4rem",
+                      whiteSpace: "nowrap",
+                      flexShrink: 0,
                     }}
                   >
+                    {isSaving && <Loader2 size={14} className="animate-spin" />}
                     Enregistrer
                     {hasPendingChanges && (
                       <span
                         style={{
-                          marginLeft: "0.4rem",
                           background: "rgba(255,255,255,0.25)",
                           borderRadius: "10px",
                           padding: "0.1rem 0.4rem",
@@ -1611,8 +1728,23 @@ const InboxPage = ({ userRole }) => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setProcessMsg(null)}
-                    className="text-white font-semibold cursor-pointer" style={{padding:"0.55rem 1.4rem",borderRadius:"6px",background:"var(--text-main)",fontSize:"0.85rem",border:"none"}}
+                    onClick={() => {
+                      setProcessMsg(null);
+                      setPendingChanges({});
+                      setShowSaveConfirm(false);
+                    }}
+                    className="text-white font-semibold cursor-pointer whitespace-nowrap inline-flex items-center justify-center shrink-0"
+                    style={{
+                      padding: "0.55rem 1.4rem",
+                      borderRadius: "6px",
+                      background: "var(--text-main)",
+                      fontSize: "0.85rem",
+                      border: "none",
+                      whiteSpace: "nowrap",
+                      flexShrink: 0,
+                      display: "inline-flex",
+                      alignItems: "center",
+                    }}
                   >
                     ← Retour
                   </button>
@@ -2301,7 +2433,7 @@ const InboxPage = ({ userRole }) => {
                                 <option value="Urgent">● Urgent</option>
                               </select>
                             </MessageDetailCard>
-                            {(currentUser?.role?.name === "Super-administrateur" || currentUser?.role === "Super-administrateur") && (
+                            {isSuperAdmin(currentUser?.role?.name || currentUser?.role || userRole) && (
                               <MessageDetailCard
                                 label="Mettre en copie"
                                 sublabel="SELECT"
@@ -2319,7 +2451,7 @@ const InboxPage = ({ userRole }) => {
                                 >
                                   <option value="">Aucun</option>
                                   {users
-                                    .filter(u => u.role?.name === "Responsable opérationnel" || u.role === "Responsable opérationnel")
+                                    .filter(u => isOperationalManager(u.role?.name || u.role))
                                     .map((u) => (
                                       <option key={u.id} value={u.id}>
                                         {u.name} (Responsable)
@@ -2409,84 +2541,6 @@ const InboxPage = ({ userRole }) => {
           </div>
         )}
 
-      {/* Modale de confirmation d'enregistrement */}
-      {showSaveConfirm && (
-        <div
-          className="fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:2100}}
-        >
-          <div
-            className="p-8" style={{background:"#FFF",borderRadius:"16px",width:"90%",maxWidth:"400px",boxShadow:"0 20px 60px rgba(0,0,0,0.2)"}}
-          >
-            <div className="text-center mb-6">
-              <h3
-                className="font-bold text-[var(--text-main)]" style={{fontSize:"1.1rem"}}
-              >
-                Confirmer l'enregistrement
-              </h3>
-              <p
-                style={{
-                  margin: "0.5rem 0 0",
-                  
-                  color: "var(--text-muted)",
-                }}
-              >
-                Vous allez enregistrer{" "}
-                <strong>
-                  {Object.keys(pendingChanges).length} modification(s)
-                </strong>{" "}
-                sur ce message.
-              </p>
-            </div>
-            <div
-              className="mb-6 text-[var(--text-main)]" style={{background:"#F8FAFC",borderRadius:"8px",padding:"0.75rem 1rem",fontSize:"0.85rem"}}
-            >
-              {Object.entries(pendingChanges).map(([k, v]) => (
-                <div
-                  key={k}
-                  className="flex justify-between" style={{padding:"0.25rem 0",borderBottom:"1px solid var(--border)"}}
-                >
-                  <span className="font-medium" style={{color:"var(--text-muted)"}}>
-                    {k === "status"
-                      ? "Statut"
-                      : k === "priorite"
-                        ? "Priorité"
-                        : k === "etiquette"
-                          ? "Étiquette"
-                          : k === "dateRappel"
-                            ? "Date rappel"
-                            : k === "noteRappel"
-                              ? "Note rappel"
-                              : k === "dateEntretien"
-                                ? "Date entretien"
-                                : k === "lienVisio"
-                                  ? "Lien visio"
-                                  : k}
-                  </span>
-                  <span className="font-semibold">{String(v)}</span>
-                </div>
-              ))}
-            </div>
-            <div
-              className="flex justify-center" style={{gap:"0.75rem"}}
-            >
-              <button
-                type="button"
-                onClick={() => setShowSaveConfirm(false)}
-                className="btn btn-outline"
-              >
-                Annuler
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveAll}
-                className="btn btn-primary font-bold"
-              >
-                Confirmer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Create Task Modal */}
       {createTaskModal && (
@@ -2790,7 +2844,7 @@ const InboxPage = ({ userRole }) => {
       {/* Assign Confirmation Modal */}
       {assignMsg && (
         <div
-          className="fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
+          className="fixed inset-0 flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
         >
           <div
             className="p-8" style={{background:"#FFF",borderRadius:"8px",width:"90%",maxWidth:"400px",boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}

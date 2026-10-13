@@ -56,7 +56,7 @@ export default function Home({ initialPublications = [] }: ClientPageProps = {})
         <div className="absolute inset-0 z-0">
           <img
             src="/img/hero-paris.webp"
-            alt={t("Paris Aerial", "Paris Aerial")}
+            alt={t("Menua Consulting - Cabinet d'externalisation à Paris", "Menua Consulting - Outsourcing firm in Paris")}
             className="w-full h-full object-cover object-[75%_center] md:object-[80%_center] lg:object-center"
             onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }}
           />
@@ -67,14 +67,12 @@ export default function Home({ initialPublications = [] }: ClientPageProps = {})
           <div className="max-w-4xl lg:max-w-6xl ml-6 md:-ml-10 portrait:sm:ml-8 lg:-ml-12 landscape:ml-6 landscape:lg:-ml-4">
             <h1 className="text-white text-[1.25rem] portrait:sm:text-[1.5rem] md:text-[2.5rem] portrait:md:text-[1.65rem] landscape:text-[1.25rem] landscape:lg:text-[1.88rem] xl:text-[2.75rem] leading-[1.1] mb-6 landscape:mb-3 landscape:lg:mb-6 font-bold uppercase tracking-widest">
               <span className="lg:whitespace-nowrap">
-                {t("Externalisation opérationnelle des", "Operational outsourcing")}
-                <span className="hidden xl:inline">{isEN ? "" : " fonctions"}</span>
+                {t("Externalisation opérationnelle des fonctions", "Operational outsourcing for")}
               </span>
               {" "}
               <br className="hidden lg:block" />
               <span className="lg:whitespace-nowrap">
-                <span className="xl:hidden">{isEN ? "" : "fonctions "}</span>
-                {t("back ", "for back ")}
+                {t("back ", "back ")}
                 <span className="font-sans font-medium text-[1.2em] relative top-[1px] mx-1">&amp;</span>
                 {t(" middle office.", " middle-office.")}
               </span>
@@ -122,7 +120,10 @@ export default function Home({ initialPublications = [] }: ClientPageProps = {})
               <div className="w-[85%] lg:h-[360px] relative overflow-hidden shadow-xl">
                 <img
                   src="/img/accueil-intro.webp"
-                  alt={t("Intro", "Intro")}
+                  alt={t(
+                    "Intégration opérationnelle et complémentarité des expertises - Menua Consulting",
+                    "Operational integration and complementary expertise - Menua Consulting"
+                  )}
                   className="w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
                 />
@@ -141,7 +142,10 @@ export default function Home({ initialPublications = [] }: ClientPageProps = {})
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                   <img
                     src="/img/accueil-intro.webp"
-                    alt={t("Intro", "Intro")}
+                    alt={t(
+                      "Intégration opérationnelle et complémentarité des expertises - Menua Consulting",
+                      "Operational integration and complementary expertise - Menua Consulting"
+                    )}
                     className="w-full h-full object-cover"
                     onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
                   />
@@ -237,7 +241,10 @@ export default function Home({ initialPublications = [] }: ClientPageProps = {})
             <div className="hidden lg:block w-4/12 lg:h-[360px] shrink-0 relative overflow-hidden shadow-xl z-20">
               <img
                 src="/img/besoins-meeting.webp"
-                alt={t("Vos besoins", "Your Needs")}
+                alt={t(
+                  "Interconnexion des processus métiers et continuité opérationnelle",
+                  "Business process interconnection and operational continuity"
+                )}
                 className="w-full h-full object-cover"
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
               />
@@ -255,7 +262,10 @@ export default function Home({ initialPublications = [] }: ClientPageProps = {})
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                   <img
                     src="/img/besoins-meeting.webp"
-                    alt={t("Vos besoins", "Your Needs")}
+                    alt={t(
+                      "Interconnexion des processus métiers et continuité opérationnelle",
+                      "Business process interconnection and operational continuity"
+                    )}
                     className="w-full h-full object-cover"
                     onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                   />

@@ -226,14 +226,15 @@ const UserFormFields = ({
           {/* Pôle d'activité */}
           <div>
             <label className="block font-medium" style={{marginBottom:"0.25rem"}}>
-              Pôle d'activité
+              Pôle d'activité <span style={{ color: "red" }}>*</span>
             </label>
             <select
               value={user.poleActivite || ""}
               onChange={handleChange("poleActivite")}
               style={selectStyle}
+              required
             >
-              <option value="">— Aucun pôle —</option>
+              <option value="" disabled>Sélectionner un pôle...</option>
               {polesList.length > 0
                 ? polesList.map((p) => (
                     <option key={p.id} value={p.name}>{p.name}</option>

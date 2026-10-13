@@ -1,54 +1,93 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo, Suspense, lazy } from "react";
 import { useTranslation } from "react-i18next";
 import { Sun, Moon, Check, ChevronDown } from "lucide-react";
-import AuditPage from "./AuditPage";
 import SpacePageLayout from "../components/SpacePageLayout";
 import i18n from "../i18n";
 
+// --- Lazy Loading de la vue Audit pour alléger le bundle ---
+const AuditPage = lazy(() => import("./AuditPage.tsx"));
+
+const TabLoadingFallback = () => (
+  <div className="flex h-64 w-full items-center justify-center text-sm text-[var(--text-muted)]">
+    <span className="animate-pulse">Chargement du journal d'audit...</span>
+  </div>
+);
+
 const SystemSpacePage = ({ userRole }) => {
   const { t } = useTranslation();
-  const [theme, setTheme] = useState(
-    localStorage.getItem("adminTheme") || "light",
-  );
-  const [lang, setLang] = useState(
-    localStorage.getItem("adminLang") || i18n.language || "fr",
-  );
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("adminTheme") || "light";
+    }
+    return "light";
+  });
+  const [lang, setLang] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("adminLang") || i18n.language || "fr";
+    }
+    return "fr";
+  });
   const [savedFeedback, setSavedFeedback] = useState(false);
 
-  // Super-administrateur ET Administrateur technique voient l'onglet Audit
-  // Collaborateur, Relecteur, Responsable opérationnel ne voient que Configuration
-  const canSeeAudit =
-    userRole === "Super-administrateur" ||
-    userRole === "Administrateur technique";
+  // Nettoyage sécurisé du feedback temporisé sans fuite mémoire
+  useEffect(() => {
+    if (!savedFeedback) return;
+    const timer = setTimeout(() => setSavedFeedback(false), 3000);
+    return () => clearTimeout(timer);
+  }, [savedFeedback]);
 
-  const tabs = [
-    ...(canSeeAudit ? [{ id: "audit", label: "Audit" }] : []),
-    { id: "configuration", label: "Configuration" },
-  ];
+  // Contrôle des habilitations robuste (insensible à la casse et aux espaces)
+  const canSeeAudit = useMemo(() => {
+    const role = userRole?.trim().toLowerCase();
+    return role === "super-administrateur" || role === "administrateur technique";
+  }, [userRole]);
+
+  // Configuration mémorisée des onglets
+  const tabs = useMemo(() => {
+    const tabList = [];
+    if (canSeeAudit) {
+      tabList.push({
+        id: "audit",
+        label: t("systemSpace.tabs.audit", "Audit"),
+        labelKey: "systemSpace.tabs.audit",
+      });
+    }
+    tabList.push({
+      id: "configuration",
+      label: t("systemSpace.tabs.config", "Configuration"),
+      labelKey: "systemSpace.tabs.config",
+    });
+    return tabList;
+  }, [canSeeAudit, t]);
 
   const handleThemeChange = (newTheme) => {
     if (newTheme !== "light" && newTheme !== "dark") return;
     setTheme(newTheme);
-    localStorage.setItem("adminTheme", newTheme);
-    if (newTheme === "dark") {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
+    if (typeof window !== "undefined") {
+      localStorage.setItem("adminTheme", newTheme);
+      if (newTheme === "dark") {
+        document.body.classList.add("dark");
+      } else {
+        document.body.classList.remove("dark");
+      }
     }
   };
 
   const handleLangChange = (newLang) => {
     if (newLang !== "fr" && newLang !== "en") return;
     setLang(newLang);
-    localStorage.setItem("adminLang", newLang);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("adminLang", newLang);
+    }
     i18n.changeLanguage(newLang);
   };
 
   const handleSavePreferences = () => {
-    localStorage.setItem("adminTheme", theme);
-    localStorage.setItem("adminLang", lang);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("adminTheme", theme);
+      localStorage.setItem("adminLang", lang);
+    }
     setSavedFeedback(true);
-    setTimeout(() => setSavedFeedback(false), 3000);
   };
 
   return (
@@ -58,7 +97,11 @@ const SystemSpacePage = ({ userRole }) => {
     >
       {(tab) => (
         <>
-          {tab === "audit" && canSeeAudit && <AuditPage />}
+          {tab === "audit" && canSeeAudit && (
+            <Suspense fallback={<TabLoadingFallback />}>
+              <AuditPage />
+            </Suspense>
+          )}
           {tab === "configuration" && (
             <div className="mx-auto" style={{maxWidth:"1280px"}}>
               {/* Header */}

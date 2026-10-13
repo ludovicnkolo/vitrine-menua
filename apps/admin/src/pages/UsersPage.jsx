@@ -84,6 +84,17 @@ const getUserInitials = (name) => {
 const UsersPage = ({ forceTab }) => {
   const { t } = useTranslation();
   const [tab, setTab] = useState(forceTab || "interne");
+
+  // Quand le parent change d'onglet (Équipe ↔ Client), React réutilise la même instance :
+  // on resynchronise l'onglet interne et on réinitialise les filtres.
+  useEffect(() => {
+    if (forceTab) {
+      setTab(forceTab);
+      setSearchTerm("");
+      setFilterUserStatus("all");
+      setOpenMenuId(null);
+    }
+  }, [forceTab]);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [consultUser, setConsultUser] = useState(null);
@@ -238,11 +249,13 @@ const UsersPage = ({ forceTab }) => {
   const [users, setUsers] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setRawErrorMsg] = useState(null);
-  const setErrorMsg = (msg) => {
-    setRawErrorMsg(msg);
-    if (msg) setTimeout(() => setRawErrorMsg(null), 3000);
-  };
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    if (!errorMsg) return;
+    const timer = setTimeout(() => setErrorMsg(null), 3500);
+    return () => clearTimeout(timer);
+  }, [errorMsg]);
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
@@ -350,7 +363,7 @@ const UsersPage = ({ forceTab }) => {
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
-    if (!newUser.name || !newUser.email || !newUser.telephone || !newUser.roleId || !newUser.lieuResidence || !newUser.experienceCle || !newUser.langues)
+    if (!newUser.name || !newUser.email || !newUser.telephone || !newUser.roleId || !newUser.lieuResidence || !newUser.experienceCle || !newUser.langues || !newUser.poleActivite)
       return setErrorMsg("Veuillez remplir tous les champs obligatoires (marqués d'un astérisque rouge).");
 
     const emailTrimmed = newUser.email.trim().toLowerCase();
@@ -470,6 +483,12 @@ const UsersPage = ({ forceTab }) => {
 
   const handleUpdateUser = async (e) => {
     e.preventDefault();
+    if (!editUser.poleActivite) {
+      const msg = "Le pôle d'activité est obligatoire pour un membre interne.";
+      setErrorMsg(msg);
+      window.customAlert(msg, "Champ obligatoire");
+      return;
+    }
     const emailTrimmed = editUser.email?.trim().toLowerCase();
     const existing = users.find(
       (u) =>
@@ -1662,13 +1681,14 @@ const UsersPage = ({ forceTab }) => {
                   <div className="flex flex-col gap-4">
                     {/* Pôle d'activité */}
                     <div>
-                      <label style={labelStyle}>Pôle d'activité</label>
+                      <label style={labelStyle}>Pôle d'activité <span style={{ color: "red" }}>*</span></label>
                       <select
                         value={editUser.poleActivite || ""}
                         onChange={(e) => setEditUser({ ...editUser, poleActivite: e.target.value || null })}
                         style={inputStyle}
+                        required
                       >
-                        <option value="">— Aucun pôle —</option>
+                        <option value="" disabled>Sélectionner un pôle...</option>
                         {polesList.length > 0
                           ? polesList.map((p) => (
                               <option key={p.id} value={p.name}>{p.name}</option>
@@ -2195,7 +2215,7 @@ const UsersPage = ({ forceTab }) => {
                     <th style={{ width: "20%" }}>{t("users.columns.role", "Rôle")}</th>
                     <th className="text-center" style={{width:"110px"}}>{t("users.columns.status", "Statut")}</th>
                     <th className="table-date-cell text-center" style={{width:"165px"}}>{t("users.columns.lastLogin", "Dernière Connexion")}</th>
-                    <th className="text-center" style={{width:"80px"}}>{t("common.actions", "Actions")}</th>
+                    <th className="text-center" style={{width:"90px"}}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2251,32 +2271,40 @@ const UsersPage = ({ forceTab }) => {
                           ? formatDate(u.lastLogin)
                           : t("users.neverConnected", "Jamais connecté")}
                       </td>
-                      <td style={{ overflow: "visible", position: "relative", zIndex: openMenuId === u.id ? 1000 : 1 }}>
-                        <div
-                          className="flex gap-2 justify-center"
-                        >
-                          <div className="relative">
+                      <td className="text-center" style={{ padding: "0.5rem", verticalAlign: "middle" }}>
+                        <div className="inline-flex flex-col items-center" style={{ gap: "3px" }}>
+                          {/* Sommet de la pyramide : Modifier */}
+                          <button
+                            type="button"
+                            onClick={() => setEditUser(u)}
+                            className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                            style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#EFF6FF", border: "1px solid #BFDBFE", color: "#2563EB" }}
+                            title={t("common.edit", "Modifier")}
+                          >
+                            <Pencil size={14} />
+                          </button>
+                          {/* Base de la pyramide : Consulter + Supprimer */}
+                          <div className="flex items-center justify-center" style={{ gap: "4px" }}>
                             <button
                               type="button"
-                              className="action-menu-trigger"
-                              onClick={(e) => toggleMenu(e, u.id)}
-                              style={{
-                                background: openMenuId === u.id ? "#E2E8F0" : "transparent",
-                                border: "1px solid #E2E8F0",
-                                borderRadius: "8px",
-                                width: "32px",
-                                height: "32px",
-                                display: "inline-flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                cursor: "pointer",
-                                color: "#4A5568",
-                              }}
-                              title="Options"
+                              onClick={() => setConsultUser(u)}
+                              className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                              style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#F1F5F9", border: "1px solid #E2E8F0", color: "#64748B" }}
+                              title={t("common.view", "Consulter")}
                             >
-                              <MoreVertical size={16} />
+                              <Eye size={14} />
                             </button>
-                            {renderDropdown(u.id, u)}
+                            {u.role?.name !== "Super-administrateur" && (
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteUser(u.id)}
+                                className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                                style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#FEF2F2", border: "1px solid #FECACA", color: "#DC2626" }}
+                                title={t("common.delete", "Supprimer")}
+                              >
+                                <Trash size={14} />
+                              </button>
+                            )}
                           </div>
                         </div>
                       </td>
@@ -2294,7 +2322,7 @@ const UsersPage = ({ forceTab }) => {
                     <th className="text-center" style={{width:"100px"}}>{t("users.columns.status", "État")}</th>
                     <th style={{ width: "18%" }}>{t("users.columns.activity", "Activité")}</th>
                     <th className="table-date-cell text-center" style={{width:"165px"}}>{t("users.columns.createdAt", "Date de création")}</th>
-                    <th className="text-center" style={{width:"80px"}}>{t("common.actions", "Actions")}</th>
+                    <th className="text-center" style={{width:"90px"}}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2386,32 +2414,48 @@ const UsersPage = ({ forceTab }) => {
                           {c.createdAt ? formatDate(c.createdAt) : "N/A"}
                         </span>
                       </td>
-                      <td style={{ overflow: "visible", position: "relative", zIndex: openMenuId === c.id ? 1000 : 1 }}>
-                        <div
-                          className="flex gap-2 justify-center"
-                        >
-                          <div className="relative">
+                      <td className="text-center" style={{ padding: "0.5rem", verticalAlign: "middle" }}>
+                        <div className="inline-flex flex-col items-center" style={{ gap: "3px" }}>
+                          {/* Sommet de la pyramide : Modifier */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditExternal({
+                                ...c,
+                                raisonSociale: c.entreprise?.raisonSociale || c.raisonSociale || (c.type !== "Particulier" ? c.name : "") || "",
+                                siret: c.entreprise?.siret || c.siret || "",
+                                emailEntreprise: c.entreprise?.emailEntreprise || c.emailEntreprise || "",
+                                telephoneEntreprise: c.entreprise?.telephoneEntreprise || c.telephoneEntreprise || "",
+                                type: c.type || "Société",
+                                contactSecondaire: c.contactSecondaire || "",
+                              });
+                            }}
+                            className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                            style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#EFF6FF", border: "1px solid #BFDBFE", color: "#2563EB" }}
+                            title={t("common.edit", "Modifier")}
+                          >
+                            <Pencil size={14} />
+                          </button>
+                          {/* Base de la pyramide : Consulter + Supprimer */}
+                          <div className="flex items-center justify-center" style={{ gap: "4px" }}>
                             <button
                               type="button"
-                              className="action-menu-trigger"
-                              onClick={(e) => toggleMenu(e, c.id)}
-                              style={{
-                                background: openMenuId === c.id ? "#E2E8F0" : "transparent",
-                                border: "1px solid #E2E8F0",
-                                borderRadius: "8px",
-                                width: "32px",
-                                height: "32px",
-                                display: "inline-flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                cursor: "pointer",
-                                color: "#4A5568",
-                              }}
-                              title="Options"
+                              onClick={() => setConsultExternal(c)}
+                              className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                              style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#F1F5F9", border: "1px solid #E2E8F0", color: "#64748B" }}
+                              title={t("common.view", "Consulter")}
                             >
-                              <MoreVertical size={16} />
+                              <Eye size={14} />
                             </button>
-                            {renderDropdown(c.id, c, true)}
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteClient(c.id)}
+                              className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                              style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#FEF2F2", border: "1px solid #FECACA", color: "#DC2626" }}
+                              title={t("common.delete", "Supprimer")}
+                            >
+                              <Trash size={14} />
+                            </button>
                           </div>
                         </div>
                       </td>
@@ -2427,7 +2471,7 @@ const UsersPage = ({ forceTab }) => {
       {/* Image/PDF Viewer Modal using <object> for better PDF support */}
       {viewImage && (
         <div
-          className="fixed flex items-center justify-center" style={{backgroundColor:"rgba(0,0,0,0.8)",zIndex:1100}}
+          className="fixed inset-0 flex items-center justify-center" style={{backgroundColor:"rgba(0,0,0,0.8)",zIndex:1100}}
         >
           <div
             className="relative flex justify-center items-center" style={{width:"90vw",height:"90vh"}}
@@ -2474,7 +2518,7 @@ const UsersPage = ({ forceTab }) => {
       {/* Modal Bilan d'activité (Interne) / Suivi d'activité (Client) */}
       {activityStatsModal.open && activityStatsModal.target && (
         <div
-          className="fixed flex items-center justify-center p-4" style={{backgroundColor:"rgba(15, 23, 42, 0.65)",backdropFilter:"blur(4px)",zIndex:1100}}
+          className="fixed inset-0 flex items-center justify-center p-4" style={{backgroundColor:"rgba(15, 23, 42, 0.65)",backdropFilter:"blur(4px)",zIndex:1100}}
         >
           <div
             className="fade-in w-full flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",maxWidth:"800px",maxHeight:"90vh",overflowY:"auto",boxShadow:"0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",padding:"1.75rem",gap:"1.25rem"}}
@@ -2711,6 +2755,28 @@ const UsersPage = ({ forceTab }) => {
                       </div>
                     </div>
 
+                    <div className="grid" style={{gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
+                      <div
+                        className="text-center" style={{background:"#F8FAFC",border:"1px solid var(--border)",borderRadius:"8px",padding:"0.65rem"}}
+                      >
+                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"var(--text-muted)",textTransform:"uppercase"}}>
+                          Assignées
+                        </span>
+                        <span className="text-[var(--text-main)]" style={{fontSize:"1.5rem",fontWeight:800}}>
+                          {statsData?.missions?.assignes ?? statsData?.missions?.total ?? 0}
+                        </span>
+                      </div>
+                      <div
+                        className="text-center" style={{background:"#ECFDF5",border:"1px solid #A7F3D0",borderRadius:"8px",padding:"0.65rem"}}
+                      >
+                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#065F46",textTransform:"uppercase"}}>
+                          Terminées
+                        </span>
+                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
+                          {statsData?.missions?.termines ?? 0}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Carte Tâches Interne */}
@@ -2830,6 +2896,28 @@ const UsersPage = ({ forceTab }) => {
                       </div>
                     </div>
 
+                    <div className="grid" style={{gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
+                      <div
+                        className="text-center" style={{background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:"8px",padding:"0.65rem"}}
+                      >
+                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#92400E",textTransform:"uppercase"}}>
+                          En cours
+                        </span>
+                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#D97706" }}>
+                          {statsData?.missions?.enCours ?? 0}
+                        </span>
+                      </div>
+                      <div
+                        className="text-center" style={{background:"#ECFDF5",border:"1px solid #A7F3D0",borderRadius:"8px",padding:"0.65rem"}}
+                      >
+                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#065F46",textTransform:"uppercase"}}>
+                          Terminées
+                        </span>
+                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
+                          {statsData?.missions?.termines ?? 0}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Carte Tâches Client */}

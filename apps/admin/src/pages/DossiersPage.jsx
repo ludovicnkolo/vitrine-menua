@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Search,
@@ -18,6 +18,7 @@ import {
   CheckSquare,
   Square,
   Link as LinkIcon,
+  Loader2,
 } from "lucide-react";
 import { getSafeApiUrl, uploadFile, formatDate } from "../utils/helpers";
 import ConfirmModal from "../components/ConfirmModal";
@@ -160,6 +161,9 @@ const DossiersPage = () => {
   const [magicNote, setMagicNote] = useState("");
   const [generatedMagicUrl, setGeneratedMagicUrl] = useState("");
   const [generatedMagicLinkId, setGeneratedMagicLinkId] = useState(null);
+  const magicFileInputRef = useRef(null);
+  const [isGeneratingMagic, setIsGeneratingMagic] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [magicFiles, setMagicFiles] = useState([]); // fichiers à joindre pour LIVRAISON
   const [magicEmailRecipient, setMagicEmailRecipient] = useState("");
   const [magicEmailSending, setMagicEmailSending] = useState(false);
@@ -221,79 +225,101 @@ const DossiersPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const currentUser = JSON.parse(sessionStorage.getItem("adminUser") || "{}");
 
-  const fetchDossiers = () => {
+  const fetchDossiers = useCallback(async () => {
     setIsLoading(true);
     const token = sessionStorage.getItem("adminToken");
-    const headers = { Authorization: `Bearer ${token}` };
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
     const urlDossiers = new URL(getSafeApiUrl("/api/crm/dossiers"));
-    urlDossiers.searchParams.set("page", page);
-    urlDossiers.searchParams.set("limit", 15);
+    urlDossiers.searchParams.set("page", page.toString());
+    urlDossiers.searchParams.set("limit", "15");
     urlDossiers.searchParams.set("rootOnly", "true");
-    if (searchQuery) urlDossiers.searchParams.set("search", searchQuery);
-    if (filterStatus) urlDossiers.searchParams.set("status", filterStatus);
-    if (filterOrigine) urlDossiers.searchParams.set("origin", filterOrigine);
+    if (searchQuery.trim()) urlDossiers.searchParams.set("search", searchQuery.trim());
+    if (filterStatus && filterStatus !== "all") urlDossiers.searchParams.set("status", filterStatus);
+    if (filterOrigine && filterOrigine !== "all") urlDossiers.searchParams.set("origin", filterOrigine);
 
     const urlTasks = new URL(getSafeApiUrl("/api/crm/tasks"));
-    urlTasks.searchParams.set("page", 1);
-    urlTasks.searchParams.set("limit", 1000);
+    urlTasks.searchParams.set("page", "1");
+    urlTasks.searchParams.set("limit", "1000");
 
-    Promise.all([
-      fetch(urlDossiers.toString(), { headers })
-        .then((res) => res.json())
-        .catch(() => ({ data: [], totalPages: 1 })),
-      fetch(urlTasks.toString(), { headers })
-        .then((res) => res.json())
-        .catch(() => ({ data: [] })),
-      fetch(getSafeApiUrl("/api/crm/users"), { headers })
-        .then((res) => res.json())
-        .catch(() => []),
-      fetch(getSafeApiUrl("/api/crm/clients"), { headers })
-        .then((res) => res.json())
-        .catch(() => []),
-    ]).then(([dossiersRes, tasksRes, usersRes, clientsRes]) => {
+    try {
+      const [dossiersRes, tasksRes, usersRes, clientsRes] = await Promise.all([
+        fetch(urlDossiers.toString(), { headers })
+          .then((res) => res.json())
+          .catch(() => ({ data: [], totalPages: 1 })),
+        fetch(urlTasks.toString(), { headers })
+          .then((res) => res.json())
+          .catch(() => ({ data: [] })),
+        dbUsers.length === 0
+          ? fetch(getSafeApiUrl("/api/crm/users"), { headers })
+              .then((res) => res.json())
+              .catch(() => [])
+          : Promise.resolve(dbUsers),
+        dbClients.length === 0
+          ? fetch(getSafeApiUrl("/api/crm/clients"), { headers })
+              .then((res) => res.json())
+              .catch(() => [])
+          : Promise.resolve(dbClients),
+      ]);
+
       setDbDossiers(
-        dossiersRes?.data || (Array.isArray(dossiersRes) ? dossiersRes : []),
+        dossiersRes?.data || (Array.isArray(dossiersRes) ? dossiersRes : [])
       );
       setTotalPages(dossiersRes?.totalPages || 1);
       setDbTasks(tasksRes?.data || (Array.isArray(tasksRes) ? tasksRes : []));
-      setDbUsers(Array.isArray(usersRes) ? usersRes : []);
-      setDbClients(Array.isArray(clientsRes) ? clientsRes : []);
+      if (dbUsers.length === 0) setDbUsers(Array.isArray(usersRes) ? usersRes : []);
+      if (dbClients.length === 0) setDbClients(Array.isArray(clientsRes) ? clientsRes : []);
+    } catch (err) {
+      console.error("Erreur de récupération des dossiers :", err);
+    } finally {
       setIsLoading(false);
-    });
-  };
+    }
+  }, [page, searchQuery, filterStatus, filterOrigine, dbUsers.length, dbClients.length]);
 
   useEffect(() => {
     if (consultDossier && dbDossiers.length > 0) {
-      const updated = dbDossiers.find(d => d.id === consultDossier.id);
-      if (updated && JSON.stringify(updated) !== JSON.stringify(consultDossier)) {
-        setConsultDossier({ ...updated, _editing: consultDossier._editing });
+      const updated = dbDossiers.find((d) => d.id === consultDossier.id);
+      if (
+        updated &&
+        (updated.status !== consultDossier.status ||
+          updated.updatedAt !== consultDossier.updatedAt ||
+          updated.name !== consultDossier.name)
+      ) {
+        setConsultDossier((prev) => ({
+          ...prev,
+          ...updated,
+          _editing: prev?._editing,
+        }));
       }
     }
-  }, [dbDossiers]);
+  }, [dbDossiers, consultDossier?.id, consultDossier?.status, consultDossier?.updatedAt, consultDossier?.name]);
 
   useEffect(() => {
     setPage(1);
   }, [searchQuery, filterStatus, filterOrigine]);
 
   useEffect(() => {
-    setPage(1);
     fetchDossiers();
-  }, [filterStatus, filterOrigine, searchQuery]);
+  }, [fetchDossiers]);
+
+  const fetchDossiersRef = useRef(fetchDossiers);
+  fetchDossiersRef.current = fetchDossiers;
 
   useEffect(() => {
+    let activeSocket = null;
     const handleUpdate = () => {
-      fetchDossiers();
+      fetchDossiersRef.current();
     };
     import("../utils/socket").then(({ socket }) => {
-      socket.on("entity_updated_global", handleUpdate);
+      activeSocket = socket;
+      activeSocket.on("entity_updated_global", handleUpdate);
     });
     return () => {
-      import("../utils/socket").then(({ socket }) => {
-        socket.off("entity_updated_global", handleUpdate);
-      });
+      if (activeSocket) {
+        activeSocket.off("entity_updated_global", handleUpdate);
+      }
     };
-  }, [filterStatus, filterOrigine, searchQuery]);
+  }, []);
 
   const handleCreateMission = async () => {
     if (!missionSubject) {
@@ -418,6 +444,7 @@ const DossiersPage = () => {
   };
 
   const handleGenerateMagicLink = async () => {
+    setIsGeneratingMagic(true);
     try {
       const token = sessionStorage.getItem("adminToken");
 
@@ -480,6 +507,8 @@ const DossiersPage = () => {
     } catch (err) {
       console.error(err);
       window.customAlert("Erreur réseau");
+    } finally {
+      setIsGeneratingMagic(false);
     }
   };
 
@@ -667,10 +696,12 @@ const DossiersPage = () => {
   };
 
   const handleDeleteDossier = async (dossier) => {
+    if (isDeleting) return;
     const message = `Êtes-vous sûr de vouloir supprimer le dossier "${dossier.name}" ?\n\nATTENTION : Cette action supprimera également, de façon hiérarchique, toutes les missions, les tâches et l'arborescence GED (fichiers) associées à ce dossier vers la corbeille.`;
     if (!(await window.customConfirm(message, "Avertissement de suppression en cascade"))) {
       return;
     }
+    setIsDeleting(true);
     try {
       const token = sessionStorage.getItem("adminToken");
       const res = await fetch(
@@ -692,6 +723,8 @@ const DossiersPage = () => {
     } catch (e) {
       console.error(e);
       window.customAlert("Erreur réseau.");
+    } finally {
+      setIsDeleting(false);
     }
   };
   /**
@@ -1396,15 +1429,6 @@ const DossiersPage = () => {
               </>
             )}
 
-            {canEdit && !isEditMode && (
-              <button
-                type="button"
-                onClick={startEdit}
-                className="font-semibold cursor-pointer flex items-center" style={{background:"#FFF",border:"1px solid #F59E0B",color:"#D97706",padding:"0.55rem 1rem",borderRadius:"8px",fontSize:"0.85rem",gap:"0.4rem"}}
-              >
-                <Pencil size={15} /> Modifier
-              </button>
-            )}
 
             {isEditMode && (
               <>
@@ -1820,7 +1844,7 @@ const DossiersPage = () => {
         {/* Modal Magic Link */}
         {showMagicModal && (
           <div
-            className="fade-in fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
+            className="fade-in fixed inset-0 flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
           >
             <div
               className="card p-8" style={{width:"90%",maxWidth:"500px",maxHeight:"90vh",overflowY:"auto"}}
@@ -1939,9 +1963,10 @@ const DossiersPage = () => {
                           const dropped = Array.from(e.dataTransfer.files);
                           setMagicFiles((prev) => [...prev, ...dropped]);
                         }}
-                        onClick={() => document.getElementById("magicFileInput").click()}
+                        onClick={() => magicFileInputRef.current?.click()}
                       >
                         <input
+                          ref={magicFileInputRef}
                           id="magicFileInput"
                           type="file"
                           multiple
@@ -1991,10 +2016,19 @@ const DossiersPage = () => {
                     </button>
                     <button
                       type="button"
+                      disabled={isGeneratingMagic}
                       onClick={handleGenerateMagicLink}
                       className="btn btn-primary flex items-center gap-2"
                     >
-                      <LinkIcon size={16} /> Générer
+                      {isGeneratingMagic ? (
+                        <>
+                          <Loader2 size={16} className="animate-spin" /> Génération...
+                        </>
+                      ) : (
+                        <>
+                          <LinkIcon size={16} /> Générer
+                        </>
+                      )}
                     </button>
                   </div>
                 </>
@@ -2120,7 +2154,7 @@ const DossiersPage = () => {
               : [];
             return (
               <div
-                className="fade-in fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
+                className="fade-in fixed inset-0 flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
               >
                 <div
                   className="p-8" style={{background:"#FFF",borderRadius:"8px",width:"90%",maxWidth:"800px",maxHeight:"90vh",overflowY:"auto",boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}
@@ -2570,7 +2604,7 @@ const DossiersPage = () => {
         >
           <option value="all">{t("dossier.origin", "Origine")}: {t("common.all", "Tous")}</option>
           <option value="CLIENT">Client</option>
-          <option value="EQUIPE">Équipe</option>
+          <option value="COLLABORATEUR">Collaborateur (Équipe)</option>
           <option value="GENERAL">Général</option>
         </select>
       </div>
@@ -2698,20 +2732,39 @@ const DossiersPage = () => {
                           minute: "2-digit",
                         })}
                       </td>
-                      <td className="text-center">
-                        <div
-                          className="flex flex-col items-center justify-center" style={{gap:"0.25rem"}}
-                        >
+                      <td className="text-center" style={{ padding: "0.5rem", verticalAlign: "middle" }}>
+                        <div className="inline-flex flex-col items-center" style={{ gap: "3px" }}>
+                          {/* Sommet de la pyramide : Modifier (même règle que l'ancien bouton « Modifier ») */}
+                          {(currentUser?.role === "Super-administrateur" ||
+                            currentUser?.role?.name === "Super-administrateur" ||
+                            currentUser?.id === d.traitantId) &&
+                            !["BLOQUE", "EN_ATTENTE"].includes(d.status) && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setConsultDossier(null);
+                              setEditDossier(d);
+                            }}
+                            className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                            style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#EFF6FF", border: "1px solid #BFDBFE", color: "#2563EB" }}
+                            title="Modifier le dossier"
+                          >
+                            <Pencil size={14} />
+                          </button>
+                          )}
+                          {/* Base de la pyramide : Consulter + Supprimer */}
+                          <div className="flex items-center justify-center" style={{ gap: "4px" }}>
                           <button
                             type="button"
                             onClick={() => {
                               setConsultDossier(d);
                               setShowMagicModal(false);
                             }}
-                            className="cursor-pointer" style={{background:"none",border:"none",color:"var(--primary)",padding:"4px"}}
+                            className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                            style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#F1F5F9", border: "1px solid #E2E8F0", color: "#64748B" }}
                             title="Consulter le dossier"
                           >
-                            <Eye size={18} />
+                            <Eye size={14} />
                           </button>
                           {(currentUser?.role === "Super-administrateur" ||
                             currentUser?.role?.name ===
@@ -2721,13 +2774,16 @@ const DossiersPage = () => {
                               "Responsable opérationnel") && (
                             <button
                               type="button"
+                              disabled={isDeleting}
                               onClick={() => handleDeleteDossier(d)}
-                              className="cursor-pointer" style={{background:"none",border:"none",color:"#EF4444",padding:"4px"}}
+                              className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                              style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#FEF2F2", border: "1px solid #FECACA", color: "#DC2626", opacity: isDeleting ? 0.5 : 1 }}
                               title="Supprimer le dossier"
                             >
-                              <Trash size={18} />
+                              <Trash size={14} />
                             </button>
                           )}
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -2751,7 +2807,7 @@ const DossiersPage = () => {
       {/* Modal Création Dossier */}
       {showCreateDossierModal && (
         <div
-          className="fade-in fixed flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
+          className="fade-in fixed inset-0 flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
         >
           <div
             className="p-8" style={{background:"#FFF",borderRadius:"8px",width:"90%",maxWidth:"500px",maxHeight:"90vh",overflowY:"auto",boxShadow:"0 4px 6px rgba(0,0,0,0.1)"}}
@@ -3070,7 +3126,7 @@ const DossiersPage = () => {
 
       {confirmingStatus && confirmingDossierId && (
         <div
-          className="fixed w-full h-full flex items-center justify-center" style={{backgroundColor:"rgba(0,0,0,0.5)",zIndex:9999}}
+          className="fixed inset-0 w-full h-full flex items-center justify-center" style={{backgroundColor:"rgba(0,0,0,0.5)",zIndex:9999}}
         >
           <div
             className="p-8 w-full text-center" style={{background:"#FFF",borderRadius:"12px",boxShadow:"0 10px 25px rgba(0,0,0,0.2)",maxWidth:"400px"}}

@@ -52,7 +52,7 @@ export default function Footer() {
         {/* Colonne 2: Navigation rapide */}
         <div className="flex flex-col md:w-1/3 md:items-center">
           <div className="w-fit">
-            <h4 className="text-[1.1rem] font-bold mb-6 text-[#141824]">{t("Navigation", "Navigation")}</h4>
+            <p className="text-[1.1rem] font-bold mb-6 text-[#141824]">{t("Navigation", "Navigation")}</p>
             <ul className="flex flex-col space-y-4 text-[0.95rem] text-[#6e7891]">
               <li><Link href="/nous-connaitre" className="hover:text-[#141824] transition-colors">{t("Nous connaître", "About Us")}</Link></li>
               <li><Link href="/vos-besoins" className="hover:text-[#141824] transition-colors">{t("Vos besoins", "Your Needs")}</Link></li>
@@ -65,7 +65,7 @@ export default function Footer() {
         {/* Colonne 3: Contact Rapide (1.2 SECTION CONTACT RAPIDE) */}
         <div className="flex flex-col md:w-1/3 md:items-end">
           <div className="w-fit">
-            <h4 className="text-[1.1rem] font-bold mb-6 text-[#141824]">{t("Nous trouver", "Find us")}</h4>
+            <p className="text-[1.1rem] font-bold mb-6 text-[#141824]">{t("Nous trouver", "Find us")}</p>
             <div className="flex flex-col space-y-4 text-[0.95rem] text-[#6e7891]">
               <div className="flex items-start gap-3">
                 <MapPin size={20} className="text-[#141824] shrink-0 mt-0.5" />

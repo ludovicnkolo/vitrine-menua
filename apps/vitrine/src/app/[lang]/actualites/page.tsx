@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const description = isEn 
     ? "Follow Menua Consulting's news, analysis and insights on operational, back and middle office challenges." 
     : "Suivez les actualités, analyses et décryptages de Menua Consulting sur les enjeux opérationnels, back et middle office.";
-  const canonicalUrl = isEn ? `${SITE_URL}/en/news` : `${SITE_URL}/actualites`;
+  const canonicalUrl = isEn ? `${SITE_URL}/en/news` : `${SITE_URL}/fr/actualites`;
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -21,9 +21,9 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        'fr-FR': `${SITE_URL}/actualites`,
+        'fr-FR': `${SITE_URL}/fr/actualites`,
         'en-GB': `${SITE_URL}/en/news`,
-        'x-default': `${SITE_URL}/actualites`,
+        'x-default': `${SITE_URL}/fr/actualites`,
       },
     },
     openGraph: {

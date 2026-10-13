@@ -65,7 +65,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
 
   return (
     <div
-      className="fixed flex flex-col items-center justify-center" style={{background:"rgba(0,0,0,0.8)",zIndex:200}}
+      className="fixed inset-0 flex flex-col items-center justify-center" style={{background:"rgba(0,0,0,0.8)",zIndex:200}}
     >
       <div
         className="flex flex-col" style={{width:"80%",height:"80%",background:"#FFF",borderRadius:"8px",overflow:"hidden"}}

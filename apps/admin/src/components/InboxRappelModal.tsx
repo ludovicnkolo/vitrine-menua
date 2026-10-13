@@ -19,16 +19,64 @@ const InboxRappelModal: React.FC<InboxRappelModalProps> = ({
   const [rappelDate, setRappelDate] = useState<string>('');
   const [rappelNote, setRappelNote] = useState<string>('');
   const [entretienLien, setEntretienLien] = useState<string>('');
+  const [dateError, setDateError] = useState<string>('');
+
+  const getLocalMinDateTime = () => {
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  };
+
+  const validateDate = (val: string): string => {
+    if (!val) return '';
+    const selected = new Date(val);
+    if (isNaN(selected.getTime())) {
+      return 'Format de date invalide.';
+    }
+    const now = new Date();
+    // Tolérance d'1 minute pour la saisie de l'heure courante
+    if (selected.getTime() < now.getTime() - 60000) {
+      return rappelModal?.type === 'ENTRETIEN'
+        ? "La date de l'entretien ne peut pas être antérieure à aujourd'hui."
+        : "La date de rappel ne peut pas être antérieure à aujourd'hui.";
+    }
+    return '';
+  };
 
   useEffect(() => {
     if (rappelModal) {
       setRappelDate('');
       setRappelNote('');
       setEntretienLien('');
+      setDateError('');
     }
   }, [rappelModal]);
 
   if (!rappelModal) return null;
+
+  const handleDateChange = (val: string) => {
+    setRappelDate(val);
+    setDateError(validateDate(val));
+  };
+
+  const handleConfirm = async () => {
+    const err = validateDate(rappelDate);
+    if (err) {
+      setDateError(err);
+      return; // Bloque la confirmation et maintient la modale ouverte
+    }
+
+    const fields: Record<string, string> = { status: rappelModal.status };
+    if (rappelModal.type === 'RAPPEL') {
+      if (rappelDate) fields.dateRappel = rappelDate;
+      if (rappelNote) fields.noteRappel = rappelNote;
+    } else {
+      if (rappelDate) fields.dateEntretien = rappelDate;
+      if (entretienLien) fields.lienVisio = entretienLien;
+    }
+    await handleUpdateMultiple(fields);
+    setRappelModal(null);
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-[2000]">
@@ -51,11 +99,23 @@ const InboxRappelModal: React.FC<InboxRappelModalProps> = ({
             </label>
             <input
               type="datetime-local"
-              min={new Date().toISOString().slice(0, 16)}
+              min={getLocalMinDateTime()}
               value={rappelDate}
-              onChange={(e) => setRappelDate(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-[var(--border)] outline-none bg-white text-[0.875rem] box-border focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
+              onChange={(e) => handleDateChange(e.target.value)}
+              className={`w-full px-4 py-3 rounded-lg border outline-none bg-white text-[0.875rem] box-border transition-all ${
+                dateError
+                  ? 'border-red-500 focus:border-red-600 focus:ring-1 focus:ring-red-500 bg-red-50/20'
+                  : 'border-[var(--border)] focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]'
+              }`}
             />
+            {dateError && (
+              <div className="flex items-center gap-1.5 mt-2 text-red-600 text-[0.8rem] font-medium animate-fadeIn">
+                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>{dateError}</span>
+              </div>
+            )}
           </div>
           <div>
             <label className="block mb-2 font-semibold text-[0.875rem]">
@@ -92,19 +152,9 @@ const InboxRappelModal: React.FC<InboxRappelModalProps> = ({
           </button>
           <button
             type="button"
-            onClick={async () => {
-              const fields: Record<string, string> = { status: rappelModal.status };
-              if (rappelModal.type === 'RAPPEL') {
-                if (rappelDate) fields.dateRappel = rappelDate;
-                if (rappelNote) fields.noteRappel = rappelNote;
-              } else {
-                if (rappelDate) fields.dateEntretien = rappelDate;
-                if (entretienLien) fields.lienVisio = entretienLien;
-              }
-              await handleUpdateMultiple(fields);
-              setRappelModal(null);
-            }}
-            className="btn btn-primary"
+            onClick={handleConfirm}
+            disabled={!!dateError}
+            className={`btn btn-primary ${dateError ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             Confirmer
           </button>

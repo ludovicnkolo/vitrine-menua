@@ -2,11 +2,31 @@ const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const { authenticateJWT } = require("../middlewares/auth");
 const multer = require("multer");
-const { uploadToS3, getPresignedUrl } = require("../services/s3Service");
+const {
+  uploadToPublicS3,
+  PUBLIC_BUCKET_NAME,
+} = require("../services/s3Service");
 const { randomUUID } = require("crypto");
 
 const router = express.Router();
 const prisma = new PrismaClient();
+
+const getPublicCmsImageUrl = (rawKeyOrUrl) => {
+  if (!rawKeyOrUrl) return null;
+  if (rawKeyOrUrl.startsWith("http://") || rawKeyOrUrl.startsWith("https://")) {
+    return rawKeyOrUrl;
+  }
+  if (rawKeyOrUrl.startsWith("/")) {
+    return rawKeyOrUrl;
+  }
+  const cleanKey = rawKeyOrUrl.startsWith("/") ? rawKeyOrUrl.slice(1) : rawKeyOrUrl;
+  const region = process.env.S3_REGION || "eu-west-par";
+  const bucket =
+    PUBLIC_BUCKET_NAME ||
+    process.env.S3_PUBLIC_BUCKET ||
+    "menua-site-public-assets";
+  return `https://${bucket}.s3.${region}.io.cloud.ovh.net/${cleanKey}`;
+};
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -61,40 +81,20 @@ router.get("/", authenticateJWT, async (req, res) => {
       include: { author: { select: { name: true, email: true } } },
       orderBy: { createdAt: "desc" },
     });
-
-    const pubsWithUrl = await Promise.all(
-      publications.map(async (pub) => {
-        let imageUrl = pub.coverImage;
-        if (
-          imageUrl &&
-          !imageUrl.startsWith("http") &&
-          !imageUrl.startsWith("/")
-        ) {
-          imageUrl = await getPresignedUrl(imageUrl, 3600, true); // 1 hour for admin view
-        }
-        // Presign section images
-        let parsedSections = [];
-        if (pub.sections) {
-          try {
-            const secs = JSON.parse(pub.sections);
-            parsedSections = await Promise.all(
-              secs.map(async (s) => {
-                let sImageUrl = s.imageKey;
-                if (
-                  sImageUrl &&
-                  !sImageUrl.startsWith("http") &&
-                  !sImageUrl.startsWith("/")
-                ) {
-                  sImageUrl = await getPresignedUrl(sImageUrl, 3600, true);
-                }
-                return { ...s, imageUrl: sImageUrl };
-              }),
-            );
-          } catch (_) {}
-        }
-        return { ...pub, coverImageUrl: imageUrl, sections: parsedSections };
-      }),
-    );
+    const pubsWithUrl = publications.map((pub) => {
+      const coverImageUrl = getPublicCmsImageUrl(pub.coverImage);
+      let parsedSections = [];
+      if (pub.sections) {
+        try {
+          const secs = JSON.parse(pub.sections);
+          parsedSections = secs.map((s) => ({
+            ...s,
+            imageUrl: getPublicCmsImageUrl(s.imageKey),
+          }));
+        } catch (_) {}
+      }
+      return { ...pub, coverImageUrl, sections: parsedSections };
+    });
 
     res.json({ success: true, data: pubsWithUrl });
   } catch (error) {
@@ -254,55 +254,20 @@ router.get("/public", async (req, res) => {
       orderBy: { publishedAt: "desc" },
     });
 
-    const pubsWithUrl = await Promise.all(
-      publications.map(async (pub) => {
-        let imageUrl = pub.coverImage;
-        if (
-          imageUrl &&
-          !imageUrl.startsWith("http") &&
-          !imageUrl.startsWith("/")
-        ) {
-          try {
-            imageUrl = await getPresignedUrl(imageUrl, 24 * 3600, true);
-          } catch (presignErr) {
-            console.warn(
-              `[CMS] Impossible de générer l'URL présignée pour ${imageUrl}:`,
-              presignErr.message,
-            );
-            imageUrl = null; // graceful fallback
-          }
-        }
-        // Presign section images
-        let parsedSections = [];
-        if (pub.sections) {
-          try {
-            const secs = JSON.parse(pub.sections);
-            parsedSections = await Promise.all(
-              secs.map(async (s) => {
-                let sImageUrl = s.imageKey;
-                if (
-                  sImageUrl &&
-                  !sImageUrl.startsWith("http") &&
-                  !sImageUrl.startsWith("/")
-                ) {
-                  try {
-                    sImageUrl = await getPresignedUrl(
-                      sImageUrl,
-                      24 * 3600,
-                      true,
-                    );
-                  } catch (_) {
-                    sImageUrl = null;
-                  }
-                }
-                return { ...s, imageUrl: sImageUrl };
-              }),
-            );
-          } catch (_) {}
-        }
-        return { ...pub, coverImageUrl: imageUrl, sections: parsedSections };
-      }),
-    );
+    const pubsWithUrl = publications.map((pub) => {
+      const coverImageUrl = getPublicCmsImageUrl(pub.coverImage);
+      let parsedSections = [];
+      if (pub.sections) {
+        try {
+          const secs = JSON.parse(pub.sections);
+          parsedSections = secs.map((s) => ({
+            ...s,
+            imageUrl: getPublicCmsImageUrl(s.imageKey),
+          }));
+        } catch (_) {}
+      }
+      return { ...pub, coverImageUrl, sections: parsedSections };
+    });
 
     res.json({ success: true, data: pubsWithUrl });
   } catch (error) {
@@ -354,47 +319,21 @@ router.get("/public/:id", async (req, res) => {
         .json({ success: false, error: "Publication introuvable." });
     }
 
-    let imageUrl = pub.coverImage;
-    if (imageUrl && !imageUrl.startsWith("http") && !imageUrl.startsWith("/")) {
-      try {
-        imageUrl = await getPresignedUrl(imageUrl, 24 * 3600, true);
-      } catch (presignErr) {
-        console.warn(
-          `[CMS] Impossible de générer l'URL présignée pour ${imageUrl}:`,
-          presignErr.message,
-        );
-        imageUrl = null;
-      }
-    }
-
-    // Presign section images
+    const coverImageUrl = getPublicCmsImageUrl(pub.coverImage);
     let parsedSections = [];
     if (pub.sections) {
       try {
         const secs = JSON.parse(pub.sections);
-        parsedSections = await Promise.all(
-          secs.map(async (s) => {
-            let sImageUrl = s.imageKey;
-            if (
-              sImageUrl &&
-              !sImageUrl.startsWith("http") &&
-              !sImageUrl.startsWith("/")
-            ) {
-              try {
-                sImageUrl = await getPresignedUrl(sImageUrl, 24 * 3600, true);
-              } catch (_) {
-                sImageUrl = null;
-              }
-            }
-            return { ...s, imageUrl: sImageUrl };
-          }),
-        );
+        parsedSections = secs.map((s) => ({
+          ...s,
+          imageUrl: getPublicCmsImageUrl(s.imageKey),
+        }));
       } catch (_) {}
     }
 
     res.json({
       success: true,
-      data: { ...pub, coverImageUrl: imageUrl, sections: parsedSections },
+      data: { ...pub, coverImageUrl, sections: parsedSections },
     });
   } catch (error) {
     console.error("Erreur GET publication publique:", error);
@@ -419,8 +358,12 @@ router.post(
       const s3Key = `cms/images/${randomUUID()}-${safeName}`;
 
       try {
-        await uploadToS3(req.file.buffer, s3Key, req.file.mimetype);
-        res.json({ success: true, url: s3Key });
+        const publicUrl = await uploadToPublicS3(
+          req.file.buffer,
+          s3Key,
+          req.file.mimetype,
+        );
+        res.json({ success: true, url: publicUrl });
       } catch (s3Error) {
         console.warn(
           "[CMS] OVH S3 indisponible, fallback stockage local:",
@@ -457,7 +400,7 @@ router.post(
         const retryInterval = setInterval(async () => {
           retries++;
           try {
-            await uploadToS3(fileBuffer, s3Key, fileMime);
+            await uploadToPublicS3(fileBuffer, s3Key, fileMime);
             console.log(
               `[CMS] Retry S3 réussi (tentative ${retries}) pour ${s3Key}`,
             );

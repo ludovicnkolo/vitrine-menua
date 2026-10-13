@@ -27,17 +27,19 @@ const KPICards: React.FC<KPICardsProps> = ({
   return (
     <div className="grid grid-cols-5 gap-4 mb-6">
       {/* KPI 1 : ALERTES PRIORITAIRES */}
-      <div className="bg-white border border-[#E2E8F0] border-t-[3.5px] border-t-red-500 rounded-lg py-3 px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-        <div className="flex justify-between items-center">
-          <span className="font-bold text-[0.72rem] text-red-500 tracking-wider uppercase">
-            {t("dashboard.priorityAlerts", "Alertes prioritaires")}
-          </span>
-          <div className="flex items-center justify-center w-5 h-5 rounded-full bg-red-50 border border-red-200 text-red-500 font-extrabold text-[11px]">
-            !
+      <div className="flex flex-col justify-between bg-white border border-[#E2E8F0] border-t-[3.5px] border-t-red-500 rounded-lg py-3 px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div>
+          <div className="flex justify-between items-center">
+            <span className="font-bold text-[0.72rem] text-red-500 tracking-wider uppercase">
+              {t("dashboard.priorityAlerts", "Alertes prioritaires")}
+            </span>
+            <div className="flex items-center justify-center w-5 h-5 rounded-full bg-red-50 border border-red-200 text-red-500 font-extrabold text-[11px]">
+              !
+            </div>
           </div>
-        </div>
-        <div className="font-bold text-[var(--text-main)] text-[1.85rem] mt-1 mb-0.5">
-          {alertesCount}
+          <div className="font-bold text-[var(--text-main)] text-[1.85rem] mt-1 mb-0.5">
+            {alertesCount}
+          </div>
         </div>
         <div className="text-[0.74rem] text-slate-500">
           {t("dashboard.urgentMessages", "Messages clients urgents")}
@@ -45,17 +47,19 @@ const KPICards: React.FC<KPICardsProps> = ({
       </div>
 
       {/* KPI 2 : DÉLAIS CRITIQUES */}
-      <div className="bg-white border border-[#E2E8F0] border-t-[3.5px] border-t-amber-500 rounded-lg py-3 px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-        <div className="flex justify-between items-center">
-          <span className="font-bold text-[0.72rem] text-amber-500 tracking-wider uppercase">
-            {t("dashboard.criticalDeadlines", "Délais critiques")}
-          </span>
-          <div className="flex items-center justify-center w-5 h-5 rounded-full bg-amber-50 border border-amber-200 text-amber-600 font-extrabold text-[11px]">
-            &gt;
+      <div className="flex flex-col justify-between bg-white border border-[#E2E8F0] border-t-[3.5px] border-t-amber-500 rounded-lg py-3 px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div>
+          <div className="flex justify-between items-center">
+            <span className="font-bold text-[0.72rem] text-amber-500 tracking-wider uppercase">
+              {t("dashboard.criticalDeadlines", "Délais critiques")}
+            </span>
+            <div className="flex items-center justify-center w-5 h-5 rounded-full bg-amber-50 border border-amber-200 text-amber-600 font-extrabold text-[11px]">
+              &gt;
+            </div>
           </div>
-        </div>
-        <div className="font-bold text-[var(--text-main)] text-[1.85rem] mt-1 mb-0.5">
-          {delaisCount}
+          <div className="font-bold text-[var(--text-main)] text-[1.85rem] mt-1 mb-0.5">
+            {delaisCount}
+          </div>
         </div>
         <div className="text-[0.74rem] text-slate-500">
           {t("dashboard.deadlines24h", "Échéances à - de 24h")}
@@ -63,17 +67,19 @@ const KPICards: React.FC<KPICardsProps> = ({
       </div>
 
       {/* KPI 3 : OPÉRATIONS BLOQUÉES */}
-      <div className="bg-white border border-[#E2E8F0] border-t-[3.5px] border-t-purple-600 rounded-lg py-3 px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-        <div className="flex justify-between items-center">
-          <span className="font-bold text-[0.72rem] text-purple-600 tracking-wider uppercase">
-            {t("dashboard.blockedOps", "Opérations bloquées")}
-          </span>
-          <div className="flex items-center justify-center w-5 h-5 rounded-full bg-purple-50 border border-purple-200 text-purple-600 font-extrabold text-[10px]">
-            ||
+      <div className="flex flex-col justify-between bg-white border border-[#E2E8F0] border-t-[3.5px] border-t-purple-600 rounded-lg py-3 px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div>
+          <div className="flex justify-between items-center">
+            <span className="font-bold text-[0.72rem] text-purple-600 tracking-wider uppercase">
+              {t("dashboard.blockedOps", "Opérations bloquées")}
+            </span>
+            <div className="flex items-center justify-center w-5 h-5 rounded-full bg-purple-50 border border-purple-200 text-purple-600 font-extrabold text-[10px]">
+              ||
+            </div>
           </div>
-        </div>
-        <div className="font-bold text-[var(--text-main)] text-[1.85rem] mt-1 mb-0.5">
-          {bloqueesCount}
+          <div className="font-bold text-[var(--text-main)] text-[1.85rem] mt-1 mb-0.5">
+            {bloqueesCount}
+          </div>
         </div>
         <div className="text-[0.74rem] text-slate-500">
           {t("dashboard.waitingClient", "Attente retour client")}
@@ -81,39 +87,50 @@ const KPICards: React.FC<KPICardsProps> = ({
       </div>
 
       {/* KPI 4 : VOLUME TOTAL */}
-      <div className="bg-white border border-[#E2E8F0] border-t-[3.5px] border-t-blue-600 rounded-lg py-3 px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-        <div className="flex justify-between items-center">
-          <span className="font-bold text-[0.72rem] text-blue-600 tracking-wider uppercase">
-            {t("dashboard.totalVolume", "Volume total")}
-          </span>
-          <div className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-50 border border-blue-200 text-blue-600 font-extrabold text-[11px]">
-            ✓
+      <div className="flex flex-col justify-between bg-white border border-[#E2E8F0] border-t-[3.5px] border-t-blue-600 rounded-lg py-3 px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div>
+          <div className="flex justify-between items-center">
+            <span className="font-bold text-[0.72rem] text-blue-600 tracking-wider uppercase">
+              {t("dashboard.totalVolume", "Volume total")}
+            </span>
+            <div className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-50 border border-blue-200 text-blue-600 font-extrabold text-[11px]">
+              ✓
+            </div>
+          </div>
+          <div className="font-bold text-[var(--text-main)] text-[1.85rem] mt-1 mb-0.5">
+            {volumeTotal}
           </div>
         </div>
-        <div className="font-bold text-[var(--text-main)] text-[1.85rem] mt-1 mb-0.5">
-          {volumeTotal}
-        </div>
-        <div className="text-[0.74rem] text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">
-          {t("dashboard.volumeSub", "Dossiers: {{d}} • Missions: {{m}} • Tâches: {{t}}", {
-            d: totalDossiers,
-            m: totalMissions,
-            t: totalTaches,
-          })}
+        <div className="text-[0.72rem] text-slate-500 leading-tight">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="whitespace-nowrap">
+              Dossiers : <strong className="font-semibold text-slate-700">{totalDossiers}</strong>
+            </span>
+            <span className="text-slate-300">•</span>
+            <span className="whitespace-nowrap">
+              Missions : <strong className="font-semibold text-slate-700">{totalMissions}</strong>
+            </span>
+          </div>
+          <div className="mt-0.5 text-slate-600 font-medium whitespace-nowrap">
+            Tâches : <strong className="font-semibold text-slate-800">{totalTaches}</strong>
+          </div>
         </div>
       </div>
 
       {/* KPI 5 : NOUVEAUX DÉPÔTS */}
-      <div className="bg-white border border-[#E2E8F0] border-t-[3.5px] border-t-emerald-500 rounded-lg py-3 px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-        <div className="flex justify-between items-center">
-          <span className="font-bold text-[0.72rem] text-emerald-500 tracking-wider uppercase">
-            {t("dashboard.newDeposits", "Nouveaux dépôts")}
-          </span>
-          <div className="flex items-center justify-center font-bold w-5 h-5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 text-[11px]">
-            @
+      <div className="flex flex-col justify-between bg-white border border-[#E2E8F0] border-t-[3.5px] border-t-emerald-500 rounded-lg py-3 px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div>
+          <div className="flex justify-between items-center">
+            <span className="font-bold text-[0.72rem] text-emerald-500 tracking-wider uppercase">
+              {t("dashboard.newDeposits", "Nouveaux dépôts")}
+            </span>
+            <div className="flex items-center justify-center font-bold w-5 h-5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 text-[11px]">
+              @
+            </div>
           </div>
-        </div>
-        <div className="font-bold text-[var(--text-main)] text-[1.85rem] mt-1 mb-0.5">
-          {nouveauxDepots}
+          <div className="font-bold text-[var(--text-main)] text-[1.85rem] mt-1 mb-0.5">
+            {nouveauxDepots}
+          </div>
         </div>
         <div className="text-[0.74rem] text-slate-500">
           {t("dashboard.docsLast24h", "Documents sur les 24h")}

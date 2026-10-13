@@ -345,14 +345,14 @@ router.get("/dashboard-stats", async (req, res) => {
     // 5. Entonnoir de Production (Période) : Demandes & formulaires qualifiés traités
     const formulairesTraitesPeriode = await prisma.formulaire.count({
       where: {
-        status: { in: ["TERMINE", "ARCHIVE", "TRAITE"] },
+        status: { in: ["A_RAPPELER", "DISCUSSION", "ENTRETIEN", "RETENU", "REFUSE", "GAGNE", "SANS_SUITE", "TRAITE", "TERMINE", "ARCHIVE"] },
         createdAt: { gte: startPeriod, lte: endPeriod },
       },
     });
     const emailsTraitesPeriode = await prisma.messagePersonnel.count({
       where: {
         type: "PERSONNEL",
-        status: { in: ["TERMINE", "ARCHIVE", "TRAITE"] },
+        status: { in: ["REPONDU", "TRAITE", "SANS_SUITE", "GAGNE", "TERMINE", "ARCHIVE", "CONSULTE"] },
         isDeleted: false,
         createdAt: { gte: startPeriod, lte: endPeriod },
       },

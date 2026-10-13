@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { getSafeApiUrl } from "../utils/helpers";
+import { socket } from "../utils/socket";
 import KPICards from "../components/dashboard/KPICards";
 import CollaboratorWeather, { CollaboratorData } from "../components/dashboard/CollaboratorWeather";
 import FunnelCard, { FunnelItem } from "../components/dashboard/FunnelCard";
@@ -109,13 +110,9 @@ const DashboardPage: React.FC = () => {
     const handleUpdate = () => {
       fetchStats(startDate, endDate);
     };
-    import("../utils/socket").then(({ socket }) => {
-      socket.on("entity_updated_global", handleUpdate);
-    });
+    socket.on("entity_updated_global", handleUpdate);
     return () => {
-      import("../utils/socket").then(({ socket }) => {
-        socket.off("entity_updated_global", handleUpdate);
-      });
+      socket.off("entity_updated_global", handleUpdate);
     };
   }, [fetchStats, startDate, endDate]);
 

@@ -9,6 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const { authenticateJWT } = require("../middlewares/auth");
 const { transporter } = require("../utils/mailer");
+const { getAdminUrl } = require("../utils/urlHelper");
 const crypto = require("crypto");
 
 // Route de connexion (Login)
@@ -455,7 +456,8 @@ router.post("/forgot-password", async (req, res) => {
       },
     });
 
-    const resetLink = `${process.env.ADMIN_URL || "http://localhost:5174"}/setup-password?token=${resetToken}`;
+    const baseUrl = getAdminUrl(req);
+    const resetLink = `${baseUrl}/setup-password?token=${resetToken}`;
 
     const mailOptions = {
       from: process.env.SMTP_FROM || "contact@menuaconsulting.com",

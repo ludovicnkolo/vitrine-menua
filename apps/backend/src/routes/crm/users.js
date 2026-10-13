@@ -16,6 +16,7 @@ const {
 } = require("../../middlewares/auth");
 const { transporter } = require("../../utils/mailer");
 const { logAudit } = require("../../utils/audit");
+const { getAdminUrl } = require("../../utils/urlHelper");
 
 const imapConfig = {
   imap: {
@@ -199,7 +200,7 @@ router.post(
   async (req, res) => {
     try {
       const { name, permissions, description, status } = req.body;
-      
+
       if (name === "Super-administrateur" || name.toLowerCase() === "super-administrateur") {
         return res.status(403).json({ error: "Le rôle Super-administrateur est unique et ne peut pas être dupliqué." });
       }
@@ -448,13 +449,11 @@ router.post(
       );
 
       // Send email — Use ADMIN_FRONTEND_URL env var (the CRM admin frontend, NOT the backend)
-      let emailSent = false;
-      let emailError = null;
       try {
-        const adminFrontend = process.env.ADMIN_FRONTEND_URL || "http://localhost:5173";
+        const adminFrontend = getAdminUrl(req);
         const activationLink = `${adminFrontend}/setup-password?token=${token}`;
 
-        const info = await transporter.sendMail({
+        await transporter.sendMail({
           from: process.env.SMTP_FROM || "contact@menuaconsulting.com",
           to: cleanEmail,
           subject: "Invitation à rejoindre le CRM Menua Consulting — Activez votre compte",
@@ -474,21 +473,14 @@ router.post(
           </div>
         `,
         });
-        emailSent = true;
-        console.log(`[+] Email d'activation envoyé à ${cleanEmail} (ID: ${info.messageId})`);
       } catch (emailErr) {
-        emailError = emailErr.message || String(emailErr);
         console.error(
           "Erreur lors de l'envoi de l'email de configuration:",
           emailErr,
         );
       }
 
-      res.json({
-        ...user,
-        emailSent,
-        ...(emailError && { emailWarning: `L'utilisateur a été créé, mais l'envoi de l'e-mail a échoué: ${emailError}` }),
-      });
+      res.json(user);
     } catch (error) {
       console.error("Erreur création utilisateur:", error);
       if (error.code === "P2002") {
@@ -683,7 +675,7 @@ router.post(
         `Réinitialisation de mot de passe déclenchée pour : ${user.name}`
       );
 
-      const adminFrontend = process.env.ADMIN_FRONTEND_URL || "http://localhost:5173";
+      const adminFrontend = getAdminUrl(req);
 
       await transporter.sendMail({
         from: process.env.SMTP_FROM || "contact@menuaconsulting.com",

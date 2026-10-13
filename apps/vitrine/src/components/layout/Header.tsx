@@ -178,7 +178,11 @@ export default function Header() {
             {/* Clean extracted logo */}
             <img
               src="/img/logo-clean-light.webp"
-              alt="Menua Consulting"
+              alt={t(
+                "Menua Consulting - Cabinet d'externalisation opérationnelle des fonctions back et middle office à Paris",
+                "Menua Consulting - Operational back and middle-office outsourcing firm in Paris"
+              )}
+              title={t("Menua Consulting - Accueil", "Menua Consulting - Home")}
               className="h-[90px] w-[135px] lg:h-[110px] lg:w-[165px] xl:h-[150px] xl:w-[225px] object-contain"
               fetchPriority="high"
             />

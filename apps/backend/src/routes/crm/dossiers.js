@@ -14,6 +14,12 @@ const {
   isAdmin,
   isManager,
 } = require("../../middlewares/auth");
+const {
+  requireSuperAdminToDeleteDossier,
+} = require("../../middlewares/rbac");
+const {
+  buildDossierAccessFilter,
+} = require("../../services/dossierFilterService");
 const { transporter } = require("../../utils/mailer");
 const emitEntityUpdate = (req, entityType, entityId, action, payload = {}) => {
   const io = req.app.get('io');
@@ -204,28 +210,10 @@ router.get("/dossiers", async (req, res) => {
     let inMemoryFilter = false;
     const where = { AND: [] };
 
-    // ── Filtrage par rôle (Zero-Trust Interne) ──────────────────────────
-    if (
-      userRole === "Responsable opérationnel" ||
-      userRole === "Collaborateur"
-    ) {
-      where.AND.push({
-        OR: [
-          { traitantId: userId },
-          { createdById: userId },
-          { missions: { some: { assignedToId: userId } } },
-          { missions: { some: { taches: { some: { assignedToId: userId } } } } },
-          { tachesLinked: { some: { assignedToId: userId } } }
-        ],
-      });
-    } else if (userRole === "Relecteur") {
-      where.AND.push({
-        OR: [
-          { missions: { some: { relecteurId: userId } } },
-          { missions: { some: { taches: { some: { relecteurId: userId } } } } },
-          { tachesLinked: { some: { relecteurId: userId } } }
-        ],
-      });
+    // ── Filtrage pyramidal et absorption des droits ──────────────────────────
+    const accessFilter = buildDossierAccessFilter(req.user);
+    if (accessFilter && Object.keys(accessFilter).length > 0) {
+      where.AND.push(accessFilter);
     }
     // Super-Admin, Admin Tech, Administrateur : pas de filtre sur le propriétaire
 
@@ -799,20 +787,8 @@ router.patch("/dossiers/:id", async (req, res) => {
   }
 });
 
-router.delete("/dossiers/:id", async (req, res) => {
+router.delete("/dossiers/:id", requireSuperAdminToDeleteDossier, async (req, res) => {
   try {
-    const userRole = req.user.role;
-    const isSA = isSuperAdmin(userRole); console.log("DELETE DOSSIER ROLE IS:", userRole);
-
-    // Seul le Super-Administrateur peut supprimer un dossier
-    if (!isSA) {
-      return res
-        .status(403)
-        .json({
-          error:
-            "Accès refusé. Seul un Super-Administrateur peut supprimer un dossier.",
-        });
-    }
 
     const dossier = await prisma.dossier.findUnique({
       where: { id: req.params.id },

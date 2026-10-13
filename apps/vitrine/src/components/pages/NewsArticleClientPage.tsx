@@ -132,7 +132,8 @@ export default function ClientPageArticle({ id, initialData }: ClientPageArticle
             {initialData.coverImageUrl && !imageError ? (
               <Image
                 src={initialData.coverImageUrl}
-                alt={displayTitle}
+                alt={`${displayTitle} - Menua Consulting`}
+                title={`${displayTitle} - Menua Consulting`}
                 fill
                 priority
                 unoptimized
@@ -196,7 +197,8 @@ export default function ClientPageArticle({ id, initialData }: ClientPageArticle
                         <div className="relative w-full h-[420px] mb-8 overflow-hidden rounded-xl shadow-md">
                           <Image
                             src={imageSrc}
-                            alt={sec.subtitle || `Section ${idx + 1}`}
+                            alt={sec.subtitle ? `${sec.subtitle} - ${displayTitle}` : `${displayTitle} - Illustration Menua Consulting`}
+                            title={sec.subtitle || displayTitle}
                             fill
                             unoptimized
                             className="object-cover"

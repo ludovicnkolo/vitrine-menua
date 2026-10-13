@@ -121,7 +121,14 @@ export default function ActualitesPage({ initialPublications = [] }: ActualitesP
         <div className="absolute inset-0 z-0">
           <Image
             src="/img/accueil-actus.webp"
-            alt={t("Actualités", "News")}
+            alt={t(
+              "Revue de presse économique, veille réglementaire et supports d'analyse sectorielle - Publications et analyses opérationnelles Menua Consulting",
+              "Financial press review, regulatory watch and business analysis insights - Operational publications and industry analysis by Menua Consulting"
+            )}
+            title={t(
+              "Actualités, veille et publications spécialisées - Menua Consulting",
+              "News, regulatory watch and specialized publications - Menua Consulting"
+            )}
             fill
             sizes="100vw"
             className="object-cover"
@@ -197,7 +204,8 @@ export default function ActualitesPage({ initialPublications = [] }: ActualitesP
                   <>
                     <Image 
                       src={featuredPub.coverImageUrl} 
-                      alt={displayTitle(featuredPub)} 
+                      alt={`${displayTitle(featuredPub)} - Menua Consulting`}
+                      title={displayTitle(featuredPub)}
                       fill
                       unoptimized
                       sizes="(max-width: 768px) 100vw, 50vw"
@@ -300,7 +308,8 @@ export default function ActualitesPage({ initialPublications = [] }: ActualitesP
                         <>
                           <Image
                             src={pub.coverImageUrl}
-                            alt={displayTitle(pub)}
+                            alt={`${displayTitle(pub)} - Menua Consulting`}
+                            title={displayTitle(pub)}
                             fill
                             unoptimized
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

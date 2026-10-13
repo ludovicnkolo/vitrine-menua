@@ -16,6 +16,12 @@ const {
   isAdmin,
   isManager,
 } = require("../../middlewares/auth");
+const {
+  canDeleteTache,
+} = require("../../middlewares/rbac");
+const {
+  buildTacheAccessFilter,
+} = require("../../services/dossierFilterService");
 const { notify } = require("../../utils/notify");
 const { transporter } = require("../../utils/mailer");
 const emitEntityUpdate = (req, entityType, entityId, action, payload = {}) => {
@@ -207,22 +213,10 @@ router.get("/taches", async (req, res) => {
     const { search, status } = req.query;
 
     const where = { AND: [] };
-    // ── Filtrage par rôle (Zero-Trust Interne) ──────────────────────────
-    if (
-      req.user.role === "Responsable opérationnel" ||
-      req.user.role === "Collaborateur"
-    ) {
-      where.AND.push({
-        OR: [
-          { assignedToId: req.user.id },
-          { createdById: req.user.id },
-          { mission: { assignedToId: req.user.id } },
-          { mission: { dossier: { traitantId: req.user.id } } },
-          { dossierTache: { traitantId: req.user.id } }
-        ]
-      });
-    } else if (req.user.role === "Relecteur") {
-      where.AND.push({ relecteurId: req.user.id });
+    // ── Filtrage pyramidal et absorption des droits ──────────────────────────
+    const accessFilter = buildTacheAccessFilter(req.user);
+    if (accessFilter && Object.keys(accessFilter).length > 0) {
+      where.AND.push(accessFilter);
     }
 
     const isSuperAdm = req.user.role === "Super-administrateur";
@@ -779,12 +773,36 @@ router.patch("/taches/:id", async (req, res) => {
 
 router.delete("/taches/:id", async (req, res) => {
   try {
-    if (!isAdmin(req.user.role)) {
+    const existingTache = await prisma.tache.findUnique({
+      where: { id: req.params.id },
+      include: {
+        mission: {
+          include: { dossier: true },
+        },
+        dossierTache: true,
+      },
+    });
+
+    if (!existingTache) {
+      return res.status(404).json({ error: "Tâche introuvable." });
+    }
+
+    const isAuthorized =
+      isSuperAdmin(req.user.role) ||
+      isAdmin(req.user.role) ||
+      canDeleteTache(
+        req.user,
+        existingTache,
+        existingTache.mission,
+        existingTache.mission?.dossier || existingTache.dossierTache
+      );
+
+    if (!isAuthorized) {
       return res
         .status(403)
         .json({
           error:
-            "Accès refusé. Seul un administrateur peut supprimer une tâche.",
+            "Accès refusé. Vous n'avez pas l'autorisation de supprimer cette tâche.",
         });
     }
 

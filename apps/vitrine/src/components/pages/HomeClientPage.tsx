@@ -56,7 +56,14 @@ export default function Home({ initialPublications = [] }: ClientPageProps = {})
         <div className="absolute inset-0 z-0">
           <img
             src="/img/hero-paris.webp"
-            alt={t("Menua Consulting - Cabinet d'externalisation à Paris", "Menua Consulting - Outsourcing firm in Paris")}
+            alt={t(
+              "Menua Consulting - Cabinet de conseil et d'externalisation back et middle office à Paris - Vue panoramique de la place financière parisienne",
+              "Menua Consulting - Back and middle-office operational outsourcing and consulting firm in Paris - Panoramic view of the Paris financial center"
+            )}
+            title={t(
+              "Menua Consulting Paris - Externalisation back et middle office",
+              "Menua Consulting Paris - Operational back and middle-office outsourcing"
+            )}
             className="w-full h-full object-cover object-[75%_center] md:object-[80%_center] lg:object-center"
             onError={(e) => { e.currentTarget.src = "/img/hero-paris.webp"; }}
           />
@@ -121,8 +128,12 @@ export default function Home({ initialPublications = [] }: ClientPageProps = {})
                 <img
                   src="/img/accueil-intro.webp"
                   alt={t(
-                    "Intégration opérationnelle et complémentarité des expertises - Menua Consulting",
-                    "Operational integration and complementary expertise - Menua Consulting"
+                    "Pièces de puzzle complémentaires sur bureau de direction - Intégration sur-mesure et continuité opérationnelle des fonctions back et middle office par Menua Consulting",
+                    "Complementary puzzle pieces on executive desk - Tailored integration and operational continuity of back and middle-office functions by Menua Consulting"
+                  )}
+                  title={t(
+                    "Intégration opérationnelle et continuité des processus métiers",
+                    "Operational integration and business process continuity"
                   )}
                   className="w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
@@ -143,8 +154,12 @@ export default function Home({ initialPublications = [] }: ClientPageProps = {})
                   <img
                     src="/img/accueil-intro.webp"
                     alt={t(
-                      "Intégration opérationnelle et complémentarité des expertises - Menua Consulting",
-                      "Operational integration and complementary expertise - Menua Consulting"
+                      "Pièces de puzzle complémentaires sur bureau de direction - Intégration sur-mesure et continuité opérationnelle des fonctions back et middle office par Menua Consulting",
+                      "Complementary puzzle pieces on executive desk - Tailored integration and operational continuity of back and middle-office functions by Menua Consulting"
+                    )}
+                    title={t(
+                      "Intégration opérationnelle et continuité des processus métiers",
+                      "Operational integration and business process continuity"
                     )}
                     className="w-full h-full object-cover"
                     onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
@@ -242,8 +257,12 @@ export default function Home({ initialPublications = [] }: ClientPageProps = {})
               <img
                 src="/img/besoins-meeting.webp"
                 alt={t(
-                  "Interconnexion des processus métiers et continuité opérationnelle",
-                  "Business process interconnection and operational continuity"
+                  "Sculpture d'anneaux entrelacés symbolisant la synergie entre conformité réglementaire, gestion financière, gouvernance des données et résilience opérationnelle",
+                  "Interlocking rings sculpture symbolizing synergy between regulatory compliance, financial management, data governance and operational resilience"
+                )}
+                title={t(
+                  "Synergie et interconnexion des fonctions opérationnelles et réglementaires",
+                  "Synergy and interconnection of operational and regulatory functions"
                 )}
                 className="w-full h-full object-cover"
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
@@ -263,8 +282,12 @@ export default function Home({ initialPublications = [] }: ClientPageProps = {})
                   <img
                     src="/img/besoins-meeting.webp"
                     alt={t(
-                      "Interconnexion des processus métiers et continuité opérationnelle",
-                      "Business process interconnection and operational continuity"
+                      "Sculpture d'anneaux entrelacés symbolisant la synergie entre conformité réglementaire, gestion financière, gouvernance des données et résilience opérationnelle",
+                      "Interlocking rings sculpture symbolizing synergy between regulatory compliance, financial management, data governance and operational resilience"
+                    )}
+                    title={t(
+                      "Synergie et interconnexion des fonctions opérationnelles et réglementaires",
+                      "Synergy and interconnection of operational and regulatory functions"
                     )}
                     className="w-full h-full object-cover"
                     onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
@@ -392,7 +415,8 @@ export default function Home({ initialPublications = [] }: ClientPageProps = {})
                       <>
                         <img
                           src={pub.coverImageUrl}
-                          alt={displayTitle(pub)}
+                          alt={`${displayTitle(pub)} - Menua Consulting`}
+                          title={displayTitle(pub)}
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 absolute inset-0 z-10 bg-[#1a1f2e]"
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />

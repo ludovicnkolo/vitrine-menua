@@ -189,102 +189,31 @@ const CMSPage = () => {
   };
 
   const handleRemoveBlacklistEmail = (emailToRemove) => {
-    setConfirmModal({
-      isOpen: true,
-      title: "Confirmation de déblocage",
-      message: (
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-          <p style={{ margin: 0, color: "var(--text-main)", fontSize: "0.95rem" }}>
-            Êtes-vous sûr de vouloir retirer cette adresse de la liste des emails indésirables ?
-          </p>
-          <div
-            style={{
-              padding: "0.5rem 0.75rem",
-              background: "#FEE2E2",
-              borderRadius: "6px",
-              color: "#DC2626",
-              fontWeight: 600,
-              fontSize: "0.9rem",
-              wordBreak: "break-all",
-            }}
-          >
-            {emailToRemove}
-          </div>
-          <p style={{ margin: 0, fontSize: "0.82rem", color: "#64748B" }}>
-            Cette adresse sera immédiatement débloquée et autorisée à nouveau à soumettre des formulaires de contact et de recrutement.
-          </p>
-        </div>
+    setFormSettings((prev) => ({
+      ...prev,
+      blacklistedEmails: (prev.blacklistedEmails || []).filter(
+        (e) => e.toLowerCase() !== emailToRemove.toLowerCase(),
       ),
-      type: "danger",
-      confirmText: "Débloquer l'adresse",
-      cancelText: "Annuler",
-      onConfirm: async () => {
-        setConfirmModal((prev) => ({ ...prev, isOpen: false }));
-        const updatedList = (formSettings.blacklistedEmails || []).filter(
-          (e) => e.toLowerCase() !== emailToRemove.toLowerCase(),
-        );
-        const updatedSettings = {
-          ...formSettings,
-          blacklistedEmails: updatedList,
-        };
-
-        // 1. Mise à jour immédiate de l'affichage local
-        setFormSettings(updatedSettings);
-
-        // 2. Persistance immédiate sur le serveur pour garantir qu'elle ne réapparaît jamais après actualisation
-        try {
-          const res = await apiFetch(
-            "/api/cms/settings/forms",
-            "PUT",
-            updatedSettings,
-          );
-          if (res.ok) {
-            const data = await res.json().catch(() => ({}));
-            if (data.data) setFormSettings(data.data);
-            showToast(`L'adresse ${emailToRemove} a été débloquée avec succès.`);
-          } else {
-            showToast("Erreur lors de la mise à jour des paramètres sur le serveur.", "error");
-          }
-        } catch (err) {
-          console.error("Erreur déblocage email:", err);
-          showToast("Erreur réseau lors de la suppression.", "error");
-        }
-      },
-    });
+    }));
   };
 
-  const handleAddBlacklistEmail = async () => {
+  const handleAddBlacklistEmail = () => {
     const trimmed = (newBlacklistEmail || "").trim().toLowerCase();
     if (!trimmed) return;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmed)) {
+      showToast("Veuillez saisir une adresse email valide.", "error");
+      return;
+    }
     if (formSettings.blacklistedEmails?.some((e) => e.toLowerCase() === trimmed)) {
       showToast("Cette adresse email est déjà dans la liste de blocage.", "error");
       return;
     }
-    const updatedList = [...(formSettings.blacklistedEmails || []), trimmed];
-    const updatedSettings = {
-      ...formSettings,
-      blacklistedEmails: updatedList,
-    };
-    setFormSettings(updatedSettings);
+    setFormSettings((prev) => ({
+      ...prev,
+      blacklistedEmails: [...(prev.blacklistedEmails || []), trimmed],
+    }));
     setNewBlacklistEmail("");
-
-    try {
-      const res = await apiFetch(
-        "/api/cms/settings/forms",
-        "PUT",
-        updatedSettings,
-      );
-      if (res.ok) {
-        const data = await res.json().catch(() => ({}));
-        if (data.data) setFormSettings(data.data);
-        showToast(`L'adresse ${trimmed} a été ajoutée et bloquée.`);
-      } else {
-        showToast("Erreur lors de l'enregistrement de l'adresse.", "error");
-      }
-    } catch (err) {
-      console.error("Erreur ajout email blacklist:", err);
-      showToast("Erreur réseau.", "error");
-    }
   };
 
   useEffect(() => {

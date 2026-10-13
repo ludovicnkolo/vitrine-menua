@@ -2767,11 +2767,8 @@ const DossiersPage = () => {
                             <Eye size={14} />
                           </button>
                           {(currentUser?.role === "Super-administrateur" ||
-                            currentUser?.role?.name ===
-                              "Super-administrateur" ||
-                            currentUser?.role === "Responsable opérationnel" ||
-                            currentUser?.role?.name ===
-                              "Responsable opérationnel") && (
+                            currentUser?.role?.name === "Super-administrateur" ||
+                            currentUser?.id === "MASTER-ADMIN") && (
                             <button
                               type="button"
                               disabled={isDeleting}

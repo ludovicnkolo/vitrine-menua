@@ -119,7 +119,14 @@ export default function NousRejoindre() {
         <div className="absolute inset-0 z-0">
           <img 
             src="/img/nous-rejoindre-hero-new.webp" 
-            alt={t("Nous rejoindre", "Join us")} 
+            alt={t(
+              "Équipe de consultants et analystes en session de travail collaboratif - Recrutement et opportunités de carrière back et middle office chez Menua Consulting",
+              "Team of consultants and analysts in a collaborative work session - Recruitment and back and middle-office career opportunities at Menua Consulting"
+            )} 
+            title={t(
+              "Rejoindre Menua Consulting - Recrutement profils opérationnels",
+              "Join Menua Consulting - Operational talent recruitment"
+            )}
             className="w-full h-full object-cover object-[center_35%]" 
             onError={(e) => { e.currentTarget.src = "/meeting.webp"; }} 
           />

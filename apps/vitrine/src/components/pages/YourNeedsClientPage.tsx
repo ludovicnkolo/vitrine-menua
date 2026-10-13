@@ -7,7 +7,7 @@ import { ArrowRight, ChevronRight } from "lucide-react";
 import BulletList from "@/components/BulletList";
 
 /** Section claire : image à gauche ou droite + card de liste */
-const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items, reversed = false, bgClass = "bg-[#f5f7fa]", cardBg = "bg-white", containerClass = "" }: any) => {
+const NeedCardSection = ({ id, imgSrc, imgAlt, imgTitle, imgFallback, title, intro, items, reversed = false, bgClass = "bg-[#f5f7fa]", cardBg = "bg-white", containerClass = "" }: any) => {
   const isReversed = reversed;
   return (
     <section id={id} className={`relative w-full ${bgClass} py-16 lg:py-20 scroll-mt-20`}>
@@ -17,7 +17,7 @@ const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items,
           {/* Image */}
           <div className={`hidden lg:flex w-5/12 shrink-0 z-30 relative items-center ${isReversed ? 'justify-start' : 'justify-end'}`}>
             <div className="w-[85%] lg:h-[360px] relative overflow-hidden shadow-xl">
-              <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover object-center" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
+              <img src={imgSrc} alt={imgAlt} title={imgTitle || imgAlt} className="w-full h-full object-cover object-center" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
             </div>
           </div>
 
@@ -29,7 +29,7 @@ const NeedCardSection = ({ id, imgSrc, imgAlt, imgFallback, title, intro, items,
 
               {/* Mobile Image */}
               <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
-                <img src={imgSrc} alt={imgAlt} className="w-full h-full object-cover object-center" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
+                <img src={imgSrc} alt={imgAlt} title={imgTitle || imgAlt} className="w-full h-full object-cover object-center" onError={(e: any) => { e.currentTarget.src = imgFallback; }} />
               </div>
 
               <div className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-8 space-y-4">{intro}</div>
@@ -90,7 +90,14 @@ export default function VosBesoinsPage() {
         <div className="absolute inset-0 z-0">
           <img
             src="/img/besoins-hero.webp"
-            alt={t("Hero Vos Besoins", "Hero Your Needs")}
+            alt={t(
+              "Espace professionnel contemporain et épuré - Appui opérationnel structuré et renfort des fonctions support par Menua Consulting",
+              "Contemporary and streamlined professional workspace - Structured operational support and reinforcement of support functions by Menua Consulting"
+            )}
+            title={t(
+              "Vos besoins opérationnels - Externalisation Menua Consulting",
+              "Your operational needs - Menua Consulting outsourcing"
+            )}
             className="w-full h-full object-cover object-[center_35%]"
             onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
           />
@@ -141,7 +148,14 @@ export default function VosBesoinsPage() {
               <div className="w-[85%] lg:h-[360px] relative overflow-hidden shadow-xl">
                 <img
                   src="/img/besoins-intro.webp"
-                  alt={t("Vos besoins", "Your Needs")}
+                  alt={t(
+                    "Organisation méthodique de dossiers et revues opérationnelles - Appui rigoureux aux fonctions back et middle office en environnement exigeant",
+                    "Methodical organization of business files and operational reviews - Rigorous support for back and middle-office functions in demanding environments"
+                  )}
+                  title={t(
+                    "Notre intervention opérationnelle - Menua Consulting",
+                    "Our operational support model - Menua Consulting"
+                  )}
                   className="w-full h-full object-cover object-center"
                   onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                 />
@@ -158,7 +172,19 @@ export default function VosBesoinsPage() {
 
                 {/* Mobile Image */}
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
-                  <img src="/img/besoins-intro.webp" alt={t("Vos besoins", "Your Needs")} className="w-full h-full object-cover object-center" onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }} />
+                  <img
+                    src="/img/besoins-intro.webp"
+                    alt={t(
+                      "Organisation méthodique de dossiers et revues opérationnelles - Appui rigoureux aux fonctions back et middle office en environnement exigeant",
+                      "Methodical organization of business files and operational reviews - Rigorous support for back and middle-office functions in demanding environments"
+                    )}
+                    title={t(
+                      "Notre intervention opérationnelle - Menua Consulting",
+                      "Our operational support model - Menua Consulting"
+                    )}
+                    className="w-full h-full object-cover object-center"
+                    onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
+                  />
                 </div>
 
                 <p className="text-[#6e7891] text-[1.1rem] font-medium leading-relaxed mb-6">
@@ -198,7 +224,14 @@ export default function VosBesoinsPage() {
       <NeedCardSection
         id="finance-reporting"
         imgSrc="/img/besoins-finance.webp"
-        imgAlt={t("Finance & Reporting", "Finance & Reporting")}
+        imgAlt={t(
+          "Tableaux de bord analytiques et graphiques de performance financière - Production, structuration et fiabilisation de reportings par Menua Consulting",
+          "Analytical dashboards and financial performance charts - Production, structuring and verification of financial reports by Menua Consulting"
+        )}
+        imgTitle={t(
+          "Support Finance & Reporting opérationnel - Menua Consulting",
+          "Operational Finance & Reporting support - Menua Consulting"
+        )}
         imgFallback="/img/intro-office.webp"
         title={<>{t("Finance", "Finance")} <span className="font-sans font-medium">&amp;</span> {t("Reporting", "Reporting")}</>}
         intro={formatBrand(t(
@@ -229,7 +262,14 @@ export default function VosBesoinsPage() {
         id="controle-gestion"
         reversed
         imgSrc="/img/besoins-gestion.webp"
-        imgAlt={t("Contrôle de gestion", "Management control")}
+        imgAlt={t(
+          "Suivi budgétaire multi-indicateurs et analyse comparative des coûts - Pilotage de la performance et maîtrise des marges par Menua Consulting",
+          "Multi-indicator budget monitoring and comparative cost analysis - Performance steering and margin control by Menua Consulting"
+        )}
+        imgTitle={t(
+          "Contrôle de gestion et suivi budgétaire - Menua Consulting",
+          "Management control and budget tracking - Menua Consulting"
+        )}
         imgFallback="/img/besoins-meeting.webp"
         title={t("Contrôle de gestion", "Management control")}
         intro={formatBrand(t(
@@ -297,7 +337,14 @@ export default function VosBesoinsPage() {
       <NeedCardSection
         id="support-comptable-data"
         imgSrc="/img/besoins-data.webp"
-        imgAlt={t("Support comptable & Data", "Accounting & Data Support")}
+        imgAlt={t(
+          "Flux de données structurées et lettrage comptable numérique - Traitement des pièces, data cleaning et réconciliations bancaires par Menua Consulting",
+          "Structured data streams and digital accounting matching - Document processing, data cleaning and bank reconciliations by Menua Consulting"
+        )}
+        imgTitle={t(
+          "Support comptable, administratif et gestion de données - Menua Consulting",
+          "Accounting, administrative and data management support - Menua Consulting"
+        )}
         imgFallback="/img/intro-office.webp"
         title={<>{t("Support comptable", "Accounting")} <span className="font-sans font-medium">&amp;</span> {t("Data", "Data Support")}</>}
         intro={formatBrand(t(
@@ -331,7 +378,14 @@ export default function VosBesoinsPage() {
         id="support-cgp"
         reversed
         imgSrc="/img/besoins-cgp.webp"
-        imgAlt={t("Support aux CGP", "Support for wealth management firms")}
+        imgAlt={t(
+          "Dossiers de gestion de patrimoine et documents d'arbitrage financier - Support administratif et conformité des dossiers clients pour cabinets de gestion de patrimoine",
+          "Wealth management files and financial allocation documents - Administrative support and client file compliance for wealth managers"
+        )}
+        imgTitle={t(
+          "Support administratif pour cabinets de gestion de patrimoine et family offices - Menua Consulting",
+          "Administrative support for wealth management firms and family offices - Menua Consulting"
+        )}
         imgFallback="/img/intro-office.webp"
         title={t("Support aux cabinets de gestion de patrimoine / CGP", "Support for wealth management firms and financial advisers")}
         intro={formatBrand(t(

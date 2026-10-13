@@ -16,6 +16,12 @@ const {
   isAdmin,
   isManager,
 } = require("../../middlewares/auth");
+const {
+  canDeleteMission,
+} = require("../../middlewares/rbac");
+const {
+  buildMissionAccessFilter,
+} = require("../../services/dossierFilterService");
 const { notify } = require("../../utils/notify");
 const { transporter } = require("../../utils/mailer");
 const emitEntityUpdate = (req, entityType, entityId, action, payload = {}) => {
@@ -202,24 +208,10 @@ router.get("/tasks", async (req, res) => {
 
     const where = { parentMissionId: null, AND: [] }; // Only parent tasks
 
-    if (
-      req.user.role === "Responsable opérationnel" ||
-      req.user.role === "Collaborateur"
-    ) {
-      where.AND.push({
-        OR: [
-          { assignedToId: req.user.id },
-          { createdById: req.user.id },
-          { dossier: { traitantId: req.user.id } },
-        ]
-      });
-    } else if (req.user.role === "Relecteur") {
-      where.AND.push({
-        OR: [
-          { relecteurId: req.user.id },
-          { taches: { some: { relecteurId: req.user.id } } },
-        ]
-      });
+    // ── Filtrage pyramidal et absorption des droits ──────────────────────────
+    const accessFilter = buildMissionAccessFilter(req.user);
+    if (accessFilter && Object.keys(accessFilter).length > 0) {
+      where.AND.push(accessFilter);
     }
 
     const isSuperAdm = req.user.role === "Super-administrateur";
@@ -863,12 +855,26 @@ router.patch("/tasks/:id", async (req, res) => {
 
 router.delete("/tasks/:id", async (req, res) => {
   try {
-    if (!isAdmin(req.user.role)) {
+    const existingMission = await prisma.mission.findUnique({
+      where: { id: req.params.id },
+      include: { dossier: true },
+    });
+
+    if (!existingMission) {
+      return res.status(404).json({ error: "Mission introuvable." });
+    }
+
+    const isAuthorized =
+      isSuperAdmin(req.user.role) ||
+      isAdmin(req.user.role) ||
+      canDeleteMission(req.user, existingMission, existingMission.dossier);
+
+    if (!isAuthorized) {
       return res
         .status(403)
         .json({
           error:
-            "Accès refusé. Seul un administrateur peut supprimer une mission.",
+            "Accès refusé. Vous n'avez pas l'autorisation de supprimer cette mission.",
         });
     }
 

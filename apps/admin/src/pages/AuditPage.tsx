@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Shield,
-  Clock,
   Search,
   AlertCircle,
-  FileText,
   Calendar,
   ChevronLeft,
   ChevronRight,
@@ -359,27 +357,17 @@ export default function AuditPage() {
                   return (
                     <tr key={log.id} className="hover:bg-slate-50/50 transition-colors">
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="flex items-center gap-2 text-slate-700">
-                          <Clock className="h-4 w-4 text-slate-400 shrink-0" />
-                          <div>
-                            <div className="font-medium text-xs text-slate-900">{dateStr}</div>
-                            <div className="text-[11px] text-slate-500">{timeStr}</div>
-                          </div>
-                        </div>
+                        <div className="font-medium text-xs text-slate-900">{dateStr}</div>
+                        <div className="text-[11px] text-slate-500">{timeStr}</div>
                       </td>
 
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
-                            {userName.charAt(0).toUpperCase()}
+                        <div className="min-w-0 flex-1 truncate">
+                          <div className="truncate font-medium text-slate-900" title={userName}>
+                            {userName}
                           </div>
-                          <div className="min-w-0 flex-1 truncate">
-                            <div className="truncate font-medium text-slate-900" title={userName}>
-                              {userName}
-                            </div>
-                            <div className="truncate text-xs text-slate-500" title={roleLabel}>
-                              {roleLabel}
-                            </div>
+                          <div className="truncate text-xs text-slate-500" title={roleLabel}>
+                            {roleLabel}
                           </div>
                         </div>
                       </td>
@@ -395,23 +383,20 @@ export default function AuditPage() {
                       </td>
 
                       <td className="px-4 py-3">
-                        <div className="flex items-start gap-2 min-w-0">
-                          <FileText className="h-4 w-4 text-slate-400 shrink-0 mt-0.5" />
-                          <div className="min-w-0 flex-1">
-                            {targetLabel && (
-                              <div
-                                className="truncate font-medium text-xs text-slate-800"
-                                title={targetLabel}
-                              >
-                                {targetLabel}
-                              </div>
-                            )}
+                        <div className="min-w-0 flex-1">
+                          {targetLabel && (
                             <div
-                              className="truncate text-xs text-slate-500"
-                              title={log.details || "-"}
+                              className="truncate font-medium text-xs text-slate-800"
+                              title={targetLabel}
                             >
-                              {log.details || "-"}
+                              {targetLabel}
                             </div>
+                          )}
+                          <div
+                            className="truncate text-xs text-slate-500"
+                            title={log.details || "-"}
+                          >
+                            {log.details || "-"}
                           </div>
                         </div>
                       </td>

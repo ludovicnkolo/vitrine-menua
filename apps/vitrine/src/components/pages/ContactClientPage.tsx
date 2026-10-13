@@ -59,7 +59,14 @@ export default function NousContacter() {
         <div className="absolute inset-0 z-0">
           <img 
             src="/img/nous-contacter-hero-new.webp" 
-            alt={t("Nous contacter", "Contact us")}
+            alt={t(
+              "Échange professionnel et écoute attentive au sein d'un bureau de conseil parisien - Prise de contact et cadrage de besoins en externalisation back et middle office",
+              "Professional dialogue and attentive listening in Parisian consulting firm - Direct inquiry and scoping of back and middle-office outsourcing requirements"
+            )}
+            title={t(
+              "Contacter Menua Consulting - Cadrage de vos besoins opérationnels",
+              "Contact Menua Consulting - Scoping your operational requirements"
+            )}
             className="w-full h-full object-cover" 
           />
           <div className="absolute inset-0 bg-[#141824]/70"></div>

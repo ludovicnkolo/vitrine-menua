@@ -18,7 +18,14 @@ export default function PourquoiMenuaPage() {
         <div className="absolute inset-0 z-0">
           <img
             src="/img/pourquoi-hero.webp"
-            alt={t("Pourquoi Menua Consulting", "Why Menua Consulting")}
+            alt={t(
+              "Édifice contemporain aux lignes architecturales rigoureuses - Valeur ajoutée, fiabilité opérationnelle et solidité de l'accompagnement Menua Consulting",
+              "Contemporary building with sharp architectural lines - Added value, operational reliability and robust support from Menua Consulting"
+            )}
+            title={t(
+              "Pourquoi choisir Menua Consulting - Cabinet d'externalisation back et middle office",
+              "Why choose Menua Consulting - Operational back and middle-office outsourcing firm"
+            )}
             className="w-full h-full object-cover object-[center_35%]"
             onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
           />
@@ -69,7 +76,14 @@ export default function PourquoiMenuaPage() {
             <div className="hidden lg:block w-5/12 lg:h-[360px] shrink-0 relative z-30 shadow-xl overflow-hidden">
               <img
                 src="/img/pourquoi_2.webp"
-                alt={t("Pourquoi Menua", "Why Choose Us")}
+                alt={t(
+                  "Perspective géométrique d'espaces de travail modernes - Vision stratégique, rigueur d'exécution et continuité des services back et middle office",
+                  "Geometric perspective of modern workspaces - Strategic vision, operational rigor and back and middle-office continuity"
+                )}
+                title={t(
+                  "Notre vision de l'excellence opérationnelle - Menua Consulting",
+                  "Our vision of operational excellence - Menua Consulting"
+                )}
                 className="w-full h-full object-cover object-center"
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
               />
@@ -87,7 +101,14 @@ export default function PourquoiMenuaPage() {
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                   <img
                     src="/img/pourquoi_2.webp"
-                    alt={t("Pourquoi Menua", "Why Choose Us")}
+                    alt={t(
+                      "Perspective géométrique d'espaces de travail modernes - Vision stratégique, rigueur d'exécution et continuité des services back et middle office",
+                      "Geometric perspective of modern workspaces - Strategic vision, operational rigor and back and middle-office continuity"
+                    )}
+                    title={t(
+                      "Notre vision de l'excellence opérationnelle - Menua Consulting",
+                      "Our vision of operational excellence - Menua Consulting"
+                    )}
                     className="w-full h-full object-cover object-center"
                     onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                   />
@@ -117,7 +138,19 @@ export default function PourquoiMenuaPage() {
           <div className="flex flex-col lg:flex-row lg:items-center">
             {/* Image (Left Desktop only) */}
             <div className="hidden lg:block w-5/12 lg:h-[360px] shrink-0 relative z-30 shadow-xl overflow-hidden">
-              <img src="/img/benefices.webp" alt={t("Bénéfices", "Benefits")} className="w-full h-full object-cover object-[80%_center]" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
+              <img
+                src="/img/benefices.webp"
+                alt={t(
+                  "Engrenages et mécanismes de précision synchronisés - Optimisation de la charge de travail, efficacité opérationnelle et gains de productivité",
+                  "Precision clockwork gears and synchronized mechanisms - Workload optimization, operational efficiency and productivity gains"
+                )}
+                title={t(
+                  "Bénéfices de l'externalisation back et middle office avec Menua Consulting",
+                  "Benefits of operational back and middle-office outsourcing with Menua Consulting"
+                )}
+                className="w-full h-full object-cover object-[80%_center]"
+                onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
+              />
             </div>
 
             {/* Text Box (Right) */}
@@ -128,7 +161,19 @@ export default function PourquoiMenuaPage() {
 
                 {/* Mobile Image */}
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
-                  <img src="/img/benefices.webp" alt={t("Bénéfices", "Benefits")} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }} />
+                  <img
+                    src="/img/benefices.webp"
+                    alt={t(
+                      "Engrenages et mécanismes de précision synchronisés - Optimisation de la charge de travail, efficacité opérationnelle et gains de productivité",
+                      "Precision clockwork gears and synchronized mechanisms - Workload optimization, operational efficiency and productivity gains"
+                    )}
+                    title={t(
+                      "Bénéfices de l'externalisation back et middle office avec Menua Consulting",
+                      "Benefits of operational back and middle-office outsourcing with Menua Consulting"
+                    )}
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.currentTarget.src = "/img/besoins-meeting.webp"; }}
+                  />
                 </div>
                 <p className="text-[#6e7891] font-light text-[1.05rem] leading-relaxed mb-6">
                   {formatBrand(t(
@@ -228,7 +273,14 @@ export default function PourquoiMenuaPage() {
             <div className="hidden lg:block w-5/12 lg:h-[360px] shrink-0 relative z-30 shadow-xl overflow-hidden">
               <img
                 src="/img/pourquoi_4.webp"
-                alt={t("Engagements", "Commitments")}
+                alt={t(
+                  "Composition symbolisant l'équilibre et la rigueur méthodique - Engagements de qualité, traçabilité des opérations et contrôle à quatre yeux",
+                  "Composition symbolizing balance and methodical rigor - Quality commitments, operational traceability and four-eyes review"
+                )}
+                title={t(
+                  "Nos engagements d'excellence opérationnelle et déontologique - Menua Consulting",
+                  "Our commitments to operational excellence and ethics - Menua Consulting"
+                )}
                 className="w-full h-full object-cover object-center"
                 onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
               />
@@ -246,7 +298,14 @@ export default function PourquoiMenuaPage() {
                 <div className="block lg:hidden w-[105%] -ml-[2.5%] portrait:sm:w-[calc(100%-6rem)] portrait:sm:ml-[3rem] h-[260px] portrait:sm:h-[300px] my-6 shadow-md overflow-hidden">
                   <img
                     src="/img/pourquoi_4.webp"
-                    alt={t("Engagements", "Commitments")}
+                    alt={t(
+                      "Composition symbolisant l'équilibre et la rigueur méthodique - Engagements de qualité, traçabilité des opérations et contrôle à quatre yeux",
+                      "Composition symbolizing balance and methodical rigor - Quality commitments, operational traceability and four-eyes review"
+                    )}
+                    title={t(
+                      "Nos engagements d'excellence opérationnelle et déontologique - Menua Consulting",
+                      "Our commitments to operational excellence and ethics - Menua Consulting"
+                    )}
                     className="w-full h-full object-cover object-center"
                     onError={(e) => { e.currentTarget.src = "/img/intro-office.webp"; }}
                   />

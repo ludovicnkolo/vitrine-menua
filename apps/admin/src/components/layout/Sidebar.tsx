@@ -142,9 +142,23 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <button
             type="button"
             onClick={() => logout()}
-            className="btn btn-outline w-full text-white flex gap-2 justify-center items-center" style={{borderColor:"rgba(255,255,255,0.2)"}}
+            className="w-full flex gap-2 justify-center items-center py-2 px-4 rounded-md font-medium text-sm transition-all duration-200"
+            style={{
+              color: "#FFFFFF",
+              backgroundColor: "rgba(255, 255, 255, 0.1)",
+              border: "1px solid rgba(255, 255, 255, 0.25)",
+              cursor: "pointer",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
+              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.4)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.25)";
+            }}
           >
-            <LogOut size={16} /> {t("nav.logout")}
+            <LogOut size={16} color="#FFFFFF" /> {t("nav.logout")}
           </button>
         </div>
       </aside>

@@ -750,6 +750,19 @@ router.patch("/tasks/:id", async (req, res) => {
     } else if (currentMissionForAuth.status === "EN_ATTENTE") {
       const { cascadeResumeMission } = require("../../utils/statusCascade");
       await cascadeResumeMission(task.id);
+    } else if (dataToUpdate.status === "ANNULEE") {
+      // L'annulation d'une mission provoque le déplacement de toutes ses tâches actives vers la corbeille
+      await prisma.tache.updateMany({
+        where: {
+          missionId: task.id,
+          status: { not: "CORBEILLE" },
+        },
+        data: {
+          status: "CORBEILLE",
+          statusBeforeTrash: "ANNULEE",
+        },
+      });
+      emitEntityUpdate(req, 'TACHE', null, 'BULK_DELETED', { missionId: task.id });
     }
 
     // ── Notifications Zero-Trust ────────────────────────────────────────────
@@ -795,13 +808,17 @@ router.patch("/tasks/:id", async (req, res) => {
     const auditAction =
       dataToUpdate.status === "TERMINE"
         ? "APPROBATION_MISSION"
-        : "MODIFICATION_MISSION";
+        : dataToUpdate.status === "ANNULEE"
+          ? "ANNULATION_MISSION"
+          : "MODIFICATION_MISSION";
     await logAudit(
       req.user?.id,
       auditAction,
       task.id,
       "MISSION",
-      `Mission ${dataToUpdate.status === "TERMINE" ? "approuvée/clôturée" : "modifiée"} (Statut: ${task.status})`,
+      dataToUpdate.status === "ANNULEE"
+        ? `Mission annulée et tâches associées déplacées vers la corbeille (Réf: ${task.reference || task.id})`
+        : `Mission ${dataToUpdate.status === "TERMINE" ? "approuvée/clôturée" : "modifiée"} (Statut: ${task.status})`,
       task.dossierId,
     );
 

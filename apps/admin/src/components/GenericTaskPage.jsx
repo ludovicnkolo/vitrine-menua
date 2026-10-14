@@ -480,15 +480,24 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       if (res.ok) {
         fetchData();
         if (consultTask && consultTask.id === taskId) {
-          setConsultTask({ ...consultTask, status: newStatus });
+          setConsultTask((prev) => prev ? { ...prev, status: newStatus } : prev);
         }
         if (editTask && editTask.id === taskId) {
-          setEditTask({ ...editTask, status: newStatus });
+          setEditTask((prev) => prev ? { ...prev, status: newStatus } : prev);
         }
         setPendingStatus("");
-        
-        // Show success popup with same styling as errors
-        // setErrorMsg(`Statut mis à jour : ${newStatus}`);
+        // Toast de succès
+        const labelMap = {
+          NOUVEAU: "Nouveau", EN_COURS: "En cours", EN_RELECTURE: "En relecture",
+          EN_APPROBATION: "En approbation", APPROUVEE: "Approuvée", A_CORRIGER: "À corriger",
+          TERMINE: "Terminé", ARCHIVE: "Archivé", BLOQUE: "Bloqué", EN_ATTENTE: "En attente",
+          ANNULEE: "Annulée", EN_FINALISATION: "En finalisation", EN_CONTROLE: "En contrôle",
+        };
+        window.customAlert(
+          `Statut mis à jour : ${labelMap[newStatus] || newStatus}`,
+          "Succès",
+          "success"
+        );
       } else {
         let errMsg = "Erreur lors de la mise à jour du statut.";
         try {
@@ -1518,24 +1527,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 </button>
               )}
 
-            {canEditTask && (
-              <button
-                type="button"
-                onClick={() => openEditTask(consultTask)}
-                className="text-white font-semibold cursor-pointer flex items-center"
-                style={{
-                  background: "#2563EB",
-                  border: "none",
-                  padding: "0.55rem 1.1rem",
-                  borderRadius: "8px",
-                  fontSize: "0.85rem",
-                  gap: "0.4rem",
-                }}
-                title={mode === "MISSION" ? "Modifier la mission" : "Modifier la tâche"}
-              >
-                <Pencil size={15} /> Modifier
-              </button>
-            )}
+
 
             <button
               type="button"
@@ -1865,19 +1857,19 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     {!isStatusLocked && pendingStatus && pendingStatus !== consultTask.status && (
                       <button
                         type="button"
-                        onClick={async () => {
+                        onClick={() => {
                           if (pendingStatus === "A_CORRIGER") {
+                            // Cas spécial : feedback manager requis
                             setShowManagerFeedbackModal(true);
                             return;
                           }
-                          if (
-                            await window.customConfirm(
-                              `Vous allez enregistrer 1 modification(s) sur cette ${mode === "MISSION" ? "mission" : "tâche"}.\n\nStatut : ${TACHE_STATUS_LABELS[pendingStatus] || pendingStatus}`,
-                              "Confirmer l'enregistrement"
-                            )
-                          ) {
-                            handleWorkflowAction(consultTask.id, pendingStatus);
+                          if (pendingStatus === "ANNULEE" && mode === "MISSION") {
+                            // Cas spécial : annulation en cascade → popup d'avertissement
+                            setConfirmingStatus(pendingStatus);
+                            return;
                           }
+                          // Cas ordinaire : appel direct sans intermédiaire
+                          handleWorkflowAction(consultTask.id, pendingStatus);
                         }}
                         className="flex items-center text-white cursor-pointer font-semibold" style={{padding:"0.45rem 0.85rem",fontSize:"0.8rem",gap:"0.35rem",background:"#1E3A8A",borderRadius:"6px",border:"none"}}
                       >
@@ -2367,44 +2359,81 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         </div>
       )}
 
-      {confirmingStatus && (
+      {confirmingStatus === "ANNULEE" && mode === "MISSION" && (
         <div
-          className="fixed inset-0 w-full h-full flex items-center justify-center" style={{backgroundColor:"rgba(0,0,0,0.5)",zIndex:9999}}
+          className="fixed inset-0 w-full h-full flex items-center justify-center p-4"
+          style={{ backgroundColor: "rgba(0,0,0,0.55)", zIndex: 9999 }}
         >
           <div
-            className="p-8 w-full text-center" style={{background:"#FFF",borderRadius:"12px",boxShadow:"0 10px 25px rgba(0,0,0,0.2)",maxWidth:"400px"}}
+            className="p-6 sm:p-8 w-full text-center"
+            style={{
+              background: "#FFF",
+              borderRadius: "14px",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+              maxWidth: "440px",
+            }}
           >
-            <h3 className="mb-2" style={{color:"var(--primary-dark)",fontSize:"1.2rem"}}>
-              Confirmer l'enregistrement
-            </h3>
-            <p className="mb-6" style={{color:"var(--text-muted)",fontSize:"0.9rem"}}>
-              Vous allez enregistrer <strong>1 modification(s)</strong> sur ce(tte) {mode === "MISSION" ? "mission" : "tâche"}.
-            </p>
             <div
-              className="mb-6 text-[var(--text-main)] flex justify-between items-center" style={{background:"#F8FAFC",borderRadius:"8px",padding:"0.75rem 1rem",fontSize:"0.9rem"}}
+              className="mx-auto mb-4 flex items-center justify-center"
+              style={{
+                width: "52px",
+                height: "52px",
+                borderRadius: "50%",
+                background: "#FEE2E2",
+                color: "#DC2626",
+              }}
             >
-              <span className="font-medium" style={{color:"var(--text-muted)"}}>Statut</span>
-              <span className="font-semibold">{TACHE_STATUS_LABELS[confirmingStatus] || confirmingStatus}</span>
+              <AlertTriangle size={28} strokeWidth={2.2} />
             </div>
-            <div className="flex gap-4 justify-center">
+            <h3
+              className="mb-2 font-bold"
+              style={{ color: "#DC2626", fontSize: "1.2rem" }}
+            >
+              Confirmer l'annulation de la mission
+            </h3>
+            <div
+              className="mb-6 p-4 rounded-lg text-left"
+              style={{
+                background: "#FEF2F2",
+                border: "1px solid #FECACA",
+                fontSize: "0.85rem",
+                color: "#991B1B",
+                lineHeight: 1.5,
+              }}
+            >
+              <p className="font-bold mb-1" style={{ color: "#7F1D1D" }}>
+                ⚠️ Attention : action en cascade
+              </p>
+              L'annulation de cette mission entraînera automatiquement le
+              <strong> déplacement de toutes ses tâches associées vers la corbeille</strong>.
+            </div>
+            <div className="flex gap-3 justify-center">
               <button
                 type="button"
                 className="btn btn-outline"
                 onClick={() => setConfirmingStatus("")}
-                style={{ padding: "0.5rem 1.5rem" }}
+                style={{ padding: "0.55rem 1.25rem", fontSize: "0.85rem" }}
               >
-                Annuler
+                Ne pas annuler
               </button>
               <button
                 type="button"
-                className="btn btn-primary"
                 onClick={() => {
                   handleWorkflowAction(consultTask.id, confirmingStatus);
                   setConfirmingStatus("");
                 }}
-                style={{ padding: "0.5rem 1.5rem" }}
+                style={{
+                  padding: "0.55rem 1.25rem",
+                  fontSize: "0.85rem",
+                  background: "#DC2626",
+                  color: "#FFF",
+                  borderRadius: "6px",
+                  border: "none",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
               >
-                Confirmer
+                Oui, annuler et supprimer les tâches
               </button>
             </div>
           </div>

@@ -212,31 +212,27 @@ router.post("/clients", async (req, res) => {
       telephoneEntreprise,
     } = req.body;
 
-    const isSociete =
-      (type && (type.toUpperCase() === "SOCIETE" || type.toLowerCase().includes("soci"))) ||
-      !!(siret || raisonSociale || emailEntreprise || telephoneEntreprise);
-
-    const clientType = isSociete
-      ? "SOCIETE"
-      : (type?.toUpperCase() === "PARTICULIER" || type?.toLowerCase().includes("particulier") ? "PARTICULIER" : (type || "PARTICULIER"));
+    const resolvedTypeStr = type !== undefined ? String(type).trim().toUpperCase() : "PARTICULIER";
+    const isSociete = resolvedTypeStr === "SOCIETE" || resolvedTypeStr.includes("SOCI");
+    const clientType = isSociete ? "SOCIETE" : "PARTICULIER";
 
     const client = await prisma.client.create({
       data: {
-        name,
-        email,
-        telephone: telephone || null,
-        contactSecondaire: contactSecondaire || null,
-        secteurActivite: secteurActivite || null,
-        description: description || null,
+        name: name ? String(name).trim() : "",
+        email: email ? String(email).trim() : "",
+        telephone: telephone ? String(telephone).trim() : null,
+        contactSecondaire: contactSecondaire ? String(contactSecondaire).trim() : null,
+        secteurActivite: secteurActivite ? String(secteurActivite).trim() : null,
+        description: description ? String(description).trim() : null,
         type: clientType,
         status: "ACTIF",
         ...(isSociete && {
           entreprise: {
             create: {
-              siret: siret || null,
-              raisonSociale: raisonSociale || name || null,
-              emailEntreprise: emailEntreprise || null,
-              telephoneEntreprise: telephoneEntreprise || null,
+              siret: siret ? String(siret).trim() : null,
+              raisonSociale: (raisonSociale && String(raisonSociale).trim()) || (name && String(name).trim()) || null,
+              emailEntreprise: emailEntreprise ? String(emailEntreprise).trim() : null,
+              telephoneEntreprise: telephoneEntreprise ? String(telephoneEntreprise).trim() : null,
             },
           },
         }),
@@ -297,46 +293,49 @@ const handleClientUpdate = async (req, res) => {
     });
     if (!existingClient) return res.status(404).json({ error: "Client introuvable." });
 
-    const isSociete =
-      (type !== undefined
-        ? (type.toUpperCase() === "SOCIETE" || type.toLowerCase().includes("soci"))
-        : (existingClient.type?.toUpperCase() === "SOCIETE" || existingClient.type?.toLowerCase().includes("soci"))) ||
-      (siret !== undefined || raisonSociale !== undefined || emailEntreprise !== undefined || telephoneEntreprise !== undefined);
+    const resolvedTypeStr = type !== undefined 
+      ? String(type).trim().toUpperCase() 
+      : (existingClient.type || "PARTICULIER").toUpperCase();
+    const isSociete = resolvedTypeStr === "SOCIETE" || resolvedTypeStr.includes("SOCI");
+    const finalType = isSociete ? "SOCIETE" : "PARTICULIER";
 
     let entrepriseUpdate = undefined;
     if (isSociete) {
       entrepriseUpdate = {
         upsert: {
           create: {
-            siret: siret || null,
-            raisonSociale: raisonSociale || name || existingClient.name || null,
-            emailEntreprise: emailEntreprise || null,
-            telephoneEntreprise: telephoneEntreprise || null,
+            siret: siret ? String(siret).trim() : null,
+            raisonSociale: (raisonSociale && String(raisonSociale).trim()) || (name && String(name).trim()) || existingClient.name || null,
+            emailEntreprise: emailEntreprise ? String(emailEntreprise).trim() : null,
+            telephoneEntreprise: telephoneEntreprise ? String(telephoneEntreprise).trim() : null,
           },
           update: {
-            ...(siret !== undefined && { siret: siret || null }),
-            ...(raisonSociale !== undefined && { raisonSociale: raisonSociale || null }),
-            ...(emailEntreprise !== undefined && { emailEntreprise: emailEntreprise || null }),
-            ...(telephoneEntreprise !== undefined && { telephoneEntreprise: telephoneEntreprise || null }),
+            ...(siret !== undefined && { siret: siret ? String(siret).trim() : null }),
+            ...(raisonSociale !== undefined && { raisonSociale: (raisonSociale && String(raisonSociale).trim()) || (name && String(name).trim()) || null }),
+            ...(emailEntreprise !== undefined && { emailEntreprise: emailEntreprise ? String(emailEntreprise).trim() : null }),
+            ...(telephoneEntreprise !== undefined && { telephoneEntreprise: telephoneEntreprise ? String(telephoneEntreprise).trim() : null }),
           },
         },
       };
+    } else {
+      // Si le client est passé en PARTICULIER, supprimer les données d'entreprise
+      if (existingClient.entreprise) {
+        await prisma.clientEntreprise.deleteMany({
+          where: { clientId: req.params.id },
+        });
+      }
     }
-
-    const resolvedType = type !== undefined
-      ? (isSociete ? "SOCIETE" : (type.toUpperCase() === "PARTICULIER" || type.toLowerCase().includes("particulier") ? "PARTICULIER" : type))
-      : undefined;
 
     const client = await prisma.client.update({
       where: { id: req.params.id },
       data: {
-        ...(name && { name }),
-        ...(email && { email }),
-        ...(telephone !== undefined && { telephone }),
-        ...(contactSecondaire !== undefined && { contactSecondaire }),
-        ...(secteurActivite !== undefined && { secteurActivite }),
-        ...(description !== undefined && { description }),
-        ...(resolvedType !== undefined && { type: resolvedType }),
+        ...(name !== undefined && { name: String(name).trim() }),
+        ...(email !== undefined && { email: String(email).trim() }),
+        ...(telephone !== undefined && { telephone: telephone ? String(telephone).trim() : null }),
+        ...(contactSecondaire !== undefined && { contactSecondaire: contactSecondaire ? String(contactSecondaire).trim() : null }),
+        ...(secteurActivite !== undefined && { secteurActivite: secteurActivite ? String(secteurActivite).trim() : null }),
+        ...(description !== undefined && { description: description ? String(description).trim() : null }),
+        type: finalType,
         ...(status && { status }),
         ...(entrepriseUpdate && { entreprise: entrepriseUpdate }),
       },

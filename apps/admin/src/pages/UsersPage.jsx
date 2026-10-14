@@ -597,21 +597,22 @@ const UsersPage = ({ forceTab }) => {
 
   const handleUpdateClient = async (e) => {
     e.preventDefault();
+    const isSociete = editExternal.type === "Société" || editExternal.type === "SOCIETE";
     await submitApiRequest(
       `/api/crm/clients/${encodeURIComponent(editExternal.id)}`,
       "PATCH",
       {
-        name: editExternal.name,
-        email: editExternal.email,
-        telephone: editExternal.telephone,
-        contactSecondaire: editExternal.contactSecondaire,
-        secteurActivite: editExternal.secteurActivite,
-        description: editExternal.description,
-        type: editExternal.type,
-        siret: editExternal.siret,
-        raisonSociale: editExternal.raisonSociale,
-        emailEntreprise: editExternal.emailEntreprise,
-        telephoneEntreprise: editExternal.telephoneEntreprise,
+        name: editExternal.name?.trim(),
+        email: editExternal.email?.trim(),
+        telephone: editExternal.telephone?.trim() || null,
+        contactSecondaire: editExternal.contactSecondaire?.trim() || null,
+        secteurActivite: editExternal.secteurActivite?.trim() || null,
+        description: editExternal.description?.trim() || null,
+        type: isSociete ? "SOCIETE" : "PARTICULIER",
+        siret: isSociete ? (editExternal.siret?.trim() || null) : null,
+        raisonSociale: isSociete ? (editExternal.raisonSociale?.trim() || null) : null,
+        emailEntreprise: isSociete ? (editExternal.emailEntreprise?.trim() || null) : null,
+        telephoneEntreprise: isSociete ? (editExternal.telephoneEntreprise?.trim() || null) : null,
         status: editExternal.status,
       },
       () => setEditExternal(null),
@@ -674,13 +675,14 @@ const UsersPage = ({ forceTab }) => {
             setOpenMenuId(null);
             if (userObj) {
               if (isExternal) {
+                const isPart = userObj.type === "Particulier" || userObj.type === "PARTICULIER";
                 setEditExternal({
                   ...userObj,
-                  raisonSociale: userObj.entreprise?.raisonSociale || userObj.raisonSociale || (userObj.type !== "Particulier" ? userObj.name : "") || "",
+                  raisonSociale: userObj.entreprise?.raisonSociale || userObj.raisonSociale || (!isPart ? userObj.name : "") || "",
                   siret: userObj.entreprise?.siret || userObj.siret || "",
                   emailEntreprise: userObj.entreprise?.emailEntreprise || userObj.emailEntreprise || "",
                   telephoneEntreprise: userObj.entreprise?.telephoneEntreprise || userObj.telephoneEntreprise || "",
-                  type: userObj.type || "Société",
+                  type: isPart ? "Particulier" : "Société",
                   contactSecondaire: userObj.contactSecondaire || "",
                 });
               } else setEditUser(userObj);
@@ -800,7 +802,10 @@ const UsersPage = ({ forceTab }) => {
 
       {/* Modal Modifier Externe */}
       {editExternal && (() => {
-        const clientTitle = editExternal.entreprise?.raisonSociale || editExternal.raisonSociale || editExternal.name || "Client";
+        const isSociete = editExternal.type === "Société" || editExternal.type === "SOCIETE";
+        const clientTitle = isSociete
+          ? (editExternal.raisonSociale || editExternal.entreprise?.raisonSociale || editExternal.name || "Client")
+          : (editExternal.name || "Client Particulier");
 
         const inputStyle = {
           width: "100%",
@@ -836,7 +841,9 @@ const UsersPage = ({ forceTab }) => {
                   Modifier le Client : {clientTitle}
                 </h1>
                 <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.85rem", color: "var(--text-muted)" }}>
-                  Édition des coordonnées de l'entreprise, des interlocuteurs et du compte client
+                  {isSociete
+                    ? "Édition des coordonnées de l'entreprise, des interlocuteurs et du compte client"
+                    : "Édition des informations personnelles et coordonnées du client particulier"}
                 </p>
               </div>
 
@@ -878,210 +885,337 @@ const UsersPage = ({ forceTab }) => {
             <div
               className="grid gap-6" style={{gridTemplateColumns:"1fr 1fr",alignItems:"start"}}
             >
-              {/* Left Column: Entreprise + Notes */}
-              <div className="flex flex-col gap-6">
-                {/* Card 1: Informations de l'Entreprise (Structure) */}
-                <div
-                  className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
-                >
-                  <div>
-                    <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
-                      1. Informations de l'Entreprise (Structure)
-                    </h2>
-                    <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                      Raison sociale, identifiants légaux et typologie
-                    </p>
+              {isSociete ? (
+                <>
+                  {/* Left Column: Entreprise + Notes */}
+                  <div className="flex flex-col gap-6">
+                    {/* Card 1: Informations de l'Entreprise (Structure) */}
+                    <div
+                      className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
+                    >
+                      <div>
+                        <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
+                          1. Informations de l'Entreprise (Structure)
+                        </h2>
+                        <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                          Raison sociale, identifiants légaux et typologie
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col gap-4">
+                        <div>
+                          <label style={labelStyle}>
+                            Nom de la société / Raison Sociale <span style={{ color: "#EF4444" }}>*</span>
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            value={editExternal.raisonSociale || ""}
+                            onChange={(e) => setEditExternal({ ...editExternal, raisonSociale: e.target.value })}
+                            style={inputStyle}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={labelStyle}>Numéro SIRET</label>
+                          <input
+                            type="text"
+                            placeholder="Ex : 123 456 789 00012"
+                            value={editExternal.siret || ""}
+                            onChange={(e) => setEditExternal({ ...editExternal, siret: e.target.value })}
+                            style={inputStyle}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={labelStyle}>Type de client</label>
+                          <select
+                            value={editExternal.type || "Société"}
+                            onChange={(e) => setEditExternal({ ...editExternal, type: e.target.value })}
+                            style={inputStyle}
+                          >
+                            <option value="Société">Société</option>
+                            <option value="Particulier">Particulier</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label style={labelStyle}>Secteur d'activité</label>
+                          <input
+                            type="text"
+                            placeholder="Ex : Conseil en technologies, Restauration..."
+                            value={editExternal.secteurActivite || ""}
+                            onChange={(e) => setEditExternal({ ...editExternal, secteurActivite: e.target.value })}
+                            style={inputStyle}
+                          />
+                        </div>
+
+                        <div className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}>
+                          <div>
+                            <label style={labelStyle}>Email entreprise</label>
+                            <input
+                              type="email"
+                              placeholder="contact@alpha-corp.fr"
+                              value={editExternal.emailEntreprise || ""}
+                              onChange={(e) => setEditExternal({ ...editExternal, emailEntreprise: e.target.value })}
+                              style={inputStyle}
+                            />
+                          </div>
+                          <div>
+                            <label style={labelStyle}>Téléphone entreprise</label>
+                            <input
+                              type="tel"
+                              placeholder="Ex : 01 23 45 67 89"
+                              value={editExternal.telephoneEntreprise || ""}
+                              onChange={(e) => setEditExternal({ ...editExternal, telephoneEntreprise: e.target.value })}
+                              style={inputStyle}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card 2: Notes & Description Client */}
+                    <div
+                      className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
+                    >
+                      <div>
+                        <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
+                          3. Notes & Description Client
+                        </h2>
+                        <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                          Accords-cadres et spécificités de la relation commerciale
+                        </p>
+                      </div>
+
+                      <div>
+                        <label style={labelStyle}>Description client</label>
+                        <textarea
+                          rows={4}
+                          placeholder="Saisissez les accords commerciaux, conditions particulières ou contexte client..."
+                          value={editExternal.description || ""}
+                          onChange={(e) => setEditExternal({ ...editExternal, description: e.target.value })}
+                          style={{ ...inputStyle, resize: "vertical", fontFamily: "inherit" }}
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="flex flex-col gap-4">
+                  {/* Right Column: Contacts & Interlocuteurs Référents */}
+                  <div
+                    className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
+                  >
                     <div>
-                      <label style={labelStyle}>
-                        Nom de la société / Raison Sociale <span style={{ color: "#EF4444" }}>*</span>
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={editExternal.raisonSociale || ""}
-                        onChange={(e) => setEditExternal({ ...editExternal, raisonSociale: e.target.value })}
-                        style={inputStyle}
-                      />
+                      <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
+                        2. Contacts & Interlocuteurs Référents
+                      </h2>
+                      <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                        Personnes à contacter pour les opérations et le suivi
+                      </p>
                     </div>
 
-                    <div>
-                      <label style={labelStyle}>Numéro SIRET</label>
-                      <input
-                        type="text"
-                        placeholder="Ex : 123 456 789 00012"
-                        value={editExternal.siret || ""}
-                        onChange={(e) => setEditExternal({ ...editExternal, siret: e.target.value })}
-                        style={inputStyle}
-                      />
-                    </div>
+                    {/* Subcard 1: Contact Principal */}
+                    <div
+                      className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #E2E8F0",borderRadius:"8px",padding:"1.25rem",gap:"0.85rem"}}
+                    >
+                      <span className="font-bold" style={{fontSize:"0.75rem",color:"#1E3A8A",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                        CONTACT PRINCIPAL (RÉFÉRENT)
+                      </span>
 
-                    <div>
-                      <label style={labelStyle}>Type de client</label>
-                      <select
-                        value={editExternal.type || "Société"}
-                        onChange={(e) => setEditExternal({ ...editExternal, type: e.target.value })}
-                        style={inputStyle}
-                      >
-                        <option value="Société">Société</option>
-                        <option value="Particulier">Particulier</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label style={labelStyle}>Secteur d'activité</label>
-                      <input
-                        type="text"
-                        placeholder="Ex : Conseil en technologies, Restauration..."
-                        value={editExternal.secteurActivite || ""}
-                        onChange={(e) => setEditExternal({ ...editExternal, secteurActivite: e.target.value })}
-                        style={inputStyle}
-                      />
-                    </div>
-
-                    <div className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}>
                       <div>
-                        <label style={labelStyle}>Email entreprise</label>
+                        <label style={labelStyle}>
+                          Nom du contact <span style={{ color: "#EF4444" }}>*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={editExternal.name || ""}
+                          onChange={(e) => setEditExternal({ ...editExternal, name: e.target.value })}
+                          style={inputStyle}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={labelStyle}>
+                          Email du contact <span style={{ color: "#EF4444" }}>*</span>
+                        </label>
                         <input
                           type="email"
-                          placeholder="contact@alpha-corp.fr"
-                          value={editExternal.emailEntreprise || ""}
-                          onChange={(e) => setEditExternal({ ...editExternal, emailEntreprise: e.target.value })}
+                          required
+                          value={editExternal.email || ""}
+                          onChange={(e) => setEditExternal({ ...editExternal, email: e.target.value })}
                           style={inputStyle}
                         />
                       </div>
+
                       <div>
-                        <label style={labelStyle}>Téléphone entreprise</label>
+                        <label style={labelStyle}>Téléphone direct du contact</label>
                         <input
                           type="tel"
-                          placeholder="Ex : 01 23 45 67 89"
-                          value={editExternal.telephoneEntreprise || ""}
-                          onChange={(e) => setEditExternal({ ...editExternal, telephoneEntreprise: e.target.value })}
+                          placeholder="Ex : +33 6 12 34 56 78"
+                          value={editExternal.telephone || ""}
+                          onChange={(e) => setEditExternal({ ...editExternal, telephone: e.target.value })}
+                          style={inputStyle}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Subcard 2: Contact Secondaire */}
+                    <div
+                      className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #E2E8F0",borderRadius:"8px",padding:"1.25rem",gap:"0.85rem"}}
+                    >
+                      <span className="font-bold" style={{fontSize:"0.75rem",color:"#475569",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                        CONTACT SECONDAIRE / SUPPLÉANT
+                      </span>
+
+                      <div>
+                        <label style={labelStyle}>Seconde personne à contacter</label>
+                        <input
+                          type="text"
+                          placeholder="Ex : Jean Dupont (Coordonnées ou fonction)"
+                          value={editExternal.contactSecondaire || ""}
+                          onChange={(e) => setEditExternal({ ...editExternal, contactSecondaire: e.target.value })}
                           style={inputStyle}
                         />
                       </div>
                     </div>
                   </div>
-                </div>
+                </>
+              ) : (
+                <>
+                  {/* Left Column: Identité du Particulier */}
+                  <div className="flex flex-col gap-6">
+                    <div
+                      className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
+                    >
+                      <div>
+                        <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
+                          1. Identité & Typologie Client
+                        </h2>
+                        <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                          Informations d'identification du client particulier
+                        </p>
+                      </div>
 
-                {/* Card 2: Notes & Description Client */}
-                <div
-                  className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
-                >
-                  <div>
-                    <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
-                      3. Notes & Description Client
-                    </h2>
-                    <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                      Accords-cadres et spécificités de la relation commerciale
-                    </p>
+                      <div className="flex flex-col gap-4">
+                        <div>
+                          <label style={labelStyle}>
+                            Nom complet <span style={{ color: "#EF4444" }}>*</span>
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="Prénom et Nom"
+                            value={editExternal.name || ""}
+                            onChange={(e) => setEditExternal({ ...editExternal, name: e.target.value })}
+                            style={inputStyle}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={labelStyle}>Type de client</label>
+                          <select
+                            value={editExternal.type || "Particulier"}
+                            onChange={(e) => setEditExternal({ ...editExternal, type: e.target.value })}
+                            style={inputStyle}
+                          >
+                            <option value="Particulier">Particulier</option>
+                            <option value="Société">Société</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label style={labelStyle}>Secteur d'activité</label>
+                          <input
+                            type="text"
+                            placeholder="Ex : Professions libérales, Particulier..."
+                            value={editExternal.secteurActivite || ""}
+                            onChange={(e) => setEditExternal({ ...editExternal, secteurActivite: e.target.value })}
+                            style={inputStyle}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={labelStyle}>Seconde personne à contacter</label>
+                          <input
+                            type="text"
+                            placeholder="Ex : Conjoint(e), Mandataire..."
+                            value={editExternal.contactSecondaire || ""}
+                            onChange={(e) => setEditExternal({ ...editExternal, contactSecondaire: e.target.value })}
+                            style={inputStyle}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card 2: Notes Client */}
+                    <div
+                      className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
+                    >
+                      <div>
+                        <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
+                          3. Notes & Contexte Client
+                        </h2>
+                        <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                          Précisions sur les besoins et conditions particulières
+                        </p>
+                      </div>
+
+                      <div>
+                        <label style={labelStyle}>Description client</label>
+                        <textarea
+                          rows={4}
+                          placeholder="Saisissez les besoins, conditions particulières ou contexte..."
+                          value={editExternal.description || ""}
+                          onChange={(e) => setEditExternal({ ...editExternal, description: e.target.value })}
+                          style={{ ...inputStyle, resize: "vertical", fontFamily: "inherit" }}
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  <div>
-                    <label style={labelStyle}>Description client</label>
-                    <textarea
-                      rows={5}
-                      placeholder="Saisissez les accords commerciaux, conditions particulières ou contexte client..."
-                      value={editExternal.description || ""}
-                      onChange={(e) => setEditExternal({ ...editExternal, description: e.target.value })}
-                      style={{ ...inputStyle, resize: "vertical", fontFamily: "inherit" }}
-                    />
+                  {/* Right Column: Coordonnées de Contact */}
+                  <div
+                    className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
+                  >
+                    <div>
+                      <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
+                        2. Coordonnées de Contact
+                      </h2>
+                      <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                        Canaux directs d'échange avec le client
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-4">
+                      <div>
+                        <label style={labelStyle}>
+                          Email du client <span style={{ color: "#EF4444" }}>*</span>
+                        </label>
+                        <input
+                          type="email"
+                          required
+                          placeholder="adresse@email.com"
+                          value={editExternal.email || ""}
+                          onChange={(e) => setEditExternal({ ...editExternal, email: e.target.value })}
+                          style={inputStyle}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={labelStyle}>Téléphone du client</label>
+                        <input
+                          type="tel"
+                          placeholder="Ex : +33 6 12 34 56 78"
+                          value={editExternal.telephone || ""}
+                          onChange={(e) => setEditExternal({ ...editExternal, telephone: e.target.value })}
+                          style={inputStyle}
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Right Column: Contacts & Interlocuteurs Référents */}
-              <div
-                className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
-              >
-                <div>
-                  <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
-                    2. Contacts & Interlocuteurs Référents
-                  </h2>
-                  <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                    Personnes à contacter pour les opérations et la facturation
-                  </p>
-                </div>
-
-                {/* Subcard 1: Contact Principal */}
-                <div
-                  className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #E2E8F0",borderRadius:"8px",padding:"1.25rem",gap:"0.85rem"}}
-                >
-                  <span className="font-bold" style={{fontSize:"0.75rem",color:"#1E3A8A",textTransform:"uppercase",letterSpacing:"0.05em"}}>
-                    CONTACT PRINCIPAL (RÉFÉRENT)
-                  </span>
-
-                  <div>
-                    <label style={labelStyle}>
-                      Nom du contact <span style={{ color: "#EF4444" }}>*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={editExternal.name || ""}
-                      onChange={(e) => setEditExternal({ ...editExternal, name: e.target.value })}
-                      style={inputStyle}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={labelStyle}>
-                      Email du contact <span style={{ color: "#EF4444" }}>*</span>
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      value={editExternal.email || ""}
-                      onChange={(e) => setEditExternal({ ...editExternal, email: e.target.value })}
-                      style={inputStyle}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={labelStyle}>Téléphone direct du contact</label>
-                    <input
-                      type="tel"
-                      placeholder="0102030405"
-                      value={editExternal.telephone || ""}
-                      onChange={(e) => setEditExternal({ ...editExternal, telephone: e.target.value })}
-                      style={inputStyle}
-                    />
-                  </div>
-                </div>
-
-                {/* Subcard 2: Contact Secondaire */}
-                <div
-                  className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #E2E8F0",borderRadius:"8px",padding:"1.25rem",gap:"0.85rem"}}
-                >
-                  <span className="font-bold" style={{fontSize:"0.75rem",color:"#475569",textTransform:"uppercase",letterSpacing:"0.05em"}}>
-                    CONTACT SECONDAIRE / SUPPLÉANT
-                  </span>
-
-                  <div>
-                    <label style={labelStyle}>Seconde personne à contacter</label>
-                    <input
-                      type="text"
-                      placeholder="Ex : Jean Dupont (Directeur des opérations)"
-                      value={editExternal.contactSecondaire || ""}
-                      onChange={(e) => setEditExternal({ ...editExternal, contactSecondaire: e.target.value })}
-                      style={inputStyle}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={labelStyle}>Email ou téléphone secondaire</label>
-                    <input
-                      type="text"
-                      placeholder="Ex : j.dupont@alpha-corp.fr"
-                      value={editExternal.contactSecondaireDetails || ""}
-                      onChange={(e) => setEditExternal({ ...editExternal, contactSecondaireDetails: e.target.value })}
-                      style={inputStyle}
-                    />
-                  </div>
-                </div>
-              </div>
+                </>
+              )}
             </div>
           </form>
         );
@@ -1126,17 +1260,17 @@ const UsersPage = ({ forceTab }) => {
                     <span
                       className="inline-flex items-center font-semibold" style={{gap:"0.35rem",backgroundColor:"#EFF6FF",border:"1px solid #DBEAFE",color:"#2563EB",padding:"0.15rem 0.65rem",borderRadius:"16px",fontSize:"0.75rem"}}
                     >
-                      {isSociete ? "Compte Client" : "Compte Client (Particulier)"}
+                      {isSociete ? "Compte Client (Société)" : "Compte Client (Particulier)"}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 flex-wrap" style={{fontSize:"0.85rem",color:"var(--text-muted)"}}>
                     <span>{clientEmail}</span>
                     <span>•</span>
                     <span>Téléphone : {clientPhone || "Non renseigné"}</span>
-                    {isSociete && (
+                    {isSociete && clientSiret && (
                       <>
                         <span>•</span>
-                        <span>SIRET : {clientSiret || "Non renseigné"}</span>
+                        <span>SIRET : {clientSiret}</span>
                       </>
                     )}
                   </div>
@@ -1159,162 +1293,329 @@ const UsersPage = ({ forceTab }) => {
             <div
               className="grid gap-6" style={{gridTemplateColumns:"1fr 1fr",alignItems:"start"}}
             >
-              {/* Left Column: Informations Administratives & Légales */}
-              <div
-                className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
-              >
-                <div>
-                  <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
-                    Informations Administratives & Légales
-                  </h2>
-                  <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                    Données d'enregistrement et identité de l'entreprise
-                  </p>
-                </div>
-
-                <div className="flex flex-col" style={{gap:"0.85rem"}}>
-                  {/* NOM DE LA SOCIETE / NOM COMPLET */}
-                  <div
-                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
-                  >
-                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
-                      {isSociete ? "Nom de la société" : "Nom complet"}
-                    </span>
-                    <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
-                      {clientDisplayName}
-                    </span>
-                  </div>
-
-                  {/* NUMERO SIRET */}
-                  <div
-                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
-                  >
-                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
-                      Numéro SIRET
-                    </span>
-                    <span style={{ fontSize: "0.95rem", fontWeight: clientSiret ? 600 : 400, color: clientSiret ? "var(--text-main)" : "#94A3B8" }}>
-                      {clientSiret || "- Non renseigné"}
-                    </span>
-                  </div>
-
-                  {/* SECTEUR D'ACTIVITÉ */}
-                  <div
-                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
-                  >
-                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
-                      Secteur d'activité
-                    </span>
-                    <span style={{ fontSize: "0.95rem", fontWeight: consultExternal.secteurActivite ? 600 : 400, color: consultExternal.secteurActivite ? "var(--text-main)" : "#94A3B8" }}>
-                      {consultExternal.secteurActivite || "- Non renseigné"}
-                    </span>
-                  </div>
-
-                  {/* CONTACT SECONDAIRE */}
-                  <div
-                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
-                  >
-                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
-                      Contact secondaire
-                    </span>
-                    <span style={{ fontSize: "0.95rem", fontWeight: consultExternal.contactSecondaire ? 600 : 400, color: consultExternal.contactSecondaire ? "var(--text-main)" : "#94A3B8" }}>
-                      {consultExternal.contactSecondaire || "- Non renseigné"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: Coordonnées de Contact & Présentation */}
-              <div className="flex flex-col gap-6">
-                {/* Top Card: Coordonnées de Contact */}
-                <div
-                  className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
-                >
-                  <div>
-                    <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
-                      Coordonnées de Contact
-                    </h2>
-                    <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                      Canaux d'échange avec l'entreprise
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col" style={{gap:"0.85rem"}}>
-                    {/* EMAIL */}
+              {isSociete ? (
+                <>
+                  {/* Left Column: Informations Entreprise */}
+                  <div className="flex flex-col gap-6">
                     <div
-                      className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                      className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
                     >
-                      <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
-                        Email de l'entreprise
-                      </span>
-                      <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
-                        {clientEmail}
-                      </span>
-                    </div>
-
-                    {/* TELEPHONE */}
-                    <div
-                      className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
-                    >
-                      <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
-                        Téléphone de l'entreprise
-                      </span>
-                      <span style={{ fontSize: "0.95rem", fontWeight: clientPhone ? 600 : 400, color: clientPhone ? "var(--text-main)" : "#94A3B8" }}>
-                        {clientPhone || "- Non renseigné"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bottom Card: Présentation & Notes Client */}
-                <div
-                  className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
-                >
-                  <div>
-                    <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
-                      Présentation & Notes Client
-                    </h2>
-                    <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                      Contexte commercial et historique
-                    </p>
-                  </div>
-
-                  <div
-                    className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.85rem 1rem",gap:"0.4rem",minHeight:"100px"}}
-                  >
-                    <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
-                      Description de l'entreprise
-                    </span>
-                    {consultExternal.description ? (
-                      <span className="text-[var(--text-main)]" style={{fontSize:"0.95rem",whiteSpace:"pre-wrap",lineHeight:1.5}}>
-                        {consultExternal.description}
-                      </span>
-                    ) : (
-                      <div style={{ fontSize: "0.85rem", color: "#94A3B8", lineHeight: 1.55 }}>
-                        <p style={{ margin: 0 }}>Aucune description ou note de cadrage n'a été saisie pour ce client.</p>
-                        <p style={{ margin: "0.25rem 0 0 0" }}>Les informations relatives aux besoins et aux accords-cadres apparaîtront ici.</p>
+                      <div>
+                        <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
+                          Informations Administratives & Légales
+                        </h2>
+                        <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                          Données d'enregistrement et identité de l'entreprise
+                        </p>
                       </div>
-                    )}
-                  </div>
-                </div>
-              </div>
 
-              {/* Bottom Action: Activity Stats */}
-              <div className="flex justify-center mt-4">
-                <button
-                  type="button"
-                  onClick={() => handleOpenActivityStats("client", consultExternal)}
-                  className="inline-flex items-center gap-2 font-semibold cursor-pointer" style={{fontSize:"0.9rem",padding:"0.75rem 1.5rem",backgroundColor:"#EFF6FF",color:"#1D4ED8",border:"1px solid #BFDBFE",borderRadius:"8px",boxShadow:"0 1px 2px rgba(0,0,0,0.05)",transition:"all 0.2s"}}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.backgroundColor = "#DBEAFE";
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.backgroundColor = "#EFF6FF";
-                  }}
-                >
-                  <Activity size={18} />
-                  Consulter les statistiques d'activité du client (Dossiers, Missions, Tâches)
-                </button>
-              </div>
+                      <div className="flex flex-col" style={{gap:"0.85rem"}}>
+                        <div
+                          className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                        >
+                          <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                            Nom de la société
+                          </span>
+                          <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
+                            {consultExternal.entreprise?.raisonSociale || consultExternal.name}
+                          </span>
+                        </div>
+
+                        <div
+                          className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                        >
+                          <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                            Numéro SIRET
+                          </span>
+                          <span style={{ fontSize: "0.95rem", fontWeight: clientSiret ? 600 : 400, color: clientSiret ? "var(--text-main)" : "#94A3B8" }}>
+                            {clientSiret || "- Non renseigné"}
+                          </span>
+                        </div>
+
+                        <div
+                          className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                        >
+                          <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                            Secteur d'activité
+                          </span>
+                          <span style={{ fontSize: "0.95rem", fontWeight: consultExternal.secteurActivite ? 600 : 400, color: consultExternal.secteurActivite ? "var(--text-main)" : "#94A3B8" }}>
+                            {consultExternal.secteurActivite || "- Non renseigné"}
+                          </span>
+                        </div>
+
+                        <div
+                          className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                        >
+                          <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                            Email de l'entreprise
+                          </span>
+                          <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
+                            {consultExternal.entreprise?.emailEntreprise || "- Non renseigné"}
+                          </span>
+                        </div>
+
+                        <div
+                          className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                        >
+                          <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                            Téléphone de l'entreprise
+                          </span>
+                          <span style={{ fontSize: "0.95rem", fontWeight: consultExternal.entreprise?.telephoneEntreprise ? 600 : 400, color: consultExternal.entreprise?.telephoneEntreprise ? "var(--text-main)" : "#94A3B8" }}>
+                            {consultExternal.entreprise?.telephoneEntreprise || "- Non renseigné"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card Description */}
+                    <div
+                      className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
+                    >
+                      <div>
+                        <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
+                          Présentation & Notes Client
+                        </h2>
+                        <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                          Contexte commercial et historique
+                        </p>
+                      </div>
+
+                      <div
+                        className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.85rem 1rem",gap:"0.4rem",minHeight:"80px"}}
+                      >
+                        <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                          Description de l'entreprise
+                        </span>
+                        {consultExternal.description ? (
+                          <span className="text-[var(--text-main)]" style={{fontSize:"0.95rem",whiteSpace:"pre-wrap",lineHeight:1.5}}>
+                            {consultExternal.description}
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: "0.85rem", color: "#94A3B8" }}>
+                            Aucune description renseignée.
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Interlocuteur Référent & Contact Secondaire */}
+                  <div className="flex flex-col gap-6">
+                    <div
+                      className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
+                    >
+                      <div>
+                        <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
+                          Contact Principal (Référent)
+                        </h2>
+                        <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                          Personne physique en charge des échanges opérationnels
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col" style={{gap:"0.85rem"}}>
+                        <div
+                          className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                        >
+                          <span className="font-bold" style={{fontSize:"0.7rem",color:"#1E3A8A",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                            Nom du contact
+                          </span>
+                          <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
+                            {consultExternal.name || "- Non renseigné"}
+                          </span>
+                        </div>
+
+                        <div
+                          className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                        >
+                          <span className="font-bold" style={{fontSize:"0.7rem",color:"#1E3A8A",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                            Email direct du contact
+                          </span>
+                          <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
+                            {consultExternal.email || "- Non renseigné"}
+                          </span>
+                        </div>
+
+                        <div
+                          className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                        >
+                          <span className="font-bold" style={{fontSize:"0.7rem",color:"#1E3A8A",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                            Téléphone direct du contact
+                          </span>
+                          <span style={{ fontSize: "0.95rem", fontWeight: consultExternal.telephone ? 600 : 400, color: consultExternal.telephone ? "var(--text-main)" : "#94A3B8" }}>
+                            {consultExternal.telephone || "- Non renseigné"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
+                    >
+                      <div>
+                        <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
+                          Contact Secondaire / Suppléant
+                        </h2>
+                        <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                          Interlocuteur alternatif en cas d'absence
+                        </p>
+                      </div>
+
+                      <div
+                        className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                      >
+                        <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                          Seconde personne à contacter
+                        </span>
+                        <span style={{ fontSize: "0.95rem", fontWeight: consultExternal.contactSecondaire ? 600 : 400, color: consultExternal.contactSecondaire ? "var(--text-main)" : "#94A3B8" }}>
+                          {consultExternal.contactSecondaire || "- Non renseigné"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Left Column: Identité du Particulier */}
+                  <div className="flex flex-col gap-6">
+                    <div
+                      className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
+                    >
+                      <div>
+                        <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
+                          Identité du Client
+                        </h2>
+                        <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                          Informations personnelles et professionnelles
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col" style={{gap:"0.85rem"}}>
+                        <div
+                          className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                        >
+                          <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                            Nom complet
+                          </span>
+                          <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
+                            {consultExternal.name || "Client"}
+                          </span>
+                        </div>
+
+                        <div
+                          className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                        >
+                          <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                            Secteur d'activité
+                          </span>
+                          <span style={{ fontSize: "0.95rem", fontWeight: consultExternal.secteurActivite ? 600 : 400, color: consultExternal.secteurActivite ? "var(--text-main)" : "#94A3B8" }}>
+                            {consultExternal.secteurActivite || "- Non renseigné"}
+                          </span>
+                        </div>
+
+                        <div
+                          className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                        >
+                          <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                            Contact secondaire
+                          </span>
+                          <span style={{ fontSize: "0.95rem", fontWeight: consultExternal.contactSecondaire ? 600 : 400, color: consultExternal.contactSecondaire ? "var(--text-main)" : "#94A3B8" }}>
+                            {consultExternal.contactSecondaire || "- Non renseigné"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
+                    >
+                      <div>
+                        <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
+                          Notes & Contexte Client
+                        </h2>
+                        <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                          Détails des échanges et conditions de gestion
+                        </p>
+                      </div>
+
+                      <div
+                        className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.85rem 1rem",gap:"0.4rem",minHeight:"80px"}}
+                      >
+                        <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                          Description client
+                        </span>
+                        {consultExternal.description ? (
+                          <span className="text-[var(--text-main)]" style={{fontSize:"0.95rem",whiteSpace:"pre-wrap",lineHeight:1.5}}>
+                            {consultExternal.description}
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: "0.85rem", color: "#94A3B8" }}>
+                            Aucune description renseignée.
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Coordonnées de Contact Particulier */}
+                  <div className="flex flex-col gap-6">
+                    <div
+                      className="p-6 flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",border:"1px solid var(--border)",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",gap:"1.25rem"}}
+                    >
+                      <div>
+                        <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.05rem"}}>
+                          Coordonnées de Contact
+                        </h2>
+                        <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                          Canaux d'échange directs avec le client
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col" style={{gap:"0.85rem"}}>
+                        <div
+                          className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                        >
+                          <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                            Email
+                          </span>
+                          <span className="font-semibold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
+                            {consultExternal.email}
+                          </span>
+                        </div>
+
+                        <div
+                          className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid #F1F5F9",borderRadius:"8px",padding:"0.75rem 1rem",gap:"0.25rem"}}
+                        >
+                          <span className="font-bold" style={{fontSize:"0.7rem",color:"#64748B",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                            Téléphone
+                          </span>
+                          <span style={{ fontSize: "0.95rem", fontWeight: consultExternal.telephone ? 600 : 400, color: consultExternal.telephone ? "var(--text-main)" : "#94A3B8" }}>
+                            {consultExternal.telephone || "- Non renseigné"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Bottom Action: Activity Stats */}
+            <div className="flex justify-center mt-2">
+              <button
+                type="button"
+                onClick={() => handleOpenActivityStats("client", consultExternal)}
+                className="inline-flex items-center gap-2 font-semibold cursor-pointer" style={{fontSize:"0.9rem",padding:"0.75rem 1.5rem",backgroundColor:"#EFF6FF",color:"#1D4ED8",border:"1px solid #BFDBFE",borderRadius:"8px",boxShadow:"0 1px 2px rgba(0,0,0,0.05)",transition:"all 0.2s"}}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = "#DBEAFE";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = "#EFF6FF";
+                }}
+              >
+                <Activity size={18} />
+                Consulter les statistiques d'activité du client (Dossiers, Missions, Tâches)
+              </button>
             </div>
           </div>
         );
@@ -2471,13 +2772,14 @@ const UsersPage = ({ forceTab }) => {
                           <button
                             type="button"
                             onClick={() => {
+                              const isPart = c.type === "Particulier" || c.type === "PARTICULIER";
                               setEditExternal({
                                 ...c,
-                                raisonSociale: c.entreprise?.raisonSociale || c.raisonSociale || (c.type !== "Particulier" ? c.name : "") || "",
+                                raisonSociale: c.entreprise?.raisonSociale || c.raisonSociale || (!isPart ? c.name : "") || "",
                                 siret: c.entreprise?.siret || c.siret || "",
                                 emailEntreprise: c.entreprise?.emailEntreprise || c.emailEntreprise || "",
                                 telephoneEntreprise: c.entreprise?.telephoneEntreprise || c.telephoneEntreprise || "",
-                                type: c.type || "Société",
+                                type: isPart ? "Particulier" : "Société",
                                 contactSecondaire: c.contactSecondaire || "",
                               });
                             }}

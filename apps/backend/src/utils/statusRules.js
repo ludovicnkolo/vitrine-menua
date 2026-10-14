@@ -105,6 +105,7 @@ const MISSION_TRANSITIONS = {
     EN_COURS: (ctx) => ctx.isSA || ctx.isMissionManager || ctx.isDossierManager,
     EN_ATTENTE: (ctx) => ctx.isSA || ctx.isMissionManager || ctx.isDossierManager,
     BLOQUE: (ctx) => ctx.isSA,
+    ANNULEE: (ctx) => ctx.isSA || ctx.isMissionManager || ctx.isDossierManager,
   },
   EN_COURS: {
     TERMINE: (ctx) => ctx.isSA || ctx.isMissionManager || ctx.isDossierManager,

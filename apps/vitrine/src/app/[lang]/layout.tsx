@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display, Lobster_Two } from "next/font/google";
 
 import "../globals.css";
 import Header from "@/components/layout/Header";
@@ -7,26 +6,6 @@ import Footer from "@/components/layout/Footer";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import ScrollObserver from "@/components/ScrollObserver";
 import JsonLd from "@/components/JsonLd";
-
-// Optimisation native des polices avec next/font
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-  display: "swap",
-});
-
-const lobster = Lobster_Two({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  variable: "--font-lobster",
-  display: "swap",
-});
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://menuaconsulting.com";
 
@@ -108,7 +87,7 @@ export default async function RootLayout({
       lang={locale}
       data-scroll-behavior="smooth"
       translate="no"
-      className={`notranslate ${inter.variable} ${playfair.variable} ${lobster.variable}`}
+      className="notranslate"
     >
       <body className="min-h-screen flex flex-col antialiased bg-[#f5f7fa] text-[#141824] font-sans">
         <JsonLd isEn={isEn} />

@@ -136,7 +136,7 @@ const TaskDropdown = ({
   const task = tasks.find((t) => t.id === taskId);
   const role = currentUser?.role?.name || currentUser?.role || "";
   const isSuperAdmin =
-    role === "Super-administrateur" || role === "Administrateur";
+    role === "Super-administrateur" || role === "Administrateur" || currentUser?.id === "MASTER-ADMIN";
   const isResp = role === "Responsable opérationnel" || isSuperAdmin;
   const isController = role === "Relecteur" || isResp;
 
@@ -248,25 +248,38 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [showSmsModal, setShowSmsModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem("adminUser") || localStorage.getItem("adminUser");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
   const menuRef = useRef(null);
 
   const role = currentUser?.role?.name || currentUser?.role || "";
   const isSuperAdmin =
-    role === "Super-administrateur" || role === "Administrateur";
+    role === "Super-administrateur" || role === "Administrateur" || currentUser?.id === "MASTER-ADMIN";
   const isResp = role === "Responsable opérationnel" || isSuperAdmin;
   const isController = role === "Relecteur" || isResp;
 
-  // Règle d'édition (identique à l'ancien bouton « Modifier » de la consultation) :
-  // Super-admin / Responsable opérationnel, et aucun élément parent bloqué ou en attente.
+  // Règle d'édition :
+  // Super-admin / Responsable opérationnel / Assigné / Responsable parent, et aucun élément parent bloqué ou en attente.
   const canEditTaskRow = (task) => {
     if (!task) return false;
     if (role === "Administrateur technique") return false;
-    const isManager =
-      role === "Super-administrateur" || role === "Responsable opérationnel";
+    const isAssigned =
+      task.assignedToId === currentUser?.id ||
+      task.assignedTo?.id === currentUser?.id;
+    const isParentOwner =
+      task.mission?.assignedToId === currentUser?.id ||
+      task.dossier?.traitantId === currentUser?.id ||
+      task.mission?.dossier?.traitantId === currentUser?.id;
+    const canEdit = isSuperAdmin || isResp || isAssigned || isParentOwner;
     const locked = ["BLOQUE", "EN_ATTENTE"];
     return (
-      isManager &&
+      canEdit &&
       !locked.includes(task.status) &&
       !locked.includes(task.mission?.status) &&
       !locked.includes(task.dossier?.status) &&
@@ -498,8 +511,9 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   const getAllowedStatuses = (currentStatus, userRole, entityMode, taskObj) => {
     const role =
       typeof userRole === "object" ? userRole?.name || "" : userRole || "";
-    const isSuperAdmin = role === "Super-administrateur";
-    const isResp = role === "Responsable opérationnel";
+    const isSuperAdmin =
+      role === "Super-administrateur" || role === "Administrateur" || currentUser?.id === "MASTER-ADMIN";
+    const isResp = role === "Responsable opérationnel" || isSuperAdmin;
     const isRelecteur = role === "Relecteur";
     const isCollab = role === "Collaborateur";
     const isRespOrAdmin = isResp || isSuperAdmin;
@@ -537,16 +551,26 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     }
 
     if (entityMode === "TACHE") {
-      const isAssigned = taskObj && taskObj.assignedToId === currentUser?.id;
-      const isRelecteurAssigned = taskObj && taskObj.relecteurId === currentUser?.id;
+      const isAssigned = taskObj && (
+        taskObj.assignedToId === currentUser?.id ||
+        taskObj.assignedTo?.id === currentUser?.id
+      );
+      const isRelecteurAssigned = taskObj && (
+        taskObj.relecteurId === currentUser?.id ||
+        taskObj.relecteur?.id === currentUser?.id
+      );
       const isMissionResp = taskObj && (
         taskObj.mission?.assignedToId === currentUser?.id ||
+        taskObj.mission?.assignedTo?.id === currentUser?.id ||
         taskObj.dossierTache?.traitantId === currentUser?.id ||
-        taskObj.mission?.dossier?.traitantId === currentUser?.id
+        taskObj.dossierTache?.traitant?.id === currentUser?.id ||
+        taskObj.mission?.dossier?.traitantId === currentUser?.id ||
+        taskObj.mission?.dossier?.traitant?.id === currentUser?.id
       );
+      const isMissionManager = isSuperAdmin || isResp || isMissionResp;
 
       // Miroir exact de TACHE_TRANSITIONS.EN_ATTENTE.RESUME / BLOQUE.RESUME
-      const canPutOrResumeAttente = isSuperAdmin || isMissionResp;
+      const canPutOrResumeAttente = isSuperAdmin || isMissionManager;
 
       const isParentLocked = 
         taskObj && (
@@ -575,6 +599,9 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       }
 
       if (currentStatus === "TERMINE") {
+        if (isSuperAdmin) {
+          return withCurrent(["EN_COURS"]);
+        }
         return lockedOnCurrent();
       }
 
@@ -586,21 +613,25 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       switch (currentStatus) {
         case "NOUVEAU":
         case "A_CORRIGER":
+          // Seul l'assigné à la tâche et le Super-administrateur
           if (isSuperAdmin || isAssigned) allowed.push("EN_COURS");
           break;
         case "EN_COURS":
+          // Seul l'assigné à la tâche et le Super-administrateur
           if (isSuperAdmin || isAssigned) allowed.push("EN_RELECTURE");
           break;
         case "EN_RELECTURE":
+          // Seul le relecteur de la tâche et le Super-administrateur
           if (isSuperAdmin || isRelecteurAssigned) allowed.push("EN_APPROBATION", "A_CORRIGER");
           break;
         case "EN_APPROBATION":
-          // isMissionManager = isSA || isMissionResp (miroir statusRules.js)
-          if (isSuperAdmin || isMissionResp) allowed.push("APPROUVEE");
-          if (isSuperAdmin || isMissionResp || isRelecteurAssigned) allowed.push("A_CORRIGER");
+          // Validation finale par Super-administrateur ou Mission Manager
+          if (isSuperAdmin || isMissionManager) allowed.push("APPROUVEE");
+          // Rattrapage d'erreur avant validation : Seul le relecteur et le Super-administrateur
+          if (isSuperAdmin || isRelecteurAssigned) allowed.push("A_CORRIGER");
           break;
         case "APPROUVEE":
-          if (isSuperAdmin || isMissionResp) allowed.push("TERMINE");
+          if (isSuperAdmin || isMissionManager) allowed.push("TERMINE");
           break;
       }
 
@@ -608,9 +639,15 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       return lockedOnCurrent();
     } else {
       // MISSION
-      const isMissionAssigned = taskObj && taskObj.assignedToId === currentUser?.id;
-      const isDossierResp = taskObj && taskObj.dossier?.traitantId === currentUser?.id;
-      const canManageMission = isSuperAdmin || isMissionAssigned || isDossierResp;
+      const isMissionAssigned = taskObj && (
+        taskObj.assignedToId === currentUser?.id ||
+        taskObj.assignedTo?.id === currentUser?.id
+      );
+      const isDossierResp = taskObj && (
+        taskObj.dossier?.traitantId === currentUser?.id ||
+        taskObj.dossier?.traitant?.id === currentUser?.id
+      );
+      const canManageMission = isSuperAdmin || isResp || isMissionAssigned || isDossierResp;
 
       const isParentLocked = taskObj && ["BLOQUE", "EN_ATTENTE"].includes(taskObj.dossier?.status);
 
@@ -625,8 +662,21 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
       if (currentStatus === "EN_ATTENTE") {
         if (canManageMission) {
-          return withCurrent([taskObj?.previousStatus || "EN_COURS"]);
+          const targets = [taskObj?.previousStatus || "EN_COURS", "ANNULEE"];
+          if (isSuperAdmin) targets.push("BLOQUE");
+          return withCurrent(targets);
         }
+        return lockedOnCurrent();
+      }
+
+      if (currentStatus === "TERMINE") {
+        if (isSuperAdmin) {
+          return withCurrent(["EN_COURS"]);
+        }
+        return lockedOnCurrent();
+      }
+
+      if (currentStatus === "ANNULEE") {
         return lockedOnCurrent();
       }
 
@@ -639,12 +689,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
       switch (currentStatus) {
         case "NOUVEAU":
+          if (canManageMission) allowed.push("EN_COURS");
+          break;
         case "EN_COURS":
-          break;
-        case "TERMINE":
-        case "ANNULEE":
-          break;
-        default:
+          if (canManageMission) allowed.push("TERMINE");
           break;
       }
 
@@ -1337,19 +1385,22 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
 
     const role = currentUser?.role?.name || currentUser?.role || "";
 
+    const isTaskAssigned =
+      consultTask?.assignedToId === currentUser?.id ||
+      consultTask?.assignedTo?.id === currentUser?.id;
+    const isMissionOwner =
+      consultTask?.mission?.assignedToId === currentUser?.id ||
+      consultTask?.dossier?.traitantId === currentUser?.id ||
+      consultTask?.mission?.dossier?.traitantId === currentUser?.id;
+
     const canEditTask =
       role !== "Administrateur technique" &&
-      (role === "Super-administrateur" ||
-        role === "Responsable opérationnel") &&
+      (isSuperAdmin || isResp || isTaskAssigned || isMissionOwner) &&
       !(
         (consultTask?.status === "EN_FINALISATION" ||
           consultTask?.status === "EN_CONTROLE" ||
           consultTask?.status === "TERMINE") &&
-        !(
-          role === "Relecteur" ||
-          role === "Responsable opérationnel" ||
-          role === "Super-administrateur"
-        )
+        !isController
       ) &&
       !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.status) &&
       !["BLOQUE", "EN_ATTENTE"].includes(consultTask?.mission?.status) &&
@@ -1457,7 +1508,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             {mode === "MISSION" &&
               !["TERMINE", "ARCHIVE", "BLOQUE", "EN_ATTENTE"].includes(consultTask.status) &&
               !["BLOQUE", "EN_ATTENTE"].includes(consultTask.dossier?.status) &&
-              (isSuperAdmin || consultTask.assignedToId === currentUser?.id) && (
+              (isSuperAdmin || isResp || consultTask.assignedToId === currentUser?.id || consultTask.dossier?.traitantId === currentUser?.id) && (
                 <button
                   type="button"
                   onClick={() => setCreateTaskModal(true)}
@@ -1815,6 +1866,10 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                       <button
                         type="button"
                         onClick={async () => {
+                          if (pendingStatus === "A_CORRIGER") {
+                            setShowManagerFeedbackModal(true);
+                            return;
+                          }
                           if (
                             await window.customConfirm(
                               `Vous allez enregistrer 1 modification(s) sur cette ${mode === "MISSION" ? "mission" : "tâche"}.\n\nStatut : ${TACHE_STATUS_LABELS[pendingStatus] || pendingStatus}`,
@@ -1849,9 +1904,9 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                   <span>⏸️</span> {mode === "MISSION" ? "Mission en attente" : "Tâche en attente"}
                 </div>
                 <div style={{ fontSize: "0.82rem", color: "#A16207" }}>
-                  {(isSuperAdmin || (mode === "TACHE" && consultTask.mission?.assignedToId === currentUser?.id) || (mode === "MISSION" && consultTask.dossier?.traitantId === currentUser?.id))
+                  {(isSuperAdmin || isResp || (mode === "TACHE" && consultTask.mission?.assignedToId === currentUser?.id) || (mode === "MISSION" && consultTask.dossier?.traitantId === currentUser?.id))
                     ? `Cette ${mode === "MISSION" ? "mission" : "tâche"} est actuellement en attente. Statut avant suspension : "${consultTask.previousStatus || "Nouveau"}". Vous êtes autorisé à reprendre l'activité en rétablissant ce statut.`
-                    : `Cette ${mode === "MISSION" ? "mission" : "tâche"} est en attente. Seul le Super-administrateur ou le responsable opérationnel assigné à la mission peut lever l'attente.`}
+                    : `Cette ${mode === "MISSION" ? "mission" : "tâche"} est en attente. Seul le Super-administrateur ou le responsable opérationnel peut lever l'attente.`}
                 </div>
               </div>
             ) : mode === "TACHE" &&

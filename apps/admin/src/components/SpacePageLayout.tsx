@@ -5,7 +5,7 @@ import TabsNavigation, { TabItem } from "./TabsNavigation";
 export interface SpacePageLayoutProps {
   initialTab: string;
   tabs: TabItem[];
-  children: (activeTab: string) => React.ReactNode;
+  children: (activeTab: string, tabResetKey: number) => React.ReactNode;
 }
 
 const SpacePageLayout: React.FC<SpacePageLayoutProps> = ({ initialTab, tabs, children }) => {
@@ -20,6 +20,10 @@ const SpacePageLayout: React.FC<SpacePageLayoutProps> = ({ initialTab, tabs, chi
     return initialTab;
   });
 
+  // Per-tab click counter: every click (incl. re-click on active) increments the
+  // counter, which consumers can use as a React key to force child remount.
+  const [tabKeys, setTabKeys] = useState<Record<string, number>>({});
+
   useEffect(() => {
     const state = location.state as { tab?: string } | null;
     if (state && state.tab) {
@@ -31,12 +35,16 @@ const SpacePageLayout: React.FC<SpacePageLayoutProps> = ({ initialTab, tabs, chi
   const handleTabChange = (newTab: string) => {
     setTab(newTab);
     sessionStorage.setItem(storageKey, newTab);
+    // Increment reset counter for the clicked tab (resets child state)
+    setTabKeys((prev) => ({ ...prev, [newTab]: (prev[newTab] ?? 0) + 1 }));
   };
+
+  const tabResetKey = tabKeys[tab] ?? 0;
 
   return (
     <div className="px-4">
       <TabsNavigation tabs={tabs} activeTab={tab} onTabChange={handleTabChange} />
-      <div>{children(tab)}</div>
+      <div>{children(tab, tabResetKey)}</div>
     </div>
   );
 };

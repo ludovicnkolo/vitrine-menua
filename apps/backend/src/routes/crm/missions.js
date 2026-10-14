@@ -320,7 +320,8 @@ router.post("/tasks", async (req, res) => {
       }
       if (
         userRole === "Responsable opérationnel" &&
-        targetDossier.traitantId !== req.user.id
+        targetDossier.traitantId !== req.user.id &&
+        targetDossier.createdById !== req.user.id
       ) {
         return res
           .status(403)
@@ -586,6 +587,7 @@ router.patch("/tasks/:id", async (req, res) => {
     const isAuthorized =
       isSuperAdmin(userRole) ||
       isAdmin(userRole) ||
+      isManager(userRole) ||
       currentMissionForAuth.assignedToId === userId ||
       currentMissionForAuth.createdById === userId ||
       currentMissionForAuth.dossier?.traitantId === userId;
@@ -694,12 +696,13 @@ router.patch("/tasks/:id", async (req, res) => {
       const isAssigned = currentMissionForAuth.assignedToId === userId;
       const isDossierResp = currentMissionForAuth.dossier?.traitantId === userId;
 
+      const isRO = isManager(userRole);
       // ── Contexte déterministe — délégation totale à statusRules.js ──────────
       const context = {
         role: userRole,
         isSA,
-        isMissionManager: isSA || isAssigned || isDossierResp,
-        isDossierManager: isSA || isDossierResp,
+        isMissionManager: isSA || isRO || isAssigned || isDossierResp,
+        isDossierManager: isSA || isRO || isDossierResp,
       };
 
       if (!canTransitionMission(from, to, currentMissionForAuth.previousStatus, context)) {

@@ -31,6 +31,12 @@ import FilePreviewModal from "../components/FilePreviewModal";
 import AttachmentSelect from "../components/AttachmentSelect";
 
 import InternalChatTab from "../components/InternalChatTab";
+import {
+  MESSAGE_STATUS_CONFIG,
+  MESSAGE_TRANSITIONS_FRONTEND,
+  DEFINITIVE_MESSAGE_STATUSES,
+  getMessageStatusLabel,
+} from "../utils/constants";
 
 // --- Utilitaires de normalisation RBAC ---
 const normalizeRole = (r) => {
@@ -116,38 +122,22 @@ const InlineDetailField = ({ label, value, children }) => (
 
 const getDisplayStatus = (status, t) => {
   if (!status) return t ? t("status.NOUVEAU", "Nouveau") : "Nouveau";
-  const s = String(status).toUpperCase();
-  if (s === "CLASSE" || s === "CLASSÉ") return t ? t("status.CLASSE", "Classé") : "Classé";
-  if (s === "TRAITE" || s === "TRAITÉ") return t ? t("status.TRAITE", "Traité") : "Traité";
-  if (s === "NOUVEAU") return t ? t("status.NOUVEAU", "Nouveau") : "Nouveau";
-  if (s === "A_RAPPELER") return t ? t("status.A_RAPPELER", "À rappeler") : "À rappeler";
-  if (s === "DISCUSSION") return t ? t("status.DISCUSSION", "Discussion") : "Discussion";
-  if (s === "SANS_SUITE") return t ? t("status.SANS_SUITE", "Sans suite") : "Sans suite";
-  if (s === "GAGNE") return t ? t("status.GAGNE", "Gagné") : "Gagné";
-  if (s === "ENTRETIEN") return t ? t("status.ENTRETIEN", "Entretien") : "Entretien";
-  if (s === "RETENU") return t ? t("status.RETENU", "Retenu") : "Retenu";
-  if (s === "REFUSE") return t ? t("status.REFUSE", "Refusé") : "Refusé";
-  if (s === "EN_ATTENTE") return t ? t("status.EN_ATTENTE", "En attente") : "En attente";
-  return t ? t(`status.${s}`, s) : s;
+  const s = String(status).toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  const cfg = MESSAGE_STATUS_CONFIG[s];
+  if (cfg) {
+    return t ? t(`status.${s}`, cfg.label) : cfg.label;
+  }
+  if (s === "CLASSE") return t ? t("status.CLASSE", "Classé") : "Classé";
+  return t ? t(`status.${s}`, status) : status;
 };
 
 const getStatusBadge = (status) => {
-  const displayStatus = getDisplayStatus(status);
-  if (displayStatus === "En attente" || displayStatus === "Nouveau")
-    return { bg: "#DBEAFE", color: "#1E3A8A" }; // Blue
-  if (displayStatus === "À rappeler")
-    return { bg: "#FEF3C7", color: "#D97706" }; // Orange
-  if (displayStatus === "Discussion" || displayStatus === "Entretien")
-    return { bg: "#E0E7FF", color: "#4F46E5" }; // Indigo
-  if (displayStatus === "Sans suite" || displayStatus === "Refusé")
-    return { bg: "#FEE2E2", color: "#DC2626" }; // Red
-  if (
-    displayStatus === "Gagné" ||
-    displayStatus === "Retenu" ||
-    displayStatus === "Traité"
-  )
-    return { bg: "#DCFCE7", color: "#166534" }; // Green
-  if (displayStatus === "Classé") return { bg: "#F1F5F9", color: "#475569" }; // Gray
+  if (!status) return { bg: "#DBEAFE", color: "#1E3A8A" };
+  const s = String(status).toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  const cfg = MESSAGE_STATUS_CONFIG[s];
+  if (cfg) {
+    return { bg: cfg.bg, color: cfg.color };
+  }
   return { bg: "#F1F5F9", color: "#475569" };
 };
 
@@ -840,6 +830,13 @@ const InboxPage = ({ userRole }) => {
         // On réinitialise à NOUVEAU pour forcer un statut valide.
         next.status = "NOUVEAU";
       }
+      if (field === "status" && DEFINITIVE_MESSAGE_STATUSES.includes(value)) {
+        // Un statut définitif interdit la priorité Urgente
+        const curPrio = (next.priorite !== undefined ? next.priorite : processMsg?.priorite || "").trim().toUpperCase();
+        if (curPrio === "URGENT" || curPrio === "URGENTE") {
+          next.priorite = "Normal";
+        }
+      }
       return next;
     });
   };
@@ -1018,80 +1015,64 @@ const InboxPage = ({ userRole }) => {
   const getAllowedMessageStatuses = (currentStatus, category, role) => {
     const isSA = isSuperAdmin(role);
     const isRO = isOperationalManager(role);
-    
-    const ALL_LABELS = {
-      NOUVEAU: "Nouveau",
-      A_RAPPELER: "À rappeler",
-      DISCUSSION: "Discussion",
-      ENTRETIEN: "Entretien",
-      SANS_SUITE: "Sans suite",
-      GAGNE: "Gagné",
-      RETENU: "Retenu",
-      REFUSE: "Refusé",
-      TRAITE: "Traité",
-    };
-    
-    const make = (vals) => vals.map(v => ({ value: v, label: ALL_LABELS[v] || v }));
-    
+
     // Rôle non autorisé pour Contact/Recrutement
     // La règle métier dit "Super-administrateur et Responsable opérationnel uniquement"
-    if (!isSA && !isRO) {
-      return make([currentStatus]);
+    if (!isSA && !isRO && category !== "interne") {
+      return [{ value: currentStatus, label: getMessageStatusLabel(currentStatus) }];
     }
 
-    const withCurrent = (vals) => {
-      const targets = vals.filter(v => v !== currentStatus);
-      return make([currentStatus, ...targets]);
-    };
+    const cat = (category || "general").toLowerCase();
+    const pipeline = MESSAGE_TRANSITIONS_FRONTEND[cat] || MESSAGE_TRANSITIONS_FRONTEND.general;
+    const allowed = pipeline[currentStatus];
 
-    if (category === "contact") {
-      switch(currentStatus) {
-        case "NOUVEAU": return withCurrent(["A_RAPPELER", "DISCUSSION", "SANS_SUITE", "GAGNE"]);
-        case "A_RAPPELER": return withCurrent(["DISCUSSION", "SANS_SUITE", "GAGNE"]);
-        case "DISCUSSION": return withCurrent(["A_RAPPELER", "SANS_SUITE", "GAGNE"]);
-        case "SANS_SUITE": return withCurrent(["DISCUSSION"]);
-        case "GAGNE": return withCurrent([]);
-        // Statut hors pipeline (ex: EN_ATTENTE) : on propose les statuts de départ du pipeline
-        default: return make([currentStatus, "NOUVEAU", "A_RAPPELER", "DISCUSSION", "SANS_SUITE"]);
+    // Si statut hors pipeline (ex: EN_ATTENTE hérité), proposer les entrées de pipeline
+    if (allowed === undefined) {
+      if (cat === "contact") {
+        return [currentStatus, "NOUVEAU", "A_RAPPELER", "DISCUSSION", "SANS_SUITE", "GAGNE"].map(v => ({
+          value: v,
+          label: getMessageStatusLabel(v),
+        }));
       }
-    } else if (category === "recrutement") {
-      switch(currentStatus) {
-        case "NOUVEAU": return withCurrent(["A_RAPPELER", "ENTRETIEN", "REFUSE"]);
-        case "A_RAPPELER": return withCurrent(["ENTRETIEN", "REFUSE"]);
-        case "ENTRETIEN": return withCurrent(["A_RAPPELER", "RETENU", "REFUSE"]);
-        case "RETENU": return withCurrent([]);
-        case "REFUSE": return withCurrent([]);
-        // Statut hors pipeline (ex: EN_ATTENTE) : on propose les statuts de départ du pipeline
-        default: return make([currentStatus, "NOUVEAU", "A_RAPPELER", "ENTRETIEN"]);
+      if (cat === "recrutement") {
+        return [currentStatus, "NOUVEAU", "A_RAPPELER", "ENTRETIEN", "REFUSE"].map(v => ({
+          value: v,
+          label: getMessageStatusLabel(v),
+        }));
       }
-    } else { 
-      // Aucun pipeline défini pour "Général" ou "Interne"
-      return [];
+      if (cat === "interne") {
+        return ["NON_CONSULTE", "CONSULTE"].map(v => ({
+          value: v,
+          label: getMessageStatusLabel(v),
+        }));
+      }
+      return [{ value: currentStatus, label: getMessageStatusLabel(currentStatus) }];
     }
+
+    const result = [currentStatus, ...allowed.filter((v) => v !== currentStatus)];
+    return result.map((val) => ({
+      value: val,
+      label: getMessageStatusLabel(val),
+    }));
   };
 
   const renderStatusDropdown = (msg, currentTab, isInline = false) => {
     const currentStatus = pendingChanges.status !== undefined ? pendingChanges.status : msg.status || "NOUVEAU";
     const currentEtiquette = pendingChanges.etiquette !== undefined ? pendingChanges.etiquette : msg.etiquette || "";
-    const role = currentUser?.role?.name || currentUser?.role || "";
+    const role = currentUser?.role?.name || currentUser?.role || userRole || "";
 
-    let category = "none";
-    if (currentTab === "contact" || currentEtiquette === "Contact") category = "contact";
-    else if (currentTab === "recrutement" || currentEtiquette === "Recrutement") category = "recrutement";
+    let category = "general";
+    const msgType = (msg.type || "").toLowerCase();
+    if (currentTab === "contact" || currentEtiquette === "Contact" || msgType === "contact") category = "contact";
+    else if (currentTab === "recrutement" || currentEtiquette === "Recrutement" || msgType === "recrutement") category = "recrutement";
+    else if (currentTab === "interne" || currentEtiquette === "Interne" || msgType === "interne") category = "interne";
 
     const options = getAllowedMessageStatuses(currentStatus, category, role);
     const isDisabled = options.length <= 1;
 
-    const getStatusColor = (st) => {
-      const s = (st || "").toUpperCase();
-      if (s === "GAGNE" || s === "GAGNÉ" || s === "TRAITE" || s === "TRAITÉ" || s === "RETENU") return "#10B981";
-      if (s === "NOUVEAU") return "#2563EB";
-      if (s === "REFUSE" || s === "REFUSÉ" || s === "SANS_SUITE") return "#EF4444";
-      if (s === "A_RAPPELER" || s === "DISCUSSION" || s === "ENTRETIEN" || s === "EN_ATTENTE") return "#F59E0B";
-      return "#CBD5E1";
-    };
-
-    const statusColor = options.length === 0 ? "#F59E0B" : getStatusColor(currentStatus);
+    const normStatus = (currentStatus || "").toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    const statusCfg = MESSAGE_STATUS_CONFIG[normStatus];
+    const statusColor = options.length === 0 ? "#F59E0B" : (statusCfg?.dot || statusCfg?.color || "#CBD5E1");
 
     const selectElement = (
       <select
@@ -1279,7 +1260,7 @@ const InboxPage = ({ userRole }) => {
                       <th style={{ width: tab === "personnel" ? "30%" : "24%" }}>
                         {t("inbox.columns.email")}
                       </th>
-                      {(tab !== "personnel") && (
+                      {(tab === "interne") && (
                         <th style={{ width: "120px", whiteSpace: "nowrap" }}>
                           {t("inbox.columns.type")}
                         </th>
@@ -1418,24 +1399,12 @@ const InboxPage = ({ userRole }) => {
                                 {col3}
                               </div>
                             </td>
-                            {(tab !== "personnel") && (
+                            {(tab === "interne") && (
                               <td>
                                 <span
-                                  style={
-                                    tab === "message"
-                                      ? {
-                                          padding: "0.25rem 0.5rem",
-                                          borderRadius: "4px",
-                                          fontSize: "0.72rem",
-                                          fontWeight: 400,
-                                          background: typeBadgeBg,
-                                          color: typeBadgeColor,
-                                        }
-                                      : {
-                                          
-                                          color: typeBadgeColor,
-                                        }
-                                  }
+                                  style={{
+                                    color: typeBadgeColor,
+                                  }}
                                 >
                                   {typeBadgeText}
                                 </span>
@@ -1489,11 +1458,10 @@ const InboxPage = ({ userRole }) => {
                             i,
                             m.nomPrenom,
                             m.email,
-                            m.statusSubmitter === "SOCIETE"
-                              ? t("inbox.type.company", "Entreprise")
-                              : t("inbox.type.individual", "Particulier"),
-                            "#E0E7FF",
-                            "#4F46E5",
+                            /* type badge unused for contact — pass empty */
+                            m.raisonSocial || "",
+                            "#F1F5F9",
+                            "#64748B",
                           ),
                         );
                       }
@@ -1505,11 +1473,10 @@ const InboxPage = ({ userRole }) => {
                             i,
                             m.nomPrenom,
                             m.email,
-                            m.statusSubmitter === "SOCIETE"
-                              ? t("inbox.type.company", "Entreprise")
-                              : t("inbox.type.individual", "Particulier"),
-                            "#FEF3C7",
-                            "#D97706",
+                            /* type badge unused for recrutement — pass empty */
+                            "",
+                            "#F1F5F9",
+                            "#64748B",
                           ),
                         );
                       }
@@ -1897,68 +1864,51 @@ const InboxPage = ({ userRole }) => {
                         INFORMATIONS DU CONTACT
                       </div>
                       <div className="flex flex-col" style={{gap:"0.6rem"}}>
-                        <MessageDetailCard
-                          label="Type de contact"
-                          value={(
-                            extractFieldFromHtml(
-                              processMsg.bodyHtml,
-                              "Type de client",
-                            ) ||
-                            (processMsg.statusSubmitter === "SOCIETE"
-                              ? "Entreprise"
-                              : "Particulier")
-                          )
-                            .replace(" / Organisation", "")
-                            .replace(" (B2B)", "")}
-                        />
-                        {processMsg.statusSubmitter === "SOCIETE" && (
-                          <MessageDetailCard
-                            label="Société"
-                            value={
-                              processMsg.raisonSocial ||
-                              extractFieldFromHtml(
-                                processMsg.bodyHtml,
-                                "Société",
-                              ) ||
-                              "Non renseigné"
-                            }
-                          />
-                        )}
-                        <MessageDetailCard
-                          label={
-                            processMsg.statusSubmitter === "SOCIETE"
-                              ? "Nom du contact"
-                              : "Nom complet"
-                          }
-                          value={
-                            processMsg.nomPrenom ||
-                            extractFieldFromHtml(
-                              processMsg.bodyHtml,
-                              "Nom complet",
-                            ) ||
-                            "Non renseigné"
-                          }
-                        />
-                        <MessageDetailCard
-                          label="Téléphone"
-                          value={
-                            processMsg.telephone ||
-                            extractFieldFromHtml(
-                              processMsg.bodyHtml,
-                              "Téléphone",
-                            ) ||
-                            "Non renseigné"
-                          }
-                        />
-                        <MessageDetailCard
-                          label="Email"
-                          value={
-                            processMsg.email ||
-                            extractFieldFromHtml(processMsg.bodyHtml, "Email") ||
-                            "Non renseigné"
-                          }
-                        />
-                      </div>
+                         {/* Organisation / Société — affiché uniquement si renseigné */}
+                         {(processMsg.raisonSocial ||
+                           extractFieldFromHtml(processMsg.bodyHtml, "Organisation / Société")
+                         ) && (
+                           <MessageDetailCard
+                             label="Organisation / Société"
+                             value={
+                               processMsg.raisonSocial ||
+                               extractFieldFromHtml(processMsg.bodyHtml, "Organisation / Société") ||
+                               extractFieldFromHtml(processMsg.bodyHtml, "Société") ||
+                               "Non renseigné"
+                             }
+                           />
+                         )}
+                         <MessageDetailCard
+                           label="Nom complet"
+                           value={
+                             processMsg.nomPrenom ||
+                             extractFieldFromHtml(
+                               processMsg.bodyHtml,
+                               "Nom complet",
+                             ) ||
+                             "Non renseigné"
+                           }
+                         />
+                         <MessageDetailCard
+                           label="Téléphone"
+                           value={
+                             processMsg.telephone ||
+                             extractFieldFromHtml(
+                               processMsg.bodyHtml,
+                               "Téléphone",
+                             ) ||
+                             "Non renseigné"
+                           }
+                         />
+                         <MessageDetailCard
+                           label="Email"
+                           value={
+                             processMsg.email ||
+                             extractFieldFromHtml(processMsg.bodyHtml, "Email") ||
+                             "Non renseigné"
+                           }
+                         />
+                       </div>
                     </div>
 
                     {/* QUALIFICATION DE LA DEMANDE */}
@@ -2043,7 +1993,7 @@ const InboxPage = ({ userRole }) => {
                           >
                             <option value="Normal">● Normal</option>
                             <option value="Prioritaire">● Prioritaire</option>
-                            <option value="Urgent">● Urgent</option>
+                            <option value="Urgent" disabled={DEFINITIVE_MESSAGE_STATUSES.includes(pendingChanges.status !== undefined ? pendingChanges.status : processMsg?.status)}>● Urgent{DEFINITIVE_MESSAGE_STATUSES.includes(pendingChanges.status !== undefined ? pendingChanges.status : processMsg?.status) ? " (interdit en statut définitif)" : ""}</option>
                           </select>
                         </MessageDetailCard>
                         <MessageDetailCard
@@ -2126,18 +2076,7 @@ const InboxPage = ({ userRole }) => {
                         INFORMATIONS DU CONTACT
                       </div>
                       <div className="flex flex-col" style={{gap:"0.6rem"}}>
-                        <MessageDetailCard
-                          label="Type de contact"
-                          value={
-                            extractFieldFromHtml(
-                              processMsg.bodyHtml,
-                              "Type de profil",
-                            ) ||
-                            (processMsg.statusSubmitter === "SOCIETE"
-                              ? "Entreprise (B2B)"
-                              : "Particulier")
-                          }
-                        />
+{/* Type de contact supprimé — formulaire recrutement ne distingue pas particulier/société */}
                         <MessageDetailCard
                           label="Nom complet"
                           value={
@@ -2314,7 +2253,7 @@ const InboxPage = ({ userRole }) => {
                           >
                             <option value="Normal">● Normal</option>
                             <option value="Prioritaire">● Prioritaire</option>
-                            <option value="Urgent">● Urgent</option>
+                            <option value="Urgent" disabled={DEFINITIVE_MESSAGE_STATUSES.includes(pendingChanges.status !== undefined ? pendingChanges.status : processMsg?.status)}>● Urgent{DEFINITIVE_MESSAGE_STATUSES.includes(pendingChanges.status !== undefined ? pendingChanges.status : processMsg?.status) ? " (interdit en statut définitif)" : ""}</option>
                           </select>
                         </MessageDetailCard>
                         <MessageDetailCard
@@ -2433,7 +2372,7 @@ const InboxPage = ({ userRole }) => {
                               >
                                 <option value="Normal">● Normal</option>
                                 <option value="Prioritaire">● Prioritaire</option>
-                                <option value="Urgent">● Urgent</option>
+                                <option value="Urgent" disabled={DEFINITIVE_MESSAGE_STATUSES.includes(pendingChanges.status !== undefined ? pendingChanges.status : processMsg?.status)}>● Urgent{DEFINITIVE_MESSAGE_STATUSES.includes(pendingChanges.status !== undefined ? pendingChanges.status : processMsg?.status) ? " (interdit en statut définitif)" : ""}</option>
                               </select>
                             </MessageDetailCard>
                             {isSuperAdmin(currentUser?.role?.name || currentUser?.role || userRole) && (

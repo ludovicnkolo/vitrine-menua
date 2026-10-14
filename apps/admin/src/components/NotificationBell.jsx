@@ -112,7 +112,20 @@ export default function NotificationBell() {
       {/* Dropdown */}
       {open && (
         <div
-          className="absolute flex flex-col" style={{top:"calc(100% + 8px)",width:370,maxHeight:480,background:"#fff",border:"1px solid #e2e8f0",borderRadius:"0.75rem",boxShadow:"0 10px 40px rgba(0,0,0,0.12)",zIndex:9999,overflow:"hidden"}}
+          className="absolute flex flex-col"
+          style={{
+            top: "calc(100% + 8px)",
+            right: 0,
+            width: 370,
+            maxWidth: "calc(100vw - 32px)",
+            maxHeight: 480,
+            background: "#fff",
+            border: "1px solid #e2e8f0",
+            borderRadius: "0.75rem",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.12)",
+            zIndex: 9999,
+            overflow: "hidden",
+          }}
         >
           {/* Header */}
           <div

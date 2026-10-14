@@ -188,10 +188,47 @@ router.get(
   requireRoles("Super-administrateur", "Administrateur technique"),
   async (req, res) => {
     try {
+      const { dateFrom, dateTo, userName, roleName } = req.query;
+
+      // Build composite where clause
+      const where = {};
+
+      // ── Date range ──────────────────────────────────────────────────────────
+      if (dateFrom || dateTo) {
+        where.createdAt = {};
+        if (dateFrom) {
+          const from = new Date(dateFrom);
+          from.setHours(0, 0, 0, 0);
+          where.createdAt.gte = from;
+        }
+        if (dateTo) {
+          const to = new Date(dateTo);
+          to.setHours(23, 59, 59, 999);
+          where.createdAt.lte = to;
+        }
+      }
+
+      // ── Search by user name (SQLite LIKE is case-insensitive for ASCII) ───
+      if (userName && userName.trim()) {
+        where.user = {
+          ...where.user,
+          name: { contains: userName.trim() },
+        };
+      }
+
+      // ── Filter by role name (exact match) ─────────────────────────────────
+      if (roleName && roleName !== "all") {
+        where.user = {
+          ...where.user,
+          role: { name: roleName },
+        };
+      }
+
       const logs = await prisma.auditLog.findMany({
+        where,
         include: { user: { include: { role: true } } },
         orderBy: { createdAt: "desc" },
-        take: 200, // limit to last 200 for performance
+        take: (dateFrom || dateTo || userName || (roleName && roleName !== "all")) ? undefined : 500,
       });
       res.json(logs);
     } catch (error) {

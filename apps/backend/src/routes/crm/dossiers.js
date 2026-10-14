@@ -617,17 +617,13 @@ router.patch("/dossiers/:id", async (req, res) => {
     if (req.body.status) {
       const from = currentDossier.status;
       const to = req.body.status;
-      const isSA = isSuperAdmin(userRole); console.log("DELETE DOSSIER ROLE IS:", userRole);
-      const isRO = userRole === "Responsable opérationnel";
+      const isSA = isSuperAdmin(userRole);
+      const isRO = userRole === "Responsable opérationnel" || isManager(userRole);
       const isRespOrAdmin = isSA || isRO;
 
       const isAssigned = currentDossier.traitantId === userId;
+      const canManageDossier = isSA || isRO || isAssigned;
       let allowed = false;
-
-      // Auto states that cannot be manually set
-      if ((to === "NOUVEAU" || to === "EN_COURS" || to === "TERMINE") && from !== "BLOQUE" && from !== "EN_ATTENTE") {
-         return res.status(403).json({ error: `Le statut '${to}' est automatique et ne peut pas être forcé manuellement.` });
-      }
 
       if (from === "ARCHIVE") {
          return res.status(403).json({ error: "Un dossier archivé ne peut plus être modifié." });
@@ -637,15 +633,15 @@ router.patch("/dossiers/:id", async (req, res) => {
         if (!isSA) {
           return res.status(403).json({ error: "Seul un Super-Administrateur peut débloquer." });
         }
-        if (to !== currentDossier.previousStatus) {
+        if (to !== currentDossier.previousStatus && to !== "EN_COURS") {
           return res.status(403).json({ error: `Un dossier bloqué ne peut retourner qu'à son statut précédent (${currentDossier.previousStatus}).` });
         }
         allowed = true;
       } else if (from === "CLOTURE") {
-        if (!isSA && !isAssigned) {
-          return res.status(403).json({ error: "Accès refusé. Seul l'assigné ou le Super-Admin peut retirer la clôture." });
+        if (!canManageDossier) {
+          return res.status(403).json({ error: "Accès refusé. Seul l'assigné, le Responsable opérationnel ou le Super-Admin peut retirer la clôture." });
         }
-        if (to === currentDossier.previousStatus) {
+        if (to === currentDossier.previousStatus || to === "EN_COURS") {
           allowed = true;
         } else if (to === "BLOQUE") {
           if (!isSA) return res.status(403).json({ error: "Seul un Super-Admin peut bloquer." });
@@ -653,16 +649,16 @@ router.patch("/dossiers/:id", async (req, res) => {
         } else if (to === "EN_ATTENTE") {
           allowed = true;
         } else {
-          return res.status(403).json({ error: `Un dossier clôturé ne peut retourner qu'à son statut précédent (${currentDossier.previousStatus}).` });
+          return res.status(403).json({ error: `Un dossier clôturé ne peut retourner qu'à son statut précédent (${currentDossier.previousStatus}) ou en cours/attente.` });
         }
       } else if (from === "EN_ATTENTE") {
-        if (!isSA && !isAssigned) {
-          return res.status(403).json({ error: "Accès refusé. Seul l'assigné ou le Super-Admin peut lever l'attente." });
+        if (!canManageDossier) {
+          return res.status(403).json({ error: "Accès refusé. Seul l'assigné, le Responsable opérationnel ou le Super-Admin peut lever l'attente." });
         }
         if (to === "BLOQUE") {
           if (!isSA) return res.status(403).json({ error: "Seul un Super-Admin peut bloquer." });
           allowed = true;
-        } else if (to === currentDossier.previousStatus) {
+        } else if (to === currentDossier.previousStatus || to === "EN_COURS") {
           allowed = true;
         } else if (to === "CLOTURE") {
           allowed = true;
@@ -677,15 +673,29 @@ router.patch("/dossiers/:id", async (req, res) => {
         } 
         // Target is EN_ATTENTE
         else if (to === "EN_ATTENTE") {
-          if (!isSA && !isAssigned) {
+          if (!canManageDossier) {
              return res.status(403).json({ error: "Accès refusé pour mettre en attente." });
           }
           allowed = true;
         }
         // Target is CLOTURE
         else if (to === "CLOTURE") {
-          if (!isSA && !isAssigned) {
+          if (!canManageDossier) {
              return res.status(403).json({ error: "Accès refusé pour clôturer." });
+          }
+          allowed = true;
+        }
+        // Target is EN_COURS
+        else if (to === "EN_COURS") {
+          if (!canManageDossier) {
+             return res.status(403).json({ error: "Accès refusé pour passer en cours." });
+          }
+          allowed = true;
+        }
+        // Target is TERMINE
+        else if (to === "TERMINE") {
+          if (!canManageDossier) {
+             return res.status(403).json({ error: "Accès refusé pour terminer le dossier." });
           }
           allowed = true;
         }

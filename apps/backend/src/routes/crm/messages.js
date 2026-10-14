@@ -5,7 +5,7 @@ const imaps = require("imap-simple");
 const simpleParser = require("mailparser").simpleParser;
 const fs = require("node:fs");
 const router = express.Router();
-const { validateMessageStatus, normalizeStatus } = require('../../utils/statusRules');
+const { canTransitionMessage, DEFINITIVE_STATUSES, normalizeStatus } = require('../../utils/statusRules');
 
 
 const {
@@ -497,6 +497,11 @@ router.get("/messages", async (req, res) => {
       let where = { type: tabType, isDeleted: false };
 
       if (req.user.role === "Collaborateur" || req.user.role === "Relecteur") {
+        if (tabType !== "INTERNE") {
+          return res.status(403).json({
+            error: "Accès interdit aux boîtes de messagerie externes et personnelles.",
+          });
+        }
         where.OR = [
           { subType: { contains: req.user.name } },
           { email: req.user.email },
@@ -623,10 +628,24 @@ router.get("/messages", async (req, res) => {
 });
 
 // --- SYNC IMAP ---
-router.post("/messages/sync-imap", authenticateJWT, syncMessages);
+router.post("/messages/sync-imap", authenticateJWT, (req, res, next) => {
+  const roleName = req.user?.role?.name || req.user?.role;
+  if (!isSuperAdmin(roleName) && req.user?.id !== "MASTER-ADMIN") {
+    return res.status(403).json({
+      error: "Accès refusé. Seul le Super-administrateur peut déclencher la synchronisation IMAP globale.",
+    });
+  }
+  return syncMessages(req, res, next);
+});
 
-router.post("/messages/:id/assign", async (req, res) => {
+router.post("/messages/:id/assign", authenticateJWT, async (req, res) => {
   try {
+    const roleName = req.user?.role?.name || req.user?.role;
+    if (!isSuperAdmin(roleName) && req.user?.id !== "MASTER-ADMIN") {
+      return res.status(403).json({
+        error: "Accès refusé. Seul le Super-administrateur peut assigner un message.",
+      });
+    }
     const { id } = req.params;
     const { assignedToId } = req.body;
 
@@ -702,71 +721,54 @@ router.patch("/messages/:id/status", async (req, res) => {
 
     const dataToUpdate = {};
     if (status !== undefined) {
-      const userRole = req.user.role;
-      
-      // Utilisation des helpers d'autorisation
-      if (!isManager(userRole) && !isAdmin(userRole)) {
+      const userRole = req.user.role?.name || req.user.role;
+      const isSA = isSuperAdmin(userRole) || req.user.id === "MASTER-ADMIN";
+      const isRO = isManager(userRole) && !isSA;
+      const isHabilite = isSA || isRO;
+
+      const currentEtiquette = etiquette !== undefined ? etiquette : existingMsg?.etiquette || "";
+      let category = "general";
+      const msgType = (existingMsg?.type || "").toLowerCase();
+      if (msgType === "contact" || currentEtiquette === "Contact") category = "contact";
+      else if (msgType === "recrutement" || currentEtiquette === "Recrutement") category = "recrutement";
+      else if (msgType === "interne" || currentEtiquette === "Interne") category = "interne";
+
+      // Collaborateurs et Relecteurs : accès strictement limité à l'interne
+      if (!isHabilite && category !== "interne") {
         return res.status(403).json({
-          error: "Acces refuse. Seuls les administrateurs et responsables peuvent modifier le statut d un message.",
+          error: "Accès refusé. Seuls le Super-administrateur et le Responsable opérationnel peuvent modifier le statut d'un message.",
         });
       }
 
       if (existingMsg && existingMsg.status !== status) {
         const from = existingMsg.status || "NOUVEAU";
-        const currentEtiquette = etiquette !== undefined ? etiquette : existingMsg.etiquette || "";
-        let category = "none";
-        const msgType = (existingMsg.type || "").toLowerCase();
-        if (msgType === "contact" || currentEtiquette === "Contact") category = "contact";
-        else if (msgType === "recrutement" || currentEtiquette === "Recrutement") category = "recrutement";
-        else if (msgType === "interne" || currentEtiquette === "Interne") category = "interne";
-        
-        const VALID = {
-          contact: {
-            NOUVEAU: ["A_RAPPELER", "DISCUSSION", "SANS_SUITE", "GAGNE"],
-            A_RAPPELER: ["DISCUSSION", "SANS_SUITE", "GAGNE"],
-            DISCUSSION: ["A_RAPPELER", "SANS_SUITE", "GAGNE"],
-            SANS_SUITE: ["DISCUSSION"],
-            GAGNE: []
-          },
-          recrutement: {
-            NOUVEAU: ["A_RAPPELER", "ENTRETIEN", "REFUSE"],
-            A_RAPPELER: ["ENTRETIEN", "REFUSE"],
-            ENTRETIEN: ["A_RAPPELER", "RETENU", "REFUSE"],
-            RETENU: [],
-            REFUSE: []
-          },
-          interne: {
-            NON_CONSULTE: ["CONSULTE"],
-            CONSULTE: ["NON_CONSULTE"]
-          }
-        };
 
-        if (category !== "none") {
-          // Si le statut actuel n'est pas dans le pipeline (ex: EN_ATTENTE),
-          // on autorise la transition vers n'importe quel statut du pipeline.
-          const allowedTransitions = VALID[category]?.[from];
-          if (allowedTransitions !== undefined && !allowedTransitions.includes(status)) {
-            return res.status(400).json({
-              error: `Transition impossible : un message en statut "${from}" ne peut pas passer a "${status}".`,
-            });
-          }
+        // ── Délégation totale à statusRules.js ──────────────────────────────
+        const context = { role: userRole, isSA, isRO };
+        if (!canTransitionMessage(from, status, category, context)) {
+          return res.status(400).json({
+            error: `Transition impossible : un message en statut "${from}" ne peut pas passer à "${status}" dans le pipeline "${category}".`,
+          });
         }
       }
       dataToUpdate.status = status;
     }
     if (etiquette !== undefined) dataToUpdate.etiquette = etiquette;
-    
+
     const finalStatus = status !== undefined ? status : existingMsg.status;
-    const definitiveStatuses = ["SANS_SUITE", "GAGNE", "RETENU", "REFUSE", "TRAITE", "CLOTURE", "TERMINE", "ARCHIVE"];
+    // DEFINITIVE_STATUSES = ["SANS_SUITE", "GAGNE", "RETENU", "REFUSE"]
+    const definitiveStatuses = DEFINITIVE_STATUSES;
     
     if (priorite !== undefined) {
-      if (definitiveStatuses.includes(finalStatus) && priorite === "Urgente") {
+      const isUrgent = ["URGENT", "URGENTE"].includes((priorite || "").trim().toUpperCase());
+      if (definitiveStatuses.includes(finalStatus) && isUrgent) {
         return res.status(400).json({ error: "Un statut définitif n'accepte pas la priorité Urgente." });
       }
       dataToUpdate.priorite = priorite;
     } else if (status !== undefined) {
       // Si on change le statut sans préciser de priorité
-      if (definitiveStatuses.includes(status) && existingMsg.priorite === "Urgente") {
+      const existingIsUrgent = ["URGENT", "URGENTE"].includes((existingMsg?.priorite || "").trim().toUpperCase());
+      if (definitiveStatuses.includes(status) && existingIsUrgent) {
         // Redescendre automatiquement la priorité si le message passe en statut définitif
         dataToUpdate.priorite = "Normal";
       } else if (status !== existingMsg.status) {
@@ -906,8 +908,14 @@ router.patch("/messages/:id/status", async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la mise a jour" });
   }
 });
-router.delete("/messages/:id", async (req, res) => {
+router.delete("/messages/:id", authenticateJWT, async (req, res) => {
   try {
+    const roleName = req.user?.role?.name || req.user?.role;
+    if (!isSuperAdmin(roleName) && req.user?.id !== "MASTER-ADMIN") {
+      return res.status(403).json({
+        error: "Accès refusé. Seul le Super-administrateur peut supprimer un message.",
+      });
+    }
     const { id } = req.params;
     const msg = await prisma.messagePersonnel.findUnique({ where: { id } });
 

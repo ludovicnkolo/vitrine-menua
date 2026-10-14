@@ -29,10 +29,16 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
     setIsLoading(true);
 
     try {
+      if (previewFile.startsWith("http://") || previewFile.startsWith("https://")) {
+        setPreviewBlobUrl(previewFile);
+        return;
+      }
+
       const token = sessionStorage.getItem("adminToken");
-      const parts = previewFile.split("/");
+      const cleanPath = previewFile.startsWith("/") ? previewFile.slice(1) : previewFile;
+      const parts = cleanPath.split("/");
       let bucket = "formulaires";
-      let filename = previewFile;
+      let filename = cleanPath;
       if (parts.length > 1) {
         bucket = parts.shift();
         filename = parts.join("/");
@@ -54,6 +60,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
     } catch (err) {
       console.error("Error setting preview URL:", err);
       setError(err.message || "Invalid URL");
+      setIsLoading(false);
     }
   }, [previewFile]);
 
@@ -75,8 +82,21 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
           className="p-4 flex justify-between items-center" style={{borderBottom:"1px solid var(--border)",background:"#F8FAFC"}}
         >
           <h3
-            className="flex items-center gap-2" style={{fontSize:"1rem"}}
-          ></h3>
+            className="flex items-center gap-2 font-semibold text-[var(--text-main)]"
+            style={{ fontSize: "1rem", margin: 0 }}
+          >
+            <Eye size={18} color="var(--primary, #1e3a8a)" />
+            <span
+              style={{
+                maxWidth: "450px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {previewFile.split("/").pop() || "Aperçu du fichier"}
+            </span>
+          </h3>
 
           {/* Barre de contrôle pour le PDF */}
           {!isImage && !error && previewBlobUrl && (
@@ -144,7 +164,7 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
                   </div>
                 );
               }
-              if (!previewBlobUrl || (isLoading && isImage)) {
+              if (!previewBlobUrl) {
                 return (
                   <div
                     className="flex flex-col items-center justify-center h-full gap-4" style={{color:"var(--text-muted)"}}
@@ -163,7 +183,25 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
               }
               if (isImage) {
                 return (
-                  <div className="w-full h-full flex items-center justify-center relative">
+                  <div className="w-full h-full flex items-center justify-center relative p-4" style={{ minHeight: "300px" }}>
+                    {isLoading && (
+                      <div
+                        className="absolute inset-0 flex flex-col items-center justify-center gap-4"
+                        style={{ color: "var(--text-muted)", background: "#FFF", zIndex: 10 }}
+                      >
+                        <div
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            border: "3px solid var(--border)",
+                            borderTopColor: "var(--primary)",
+                            borderRadius: "50%",
+                            animation: "spin 0.8s linear infinite",
+                          }}
+                        />
+                        <span>Chargement de l'image...</span>
+                      </div>
+                    )}
                     <img
                       src={previewBlobUrl}
                       alt={previewFile.split("/").pop()}
@@ -171,6 +209,8 @@ const FilePreviewModal = ({ previewFile, onClose }) => {
                         maxWidth: "100%",
                         maxHeight: "100%",
                         objectFit: "contain",
+                        opacity: isLoading ? 0 : 1,
+                        transition: "opacity 0.2s ease-in-out",
                       }}
                       onLoad={() => setIsLoading(false)}
                       onError={() => {

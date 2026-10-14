@@ -749,9 +749,16 @@ router.get("/users/:id/activity-stats", async (req, res) => {
     }
     const hasDateFilter = Object.keys(dateFilter).length > 0;
 
-    // Dossiers assignés à cet interne (traitant ou targetUser)
+    // 1. Dossiers assignés à cet interne (traitant, targetUser ou créateur)
+    // EXCLUSION STRICTE : Ne jamais compter les sous-dossiers GED ni les dossiers techniques auto-générés (isSystem: true)
     const dossierBaseWhere = {
-      OR: [{ traitantId: id }, { targetUserId: id }],
+      OR: [
+        { traitantId: id },
+        { targetUserId: id },
+        { createdById: id },
+      ],
+      isSystem: false,
+      parentDossierId: null,
       status: { not: "CORBEILLE" },
       ...(hasDateFilter ? { createdAt: dateFilter } : {}),
     };
@@ -761,14 +768,17 @@ router.get("/users/:id/activity-stats", async (req, res) => {
       prisma.dossier.count({
         where: {
           ...dossierBaseWhere,
-          status: "TERMINE",
+          status: { in: ["TERMINE", "CLOTURE"] },
         },
       }),
     ]);
 
-    // Missions assignées à cet interne (assignedToId)
+    // 2. Missions assignées à cet interne (exécutant direct ou relecteur)
     const missionBaseWhere = {
-      assignedToId: id,
+      OR: [
+        { assignedToId: id },
+        { relecteurId: id },
+      ],
       status: { not: "CORBEILLE" },
       ...(hasDateFilter ? { createdAt: dateFilter } : {}),
     };
@@ -778,14 +788,17 @@ router.get("/users/:id/activity-stats", async (req, res) => {
       prisma.mission.count({
         where: {
           ...missionBaseWhere,
-          status: "TERMINE",
+          status: { in: ["TERMINE", "CLOTURE"] },
         },
       }),
     ]);
 
-    // Tâches assignées à cet interne (assignedToId)
+    // 3. Tâches assignées à cet interne (exécutant direct ou relecteur)
     const tacheBaseWhere = {
-      assignedToId: id,
+      OR: [
+        { assignedToId: id },
+        { relecteurId: id },
+      ],
       status: { not: "CORBEILLE" },
       ...(hasDateFilter ? { createdAt: dateFilter } : {}),
     };
@@ -795,7 +808,7 @@ router.get("/users/:id/activity-stats", async (req, res) => {
       prisma.tache.count({
         where: {
           ...tacheBaseWhere,
-          status: "TERMINE",
+          status: { in: ["TERMINE", "CLOTURE"] },
         },
       }),
     ]);
@@ -804,14 +817,20 @@ router.get("/users/:id/activity-stats", async (req, res) => {
       user,
       dossiers: {
         assignes: dossiersAssignes,
+        assignees: dossiersAssignes,
         termines: dossiersTermines,
+        terminees: dossiersTermines,
       },
       missions: {
+        assignes: missionsAssignees,
         assignees: missionsAssignees,
+        termines: missionsTerminees,
         terminees: missionsTerminees,
       },
       taches: {
+        assignes: tachesAssignees,
         assignees: tachesAssignees,
+        termines: tachesTerminees,
         terminees: tachesTerminees,
       },
     });

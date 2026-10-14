@@ -54,16 +54,16 @@ const WorkspacePage = ({ userRole }) => {
 
   const initialTab = isCollaborateur ? "taches" : "dossiers";
 
-  const renderTabContent = (tabId) => {
+  const renderTabContent = (tabId, resetKey) => {
     switch (tabId) {
       case "dossiers":
-        return !isCollaborateur ? <DossiersPage key="dossiers" /> : null;
+        return !isCollaborateur ? <DossiersPage key={`dossiers-${resetKey}`} /> : null;
       case "missions":
-        return !isCollaborateur ? <MissionsPage key="missions" /> : null;
+        return !isCollaborateur ? <MissionsPage key={`missions-${resetKey}`} /> : null;
       case "taches":
-        return <TachesPage key="taches" />;
+        return <TachesPage key={`taches-${resetKey}`} />;
       case "documents":
-        return <DocumentsPage key="documents" />;
+        return <DocumentsPage key={`documents-${resetKey}`} />;
       default:
         return null;
     }
@@ -71,9 +71,9 @@ const WorkspacePage = ({ userRole }) => {
 
   return (
     <SpacePageLayout initialTab={initialTab} tabs={tabs}>
-      {(activeTabId) => (
+      {(activeTabId, tabResetKey) => (
         <Suspense fallback={<TabLoadingFallback />}>
-          {renderTabContent(activeTabId)}
+          {renderTabContent(activeTabId, tabResetKey)}
         </Suspense>
       )}
     </SpacePageLayout>

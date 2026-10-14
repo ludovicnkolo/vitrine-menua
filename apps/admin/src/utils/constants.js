@@ -154,3 +154,79 @@ export const MISSION_STATUS_LABELS = {
   ANNULEE: "Annulée",
   CORBEILLE: "Corbeille",
 };
+
+// ── Espace Messages ───────────────────────────────────────────────────────────
+
+/**
+ * Configuration des statuts de l'espace Messages (couleurs + libellés).
+ * Source unique de vérité côté frontend — consommé par InboxPage.jsx.
+ */
+export const MESSAGE_STATUS_CONFIG = {
+  // Commun
+  NOUVEAU:      { label: "Nouveau",      bg: "#DBEAFE", color: "#1E3A8A", dot: "#3B82F6" },
+
+  // Pipeline Contact
+  A_RAPPELER:   { label: "À rappeler",   bg: "#FEF3C7", color: "#D97706", dot: "#F59E0B" },
+  DISCUSSION:   { label: "Discussion",   bg: "#E0E7FF", color: "#4F46E5", dot: "#6366F1" },
+  SANS_SUITE:   { label: "Sans suite",   bg: "#FEE2E2", color: "#DC2626", dot: "#EF4444" },
+  GAGNE:        { label: "Gagné",        bg: "#DCFCE7", color: "#166534", dot: "#22C55E" },
+
+  // Pipeline Recrutement
+  ENTRETIEN:    { label: "Entretien",    bg: "#E0E7FF", color: "#4F46E5", dot: "#6366F1" },
+  RETENU:       { label: "Retenu",       bg: "#DCFCE7", color: "#166534", dot: "#22C55E" },
+  REFUSE:       { label: "Refusé",       bg: "#FEE2E2", color: "#DC2626", dot: "#EF4444" },
+
+  // Pipeline Interne
+  NON_CONSULTE: { label: "Non consulté", bg: "#DBEAFE", color: "#1E3A8A", dot: "#3B82F6" },
+  CONSULTE:     { label: "Consulté",     bg: "#DCFCE7", color: "#166534", dot: "#22C55E" },
+
+  // Statuts transversaux / hérités
+  TRAITE:       { label: "Traité",       bg: "#DCFCE7", color: "#166534", dot: "#22C55E" },
+  EN_ATTENTE:   { label: "En attente",   bg: "#FFFBEB", color: "#B45309", dot: "#F59E0B" },
+};
+
+/**
+ * Statuts terminaux définitifs de l'espace Messages.
+ * Un message dans ces statuts ne peut pas recevoir la priorité "Urgente".
+ * Miroir de DEFINITIVE_STATUSES dans statusRules.js.
+ */
+export const DEFINITIVE_MESSAGE_STATUSES = ["SANS_SUITE", "GAGNE", "RETENU", "REFUSE"];
+
+/**
+ * Matrice des transitions autorisées — miroir côté frontend de MESSAGE_TRANSITIONS (statusRules.js).
+ * Utilisée par getAllowedMessageStatuses dans InboxPage.jsx.
+ */
+export const MESSAGE_TRANSITIONS_FRONTEND = {
+  contact: {
+    NOUVEAU:    ["A_RAPPELER", "DISCUSSION", "SANS_SUITE", "GAGNE"],
+    A_RAPPELER: ["DISCUSSION", "SANS_SUITE", "GAGNE"],
+    DISCUSSION: ["A_RAPPELER", "SANS_SUITE", "GAGNE"],
+    SANS_SUITE: ["DISCUSSION"],
+    GAGNE:      [],
+  },
+  recrutement: {
+    NOUVEAU:    ["A_RAPPELER", "ENTRETIEN", "REFUSE"],
+    A_RAPPELER: ["ENTRETIEN", "REFUSE"],
+    ENTRETIEN:  ["A_RAPPELER", "RETENU", "REFUSE"],
+    RETENU:     [],
+    REFUSE:     [],
+  },
+  interne: {
+    NON_CONSULTE: ["CONSULTE"],
+    CONSULTE:     ["NON_CONSULTE"],
+  },
+  general: {
+    NOUVEAU:    ["A_RAPPELER"],
+    A_RAPPELER: ["NOUVEAU"],
+  },
+};
+
+/**
+ * Retourne le libellé d'un statut message.
+ * @param {string} status
+ * @returns {string}
+ */
+export function getMessageStatusLabel(status) {
+  return MESSAGE_STATUS_CONFIG[status]?.label ?? status;
+}
+

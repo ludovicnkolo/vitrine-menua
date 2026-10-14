@@ -45,17 +45,17 @@ export const UsersSpacePage = () => {
   );
 
   // Table de correspondance déclarative (supporte à la fois "role" et "roles")
-  const renderTabContent = (activeTabId) => {
+  const renderTabContent = (activeTabId, resetKey) => {
     switch (activeTabId) {
       case "equipe":
-        return <UsersPage key="equipe" forceTab="interne" />;
+        return <UsersPage key={`equipe-${resetKey}`} forceTab="interne" />;
       case "client":
-        return <UsersPage key="client" forceTab="externe" />;
+        return <UsersPage key={`client-${resetKey}`} forceTab="externe" />;
       case "role":
       case "roles":
-        return <RolesPage key="roles" />;
+        return <RolesPage key={`roles-${resetKey}`} />;
       case "poles":
-        return <PolesPage key="poles" />;
+        return <PolesPage key={`poles-${resetKey}`} />;
       default:
         return null;
     }
@@ -63,9 +63,9 @@ export const UsersSpacePage = () => {
 
   return (
     <SpacePageLayout initialTab="equipe" tabs={tabs}>
-      {(activeTabId) => (
+      {(activeTabId, tabResetKey) => (
         <Suspense fallback={<TabLoadingFallback />}>
-          {renderTabContent(activeTabId)}
+          {renderTabContent(activeTabId, tabResetKey)}
         </Suspense>
       )}
     </SpacePageLayout>

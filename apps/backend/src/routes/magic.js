@@ -164,6 +164,7 @@ router.get("/verify/:token", async (req, res) => {
       id: magicLink.id,
       type: magicLink.type,
       note: magicLink.note || null,
+      expiresAt: magicLink.expiresAt,
       dossierRef: magicLink.dossier.reference,
       clientName:
         magicLink.dossier.client?.raisonSocial ||
@@ -312,27 +313,34 @@ router.post("/send-email/:id", authenticateJWT, async (req, res) => {
   </td></tr></table>
 </body></html>`;
 
+    const fromAddress =
+      process.env.SMTP_FROM ||
+      `"Menua Consulting" <${process.env.SMTP_USER || "contact@menuaconsulting.com"}>`;
+
     await transporter.sendMail({
-      from: `"Menua Consulting" <${process.env.SMTP_USER}>`,
-      to: recipientEmail,
+      from: fromAddress,
+      to: recipientEmail.trim(),
       subject,
       text: bodyText,
       html: bodyHtml,
     });
 
     await logAudit(
-      req.user.id,
+      req.user?.id || null,
       "ENVOI_EMAIL_LIEN_MAGIQUE",
       magicLink.id,
       "MAGIC_LINK",
-      `Lien magique (${magicLink.type}) envoyé par email à ${recipientEmail}`,
+      `Lien magique (${magicLink.type}) envoyé par email à ${recipientEmail.trim()}`,
       magicLink.dossierId,
     );
 
     res.json({ success: true, message: "Email envoyé avec succès." });
   } catch (error) {
     console.error("Erreur envoi email lien magique:", error);
-    res.status(500).json({ success: false, error: "Erreur lors de l'envoi de l'email." });
+    res.status(500).json({
+      success: false,
+      error: error?.message || "Erreur lors de l'envoi de l'email.",
+    });
   }
 });
 

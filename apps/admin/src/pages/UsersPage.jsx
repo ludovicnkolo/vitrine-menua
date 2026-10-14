@@ -2775,7 +2775,7 @@ const UsersPage = ({ forceTab }) => {
                           Assignés
                         </span>
                         <span className="text-[var(--text-main)]" style={{fontSize:"1.5rem",fontWeight:800}}>
-                          {statsData?.dossiers?.assignes ?? 0}
+                          {statsData?.dossiers?.assignes ?? statsData?.dossiers?.assignees ?? 0}
                         </span>
                       </div>
                       <div
@@ -2785,7 +2785,7 @@ const UsersPage = ({ forceTab }) => {
                           Terminés
                         </span>
                         <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
-                          {statsData?.dossiers?.termines ?? 0}
+                          {statsData?.dossiers?.termines ?? statsData?.dossiers?.terminees ?? 0}
                         </span>
                       </div>
                     </div>
@@ -2814,7 +2814,7 @@ const UsersPage = ({ forceTab }) => {
                           Assignées
                         </span>
                         <span className="text-[var(--text-main)]" style={{fontSize:"1.5rem",fontWeight:800}}>
-                          {statsData?.missions?.assignes ?? statsData?.missions?.total ?? 0}
+                          {statsData?.missions?.assignees ?? statsData?.missions?.assignes ?? statsData?.missions?.total ?? 0}
                         </span>
                       </div>
                       <div
@@ -2824,7 +2824,7 @@ const UsersPage = ({ forceTab }) => {
                           Terminées
                         </span>
                         <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
-                          {statsData?.missions?.termines ?? 0}
+                          {statsData?.missions?.terminees ?? statsData?.missions?.termines ?? 0}
                         </span>
                       </div>
                     </div>
@@ -2853,7 +2853,7 @@ const UsersPage = ({ forceTab }) => {
                           Assignées
                         </span>
                         <span className="text-[var(--text-main)]" style={{fontSize:"1.5rem",fontWeight:800}}>
-                          {statsData?.taches?.assignees ?? 0}
+                          {statsData?.taches?.assignees ?? statsData?.taches?.assignes ?? 0}
                         </span>
                       </div>
                       <div
@@ -2863,7 +2863,7 @@ const UsersPage = ({ forceTab }) => {
                           Terminées
                         </span>
                         <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
-                          {statsData?.taches?.terminees ?? 0}
+                          {statsData?.taches?.terminees ?? statsData?.taches?.termines ?? 0}
                         </span>
                       </div>
                     </div>

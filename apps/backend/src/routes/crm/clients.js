@@ -417,9 +417,11 @@ router.get("/clients/:id/activity-stats", async (req, res) => {
     }
     const hasDateFilter = Object.keys(dateFilter).length > 0;
 
-    // 1. Dossiers créés pour ce client
+    // 1. Dossiers créés pour ce client (exclusion des sous-dossiers et dossiers système)
     const dossierBaseWhere = {
       clientId: id,
+      parentDossierId: null,
+      isSystem: false,
       status: { not: "CORBEILLE" },
       ...(hasDateFilter ? { createdAt: dateFilter } : {}),
     };
@@ -429,7 +431,7 @@ router.get("/clients/:id/activity-stats", async (req, res) => {
       prisma.dossier.count({
         where: {
           ...dossierBaseWhere,
-          status: "TERMINE",
+          status: { in: ["TERMINE", "CLOTURE"] },
         },
       }),
     ]);

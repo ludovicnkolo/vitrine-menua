@@ -97,7 +97,6 @@ router.post("/contact", upload.none(), async (req, res) => {
   try {
     const sanitizedBody = sanitizeInput(req.body);
     const {
-      clientType,
       company,
       firstName,
       lastName,
@@ -138,9 +137,6 @@ router.post("/contact", upload.none(), async (req, res) => {
     if (!description) {
       return sendResponse(res, 400, "ERROR_REQUIRED_FIELDS", lang);
     }
-    if (clientType === "company" && !company) {
-      return sendResponse(res, 400, "ERROR_REQUIRED_FIELDS", lang);
-    }
 
     let parsedNeeds = [];
     if (Array.isArray(needs)) {
@@ -149,12 +145,9 @@ router.post("/contact", upload.none(), async (req, res) => {
       parsedNeeds = [needs];
     }
 
-    const typeText =
-      clientType === "company" ? "Entreprise / Organisation" : "Particulier";
-    const companyHtml =
-      clientType === "company"
-        ? `<strong>Société</strong> : <span>${company}</span><br/>`
-        : "";
+    const companyHtml = company
+      ? `<strong>Organisation / Société</strong> : <span>${company}</span><br/>`
+      : "";
     const needsHtml =
       parsedNeeds.length > 0
         ? `<ul>${parsedNeeds.map((n) => `<li>${n}</li>`).join("")}</ul>`
@@ -162,9 +155,8 @@ router.post("/contact", upload.none(), async (req, res) => {
 
     const contentHTML = `
       <div style="margin-bottom: 20px;">
-        <strong>Type de client</strong> : <span>${typeText}</span><br/>
-        ${companyHtml}
         <strong>Nom complet</strong> : <span>${fullName}</span><br/>
+        ${companyHtml}
         <strong>Email</strong> : <span>${senderEmail}</span><br/>
         <strong>Téléphone</strong> : <span>${phone || ""}</span>
       </div>
@@ -192,7 +184,7 @@ router.post("/contact", upload.none(), async (req, res) => {
         data: {
           formulaireId: crypto.randomUUID(),
           type: "CONTACT",
-          statusSubmitter: clientType === "company" ? "SOCIETE" : "PARTICULIER",
+          statusSubmitter: null,
           nomPrenom: fullName,
           email: senderEmail,
           telephone: phone || null,
@@ -374,7 +366,7 @@ router.post("/join", upload.none(), async (req, res) => {
         data: {
           formulaireId: crypto.randomUUID(),
           type: "RECRUTEMENT",
-          statusSubmitter: "PARTICULIER",
+          statusSubmitter: null,
           nomPrenom: `${firstName || ""} ${lastName || ""}`.trim(),
           email: email,
           telephone: phone || null,

@@ -171,6 +171,7 @@ const DossiersPage = () => {
   const [magicEmailRecipient, setMagicEmailRecipient] = useState("");
   const [magicEmailSending, setMagicEmailSending] = useState(false);
   const [magicEmailSent, setMagicEmailSent] = useState(false);
+  const [magicLinkCopied, setMagicLinkCopied] = useState(false);
 
   useEffect(() => {
     if (createMissionModal && consultDossier) {
@@ -449,7 +450,10 @@ const DossiersPage = () => {
   const handleGenerateMagicLink = async () => {
     setIsGeneratingMagic(true);
     try {
-      const token = sessionStorage.getItem("adminToken");
+      const token =
+        sessionStorage.getItem("adminToken") ||
+        localStorage.getItem("adminToken") ||
+        "";
 
       // 1. Si LIVRAISON : uploader les fichiers dans la GED du dossier principal via S3
       const attachedDocumentIds = [];
@@ -473,6 +477,9 @@ const DossiersPage = () => {
             if (uploadData.document?.id) {
               attachedDocumentIds.push(uploadData.document.id);
             }
+          } else {
+            const errData = await uploadRes.json().catch(() => ({}));
+            throw new Error(errData.error || `Erreur d'upload pour le fichier ${file.name}`);
           }
         }
       }
@@ -487,7 +494,7 @@ const DossiersPage = () => {
         body: JSON.stringify({
           dossierId: consultDossier.id,
           type: magicType,
-          expiresInDays: magicExpires,
+          expiresInDays: parseInt(magicExpires, 10),
           note: magicNote.trim() || null,
           attachedDocumentIds:
             magicType === "LIVRAISON" && attachedDocumentIds.length > 0
@@ -500,18 +507,67 @@ const DossiersPage = () => {
         const magicUrl = `${window.location.origin}/magic-drop/${data.data.token}`;
         setGeneratedMagicUrl(magicUrl);
         setGeneratedMagicLinkId(data.data.id);
-        // Pré-remplir l'email avec celui du client si disponible
-        const clientEmail = consultDossier?.client?.email || "";
-        setMagicEmailRecipient(clientEmail);
+        const defaultEmail =
+          consultDossier?.client?.email ||
+          dbClients.find((c) => c.id === consultDossier?.clientId)?.email ||
+          consultDossier?.targetUser?.email ||
+          dbUsers.find((u) => u.id === consultDossier?.targetUserId)?.email ||
+          "";
+        setMagicEmailRecipient(defaultEmail);
         setMagicEmailSent(false);
+        setMagicLinkCopied(false);
       } else {
-        window.customAlert("Erreur lors de la génération du lien.");
+        const errData = await res.json().catch(() => ({}));
+        window.customAlert(errData.error || "Erreur lors de la génération du lien.");
       }
     } catch (err) {
-      console.error(err);
-      window.customAlert("Erreur réseau");
+      console.error("Erreur génération lien magique:", err);
+      window.customAlert(err.message || "Erreur réseau");
     } finally {
       setIsGeneratingMagic(false);
+    }
+  };
+
+  const handleSendMagicEmail = async () => {
+    if (!magicEmailRecipient.trim() || !generatedMagicLinkId) {
+      window.customAlert("Veuillez renseigner une adresse email valide.");
+      return;
+    }
+    setMagicEmailSending(true);
+    try {
+      const token =
+        sessionStorage.getItem("adminToken") ||
+        localStorage.getItem("adminToken") ||
+        "";
+      const res = await fetch(
+        getSafeApiUrl(`/api/magic/send-email/${generatedMagicLinkId}`),
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            recipientEmail: magicEmailRecipient.trim(),
+            magicUrl: generatedMagicUrl,
+          }),
+        },
+      );
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        setMagicEmailSent(true);
+      } else {
+        window.customAlert(
+          data.error || "Une erreur est survenue lors de l'envoi de l'email.",
+        );
+      }
+    } catch (err) {
+      console.error("Erreur envoi email:", err);
+      window.customAlert(
+        err.message || "Erreur réseau lors de l'envoi de l'email.",
+      );
+    } finally {
+      setMagicEmailSending(false);
     }
   };
 
@@ -736,8 +792,14 @@ const DossiersPage = () => {
   const getAllowedDossierStatuses = (dossier, currentUser) => {
     const currentStatus = dossier?.status || "NOUVEAU";
     const role = currentUser?.role?.name || currentUser?.role || "";
-    const isSuperAdmin = role === "Super-administrateur";
-    const isAssigned = dossier?.traitantId === currentUser?.id;
+    const isSuperAdmin =
+      role === "Super-administrateur" || role === "Administrateur" || currentUser?.id === "MASTER-ADMIN";
+    const isResp = role === "Responsable opérationnel" || isSuperAdmin;
+    const isAssigned =
+      dossier?.traitantId === currentUser?.id ||
+      dossier?.traitant?.id === currentUser?.id ||
+      dossier?.createdById === currentUser?.id;
+    const canManageDossier = isSuperAdmin || isResp || isAssigned;
 
     const ALL_LABELS = {
       NOUVEAU: "Nouveau",
@@ -769,27 +831,40 @@ const DossiersPage = () => {
 
     if (currentStatus === "CLOTURE") {
       const allowed = [];
-      if (isSuperAdmin || isAssigned) {
+      if (canManageDossier) {
         if (dossier?.previousStatus) allowed.push(dossier.previousStatus);
-        if (isSuperAdmin) allowed.push("BLOQUE");
+        else allowed.push("EN_COURS");
         allowed.push("EN_ATTENTE");
       }
-      if (allowed.length > 0) return withCurrent(allowed);
+      if (isSuperAdmin) allowed.push("BLOQUE");
+      if (allowed.length > 0) return withCurrent([...new Set(allowed)]);
       return lockedOnCurrent();
     }
 
     if (currentStatus === "EN_ATTENTE") {
-      if (isSuperAdmin || isAssigned) {
-        return withCurrent([dossier?.previousStatus || "EN_COURS"]);
+      const allowed = [];
+      if (canManageDossier) {
+        if (dossier?.previousStatus) allowed.push(dossier.previousStatus);
+        else allowed.push("EN_COURS");
+        allowed.push("CLOTURE");
       }
+      if (isSuperAdmin) allowed.push("BLOQUE");
+      if (allowed.length > 0) return withCurrent([...new Set(allowed)]);
       return lockedOnCurrent();
     }
 
     const allowed = [];
     if (isSuperAdmin) allowed.push("BLOQUE");
 
-    if (isSuperAdmin || isAssigned) {
+    if (canManageDossier) {
       allowed.push("EN_ATTENTE", "CLOTURE");
+      if (currentStatus === "NOUVEAU") {
+        allowed.push("EN_COURS");
+      } else if (currentStatus === "EN_COURS") {
+        allowed.push("TERMINE");
+      } else if (currentStatus === "TERMINE") {
+        allowed.push("EN_COURS");
+      }
     }
 
     if (currentStatus === "TERMINE") {
@@ -803,12 +878,16 @@ const DossiersPage = () => {
   const renderWorkflowButtons = (dossier) => {
     if (!dossier) return null;
     const role = currentUser?.role?.name || currentUser?.role || "";
-    const isSuperAdmin = role === "Super-administrateur";
-    const isResp = role === "Responsable opérationnel";
-    const isRespOrAdmin = isResp || isSuperAdmin;
+    const isSuperAdmin =
+      role === "Super-administrateur" || role === "Administrateur" || currentUser?.id === "MASTER-ADMIN";
+    const isResp = role === "Responsable opérationnel" || isSuperAdmin;
+    const isAssigned =
+      dossier.traitantId === currentUser?.id ||
+      dossier.traitant?.id === currentUser?.id ||
+      dossier.createdById === currentUser?.id;
 
-    // Seuls Super-admin et Resp.Op. assigné peuvent agir
-    if (!isSuperAdmin && !isResp && currentUser?.id !== dossier.traitantId)
+    // Super-admin, Responsable Opérationnel et Traitant assigné peuvent agir
+    if (!isSuperAdmin && !isResp && !isAssigned)
       return null;
 
     const options = getAllowedDossierStatuses(dossier, currentUser);
@@ -986,7 +1065,10 @@ const DossiersPage = () => {
             </strong>
             {isEdit &&
             (currentUser?.role?.name === "Super-administrateur" ||
-              currentUser?.role === "Super-administrateur") ? (
+              currentUser?.role === "Super-administrateur" ||
+              currentUser?.role?.name === "Responsable opérationnel" ||
+              currentUser?.role === "Responsable opérationnel" ||
+              currentUser?.id === "MASTER-ADMIN") ? (
               <select
                 value={editDossier?.traitantId || dossier.traitantId || ""}
                 onChange={(e) =>
@@ -1206,10 +1288,21 @@ const DossiersPage = () => {
     );
     const isSuperAdmin =
       currentUser?.role?.name === "Super-administrateur" ||
-      currentUser?.role === "Super-administrateur";
+      currentUser?.role === "Super-administrateur" ||
+      currentUser?.role?.name === "Administrateur" ||
+      currentUser?.role === "Administrateur" ||
+      currentUser?.id === "MASTER-ADMIN";
+    const isResp =
+      currentUser?.role?.name === "Responsable opérationnel" ||
+      currentUser?.role === "Responsable opérationnel" ||
+      isSuperAdmin;
+    const isAssigned =
+      consultDossier?.traitantId === currentUser?.id ||
+      consultDossier?.traitant?.id === currentUser?.id ||
+      consultDossier?.createdById === currentUser?.id;
     const isLocked = ["BLOQUE", "EN_ATTENTE"].includes(consultDossier.status);
     const canEdit =
-      (isSuperAdmin || currentUser?.id === consultDossier.traitantId) && !isLocked;
+      (isSuperAdmin || isResp || isAssigned) && !isLocked;
 
     // isEditingConsult est géré via un objet temporaire dans consultDossier._editing
     const isEditMode = consultDossier._editing === true;
@@ -1320,9 +1413,7 @@ const DossiersPage = () => {
         : "Aucune mission active.";
 
     const roleName = currentUser?.role?.name || currentUser?.role || "";
-    const isResp = roleName === "Responsable opérationnel";
-    const canChangeStatus =
-      isSuperAdmin || (isResp && currentUser?.id === consultDossier.traitantId);
+    const canChangeStatus = isSuperAdmin || isResp || isAssigned;
     const statusOptions = getAllowedDossierStatuses(consultDossier, currentUser);
     const isStatusLocked = !canChangeStatus || statusOptions.length === 1;
 
@@ -1410,14 +1501,24 @@ const DossiersPage = () => {
                   onClick={() => {
                     setShowMagicModal(true);
                     setGeneratedMagicUrl("");
+                    setGeneratedMagicLinkId(null);
                     setMagicFiles([]);
+                    setMagicEmailSent(false);
+                    setMagicLinkCopied(false);
+                    const defaultEmail =
+                      consultDossier?.client?.email ||
+                      dbClients.find((c) => c.id === consultDossier?.clientId)?.email ||
+                      consultDossier?.targetUser?.email ||
+                      dbUsers.find((u) => u.id === consultDossier?.targetUserId)?.email ||
+                      "";
+                    setMagicEmailRecipient(defaultEmail);
                   }}
                   className="font-medium cursor-pointer flex items-center" style={{background:"#FFF",border:"1px solid #CBD5E1",color:"#334155",padding:"0.55rem 1rem",borderRadius:"8px",fontSize:"0.85rem",gap:"0.4rem"}}
                 >
                   Générer Lien Magique
                 </button>
 
-                {(isSuperAdmin || consultDossier.traitantId === currentUser?.id) && (
+                {(isSuperAdmin || isResp || isAssigned) && (
                   <button
                     type="button"
                     onClick={() => {
@@ -1558,7 +1659,7 @@ const DossiersPage = () => {
                   <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
                     Traitant :
                   </div>
-                  {isEditMode && isSuperAdmin ? (
+                  {isEditMode && (isSuperAdmin || isResp) ? (
                     <select
                       value={consultDossier.traitantId || ""}
                       onChange={(e) =>
@@ -1869,119 +1970,114 @@ const DossiersPage = () => {
         {/* Modal Magic Link */}
         {showMagicModal && (
           <div
-            className="fade-in fixed inset-0 flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)",zIndex:1000}}
+            className="fade-in fixed inset-0 flex items-center justify-center p-4"
+            style={{
+              background: "rgba(15, 23, 42, 0.65)",
+              backdropFilter: "blur(4px)",
+              zIndex: 1000,
+            }}
           >
             <div
-              className="card p-8" style={{width:"90%",maxWidth:"500px",maxHeight:"90vh",overflowY:"auto"}}
+              className="bg-white rounded-2xl shadow-2xl p-6 sm:p-7 w-full max-h-[90vh] overflow-y-auto"
+              style={{ maxWidth: generatedMagicUrl ? "500px" : "520px" }}
             >
-              <h3
-                style={{
-                  marginTop: 0,
-                  marginBottom: "0.75rem",
-                  fontSize: "1.25rem",
-                }}
-              >
-                Lien Magique (Dossier:{" "}
-                {consultDossier.reference || consultDossier.id})
-              </h3>
-
-              {/* Destinataire du lien */}
-              {(consultDossier.client?.email || consultDossier.targetUser?.email) && (
-                <div
-                  className="mb-6 flex items-center gap-2" style={{padding:"0.75rem 1rem",background:"#EFF6FF",borderRadius:"8px",border:"1px solid #BFDBFE",fontSize:"0.85rem",color:"#1E40AF"}}
-                >
-                  <span>📧</span>
-                  <span>
-                    Destinataire :{" "}
-                    <a
-                      href={`mailto:${consultDossier.client?.email || consultDossier.targetUser?.email}`}
-                      className="font-semibold" style={{color:"#1D4ED8"}}
-                    >
-                      {consultDossier.client?.email || consultDossier.targetUser?.email}
-                    </a>
-                  </span>
-                </div>
-              )}
-
               {!generatedMagicUrl ? (
+                /* ── Image 3: Generator Modal ── */
                 <>
-                  <div className="mb-6">
-
-                    <label
-                      className="block mb-2 font-medium"
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="text-xl font-bold text-slate-900 m-0">
+                        Générer un lien de partage client
+                      </h3>
+                      <p className="text-sm text-slate-500 mt-1 mb-0">
+                        Dossier rattaché : {consultDossier.reference || consultDossier.id}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowMagicModal(false)}
+                      className="text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full p-1.5 transition-colors cursor-pointer"
+                      title="Fermer"
                     >
-                      Type de lien
-                    </label>
-                    <select
-                      value={magicType}
-                      onChange={(e) => setMagicType(e.target.value)}
-                      className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
-                    >
-                      <option value="ACQUISITION">
-                        📤 Lien de dépôt (Le client nous envoie des fichiers)
-                      </option>
-                      <option value="LIVRAISON">
-                        📦 Lien de partage (Nous envoyons des fichiers au
-                        client)
-                      </option>
-                    </select>
-                  </div>
-                  <div className="mb-6">
-                    <label
-                      className="block mb-2 font-medium"
-                    >
-                      Validité (jours)
-                    </label>
-                    <select
-                      value={magicExpires}
-                      onChange={(e) => setMagicExpires(e.target.value)}
-                      className="input-field w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)"}}
-                    >
-                      <option value="1">1 jour</option>
-                      <option value="7">7 jours</option>
-                      <option value="30">30 jours</option>
-                    </select>
+                      <X size={20} />
+                    </button>
                   </div>
 
-                  {/* Instructions pour le client */}
-                  <div
-                    className="mb-6 p-4" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)"}}
-                  >
-                    <label
-                      className="block mb-2 font-semibold" style={{color:"var(--primary-dark)"}}
+                  {/* Tabs: Demander des fichiers / Envoyer des fichiers */}
+                  <div className="flex bg-slate-100 p-1 rounded-xl mb-5">
+                    <button
+                      type="button"
+                      onClick={() => setMagicType("ACQUISITION")}
+                      className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+                        magicType === "ACQUISITION"
+                          ? "bg-white text-slate-900 shadow-sm"
+                          : "text-slate-500 hover:text-slate-800"
+                      }`}
                     >
-                      {magicType === "ACQUISITION"
-                        ? "📋 Quels fichiers demandez-vous au client ?"
-                        : "📝 Message d'accompagnement (optionnel)"}
+                      Demander des fichiers
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMagicType("LIVRAISON")}
+                      className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+                        magicType === "LIVRAISON"
+                          ? "bg-white text-slate-900 shadow-sm"
+                          : "text-slate-500 hover:text-slate-800"
+                      }`}
+                    >
+                      Envoyer des fichiers
+                    </button>
+                  </div>
+
+                  {/* Durée de validité */}
+                  <div className="mb-4">
+                    <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                      DURÉE DE VALIDITÉ
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={magicExpires}
+                        onChange={(e) => setMagicExpires(e.target.value)}
+                        className="w-full appearance-none bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
+                      >
+                        <option value="7">7 jours (Recommandé)</option>
+                        <option value="1">24 heures</option>
+                        <option value="2">48 heures</option>
+                        <option value="14">14 jours</option>
+                        <option value="30">30 jours</option>
+                      </select>
+                      <ChevronDown
+                        size={18}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Message pour le client */}
+                  <div className="mb-4">
+                    <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                      MESSAGE POUR LE CLIENT (OPTIONNEL)
                     </label>
                     <textarea
                       value={magicNote}
                       onChange={(e) => setMagicNote(e.target.value)}
                       placeholder={
                         magicType === "ACQUISITION"
-                          ? "Ex: Merci de nous transmettre votre dernier bilan comptable, vos relevés bancaires des 3 derniers mois et une copie de votre pièce d'identité."
-                          : "Ex: Veuillez trouver ci-joint les documents préparés dans le cadre de votre dossier. N'hésitez pas à nous contacter si vous avez des questions."
+                          ? "Ex: Merci de nous transmettre vos pièces justificatives..."
+                          : "Ex: Veuillez trouver ci-joint les documents préparés..."
                       }
-                      className="w-full" style={{padding:"0.75rem",borderRadius:"8px",border:"1px solid var(--border)",minHeight:"100px",resize:"vertical",fontFamily:"inherit",boxSizing:"border-box"}}
+                      rows={3}
+                      className="w-full bg-white border border-slate-300 rounded-xl p-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                     />
-                    <small
-                      className="block" style={{color:"var(--text-muted)",marginTop:"0.25rem"}}
-                    >
-                      {magicType === "ACQUISITION"
-                        ? "Ces instructions seront affichées au client sur la page de dépôt."
-                        : "Ce message sera affiché au client sur la page de téléchargement."}
-                    </small>
                   </div>
-                  {/* Zone d'upload pour LIVRAISON */}
+
+                  {/* Documents à joindre (si LIVRAISON) */}
                   {magicType === "LIVRAISON" && (
-                    <div className="mb-6">
-                      <label
-                        className="block mb-2 font-semibold" style={{color:"var(--primary-dark)"}}
-                      >
-                        📎 Fichiers à mettre à disposition du client
+                    <div className="mb-5">
+                      <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                        DOCUMENTS À JOINDRE
                       </label>
                       <div
-                        className="p-6 text-center cursor-pointer" style={{border:"2px dashed var(--border)",borderRadius:"8px",background:"#F8FAFC"}}
                         onDragOver={(e) => e.preventDefault()}
                         onDrop={(e) => {
                           e.preventDefault();
@@ -1989,176 +2085,179 @@ const DossiersPage = () => {
                           setMagicFiles((prev) => [...prev, ...dropped]);
                         }}
                         onClick={() => magicFileInputRef.current?.click()}
+                        className="border-2 border-dashed border-blue-200 bg-slate-50/60 hover:bg-blue-50/30 rounded-xl p-5 text-center cursor-pointer transition-all"
                       >
                         <input
                           ref={magicFileInputRef}
-                          id="magicFileInput"
                           type="file"
                           multiple
                           className="hidden"
                           onChange={(e) => {
                             const selected = Array.from(e.target.files);
                             setMagicFiles((prev) => [...prev, ...selected]);
+                            e.target.value = "";
                           }}
                         />
-                        <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "0.85rem" }}>
-                          Glissez vos fichiers ici ou <strong>cliquez pour sélectionner</strong>
+                        <div className="flex justify-center mb-1 text-blue-600">
+                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="12" y1="19" x2="12" y2="5" />
+                            <polyline points="5 12 12 5 19 12" />
+                          </svg>
+                        </div>
+                        <p className="text-sm font-semibold text-slate-800 m-0">
+                          Glissez vos fichiers ici <span className="text-blue-600 hover:underline">parcourir</span>
+                        </p>
+                        <p className="text-xs text-slate-400 mt-1 mb-0">
+                          PDF, PNG, DOCX jusqu'à 25 Mo
                         </p>
                       </div>
+
                       {magicFiles.length > 0 && (
-                        <ul style={{ marginTop: "0.75rem", padding: "0 0 0 1rem" }}>
+                        <div className="mt-2.5 space-y-1.5 max-h-36 overflow-y-auto">
                           {magicFiles.map((f, i) => (
-                            <li
+                            <div
                               key={i}
-                              className="flex justify-between items-center" style={{fontSize:"0.8rem",padding:"0.25rem 0"}}
+                              className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700"
                             >
-                              <span>📄 {f.name}</span>
+                              <div className="flex items-center gap-2 truncate">
+                                <FileText size={16} className="text-slate-400 shrink-0" />
+                                <span className="truncate font-medium">{f.name}</span>
+                                <span className="text-slate-400 shrink-0">
+                                  ({(f.size / 1024 / 1024).toFixed(1)} Mo)
+                                </span>
+                              </div>
                               <button
                                 type="button"
-                                onClick={() => setMagicFiles((prev) => prev.filter((_, idx) => idx !== i))}
-                                className="cursor-pointer" style={{background:"none",border:"none",color:"var(--danger)",fontSize:"1rem"}}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setMagicFiles((prev) => prev.filter((_, idx) => idx !== i));
+                                }}
+                                className="text-slate-400 hover:text-red-500 p-1 cursor-pointer"
+                                title="Supprimer"
                               >
-                                ×
+                                <X size={14} />
                               </button>
-                            </li>
+                            </div>
                           ))}
-                        </ul>
+                        </div>
                       )}
-                      <small className="block mt-2" style={{color:"var(--text-muted)"}}>
-                        Ces fichiers seront stockés dans la GED du dossier et accessibles au client via le lien.
-                      </small>
                     </div>
                   )}
-                  <div
-                    className="flex justify-end gap-4 mt-8"
-                  >
+
+                  {/* Actions footer */}
+                  <div className="flex justify-end items-center gap-3 mt-6">
                     <button
                       type="button"
                       onClick={() => setShowMagicModal(false)}
-                      className="btn btn-outline"
+                      className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-800 transition cursor-pointer"
                     >
                       Annuler
                     </button>
                     <button
                       type="button"
-                      disabled={isGeneratingMagic}
+                      disabled={isGeneratingMagic || (magicType === "LIVRAISON" && magicFiles.length === 0)}
                       onClick={handleGenerateMagicLink}
-                      className="btn btn-primary flex items-center gap-2"
+                      className="px-5 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white text-sm font-semibold rounded-xl disabled:opacity-50 flex items-center gap-2 shadow-sm transition cursor-pointer"
                     >
-                      {isGeneratingMagic ? (
-                        <>
-                          <Loader2 size={16} className="animate-spin" /> Génération...
-                        </>
-                      ) : (
-                        <>
-                          <LinkIcon size={16} /> Générer
-                        </>
-                      )}
+                      {isGeneratingMagic && <Loader2 size={16} className="animate-spin" />}
+                      {isGeneratingMagic ? "Génération..." : "Générer le lien"}
                     </button>
                   </div>
                 </>
               ) : (
+                /* ── Image 2: Success Modal ("Lien de partage prêt") ── */
                 <>
-                  <div
-                    className="p-6 mb-6" style={{background:"#F0FDF4",border:"1px solid #BBF7D0",borderRadius:"8px"}}
-                  >
-                    <p
-                      className="font-semibold" style={{margin:"0 0 0.5rem 0",color:"#166534",fontSize:"0.95rem"}}
-                    >
-                      ✅ Lien généré avec succès !
-                    </p>
-                    <p style={{ margin: "0 0 1rem 0", color: "#166534", fontSize: "0.85rem" }}>
-                      {magicType === "LIVRAISON"
-                        ? "Le client peut télécharger les fichiers en ouvrant ce lien."
-                        : "Le client peut déposer ses fichiers en ouvrant ce lien."}
-                    </p>
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-base font-bold text-slate-900 m-0">
+                        Lien de partage prêt
+                      </h3>
+                      <p className="text-xs text-slate-500 mt-0.5 mb-0">
+                        Actif pendant {magicExpires} jours •{" "}
+                        {magicType === "LIVRAISON"
+                          ? `${magicFiles.length || 1} document${(magicFiles.length || 1) > 1 ? "s" : ""} attaché${(magicFiles.length || 1) > 1 ? "s" : ""}`
+                          : "Demande de fichiers client"}
+                      </p>
+                    </div>
+                  </div>
 
-                    {/* URL client */}
-                    <label className="block font-medium" style={{marginBottom:"0.35rem",fontSize:"0.85rem",color:"#166534"}}>
-                      🔗 URL à envoyer au client :
+                  {/* LIEN SÉCURISÉ GÉNÉRÉ */}
+                  <div className="mb-4">
+                    <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                      LIEN SÉCURISÉ GÉNÉRÉ
                     </label>
                     <div className="flex gap-2">
                       <input
                         type="text"
                         readOnly
                         value={generatedMagicUrl}
-                        className="input-field"
-                        style={{
-                          flex: 1,
-                          padding: "0.75rem",
-                          borderRadius: "8px",
-                          border: "1px solid #BBF7D0",
-                          background: "#FFF",
-                          fontSize: "0.8rem",
-                        }}
+                        className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 truncate font-mono focus:outline-none"
                       />
                       <button
                         type="button"
                         onClick={() => {
                           navigator.clipboard.writeText(generatedMagicUrl);
-                          window.customAlert("Lien copié !");
+                          setMagicLinkCopied(true);
+                          setTimeout(() => setMagicLinkCopied(false), 2000);
                         }}
-                        className="btn btn-primary"
+                        className="px-4 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white text-xs font-semibold rounded-xl shrink-0 transition cursor-pointer"
                       >
-                        Copier
+                        {magicLinkCopied ? "Copié !" : "Copier"}
                       </button>
-                    </div>
-                    {magicFiles.length > 0 && (
-                      <p style={{ margin: "0.75rem 0 0 0", fontSize: "0.8rem", color: "#166534" }}>
-                        📦 {magicFiles.length} fichier(s) stocké(s) dans la GED du dossier.
-                      </p>
-                    )}
-
-                    {/* ── Envoi par email ── */}
-                    <div className="mt-6 p-4" style={{background:"#fff",border:"1px solid #E2E8F0",borderRadius:"8px"}}>
-                      <label className="block mb-2 font-semibold" style={{fontSize:"0.85rem",color:"#141824"}}>
-                        ✉️ Envoyer le lien directement par email
-                      </label>
-                      {magicEmailSent ? (
-                        <p style={{ color: "#166534", fontSize: "0.85rem", margin: 0 }}>✅ Email envoyé avec succès !</p>
-                      ) : (
-                        <div className="flex gap-2">
-                          <input
-                            type="email"
-                            value={magicEmailRecipient}
-                            onChange={(e) => setMagicEmailRecipient(e.target.value)}
-                            placeholder="email@client.com"
-                            className="input-field"
-                            style={{ flex: 1, padding: "0.65rem", borderRadius: "8px", border: "1px solid var(--border)", fontSize: "0.85rem" }}
-                          />
-                          <button
-                            type="button"
-                            disabled={magicEmailSending || !magicEmailRecipient.trim()}
-                            onClick={async () => {
-                              if (!generatedMagicLinkId || !magicEmailRecipient.trim()) return;
-                              setMagicEmailSending(true);
-                              try {
-                                const token = sessionStorage.getItem("adminToken");
-                                const r = await fetch(getSafeApiUrl(`/api/magic/send-email/${generatedMagicLinkId}`), {
-                                  method: "POST",
-                                  headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-                                  body: JSON.stringify({ recipientEmail: magicEmailRecipient.trim(), magicUrl: generatedMagicUrl }),
-                                });
-                                if (r.ok) { setMagicEmailSent(true); }
-                                else { window.customAlert("Erreur lors de l'envoi de l'email."); }
-                              } catch { window.customAlert("Erreur réseau."); }
-                              finally { setMagicEmailSending(false); }
-                            }}
-                            className="btn btn-primary"
-                            style={{ whiteSpace: "nowrap" }}
-                          >
-                            {magicEmailSending ? "Envoi..." : "Envoyer"}
-                          </button>
-                        </div>
-                      )}
                     </div>
                   </div>
 
-                  <div className="flex justify-center">
+                  {/* Divider OU */}
+                  <div className="relative my-4 text-center">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-slate-200"></div>
+                    </div>
+                    <span className="relative bg-white px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-widest">
+                      OU
+                    </span>
+                  </div>
+
+                  {/* TRANSMETTRE DIRECTEMENT PAR EMAIL */}
+                  <div className="mb-6">
+                    <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                      TRANSMETTRE DIRECTEMENT PAR EMAIL
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="email"
+                        value={magicEmailRecipient}
+                        onChange={(e) => setMagicEmailRecipient(e.target.value)}
+                        placeholder="client@entreprise.com"
+                        className="flex-1 bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <button
+                        type="button"
+                        disabled={magicEmailSending || !magicEmailRecipient.trim()}
+                        onClick={handleSendMagicEmail}
+                        className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shrink-0 disabled:opacity-50 transition flex items-center gap-1.5 cursor-pointer"
+                      >
+                        {magicEmailSending && <Loader2 size={14} className="animate-spin" />}
+                        {magicEmailSending ? "Envoi..." : "Envoyer"}
+                      </button>
+                    </div>
+                    {magicEmailSent && (
+                      <p className="text-xs text-emerald-600 font-medium mt-1.5 mb-0">
+                        ✅ Email transmis avec succès à {magicEmailRecipient} !
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  <div className="flex justify-end">
                     <button
                       type="button"
                       onClick={() => setShowMagicModal(false)}
-                      className="btn btn-outline"
+                      className="px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition cursor-pointer"
                     >
                       Fermer
                     </button>
@@ -2554,7 +2653,10 @@ const DossiersPage = () => {
           </p>
         </div>
         {(currentUser?.role === "Super-administrateur" ||
-          currentUser?.role?.name === "Super-administrateur") && (
+          currentUser?.role?.name === "Super-administrateur" ||
+          currentUser?.role === "Responsable opérationnel" ||
+          currentUser?.role?.name === "Responsable opérationnel" ||
+          currentUser?.id === "MASTER-ADMIN") && (
           <button
             onClick={() => {
               setNewDossierData({
@@ -2745,7 +2847,11 @@ const DossiersPage = () => {
                           {/* Sommet de la pyramide : Modifier (même règle que l'ancien bouton « Modifier ») */}
                           {(currentUser?.role === "Super-administrateur" ||
                             currentUser?.role?.name === "Super-administrateur" ||
-                            currentUser?.id === d.traitantId) &&
+                            currentUser?.role === "Responsable opérationnel" ||
+                            currentUser?.role?.name === "Responsable opérationnel" ||
+                            currentUser?.id === "MASTER-ADMIN" ||
+                            currentUser?.id === d.traitantId ||
+                            currentUser?.id === d.createdById) &&
                             !["BLOQUE", "EN_ATTENTE"].includes(d.status) && (
                           <button
                             type="button"

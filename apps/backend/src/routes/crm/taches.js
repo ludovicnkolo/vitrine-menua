@@ -327,13 +327,14 @@ router.post("/taches", async (req, res) => {
       if (
         userRole === "Responsable opérationnel" &&
         (!targetMission.dossier ||
-          targetMission.dossier.traitantId !== req.user.id)
+          targetMission.dossier.traitantId !== req.user.id) &&
+        targetMission.assignedToId !== req.user.id
       ) {
         return res
           .status(403)
           .json({
             error:
-              "Accès refusé. Vous n'êtes pas le responsable du dossier de cette mission.",
+              "Accès refusé. Vous n'êtes pas le responsable de cette mission ni de son dossier.",
           });
       }
     }
@@ -530,6 +531,7 @@ router.patch("/taches/:id", async (req, res) => {
     const isAuthorized =
       isSA ||
       isAdmin(userRole) ||
+      isManager(userRole) ||
       currentTache.assignedToId === userId ||
       currentTache.createdById === userId ||
       currentTache.relecteurId === userId ||
@@ -549,13 +551,14 @@ router.patch("/taches/:id", async (req, res) => {
       const from = currentTache.status;
       const to = status;
 
+      const isRO = isManager(userRole);
       // ── Contexte déterministe — délégation totale à statusRules.js ──────────
       const context = {
         role: userRole,
         isSA,
         isAssigned: currentTache.assignedToId === userId,
         isRelecteurAssigned: currentTache.relecteurId === userId,
-        isMissionManager: currentTache.mission?.assignedToId === userId || dossierTraitantId === userId,
+        isMissionManager: isSA || isRO || currentTache.mission?.assignedToId === userId || dossierTraitantId === userId,
       };
 
       if (!canTransitionTache(from, to, currentTache.previousStatus, context)) {

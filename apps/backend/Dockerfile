@@ -8,7 +8,7 @@ COPY src/ ./src/
 COPY prisma/ ./prisma/
 COPY seed_imap.js ./
 COPY seed_admin.js ./
-COPY seed_test_users.js ./
+COPY reset_db.js ./
 COPY export_db.js ./
 COPY restore_db.js ./
 COPY scripts/ ./scripts/

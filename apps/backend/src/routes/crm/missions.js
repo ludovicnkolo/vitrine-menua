@@ -75,17 +75,23 @@ const resolveCreatorId = async (req) => {
 };
 
 const generateReference = async (model, prefix) => {
-  const lastRecord = await prisma[model].findFirst({
-    orderBy: { createdAt: "desc" },
+  const records = await prisma[model].findMany({
+    where: { reference: { startsWith: `${prefix}-` } },
     select: { reference: true },
   });
-  let nextNum = 1;
-  if (lastRecord && lastRecord.reference) {
-    const regex = new RegExp(`${prefix}-(\\d+)`);
-    const match = lastRecord.reference.match(regex);
-    if (match) nextNum = Number.parseInt(match[1], 10) + 1;
+
+  let maxNum = 0;
+  const regex = new RegExp(`^${prefix}-(\\d+)$`);
+  for (const r of records) {
+    if (!r.reference) continue;
+    const match = r.reference.match(regex);
+    if (match) {
+      const num = parseInt(match[1], 10);
+      if (!isNaN(num) && num > maxNum) maxNum = num;
+    }
   }
-  return `${prefix}-${String(nextNum).padStart(2, "0")}`;
+
+  return `${prefix}-${String(maxNum + 1).padStart(2, "0")}`;
 };
 
 const generateSubDossierReference = async (parentDossierId) => {

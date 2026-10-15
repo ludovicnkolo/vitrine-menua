@@ -27,41 +27,61 @@ export default function AppRoutes() {
     );
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ROUTES UTILISATEURS NON CONNECTÉS (DEUX INTERFACES TOTALEMENT SÉPARÉES)
+  // ═══════════════════════════════════════════════════════════════════════════
   if (!isAuthenticated || !user) {
-    if (location.pathname === "/forgot-password") {
-      return (
-        <Routes>
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        </Routes>
-      );
-    }
-    if (location.pathname.startsWith("/setup-password")) {
-      return (
-        <Routes>
-          <Route path="/setup-password" element={<SetupPasswordPage />} />
-        </Routes>
-      );
-    }
-    if (
-      location.pathname !== "/" &&
-      location.pathname !== "/login" &&
-      !location.pathname.startsWith("/magic-drop/") &&
-      !location.pathname.startsWith("/setup-password")
-    ) {
-      return <Navigate to="/" replace />;
-    }
-    return <LoginPage onLogin={login} />;
+    return (
+      <Routes>
+        {/* Procédure d'activation / réinitialisation par token */}
+        <Route path="/setup-password" element={<SetupPasswordPage />} />
+
+        {/* ── 1. PORTAIL ET CONNEXION ESPACE CLIENT SÉCURISÉ ────────────────── */}
+        <Route path="/client/login" element={<LoginPage onLogin={login} portal="client" />} />
+        <Route path="/client/forgot-password" element={<ForgotPasswordPage portal="client" />} />
+        <Route path="/client-login" element={<Navigate to="/client/login" replace />} />
+        <Route path="/client" element={<Navigate to="/client/login" replace />} />
+        <Route path="/espace-client" element={<Navigate to="/client/login" replace />} />
+
+        {/* ── 2. PORTAIL ET CONNEXION ESPACE COLLABORATEUR CRM ──────────────── */}
+        <Route path="/login" element={<LoginPage onLogin={login} portal="team" />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage portal="team" />} />
+        <Route path="/" element={<LoginPage onLogin={login} portal="team" />} />
+
+        {/* Redirection intelligente pour toute autre URL */}
+        <Route
+          path="*"
+          element={
+            location.pathname.startsWith("/client") ? (
+              <Navigate to="/client/login" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+      </Routes>
+    );
   }
 
   const role = user.role;
   const isAdminTech = role === "Administrateur technique";
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ROUTES UTILISATEURS CONNECTÉS
+  // ═══════════════════════════════════════════════════════════════════════════
   return (
     <Routes>
-      {/* Routes conditionnelles selon rôle */}
+      {/* Client connecté */}
       {role === "Client" && (
-        <Route path="/" element={<ClientPortalPage user={user} />} />
+        <>
+          <Route path="/" element={<ClientPortalPage user={user} />} />
+          <Route path="/client" element={<Navigate to="/" replace />} />
+          <Route path="/client/login" element={<Navigate to="/" replace />} />
+          <Route path="/espace-client" element={<Navigate to="/" replace />} />
+        </>
       )}
+
+      {/* Collaborateurs CRM */}
       {role !== "Client" && hasAccess.toGlobal(role) && <Route path="/" element={<DashboardPage />} />}
       {role !== "Client" && !hasAccess.toGlobal(role) && isAdminTech && (
         <Route path="/" element={<SystemSpacePage userRole={role} />} />
@@ -86,6 +106,7 @@ export default function AppRoutes() {
 
       {/* Redirections sécurisées */}
       <Route path="/login" element={<Navigate to="/" replace />} />
+      <Route path="/client/login" element={<Navigate to="/" replace />} />
       <Route path="/dossiers" element={hasAccess.toWorkspace(role) ? <Navigate to="/workspace" replace /> : <Navigate to="/" replace />} />
       <Route path="/taches" element={hasAccess.toWorkspace(role) ? <Navigate to="/workspace" replace /> : <Navigate to="/" replace />} />
       <Route path="/tasks" element={hasAccess.toWorkspace(role) ? <Navigate to="/workspace" replace /> : <Navigate to="/" replace />} />

@@ -719,7 +719,10 @@ export default function DocumentsPage() {
     if (!uploadFile || !currentFolderId) return;
     setIsSubmitting(true);
     try {
-      const token = sessionStorage.getItem("adminToken");
+      const token =
+        sessionStorage.getItem("adminToken") ||
+        localStorage.getItem("adminToken") ||
+        "";
 
       const formData = new FormData();
       formData.append("bucket", "ged"); // MUST be before file for multer
@@ -739,7 +742,7 @@ export default function DocumentsPage() {
       if (uploadRes.ok) {
         setShowUploadModal(false);
         setUploadFile(null);
-        fetchDossiers();
+        await fetchDossiers();
       } else {
         const errorData = await uploadRes.json().catch(() => ({}));
         window.customAlert(errorData.error || "Erreur d'upload");
@@ -983,7 +986,7 @@ export default function DocumentsPage() {
                         e.currentTarget.style.borderColor = "var(--border)";
                       }}
                     >
-                      <Folder size={40} color="#eab308" fill="#eab308" />
+                      <Folder size={40} color="#D97706" fill="#FBBF24" />
                       <div
                         className="text-center font-medium text-[var(--text-main)] w-full" style={{wordBreak:"normal",overflowWrap:"anywhere",fontSize:"0.75rem"}}
                       >
@@ -1085,9 +1088,9 @@ export default function DocumentsPage() {
                         }}
                         className="cursor-pointer relative" style={{background:"#FFF",border:"1px solid #E2E8F0",padding:"1.25rem",borderRadius:"10px",transition:"all 0.2s",boxShadow:"0 1px 3px rgba(0,0,0,0.03)"}}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.borderColor = "#2563EB";
+                          e.currentTarget.style.borderColor = "#F59E0B";
                           e.currentTarget.style.boxShadow =
-                            "0 4px 12px rgba(37,99,235,0.08)";
+                            "0 4px 12px rgba(245,158,11,0.12)";
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.borderColor = "#E2E8F0";
@@ -1098,7 +1101,7 @@ export default function DocumentsPage() {
                         <div
                           className="flex justify-between items-start"
                         >
-                          <Folder size={32} color="#2563EB" fill="#2563EB" />
+                          <Folder size={32} color="#D97706" fill="#FBBF24" />
                           {badge && (
                             <span
                               style={{

@@ -11,6 +11,8 @@ const TYPE_ICON = {
   MISSION_TERMINE: { icon: "🎯", color: "#6366F1" },
   DOSSIER_CLOTURE: { icon: "📁", color: "#4B5563" },
   NOUVEAU_MESSAGE: { icon: "💬", color: "#3B82F6" },
+  DEMANDE_DOCUMENT: { icon: "📥", color: "#F59E0B" },
+  DEPOT_DOCUMENT_CLIENT: { icon: "📤", color: "#10B981" },
 };
 
 function timeAgo(dateStr) {

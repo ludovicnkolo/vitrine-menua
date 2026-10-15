@@ -17,6 +17,7 @@ const {
 const { transporter } = require("../../utils/mailer");
 const { logAudit } = require("../../utils/audit");
 const { getAdminUrl } = require("../../utils/urlHelper");
+const { ensureClientSharingFolders } = require("../../services/sharingFolderService");
 const bcrypt = require("bcryptjs");
 
 const imapConfig = {
@@ -60,17 +61,23 @@ const resolveCreatorId = async (req) => {
 };
 
 const generateReference = async (model, prefix) => {
-  const lastRecord = await prisma[model].findFirst({
-    orderBy: { createdAt: "desc" },
+  const records = await prisma[model].findMany({
+    where: { reference: { startsWith: `${prefix}-` } },
     select: { reference: true },
   });
-  let nextNum = 1;
-  if (lastRecord && lastRecord.reference) {
-    const regex = new RegExp(`${prefix}-(\\d+)`);
-    const match = lastRecord.reference.match(regex);
-    if (match) nextNum = Number.parseInt(match[1], 10) + 1;
+
+  let maxNum = 0;
+  const regex = new RegExp(`^${prefix}-(\\d+)$`);
+  for (const r of records) {
+    if (!r.reference) continue;
+    const match = r.reference.match(regex);
+    if (match) {
+      const num = parseInt(match[1], 10);
+      if (!isNaN(num) && num > maxNum) maxNum = num;
+    }
   }
-  return `${prefix}-${String(nextNum).padStart(2, "0")}`;
+
+  return `${prefix}-${String(maxNum + 1).padStart(2, "0")}`;
 };
 
 const generateSubDossierReference = async (parentDossierId) => {
@@ -199,6 +206,24 @@ const clientInclude = {
       role: { select: { id: true, name: true } },
     },
   },
+  dossiers: {
+    where: { status: { notIn: ["CORBEILLE"] } },
+    include: {
+      documents: {
+        where: { isDeleted: false },
+        orderBy: { createdAt: "desc" },
+      },
+      liensMagiques: {
+        where: {
+          type: "ACQUISITION",
+          isUsed: false,
+          expiresAt: { gt: new Date() },
+        },
+        orderBy: { createdAt: "desc" },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  },
 };
 
 router.get("/clients", async (req, res) => {
@@ -214,15 +239,74 @@ router.get("/clients", async (req, res) => {
   }
 });
 
+// Endpoint pour récupérer le profil et les dossiers du client connecté
+router.get("/clients/me", async (req, res) => {
+  try {
+    let client = null;
+    if (req.user?.clientId) {
+      client = await prisma.client.findUnique({
+        where: { id: req.user.clientId },
+        include: clientInclude,
+      });
+    } else if (req.user?.id) {
+      client = await prisma.client.findFirst({
+        where: { userId: req.user.id },
+        include: clientInclude,
+      });
+    }
+
+    if (!client && req.user?.email) {
+      client = await prisma.client.findFirst({
+        where: { email: req.user.email },
+        include: clientInclude,
+      });
+    }
+
+    if (!client) {
+      return res.status(404).json({ error: "Compte client introuvable." });
+    }
+
+    // S'assurer que le dossier principal possède bien Partage documents > Sortant & Entrant
+    if (client.dossiers && client.dossiers.length > 0) {
+      const rootDossier = client.dossiers.find((d) => !d.parentDossierId) || client.dossiers[0];
+      await ensureClientSharingFolders(rootDossier.id);
+
+      // Recharger pour inclure l'arborescence et tous les documents
+      client = await prisma.client.findUnique({
+        where: { id: client.id },
+        include: clientInclude,
+      });
+    }
+
+    res.json(client);
+  } catch (error) {
+    console.error("Erreur GET /clients/me:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.get("/clients/:id", async (req, res) => {
   try {
-    const client = await prisma.client.findUnique({
+    let client = await prisma.client.findUnique({
       where: { id: req.params.id },
       include: clientInclude,
     });
     if (!client) {
       return res.status(404).json({ error: "Client introuvable." });
     }
+
+    // S'assurer que le dossier principal possède bien Partage documents > Sortant & Entrant
+    if (client.dossiers && client.dossiers.length > 0) {
+      const rootDossier = client.dossiers.find((d) => !d.parentDossierId) || client.dossiers[0];
+      await ensureClientSharingFolders(rootDossier.id);
+
+      // Recharger pour inclure l'arborescence et tous les documents
+      client = await prisma.client.findUnique({
+        where: { id: req.params.id },
+        include: clientInclude,
+      });
+    }
+
     res.json(client);
   } catch (error) {
     console.error(error);
@@ -298,6 +382,89 @@ router.post("/clients", async (req, res) => {
       },
       include: clientInclude,
     });
+
+    // Création automatique du compte portail et envoi de l'invitation si un email est renseigné
+    if (cleanEmail) {
+      try {
+        let clientRole = await prisma.role.findFirst({
+          where: { name: "Client" },
+        });
+        if (!clientRole) {
+          clientRole = await prisma.role.create({
+            data: {
+              name: "Client",
+              description: "Accès portail client externe. Dépôt et consultation des documents.",
+              status: "Actif",
+              permissions: JSON.stringify(["PORTAIL_CLIENT_VIEW", "PORTAIL_CLIENT_UPLOAD"]),
+            },
+          });
+        }
+
+        const existingUser = await prisma.utilisateur.findUnique({
+          where: { email: cleanEmail },
+        });
+
+        if (!existingUser) {
+          const token = crypto.randomBytes(32).toString("hex");
+          const resetTokenExpiry = new Date(Date.now() + 48 * 3600 * 1000);
+          const tempPassword = await bcrypt.hash(crypto.randomBytes(16).toString("hex"), 10);
+
+          await prisma.utilisateur.create({
+            data: {
+              email: cleanEmail,
+              name: client.name || "Client",
+              password: tempPassword,
+              roleId: clientRole.id,
+              clientId: client.id,
+              resetToken: token,
+              resetTokenExpiry,
+              status: "Invitation envoyée",
+              isBlocked: false,
+            },
+          });
+
+          // Envoi de l'email d'invitation sécurisé
+          try {
+            const adminFrontend = getAdminUrl(req);
+            const activationLink = `${adminFrontend}/setup-password?token=${token}`;
+            await transporter.sendMail({
+              from: process.env.SMTP_FROM || "contact@menuaconsulting.com",
+              to: cleanEmail,
+              subject: "Activation de votre Espace Client Sécurisé — MENUA CONSULTING",
+              html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
+                  <div style="text-align: center; margin-bottom: 25px;">
+                    <h1 style="color: #141824; font-size: 22px; margin: 0; letter-spacing: 0.5px;">MENUA CONSULTING</h1>
+                    <p style="color: #c99c5c; font-size: 13px; font-weight: bold; letter-spacing: 1px; margin-top: 4px; text-transform: uppercase;">Portail Client Sécurisé</p>
+                  </div>
+                  <p style="color: #334155; font-size: 15px;">Bonjour <strong>${client.name}</strong>,</p>
+                  <p style="color: #334155; font-size: 14px; line-height: 1.6;">
+                    Votre compte client a été créé sur la plateforme sécurisée de <strong>MENUA CONSULTING</strong>.
+                    Cet espace dédié vous permet d'accéder à vos documents, de déposer vos justificatifs en toute sécurité et de suivre la restitution de vos livrables.
+                  </p>
+                  <p style="color: #334155; font-size: 14px; line-height: 1.6;">
+                    Pour activer votre compte et choisir votre mot de passe d'accès en toute autonomie, cliquez sur le bouton ci-dessous :
+                  </p>
+                  <div style="text-align: center; margin: 30px 0;">
+                    <a href="${activationLink}" style="display:inline-block;padding:12px 30px;background:#141824;color:#ffffff;text-decoration:none;border-radius:6px;font-weight:bold;font-size:14px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+                      Activer mon espace client
+                    </a>
+                  </div>
+                  <p style="color: #64748b; font-size: 12px;">Ce lien d'activation sécurisé est valable pendant 48 heures.</p>
+                  <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 25px 0;" />
+                  <p style="color: #94a3b8; font-size: 11px; margin: 0; text-align: center;">MENUA CONSULTING — Cabinet de conseil juridique et financier</p>
+                </div>
+              `,
+            });
+          } catch (mailErr) {
+            console.error(`[CREATION CLIENT] Email d'activation non envoyé (SMTP) :`, mailErr.message);
+          }
+        }
+      } catch (userErr) {
+        console.error("[CREATION CLIENT] Erreur création compte utilisateur automatique:", userErr);
+      }
+    }
+
     await logAudit(
       req.user?.id,
       "CREATION_CLIENT",
@@ -305,7 +472,13 @@ router.post("/clients", async (req, res) => {
       "CLIENT",
       `Client créé : ${client.name} (${client.type})`,
     );
-    res.status(201).json(client);
+
+    const freshClient = await prisma.client.findUnique({
+      where: { id: client.id },
+      include: clientInclude,
+    });
+
+    res.status(201).json(freshClient || client);
   } catch (error) {
     console.error(error);
     if (error.code === "P2002") {
@@ -377,6 +550,9 @@ const handleClientUpdate = async (req, res) => {
       }
     }
 
+    const prevStatusUpper = String(existingClient.status || "ACTIF").toUpperCase();
+    const newStatusUpper = status !== undefined ? String(status).trim().toUpperCase() : prevStatusUpper;
+
     const client = await prisma.client.update({
       where: { id: req.params.id },
       data: {
@@ -387,19 +563,30 @@ const handleClientUpdate = async (req, res) => {
         ...(secteurActivite !== undefined && { secteurActivite: secteurActivite ? String(secteurActivite).trim() : null }),
         ...(description !== undefined && { description: description ? String(description).trim() : null }),
         type: finalType,
-        ...(status && { status }),
+        ...(status !== undefined && { status: newStatusUpper }),
         ...(entrepriseUpdate && { entreprise: entrepriseUpdate }),
       },
       include: clientInclude,
     });
+
+    // Si le statut a changé vers INACTIF ou retour à ACTIF, répercuter en cascade sur les dossiers/missions/tâches
+    if (newStatusUpper !== prevStatusUpper) {
+      const { cascadeBlockClient, cascadeUnblockClient } = require("../../utils/statusCascade");
+      if (newStatusUpper === "INACTIF" || newStatusUpper === "BLOQUE") {
+        await cascadeBlockClient(client.id);
+      } else if (newStatusUpper === "ACTIF" && (prevStatusUpper === "INACTIF" || prevStatusUpper === "BLOQUE")) {
+        await cascadeUnblockClient(client.id);
+      }
+    }
+
     const clientAuditAction =
-      status === "BLOQUE" ? "BLOCAGE_CLIENT" : "MODIFICATION_CLIENT";
+      newStatusUpper === "INACTIF" || newStatusUpper === "BLOQUE" ? "BLOCAGE_CLIENT" : "MODIFICATION_CLIENT";
     await logAudit(
       req.user?.id,
       clientAuditAction,
       client.id,
       "CLIENT",
-      `Client ${status === "BLOQUE" ? "bloqué" : "modifié"} : ${client.name}`,
+      `Client ${newStatusUpper === "INACTIF" ? "désactivé" : "modifié"} : ${client.name}`,
     );
     res.json(client);
   } catch (error) {
@@ -738,27 +925,35 @@ router.post(
 
       const token = crypto.randomBytes(32).toString("hex");
       const resetTokenExpiry = new Date(Date.now() + 24 * 3600 * 1000);
+      const erasedPassword = "RESET_PENDING_" + crypto.randomBytes(32).toString("hex");
 
       await prisma.utilisateur.update({
         where: { id: client.user.id },
         data: {
+          password: erasedPassword,
           resetToken: token,
           resetTokenExpiry,
         },
       });
+
+      // Déconnexion immédiate du client concerné via WebSocket
+      const io = req.app.get("io");
+      if (io) {
+        io.emit("force_logout", { userId: client.user.id });
+      }
 
       await logAudit(
         req.user?.id,
         "REINITIALISATION_MDP_ADMIN",
         client.id,
         "CLIENT",
-        `Réinitialisation administrative du mot de passe déclenchée pour ${client.user.email}`,
+        `Réinitialisation administrative du mot de passe déclenchée pour ${client.user.email} (mot de passe supprimé, déconnexion forcée)`,
       );
 
-      try {
-        const adminFrontend = getAdminUrl(req);
-        const resetLink = `${adminFrontend}/setup-password?token=${token}`;
+      const adminFrontend = getAdminUrl(req);
+      const resetLink = `${adminFrontend}/setup-password?token=${token}`;
 
+      try {
         await transporter.sendMail({
           from: process.env.SMTP_FROM || "contact@menuaconsulting.com",
           to: client.user.email,
@@ -767,7 +962,7 @@ router.post(
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
               <h2 style="color: #141824; margin-top: 0;">MENUA CONSULTING</h2>
               <p>Bonjour <strong>${client.user.name}</strong>,</p>
-              <p>Une demande de réinitialisation de votre mot de passe a été initiée par votre gestionnaire MENUA CONSULTING.</p>
+              <p>Une demande de réinitialisation de votre mot de passe a été initiée par votre gestionnaire MENUA CONSULTING. Par mesure de sécurité, votre session en cours a été fermée et votre ancien mot de passe a été supprimé.</p>
               <p>Pour définir un nouveau mot de passe, cliquez sur le bouton ci-dessous :</p>
               <div style="text-align: center; margin: 25px 0;">
                 <a href="${resetLink}" style="display:inline-block;padding:12px 28px;background:#141824;color:#ffffff;text-decoration:none;border-radius:4px;font-weight:bold;">
@@ -784,7 +979,7 @@ router.post(
 
       res.json({
         success: true,
-        message: "Lien sécurisé de réinitialisation envoyé avec succès au client.",
+        message: "Compte client déconnecté, mot de passe supprimé et lien sécurisé de réinitialisation envoyé avec succès.",
       });
     } catch (err) {
       console.error("Erreur reset password:", err);
@@ -811,6 +1006,7 @@ router.patch(
 
       const newIsBlocked = !client.user.isBlocked;
       const newStatus = newIsBlocked ? "Suspendu / Inactif" : (client.user.lastLogin ? "Actif" : "Invitation envoyée");
+      const newClientStatus = newIsBlocked ? "INACTIF" : "ACTIF";
 
       const updatedUser = await prisma.utilisateur.update({
         where: { id: client.user.id },
@@ -820,6 +1016,19 @@ router.patch(
         },
         include: { role: true },
       });
+
+      // Synchroniser le statut du client et appliquer la cascade
+      await prisma.client.update({
+        where: { id: client.id },
+        data: { status: newClientStatus },
+      });
+
+      const { cascadeBlockClient, cascadeUnblockClient } = require("../../utils/statusCascade");
+      if (newIsBlocked) {
+        await cascadeBlockClient(client.id);
+      } else {
+        await cascadeUnblockClient(client.id);
+      }
 
       await logAudit(
         req.user?.id,
@@ -831,13 +1040,76 @@ router.patch(
 
       res.json({
         success: true,
-        message: newIsBlocked ? "Compte client désactivé." : "Compte client réactivé.",
+        message: newIsBlocked ? "Compte client désactivé. Dossiers bloqués en cascade." : "Compte client réactivé. Dossiers restaurés.",
         user: updatedUser,
       });
     } catch (err) {
       console.error("Erreur toggle status:", err);
       res.status(500).json({ error: "Erreur lors du changement de statut." });
     }
+  },
+);
+
+// Route directe pour basculer le statut Actif / Inactif du client avec cascade
+router.post(
+  "/clients/:id/toggle-status",
+  requireRoles("Super-administrateur", "Responsable opérationnel"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const client = await prisma.client.findUnique({
+        where: { id },
+        include: clientInclude,
+      });
+
+      if (!client) {
+        return res.status(404).json({ error: "Client introuvable." });
+      }
+
+      const isCurrentlyActive = String(client.status || "ACTIF").toUpperCase() === "ACTIF";
+      const newStatus = isCurrentlyActive ? "INACTIF" : "ACTIF";
+
+      const updatedClient = await prisma.client.update({
+        where: { id },
+        data: { status: newStatus },
+        include: clientInclude,
+      });
+
+      const { cascadeBlockClient, cascadeUnblockClient } = require("../../utils/statusCascade");
+      if (newStatus === "INACTIF") {
+        await cascadeBlockClient(id);
+      } else {
+        await cascadeUnblockClient(id);
+      }
+
+      await logAudit(
+        req.user?.id,
+        newStatus === "INACTIF" ? "DESACTIVATION_CLIENT" : "REACTIVATION_CLIENT",
+        client.id,
+        "CLIENT",
+        `Statut du client ${client.name} passé à ${newStatus}`,
+      );
+
+      res.json({
+        success: true,
+        message: newStatus === "INACTIF"
+          ? `Le client « ${client.name} » est maintenant inactif. Tous ses dossiers sont bloqués.`
+          : `Le client « ${client.name} » a été réactivé. Ses dossiers ont été restaurés.`,
+        client: updatedClient,
+      });
+    } catch (err) {
+      console.error("Erreur toggle client status:", err);
+      res.status(500).json({ error: "Erreur lors du changement de statut du client." });
+    }
+  },
+);
+
+router.patch(
+  "/clients/:id/toggle-status",
+  requireRoles("Super-administrateur", "Responsable opérationnel"),
+  async (req, res, next) => {
+    req.method = "POST";
+    return router.handle(req, res, next);
   },
 );
 

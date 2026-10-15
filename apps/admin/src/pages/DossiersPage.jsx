@@ -20,6 +20,10 @@ import {
   Link as LinkIcon,
   Loader2,
   AlertTriangle,
+  Share2,
+  UserCheck,
+  CheckCircle2,
+  ArrowUp,
 } from "lucide-react";
 import { getSafeApiUrl, uploadFile, formatDate, getDeadlineEvaluation } from "../utils/helpers";
 import ConfirmModal from "../components/ConfirmModal";
@@ -172,6 +176,23 @@ const DossiersPage = () => {
   const [magicEmailSending, setMagicEmailSending] = useState(false);
   const [magicEmailSent, setMagicEmailSent] = useState(false);
   const [magicLinkCopied, setMagicLinkCopied] = useState(false);
+
+  // Direct Client Share & Modal Mode State
+  const [shareMode, setShareMode] = useState("DIRECT"); // "DIRECT" | "MAGIC"
+  const [directShareType, setDirectShareType] = useState("ACQUISITION"); // "ACQUISITION" (Demander des fichiers) | "LIVRAISON" (Envoyer des fichiers)
+  const [directShareFiles, setDirectShareFiles] = useState([]);
+  const [directShareStatus, setDirectShareStatus] = useState("VALIDE");
+  const [directShareNote, setDirectShareNote] = useState("");
+  const [isSubmittingDirectShare, setIsSubmittingDirectShare] = useState(false);
+  const [directShareSuccess, setDirectShareSuccess] = useState(false);
+  const directFileInputRef = useRef(null);
+
+  // Demande de documents client directe
+  const [directRequestTitle, setDirectRequestTitle] = useState("");
+  const [directRequestInstructions, setDirectRequestInstructions] = useState("");
+  const [directRequestDeadline, setDirectRequestDeadline] = useState("7");
+  const [isSubmittingDirectRequest, setIsSubmittingDirectRequest] = useState(false);
+  const [directRequestSuccess, setDirectRequestSuccess] = useState(false);
 
   useEffect(() => {
     if (createMissionModal && consultDossier) {
@@ -568,6 +589,100 @@ const DossiersPage = () => {
       );
     } finally {
       setMagicEmailSending(false);
+    }
+  };
+
+  const handleDirectShareSubmit = async () => {
+    if (!consultDossier?.id) return;
+    if (directShareFiles.length === 0) {
+      window.customAlert("Veuillez sélectionner au moins un document ou livrable à partager.");
+      return;
+    }
+
+    setIsSubmittingDirectShare(true);
+    try {
+      const token =
+        sessionStorage.getItem("adminToken") ||
+        localStorage.getItem("adminToken") ||
+        "";
+      for (const file of directShareFiles) {
+        const formData = new FormData();
+        formData.append("bucket", "ged");
+        formData.append("dossierId", consultDossier.id);
+        formData.append("name", file.name);
+        formData.append("file", file);
+        formData.append("status", directShareStatus);
+        formData.append("category", "RESTITUTION");
+        if (directShareNote.trim()) {
+          formData.append("note", directShareNote.trim());
+        }
+
+        const res = await fetch(getSafeApiUrl("/api/files/upload-and-attach"), {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || `Erreur d'upload pour le fichier ${file.name}`);
+        }
+      }
+
+      setDirectShareSuccess(true);
+      setDirectShareFiles([]);
+      setDirectShareNote("");
+      fetchDossiers();
+    } catch (err) {
+      console.error("Erreur partage direct client:", err);
+      window.customAlert(err.message || "Erreur réseau lors de la publication.");
+    } finally {
+      setIsSubmittingDirectShare(false);
+    }
+  };
+
+  const handleDirectRequestSubmit = async () => {
+    if (!consultDossier?.id) return;
+    if (!directRequestTitle.trim()) {
+      window.customAlert("Veuillez renseigner l'intitulé des pièces ou documents sollicités.");
+      return;
+    }
+
+    setIsSubmittingDirectRequest(true);
+    try {
+      const token =
+        sessionStorage.getItem("adminToken") ||
+        localStorage.getItem("adminToken") ||
+        "";
+      const res = await fetch(
+        getSafeApiUrl(`/api/crm/dossiers/${consultDossier.id}/request-client-documents`),
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            documentTitle: directRequestTitle.trim(),
+            instructions: directRequestInstructions.trim(),
+            deadlineDays: parseInt(directRequestDeadline, 10),
+          }),
+        }
+      );
+
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        setDirectRequestSuccess(true);
+        setDirectRequestTitle("");
+        setDirectRequestInstructions("");
+      } else {
+        window.customAlert(data.error || "Erreur lors de la transmission de la demande.");
+      }
+    } catch (err) {
+      console.error("Erreur demande documents client:", err);
+      window.customAlert(err.message || "Erreur réseau lors de la demande.");
+    } finally {
+      setIsSubmittingDirectRequest(false);
     }
   };
 
@@ -1458,6 +1573,19 @@ const DossiersPage = () => {
       return match ? match[1].trim() : desc.split("\n")[0];
     };
 
+    const targetClientId = consultDossier?.clientId || consultDossier?.client?.id;
+    const clientFromDb = dbClients.find((c) => c.id === targetClientId);
+    const activeConsultClient = clientFromDb || consultDossier?.client;
+    const activeConsultClientUser =
+      clientFromDb?.user ||
+      consultDossier?.client?.user ||
+      activeConsultClient?.user;
+    const isConsultClientAccountActive = Boolean(
+      activeConsultClientUser &&
+      String(activeConsultClientUser.status || "").trim().toLowerCase() === "actif" &&
+      !activeConsultClientUser.isBlocked
+    );
+
     return (
       <div className="fade-in w-full" style={{padding:"0"}}>
         {/* Header Card conforming to Screenshot 1 */}
@@ -1467,9 +1595,9 @@ const DossiersPage = () => {
           {/* Left info with folder icon */}
           <div className="flex items-center gap-4">
             <div
-              className="flex items-center justify-center" style={{width:"48px",height:"48px",borderRadius:"10px",background:"#EFF6FF",border:"1px solid #DBEAFE"}}
+              className="flex items-center justify-center" style={{width:"48px",height:"48px",borderRadius:"10px",background:"#FEF3C7",border:"1px solid #FDE68A"}}
             >
-              <Folder size={24} color="#2563EB" fill="#2563EB" />
+              <Folder size={24} color="#D97706" fill="#FBBF24" />
             </div>
             <div>
               <div className="flex items-center flex-wrap" style={{gap:"0.75rem"}}>
@@ -1500,11 +1628,21 @@ const DossiersPage = () => {
                   type="button"
                   onClick={() => {
                     setShowMagicModal(true);
+                    setShareMode(isConsultClientAccountActive ? "DIRECT" : "MAGIC");
                     setGeneratedMagicUrl("");
                     setGeneratedMagicLinkId(null);
                     setMagicFiles([]);
                     setMagicEmailSent(false);
                     setMagicLinkCopied(false);
+                    setDirectShareFiles([]);
+                    setDirectShareNote("");
+                    setDirectShareStatus("VALIDE");
+                    setDirectShareSuccess(false);
+                    setDirectShareType("ACQUISITION");
+                    setDirectRequestTitle("");
+                    setDirectRequestInstructions("");
+                    setDirectRequestDeadline("7");
+                    setDirectRequestSuccess(false);
                     const defaultEmail =
                       consultDossier?.client?.email ||
                       dbClients.find((c) => c.id === consultDossier?.clientId)?.email ||
@@ -1513,9 +1651,18 @@ const DossiersPage = () => {
                       "";
                     setMagicEmailRecipient(defaultEmail);
                   }}
-                  className="font-medium cursor-pointer flex items-center" style={{background:"#FFF",border:"1px solid #CBD5E1",color:"#334155",padding:"0.55rem 1rem",borderRadius:"8px",fontSize:"0.85rem",gap:"0.4rem"}}
+                  className="font-medium cursor-pointer flex items-center gap-1.5"
+                  style={{
+                    background: "#FFF",
+                    border: "1px solid #CBD5E1",
+                    color: "#334155",
+                    padding: "0.55rem 1rem",
+                    borderRadius: "8px",
+                    fontSize: "0.85rem",
+                  }}
                 >
-                  Générer Lien Magique
+                  <Share2 size={15} />
+                  Partage de document
                 </button>
 
                 {(isSuperAdmin || isResp || isAssigned) && (
@@ -1979,37 +2126,95 @@ const DossiersPage = () => {
           >
             <div
               className="bg-white rounded-2xl shadow-2xl p-6 sm:p-7 w-full max-h-[90vh] overflow-y-auto"
-              style={{ maxWidth: generatedMagicUrl ? "500px" : "520px" }}
+              style={{ maxWidth: generatedMagicUrl ? "500px" : "540px" }}
             >
-              {!generatedMagicUrl ? (
-                /* ── Image 3: Generator Modal ── */
-                <>
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-slate-900 m-0">
-                        Générer un lien de partage client
-                      </h3>
-                      <p className="text-sm text-slate-500 mt-1 mb-0">
-                        Dossier rattaché : {consultDossier.reference || consultDossier.id}
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setShowMagicModal(false)}
-                      className="text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full p-1.5 transition-colors cursor-pointer"
-                      title="Fermer"
-                    >
-                      <X size={20} />
-                    </button>
-                  </div>
+              {/* Entête du modal */}
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 m-0">
+                    Partage de document
+                  </h3>
+                  <p className="text-sm text-slate-500 mt-1 mb-0">
+                    Dossier : {consultDossier.reference || consultDossier.name} • Cible : {consultDossier?.client?.name || dbClients.find((c) => c.id === consultDossier?.clientId)?.name || "Client"}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowMagicModal(false)}
+                  className="text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full p-1.5 transition-colors cursor-pointer"
+                  title="Fermer"
+                >
+                  <X size={20} />
+                </button>
+              </div>
 
-                  {/* Tabs: Demander des fichiers / Envoyer des fichiers */}
-                  <div className="flex bg-slate-100 p-1 rounded-xl mb-5">
+              {/* Sélecteur des méthodes de partage (Compte client direct conditionné à un compte actif) */}
+              {!generatedMagicUrl && (
+                <>
+                  {isConsultClientAccountActive ? (
+                    <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-xl mb-5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShareMode("DIRECT");
+                          setDirectShareSuccess(false);
+                        }}
+                        className={`flex items-center justify-center gap-2 py-2 px-3 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer ${
+                          shareMode === "DIRECT"
+                            ? "bg-white text-slate-900 shadow-sm"
+                            : "text-slate-500 hover:text-slate-800"
+                        }`}
+                      >
+                        <UserCheck size={16} className={shareMode === "DIRECT" ? "text-blue-600" : ""} />
+                        Compte client direct
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShareMode("MAGIC");
+                        }}
+                        className={`flex items-center justify-center gap-2 py-2 px-3 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer ${
+                          shareMode === "MAGIC"
+                            ? "bg-white text-slate-900 shadow-sm"
+                            : "text-slate-500 hover:text-slate-800"
+                        }`}
+                      >
+                        <LinkIcon size={16} className={shareMode === "MAGIC" ? "text-amber-600" : ""} />
+                        Lien magique
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="bg-slate-100/80 p-2.5 rounded-xl mb-5 flex items-center justify-between text-xs border border-slate-200">
+                      <div className="flex items-center gap-2 font-bold text-slate-800">
+                        <LinkIcon size={16} className="text-amber-600" />
+                        <span>Partage par Lien magique</span>
+                      </div>
+                      <span className="text-slate-500 text-[11px]">
+                        {activeConsultClientUser
+                          ? "Compte client non actif (Lien magique requis)"
+                          : "Client sans compte portail (Lien magique requis)"}
+                      </span>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* ════════════════════════════════════════════════════════════════ */}
+              {/* MODE 1 : INTERACTION DIRECTE AVEC LE COMPTE CLIENT               */}
+              {/* ════════════════════════════════════════════════════════════════ */}
+              {shareMode === "DIRECT" && isConsultClientAccountActive && !generatedMagicUrl && (
+                <div>
+                  {/* Sous-onglets: Demander des fichiers / Envoyer des fichiers */}
+                  <div className="flex bg-slate-100 p-1 rounded-xl mb-4">
                     <button
                       type="button"
-                      onClick={() => setMagicType("ACQUISITION")}
+                      onClick={() => {
+                        setDirectShareType("ACQUISITION");
+                        setDirectRequestSuccess(false);
+                      }}
                       className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
-                        magicType === "ACQUISITION"
+                        directShareType === "ACQUISITION"
                           ? "bg-white text-slate-900 shadow-sm"
                           : "text-slate-500 hover:text-slate-800"
                       }`}
@@ -2018,9 +2223,12 @@ const DossiersPage = () => {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setMagicType("LIVRAISON")}
+                      onClick={() => {
+                        setDirectShareType("LIVRAISON");
+                        setDirectShareSuccess(false);
+                      }}
                       className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
-                        magicType === "LIVRAISON"
+                        directShareType === "LIVRAISON"
                           ? "bg-white text-slate-900 shadow-sm"
                           : "text-slate-500 hover:text-slate-800"
                       }`}
@@ -2029,239 +2237,578 @@ const DossiersPage = () => {
                     </button>
                   </div>
 
-                  {/* Durée de validité */}
+                  {/* Contexte & Statut du compte client */}
                   <div className="mb-4">
-                    <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
-                      DURÉE DE VALIDITÉ
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={magicExpires}
-                        onChange={(e) => setMagicExpires(e.target.value)}
-                        className="w-full appearance-none bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
-                      >
-                        <option value="7">7 jours (Recommandé)</option>
-                        <option value="1">24 heures</option>
-                        <option value="2">48 heures</option>
-                        <option value="14">14 jours</option>
-                        <option value="30">30 jours</option>
-                      </select>
-                      <ChevronDown
-                        size={18}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
-                      />
-                    </div>
-                  </div>
+                    <p className="text-xs text-slate-500 mb-2">
+                      {directShareType === "ACQUISITION"
+                        ? "Sollicitez des pièces justificatives directement sur le portail sécurisé de votre client. Une notification et un email lui seront automatiquement transmis."
+                        : "Déposez directement un livrable ou un document validé sur l'Espace Client sécurisé. Il y aura accès immédiatement dès sa connexion."}
+                    </p>
 
-                  {/* Message pour le client */}
-                  <div className="mb-4">
-                    <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
-                      MESSAGE POUR LE CLIENT (OPTIONNEL)
-                    </label>
-                    <textarea
-                      value={magicNote}
-                      onChange={(e) => setMagicNote(e.target.value)}
-                      placeholder={
-                        magicType === "ACQUISITION"
-                          ? "Ex: Merci de nous transmettre vos pièces justificatives..."
-                          : "Ex: Veuillez trouver ci-joint les documents préparés..."
-                      }
-                      rows={3}
-                      className="w-full bg-white border border-slate-300 rounded-xl p-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                    />
-                  </div>
-
-                  {/* Documents à joindre (si LIVRAISON) */}
-                  {magicType === "LIVRAISON" && (
-                    <div className="mb-5">
-                      <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
-                        DOCUMENTS À JOINDRE
-                      </label>
-                      <div
-                        onDragOver={(e) => e.preventDefault()}
-                        onDrop={(e) => {
-                          e.preventDefault();
-                          const dropped = Array.from(e.dataTransfer.files);
-                          setMagicFiles((prev) => [...prev, ...dropped]);
-                        }}
-                        onClick={() => magicFileInputRef.current?.click()}
-                        className="border-2 border-dashed border-blue-200 bg-slate-50/60 hover:bg-blue-50/30 rounded-xl p-5 text-center cursor-pointer transition-all"
-                      >
-                        <input
-                          ref={magicFileInputRef}
-                          type="file"
-                          multiple
-                          className="hidden"
-                          onChange={(e) => {
-                            const selected = Array.from(e.target.files);
-                            setMagicFiles((prev) => [...prev, ...selected]);
-                            e.target.value = "";
-                          }}
-                        />
-                        <div className="flex justify-center mb-1 text-blue-600">
-                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="12" y1="19" x2="12" y2="5" />
-                            <polyline points="5 12 12 5 19 12" />
-                          </svg>
-                        </div>
-                        <p className="text-sm font-semibold text-slate-800 m-0">
-                          Glissez vos fichiers ici <span className="text-blue-600 hover:underline">parcourir</span>
-                        </p>
-                        <p className="text-xs text-slate-400 mt-1 mb-0">
-                          PDF, PNG, DOCX jusqu'à 25 Mo
-                        </p>
+                    {(consultDossier?.client?.user?.status === "Actif" ||
+                      dbClients.find((c) => c.id === consultDossier?.clientId)?.user?.status === "Actif") ? (
+                      <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+                        <span>
+                          <strong>Compte Client Actif</strong> ({consultDossier?.client?.email || dbClients.find((c) => c.id === consultDossier?.clientId)?.email}) — Le client sera notifié en direct.
+                        </span>
                       </div>
-
-                      {magicFiles.length > 0 && (
-                        <div className="mt-2.5 space-y-1.5 max-h-36 overflow-y-auto">
-                          {magicFiles.map((f, i) => (
-                            <div
-                              key={i}
-                              className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700"
-                            >
-                              <div className="flex items-center gap-2 truncate">
-                                <FileText size={16} className="text-slate-400 shrink-0" />
-                                <span className="truncate font-medium">{f.name}</span>
-                                <span className="text-slate-400 shrink-0">
-                                  ({(f.size / 1024 / 1024).toFixed(1)} Mo)
-                                </span>
-                              </div>
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setMagicFiles((prev) => prev.filter((_, idx) => idx !== i));
-                                }}
-                                className="text-slate-400 hover:text-red-500 p-1 cursor-pointer"
-                                title="Supprimer"
-                              >
-                                <X size={14} />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Actions footer */}
-                  <div className="flex justify-end items-center gap-3 mt-6">
-                    <button
-                      type="button"
-                      onClick={() => setShowMagicModal(false)}
-                      className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-800 transition cursor-pointer"
-                    >
-                      Annuler
-                    </button>
-                    <button
-                      type="button"
-                      disabled={isGeneratingMagic || (magicType === "LIVRAISON" && magicFiles.length === 0)}
-                      onClick={handleGenerateMagicLink}
-                      className="px-5 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white text-sm font-semibold rounded-xl disabled:opacity-50 flex items-center gap-2 shadow-sm transition cursor-pointer"
-                    >
-                      {isGeneratingMagic && <Loader2 size={16} className="animate-spin" />}
-                      {isGeneratingMagic ? "Génération..." : "Générer le lien"}
-                    </button>
-                  </div>
-                </>
-              ) : (
-                /* ── Image 2: Success Modal ("Lien de partage prêt") ── */
-                <>
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-slate-900 m-0">
-                        Lien de partage prêt
-                      </h3>
-                      <p className="text-xs text-slate-500 mt-0.5 mb-0">
-                        Actif pendant {magicExpires} jours •{" "}
-                        {magicType === "LIVRAISON"
-                          ? `${magicFiles.length || 1} document${(magicFiles.length || 1) > 1 ? "s" : ""} attaché${(magicFiles.length || 1) > 1 ? "s" : ""}`
-                          : "Demande de fichiers client"}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* LIEN SÉCURISÉ GÉNÉRÉ */}
-                  <div className="mb-4">
-                    <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
-                      LIEN SÉCURISÉ GÉNÉRÉ
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        readOnly
-                        value={generatedMagicUrl}
-                        className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 truncate font-mono focus:outline-none"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          navigator.clipboard.writeText(generatedMagicUrl);
-                          setMagicLinkCopied(true);
-                          setTimeout(() => setMagicLinkCopied(false), 2000);
-                        }}
-                        className="px-4 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white text-xs font-semibold rounded-xl shrink-0 transition cursor-pointer"
-                      >
-                        {magicLinkCopied ? "Copié !" : "Copier"}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Divider OU */}
-                  <div className="relative my-4 text-center">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-slate-200"></div>
-                    </div>
-                    <span className="relative bg-white px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-widest">
-                      OU
-                    </span>
-                  </div>
-
-                  {/* TRANSMETTRE DIRECTEMENT PAR EMAIL */}
-                  <div className="mb-6">
-                    <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
-                      TRANSMETTRE DIRECTEMENT PAR EMAIL
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="email"
-                        value={magicEmailRecipient}
-                        onChange={(e) => setMagicEmailRecipient(e.target.value)}
-                        placeholder="client@entreprise.com"
-                        className="flex-1 bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      />
-                      <button
-                        type="button"
-                        disabled={magicEmailSending || !magicEmailRecipient.trim()}
-                        onClick={handleSendMagicEmail}
-                        className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shrink-0 disabled:opacity-50 transition flex items-center gap-1.5 cursor-pointer"
-                      >
-                        {magicEmailSending && <Loader2 size={14} className="animate-spin" />}
-                        {magicEmailSending ? "Envoi..." : "Envoyer"}
-                      </button>
-                    </div>
-                    {magicEmailSent && (
-                      <p className="text-xs text-emerald-600 font-medium mt-1.5 mb-0">
-                        ✅ Email transmis avec succès à {magicEmailRecipient} !
-                      </p>
+                    ) : (
+                      <div className="flex items-center gap-2 p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800">
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
+                        <span>
+                          Compte client en attente d'activation ({consultDossier?.client?.email || dbClients.find((c) => c.id === consultDossier?.clientId)?.email || "Email non renseigné"}).
+                        </span>
+                      </div>
                     )}
                   </div>
 
-                  {/* Footer */}
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => setShowMagicModal(false)}
-                      className="px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition cursor-pointer"
-                    >
-                      Fermer
-                    </button>
-                  </div>
+                  {/* ── SOUS-OPTION A : DEMANDER DES FICHIERS AU CLIENT DIRECT ── */}
+                  {directShareType === "ACQUISITION" && (
+                    <>
+                      {directRequestSuccess ? (
+                        <div className="py-6 text-center">
+                          <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3">
+                            <CheckCircle2 size={26} />
+                          </div>
+                          <h4 className="text-base font-bold text-slate-900 m-0">
+                            Demande de documents transmise !
+                          </h4>
+                          <p className="text-xs text-slate-500 mt-1 mb-5">
+                            Votre client a été notifié et peut déposer ses pièces directement depuis son Espace Client.
+                          </p>
+                          <div className="flex justify-center gap-3">
+                            <button
+                              type="button"
+                              onClick={() => setDirectRequestSuccess(false)}
+                              className="px-4 py-2 border border-slate-300 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+                            >
+                              Faire une autre demande
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setShowMagicModal(false)}
+                              className="px-5 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white text-xs font-semibold rounded-xl transition cursor-pointer"
+                            >
+                              Fermer
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="mb-4">
+                            <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                              PIÈCES OU DOCUMENTS SOLLICITÉS
+                            </label>
+                            <input
+                              type="text"
+                              value={directRequestTitle}
+                              onChange={(e) => setDirectRequestTitle(e.target.value)}
+                              placeholder="Ex: Relevés bancaires septembre, Extrait Kbis, Justificatifs..."
+                              className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+
+                          <div className="mb-4">
+                            <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                              DÉLAI DE TRANSMISSION SOUHAITÉ
+                            </label>
+                            <div className="relative">
+                              <select
+                                value={directRequestDeadline}
+                                onChange={(e) => setDirectRequestDeadline(e.target.value)}
+                                className="w-full appearance-none bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
+                              >
+                                <option value="7">7 jours (Recommandé)</option>
+                                <option value="2">48 heures</option>
+                                <option value="14">14 jours</option>
+                                <option value="30">30 jours</option>
+                              </select>
+                              <ChevronDown
+                                size={18}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="mb-4">
+                            <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                              INSTRUCTIONS OU COMMENTAIRE POUR LE CLIENT (OPTIONNEL)
+                            </label>
+                            <textarea
+                              value={directRequestInstructions}
+                              onChange={(e) => setDirectRequestInstructions(e.target.value)}
+                              placeholder="Ex: Merci de bien vouloir déposer vos pièces justificatives via le volet « Transmettre un document » de votre espace client..."
+                              rows={3}
+                              className="w-full bg-white border border-slate-300 rounded-xl p-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                            />
+                          </div>
+
+                          <div className="flex justify-end items-center gap-3 mt-6">
+                            <button
+                              type="button"
+                              onClick={() => setShowMagicModal(false)}
+                              className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-800 transition cursor-pointer"
+                            >
+                              Annuler
+                            </button>
+                            <button
+                              type="button"
+                              disabled={isSubmittingDirectRequest || !directRequestTitle.trim()}
+                              onClick={handleDirectRequestSubmit}
+                              className="px-5 py-2.5 bg-[#1e3a8a] hover:bg-[#172554] text-white text-sm font-semibold rounded-xl disabled:opacity-50 flex items-center gap-2 shadow-sm transition cursor-pointer"
+                            >
+                              {isSubmittingDirectRequest && <Loader2 size={16} className="animate-spin" />}
+                              {isSubmittingDirectRequest ? "Envoi en cours..." : "Envoyer la demande au client"}
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
+
+                  {/* ── SOUS-OPTION B : ENVOYER DES FICHIERS AU CLIENT DIRECT ── */}
+                  {directShareType === "LIVRAISON" && (
+                    <>
+                      {directShareSuccess ? (
+                        <div className="py-6 text-center">
+                          <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3">
+                            <CheckCircle2 size={26} />
+                          </div>
+                          <h4 className="text-base font-bold text-slate-900 m-0">
+                            Document publié sur l'Espace Client !
+                          </h4>
+                          <p className="text-xs text-slate-500 mt-1 mb-5">
+                            Le livrable a été déposé avec succès et rattaché au dossier du client.
+                          </p>
+                          <div className="flex justify-center gap-3">
+                            <button
+                              type="button"
+                              onClick={() => setDirectShareSuccess(false)}
+                              className="px-4 py-2 border border-slate-300 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+                            >
+                              Déposer un autre document
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setShowMagicModal(false)}
+                              className="px-5 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white text-xs font-semibold rounded-xl transition cursor-pointer"
+                            >
+                              Fermer
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          {/* Dropzone Livrables */}
+                          <div className="mb-4">
+                            <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                              LIVRABLE OU DOCUMENT À DÉPOSER
+                            </label>
+                            <div
+                              onDragOver={(e) => e.preventDefault()}
+                              onDrop={(e) => {
+                                e.preventDefault();
+                                const dropped = Array.from(e.dataTransfer.files);
+                                setDirectShareFiles((prev) => [...prev, ...dropped]);
+                              }}
+                              onClick={() => directFileInputRef.current?.click()}
+                              className="border-2 border-dashed border-blue-200 bg-slate-50/60 hover:bg-blue-50/30 rounded-xl p-5 text-center cursor-pointer transition-all"
+                            >
+                              <input
+                                ref={directFileInputRef}
+                                type="file"
+                                multiple
+                                className="hidden"
+                                onChange={(e) => {
+                                  const selected = Array.from(e.target.files);
+                                  setDirectShareFiles((prev) => [...prev, ...selected]);
+                                  e.target.value = "";
+                                }}
+                              />
+                              <div className="w-10 h-10 mx-auto rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-1.5">
+                                <ArrowUp size={20} strokeWidth={2.4} />
+                              </div>
+                              <p className="text-sm font-semibold text-slate-800 m-0">
+                                Glissez vos livrables ici <span className="text-blue-600 hover:underline">parcourir</span>
+                              </p>
+                              <p className="text-xs text-slate-400 mt-1 mb-0">
+                                PDF, Excel, Word, ZIP jusqu'à 200 Mo
+                              </p>
+                            </div>
+
+                            {directShareFiles.length > 0 && (
+                              <div className="mt-2.5 space-y-1.5 max-h-32 overflow-y-auto">
+                                {directShareFiles.map((f, i) => (
+                                  <div
+                                    key={i}
+                                    className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700"
+                                  >
+                                    <div className="flex items-center gap-2 truncate">
+                                      <FileText size={15} className="text-blue-600 shrink-0" />
+                                      <span className="truncate font-medium">{f.name}</span>
+                                      <span className="text-slate-400 shrink-0">
+                                        ({(f.size / 1024 / 1024).toFixed(1)} Mo)
+                                      </span>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setDirectShareFiles((prev) => prev.filter((_, idx) => idx !== i));
+                                      }}
+                                      className="text-slate-400 hover:text-red-500 p-1 cursor-pointer"
+                                      title="Retirer"
+                                    >
+                                      <X size={14} />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Qualification du livrable */}
+                          <div className="mb-4">
+                            <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                              QUALIFICATION DU LIVRABLE
+                            </label>
+                            <div className="grid grid-cols-2 gap-2">
+                              <button
+                                type="button"
+                                onClick={() => setDirectShareStatus("VALIDE")}
+                                className={`p-2.5 rounded-xl border text-xs font-semibold text-left transition cursor-pointer flex items-center gap-2 ${
+                                  directShareStatus === "VALIDE"
+                                    ? "border-emerald-500 bg-emerald-50 text-emerald-800 shadow-xs"
+                                    : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                                }`}
+                              >
+                                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                                ✓ Validé & Conforme
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setDirectShareStatus("A_CORRIGER")}
+                                className={`p-2.5 rounded-xl border text-xs font-semibold text-left transition cursor-pointer flex items-center gap-2 ${
+                                  directShareStatus === "A_CORRIGER"
+                                    ? "border-rose-500 bg-rose-50 text-rose-800 shadow-xs"
+                                    : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                                }`}
+                              >
+                                <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                                ⚠ À corriger / En révision
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Note pour le client */}
+                          <div className="mb-4">
+                            <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                              NOTE / COMMENTAIRE D'ACCOMPAGNEMENT
+                            </label>
+                            <textarea
+                              value={directShareNote}
+                              onChange={(e) => setDirectShareNote(e.target.value)}
+                              placeholder="Ex: Version finale validée par le pôle gestion..."
+                              rows={2}
+                              className="w-full bg-white border border-slate-300 rounded-xl p-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                            />
+                          </div>
+
+                          {/* Actions footer direct share */}
+                          <div className="flex justify-end items-center gap-3 mt-6">
+                            <button
+                              type="button"
+                              onClick={() => setShowMagicModal(false)}
+                              className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-800 transition cursor-pointer"
+                            >
+                              Annuler
+                            </button>
+                            <button
+                              type="button"
+                              disabled={isSubmittingDirectShare || directShareFiles.length === 0}
+                              onClick={handleDirectShareSubmit}
+                              className="px-5 py-2.5 bg-[#1e3a8a] hover:bg-[#172554] text-white text-sm font-semibold rounded-xl disabled:opacity-50 flex items-center gap-2 shadow-sm transition cursor-pointer"
+                            >
+                              {isSubmittingDirectShare && <Loader2 size={16} className="animate-spin" />}
+                              {isSubmittingDirectShare ? "Publication..." : "Publier sur l'Espace Client"}
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* ════════════════════════════════════════════════════════════════ */}
+              {/* MODE 2 : LIEN MAGIQUE TEMPORAIRE SÉCURISÉ                        */}
+              {/* ════════════════════════════════════════════════════════════════ */}
+              {(shareMode === "MAGIC" || !isConsultClientAccountActive || generatedMagicUrl) && (
+                <>
+                  {!generatedMagicUrl ? (
+                    <>
+                      {/* Tabs: Demander des fichiers / Envoyer des fichiers */}
+                      <div className="flex bg-slate-100 p-1 rounded-xl mb-5">
+                        <button
+                          type="button"
+                          onClick={() => setMagicType("ACQUISITION")}
+                          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+                            magicType === "ACQUISITION"
+                              ? "bg-white text-slate-900 shadow-sm"
+                              : "text-slate-500 hover:text-slate-800"
+                          }`}
+                        >
+                          Demander des fichiers
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setMagicType("LIVRAISON")}
+                          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+                            magicType === "LIVRAISON"
+                              ? "bg-white text-slate-900 shadow-sm"
+                              : "text-slate-500 hover:text-slate-800"
+                          }`}
+                        >
+                          Envoyer des fichiers
+                        </button>
+                      </div>
+
+                      {/* Durée de validité */}
+                      <div className="mb-4">
+                        <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                          DURÉE DE VALIDITÉ DU LIEN
+                        </label>
+                        <div className="relative">
+                          <select
+                            value={magicExpires}
+                            onChange={(e) => setMagicExpires(e.target.value)}
+                            className="w-full appearance-none bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
+                          >
+                            <option value="7">7 jours (Recommandé)</option>
+                            <option value="1">24 heures</option>
+                            <option value="2">48 heures</option>
+                            <option value="14">14 jours</option>
+                            <option value="30">30 jours</option>
+                          </select>
+                          <ChevronDown
+                            size={18}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Message pour le client */}
+                      <div className="mb-4">
+                        <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                          MESSAGE POUR LE DESTINATAIRE (OPTIONNEL)
+                        </label>
+                        <textarea
+                          value={magicNote}
+                          onChange={(e) => setMagicNote(e.target.value)}
+                          placeholder={
+                            magicType === "ACQUISITION"
+                              ? "Ex: Merci de nous transmettre vos pièces justificatives..."
+                              : "Ex: Veuillez trouver ci-joint les documents préparés..."
+                          }
+                          rows={3}
+                          className="w-full bg-white border border-slate-300 rounded-xl p-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                        />
+                      </div>
+
+                      {/* Documents à joindre (si LIVRAISON) */}
+                      {magicType === "LIVRAISON" && (
+                        <div className="mb-5">
+                          <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                            DOCUMENTS À JOINDRE
+                          </label>
+                          <div
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              const dropped = Array.from(e.dataTransfer.files);
+                              setMagicFiles((prev) => [...prev, ...dropped]);
+                            }}
+                            onClick={() => magicFileInputRef.current?.click()}
+                            className="border-2 border-dashed border-blue-200 bg-slate-50/60 hover:bg-blue-50/30 rounded-xl p-5 text-center cursor-pointer transition-all"
+                          >
+                            <input
+                              ref={magicFileInputRef}
+                              type="file"
+                              multiple
+                              className="hidden"
+                              onChange={(e) => {
+                                const selected = Array.from(e.target.files);
+                                setMagicFiles((prev) => [...prev, ...selected]);
+                                e.target.value = "";
+                              }}
+                            />
+                            <div className="flex justify-center mb-1 text-blue-600">
+                              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="12" y1="19" x2="12" y2="5" />
+                                <polyline points="5 12 12 5 19 12" />
+                              </svg>
+                            </div>
+                            <p className="text-sm font-semibold text-slate-800 m-0">
+                              Glissez vos fichiers ici <span className="text-blue-600 hover:underline">parcourir</span>
+                            </p>
+                            <p className="text-xs text-slate-400 mt-1 mb-0">
+                              PDF, PNG, DOCX jusqu'à 25 Mo
+                            </p>
+                          </div>
+
+                          {magicFiles.length > 0 && (
+                            <div className="mt-2.5 space-y-1.5 max-h-36 overflow-y-auto">
+                              {magicFiles.map((f, i) => (
+                                <div
+                                  key={i}
+                                  className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700"
+                                >
+                                  <div className="flex items-center gap-2 truncate">
+                                    <FileText size={16} className="text-slate-400 shrink-0" />
+                                    <span className="truncate font-medium">{f.name}</span>
+                                    <span className="text-slate-400 shrink-0">
+                                      ({(f.size / 1024 / 1024).toFixed(1)} Mo)
+                                    </span>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setMagicFiles((prev) => prev.filter((_, idx) => idx !== i));
+                                    }}
+                                    className="text-slate-400 hover:text-red-500 p-1 cursor-pointer"
+                                    title="Supprimer"
+                                  >
+                                    <X size={14} />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Actions footer */}
+                      <div className="flex justify-end items-center gap-3 mt-6">
+                        <button
+                          type="button"
+                          onClick={() => setShowMagicModal(false)}
+                          className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-800 transition cursor-pointer"
+                        >
+                          Annuler
+                        </button>
+                        <button
+                          type="button"
+                          disabled={isGeneratingMagic || (magicType === "LIVRAISON" && magicFiles.length === 0)}
+                          onClick={handleGenerateMagicLink}
+                          className="px-5 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white text-sm font-semibold rounded-xl disabled:opacity-50 flex items-center gap-2 shadow-sm transition cursor-pointer"
+                        >
+                          {isGeneratingMagic && <Loader2 size={16} className="animate-spin" />}
+                          {isGeneratingMagic ? "Génération..." : "Générer le lien magique"}
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    /* ── Écran succès Lien Magique ── */
+                    <>
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="text-base font-bold text-slate-900 m-0">
+                            Lien magique de partage prêt
+                          </h3>
+                          <p className="text-xs text-slate-500 mt-0.5 mb-0">
+                            Actif pendant {magicExpires} jours •{" "}
+                            {magicType === "LIVRAISON"
+                              ? `${magicFiles.length || 1} document${(magicFiles.length || 1) > 1 ? "s" : ""} attaché${(magicFiles.length || 1) > 1 ? "s" : ""}`
+                              : "Demande de fichiers client"}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* LIEN SÉCURISÉ GÉNÉRÉ */}
+                      <div className="mb-4">
+                        <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                          LIEN SÉCURISÉ GÉNÉRÉ
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            readOnly
+                            value={generatedMagicUrl}
+                            className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 truncate font-mono focus:outline-none"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(generatedMagicUrl);
+                              setMagicLinkCopied(true);
+                              setTimeout(() => setMagicLinkCopied(false), 2000);
+                            }}
+                            className="px-4 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white text-xs font-semibold rounded-xl shrink-0 transition cursor-pointer"
+                          >
+                            {magicLinkCopied ? "Copié !" : "Copier"}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Divider OU */}
+                      <div className="relative my-4 text-center">
+                        <div className="absolute inset-0 flex items-center">
+                          <div className="w-full border-t border-slate-200"></div>
+                        </div>
+                        <span className="relative bg-white px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-widest">
+                          OU
+                        </span>
+                      </div>
+
+                      {/* TRANSMETTRE DIRECTEMENT PAR EMAIL */}
+                      <div className="mb-6">
+                        <label className="block text-xs font-bold text-slate-600 tracking-wider uppercase mb-1.5">
+                          TRANSMETTRE DIRECTEMENT PAR EMAIL
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="email"
+                            value={magicEmailRecipient}
+                            onChange={(e) => setMagicEmailRecipient(e.target.value)}
+                            placeholder="client@entreprise.com"
+                            className="flex-1 bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          />
+                          <button
+                            type="button"
+                            disabled={magicEmailSending || !magicEmailRecipient.trim()}
+                            onClick={handleSendMagicEmail}
+                            className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shrink-0 disabled:opacity-50 transition flex items-center gap-1.5 cursor-pointer"
+                          >
+                            {magicEmailSending && <Loader2 size={14} className="animate-spin" />}
+                            {magicEmailSending ? "Envoi..." : "Envoyer"}
+                          </button>
+                        </div>
+                        {magicEmailSent && (
+                          <p className="text-xs text-emerald-600 font-medium mt-1.5 mb-0">
+                            ✅ Email transmis avec succès à {magicEmailRecipient} !
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Footer */}
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => setShowMagicModal(false)}
+                          className="px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition cursor-pointer"
+                        >
+                          Fermer
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </div>
@@ -3072,10 +3619,12 @@ const DossiersPage = () => {
                       </label>
                       {newDossierData.origin === "CLIENT" ? (
                         <SearchableDropdown
-                          options={dbClients.map((c) => ({
-                            value: c.id,
-                            label: c.name || "Client Inconnu",
-                          }))}
+                          options={dbClients
+                            .filter((c) => String(c.status || "ACTIF").toUpperCase() === "ACTIF")
+                            .map((c) => ({
+                              value: c.id,
+                              label: c.name || "Client Inconnu",
+                            }))}
                           value={newDossierData.targetId}
                           onChange={(val) =>
                             setNewDossierData({

@@ -132,8 +132,8 @@ const GedExplorer = ({
               >
                 <Folder
                   size={40}
-                  style={{ color: "#eab308" }}
-                  fill={isSelected ? "#fef08a" : "none"}
+                  color="#D97706"
+                  fill={isSelected ? "#FDE047" : "#FBBF24"}
                 />
                 <div
                   className="mt-2 font-medium" style={{fontSize:"0.75rem",wordBreak:"break-word",color:"var(--text)"}}

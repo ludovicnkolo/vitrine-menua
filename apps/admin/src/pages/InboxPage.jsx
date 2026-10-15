@@ -2592,13 +2592,15 @@ const InboxPage = ({ userRole }) => {
                           >{`${u.name} (${u.role?.name || "Sans rôle"})`}</option>
                         ))}
                       {taskDossierSection === "client" &&
-                        clients.map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.name ||
-                              `${c.firstName} ${c.lastName}` ||
-                              c.email}
-                          </option>
-                        ))}
+                        clients
+                          .filter((c) => String(c.status || "ACTIF").toUpperCase() === "ACTIF")
+                          .map((c) => (
+                            <option key={c.id} value={c.id}>
+                              {c.name ||
+                                `${c.firstName} ${c.lastName}` ||
+                                c.email}
+                            </option>
+                          ))}
                     </select>
 
                     <input

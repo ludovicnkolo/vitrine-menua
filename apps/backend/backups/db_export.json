@@ -1,10 +1,10 @@
 {
   "_metadata": {
-    "exportedAt": "2026-10-15T08:18:10.257Z",
-    "timestamp": "2026-10-15_09-18-10",
+    "exportedAt": "2026-10-15T14:32:25.858Z",
+    "timestamp": "2026-10-15_15-32-25",
     "version": "1.0",
     "format": "menua-crm-database-backup",
-    "totalRecords": 186
+    "totalRecords": 291
   },
   "roles": [
     {
@@ -14,7 +14,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-10-13T17:12:29.710Z",
-      "updatedAt": "2026-10-15T08:18:09.988Z"
+      "updatedAt": "2026-10-15T14:32:25.644Z"
     },
     {
       "id": "09b32e80-557d-4abf-bdbe-f09ca35ee6ec",
@@ -23,7 +23,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-10-13T17:12:29.716Z",
-      "updatedAt": "2026-10-15T08:18:10.012Z"
+      "updatedAt": "2026-10-15T14:32:25.651Z"
     },
     {
       "id": "e90cbe7b-4228-4f7a-aafc-42f7fc410c35",
@@ -32,7 +32,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-10-13T17:12:29.721Z",
-      "updatedAt": "2026-10-15T08:18:10.023Z"
+      "updatedAt": "2026-10-15T14:32:25.658Z"
     },
     {
       "id": "6fcc15af-847c-4037-b63f-af5d4f634485",
@@ -41,7 +41,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-10-13T17:12:29.731Z",
-      "updatedAt": "2026-10-15T08:18:10.036Z"
+      "updatedAt": "2026-10-15T14:32:25.665Z"
     },
     {
       "id": "c8cbae5d-35a8-4ab3-a42d-7154579542c5",
@@ -50,7 +50,7 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-10-13T17:12:29.736Z",
-      "updatedAt": "2026-10-15T08:18:10.054Z"
+      "updatedAt": "2026-10-15T14:32:25.671Z"
     },
     {
       "id": "4ab41b8c-5465-4fd3-8a27-cbb2c01b0394",
@@ -66,7 +66,7 @@
     {
       "id": "83796f6e-801f-481c-9e09-de0de0269c36",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$7yVV5Jz.C3aPHz0UkcmzguO72DT1LtV.bkCG.1kDCsTvqUAPHKHsG",
+      "password": "$2a$10$RFt/JjUiPz2L8NiPbnOnKOfJqT7x5Y01zsLJtIqSlTlHJ2AtBIaye",
       "name": "Rosette Fouelefack",
       "roleId": "91289dca-491d-4518-8a29-6e8b7f21f153",
       "telephone": "+33659207511",
@@ -85,9 +85,9 @@
       "resetTokenExpiry": null,
       "isBlocked": false,
       "status": "Actif",
-      "lastLogin": "2026-10-14T18:09:25.467Z",
+      "lastLogin": "2026-10-15T11:50:55.239Z",
       "createdAt": "2026-10-13T17:12:29.933Z",
-      "updatedAt": "2026-10-15T08:18:10.227Z",
+      "updatedAt": "2026-10-15T14:32:25.827Z",
       "clientId": null
     },
     {
@@ -135,14 +135,14 @@
       "emailPro": "mepigotoly@mailinator.com",
       "fonction": "Esse sequi perspicia",
       "managerId": null,
-      "resetToken": null,
-      "resetTokenExpiry": null,
+      "resetToken": "d1e63ffac7f896d5b93189f8f63275dda93c2c819a1a08b285ae10419f5fa745",
+      "resetTokenExpiry": "2026-10-17T09:02:07.556Z",
       "isBlocked": false,
-      "status": "Actif",
+      "status": "Invitation envoyée",
       "lastLogin": "2026-10-14T16:22:48.172Z",
       "createdAt": "2026-10-14T15:44:13.450Z",
-      "updatedAt": "2026-10-14T16:22:48.173Z",
-      "clientId": null
+      "updatedAt": "2026-10-15T09:02:07.557Z",
+      "clientId": "049c0685-4539-4056-87d2-bc5287245c6c"
     },
     {
       "id": "6e19b807-cc40-4ce8-84cb-bc9398146d07",
@@ -201,7 +201,7 @@
     {
       "id": "8aeacc5b-111c-4865-9894-ece9d62acbbe",
       "email": "xijenysyk@mailinator.com",
-      "password": "$2a$10$Eo/qs1JoTA0IzbbK8M7yVO54vKsVOn01N2J2iWYeTlBPcFdHlaVc6",
+      "password": "$2a$10$V6mFlZFhJfd/KXxXkWJdpuOm8fr79kNWEkTQb038dfrcgDDNUQONC",
       "name": "client-part1",
       "roleId": "4ab41b8c-5465-4fd3-8a27-cbb2c01b0394",
       "telephone": null,
@@ -222,7 +222,7 @@
       "status": "Actif",
       "lastLogin": "2026-10-14T18:09:13.956Z",
       "createdAt": "2026-10-14T18:06:08.869Z",
-      "updatedAt": "2026-10-14T18:09:13.957Z",
+      "updatedAt": "2026-10-15T13:31:27.505Z",
       "clientId": "6285d8a6-ea47-4206-a017-9a23b7bb0a8f"
     },
     {
@@ -243,14 +243,68 @@
       "emailPro": null,
       "fonction": null,
       "managerId": null,
-      "resetToken": "619cfb42b99db184909f42827868dccd2481eec8a063f0a24e71f208cd545ed6",
-      "resetTokenExpiry": "2026-10-16T18:17:51.995Z",
+      "resetToken": "09bdaba67d63baa54c48cc41b7f2204e1720d121c42bf2d2f15eb13aabadd8f1",
+      "resetTokenExpiry": "2026-10-17T08:47:29.069Z",
       "isBlocked": false,
       "status": "Invitation envoyée",
       "lastLogin": null,
       "createdAt": "2026-10-14T18:17:52.403Z",
-      "updatedAt": "2026-10-14T18:17:52.403Z",
+      "updatedAt": "2026-10-15T08:47:29.071Z",
       "clientId": "1705d2b4-3a0c-472c-be73-674c2566d58e"
+    },
+    {
+      "id": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "email": "laslasmoi01@gmail.com",
+      "password": "$2a$10$Oqhx661yG5M9j2Wr0jFBXeix9NrqRmZR2XuIq3BckrjQxLQW6u5GK",
+      "name": "Ea beatae eos labor",
+      "roleId": "4ab41b8c-5465-4fd3-8a27-cbb2c01b0394",
+      "telephone": null,
+      "lieuResidence": null,
+      "experienceCle": null,
+      "langues": null,
+      "formations": null,
+      "profile": null,
+      "idCardUrl": null,
+      "poleActivite": null,
+      "matricule": null,
+      "emailPro": null,
+      "fonction": null,
+      "managerId": null,
+      "resetToken": null,
+      "resetTokenExpiry": null,
+      "isBlocked": false,
+      "status": "Actif",
+      "lastLogin": "2026-10-15T14:08:17.422Z",
+      "createdAt": "2026-10-15T09:05:02.677Z",
+      "updatedAt": "2026-10-15T14:08:17.423Z",
+      "clientId": "c6e6d578-59b4-4b08-91c4-3e6f96716ca8"
+    },
+    {
+      "id": "0c36b20a-7339-4322-a8c0-771d70f4c634",
+      "email": "client_cascade_1792058021722@test.menua.local",
+      "password": "$2a$10$.HxdcwSmoWDCgW0/vzYJuOGIxbqfleSZkFjsB.26LcZVLPM6ZOYVq",
+      "name": "Entreprise Inactive Test",
+      "roleId": "4ab41b8c-5465-4fd3-8a27-cbb2c01b0394",
+      "telephone": null,
+      "lieuResidence": null,
+      "experienceCle": null,
+      "langues": null,
+      "formations": null,
+      "profile": null,
+      "idCardUrl": null,
+      "poleActivite": null,
+      "matricule": null,
+      "emailPro": null,
+      "fonction": null,
+      "managerId": null,
+      "resetToken": "4f99f4ca3f12325fefcafadf43496e66d436b9465bc8946bb1fd7b471f4a76a1",
+      "resetTokenExpiry": "2026-10-17T09:53:41.769Z",
+      "isBlocked": false,
+      "status": "Invitation envoyée",
+      "lastLogin": null,
+      "createdAt": "2026-10-15T09:53:41.915Z",
+      "updatedAt": "2026-10-15T09:53:41.915Z",
+      "clientId": "80a7f6a3-795f-4918-aa84-5f9d9734e844"
     }
   ],
   "polesActivite": [
@@ -329,6 +383,45 @@
       "status": "ACTIF",
       "createdAt": "2026-10-14T18:23:56.401Z",
       "updatedAt": "2026-10-14T18:23:56.401Z"
+    },
+    {
+      "id": "049c0685-4539-4056-87d2-bc5287245c6c",
+      "type": "SOCIETE",
+      "email": "bojinas@mailinator.com",
+      "name": "Provident qui magni",
+      "telephone": "+1 (325) 759-1503",
+      "contactSecondaire": "Iusto voluptas commo",
+      "secteurActivite": "Hic rem dolore volup",
+      "description": "Enim deleniti quia a",
+      "status": "ACTIF",
+      "createdAt": "2026-10-15T08:54:41.072Z",
+      "updatedAt": "2026-10-15T08:54:41.072Z"
+    },
+    {
+      "id": "c6e6d578-59b4-4b08-91c4-3e6f96716ca8",
+      "type": "SOCIETE",
+      "email": "lud@gmail.com",
+      "name": "Ipsum fugit laboris",
+      "telephone": null,
+      "contactSecondaire": null,
+      "secteurActivite": null,
+      "description": "Iure odio ad est lau",
+      "status": "ACTIF",
+      "createdAt": "2026-10-15T09:04:53.923Z",
+      "updatedAt": "2026-10-15T09:04:53.923Z"
+    },
+    {
+      "id": "80a7f6a3-795f-4918-aa84-5f9d9734e844",
+      "type": "SOCIETE",
+      "email": "client_cascade_1792058021722@test.menua.local",
+      "name": "Entreprise Inactive Test",
+      "telephone": null,
+      "contactSecondaire": null,
+      "secteurActivite": null,
+      "description": null,
+      "status": "ACTIF",
+      "createdAt": "2026-10-15T09:53:41.755Z",
+      "updatedAt": "2026-10-15T09:53:41.755Z"
     }
   ],
   "clientEntreprises": [
@@ -339,6 +432,30 @@
       "raisonSociale": "client-so1",
       "emailEntreprise": "nevyh@mailinator.com",
       "telephoneEntreprise": "+1 (128) 139-1532"
+    },
+    {
+      "id": "d4a6e41a-ce3c-433e-9799-5cacfec2ba5a",
+      "clientId": "049c0685-4539-4056-87d2-bc5287245c6c",
+      "siret": "Tempor vel nostrud o",
+      "raisonSociale": "Mollit vitae reicien",
+      "emailEntreprise": "ludovicnkolo01@gmail.com",
+      "telephoneEntreprise": "+1 (235) 149-5383"
+    },
+    {
+      "id": "38687b30-cd39-4451-ac8a-7c2f776b4a62",
+      "clientId": "c6e6d578-59b4-4b08-91c4-3e6f96716ca8",
+      "siret": "Proident veritatis",
+      "raisonSociale": "Ea beatae eos labor",
+      "emailEntreprise": "laslasmoi01@gmail.com",
+      "telephoneEntreprise": "+1 (169) 811-2148"
+    },
+    {
+      "id": "2e293a7a-201a-414c-be2f-49333725a14d",
+      "clientId": "80a7f6a3-795f-4918-aa84-5f9d9734e844",
+      "siret": null,
+      "raisonSociale": "Entreprise Inactive Test SARL",
+      "emailEntreprise": null,
+      "telephoneEntreprise": null
     }
   ],
   "formulaires": [
@@ -542,6 +659,46 @@
       "createdAt": "2026-10-14T16:09:46.763Z",
       "updatedAt": "2026-10-14T16:09:46.763Z",
       "isSystem": true
+    },
+    {
+      "origin": "CLIENT",
+      "createdById": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "id": "f7ae98ce-fb45-4103-8641-5d3156cc15a0",
+      "reference": "DOS-03",
+      "name": "dos-03_ipsum_fugit_laboris",
+      "description": "z c dk",
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "statusBeforeTrash": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": "c6e6d578-59b4-4b08-91c4-3e6f96716ca8",
+      "targetUserId": null,
+      "traitantId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "parentDossierId": null,
+      "createdAt": "2026-10-15T09:40:27.308Z",
+      "updatedAt": "2026-10-15T09:40:27.308Z",
+      "isSystem": false
+    },
+    {
+      "origin": "CLIENT",
+      "createdById": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "id": "ce8d6780-bdae-484e-86a7-4cdcb62a7711",
+      "reference": "DOS-04",
+      "name": "dos-04_dossier test inactivité",
+      "description": null,
+      "status": "NOUVEAU",
+      "previousStatus": null,
+      "statusBeforeTrash": null,
+      "priority": "NORMAL",
+      "categorie": null,
+      "clientId": null,
+      "targetUserId": null,
+      "traitantId": null,
+      "parentDossierId": null,
+      "createdAt": "2026-10-15T09:53:46.798Z",
+      "updatedAt": "2026-10-15T09:53:46.798Z",
+      "isSystem": false
     }
   ],
   "missions": [
@@ -2060,6 +2217,1040 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-10-14T20:48:18.589Z"
+    },
+    {
+      "id": "7487a59b-06be-4dda-8e9e-e147c33561f4",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "RENVOI_INVITATION_CLIENT",
+      "targetId": "1705d2b4-3a0c-472c-be73-674c2566d58e",
+      "targetType": "CLIENT",
+      "details": "Nouvelle invitation envoyée à nevyh@mailinator.com",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T08:47:29.080Z"
+    },
+    {
+      "id": "c5f78268-4a3c-4eed-b188-deb78e0bbdf0",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T08:53:49.491Z"
+    },
+    {
+      "id": "3eacbb35-e821-492a-be9d-bdd8313396ab",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "049c0685-4539-4056-87d2-bc5287245c6c",
+      "targetType": "CLIENT",
+      "details": "Client créé : Provident qui magni (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T08:54:41.104Z"
+    },
+    {
+      "id": "a629f19a-49da-4a66-923c-534d105fb58a",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "LIAISON_COMPTE_CLIENT",
+      "targetId": "049c0685-4539-4056-87d2-bc5287245c6c",
+      "targetType": "CLIENT",
+      "details": "Compte existant (ledurmarc045@gmail.com) relié au client Provident qui magni",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T08:56:17.480Z"
+    },
+    {
+      "id": "2b8003f9-1eff-4285-83cd-64b061904a96",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "RENVOI_INVITATION_CLIENT",
+      "targetId": "049c0685-4539-4056-87d2-bc5287245c6c",
+      "targetType": "CLIENT",
+      "details": "Nouvelle invitation envoyée à ledurmarc045@gmail.com",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:02:07.566Z"
+    },
+    {
+      "id": "b82b32a4-76e9-406c-84d4-b4a81a7dabb3",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "c6e6d578-59b4-4b08-91c4-3e6f96716ca8",
+      "targetType": "CLIENT",
+      "details": "Client créé : Ipsum fugit laboris (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:04:53.932Z"
+    },
+    {
+      "id": "9427bc6d-1c6c-44f3-b684-d1519700353e",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_COMPTE_CLIENT",
+      "targetId": "c6e6d578-59b4-4b08-91c4-3e6f96716ca8",
+      "targetType": "CLIENT",
+      "details": "Compte client portail créé pour Ipsum fugit laboris (laslasmoi01@gmail.com)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:05:02.686Z"
+    },
+    {
+      "id": "beb0726c-931d-46db-b65f-309940308ca0",
+      "userId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour laslasmoi01@gmail.com",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:06:11.500Z"
+    },
+    {
+      "id": "5d29bd08-3dae-4b26-b12f-b81a4187ef4c",
+      "userId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:09:21.976Z"
+    },
+    {
+      "id": "2f9202d6-459e-4b75-8552-225685efe5af",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_ROLE",
+      "targetId": "99589659-7252-41b2-92eb-64d821d6eee1",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1792055845133",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:17:25.160Z"
+    },
+    {
+      "id": "0cdb6195-c1a3-4bec-8d12-52532bf170e1",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "cf367c9f-e4e1-442a-a11e-d841da610446",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1792055845070@test.menua.local",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:17:25.246Z"
+    },
+    {
+      "id": "09d609ac-dbde-425d-93b2-dd0ffe3c9b31",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_ROLE",
+      "targetId": "5785599b-4f3e-485a-ad55-7e3ef36aec00",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1792055959709",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:19:19.736Z"
+    },
+    {
+      "id": "a584a0ba-5fc2-49be-975e-97f8c6528758",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "3086221c-a6b2-4602-ad02-e4af18f5e17b",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1792055959719@test.menua.local",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:19:19.893Z"
+    },
+    {
+      "id": "f3605c9b-9104-4e22-9310-91c779932479",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "96f211d8-937f-45d6-819c-20c894555454",
+      "targetType": "CLIENT",
+      "details": "Client créé : ACME Corporation (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:19:20.043Z"
+    },
+    {
+      "id": "10352d18-9531-47e5-9ae7-7c7fb2a1b13b",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "MODIFICATION_CLIENT",
+      "targetId": "96f211d8-937f-45d6-819c-20c894555454",
+      "targetType": "CLIENT",
+      "details": "Client modifié : ACME Corporation",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:19:20.066Z"
+    },
+    {
+      "id": "e08a27c0-ab9a-4bbe-8f4f-9b136951b8fe",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_ROLE",
+      "targetId": "15c30bf4-7ae6-4caa-9589-fd262a26c266",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1792056365500",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:26:05.540Z"
+    },
+    {
+      "id": "ff14b505-c105-4433-a12e-9b17a489bd82",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "561159d6-bc19-4409-a37c-c63ca8aa1e79",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1792056365845@test.menua.local",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:26:06.005Z"
+    },
+    {
+      "id": "5494f37d-2e13-4511-90b5-7da6ba6d369b",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "d1b0beb5-b796-48bc-97b8-575aa6e780b6",
+      "targetType": "CLIENT",
+      "details": "Client créé : ACME Corporation (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:26:06.161Z"
+    },
+    {
+      "id": "04d68f48-be29-46e3-83c2-33aaa13a7c59",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "MODIFICATION_CLIENT",
+      "targetId": "d1b0beb5-b796-48bc-97b8-575aa6e780b6",
+      "targetType": "CLIENT",
+      "details": "Client modifié : ACME Corporation",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:26:06.184Z"
+    },
+    {
+      "id": "d2598e29-0f66-4c73-b3fd-31be0c75eedb",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_DOSSIER",
+      "targetId": "f7ae98ce-fb45-4103-8641-5d3156cc15a0",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dos-03_ipsum_fugit_laboris",
+      "dossierId": "f7ae98ce-fb45-4103-8641-5d3156cc15a0",
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:40:27.313Z"
+    },
+    {
+      "id": "8e19dea2-ca7f-4c9a-a0ae-3dbd46c62921",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_LIEN_MAGIQUE",
+      "targetId": "017e4bac-b686-4392-9ccb-ad5a8945151d",
+      "targetType": "MAGIC_LINK",
+      "details": "Lien magique (ACQUISITION) généré pour le dossier",
+      "dossierId": "f7ae98ce-fb45-4103-8641-5d3156cc15a0",
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:40:49.268Z"
+    },
+    {
+      "id": "e4eeee99-5dc9-4dc4-b87c-df5102a2ff9c",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_ROLE",
+      "targetId": "109a0a09-7497-4e17-8e57-6098344d4531",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1792057655114",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:47:35.147Z"
+    },
+    {
+      "id": "54099774-2d06-4dfb-82b8-35b890c92b23",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "c6ce3ac9-7a36-4e29-a110-545a1a5e39c8",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1792057655285@test.menua.local",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:47:35.455Z"
+    },
+    {
+      "id": "0637f6a5-aea6-481f-9e4a-6b81121a88d5",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "e53d63f4-cddc-4d52-a4d4-0fbf766ed22a",
+      "targetType": "CLIENT",
+      "details": "Client créé : ACME Corporation (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:47:39.142Z"
+    },
+    {
+      "id": "4b983045-71f1-496d-ab1c-93d00c558ef6",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "MODIFICATION_CLIENT",
+      "targetId": "e53d63f4-cddc-4d52-a4d4-0fbf766ed22a",
+      "targetType": "CLIENT",
+      "details": "Client modifié : ACME Corporation",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:47:39.227Z"
+    },
+    {
+      "id": "ee397d46-0999-4a44-a487-14cd373f2c38",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_ROLE",
+      "targetId": "a7537297-22e1-40f8-bda3-526cbb163adc",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1792057917164",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:51:57.201Z"
+    },
+    {
+      "id": "0b9b3591-00db-4af6-8294-1dbab0638ca8",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "26759d60-7b6f-45df-965a-3a2a6c1499fe",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1792057917168@test.menua.local",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:51:57.448Z"
+    },
+    {
+      "id": "347e2530-30d1-4407-8807-d0d47414d974",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "0b62773d-658e-4751-a816-78a9579165ac",
+      "targetType": "CLIENT",
+      "details": "Client créé : ACME Corporation (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:52:00.896Z"
+    },
+    {
+      "id": "d0e9713b-1897-4ce5-8221-d48620dddcbf",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "MODIFICATION_CLIENT",
+      "targetId": "0b62773d-658e-4751-a816-78a9579165ac",
+      "targetType": "CLIENT",
+      "details": "Client modifié : ACME Corporation",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:52:00.935Z"
+    },
+    {
+      "id": "57393a58-9adc-4a59-b568-6f9995888896",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_DOSSIER",
+      "targetId": "ce8d6780-bdae-484e-86a7-4cdcb62a7711",
+      "targetType": "DOSSIER",
+      "details": "Dossier créé: dos-04_dossier test inactivité",
+      "dossierId": "ce8d6780-bdae-484e-86a7-4cdcb62a7711",
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:53:46.809Z"
+    },
+    {
+      "id": "a85eddce-52ed-4397-853c-3e6a8d2577e1",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "80a7f6a3-795f-4918-aa84-5f9d9734e844",
+      "targetType": "CLIENT",
+      "details": "Client créé : Entreprise Inactive Test (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:53:55.339Z"
+    },
+    {
+      "id": "2b701db1-961f-426a-aa35-7de6f7e79d0c",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "43d54762-601b-4772-9373-33d086eb0600",
+      "targetType": "CLIENT",
+      "details": "Client créé : Entreprise Inactive Test (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:57:23.611Z"
+    },
+    {
+      "id": "ee1784d7-a500-4d7b-8728-7aa7f3711208",
+      "userId": null,
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "a41426de-5d65-42fb-a8d5-36da4046bfcd",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:57:23.850Z"
+    },
+    {
+      "id": "17cbdbb1-03f8-4c38-8039-2fe09bcbe265",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "DESACTIVATION_CLIENT",
+      "targetId": "43d54762-601b-4772-9373-33d086eb0600",
+      "targetType": "CLIENT",
+      "details": "Statut du client Entreprise Inactive Test passé à INACTIF",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:57:24.098Z"
+    },
+    {
+      "id": "5fafa03c-ddd1-4d12-8bbe-6332879259dc",
+      "userId": null,
+      "action": "ECHEC_CONNEXION",
+      "targetId": "a41426de-5d65-42fb-a8d5-36da4046bfcd",
+      "targetType": "USER",
+      "details": "Tentative de connexion sur un compte bloqué : client_cascade_1792058243424@test.menua.local",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:57:24.115Z"
+    },
+    {
+      "id": "eaa0ce87-a004-4ca2-9fed-2de3a01d5c2c",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "REACTIVATION_CLIENT",
+      "targetId": "43d54762-601b-4772-9373-33d086eb0600",
+      "targetType": "CLIENT",
+      "details": "Statut du client Entreprise Inactive Test passé à ACTIF",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:57:24.186Z"
+    },
+    {
+      "id": "32592dc0-df8a-4faa-a07a-a1f3103e2995",
+      "userId": null,
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "a41426de-5d65-42fb-a8d5-36da4046bfcd",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:57:24.324Z"
+    },
+    {
+      "id": "47b05041-85b0-4785-b685-23929e11e070",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "6161d5c6-e976-4bc1-adc3-a4275683300e",
+      "targetType": "CLIENT",
+      "details": "Client créé : Entreprise Inactive Test (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:42.303Z"
+    },
+    {
+      "id": "2f4d6446-b133-4bc3-bbfa-dc9a62a499ee",
+      "userId": null,
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "d7e833c2-77bc-43bb-a5e3-f5d03af94787",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:42.523Z"
+    },
+    {
+      "id": "9e72dbb1-36e8-4c85-9edd-2f660fbb7ced",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "DESACTIVATION_CLIENT",
+      "targetId": "6161d5c6-e976-4bc1-adc3-a4275683300e",
+      "targetType": "CLIENT",
+      "details": "Statut du client Entreprise Inactive Test passé à INACTIF",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:42.648Z"
+    },
+    {
+      "id": "92ff54d4-6caf-44e8-b2e1-106a7add64b5",
+      "userId": null,
+      "action": "ECHEC_CONNEXION_CLIENT_INACTIF",
+      "targetId": "6161d5c6-e976-4bc1-adc3-a4275683300e",
+      "targetType": "CLIENT",
+      "details": "Tentative de connexion refusée : le client Entreprise Inactive Test (client_cascade_1792058322137@test.menua.local) est au statut inactif.",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:42.663Z"
+    },
+    {
+      "id": "f2dbe9c8-ff59-4316-bf38-70517561a6b8",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "REACTIVATION_CLIENT",
+      "targetId": "6161d5c6-e976-4bc1-adc3-a4275683300e",
+      "targetType": "CLIENT",
+      "details": "Statut du client Entreprise Inactive Test passé à ACTIF",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:42.716Z"
+    },
+    {
+      "id": "e2b30e14-3a32-40c4-b2c1-880f3e68d47a",
+      "userId": null,
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "d7e833c2-77bc-43bb-a5e3-f5d03af94787",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:42.828Z"
+    },
+    {
+      "id": "53f7e9ed-629e-4bba-962f-ff0eaee59e0d",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "8493896b-fc93-4191-a08f-6b7b5b2eef25",
+      "targetType": "CLIENT",
+      "details": "Client créé : Entreprise Inactive Test (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:51.810Z"
+    },
+    {
+      "id": "df6d4889-5f8e-43e0-97b1-824bf062ccd1",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_ROLE",
+      "targetId": "85d16bc7-5e9e-49b0-8309-1b10108c8c60",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1792058331778",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:51.802Z"
+    },
+    {
+      "id": "3e68e1bd-2fca-4c1e-8563-b8f7d8514cd0",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "db9cc1da-d479-4eed-ba0f-8feb0170ce4e",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1792058331692@test.menua.local",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:51.875Z"
+    },
+    {
+      "id": "b440182e-c058-4a28-989c-7ec9193773ff",
+      "userId": null,
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "a364d9e8-e85e-46fc-b1ba-79503ec02732",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:52.181Z"
+    },
+    {
+      "id": "a09c8544-9324-4a62-9465-16971a66da25",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "DESACTIVATION_CLIENT",
+      "targetId": "8493896b-fc93-4191-a08f-6b7b5b2eef25",
+      "targetType": "CLIENT",
+      "details": "Statut du client Entreprise Inactive Test passé à INACTIF",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:52.336Z"
+    },
+    {
+      "id": "a016bd33-5992-47fa-9cc3-dfd407f21830",
+      "userId": null,
+      "action": "ECHEC_CONNEXION_CLIENT_INACTIF",
+      "targetId": "8493896b-fc93-4191-a08f-6b7b5b2eef25",
+      "targetType": "CLIENT",
+      "details": "Tentative de connexion refusée : le client Entreprise Inactive Test (client_cascade_1792058331511@test.menua.local) est au statut inactif.",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:52.350Z"
+    },
+    {
+      "id": "5d35643b-8381-438d-960f-f4574992573f",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "REACTIVATION_CLIENT",
+      "targetId": "8493896b-fc93-4191-a08f-6b7b5b2eef25",
+      "targetType": "CLIENT",
+      "details": "Statut du client Entreprise Inactive Test passé à ACTIF",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:52.417Z"
+    },
+    {
+      "id": "50e4c8ec-9aac-4749-9c2c-34c228aa901b",
+      "userId": null,
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "a364d9e8-e85e-46fc-b1ba-79503ec02732",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:52.529Z"
+    },
+    {
+      "id": "9a9be43c-4ef6-4a57-bd63-6ecd978c48dd",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "16614d49-7a3a-4195-b771-095b5ad206d7",
+      "targetType": "CLIENT",
+      "details": "Client créé : ACME Corporation (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:55.718Z"
+    },
+    {
+      "id": "16cbedba-a4ee-4b4d-a7de-7594466078a9",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "MODIFICATION_CLIENT",
+      "targetId": "16614d49-7a3a-4195-b771-095b5ad206d7",
+      "targetType": "CLIENT",
+      "details": "Client modifié : ACME Corporation",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T09:58:55.773Z"
+    },
+    {
+      "id": "c3af946a-f941-4396-a954-5acd36497d63",
+      "userId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "action": "DECONNEXION",
+      "targetId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T10:54:35.952Z"
+    },
+    {
+      "id": "676be228-6607-4e40-aac5-8432711a4d3f",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "DECONNEXION",
+      "targetId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T11:05:20.291Z"
+    },
+    {
+      "id": "89e4b75d-6f32-446f-a69d-a552a703f830",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_ROLE",
+      "targetId": "944d976e-1c61-497a-8094-af1afc993391",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1792064009628",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T11:33:29.670Z"
+    },
+    {
+      "id": "665b5592-631c-4700-9bf5-54eb263c503a",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "bf8a86c0-b85e-4b8c-9b70-015e6e5eae14",
+      "targetType": "CLIENT",
+      "details": "Client créé : Entreprise Inactive Test (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T11:33:29.892Z"
+    },
+    {
+      "id": "4afd7164-7a83-41f8-afc4-9133d260e2f7",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "1426b3e7-be93-4eff-9702-ab7e86098de5",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1792064009812@test.menua.local",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T11:33:30.137Z"
+    },
+    {
+      "id": "a5acd4e0-0e97-4b90-8f92-4ee04b4e1c3f",
+      "userId": null,
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "dae418ae-eba6-4e73-acad-20b0e8e4d937",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T11:33:30.585Z"
+    },
+    {
+      "id": "e5609229-27e7-4f3f-bb04-55d6fc8ebef1",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "DESACTIVATION_CLIENT",
+      "targetId": "bf8a86c0-b85e-4b8c-9b70-015e6e5eae14",
+      "targetType": "CLIENT",
+      "details": "Statut du client Entreprise Inactive Test passé à INACTIF",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T11:33:30.716Z"
+    },
+    {
+      "id": "a84fa7a6-4b77-47a7-87af-2ef455dbb833",
+      "userId": null,
+      "action": "ECHEC_CONNEXION_CLIENT_INACTIF",
+      "targetId": "bf8a86c0-b85e-4b8c-9b70-015e6e5eae14",
+      "targetType": "CLIENT",
+      "details": "Tentative de connexion refusée : le client Entreprise Inactive Test (client_cascade_1792064009461@test.menua.local) est au statut inactif.",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T11:33:30.729Z"
+    },
+    {
+      "id": "965c3db0-2912-47e0-ac84-3fa20d815251",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "REACTIVATION_CLIENT",
+      "targetId": "bf8a86c0-b85e-4b8c-9b70-015e6e5eae14",
+      "targetType": "CLIENT",
+      "details": "Statut du client Entreprise Inactive Test passé à ACTIF",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T11:33:30.813Z"
+    },
+    {
+      "id": "71b88a87-9d8c-45ba-a194-2e66e8f6628c",
+      "userId": null,
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "dae418ae-eba6-4e73-acad-20b0e8e4d937",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T11:33:30.960Z"
+    },
+    {
+      "id": "f61ff4f8-dd35-4b6a-aab8-aed5c82568bd",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "a8dd49af-bb4e-473c-acdd-d61eb9fd4664",
+      "targetType": "CLIENT",
+      "details": "Client créé : ACME Corporation (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T11:33:34.378Z"
+    },
+    {
+      "id": "057ed784-8287-46fd-af13-3ad9ee5b82f7",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "MODIFICATION_CLIENT",
+      "targetId": "a8dd49af-bb4e-473c-acdd-d61eb9fd4664",
+      "targetType": "CLIENT",
+      "details": "Client modifié : ACME Corporation",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T11:33:34.411Z"
+    },
+    {
+      "id": "b1fabaf4-f2d1-4abb-8c42-9f655e8f355d",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T11:50:55.254Z"
+    },
+    {
+      "id": "a9ddc47a-0712-4ea2-b2f5-e8796eb45335",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "d369d63b-8cce-454d-b39d-2beacf26ca75",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1792066377268@test.menua.local",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:12:57.737Z"
+    },
+    {
+      "id": "8e13bf93-e0e7-40a6-bba2-a79d30f5c4d1",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_ROLE",
+      "targetId": "873ab593-1c0e-48ee-af79-df50cc476107",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1792066378718",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:12:58.757Z"
+    },
+    {
+      "id": "4e7c252f-8a5a-4ad4-87ab-f3f28a2b3067",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "ed027638-4920-4acb-b59d-a2814596ee09",
+      "targetType": "CLIENT",
+      "details": "Client créé : Entreprise Inactive Test (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:12:58.823Z"
+    },
+    {
+      "id": "c1576168-bdd4-4ac3-a502-9ba04f5a57a7",
+      "userId": null,
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "fad3ca30-18e5-40cc-b0ec-40d32ba06e49",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:12:59.249Z"
+    },
+    {
+      "id": "2a6e097a-dcc4-48b5-b7e1-5239d9d0b3c6",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "DESACTIVATION_CLIENT",
+      "targetId": "ed027638-4920-4acb-b59d-a2814596ee09",
+      "targetType": "CLIENT",
+      "details": "Statut du client Entreprise Inactive Test passé à INACTIF",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:12:59.506Z"
+    },
+    {
+      "id": "924a7b20-6c53-421e-a53d-eaa0df894a3f",
+      "userId": null,
+      "action": "ECHEC_CONNEXION_CLIENT_INACTIF",
+      "targetId": "ed027638-4920-4acb-b59d-a2814596ee09",
+      "targetType": "CLIENT",
+      "details": "Tentative de connexion refusée : le client Entreprise Inactive Test (client_cascade_1792066378313@test.menua.local) est au statut inactif.",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:12:59.521Z"
+    },
+    {
+      "id": "be4485ac-d3a7-4e5d-b6c8-c7896fc43f93",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "REACTIVATION_CLIENT",
+      "targetId": "ed027638-4920-4acb-b59d-a2814596ee09",
+      "targetType": "CLIENT",
+      "details": "Statut du client Entreprise Inactive Test passé à ACTIF",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:12:59.622Z"
+    },
+    {
+      "id": "c5260f57-712f-4b1a-be24-2ea911cebb6c",
+      "userId": null,
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "fad3ca30-18e5-40cc-b0ec-40d32ba06e49",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:12:59.816Z"
+    },
+    {
+      "id": "6b035285-9791-432b-98f9-a04f59871efe",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "bd5b00ad-7d0a-438c-b010-c62629739c39",
+      "targetType": "CLIENT",
+      "details": "Client créé : ACME Corporation (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:13:01.810Z"
+    },
+    {
+      "id": "e4e72305-d8b6-4d79-ae57-82d80bd41fdf",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "MODIFICATION_CLIENT",
+      "targetId": "bd5b00ad-7d0a-438c-b010-c62629739c39",
+      "targetType": "CLIENT",
+      "details": "Client modifié : ACME Corporation",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:13:01.859Z"
+    },
+    {
+      "id": "9eb274da-c0d0-4161-8ae3-7e182206b0f6",
+      "userId": null,
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "5751be04-43dd-4e96-9e21-f9c7725018e9",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour recette_1792067538858@test.menua.local",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:32:19.314Z"
+    },
+    {
+      "id": "53a6d96f-4d52-42da-9ad2-716c5749b6d6",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "ff050279-6c59-436b-98a0-bc048ca897c6",
+      "targetType": "CLIENT",
+      "details": "Client créé : Entreprise Inactive Test (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:32:19.914Z"
+    },
+    {
+      "id": "1b84d2e7-438a-4414-b3b7-42492bb372e5",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_ROLE",
+      "targetId": "f7531198-56ea-4ea7-9786-9386e71d4a11",
+      "targetType": "ROLE",
+      "details": "Rôle créé : RoleTest_1792067539896",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:32:19.932Z"
+    },
+    {
+      "id": "b6c613fb-c6ec-4f31-b11f-dbd5f817e1a5",
+      "userId": null,
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "33384a88-e45e-4797-82ef-e36b1980752f",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:32:20.295Z"
+    },
+    {
+      "id": "7fac0aad-eb9a-4258-843f-12a212f0c3e7",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "DESACTIVATION_CLIENT",
+      "targetId": "ff050279-6c59-436b-98a0-bc048ca897c6",
+      "targetType": "CLIENT",
+      "details": "Statut du client Entreprise Inactive Test passé à INACTIF",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:32:20.540Z"
+    },
+    {
+      "id": "355ee6cb-f178-4e82-8d08-59e243b2b0fd",
+      "userId": null,
+      "action": "ECHEC_CONNEXION_CLIENT_INACTIF",
+      "targetId": "ff050279-6c59-436b-98a0-bc048ca897c6",
+      "targetType": "CLIENT",
+      "details": "Tentative de connexion refusée : le client Entreprise Inactive Test (client_cascade_1792067539657@test.menua.local) est au statut inactif.",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:32:20.560Z"
+    },
+    {
+      "id": "99ca7108-4ac1-46e4-9148-771019b1061d",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "REACTIVATION_CLIENT",
+      "targetId": "ff050279-6c59-436b-98a0-bc048ca897c6",
+      "targetType": "CLIENT",
+      "details": "Statut du client Entreprise Inactive Test passé à ACTIF",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:32:20.712Z"
+    },
+    {
+      "id": "6084119e-84cb-43b5-b3a1-053459bec07a",
+      "userId": null,
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "33384a88-e45e-4797-82ef-e36b1980752f",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:32:20.900Z"
+    },
+    {
+      "id": "f555485a-2def-4dbb-add6-3ca08d7c2512",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CREATION_CLIENT",
+      "targetId": "65f8ffaa-6f87-413f-937c-8646c2b6bc8b",
+      "targetType": "CLIENT",
+      "details": "Client créé : ACME Corporation (SOCIETE)",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:32:23.403Z"
+    },
+    {
+      "id": "4ebcf457-459e-4c09-93ae-bae6369077d8",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "MODIFICATION_CLIENT",
+      "targetId": "65f8ffaa-6f87-413f-937c-8646c2b6bc8b",
+      "targetType": "CLIENT",
+      "details": "Client modifié : ACME Corporation",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:32:23.460Z"
+    },
+    {
+      "id": "accd1412-23ed-4152-85b5-8b52d38ef11b",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "RENVOI_INVITATION_CLIENT",
+      "targetId": "c6e6d578-59b4-4b08-91c4-3e6f96716ca8",
+      "targetType": "CLIENT",
+      "details": "Nouvelle invitation envoyée à laslasmoi01@gmail.com",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:35:21.819Z"
+    },
+    {
+      "id": "68fb326b-c587-4e42-92de-e9290d878c11",
+      "userId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:38:57.856Z"
+    },
+    {
+      "id": "4a7e0a34-31e8-45a7-9014-abc5846f1fee",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "RENVOI_INVITATION_CLIENT",
+      "targetId": "c6e6d578-59b4-4b08-91c4-3e6f96716ca8",
+      "targetType": "CLIENT",
+      "details": "Nouvelle invitation envoyée à laslasmoi01@gmail.com",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T12:46:43.598Z"
+    },
+    {
+      "id": "de6871dc-72ae-47ad-b894-d64b37f29fdf",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "DECONNEXION",
+      "targetId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T13:28:01.369Z"
+    },
+    {
+      "id": "68f63a69-a612-4f64-983e-6b4af52e0a14",
+      "userId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "action": "DECONNEXION",
+      "targetId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T13:47:16.965Z"
+    },
+    {
+      "id": "7fe12406-6001-4bf4-b179-bea34b23e96b",
+      "userId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "action": "ACTIVATION_COMPTE",
+      "targetId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "targetType": "USER",
+      "details": "Compte activé et mot de passe initialisé pour laslasmoi01@gmail.com",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T14:08:06.770Z"
+    },
+    {
+      "id": "72af561e-cbb8-47d2-a19a-6236e0009558",
+      "userId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "d35d1a82-1106-45b2-ae4b-bf428cf3f10b",
+      "targetType": "USER",
+      "details": "Connexion au CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T14:08:17.430Z"
+    },
+    {
+      "id": "626c7371-2bfd-4a12-9325-bde8233b62ae",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "DECONNEXION",
+      "targetId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "targetType": "USER",
+      "details": "Déconnexion manuelle du CRM",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-15T14:25:43.113Z"
     }
   ],
   "messagePersonnels": [
@@ -2310,7 +3501,20 @@
       "publishedAt": "2026-10-14T01:21:09.421Z"
     }
   ],
-  "liensMagiques": [],
+  "liensMagiques": [
+    {
+      "id": "017e4bac-b686-4392-9ccb-ad5a8945151d",
+      "token": "d4360d5a-baaa-424d-859f-ae0820820dc5",
+      "type": "ACQUISITION",
+      "dossierId": "f7ae98ce-fb45-4103-8641-5d3156cc15a0",
+      "createdBy": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "expiresAt": "2026-10-16T09:40:49.254Z",
+      "isUsed": false,
+      "note": "dm mdkwjr",
+      "attachedDocumentIds": null,
+      "createdAt": "2026-10-15T09:40:49.256Z"
+    }
+  ],
   "notifications": [
     {
       "id": "e59472e9-8e17-48b9-a0bd-24a08f70c048",

@@ -384,18 +384,50 @@ router.post("/upload/:token", upload.array("files", 10), async (req, res) => {
           name: file.originalname,
           url: s3Key,
           uploadedById: magicLink.createdBy,
+          category: "DEPOT_CLIENT",
+          status: "EN_ATTENTE",
         },
       });
       uploadedDocs.push(doc);
     }
 
+    // ── 1. Expirer le lien magique immédiatement après le dépôt réussi ──
+    await prisma.lienMagique.update({
+      where: { id: magicLink.id },
+      data: { expiresAt: new Date(Date.now() - 1000) },
+    });
+
+    // ── 2. Clôturer les demandes de documents en cours sur ce dossier ──
+    await prisma.document.updateMany({
+      where: {
+        dossierId: magicLink.dossierId,
+        category: "DEMANDE",
+        status: "ACTION_REQUISE",
+      },
+      data: { status: "TRAITE" },
+    });
+
     if (uploadedDocs.length > 0) {
+      const dossier = await prisma.dossier.findUnique({
+        where: { id: magicLink.dossierId },
+        include: { client: true },
+      });
+
+      const clientName =
+        dossier?.client?.raisonSociale ||
+        dossier?.client?.name ||
+        "Client";
+      const dossierName =
+        dossier?.name || dossier?.reference || "Dossier";
+      const fileNames = uploadedDocs.map((d) => d.name).join(", ");
+
+      // Audit trail détaillé
       await logAudit(
         magicLink.createdBy,
         "DEPOT_DOCUMENT_MAGIQUE",
         uploadedDocs[0].id,
         "DOCUMENT",
-        `${uploadedDocs.length} document(s) déposé(s) via Lien Magique (${uploadedDocs.map((d) => d.name).join(", ")})`,
+        `Dépôt du/des fichier(s) « ${fileNames} » par le client « ${clientName} » dans le dossier « ${dossierName} » (${dossier?.reference || ""}) — Lien magique clôturé`,
         magicLink.dossierId,
       );
 
@@ -405,10 +437,6 @@ router.post("/upload/:token", upload.array("files", 10), async (req, res) => {
           where: { role: { name: "Super-administrateur" } },
           select: { id: true },
         });
-        const dossier = await prisma.dossier.findUnique({
-          where: { id: magicLink.dossierId },
-          select: { traitantId: true },
-        });
 
         const notifyIds = new Set();
         superAdmins.forEach((sa) => notifyIds.add(sa.id));
@@ -416,11 +444,22 @@ router.post("/upload/:token", upload.array("files", 10), async (req, res) => {
 
         if (notifyIds.size > 0) {
           await notify(Array.from(notifyIds), {
-            type: "DOCUMENT_AJOUTE",
-            title: "Nouveau dépôt client",
-            message: `Le client a déposé ${uploadedDocs.length} document(s) via son lien sécurisé.`,
+            type: "DEPOT_DOCUMENT_CLIENT",
+            title: "Nouveau document déposé par un client",
+            message: `Le client « ${clientName} » a transmis « ${fileNames} » dans le dossier « ${dossierName} » (${dossier?.reference || ""}) via son lien sécurisé.`,
             targetId: magicLink.dossierId,
             targetType: "DOSSIER",
+          });
+        }
+
+        const io = req.app?.get("io");
+        if (io) {
+          io.emit("entity_updated_global", {
+            entity: "DOCUMENT",
+            action: "CLIENT_UPLOAD",
+            dossierId: magicLink.dossierId,
+            clientName,
+            fileNames,
           });
         }
       } catch (notifErr) {

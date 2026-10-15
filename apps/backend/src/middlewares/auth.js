@@ -77,6 +77,16 @@ const authenticateJWT = (req, res, next) => {
               action: "FORCE_LOGOUT",
             });
         }
+
+        // Si le mot de passe a été supprimé par l'administrateur (réinitialisation en attente)
+        if (dbUser.password && dbUser.password.startsWith("RESET_PENDING")) {
+          return res
+            .status(401)
+            .json({
+              error: "Votre mot de passe a été réinitialisé par un administrateur. Session interrompue.",
+              action: "FORCE_LOGOUT",
+            });
+        }
         
         // Validation de session: si le mot de passe a changé, la signature change
         if (user.sessionSig !== undefined) {

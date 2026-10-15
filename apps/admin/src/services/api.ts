@@ -43,8 +43,22 @@ let isRedirecting = false;
 export function redirectToLogin(reason = "expired") {
   if (typeof window === "undefined" || isRedirecting) return;
   isRedirecting = true;
+  const isClientPath = window.location.pathname.startsWith("/client");
+  const storedUser = localStorage.getItem("adminUser") || sessionStorage.getItem("adminUser");
+  let isClientUser = false;
+  try {
+    if (storedUser) {
+      const u = JSON.parse(storedUser);
+      isClientUser = u.role === "Client" || !!u.clientId;
+    }
+  } catch {}
+
   clearAuthSession();
-  window.location.href = `/?logout=${reason}`;
+  if (isClientPath || isClientUser) {
+    window.location.href = `/client/login?logout=${reason}`;
+  } else {
+    window.location.href = `/login?logout=${reason}`;
+  }
 }
 
 let interceptorInstalled = false;
@@ -53,7 +67,7 @@ let interceptorInstalled = false;
  * Configure global fetch interceptor to inject credentials and handle 401/403.
  * Should be called once at application startup.
  */
-export function setupFetchInterceptor(onSessionExpired?: () => void) {
+export function setupFetchInterceptor(onSessionExpired?: (reason?: string) => void) {
   if (typeof window === "undefined" || interceptorInstalled) return;
   interceptorInstalled = true;
 
@@ -95,24 +109,26 @@ export function setupFetchInterceptor(onSessionExpired?: () => void) {
       // Si 401 (token manquant, invalide ou session expirée) ou 403 avec ordre de déconnexion
       if ((response.status === 401 || response.status === 403) && !isPublicAuthRoute) {
         let shouldLogout = response.status === 401;
-        if (!shouldLogout) {
-          try {
-            const clone = response.clone();
-            const data = await clone.json();
-            if (data?.action === "FORCE_LOGOUT" || data?.error?.toLowerCase().includes("bloqué")) {
-              shouldLogout = true;
-            }
-          } catch {
-            // Ignorer l'erreur de parsing JSON
+        let logoutReason = "expired";
+        try {
+          const clone = response.clone();
+          const data = await clone.json();
+          if (data?.action === "FORCE_LOGOUT" || data?.error?.toLowerCase().includes("bloqué")) {
+            shouldLogout = true;
           }
+          if (data?.error?.toLowerCase().includes("réinitialisé") || data?.error?.toLowerCase().includes("reinitialise")) {
+            logoutReason = "reset_by_admin";
+          }
+        } catch {
+          // Ignorer l'erreur de parsing JSON
         }
 
         if (shouldLogout) {
           console.warn("[AUTH] Session expirée ou non autorisée. Déconnexion immédiate...");
           if (onSessionExpired) {
-            onSessionExpired();
+            onSessionExpired(logoutReason);
           } else {
-            redirectToLogin("expired");
+            redirectToLogin(logoutReason);
           }
         }
       }

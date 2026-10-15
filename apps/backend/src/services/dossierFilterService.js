@@ -68,6 +68,10 @@ function buildDossierAccessFilter(user, options = {}) {
     { createdById: userId },
   ];
 
+  if (user?.clientId) {
+    conditions.push({ clientId: user.clientId });
+  }
+
   // Exception Relecteur : visibilité ascendante de contrôle qualité si assigné en relecture
   if (isUserRelecteur) {
     conditions.push({

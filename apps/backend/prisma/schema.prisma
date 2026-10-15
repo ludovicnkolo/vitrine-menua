@@ -318,6 +318,11 @@ model Document {
   missionId String?
   mission   Mission? @relation(fields: [missionId], references: [id], onDelete: Cascade)
 
+  status    String?  @default("VALIDE")
+  note      String?
+  fileSize  String?
+  category  String?  @default("RESTITUTION")
+
   createdAt DateTime @default(now())
   isDeleted Boolean  @default(false)
 }

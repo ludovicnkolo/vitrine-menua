@@ -11,10 +11,10 @@ const CONTEXT_CONFIG = {
   activation: {
     client: {
       badge: "Espace Client Sécurisé",
-      badgeClass: "bg-amber-50 text-amber-800 border-amber-200",
-      accentColor: "#c99c5c",
+      badgeClass: "bg-blue-50 text-blue-800 border-blue-200",
+      accentColor: "#2563eb",
       icon: <Building2 size={24} className="text-white" />,
-      iconBg: "linear-gradient(135deg, #c99c5c 0%, #b8863d 100%)",
+      iconBg: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
       title: "Activez votre Espace Client",
       subtitle: "Bienvenue sur votre portail client MENUA CONSULTING. Définissez un mot de passe personnel pour accéder à vos documents, dossiers et livrables en toute confidentialité.",
       btnLabel: "Activer mon espace client",
@@ -39,10 +39,10 @@ const CONTEXT_CONFIG = {
   reset: {
     client: {
       badge: "Espace Client — Réinitialisation",
-      badgeClass: "bg-amber-50 text-amber-800 border-amber-200",
-      accentColor: "#c99c5c",
+      badgeClass: "bg-blue-50 text-blue-800 border-blue-200",
+      accentColor: "#2563eb",
       icon: <ShieldCheck size={24} className="text-white" />,
-      iconBg: "linear-gradient(135deg, #c99c5c 0%, #b8863d 100%)",
+      iconBg: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
       title: "Réinitialisez votre mot de passe",
       subtitle: "Définissez un nouveau mot de passe sécurisé pour retrouver l'accès à votre espace client MENUA CONSULTING.",
       btnLabel: "Enregistrer mon nouveau mot de passe",
@@ -129,10 +129,11 @@ const SetupPasswordPage = () => {
     const isClient = tokenContext?.isClient;
     const isReset = tokenContext?.context === "reset";
     const emailParam = encodeURIComponent(tokenContext?.userEmail || "");
-    const portal = isClient ? "client" : "team";
     const statusParam = isReset ? "reset=true" : "activated=true";
 
-    const targetUrl = `/?portal=${portal}&${statusParam}&email=${emailParam}`;
+    const targetUrl = isClient
+      ? `/client/login?${statusParam}&email=${emailParam}`
+      : `/login?${statusParam}&email=${emailParam}`;
     const timer = setTimeout(() => navigate(targetUrl), 2600);
     return () => clearTimeout(timer);
   }, [success, tokenContext, navigate]);
@@ -229,10 +230,10 @@ const SetupPasswordPage = () => {
           </div>
 
           <button
-            onClick={() => navigate("/")}
-            className="w-full py-2.5 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 transition"
+            onClick={() => navigate(tokenContext?.isClient ? "/client/login" : "/login")}
+            className="w-full py-2.5 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 transition cursor-pointer"
           >
-            Retourner à l'accueil
+            {tokenContext?.isClient ? "Retourner à la connexion Client" : "Retourner à la connexion Collaborateur"}
           </button>
         </div>
       </div>

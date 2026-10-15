@@ -22,6 +22,7 @@ const {
 } = require("../../services/dossierFilterService");
 const { transporter } = require("../../utils/mailer");
 const { normalizeStatus } = require("../../utils/statusRules");
+const { ensureClientSharingFolders } = require("../../services/sharingFolderService");
 const emitEntityUpdate = (req, entityType, entityId, action, payload = {}) => {
   const io = req.app.get('io');
   if (io) {
@@ -31,6 +32,8 @@ const emitEntityUpdate = (req, entityType, entityId, action, payload = {}) => {
 };
 
 const { logAudit } = require("../../utils/audit");
+const { notify } = require("../../utils/notify");
+const { getAdminUrl } = require("../../utils/urlHelper");
 
 const imapConfig = {
   imap: {
@@ -73,17 +76,31 @@ const resolveCreatorId = async (req) => {
 };
 
 const generateReference = async (model, prefix) => {
-  const lastRecord = await prisma[model].findFirst({
-    orderBy: { createdAt: "desc" },
+  const records = await prisma[model].findMany({
+    where: { reference: { startsWith: `${prefix}-` } },
     select: { reference: true },
   });
-  let nextNum = 1;
-  if (lastRecord && lastRecord.reference) {
-    const regex = new RegExp(`${prefix}-(\\d+)`);
-    const match = lastRecord.reference.match(regex);
-    if (match) nextNum = Number.parseInt(match[1], 10) + 1;
+
+  let maxNum = 0;
+  const regex = new RegExp(`^${prefix}-(\\d+)$`);
+  for (const r of records) {
+    if (!r.reference) continue;
+    const match = r.reference.match(regex);
+    if (match) {
+      const num = parseInt(match[1], 10);
+      if (!isNaN(num) && num > maxNum) maxNum = num;
+    }
   }
-  return `${prefix}-${String(nextNum).padStart(2, "0")}`;
+
+  let nextNum = maxNum + 1;
+  let candidate = `${prefix}-${String(nextNum).padStart(2, "0")}`;
+
+  while (await prisma[model].findUnique({ where: { reference: candidate } })) {
+    nextNum++;
+    candidate = `${prefix}-${String(nextNum).padStart(2, "0")}`;
+  }
+
+  return candidate;
 };
 
 const generateSubDossierReference = async (parentDossierId) => {
@@ -327,7 +344,7 @@ router.get("/dossiers", async (req, res) => {
           where: tachesWhere,
           include: { assignedTo: true },
         },
-        client: true,
+        client: { include: { user: true } },
         createdBy: { include: { role: true } },
         documents: {
           where: { isDeleted: false },
@@ -528,6 +545,39 @@ router.post("/dossiers", async (req, res) => {
       }
     }
 
+    // Vérification : impossible de créer un dossier pour un client inactif
+    if (req.body.clientId) {
+      const client = await prisma.client.findUnique({
+        where: { id: req.body.clientId },
+        select: { id: true, name: true, status: true },
+      });
+      if (!client) {
+        return res.status(404).json({ error: "Client introuvable." });
+      }
+      const clientStatus = String(client.status || "").trim().toUpperCase();
+      if (clientStatus === "INACTIF" || clientStatus === "BLOQUE") {
+        return res.status(400).json({
+          error: `Impossible de créer un dossier : le client « ${client.name} » est actuellement au statut inactif.`,
+        });
+      }
+    }
+
+    // Si c'est un sous-dossier, vérifier si le dossier parent est rattaché à un client inactif
+    if (req.body.parentDossierId) {
+      const parentDossier = await prisma.dossier.findUnique({
+        where: { id: req.body.parentDossierId },
+        include: { client: true },
+      });
+      if (parentDossier?.client) {
+        const clientStatus = String(parentDossier.client.status || "").trim().toUpperCase();
+        if (clientStatus === "INACTIF" || clientStatus === "BLOQUE") {
+          return res.status(400).json({
+            error: `Impossible de créer un sous-dossier : le client « ${parentDossier.client.name} » est inactif.`,
+          });
+        }
+      }
+    }
+
     // ── Vérification d'unicité du nom supprimée à la demande ─────────────────────
     const parentId = req.body.parentDossierId || null;
 
@@ -553,7 +603,12 @@ router.post("/dossiers", async (req, res) => {
         },
       });
 
-      // (La boucle de sous-dossiers par défaut a été supprimée à la demande de l'utilisateur)
+      // Si le dossier est rattaché à un client, créer automatiquement l'arborescence :
+      // Partage documents > Sortant & Entrant
+      if (req.body.clientId && !isSubFolder) {
+        await ensureClientSharingFolders(created.id, tx);
+      }
+
       return created;
     });
 
@@ -571,8 +626,8 @@ router.post("/dossiers", async (req, res) => {
     emitEntityUpdate(req, 'DOSSIER', dossier.id, 'CREATED');
     res.status(201).json(dossier);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Erreur lors de la création du dossier." });
+    console.error("Erreur POST /dossiers:", error);
+    res.status(500).json({ error: error.message || "Erreur lors de la création du dossier." });
   }
 });
 
@@ -797,6 +852,12 @@ router.patch("/dossiers/:id", async (req, res) => {
     } else if (currentDossier.status === "EN_ATTENTE") {
       const { cascadeResumeDossier } = require("../../utils/statusCascade");
       await cascadeResumeDossier(dossier.id);
+    } else if (updateData.status === "BLOQUE") {
+      const { cascadeBlockDossier } = require("../../utils/statusCascade");
+      await cascadeBlockDossier(dossier.id);
+    } else if (currentDossier.status === "BLOQUE") {
+      const { cascadeUnblockDossier } = require("../../utils/statusCascade");
+      await cascadeUnblockDossier(dossier.id);
     }
 
     await logAudit(
@@ -1090,6 +1151,144 @@ router.get("/dossiers/:id/tree", async (req, res) => {
   }
 });
 
-// --- TÂCHES ---
+// ─── DEMANDE DE DOCUMENTS AU CLIENT (ESPACE CLIENT DIRECT) ───────────────────
+router.post(
+  "/dossiers/:id/request-client-documents",
+  authenticateJWT,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { documentTitle, instructions, deadlineDays = 7 } = req.body;
+
+      if (!documentTitle || !documentTitle.trim()) {
+        return res
+          .status(400)
+          .json({ error: "L'intitulé des documents sollicités est requis." });
+      }
+
+      const dossier = await prisma.dossier.findUnique({
+        where: { id },
+        include: {
+          client: {
+            include: { user: true },
+          },
+        },
+      });
+
+      if (!dossier) {
+        return res.status(404).json({ error: "Dossier introuvable." });
+      }
+
+      const clientUser = dossier.client?.user;
+      const clientEmail = dossier.client?.email || clientUser?.email;
+
+      // S'assurer de l'existence de l'arborescence Partage documents > Sortant & Entrant
+      const folders = await ensureClientSharingFolders(dossier.id);
+
+      // Enregistrer la demande persistante dans le dossier (visible dans Action Requise côté client)
+      await prisma.document.create({
+        data: {
+          name: documentTitle.trim(),
+          url: "demande://action-requise",
+          uploadedById: req.user.id,
+          status: "ACTION_REQUISE",
+          category: "DEMANDE",
+          note: instructions?.trim() || null,
+          dossierId: folders?.entrantFolder?.id || dossier.id,
+          fileSize: "En attente",
+        },
+      });
+
+      // 1. Notification in-app si compte utilisateur client existant
+      let targetUser = clientUser;
+      if (!targetUser && dossier.clientId) {
+        targetUser = await prisma.utilisateur.findFirst({
+          where: { clientId: dossier.clientId },
+        });
+      }
+      if (!targetUser && clientEmail) {
+        targetUser = await prisma.utilisateur.findFirst({
+          where: { email: clientEmail },
+        });
+      }
+
+      if (targetUser) {
+        await notify(targetUser.id, {
+          type: "DEMANDE_DOCUMENT",
+          title: `Demande de document : ${documentTitle.trim()}`,
+          message:
+            instructions?.trim() ||
+            `Votre conseiller MENUA CONSULTING a sollicité des pièces justificatives sur votre dossier ${dossier.reference || dossier.name}.`,
+          targetId: dossier.id,
+          targetType: "DOSSIER",
+        });
+
+        const io = req.app?.get("io");
+        if (io) {
+          io.emit("entity_updated_global", {
+            entity: "DOCUMENT_DEMAND",
+            action: "CREATED",
+            userId: targetUser.id,
+            dossierId: dossier.id,
+          });
+        }
+      }
+
+      // 2. Notification par email
+      if (clientEmail) {
+        try {
+          const clientName = dossier.client?.name || "Client";
+          const portalUrl = getAdminUrl(req);
+          await transporter.sendMail({
+            from: process.env.SMTP_FROM || "contact@menuaconsulting.com",
+            to: clientEmail,
+            subject: `Demande de pièces justificatives — Dossier ${dossier.reference || dossier.name} — MENUA CONSULTING`,
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
+                <h2 style="color: #141824; margin-top: 0;">MENUA CONSULTING</h2>
+                <p style="color: #64748b; font-size: 13px; text-transform: uppercase; font-weight: bold;">Espace Client Sécurisé</p>
+                <p>Bonjour <strong>${clientName}</strong>,</p>
+                <p>Votre conseiller a formulé une demande de pièces justificatives pour le dossier <strong>${dossier.reference || dossier.name}</strong> :</p>
+                <div style="background-color: #f8fafc; border-left: 4px solid #2563eb; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                  <p style="margin: 0; font-weight: bold; color: #1e293b;">${documentTitle.trim()}</p>
+                  ${instructions?.trim() ? `<p style="margin: 8px 0 0 0; color: #475569; font-size: 14px; font-style: italic;">« ${instructions.trim()} »</p>` : ""}
+                  <p style="margin: 8px 0 0 0; color: #64748b; font-size: 12px;">Délai souhaité : sous ${deadlineDays} jours</p>
+                </div>
+                <p>Vous pouvez téléverser ces pièces directement dans le volet <strong>« Transmettre un document à MENUA »</strong> de votre portail sécurisé :</p>
+                <div style="text-align: center; margin: 25px 0;">
+                  <a href="${portalUrl}/client/login" style="display:inline-block;padding:12px 28px;background:#c99c5c;color:#ffffff;text-decoration:none;border-radius:6px;font-weight:bold;font-size:14px;">
+                    Accéder à mon Espace Client
+                  </a>
+                </div>
+                <p style="color: #64748b; font-size: 12px;">Tous vos envois et réceptions sont tracés et chiffrés.</p>
+              </div>
+            `,
+          });
+        } catch (mailErr) {
+          console.error("Erreur envoi email demande document client:", mailErr);
+        }
+      }
+
+      await logAudit(
+        req.user?.id,
+        "DEMANDE_DOCUMENT_CLIENT",
+        dossier.id,
+        "DOSSIER",
+        `Demande de documents (« ${documentTitle.trim()} ») transmise au client ${dossier.client?.name || "Client"}`,
+        dossier.id,
+      );
+
+      res.json({
+        success: true,
+        message: "Demande de documents transmise avec succès au client.",
+      });
+    } catch (err) {
+      console.error("Erreur demande documents client:", err);
+      res
+        .status(500)
+        .json({ error: "Erreur lors de la transmission de la demande." });
+    }
+  },
+);
 
 module.exports = router;

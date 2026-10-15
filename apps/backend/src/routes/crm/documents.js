@@ -417,7 +417,7 @@ router.delete("/documents/:id/purge", async (req, res) => {
 // Route de mise à jour du nom uniquement (sans nouveau fichier)
 router.patch("/documents/:id", async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, status, note } = req.body;
     const doc = await prisma.document.findUnique({
       where: { id: req.params.id },
     });
@@ -430,7 +430,7 @@ router.patch("/documents/:id", async (req, res) => {
     let newS3Key = doc.url; // par défaut : la clé existante ne change pas
 
     // Si le nom change, renommer également l'objet dans S3
-    if (name && name !== doc.name && doc.url) {
+    if (name && name !== doc.name && doc.url && !doc.url.startsWith("demande://")) {
       try {
         // Construire la nouvelle clé S3 en conservant le bucket/préfixe :
         // ex. "ged/1728230000000-abc123-ancien_nom.pdf" → "ged/1728230000000-abc123-nouveau_nom.pdf"
@@ -460,17 +460,23 @@ router.patch("/documents/:id", async (req, res) => {
       where: { id: req.params.id },
       data: {
         ...(name && { name }),
+        ...(status && { status }),
+        ...(note !== undefined && { note }),
         // Mettre à jour la clé S3 si elle a changé
         ...(newS3Key !== doc.url && { url: newS3Key }),
       },
     });
 
+    const actionDesc = status
+      ? `Statut document modifié: ${doc.status} → ${status}${note ? ` (Note: ${note})` : ""}`
+      : `Document renommé: ${doc.name} → ${name}`;
+
     await logAudit(
       req.user?.id,
-      "RENOMMAGE_DOCUMENT",
+      status ? "STATUT_DOCUMENT" : "RENOMMAGE_DOCUMENT",
       doc.id,
       "DOCUMENT",
-      `Document renommé: ${doc.name} → ${name}${newS3Key !== doc.url ? ` (clé S3 mise à jour)` : ""}`,
+      actionDesc,
       doc.dossierId || null,
     );
     res.json(updated);

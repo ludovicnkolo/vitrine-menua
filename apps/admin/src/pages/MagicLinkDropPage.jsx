@@ -347,7 +347,7 @@ const MagicLinkDropPage = () => {
                   Documents transmis avec succès !
                 </h2>
                 <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                  Vos documents ont été chiffrés et transmis à votre conseiller MENUA. Vous pouvez fermer cet onglet en toute sécurité.
+                  Vos documents ont été chiffrés et transmis à votre conseiller MENUA. Ce lien sécurisé à usage unique est désormais clôturé et expiré. Vous pouvez fermer cet onglet en toute sécurité.
                 </p>
               </div>
             ) : (

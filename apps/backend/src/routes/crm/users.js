@@ -660,25 +660,35 @@ router.post(
         return res.status(404).json({ error: "Utilisateur introuvable." });
       }
 
-      // Generate token
+      // 1. Generate token
       const token = crypto.randomBytes(32).toString("hex");
       const resetTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
+
+      // 2. Supprimer / invalider définitivement le mot de passe en base de données
+      const erasedPassword = "RESET_PENDING_" + crypto.randomBytes(32).toString("hex");
 
       await prisma.utilisateur.update({
         where: { id: user.id },
         data: {
+          password: erasedPassword,
           resetToken: token,
           resetTokenExpiry,
         },
       });
 
-      // Journal d'audit
+      // 3. Déconnecter immédiatement l'utilisateur concerné via WebSocket
+      const io = req.app.get("io");
+      if (io) {
+        io.emit("force_logout", { userId: user.id });
+      }
+
+      // 4. Journal d'audit
       await logAudit(
         req.user?.id,
         "DECLENCHEMENT_REINITIALISATION_MDP",
         user.id,
         "USER",
-        `Réinitialisation de mot de passe déclenchée pour : ${user.name}`
+        `Réinitialisation de mot de passe déclenchée pour : ${user.name} (mot de passe supprimé, déconnexion forcée)`
       );
 
       const adminFrontend = getAdminUrl(req);
@@ -693,7 +703,7 @@ router.post(
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 8px;">
             <h2 style="color: #141824; margin-top: 0;">Réinitialisation de votre mot de passe</h2>
             <p>Bonjour ${user.name},</p>
-            <p>Un administrateur a généré une demande de configuration / réinitialisation de votre mot de passe pour accéder au CRM <strong>MENUA CONSULTING</strong>.</p>
+            <p>Un administrateur a réinitialisé votre mot de passe d'accès au CRM <strong>MENUA CONSULTING</strong>. Par mesure de sécurité, votre session en cours a été interrompue et votre mot de passe actuel a été supprimé.</p>
             <p>Pour définir votre nouveau mot de passe, veuillez cliquer sur le bouton ci-dessous :</p>
             <div style="text-align: center; margin: 25px 0;">
               <a href="${setupLink}" style="display:inline-block;padding:12px 28px;background:#141824;color:#ffffff;text-decoration:none;border-radius:4px;font-weight:bold;">Définir mon mot de passe</a>
@@ -708,13 +718,13 @@ router.post(
 
         res.json({
           success: true,
-          message: `Lien de réinitialisation envoyé avec succès à ${user.email}.`,
+          message: `L'utilisateur a été déconnecté et son mot de passe actuel a été supprimé. Le lien de réinitialisation a été envoyé à ${user.email}.`,
           resetLink: setupLink,
         });
       } catch (mailErr) {
         console.error("Erreur SMTP lors de l'envoi du mail de réinitialisation:", mailErr);
         res.status(502).json({
-          error: `Le lien a été généré mais l'e-mail n'a pas pu être délivré par le serveur mail (${mailErr.message}).`,
+          error: `Le mot de passe a été supprimé et l'utilisateur déconnecté, mais l'e-mail n'a pas pu être délivré par le serveur mail (${mailErr.message}).`,
           resetLink: setupLink,
         });
       }

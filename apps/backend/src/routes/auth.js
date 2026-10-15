@@ -77,7 +77,7 @@ router.post("/login", async (req, res) => {
 
     const user = await prisma.utilisateur.findUnique({
       where: { email },
-      include: { role: true },
+      include: { role: true, client: true },
     });
 
     if (!user) {
@@ -91,6 +91,31 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Identifiants invalides." });
     }
 
+    // Si l'utilisateur est un client (ou rattaché à un client) : interdire la connexion si le client est inactif
+    if (user.clientId || user.role?.name === "Client" || user.client) {
+      let client = user.client;
+      if (!client && user.clientId) {
+        client = await prisma.client.findUnique({ where: { id: user.clientId } });
+      }
+      if (client) {
+        const clientStatus = String(client.status || "").trim().toUpperCase();
+        if (clientStatus === "INACTIF" || clientStatus === "BLOQUE") {
+          await prisma.auditLog.create({
+            data: {
+              userId: user.id,
+              action: "ECHEC_CONNEXION_CLIENT_INACTIF",
+              targetId: client.id,
+              targetType: "CLIENT",
+              details: `Tentative de connexion refusée : le client ${client.name} (${client.email}) est au statut inactif.`,
+            },
+          });
+          return res.status(403).json({
+            error: "Votre compte client est actuellement inactif. Veuillez contacter votre administrateur MENUA CONSULTING.",
+          });
+        }
+      }
+    }
+
     if (user.isBlocked) {
       await prisma.auditLog.create({
         data: {
@@ -102,6 +127,28 @@ router.post("/login", async (req, res) => {
         },
       });
       return res.status(403).json({ error: "Ce compte a été bloqué." });
+    }
+
+    // Blocage si le mot de passe a été supprimé par l'administrateur
+    if (user.password && user.password.startsWith("RESET_PENDING")) {
+      await prisma.auditLog.create({
+        data: {
+          userId: user.id,
+          action: "ECHEC_CONNEXION_MDP_REINITIALISE",
+          targetId: user.id,
+          targetType: "USER",
+          details: `Tentative de connexion refusée : mot de passe réinitialisé par un administrateur (${user.email})`,
+        },
+      });
+      return res.status(403).json({
+        error: "Votre mot de passe a été réinitialisé par un administrateur. Vous ne pouvez plus vous connecter avec votre ancien mot de passe. Veuillez consulter vos e-mails pour définir un nouveau mot de passe via le lien sécurisé reçu.",
+      });
+    }
+
+    if (user.status === "Invitation envoyée") {
+      return res.status(403).json({
+        error: "Ce compte n'a pas encore été activé. Veuillez utiliser le lien d'invitation reçu par e-mail pour configurer votre mot de passe.",
+      });
     }
 
     let isMatch = false;
@@ -220,6 +267,12 @@ router.get("/verify", authenticateJWT, async (req, res) => {
       return res
         .status(401)
         .json({ error: "Compte désactivé.", action: "FORCE_LOGOUT" });
+    }
+
+    if (dbUser.password && dbUser.password.startsWith("RESET_PENDING")) {
+      return res
+        .status(401)
+        .json({ error: "Votre mot de passe a été réinitialisé par un administrateur.", action: "FORCE_LOGOUT" });
     }
 
     const currentRole = dbUser.role?.name || "SANS ROLE";
@@ -373,6 +426,17 @@ router.get("/verify-token", async (req, res) => {
       });
     }
 
+    // Vérifier si le client rattaché est inactif
+    if (user.clientId) {
+      const client = await prisma.client.findUnique({ where: { id: user.clientId } });
+      if (client && String(client.status || "").trim().toUpperCase() === "INACTIF") {
+        return res.status(200).json({
+          valid: false,
+          error: "Ce compte client est actuellement inactif. Veuillez contacter un administrateur.",
+        });
+      }
+    }
+
     // Détecter le contexte : activation initiale vs réinitialisation
     const isClient = !!user.clientId;
     const isFirstActivation = user.status === "Invitation envoyée";
@@ -421,6 +485,16 @@ router.post("/setup-password", async (req, res) => {
       return res.status(400).json({
         error: "Le lien d'activation est invalide ou a expiré (validité 24h). Veuillez contacter un administrateur pour recevoir une nouvelle invitation.",
       });
+    }
+
+    // Si client inactif, interdire la configuration du mot de passe
+    if (user.clientId) {
+      const client = await prisma.client.findUnique({ where: { id: user.clientId } });
+      if (client && String(client.status || "").trim().toUpperCase() === "INACTIF") {
+        return res.status(403).json({
+          error: "Ce compte client est inactif. Impossible d'activer le mot de passe.",
+        });
+      }
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -486,6 +560,19 @@ router.post("/forgot-password", async (req, res) => {
 
     if (user.isBlocked) {
        return res.status(403).json({ error: "Ce compte a été bloqué." });
+    }
+
+    // Le clic sur "mot de passe oublié" ne doit pas fonctionner si le mot de passe a été supprimé par l'admin
+    if (user.password && user.password.startsWith("RESET_PENDING")) {
+      return res.status(400).json({
+        error: "Ce compte n'a pas de mot de passe actif. Une réinitialisation a déjà été initiée par votre administrateur : vous devez obligatoirement utiliser le lien sécurisé envoyé par e-mail pour définir votre mot de passe.",
+      });
+    }
+
+    if (user.status === "Invitation envoyée") {
+      return res.status(400).json({
+        error: "Ce compte n'a pas encore de mot de passe configuré. Veuillez utiliser le lien d'invitation sécurisé reçu par e-mail pour activer votre compte.",
+      });
     }
 
     const resetToken = crypto.randomBytes(32).toString("hex");

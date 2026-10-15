@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { Loader2, CheckCircle2, AlertCircle, Building2, ShieldCheck, ArrowLeft } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { Loader2, CheckCircle2, AlertCircle, ArrowLeft } from "lucide-react";
 import { getSafeApiUrl } from "../utils/helpers";
 
-const ForgotPasswordPage = () => {
-  const [searchParams] = useSearchParams();
-  const portal = searchParams.get("portal") || "team";
+const ForgotPasswordPage = ({ portal: portalProp }) => {
+  const location = useLocation();
+  const portal = portalProp || (location.pathname.startsWith("/client") ? "client" : "team");
   const isClient = portal === "client";
 
   const [email, setEmail] = useState("");
@@ -46,6 +46,8 @@ const ForgotPasswordPage = () => {
     }
   };
 
+  const loginUrl = isClient ? "/client/login" : "/login";
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-[var(--bg-main,#f8fafc)] p-4">
       <div
@@ -74,7 +76,7 @@ const ForgotPasswordPage = () => {
               <p>⏱️ Le lien est valable pendant <strong>15 minutes</strong>. Pensez à vérifier vos dossiers courriers indésirables (spams) si vous ne le recevez pas rapidement.</p>
             </div>
             <Link
-              to={`/?portal=${portal}`}
+              to={loginUrl}
               className="btn btn-primary w-full mt-3 py-2.5 text-sm font-semibold text-center justify-center"
               style={isClient ? { backgroundColor: "#c99c5c", borderColor: "#c99c5c" } : {}}
             >
@@ -84,17 +86,6 @@ const ForgotPasswordPage = () => {
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="text-center mb-1">
-              <div
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border mb-2"
-                style={{
-                  borderColor: isClient ? "#f0d9a0" : "#cbd5e1",
-                  backgroundColor: isClient ? "#fef9f0" : "#f1f5f9",
-                  color: isClient ? "#a07340" : "#1e293b",
-                }}
-              >
-                {isClient ? <Building2 size={13} /> : <ShieldCheck size={13} />}
-                <span>{isClient ? "Espace Client" : "Espace Collaborateur"}</span>
-              </div>
               <h1 className="text-lg font-bold text-slate-800">
                 {isClient ? "Récupération d'accès client" : "Mot de passe oublié"}
               </h1>
@@ -131,7 +122,7 @@ const ForgotPasswordPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary w-full mt-2 py-2.5 text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition"
+              className="btn btn-primary w-full mt-2 py-2.5 text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition cursor-pointer"
               style={isClient ? { backgroundColor: "#c99c5c", borderColor: "#c99c5c" } : {}}
             >
               {loading && <Loader2 size={16} className="animate-spin" />}
@@ -139,8 +130,8 @@ const ForgotPasswordPage = () => {
             </button>
 
             <Link
-              to={`/?portal=${portal}`}
-              className="w-full py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 text-center flex items-center justify-center gap-1.5 transition"
+              to={loginUrl}
+              className="w-full py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 text-center flex items-center justify-center gap-1.5 transition cursor-pointer"
             >
               <ArrowLeft size={14} />
               <span>Annuler et retourner à la connexion</span>

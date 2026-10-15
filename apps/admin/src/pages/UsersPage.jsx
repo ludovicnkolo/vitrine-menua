@@ -612,7 +612,7 @@ const UsersPage = ({ forceTab }) => {
   const handleTriggerPasswordReset = async (userId) => {
     if (
       !(await window.customConfirm(
-        "Voulez-vous vraiment déclencher une réinitialisation de mot de passe pour cet utilisateur ? Un email lui sera envoyé.",
+        "Voulez-vous vraiment réinitialiser le mot de passe de ce membre ?\n\nCette action va immédiatement déconnecter l'utilisateur, supprimer son mot de passe en base de données pour empêcher toute reconnexion et lui envoyer un e-mail avec un lien sécurisé pour définir son nouveau mot de passe.",
         "Réinitialisation de mot de passe",
       ))
     )
@@ -623,7 +623,7 @@ const UsersPage = ({ forceTab }) => {
       {},
       (resData) => {
         window.customAlert(
-          resData?.message || "Un lien de réinitialisation a été envoyé à l'utilisateur.",
+          resData?.message || "L'utilisateur a été déconnecté, son mot de passe actuel a été supprimé et un lien sécurisé lui a été envoyé par email.",
           "Succès"
         );
         setConsultUser(null);
@@ -795,7 +795,7 @@ const UsersPage = ({ forceTab }) => {
     const targetEmail = client.user?.email || client.email;
     if (
       !(await window.customConfirm(
-        `Déclencher la réinitialisation administrative du mot de passe pour ${targetEmail} ? Un lien sécurisé sera directement envoyé au client pour qu'il définisse son nouveau mot de passe en toute autonomie.`,
+        `Voulez-vous vraiment réinitialiser le mot de passe du client ${targetEmail} ?\n\nCette action va immédiatement déconnecter le client de son portail, supprimer son mot de passe en base de données et lui envoyer un e-mail avec un lien sécurisé pour définir son nouveau mot de passe.`,
         "Réinitialisation administrative"
       ))
     )
@@ -815,7 +815,7 @@ const UsersPage = ({ forceTab }) => {
         }
       } else {
         if (window.customAlert) {
-          window.customAlert(`L'e-mail de réinitialisation sécurisé a été transmis au client à l'adresse ${targetEmail}.`, "Lien envoyé", "success");
+          window.customAlert(data.message || `Le client a été déconnecté, son mot de passe a été supprimé et l'e-mail sécurisé a été transmis à ${targetEmail}.`, "Succès", "success");
         }
       }
     } catch (e) {
@@ -858,6 +858,7 @@ const UsersPage = ({ forceTab }) => {
         if (consultExternal && consultExternal.id === client.id) {
           setConsultExternal((prev) => ({
             ...prev,
+            status: isCurrentlyBlocked ? "ACTIF" : "INACTIF",
             user: data.user,
           }));
         }
@@ -870,6 +871,41 @@ const UsersPage = ({ forceTab }) => {
       }
     } finally {
       setAccountActionLoading(false);
+    }
+  };
+
+  const handleToggleClientStatus = async (client) => {
+    const isCurrentlyActive = String(client.status || "ACTIF").toUpperCase() === "ACTIF";
+    const confirmMsg = isCurrentlyActive
+      ? `Voulez-vous vraiment passer le client « ${client.name} » au statut INACTIF ?\n\n⚠️ Conséquences immédiates :\n• Le client ne pourra plus se connecter au portail.\n• Aucun nouveau dossier ne pourra être créé pour lui.\n• Tous ses dossiers en cours passeront au statut BLOQUÉ en cascade avec leurs missions et tâches.`
+      : `Voulez-vous réactiver le client « ${client.name} » ?\n\nSes dossiers précédemment bloqués seront restaurés et ses accès rétablis.`;
+
+    if (!(await window.customConfirm(confirmMsg, isCurrentlyActive ? "Désactivation client & blocage" : "Réactivation client"))) {
+      return;
+    }
+
+    try {
+      const token = sessionStorage.getItem("adminToken");
+      const res = await fetch(getSafeApiUrl(`/api/crm/clients/${client.id}/toggle-status`), {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        if (window.customAlert) window.customAlert(data.error || "Erreur lors de l'opération.", "Erreur", "error");
+      } else {
+        if (window.customAlert) window.customAlert(data.message, "Statut client mis à jour", "success");
+        if (consultExternal && consultExternal.id === client.id) {
+          setConsultExternal((prev) => ({
+            ...prev,
+            status: data.client?.status || (isCurrentlyActive ? "INACTIF" : "ACTIF"),
+          }));
+        }
+        fetchData();
+      }
+    } catch (e) {
+      console.error(e);
+      if (window.customAlert) window.customAlert("Erreur réseau.", "Erreur", "error");
     }
   };
 
@@ -1181,16 +1217,29 @@ const UsersPage = ({ forceTab }) => {
                           />
                         </div>
 
-                        <div>
-                          <label style={labelStyle}>Type de client</label>
-                          <select
-                            value={editExternal.type || "Société"}
-                            onChange={(e) => setEditExternal({ ...editExternal, type: e.target.value })}
-                            style={inputStyle}
-                          >
-                            <option value="Société">Société</option>
-                            <option value="Particulier">Particulier</option>
-                          </select>
+                        <div className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}>
+                          <div>
+                            <label style={labelStyle}>Type de client</label>
+                            <select
+                              value={editExternal.type || "Société"}
+                              onChange={(e) => setEditExternal({ ...editExternal, type: e.target.value })}
+                              style={inputStyle}
+                            >
+                              <option value="Société">Société</option>
+                              <option value="Particulier">Particulier</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label style={labelStyle}>Statut du client</label>
+                            <select
+                              value={String(editExternal.status || "ACTIF").toUpperCase()}
+                              onChange={(e) => setEditExternal({ ...editExternal, status: e.target.value })}
+                              style={inputStyle}
+                            >
+                              <option value="ACTIF">Actif</option>
+                              <option value="INACTIF">Inactif (bloque les dossiers)</option>
+                            </select>
+                          </div>
                         </div>
 
                         <div>
@@ -1366,16 +1415,29 @@ const UsersPage = ({ forceTab }) => {
                           />
                         </div>
 
-                        <div>
-                          <label style={labelStyle}>Type de client</label>
-                          <select
-                            value={editExternal.type || "Particulier"}
-                            onChange={(e) => setEditExternal({ ...editExternal, type: e.target.value })}
-                            style={inputStyle}
-                          >
-                            <option value="Particulier">Particulier</option>
-                            <option value="Société">Société</option>
-                          </select>
+                        <div className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}>
+                          <div>
+                            <label style={labelStyle}>Type de client</label>
+                            <select
+                              value={editExternal.type || "Particulier"}
+                              onChange={(e) => setEditExternal({ ...editExternal, type: e.target.value })}
+                              style={inputStyle}
+                            >
+                              <option value="Particulier">Particulier</option>
+                              <option value="Société">Société</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label style={labelStyle}>Statut du client</label>
+                            <select
+                              value={String(editExternal.status || "ACTIF").toUpperCase()}
+                              onChange={(e) => setEditExternal({ ...editExternal, status: e.target.value })}
+                              style={inputStyle}
+                            >
+                              <option value="ACTIF">Actif</option>
+                              <option value="INACTIF">Inactif (bloque les dossiers)</option>
+                            </select>
+                          </div>
                         </div>
 
                         <div>
@@ -3214,12 +3276,15 @@ const UsersPage = ({ forceTab }) => {
                         c.email?.toLowerCase().includes(term) ||
                         c.secteurActivite?.toLowerCase().includes(term) ||
                         c.entreprise?.raisonSociale?.toLowerCase().includes(term);
+                      const isClientActive = String(c.status || "ACTIF").toUpperCase() === "ACTIF";
                       const matchStatus = filterUserStatus === "all" ||
-                        (filterUserStatus === "actif" && !c.isBlocked) ||
-                        (filterUserStatus === "inactif" && c.isBlocked);
+                        (filterUserStatus === "actif" && isClientActive) ||
+                        (filterUserStatus === "inactif" && !isClientActive);
                       return matchSearch && matchStatus;
                     })
-                    .map((c) => (
+                    .map((c) => {
+                      const isClientActive = String(c.status || "ACTIF").toUpperCase() === "ACTIF";
+                      return (
                     <tr key={c.id}>
                       <td>
                         <div
@@ -3272,76 +3337,54 @@ const UsersPage = ({ forceTab }) => {
                         </span>
                       </td>
                       <td className="text-center">
-                        <span
+                        <button
+                          type="button"
+                          onClick={() => handleToggleClientStatus(c)}
+                          className="cursor-pointer hover:opacity-80 transition inline-flex items-center gap-1 font-semibold"
                           style={{
-                            color: !c.isBlocked ? "var(--success)" : "var(--danger)",
+                            fontSize: "0.75rem",
+                            padding: "0.15rem 0.55rem",
+                            borderRadius: "12px",
+                            backgroundColor: isClientActive ? "#ECFDF5" : "#FEF2F2",
+                            color: isClientActive ? "#059669" : "#DC2626",
+                            border: `1px solid ${isClientActive ? "#A7F3D0" : "#FECACA"}`,
                           }}
+                          title={`Statut : ${isClientActive ? "Actif" : "Inactif"}. Cliquer pour ${isClientActive ? "désactiver (bloquer les dossiers)" : "réactiver"}.`}
                         >
-                          {!c.isBlocked ? t("common.active", "Actif") : t("common.inactive", "Inactif")}
-                        </span>
+                          <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: isClientActive ? "#059669" : "#DC2626" }}></span>
+                          {isClientActive ? t("common.active", "Actif") : t("common.inactive", "Inactif")}
+                        </button>
                       </td>
                       <td className="text-center">
-                        {c.user ? (
-                          c.user.isBlocked ? (
-                            <span
-                              className="inline-flex items-center gap-1 font-semibold"
-                              style={{
-                                fontSize: "0.75rem",
-                                padding: "0.15rem 0.55rem",
-                                borderRadius: "12px",
-                                backgroundColor: "#FEF2F2",
-                                color: "#DC2626",
-                                border: "1px solid #FECACA",
-                              }}
-                              title="Compte portail désactivé"
-                            >
-                              <Ban size={11} /> Désactivé
-                            </span>
-                          ) : c.user.status === "Actif" ? (
-                            <span
-                              className="inline-flex items-center gap-1 font-semibold"
-                              style={{
-                                fontSize: "0.75rem",
-                                padding: "0.15rem 0.55rem",
-                                borderRadius: "12px",
-                                backgroundColor: "#ECFDF5",
-                                color: "#059669",
-                                border: "1px solid #A7F3D0",
-                              }}
-                              title="Compte actif"
-                            >
-                              <CheckCircle2 size={11} /> Actif
-                            </span>
-                          ) : (
-                            <span
-                              className="inline-flex items-center gap-1 font-semibold"
-                              style={{
-                                fontSize: "0.75rem",
-                                padding: "0.15rem 0.55rem",
-                                borderRadius: "12px",
-                                backgroundColor: "#FFFBEB",
-                                color: "#D97706",
-                                border: "1px solid #FDE68A",
-                              }}
-                              title="Invitation envoyée en attente d'activation"
-                            >
-                              <Clock size={11} /> Invitation
-                            </span>
-                          )
-                        ) : (
+                        {c.user?.status === "Actif" ? (
                           <span
-                            className="inline-flex items-center gap-1 font-medium"
+                            className="inline-flex items-center gap-1 font-semibold"
                             style={{
                               fontSize: "0.75rem",
                               padding: "0.15rem 0.55rem",
                               borderRadius: "12px",
-                              backgroundColor: "#F1F5F9",
-                              color: "#64748B",
-                              border: "1px solid #E2E8F0",
+                              backgroundColor: "#ECFDF5",
+                              color: "#059669",
+                              border: "1px solid #A7F3D0",
                             }}
-                            title="Aucun compte utilisateur créé"
+                            title="Mot de passe configuré — Accès portail actif"
                           >
-                            Sans compte
+                            <CheckCircle2 size={11} /> Actif
+                          </span>
+                        ) : (
+                          <span
+                            className="inline-flex items-center gap-1 font-semibold"
+                            style={{
+                              fontSize: "0.75rem",
+                              padding: "0.15rem 0.55rem",
+                              borderRadius: "12px",
+                              backgroundColor: "#FFFBEB",
+                              color: "#D97706",
+                              border: "1px solid #FDE68A",
+                            }}
+                            title="Invitation envoyée — En attente de configuration du mot de passe"
+                          >
+                            <Clock size={11} /> Invitation
                           </span>
                         )}
                       </td>
@@ -3369,6 +3412,7 @@ const UsersPage = ({ forceTab }) => {
                                 const isPart = c.type === "Particulier" || c.type === "PARTICULIER";
                                 setEditExternal({
                                   ...c,
+                                  status: c.status || "ACTIF",
                                   raisonSociale: c.entreprise?.raisonSociale || c.raisonSociale || (!isPart ? c.name : "") || "",
                                   siret: c.entreprise?.siret || c.siret || "",
                                   emailEntreprise: c.entreprise?.emailEntreprise || c.emailEntreprise || "",
@@ -3419,7 +3463,8 @@ const UsersPage = ({ forceTab }) => {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             )}
@@ -3669,9 +3714,9 @@ const UsersPage = ({ forceTab }) => {
                         Dossiers
                       </span>
                       <div
-                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#EFF6FF",color:"#2563EB"}}
+                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#FEF3C7",color:"#D97706"}}
                       >
-                        <Folder size={18} />
+                        <Folder size={18} color="#D97706" fill="#FBBF24" />
                       </div>
                     </div>
 
@@ -3805,9 +3850,9 @@ const UsersPage = ({ forceTab }) => {
                         </span>
                       </div>
                       <div
-                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#EFF6FF",color:"#2563EB"}}
+                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#FEF3C7",color:"#D97706"}}
                       >
-                        <Folder size={18} />
+                        <Folder size={18} color="#D97706" fill="#FBBF24" />
                       </div>
                     </div>
 

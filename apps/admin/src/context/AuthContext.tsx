@@ -50,10 +50,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Synchronisation et validation initiale
   useEffect(() => {
-    setupFetchInterceptor(() => {
+    setupFetchInterceptor((reason = "expired") => {
       setIsAuthenticated(false);
       setUser(null);
-      redirectToLogin("expired");
+      redirectToLogin(reason);
     });
 
     if (localStorage.getItem("adminTheme") === "dark") {

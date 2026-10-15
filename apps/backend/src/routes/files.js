@@ -7,6 +7,8 @@ const crypto = require("node:crypto");
 const { authenticateJWT } = require("../middlewares/auth");
 const prisma = require("../prisma");
 const { logAudit } = require("../utils/audit");
+const { notify } = require("../utils/notify");
+const { ensureClientSharingFolders } = require("../services/sharingFolderService");
 
 const router = express.Router();
 
@@ -159,12 +161,79 @@ router.post(
         uploadedById = masterUser?.id || uploadedById;
       }
 
+      const rawSize = req.file.size;
+      const formattedSize = req.body.fileSize || (rawSize < 1024 * 1024 
+        ? `${Math.round(rawSize / 1024)} Ko` 
+        : `${(rawSize / (1024 * 1024)).toFixed(1)} Mo`);
+
+      let effectiveDossierId = dossierId;
+      const isClientUpload = req.body.category === "DEPOT_CLIENT" || Boolean(req.user?.clientId);
+
+      // Si le dossier est un dossier client, router vers Sortant ou Entrant
+      if (dossierId) {
+        try {
+          const targetDossier = await prisma.dossier.findUnique({
+            where: { id: dossierId },
+            select: { id: true, clientId: true, parentDossierId: true },
+          });
+
+          if (targetDossier?.clientId || req.user?.clientId) {
+            const folders = await ensureClientSharingFolders(dossierId);
+            if (folders) {
+              if (isClientUpload) {
+                // Documents transmis par le client -> sous-dossier « Entrant »
+                effectiveDossierId = folders.entrantFolder?.id || dossierId;
+
+                // Marquer toutes les demandes en attente de ce dossier/client comme traitées
+                const demandIdsToClose = [
+                  dossierId,
+                  targetDossier?.id,
+                  folders.rootDossier?.id,
+                  folders.partageFolder?.id,
+                  folders.entrantFolder?.id,
+                ].filter(Boolean);
+
+                await prisma.document.updateMany({
+                  where: {
+                    OR: [
+                      { dossierId: { in: demandIdsToClose }, category: "DEMANDE", status: "ACTION_REQUISE" },
+                      ...(req.body.demandId ? [{ id: req.body.demandId }] : []),
+                    ],
+                  },
+                  data: {
+                    status: "TRAITE",
+                  },
+                });
+
+                // Clôturer / expirer tout lien magique d'acquisition pour ce dossier
+                await prisma.lienMagique.updateMany({
+                  where: {
+                    dossierId: { in: demandIdsToClose },
+                    type: "ACQUISITION",
+                  },
+                  data: {
+                    isUsed: true,
+                    expiresAt: new Date(Date.now() - 1000),
+                  },
+                });
+              }
+            }
+          }
+        } catch (folderErr) {
+          console.error("Erreur routage dossier partage client:", folderErr);
+        }
+      }
+
       document = await prisma.document.create({
         data: {
           name: name || req.file.originalname,
           url: s3Key,
           uploadedById,
-          ...(dossierId && { dossierId }),
+          status: req.body.status || (isClientUpload ? "EN_COURS" : "VALIDE"),
+          note: req.body.note || null,
+          fileSize: formattedSize,
+          category: req.body.category || (isClientUpload ? "DEPOT_CLIENT" : "DOCUMENT"),
+          ...(effectiveDossierId && { dossierId: effectiveDossierId }),
           ...(missionId && { missionId }),
         },
         include: { uploadedBy: true },
@@ -194,18 +263,85 @@ router.post(
       });
     }
 
-    // ── ÉTAPE 3 : Audit trail ────────────────────────────────────────────────────
+    // ── ÉTAPE 3 : Audit trail & Notification Super-Admin ─────────────────────────
     try {
-      await logAudit(
-        req.user?.id,
-        "AJOUT_DOCUMENT",
-        document.id,
-        "DOCUMENT",
-        `Document rattaché (atomique): ${document.name}`,
-        document.dossierId || null,
-      );
+      let dossierInfo = null;
+      if (document.dossierId) {
+        dossierInfo = await prisma.dossier.findUnique({
+          where: { id: document.dossierId },
+          include: { client: true },
+        });
+        if (!dossierInfo?.client && dossierInfo?.parentDossierId) {
+          const parent = await prisma.dossier.findUnique({
+            where: { id: dossierInfo.parentDossierId },
+            include: { client: true },
+          });
+          if (parent?.client) dossierInfo.client = parent.client;
+          if (!dossierInfo.reference) dossierInfo.reference = parent?.reference;
+        }
+      }
+
+      const clientName =
+        dossierInfo?.client?.raisonSociale ||
+        dossierInfo?.client?.name ||
+        req.user?.name ||
+        "Client";
+      const dossierName =
+        dossierInfo?.name || dossierInfo?.reference || "Dossier";
+
+      if (isClientUpload) {
+        // 1. Audit trail pour le dépôt client
+        await logAudit(
+          req.user?.id,
+          "DEPOT_DOCUMENT_CLIENT",
+          document.id,
+          "DOCUMENT",
+          `Dépôt du fichier « ${document.name} » par le client « ${clientName} » dans le dossier « ${dossierName} » (${dossierInfo?.reference || ""})`,
+          document.dossierId || null,
+        );
+
+        // 2. Notification aux Super-Administrateurs avec Nom du fichier, Nom du client et Nom du dossier
+        const superAdmins = await prisma.utilisateur.findMany({
+          where: { role: { name: "Super-administrateur" } },
+          select: { id: true },
+        });
+
+        if (superAdmins.length > 0) {
+          await notify(
+            superAdmins.map((sa) => sa.id),
+            {
+              type: "DEPOT_DOCUMENT_CLIENT",
+              title: "Nouveau document déposé par un client",
+              message: `Le client « ${clientName} » a transmis le fichier « ${document.name} » dans le dossier « ${dossierName} » (${dossierInfo?.reference || ""}).`,
+              targetId: document.dossierId || null,
+              targetType: "DOSSIER",
+            },
+          );
+        }
+
+        // 3. Événement temps réel WebSocket
+        const io = req.app?.get("io");
+        if (io) {
+          io.emit("entity_updated_global", {
+            entity: "DOCUMENT",
+            action: "CLIENT_UPLOAD",
+            dossierId: document.dossierId,
+            documentId: document.id,
+            clientName,
+            fileName: document.name,
+          });
+        }
+      } else {
+        await logAudit(
+          req.user?.id,
+          "AJOUT_DOCUMENT",
+          document.id,
+          "DOCUMENT",
+          `Document rattaché (atomique): ${document.name}`,
+          document.dossierId || null,
+        );
+      }
     } catch (auditError) {
-      // L'audit n'est pas bloquant — on logue mais on ne fait pas échouer la requête
       console.warn({ event: "audit_log_failed", error: auditError.message });
     }
 

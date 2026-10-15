@@ -55,6 +55,16 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </div>
 
         <nav style={{ padding: "1rem 0", flex: "0 0 auto" }}>
+          {role === "Client" && (
+            <Link
+              to="/"
+              className={`nav-item ${location.pathname === "/" ? "active" : ""}`}
+            >
+              <Files size={20} />
+              Espace Documentaire
+            </Link>
+          )}
+
           {hasAccess.toGlobal(role) && (
             <Link
               to="/"

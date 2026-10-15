@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Loader2, CheckCircle2, AlertCircle, Building2, ShieldCheck, ArrowLeft } from "lucide-react";
 import { getSafeApiUrl } from "../utils/helpers";
 
 const ForgotPasswordPage = () => {
+  const [searchParams] = useSearchParams();
+  const portal = searchParams.get("portal") || "team";
+  const isClient = portal === "client";
+
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -43,36 +47,61 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[var(--bg-main)] p-4">
-      <div className="w-full max-w-sm bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
-        <div className="bg-[var(--primary)] p-5 rounded-xl flex items-center justify-center mb-6 shadow-sm">
+    <div className="flex items-center justify-center min-h-screen bg-[var(--bg-main,#f8fafc)] p-4">
+      <div
+        className="w-full max-w-sm bg-white border border-slate-200 rounded-2xl p-8 shadow-md"
+        style={{ borderTop: `4px solid ${isClient ? "#c99c5c" : "#141824"}` }}
+      >
+        {/* En-tête avec Logo Menua */}
+        <div className="bg-[var(--primary,#141824)] p-4 rounded-xl flex items-center justify-center mb-5 shadow-sm">
           <img
             src="/logo.png"
             alt="Menua Consulting"
-            style={{ height: "56px", objectFit: "contain" }}
+            style={{ height: "52px", objectFit: "contain" }}
           />
         </div>
 
         {submitted ? (
-          <div className="text-center flex flex-col items-center gap-4 py-2">
-            <CheckCircle2 size={48} className="text-emerald-600" />
-            <h2 className="text-base font-bold text-slate-800">E-mail de réinitialisation envoyé</h2>
+          <div className="text-center flex flex-col items-center gap-3 py-2">
+            <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 mb-1">
+              <CheckCircle2 size={32} />
+            </div>
+            <h2 className="text-base font-bold text-slate-800">Lien sécurisé envoyé</h2>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Si un compte est associé à <strong>{email}</strong>, un lien sécurisé vous a été transmis par courrier électronique.
+              Si un compte est associé à <strong className="text-slate-800">{email}</strong>, un lien sécurisé de réinitialisation vous a été transmis par courrier électronique.
             </p>
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-[11px] text-slate-500 text-left w-full mt-2">
+              <p>⏱️ Le lien est valable pendant <strong>15 minutes</strong>. Pensez à vérifier vos dossiers courriers indésirables (spams) si vous ne le recevez pas rapidement.</p>
+            </div>
             <Link
-              to="/"
-              className="btn btn-primary w-full mt-2 py-2.5 text-sm font-semibold text-center justify-center"
+              to={`/?portal=${portal}`}
+              className="btn btn-primary w-full mt-3 py-2.5 text-sm font-semibold text-center justify-center"
+              style={isClient ? { backgroundColor: "#c99c5c", borderColor: "#c99c5c" } : {}}
             >
-              Retour à la connexion
+              Retour à la page de connexion
             </Link>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="text-center mb-2">
-              <h1 className="text-lg font-bold text-slate-800">Mot de passe oublié</h1>
-              <p className="text-xs text-slate-500 mt-1">
-                Saisissez votre e-mail pour recevoir un lien d'activation sécurisé.
+            <div className="text-center mb-1">
+              <div
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border mb-2"
+                style={{
+                  borderColor: isClient ? "#f0d9a0" : "#cbd5e1",
+                  backgroundColor: isClient ? "#fef9f0" : "#f1f5f9",
+                  color: isClient ? "#a07340" : "#1e293b",
+                }}
+              >
+                {isClient ? <Building2 size={13} /> : <ShieldCheck size={13} />}
+                <span>{isClient ? "Espace Client" : "Espace Collaborateur"}</span>
+              </div>
+              <h1 className="text-lg font-bold text-slate-800">
+                {isClient ? "Récupération d'accès client" : "Mot de passe oublié"}
+              </h1>
+              <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                {isClient
+                  ? "Saisissez l'adresse e-mail de votre compte client pour recevoir un lien de réinitialisation sécurisé."
+                  : "Saisissez votre e-mail collaborateur pour réinitialiser votre accès au CRM."}
               </p>
             </div>
 
@@ -85,7 +114,7 @@ const ForgotPasswordPage = () => {
 
             <div>
               <label htmlFor="forgot-email" className="block text-xs font-semibold text-slate-700 mb-1">
-                Adresse e-mail
+                {isClient ? "Adresse e-mail client" : "Adresse e-mail"}
               </label>
               <input
                 id="forgot-email"
@@ -94,25 +123,27 @@ const ForgotPasswordPage = () => {
                 disabled={loading}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-2.5 text-sm rounded-lg border border-slate-300 bg-white text-slate-800 outline-none focus:border-blue-700 disabled:bg-slate-50"
-                placeholder="nom@menuaconsulting.com"
+                className="w-full p-2.5 text-sm rounded-lg border border-slate-300 bg-white text-slate-800 outline-none focus:border-blue-700 disabled:bg-slate-50 transition"
+                placeholder={isClient ? "votre.email@entreprise.com" : "nom@menuaconsulting.com"}
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary w-full mt-2 py-2.5 text-sm font-semibold flex items-center justify-center gap-2"
+              className="btn btn-primary w-full mt-2 py-2.5 text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition"
+              style={isClient ? { backgroundColor: "#c99c5c", borderColor: "#c99c5c" } : {}}
             >
               {loading && <Loader2 size={16} className="animate-spin" />}
-              {loading ? "Envoi en cours..." : "Envoyer le lien"}
+              {loading ? "Envoi en cours..." : "Envoyer le lien de réinitialisation"}
             </button>
 
             <Link
-              to="/"
-              className="w-full py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 text-center"
+              to={`/?portal=${portal}`}
+              className="w-full py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 text-center flex items-center justify-center gap-1.5 transition"
             >
-              Annuler
+              <ArrowLeft size={14} />
+              <span>Annuler et retourner à la connexion</span>
             </Link>
           </form>
         )}
@@ -122,4 +153,3 @@ const ForgotPasswordPage = () => {
 };
 
 export default ForgotPasswordPage;
-

@@ -130,7 +130,7 @@ router.post("/login", async (req, res) => {
     // Générer le token JWT valide pendant 7 jours
     const sessionSig = user.password ? user.password.substring(user.password.length - 10) : "";
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role?.name || "SANS ROLE", sessionSig },
+      { id: user.id, email: user.email, role: user.role?.name || "SANS ROLE", clientId: user.clientId || null, sessionSig },
       JWT_SECRET,
       { expiresIn: "7d" },
     );
@@ -161,6 +161,7 @@ router.post("/login", async (req, res) => {
         email: user.email,
         role: user.role?.name || "SANS ROLE",
         profile: user.profile,
+        clientId: user.clientId || null,
         lastLogin: now,
       },
     });
@@ -342,6 +343,54 @@ router.post("/reset-password-otp", async (req, res) => {
   }
 });
 
+// Route "Vérification du contexte du token (activation initiale vs réinitialisation)"
+router.get("/verify-token", async (req, res) => {
+  const { token } = req.query;
+  if (!token) {
+    return res.status(400).json({ valid: false, error: "Token manquant." });
+  }
+  try {
+    const user = await prisma.utilisateur.findFirst({
+      where: {
+        resetToken: token,
+        resetTokenExpiry: { gt: new Date() },
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        status: true,
+        clientId: true,
+        role: { select: { name: true } },
+      },
+    });
+
+    if (!user) {
+      return res.status(200).json({
+        valid: false,
+        expired: true,
+        error: "Ce lien est invalide ou a expiré.",
+      });
+    }
+
+    // Détecter le contexte : activation initiale vs réinitialisation
+    const isClient = !!user.clientId;
+    const isFirstActivation = user.status === "Invitation envoyée";
+
+    return res.json({
+      valid: true,
+      context: isFirstActivation ? "activation" : "reset",
+      isClient,
+      userName: user.name,
+      userEmail: user.email,
+      roleName: user.role?.name || null,
+    });
+  } catch (err) {
+    console.error("Erreur verify-token:", err);
+    return res.status(500).json({ valid: false, error: "Erreur serveur." });
+  }
+});
+
 // Route "Activation de compte / Configuration initiale du mot de passe via invitation"
 router.post("/setup-password", async (req, res) => {
   try {
@@ -403,8 +452,12 @@ router.post("/setup-password", async (req, res) => {
       sameSite: "lax"
     });
 
+    const isClient = !!user.clientId;
+
     res.json({
       success: true,
+      isClient,
+      userEmail: user.email,
       message: "Votre mot de passe a été configuré avec succès. Vous pouvez maintenant vous connecter.",
     });
   } catch (error) {
@@ -424,6 +477,7 @@ router.post("/forgot-password", async (req, res) => {
 
     const user = await prisma.utilisateur.findUnique({
       where: { email: email.trim() },
+      include: { role: true },
     });
 
     if (!user) {
@@ -459,22 +513,41 @@ router.post("/forgot-password", async (req, res) => {
     const baseUrl = getAdminUrl(req);
     const resetLink = `${baseUrl}/setup-password?token=${resetToken}`;
 
+    const isClient = !!user.clientId || user.role?.name === "Client";
+    const portalName = isClient ? "votre Espace Client MENUA CONSULTING" : "le CRM MENUA CONSULTING";
+    const mailSubject = isClient
+      ? "Réinitialisation de votre mot de passe — Espace Client MENUA CONSULTING"
+      : "Réinitialisation de votre mot de passe — MENUA CONSULTING";
+
     const mailOptions = {
       from: process.env.SMTP_FROM || "contact@menuaconsulting.com",
       to: user.email,
-      subject: "Réinitialisation de votre mot de passe - CRM Menua",
+      subject: mailSubject,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
-          <h2 style="color: #c99c5c;">Réinitialisation de votre mot de passe</h2>
-          <p>Bonjour ${user.name},</p>
-          <p>Vous avez demandé à réinitialiser votre mot de passe pour accéder au CRM Menua.</p>
-          <p>Veuillez cliquer sur le lien sécurisé ci-dessous pour définir un nouveau mot de passe :</p>
-          <div style="text-align: center; margin: 20px 0;">
-            <a href="${resetLink}" style="background-color: #c99c5c; color: white; padding: 15px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Réinitialiser mon mot de passe</a>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="color: #141824; font-size: 20px; margin: 0;">MENUA CONSULTING</h1>
+            <p style="color: ${isClient ? "#c99c5c" : "#2563eb"}; font-size: 12px; font-weight: bold; margin-top: 4px; text-transform: uppercase;">
+              ${isClient ? "Portail Client Sécurisé" : "Portail CRM Collaborateur"}
+            </p>
           </div>
-          <p><strong>Ce lien unique est valide pendant 15 minutes.</strong></p>
-          <p>Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet e-mail.</p>
-          <p>Cordialement,<br>L'équipe Menua Consulting</p>
+          <h2 style="color: #141824; font-size: 16px;">Réinitialisation de votre mot de passe</h2>
+          <p style="color: #334155; font-size: 14px;">Bonjour <strong>${user.name}</strong>,</p>
+          <p style="color: #334155; font-size: 14px; line-height: 1.6;">
+            Vous avez demandé à réinitialiser votre mot de passe pour accéder à <strong>${portalName}</strong>.
+          </p>
+          <p style="color: #334155; font-size: 14px; line-height: 1.6;">
+            Veuillez cliquer sur le lien sécurisé ci-dessous pour choisir votre nouveau mot de passe :
+          </p>
+          <div style="text-align: center; margin: 25px 0;">
+            <a href="${resetLink}" style="background-color: ${isClient ? "#c99c5c" : "#141824"}; color: white; padding: 12px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; font-size: 14px;">
+              Définir mon nouveau mot de passe
+            </a>
+          </div>
+          <p style="color: #64748b; font-size: 12px;"><strong>Ce lien sécurisé est valable pendant 15 minutes.</strong></p>
+          <p style="color: #64748b; font-size: 12px;">Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet e-mail en toute sécurité.</p>
+          <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 20px 0;" />
+          <p style="color: #94a3b8; font-size: 11px; margin: 0; text-align: center;">MENUA CONSULTING — Cabinet de conseil juridique et financier</p>
         </div>
       `,
     };

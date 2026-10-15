@@ -1,41 +1,80 @@
 import { getSafeApiUrl } from "../utils/helpers";
 import { saveAuthSession } from "../services/api";
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Eye, EyeOff, Loader2, Building2, ShieldCheck, CheckCircle2 } from "lucide-react";
 
 const LoginPage = ({ onLogin }) => {
-  const [email, setEmail] = useState("");
+  const [searchParams] = useSearchParams();
+
+  // Détection du portail par défaut via URL ou localStorage
+  const urlPortal = searchParams.get("portal");
+  const urlEmail = searchParams.get("email");
+  const isActivated = searchParams.get("activated") === "true";
+  const isReset = searchParams.get("reset") === "true";
+  const isExpired = searchParams.get("logout") === "expired";
+
+  const initialPortal = urlPortal === "client" ? "client" : (
+    urlPortal === "team" ? "team" : (localStorage.getItem("menua_portal_pref") || "team")
+  );
+
+  const [portal, setPortal] = useState(initialPortal);
+  const [email, setEmail] = useState(urlEmail || "");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [successBanner, setSuccessBanner] = useState(
+    isActivated
+      ? "Votre compte a été activé avec succès ! Vous pouvez maintenant vous connecter."
+      : isReset
+      ? "Votre mot de passe a été réinitialisé avec succès ! Veuillez vous connecter."
+      : ""
+  );
 
   const errorTimeoutRef = useRef(null);
 
   const setTimedError = (msg) => {
     if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
     setError(msg);
-    errorTimeoutRef.current = setTimeout(() => setError(""), 4000);
+    errorTimeoutRef.current = setTimeout(() => setError(""), 5000);
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("logout") === "expired") {
+    if (urlPortal) {
+      setPortal(urlPortal);
+      localStorage.setItem("menua_portal_pref", urlPortal);
+    }
+  }, [urlPortal]);
+
+  useEffect(() => {
+    if (urlEmail) {
+      setEmail(urlEmail);
+    }
+  }, [urlEmail]);
+
+  useEffect(() => {
+    if (isExpired) {
       setTimedError("Votre session a expiré. Veuillez vous reconnecter.");
       window.history.replaceState({}, document.title, window.location.pathname);
     }
     return () => {
       if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
     };
-  }, []);
+  }, [isExpired]);
+
+  const handlePortalSwitch = (newPortal) => {
+    setPortal(newPortal);
+    localStorage.setItem("menua_portal_pref", newPortal);
+    setError("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const cleanEmail = email.trim();
 
     if (!cleanEmail || !password) {
-      setTimedError("Veuillez renseigner votre email et mot de passe.");
+      setTimedError("Veuillez renseigner votre email et votre mot de passe.");
       return;
     }
 
@@ -72,46 +111,83 @@ const LoginPage = ({ onLogin }) => {
     }
   };
 
+  const isClientPortal = portal === "client";
+
   return (
-    <div
-      className="flex items-center justify-center min-h-screen bg-[var(--bg-main)] p-4"
-    >
-      <div
-        className="card w-full max-w-sm p-8 bg-white border border-slate-200 rounded-2xl shadow-sm"
-      >
-        <div className="text-center mb-8">
-          <div
-            className="bg-[var(--primary)] p-6 flex items-center justify-center mb-6 rounded-xl shadow-sm"
-          >
+    <div className="flex items-center justify-center min-h-screen bg-[var(--bg-main,#f8fafc)] p-4">
+      <div className="card w-full max-w-sm p-8 bg-white border border-slate-200 rounded-2xl shadow-md transition-all">
+        
+        {/* Logo MENUA CONSULTING */}
+        <div className="text-center mb-6">
+          <div className="bg-[var(--primary,#141824)] p-5 flex items-center justify-center mb-5 rounded-xl shadow-sm">
             <img
               src="/logo.png"
               alt="Menua Consulting"
-              style={{ height: "64px", objectFit: "contain" }}
+              style={{ height: "60px", objectFit: "contain" }}
             />
           </div>
+
+          {/* Onglets de sélection : Espace Client vs Espace Collaborateur */}
+          <div className="grid grid-cols-2 p-1 bg-slate-100 rounded-xl mb-4 border border-slate-200">
+            <button
+              type="button"
+              onClick={() => handlePortalSwitch("client")}
+              className={`flex items-center justify-center gap-1.5 py-2 text-xs font-bold rounded-lg transition-all ${
+                isClientPortal
+                  ? "bg-white text-[#b8863d] shadow-xs border border-amber-200"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              <Building2 size={14} />
+              <span>Espace Client</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handlePortalSwitch("team")}
+              className={`flex items-center justify-center gap-1.5 py-2 text-xs font-bold rounded-lg transition-all ${
+                !isClientPortal
+                  ? "bg-[var(--primary,#141824)] text-white shadow-xs"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              <ShieldCheck size={14} />
+              <span>Collaborateur</span>
+            </button>
+          </div>
+
+          {/* Titre et sous-titre contextuels */}
           <h1 className="text-xl font-bold text-slate-800">
-            Espace d'Administration
+            {isClientPortal ? "Espace Client" : "Espace Collaborateur"}
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Connectez-vous pour accéder au portail CRM
+          <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+            {isClientPortal
+              ? "Accédez à vos documents, dossiers et livrables sécurisés"
+              : "Connectez-vous pour accéder au portail CRM"}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {error && (
-            <div
-              className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg text-center font-medium"
-            >
-              {error}
-            </div>
-          )}
+        {/* Bannière de succès (activation ou reset) */}
+        {successBanner && (
+          <div className="flex items-start gap-2 p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-lg font-medium mb-4">
+            <CheckCircle2 size={16} className="text-emerald-600 shrink-0 mt-0.5" />
+            <div className="flex-1 leading-snug">{successBanner}</div>
+          </div>
+        )}
 
+        {/* Message d'erreur */}
+        {error && (
+          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg text-center font-medium mb-4">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <label
               htmlFor="login-email"
               className="block text-xs font-semibold text-slate-700 mb-1"
             >
-              Email
+              {isClientPortal ? "Adresse email du client" : "Adresse email collaborateur"}
             </label>
             <input
               id="login-email"
@@ -122,7 +198,7 @@ const LoginPage = ({ onLogin }) => {
               disabled={loading}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="adresse@menuaconsulting.com"
+              placeholder={isClientPortal ? "votre.email@entreprise.com" : "adresse@menuaconsulting.com"}
               className="w-full p-2.5 text-sm rounded-lg border border-slate-300 bg-white text-slate-800 outline-none focus:border-blue-700 disabled:bg-slate-50 transition"
             />
           </div>
@@ -162,16 +238,23 @@ const LoginPage = ({ onLogin }) => {
           <button
             type="submit"
             disabled={loading}
-            className="btn btn-primary w-full mt-2 py-3 text-sm font-semibold flex items-center justify-center gap-2 shadow-sm"
+            className="btn btn-primary w-full mt-2 py-3 text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition"
+            style={isClientPortal ? {
+              backgroundColor: "#c99c5c",
+              borderColor: "#c99c5c",
+              color: "#ffffff"
+            } : {}}
           >
             {loading && <Loader2 size={16} className="animate-spin" />}
-            {loading ? "Connexion en cours..." : "Se connecter"}
+            {loading
+              ? "Connexion en cours..."
+              : (isClientPortal ? "Accéder à mon espace client" : "Se connecter au CRM")}
           </button>
 
           <div className="text-center mt-2">
             <Link
-              to="/forgot-password"
-              className="text-xs text-[var(--primary)] hover:underline font-medium p-1 inline-block"
+              to={`/forgot-password?portal=${portal}`}
+              className="text-xs text-slate-500 hover:text-slate-800 hover:underline font-medium p-1 inline-block"
             >
               Mot de passe oublié ?
             </Link>
@@ -183,4 +266,3 @@ const LoginPage = ({ onLogin }) => {
 };
 
 export default LoginPage;
-

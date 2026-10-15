@@ -56,6 +56,10 @@ model Utilisateur {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
+  // Liaison compte client externe (Portail Client)
+  clientId         String?            @unique
+  client           Client?            @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
   assignedMissions          Mission[]          @relation("AssignedMissions")
   relectureMissions         Mission[]          @relation("RelecteurMissions")
   createdMissions           Mission[]          @relation("CreatedMissions")
@@ -88,6 +92,7 @@ model Client {
   updatedAt         DateTime @updatedAt
 
   entreprise ClientEntreprise?
+  user       Utilisateur?
 
   dossiers    Dossier[]
   formulaires Formulaire[]

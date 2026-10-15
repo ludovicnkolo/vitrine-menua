@@ -13,6 +13,7 @@ import LoginPage from "../pages/LoginPage";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import SetupPasswordPage from "../pages/SetupPasswordPage";
 import MagicLinkDropPage from "../pages/MagicLinkDropPage";
+import ClientPortalPage from "../pages/ClientPortalPage";
 
 export default function AppRoutes() {
   const { user, isAuthenticated, login } = useAuth();
@@ -58,11 +59,14 @@ export default function AppRoutes() {
   return (
     <Routes>
       {/* Routes conditionnelles selon rôle */}
-      {hasAccess.toGlobal(role) && <Route path="/" element={<DashboardPage />} />}
-      {!hasAccess.toGlobal(role) && isAdminTech && (
+      {role === "Client" && (
+        <Route path="/" element={<ClientPortalPage user={user} />} />
+      )}
+      {role !== "Client" && hasAccess.toGlobal(role) && <Route path="/" element={<DashboardPage />} />}
+      {role !== "Client" && !hasAccess.toGlobal(role) && isAdminTech && (
         <Route path="/" element={<SystemSpacePage userRole={role} />} />
       )}
-      {!hasAccess.toGlobal(role) && !isAdminTech && (
+      {role !== "Client" && !hasAccess.toGlobal(role) && !isAdminTech && (
         <Route path="/" element={<WorkspacePage userRole={role} />} />
       )}
 

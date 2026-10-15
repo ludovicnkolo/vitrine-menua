@@ -4,6 +4,7 @@ export type Role =
   | "Relecteur"
   | "Collaborateur"
   | "Administrateur technique"
+  | "Client"
   | "SANS ROLE";
 
 export interface User {
@@ -12,6 +13,7 @@ export interface User {
   name: string;
   role: Role;
   status?: string;
+  clientId?: string;
   lastLogin?: string;
 }
 

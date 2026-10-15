@@ -95,6 +95,7 @@ const authenticateJWT = (req, res, next) => {
           role: dbUser.role?.name || user.role || "Collaborateur",
           name: dbUser.name,
           email: dbUser.email,
+          clientId: dbUser.clientId || null,
         };
       } catch (dbError) {
         console.error("[AUTH DB ERROR]", dbError?.message || dbError);

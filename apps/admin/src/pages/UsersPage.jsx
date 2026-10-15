@@ -28,6 +28,11 @@ import {
   Check,
   Info,
   AlertTriangle,
+  UserPlus,
+  ShieldCheck,
+  Key,
+  Send,
+  Ban,
 } from "lucide-react";
 import ActionDropdown from "../components/ActionDropdown";
 import UserFormFields from "../components/UserFormFields";
@@ -257,6 +262,12 @@ const UsersPage = ({ forceTab }) => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
 
+  // Client Account (Portail) states
+  const [accountActionLoading, setAccountActionLoading] = useState(false);
+  const [convertModalClient, setConvertModalClient] = useState(null);
+  const [convertEmail, setConvertEmail] = useState("");
+  const [convertName, setConvertName] = useState("");
+
   useEffect(() => {
     if (!errorMsg) return;
     const timer = setTimeout(() => setErrorMsg(null), 3500);
@@ -449,6 +460,32 @@ const UsersPage = ({ forceTab }) => {
       }
       return;
     }
+
+    // — Vérification doublon email côté frontend (avant appel API) —
+    const emailTrimmed = newClient.email.trim().toLowerCase();
+    const existingClient = clients.find(
+      (c) => c.email && c.email.trim().toLowerCase() === emailTrimmed,
+    );
+    if (existingClient) {
+      const msg = `⚠️ L'adresse email « ${newClient.email.trim()} » est déjà utilisée par le client « ${existingClient.name} ». Veuillez utiliser une adresse email différente.`;
+      setErrorMsg(msg);
+      if (window.customAlert) {
+        window.customAlert(msg, "Email déjà existant");
+      }
+      return;
+    }
+    const existingUserWithEmail = users.find(
+      (u) => u.email && u.email.trim().toLowerCase() === emailTrimmed,
+    );
+    if (existingUserWithEmail) {
+      const msg = `⚠️ L'adresse email « ${newClient.email.trim()} » appartient déjà à un membre interne de l'équipe (${existingUserWithEmail.name}). Impossible de l'utiliser pour un client.`;
+      setErrorMsg(msg);
+      if (window.customAlert) {
+        window.customAlert(msg, "Email déjà existant");
+      }
+      return;
+    }
+
     await submitApiRequest(
       "/api/crm/clients",
       "POST",
@@ -620,13 +657,230 @@ const UsersPage = ({ forceTab }) => {
     );
   };
 
+  const openConvertModal = (client) => {
+    const isSociete = client.type === "Société" || client.type === "SOCIETE";
+    const defaultEmail = isSociete
+      ? (client.entreprise?.emailEntreprise || client.email || "")
+      : (client.email || "");
+    const defaultName = isSociete
+      ? (client.entreprise?.raisonSociale || client.name || "")
+      : (client.name || "");
+
+    setConvertEmail(defaultEmail);
+    setConvertName(defaultName);
+    setConvertModalClient(client);
+  };
+
+  const handleConfirmConvertToAccount = async () => {
+    if (!convertModalClient) return;
+    if (!convertEmail || !convertEmail.trim()) {
+      if (window.customAlert) {
+        window.customAlert("Veuillez saisir une adresse email valide.", "Email requis", "error");
+      }
+      return;
+    }
+
+    setAccountActionLoading(true);
+    try {
+      const token = sessionStorage.getItem("adminToken");
+      const res = await fetch(getSafeApiUrl(`/api/crm/clients/${convertModalClient.id}/convert-to-account`), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          email: convertEmail.trim(),
+          name: convertName.trim(),
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        if (window.customAlert) {
+          window.customAlert(data.error || "Impossible de créer le compte client.", "Erreur", "error");
+        }
+      } else {
+        if (window.customAlert) {
+          if (data.emailSent === false) {
+            window.customAlert(
+              `⚠️ Compte portail créé, mais l'email d'invitation n'a pas pu être envoyé à ${data.emailDestination || convertEmail}.\n\n${data.emailError || ""}\n\nUtilisez "Renvoyer l'invitation" depuis la fiche client pour réessayer.`,
+              "Email non envoyé",
+              "warning"
+            );
+          } else {
+            window.customAlert(
+              `✅ Compte portail créé ! L'invitation a été envoyée à : ${data.emailDestination || convertEmail}`,
+              "Compte Client Activé",
+              "success"
+            );
+          }
+        }
+        if (consultExternal && consultExternal.id === convertModalClient.id) {
+          setConsultExternal((prev) => ({
+            ...prev,
+            user: data.user,
+          }));
+        }
+        setConvertModalClient(null);
+        fetchData();
+      }
+    } catch (e) {
+      console.error(e);
+      if (window.customAlert) {
+        window.customAlert("Erreur réseau lors de la création du compte.", "Erreur", "error");
+      }
+    } finally {
+      setAccountActionLoading(false);
+    }
+  };
+
+  const handleResendInvitation = async (client) => {
+    const targetEmail = client.user?.email || client.email;
+    if (
+      !(await window.customConfirm(
+        `Voulez-vous renvoyer un nouvel e-mail d'activation à ${targetEmail} ? L'ancien lien sera invalidé et remplacé par un nouveau lien valable 48h.`,
+        "Renvoyer l'invitation"
+      ))
+    )
+      return;
+
+    setAccountActionLoading(true);
+    try {
+      const token = sessionStorage.getItem("adminToken");
+      const res = await fetch(getSafeApiUrl(`/api/crm/clients/${client.id}/resend-invitation`), {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        if (window.customAlert) {
+          window.customAlert(data.error || "Erreur lors du renvoi de l'invitation.", "Erreur", "error");
+        }
+      } else {
+        if (window.customAlert) {
+          if (data.emailSent === false) {
+            window.customAlert(
+              `⚠️ Lien régénéré mais l'email n'a pas pu être envoyé à ${data.emailDestination || targetEmail}.\n\n${data.emailError || ""}\n\nVérifiez la configuration SMTP ou l'adresse email du client.`,
+              "Email non envoyé",
+              "warning"
+            );
+          } else {
+            window.customAlert(
+              `✅ Nouvelle invitation envoyée à : ${data.emailDestination || targetEmail}`,
+              "Invitation envoyée",
+              "success"
+            );
+          }
+        }
+        if (consultExternal && consultExternal.id === client.id) {
+          setConsultExternal((prev) => ({
+            ...prev,
+            user: data.user,
+          }));
+        }
+        fetchData();
+      }
+    } catch (e) {
+      console.error(e);
+      if (window.customAlert) {
+        window.customAlert("Erreur réseau.", "Erreur", "error");
+      }
+    } finally {
+      setAccountActionLoading(false);
+    }
+  };
+
+  const handleResetAccountPassword = async (client) => {
+    const targetEmail = client.user?.email || client.email;
+    if (
+      !(await window.customConfirm(
+        `Déclencher la réinitialisation administrative du mot de passe pour ${targetEmail} ? Un lien sécurisé sera directement envoyé au client pour qu'il définisse son nouveau mot de passe en toute autonomie.`,
+        "Réinitialisation administrative"
+      ))
+    )
+      return;
+
+    setAccountActionLoading(true);
+    try {
+      const token = sessionStorage.getItem("adminToken");
+      const res = await fetch(getSafeApiUrl(`/api/crm/clients/${client.id}/reset-account-password`), {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        if (window.customAlert) {
+          window.customAlert(data.error || "Erreur lors de la réinitialisation.", "Erreur", "error");
+        }
+      } else {
+        if (window.customAlert) {
+          window.customAlert(`L'e-mail de réinitialisation sécurisé a été transmis au client à l'adresse ${targetEmail}.`, "Lien envoyé", "success");
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      if (window.customAlert) {
+        window.customAlert("Erreur réseau.", "Erreur", "error");
+      }
+    } finally {
+      setAccountActionLoading(false);
+    }
+  };
+
+  const handleToggleAccountStatus = async (client) => {
+    const isCurrentlyBlocked = client.user?.isBlocked;
+    const actionLabel = isCurrentlyBlocked ? "réactiver" : "désactiver (suspendre)";
+    if (
+      !(await window.customConfirm(
+        `Voulez-vous vraiment ${actionLabel} l'accès portail de ce client (${client.user?.email}) ?`,
+        isCurrentlyBlocked ? "Réactivation du compte" : "Suspension du compte"
+      ))
+    )
+      return;
+
+    setAccountActionLoading(true);
+    try {
+      const token = sessionStorage.getItem("adminToken");
+      const res = await fetch(getSafeApiUrl(`/api/crm/clients/${client.id}/toggle-account-status`), {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        if (window.customAlert) {
+          window.customAlert(data.error || "Erreur lors de l'opération.", "Erreur", "error");
+        }
+      } else {
+        if (window.customAlert) {
+          window.customAlert(data.message, "Statut mis à jour", "success");
+        }
+        if (consultExternal && consultExternal.id === client.id) {
+          setConsultExternal((prev) => ({
+            ...prev,
+            user: data.user,
+          }));
+        }
+        fetchData();
+      }
+    } catch (e) {
+      console.error(e);
+      if (window.customAlert) {
+        window.customAlert("Erreur réseau.", "Erreur", "error");
+      }
+    } finally {
+      setAccountActionLoading(false);
+    }
+  };
+
   const isAnyModalOpen =
     showModal ||
     showExternalModal ||
     editUser ||
     editExternal ||
     consultUser ||
-    consultExternal;
+    consultExternal ||
+    convertModalClient;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -1279,6 +1533,26 @@ const UsersPage = ({ forceTab }) => {
 
               {/* Right: Actions */}
               <div className="flex items-center flex-wrap" style={{gap:"0.75rem"}}>
+                {!consultExternal.user && (
+                  <button
+                    type="button"
+                    onClick={() => openConvertModal(consultExternal)}
+                    className="inline-flex items-center font-bold cursor-pointer transition-transform active:scale-95"
+                    style={{
+                      gap: "0.45rem",
+                      fontSize: "0.85rem",
+                      padding: "0.5rem 1.15rem",
+                      backgroundColor: "var(--primary, #c99c5c)",
+                      color: "#FFFFFF",
+                      border: "none",
+                      borderRadius: "8px",
+                      boxShadow: "0 2px 4px rgba(201, 156, 92, 0.25)",
+                    }}
+                  >
+                    <UserPlus size={16} />
+                    Convertir en compte client
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setConsultExternal(null)}
@@ -1288,6 +1562,259 @@ const UsersPage = ({ forceTab }) => {
                 </button>
               </div>
             </div>
+
+            {/* Carte Accès & Compte Espace Client Sécurisé */}
+            {!consultExternal.user ? (
+              <div
+                className="p-5 flex items-center justify-between flex-wrap gap-4"
+                style={{
+                  backgroundColor: "#F8FAFC",
+                  borderRadius: "12px",
+                  border: "1.5px dashed #CBD5E1",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+                }}
+              >
+                <div className="flex items-center gap-4">
+                  <div
+                    className="flex items-center justify-center shrink-0"
+                    style={{
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "10px",
+                      backgroundColor: "#EFF6FF",
+                      color: "#2563EB",
+                      border: "1px solid #DBEAFE",
+                    }}
+                  >
+                    <UserPlus size={24} />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-[var(--text-main)]" style={{ fontSize: "1.05rem", margin: 0 }}>
+                        Espace Client Sécurisé (Portail GED)
+                      </h3>
+                      <span
+                        style={{
+                          fontSize: "0.75rem",
+                          padding: "0.15rem 0.55rem",
+                          borderRadius: "12px",
+                          backgroundColor: "#E2E8F0",
+                          color: "#475569",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Compte non créé
+                      </span>
+                    </div>
+                    <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.85rem", color: "var(--text-muted)", maxWidth: "600px", lineHeight: 1.4 }}>
+                      Ce client ne dispose pas encore d'un compte d'accès au portail.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => openConvertModal(consultExternal)}
+                  className="inline-flex items-center gap-2 font-bold cursor-pointer transition-transform active:scale-95"
+                  style={{
+                    fontSize: "0.85rem",
+                    padding: "0.6rem 1.25rem",
+                    backgroundColor: "var(--primary, #c99c5c)",
+                    color: "#FFFFFF",
+                    border: "none",
+                    borderRadius: "8px",
+                    boxShadow: "0 2px 4px rgba(201, 156, 92, 0.25)",
+                  }}
+                >
+                  <UserPlus size={16} />
+                  Convertir en compte client
+                </button>
+              </div>
+            ) : (
+              <div
+                className="p-5 flex flex-col gap-4"
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: "12px",
+                  border: "1px solid var(--border)",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                }}
+              >
+                {/* Entête de la carte compte */}
+                <div className="flex items-center justify-between flex-wrap gap-3" style={{ borderBottom: "1px solid #F1F5F9", paddingBottom: "0.75rem" }}>
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="flex items-center justify-center shrink-0"
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "8px",
+                        backgroundColor: consultExternal.user.isBlocked ? "#FEF2F2" : "#ECFDF5",
+                        color: consultExternal.user.isBlocked ? "#DC2626" : "#059669",
+                        border: `1px solid ${consultExternal.user.isBlocked ? "#FECACA" : "#A7F3D0"}`,
+                      }}
+                    >
+                      <ShieldCheck size={22} />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-[var(--text-main)]" style={{ fontSize: "1.05rem", margin: 0 }}>
+                        Compte Portail Client Sécurisé
+                      </h3>
+                      <p style={{ margin: "0.15rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                        Accès documentaire cloisonné et autonome du client
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Badge Statut */}
+                  <div>
+                    {consultExternal.user.isBlocked ? (
+                      <span
+                        className="inline-flex items-center gap-1.5 font-bold"
+                        style={{
+                          fontSize: "0.8rem",
+                          padding: "0.25rem 0.75rem",
+                          borderRadius: "16px",
+                          backgroundColor: "#FEF2F2",
+                          color: "#DC2626",
+                          border: "1px solid #FECACA",
+                        }}
+                      >
+                        <Ban size={13} /> Compte Désactivé / Suspendu
+                      </span>
+                    ) : consultExternal.user.status === "Actif" ? (
+                      <span
+                        className="inline-flex items-center gap-1.5 font-bold"
+                        style={{
+                          fontSize: "0.8rem",
+                          padding: "0.25rem 0.75rem",
+                          borderRadius: "16px",
+                          backgroundColor: "#ECFDF5",
+                          color: "#059669",
+                          border: "1px solid #A7F3D0",
+                        }}
+                      >
+                        <CheckCircle2 size={13} /> Compte Actif
+                      </span>
+                    ) : (
+                      <span
+                        className="inline-flex items-center gap-1.5 font-bold"
+                        style={{
+                          fontSize: "0.8rem",
+                          padding: "0.25rem 0.75rem",
+                          borderRadius: "16px",
+                          backgroundColor: "#FFFBEB",
+                          color: "#D97706",
+                          border: "1px solid #FDE68A",
+                        }}
+                      >
+                        <Clock size={13} /> Invitation envoyée (En attente d'activation)
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Détails du compte en grille */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.65rem 0.85rem" }}>
+                    <span style={{ fontSize: "0.7rem", color: "#64748B", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                      Email de connexion
+                    </span>
+                    <div className="font-semibold text-[var(--text-main)] truncate mt-1" style={{ fontSize: "0.9rem" }} title={consultExternal.user.email}>
+                      {consultExternal.user.email}
+                    </div>
+                  </div>
+
+                  <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.65rem 0.85rem" }}>
+                    <span style={{ fontSize: "0.7rem", color: "#64748B", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                      Date de création
+                    </span>
+                    <div className="font-semibold text-[var(--text-main)] mt-1" style={{ fontSize: "0.9rem" }}>
+                      {formatDate(consultExternal.user.createdAt)}
+                    </div>
+                  </div>
+
+                  <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.65rem 0.85rem" }}>
+                    <span style={{ fontSize: "0.7rem", color: "#64748B", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                      Dernière connexion
+                    </span>
+                    <div className="font-semibold text-[var(--text-main)] mt-1" style={{ fontSize: "0.9rem" }}>
+                      {consultExternal.user.lastLogin ? formatDate(consultExternal.user.lastLogin) : "Jamais connecté"}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Barre d'actions administratives conformes au cadrage Mme Fouelefack */}
+                <div className="flex items-center justify-between flex-wrap gap-2 pt-2" style={{ borderTop: "1px solid #F1F5F9" }}>
+                  <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                    Gestion des accès client :
+                  </span>
+
+                  <div className="flex items-center flex-wrap gap-2">
+                    <button
+                      type="button"
+                      disabled={accountActionLoading}
+                      onClick={() => handleResendInvitation(consultExternal)}
+                      className="inline-flex items-center gap-1.5 font-semibold cursor-pointer hover:bg-slate-100 transition-colors"
+                      style={{
+                        fontSize: "0.8rem",
+                        padding: "0.45rem 0.85rem",
+                        borderRadius: "6px",
+                        border: "1px solid #CBD5E1",
+                        backgroundColor: "#FFFFFF",
+                        color: "#334155",
+                      }}
+                      title="Renvoyer un nouveau lien d'activation valable 48h"
+                    >
+                      <Send size={14} /> Renvoyer l'invitation
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={accountActionLoading}
+                      onClick={() => handleResetAccountPassword(consultExternal)}
+                      className="inline-flex items-center gap-1.5 font-semibold cursor-pointer hover:bg-amber-50 transition-colors"
+                      style={{
+                        fontSize: "0.8rem",
+                        padding: "0.45rem 0.85rem",
+                        borderRadius: "6px",
+                        border: "1px solid #FCD34D",
+                        backgroundColor: "#FFFBEB",
+                        color: "#B45309",
+                      }}
+                      title="Envoyer un lien de réinitialisation sécurisé sans connaître le mot de passe"
+                    >
+                      <Key size={14} /> Réinitialiser le mot de passe
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={accountActionLoading}
+                      onClick={() => handleToggleAccountStatus(consultExternal)}
+                      className="inline-flex items-center gap-1.5 font-semibold cursor-pointer transition-colors"
+                      style={{
+                        fontSize: "0.8rem",
+                        padding: "0.45rem 0.85rem",
+                        borderRadius: "6px",
+                        border: consultExternal.user.isBlocked ? "1px solid #A7F3D0" : "1px solid #FECACA",
+                        backgroundColor: consultExternal.user.isBlocked ? "#ECFDF5" : "#FEF2F2",
+                        color: consultExternal.user.isBlocked ? "#059669" : "#DC2626",
+                      }}
+                    >
+                      {consultExternal.user.isBlocked ? (
+                        <>
+                          <CheckCircle2 size={14} /> Réactiver le compte
+                        </>
+                      ) : (
+                        <>
+                          <Ban size={14} /> Désactiver le compte
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Body: Two columns layout */}
             <div
@@ -2668,13 +3195,14 @@ const UsersPage = ({ forceTab }) => {
               <table className="w-full" style={{tableLayout:"fixed"}}>
                 <thead>
                   <tr>
-                    <th className="text-left" style={{paddingLeft:"1.25rem",width:"22%"}}>{t("users.columns.name", "Société / Nom")}</th>
-                    <th style={{ width: "24%" }}>{t("users.columns.email", "Email")}</th>
-                    <th className="text-center" style={{width:"110px"}}>{t("users.columns.type", "Type")}</th>
-                    <th className="text-center" style={{width:"100px"}}>{t("users.columns.status", "État")}</th>
-                    <th style={{ width: "18%" }}>{t("users.columns.activity", "Activité")}</th>
-                    <th className="table-date-cell text-center" style={{width:"165px"}}>{t("users.columns.createdAt", "Date de création")}</th>
-                    <th className="text-center" style={{width:"90px"}}>{t("common.actions", "Actions")}</th>
+                    <th className="text-left" style={{paddingLeft:"1.25rem",width:"20%"}}>{t("users.columns.name", "Société / Nom")}</th>
+                    <th style={{ width: "22%" }}>{t("users.columns.email", "Email")}</th>
+                    <th className="text-center" style={{width:"100px"}}>{t("users.columns.type", "Type")}</th>
+                    <th className="text-center" style={{width:"90px"}}>{t("users.columns.status", "État")}</th>
+                    <th className="text-center" style={{width:"140px"}}>Accès Portail</th>
+                    <th style={{ width: "16%" }}>{t("users.columns.activity", "Activité")}</th>
+                    <th className="table-date-cell text-center" style={{width:"150px"}}>{t("users.columns.createdAt", "Date de création")}</th>
+                    <th className="text-center" style={{width:"95px"}}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2752,6 +3280,71 @@ const UsersPage = ({ forceTab }) => {
                           {!c.isBlocked ? t("common.active", "Actif") : t("common.inactive", "Inactif")}
                         </span>
                       </td>
+                      <td className="text-center">
+                        {c.user ? (
+                          c.user.isBlocked ? (
+                            <span
+                              className="inline-flex items-center gap-1 font-semibold"
+                              style={{
+                                fontSize: "0.75rem",
+                                padding: "0.15rem 0.55rem",
+                                borderRadius: "12px",
+                                backgroundColor: "#FEF2F2",
+                                color: "#DC2626",
+                                border: "1px solid #FECACA",
+                              }}
+                              title="Compte portail désactivé"
+                            >
+                              <Ban size={11} /> Désactivé
+                            </span>
+                          ) : c.user.status === "Actif" ? (
+                            <span
+                              className="inline-flex items-center gap-1 font-semibold"
+                              style={{
+                                fontSize: "0.75rem",
+                                padding: "0.15rem 0.55rem",
+                                borderRadius: "12px",
+                                backgroundColor: "#ECFDF5",
+                                color: "#059669",
+                                border: "1px solid #A7F3D0",
+                              }}
+                              title="Compte actif"
+                            >
+                              <CheckCircle2 size={11} /> Actif
+                            </span>
+                          ) : (
+                            <span
+                              className="inline-flex items-center gap-1 font-semibold"
+                              style={{
+                                fontSize: "0.75rem",
+                                padding: "0.15rem 0.55rem",
+                                borderRadius: "12px",
+                                backgroundColor: "#FFFBEB",
+                                color: "#D97706",
+                                border: "1px solid #FDE68A",
+                              }}
+                              title="Invitation envoyée en attente d'activation"
+                            >
+                              <Clock size={11} /> Invitation
+                            </span>
+                          )
+                        ) : (
+                          <span
+                            className="inline-flex items-center gap-1 font-medium"
+                            style={{
+                              fontSize: "0.75rem",
+                              padding: "0.15rem 0.55rem",
+                              borderRadius: "12px",
+                              backgroundColor: "#F1F5F9",
+                              color: "#64748B",
+                              border: "1px solid #E2E8F0",
+                            }}
+                            title="Aucun compte utilisateur créé"
+                          >
+                            Sans compte
+                          </span>
+                        )}
+                      </td>
                       <td>
                         <div
                           className="truncate-name"
@@ -2761,35 +3354,48 @@ const UsersPage = ({ forceTab }) => {
                           {c.secteurActivite || "N/A"}
                         </div>
                       </td>
-                      <td className="table-date-cell text-center" style={{width:"165px"}}>
+                      <td className="table-date-cell text-center" style={{width:"150px"}}>
                         <span style={{ color: "var(--text-muted)" }}>
                           {c.createdAt ? formatDate(c.createdAt) : "N/A"}
                         </span>
                       </td>
                       <td className="text-center" style={{ padding: "0.5rem", verticalAlign: "middle" }}>
                         <div className="inline-flex flex-col items-center" style={{ gap: "3px" }}>
-                          {/* Sommet de la pyramide : Modifier */}
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const isPart = c.type === "Particulier" || c.type === "PARTICULIER";
-                              setEditExternal({
-                                ...c,
-                                raisonSociale: c.entreprise?.raisonSociale || c.raisonSociale || (!isPart ? c.name : "") || "",
-                                siret: c.entreprise?.siret || c.siret || "",
-                                emailEntreprise: c.entreprise?.emailEntreprise || c.emailEntreprise || "",
-                                telephoneEntreprise: c.entreprise?.telephoneEntreprise || c.telephoneEntreprise || "",
-                                type: isPart ? "Particulier" : "Société",
-                                contactSecondaire: c.contactSecondaire || "",
-                              });
-                            }}
-                            className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
-                            style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#EFF6FF", border: "1px solid #BFDBFE", color: "#2563EB" }}
-                            title={t("common.edit", "Modifier")}
-                          >
-                            <Pencil size={14} />
-                          </button>
-                          {/* Base de la pyramide : Consulter + Supprimer */}
+                          {/* Sommet : Modifier + Convertir si pas encore de compte */}
+                          <div className="flex items-center justify-center" style={{ gap: "4px" }}>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const isPart = c.type === "Particulier" || c.type === "PARTICULIER";
+                                setEditExternal({
+                                  ...c,
+                                  raisonSociale: c.entreprise?.raisonSociale || c.raisonSociale || (!isPart ? c.name : "") || "",
+                                  siret: c.entreprise?.siret || c.siret || "",
+                                  emailEntreprise: c.entreprise?.emailEntreprise || c.emailEntreprise || "",
+                                  telephoneEntreprise: c.entreprise?.telephoneEntreprise || c.telephoneEntreprise || "",
+                                  type: isPart ? "Particulier" : "Société",
+                                  contactSecondaire: c.contactSecondaire || "",
+                                });
+                              }}
+                              className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                              style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#EFF6FF", border: "1px solid #BFDBFE", color: "#2563EB" }}
+                              title={t("common.edit", "Modifier")}
+                            >
+                              <Pencil size={14} />
+                            </button>
+                            {!c.user && (
+                              <button
+                                type="button"
+                                onClick={() => openConvertModal(c)}
+                                className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                                style={{ width: "28px", height: "28px", borderRadius: "6px", background: "rgba(201, 156, 92, 0.15)", border: "1px solid rgba(201, 156, 92, 0.4)", color: "var(--primary, #c99c5c)" }}
+                                title="Convertir en compte client (Créer accès portail)"
+                              >
+                                <UserPlus size={14} />
+                              </button>
+                            )}
+                          </div>
+                          {/* Base : Consulter + Supprimer */}
                           <div className="flex items-center justify-center" style={{ gap: "4px" }}>
                             <button
                               type="button"
@@ -3340,6 +3946,164 @@ const UsersPage = ({ forceTab }) => {
                 style={{ padding: "0.5rem 1.25rem" }}
               >
                 Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Convertir en Compte Client (Portail GED) */}
+      {convertModalClient && (
+        <div
+          className="fixed inset-0 flex items-center justify-center p-4"
+          style={{
+            backgroundColor: "rgba(15, 23, 42, 0.65)",
+            backdropFilter: "blur(4px)",
+            zIndex: 1200,
+          }}
+        >
+          <div
+            className="fade-in w-full flex flex-col"
+            style={{
+              backgroundColor: "#FFFFFF",
+              borderRadius: "12px",
+              maxWidth: "520px",
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.2)",
+              padding: "1.75rem",
+              gap: "1.25rem",
+            }}
+          >
+            {/* Header */}
+            <div className="flex items-start justify-between" style={{ borderBottom: "1px solid var(--border)", paddingBottom: "1rem" }}>
+              <div className="flex items-center" style={{ gap: "0.75rem" }}>
+                <div
+                  className="flex items-center justify-center shrink-0"
+                  style={{
+                    width: "44px",
+                    height: "44px",
+                    borderRadius: "10px",
+                    backgroundColor: "rgba(201, 156, 92, 0.12)",
+                    color: "var(--primary, #c99c5c)",
+                  }}
+                >
+                  <UserPlus size={24} />
+                </div>
+                <div>
+                  <h2 className="font-bold text-[var(--text-main)]" style={{ fontSize: "1.15rem", margin: 0 }}>
+                    Convertir en Compte Client
+                  </h2>
+                  <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                    Initialisation des accès au portail sécurisé GED
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setConvertModalClient(null)}
+                className="cursor-pointer flex items-center justify-center"
+                style={{ background: "transparent", border: "none", color: "var(--text-muted)", padding: "0.25rem" }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Note explicative cadrage Mme Fouelefack */}
+            <div
+              style={{
+                backgroundColor: "#F8FAFC",
+                borderLeft: "4px solid var(--primary, #c99c5c)",
+                padding: "0.75rem 1rem",
+                borderRadius: "0 6px 6px 0",
+                fontSize: "0.85rem",
+                color: "#334155",
+                lineHeight: 1.5,
+              }}
+            >
+              Un compte nominatif va être créé pour ce client. Une invitation officielle contenant un lien sécurisé d'activation lui sera transmise par e-mail afin qu'il définisse son mot de passe de manière autonome.
+            </div>
+
+            {/* Formulaire */}
+            <div className="flex flex-col gap-3">
+              <div>
+                <label className="block font-bold text-[var(--text-main)] mb-1" style={{ fontSize: "0.8rem" }}>
+                  Nom / Raison Sociale affiché(e)
+                </label>
+                <input
+                  type="text"
+                  value={convertName}
+                  onChange={(e) => setConvertName(e.target.value)}
+                  className="w-full"
+                  style={{
+                    padding: "0.6rem 0.85rem",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                    fontSize: "0.9rem",
+                  }}
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-[var(--text-main)] mb-1" style={{ fontSize: "0.8rem" }}>
+                  Adresse email du compte (pour réception de l'invitation) <span style={{ color: "var(--danger)" }}>*</span>
+                </label>
+                <input
+                  type="email"
+                  value={convertEmail}
+                  onChange={(e) => setConvertEmail(e.target.value)}
+                  required
+                  className="w-full"
+                  style={{
+                    padding: "0.6rem 0.85rem",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                    fontSize: "0.9rem",
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center justify-end gap-3 pt-2" style={{ borderTop: "1px solid var(--border)" }}>
+              <button
+                type="button"
+                onClick={() => setConvertModalClient(null)}
+                className="cursor-pointer font-semibold"
+                style={{
+                  padding: "0.55rem 1.15rem",
+                  borderRadius: "8px",
+                  border: "1px solid var(--border)",
+                  backgroundColor: "#FFFFFF",
+                  color: "var(--text-muted)",
+                  fontSize: "0.85rem",
+                }}
+              >
+                Annuler
+              </button>
+
+              <button
+                type="button"
+                disabled={accountActionLoading || !convertEmail.trim()}
+                onClick={handleConfirmConvertToAccount}
+                className="cursor-pointer font-bold inline-flex items-center gap-2"
+                style={{
+                  padding: "0.55rem 1.25rem",
+                  borderRadius: "8px",
+                  border: "none",
+                  backgroundColor: "var(--primary, #c99c5c)",
+                  color: "#FFFFFF",
+                  fontSize: "0.85rem",
+                  opacity: accountActionLoading || !convertEmail.trim() ? 0.6 : 1,
+                }}
+              >
+                {accountActionLoading ? (
+                  <>
+                    <Loader size={16} className="animate-spin" /> Envoi en cours...
+                  </>
+                ) : (
+                  <>
+                    <UserPlus size={16} /> Créer le compte & Inviter
+                  </>
+                )}
               </button>
             </div>
           </div>

@@ -6,6 +6,7 @@ export const ALLOWED_ROLES: Role[] = [
   "Relecteur",
   "Collaborateur",
   "Administrateur technique",
+  "Client",
   "SANS ROLE",
 ];
 

@@ -484,8 +484,14 @@ router.post(
     } catch (error) {
       console.error("Erreur création utilisateur:", error);
       if (error.code === "P2002") {
+        const targets = Array.isArray(error.meta?.target) ? error.meta.target : [];
+        const isEmail = targets.some((t) => t.includes("email"));
+        const isPhone = targets.some((t) => t.includes("telephone") || t.includes("phone"));
+        let fieldMsg = "email ou numéro de téléphone";
+        if (isEmail && !isPhone) fieldMsg = "adresse email";
+        if (isPhone && !isEmail) fieldMsg = "numéro de téléphone";
         return res.status(409).json({
-          error: "Impossible d'inscrire ce membre : l'adresse email ou le téléphone renseigné est déjà utilisé par un autre membre interne.",
+          error: `⚠️ Impossible de créer ce membre : la ${fieldMsg} renseignée est déjà utilisée par un autre membre interne. Veuillez en utiliser une différente.`,
         });
       }
       res

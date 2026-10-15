@@ -14,6 +14,7 @@ const LoginPage = ({ onLogin, portal: portalProp }) => {
 
   const urlEmail = searchParams.get("email");
   const isActivated = searchParams.get("activated") === "true";
+  const isReset = searchParams.get("reset") === "true";
   const logoutReason = searchParams.get("logout");
   const isExpired = logoutReason === "expired";
   const isResetByAdmin = logoutReason === "reset_by_admin";

@@ -167,60 +167,103 @@ router.post(
         : `${(rawSize / (1024 * 1024)).toFixed(1)} Mo`);
 
       let effectiveDossierId = dossierId;
-      const isClientUpload = req.body.category === "DEPOT_CLIENT" || Boolean(req.user?.clientId);
+      const isClientUpload =
+        req.body.category === "DEPOT_CLIENT" || Boolean(req.user?.clientId);
 
-      // Si le dossier est un dossier client, router vers Sortant ou Entrant
+      let targetDossier = null;
       if (dossierId) {
         try {
-          const targetDossier = await prisma.dossier.findUnique({
+          targetDossier = await prisma.dossier.findUnique({
             where: { id: dossierId },
             select: { id: true, clientId: true, parentDossierId: true },
           });
+        } catch (err) {
+          console.error("Erreur récupération targetDossier:", err);
+        }
+      }
 
-          if (targetDossier?.clientId || req.user?.clientId) {
-            const folders = await ensureClientSharingFolders(dossierId);
-            if (folders) {
-              if (isClientUpload) {
-                // Documents transmis par le client -> sous-dossier « Entrant »
-                effectiveDossierId = folders.entrantFolder?.id || dossierId;
+      const effectiveClientId = req.user?.clientId || targetDossier?.clientId || null;
 
-                // Marquer toutes les demandes en attente de ce dossier/client comme traitées
-                const demandIdsToClose = [
-                  dossierId,
-                  targetDossier?.id,
-                  folders.rootDossier?.id,
-                  folders.partageFolder?.id,
-                  folders.entrantFolder?.id,
-                ].filter(Boolean);
-
-                await prisma.document.updateMany({
-                  where: {
-                    OR: [
-                      { dossierId: { in: demandIdsToClose }, category: "DEMANDE", status: "ACTION_REQUISE" },
-                      ...(req.body.demandId ? [{ id: req.body.demandId }] : []),
-                    ],
-                  },
-                  data: {
-                    status: "TRAITE",
-                  },
-                });
-
-                // Clôturer / expirer tout lien magique d'acquisition pour ce dossier
-                await prisma.lienMagique.updateMany({
-                  where: {
-                    dossierId: { in: demandIdsToClose },
-                    type: "ACQUISITION",
-                  },
-                  data: {
-                    isUsed: true,
-                    expiresAt: new Date(Date.now() - 1000),
-                  },
-                });
-              }
-            }
+      // Si le dossier est un dossier client, router vers Sortant ou Entrant
+      if (dossierId && (targetDossier?.clientId || req.user?.clientId)) {
+        try {
+          const folders = await ensureClientSharingFolders(dossierId);
+          if (folders && isClientUpload) {
+            // Documents transmis par le client -> sous-dossier « Entrant »
+            effectiveDossierId = folders.entrantFolder?.id || dossierId;
           }
         } catch (folderErr) {
           console.error("Erreur routage dossier partage client:", folderErr);
+        }
+      }
+
+      // ── Clôture et invalidation immédiate de toute demande active ──────────────
+      // Que ce soit un lien magique d'acquisition ou une demande initiée dans le CRM,
+      // dès qu'une pièce est transmise (ou que demandId est fourni), la demande est
+      // invalidée / clôturée immédiatement, même avant son expiration.
+      if (isClientUpload || req.body.demandId) {
+        try {
+          // 1. Clôture directe par ID de demande si précisé (Lien Magique ou Document DEMANDE)
+          if (req.body.demandId) {
+            await prisma.lienMagique.updateMany({
+              where: { id: req.body.demandId },
+              data: {
+                isUsed: true,
+                expiresAt: new Date(Date.now() - 1000),
+              },
+            }).catch(() => {});
+
+            await prisma.document.updateMany({
+              where: { id: req.body.demandId },
+              data: {
+                status: "TRAITE",
+              },
+            }).catch(() => {});
+          }
+
+          // 2. Recherche exhaustive de tous les dossiers associés au client
+          const dossiersToClose = new Set();
+          if (dossierId) dossiersToClose.add(dossierId);
+          if (targetDossier?.id) dossiersToClose.add(targetDossier.id);
+          if (effectiveDossierId) dossiersToClose.add(effectiveDossierId);
+
+          if (effectiveClientId) {
+            const clientDossiers = await prisma.dossier.findMany({
+              where: { clientId: effectiveClientId },
+              select: { id: true },
+            });
+            clientDossiers.forEach((d) => dossiersToClose.add(d.id));
+          }
+
+          const closeDossierIds = Array.from(dossiersToClose);
+
+          if (closeDossierIds.length > 0) {
+            // Clôturer les documents de catégorie DEMANDE
+            await prisma.document.updateMany({
+              where: {
+                dossierId: { in: closeDossierIds },
+                category: "DEMANDE",
+                status: "ACTION_REQUISE",
+              },
+              data: {
+                status: "TRAITE",
+              },
+            }).catch((e) => console.error("Erreur clôture document DEMANDE:", e));
+
+            // Clôturer et invalider les liens magiques d'acquisition (même avant expiration)
+            await prisma.lienMagique.updateMany({
+              where: {
+                dossierId: { in: closeDossierIds },
+                type: "ACQUISITION",
+              },
+              data: {
+                isUsed: true,
+                expiresAt: new Date(Date.now() - 1000),
+              },
+            }).catch((e) => console.error("Erreur clôture lienMagique ACQUISITION:", e));
+          }
+        } catch (closeErr) {
+          console.error("Erreur clôture demandes/liens magiques:", closeErr);
         }
       }
 

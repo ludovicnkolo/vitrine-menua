@@ -34,16 +34,25 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header justify-between">
-          <div className="flex items-center" style={{gap:"0.75rem"}}>
-            <div
-              className="flex items-center justify-center font-bold" style={{width:32,height:32,borderRadius:8,background:"var(--secondary)",color:"var(--primary)"}}
+          <div className="flex items-center" style={{ gap: "0.75rem" }}>
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 32 32"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="shrink-0"
+              aria-label="Logo MENUA CONSULTING"
             >
-              M
-            </div>
+              <path d="M4 23L12 5L18 17L12 27L4 23Z" fill="#a38b6d" />
+              <path d="M28 23L20 5L14 17L20 27L28 23Z" fill="#D4AF37" />
+              <path d="M16 13L20 5L12 5L16 13Z" fill="#e8c766" />
+            </svg>
             <span
-              className="font-semibold" style={{fontSize:"1.1rem",letterSpacing:"-0.5px"}}
+              className="font-extrabold text-white tracking-tight"
+              style={{ fontSize: "0.95rem", letterSpacing: "-0.3px", whiteSpace: "nowrap" }}
             >
-              MENUA CRM
+              MENUA CONSULTING
             </span>
           </div>
           <button 

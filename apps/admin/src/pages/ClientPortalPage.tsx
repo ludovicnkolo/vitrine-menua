@@ -69,10 +69,15 @@ export default function ClientPortalPage({ user }: ClientPortalPageProps) {
   // Demande de document active initiée par le CRM (null si aucune demande)
   const [activeRequest, setActiveRequest] = useState<{
     id: string;
+    dossierId?: string;
+    type?: string;
     title: string;
     motif: string;
     isCompleted: boolean;
   } | null>(null);
+
+  // Demandes complétées / invalidées pendant la session
+  const [completedDemandIds, setCompletedDemandIds] = useState<string[]>([]);
 
   const fetchClientData = () => {
     setLoading(true);
@@ -110,13 +115,42 @@ export default function ClientPortalPage({ user }: ClientPortalPageProps) {
             const folderName = String(d.name || "").toLowerCase();
             const isEntrantFolder = folderName.includes("entrant");
 
+            // Détection de lien magique d'acquisition actif et non utilisé
+            if (d.liensMagiques && Array.isArray(d.liensMagiques)) {
+              d.liensMagiques.forEach((lm: any) => {
+                const isAcquisition = lm.type === "ACQUISITION";
+                const isNotExpired = new Date(lm.expiresAt).getTime() > Date.now();
+                const isNotUsed = !lm.isUsed;
+                if (
+                  isAcquisition &&
+                  isNotExpired &&
+                  isNotUsed &&
+                  !foundActiveDemand &&
+                  !completedDemandIds.includes(lm.id)
+                ) {
+                  foundActiveDemand = {
+                    id: lm.id,
+                    dossierId: d.id,
+                    type: "MAGIC_LINK",
+                    title: "Demande de pièces justificatives",
+                    motif:
+                      lm.note ||
+                      "Veuillez inclure les pièces justificatives demandées par votre conseiller.",
+                    isCompleted: false,
+                  };
+                }
+              });
+            }
+
             if (d.documents && Array.isArray(d.documents)) {
               d.documents.forEach((doc: any) => {
                 // Détection de demande active initiée par le CRM
                 if (doc.category === "DEMANDE" && doc.status === "ACTION_REQUISE") {
-                  if (!foundActiveDemand) {
+                  if (!foundActiveDemand && !completedDemandIds.includes(doc.id)) {
                     foundActiveDemand = {
                       id: doc.id,
+                      dossierId: d.id,
+                      type: "DOCUMENT_DEMAND",
                       title: doc.name.startsWith("Demande")
                         ? doc.name
                         : `Demande de document : ${doc.name}`,
@@ -304,15 +338,17 @@ export default function ClientPortalPage({ user }: ClientPortalPageProps) {
 
     try {
       const token = sessionStorage.getItem("adminToken");
-      const targetDossierId = primaryDossier?.id;
+      // Priorité au dossier spécifique ciblé par la demande, sinon dossier racine client
+      const targetDossierId = activeRequest?.dossierId || primaryDossier?.id;
+      const currentDemandId = activeRequest?.id;
 
       if (targetDossierId) {
         for (const file of uploadFiles) {
           const formData = new FormData();
           formData.append("bucket", "ged");
           formData.append("dossierId", targetDossierId);
-          if (activeRequest?.id) {
-            formData.append("demandId", activeRequest.id);
+          if (currentDemandId) {
+            formData.append("demandId", currentDemandId);
           }
           formData.append("file", file);
           formData.append("name", file.name);
@@ -332,6 +368,12 @@ export default function ClientPortalPage({ user }: ClientPortalPageProps) {
           });
         }
       }
+
+      // Marquer la demande active comme satisfaite / invalidée pour qu'elle disparaisse immédiatement
+      if (currentDemandId) {
+        setCompletedDemandIds((prev) => [...prev, currentDemandId]);
+      }
+      setActiveRequest(null);
 
       // Ajouter aux documents transmis dans l'interface
       const newItems: DocumentItem[] = uploadFiles.map((file, idx) => ({
@@ -353,8 +395,7 @@ export default function ClientPortalPage({ user }: ClientPortalPageProps) {
 
       setTransmittedDocs((prev) => [...newItems, ...prev]);
 
-      // IMMÉDIAT : L'espace d'upload disparaît tout de suite après l'envoi réussi
-      setActiveRequest(null);
+      // Feedback visuel de succès
       setUploadSuccess(true);
       setUploadFiles([]);
       setTimeout(() => setUploadSuccess(false), 5000);
@@ -383,7 +424,7 @@ export default function ClientPortalPage({ user }: ClientPortalPageProps) {
       {/* BARRE LATÉRALE GAUCHE : IDENTIQUE CRM, COMPLÈTEMENT CLIQUABLE         */}
       {/* ═════════════════════════════════════════════════════════════════════ */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#141824] text-white flex flex-col justify-between transition-transform duration-200 ease-in-out md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#141824] text-white flex flex-col transition-transform duration-200 ease-in-out md:static md:translate-x-0 ${
           isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -405,7 +446,7 @@ export default function ClientPortalPage({ user }: ClientPortalPageProps) {
               </svg>
               <div>
                 <span className="font-extrabold text-white tracking-tight text-sm block leading-tight">
-                  MENUA
+                  MENUA CONSULTING
                 </span>
                 <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">
                   Espace Client
@@ -488,32 +529,32 @@ export default function ClientPortalPage({ user }: ClientPortalPageProps) {
               </button>
             </nav>
           </div>
-        </div>
 
-        {/* Footer Sidebar : Compte client & Déconnexion */}
-        <div className="p-4 border-t border-slate-800/80 bg-slate-950/40">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-8 h-8 rounded-full bg-slate-800 text-amber-400 text-xs font-bold flex items-center justify-center shrink-0 border border-slate-700">
-              {avatarInitials}
+          {/* Footer Sidebar : Compte client & Déconnexion — positionné plus haut, sous la navigation */}
+          <div className="p-4 mt-4 border-t border-slate-800/80 bg-slate-900/60 rounded-2xl mx-3">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-8 h-8 rounded-full bg-slate-800 text-amber-400 text-xs font-bold flex items-center justify-center shrink-0 border border-slate-700">
+                {avatarInitials}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-bold text-white truncate m-0">
+                  {rawDisplayName}
+                </p>
+                <p className="text-[10px] text-slate-400 truncate m-0">
+                  Dossier : {primaryDossierRef}
+                </p>
+              </div>
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-bold text-white truncate m-0">
-                {rawDisplayName}
-              </p>
-              <p className="text-[10px] text-slate-400 truncate m-0">
-                Dossier : {primaryDossierRef}
-              </p>
-            </div>
+
+            <button
+              type="button"
+              onClick={() => logout()}
+              className="w-full py-2 px-3 rounded-xl text-xs font-semibold text-rose-300 hover:bg-rose-500/10 hover:text-rose-200 flex items-center justify-center gap-2 transition cursor-pointer border border-rose-500/20"
+            >
+              <LogOut size={13} />
+              <span>Se déconnecter</span>
+            </button>
           </div>
-
-          <button
-            type="button"
-            onClick={() => logout()}
-            className="w-full py-2 px-3 rounded-xl text-xs font-semibold text-rose-300 hover:bg-rose-500/10 hover:text-rose-200 flex items-center justify-center gap-2 transition cursor-pointer border border-rose-500/20"
-          >
-            <LogOut size={13} />
-            <span>Se déconnecter</span>
-          </button>
         </div>
       </aside>
 
@@ -617,9 +658,9 @@ export default function ClientPortalPage({ user }: ClientPortalPageProps) {
           </div>
 
           {/* ═══════════════════════════════════════════════════════════════════ */}
-          {/* SECTION ACTION REQUISE (DISPARAÎT IMMÉDIATEMENT APRÈS LE DÉPÔT)    */}
+          {/* SECTION ACTION REQUISE (UNIQUEMENT SUR L'ONGLET TRANSMIS SI ACTIF) */}
           {/* ═══════════════════════════════════════════════════════════════════ */}
-          {activeRequest && !activeRequest.isCompleted && (
+          {activeTab === "TRANSMIS" && activeRequest && !activeRequest.isCompleted && (
             <section className="space-y-2.5 animate-in fade-in duration-200">
               <div className="text-[11px] font-bold tracking-wider text-slate-800 uppercase">
                 ACTION REQUISE

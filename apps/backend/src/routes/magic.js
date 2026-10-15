@@ -391,10 +391,13 @@ router.post("/upload/:token", upload.array("files", 10), async (req, res) => {
       uploadedDocs.push(doc);
     }
 
-    // ── 1. Expirer le lien magique immédiatement après le dépôt réussi ──
+    // ── 1. Expirer et marquer le lien magique comme utilisé immédiatement après le dépôt réussi ──
     await prisma.lienMagique.update({
       where: { id: magicLink.id },
-      data: { expiresAt: new Date(Date.now() - 1000) },
+      data: {
+        isUsed: true,
+        expiresAt: new Date(Date.now() - 1000),
+      },
     });
 
     // ── 2. Clôturer les demandes de documents en cours sur ce dossier ──

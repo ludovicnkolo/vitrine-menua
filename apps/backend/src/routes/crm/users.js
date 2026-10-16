@@ -277,7 +277,41 @@ router.delete(
 // --- DASHBOARD STATS (TOUR DE CONTROLE) ---
 router.get("/users", async (req, res) => {
   try {
+    const { role, search, status } = req.query;
+
+    const whereConditions = [];
+
+    if (role && role !== "all") {
+      whereConditions.push({
+        OR: [
+          { roleId: role },
+          { role: { name: { equals: role, mode: "insensitive" } } },
+        ],
+      });
+    }
+
+    if (status && status !== "all") {
+      if (status === "actif") {
+        whereConditions.push({ isBlocked: false });
+      } else if (status === "inactif") {
+        whereConditions.push({ isBlocked: true });
+      }
+    }
+
+    if (search && search.trim()) {
+      const term = search.trim();
+      whereConditions.push({
+        OR: [
+          { name: { contains: term, mode: "insensitive" } },
+          { email: { contains: term, mode: "insensitive" } },
+        ],
+      });
+    }
+
+    const where = whereConditions.length > 0 ? { AND: whereConditions } : undefined;
+
     const users = await prisma.utilisateur.findMany({
+      where,
       select: {
         id: true,
         name: true,

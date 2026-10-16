@@ -257,6 +257,7 @@ const UsersPage = ({ forceTab }) => {
   // Real API states
   const [searchTerm, setSearchTerm] = useState("");
   const [filterUserStatus, setFilterUserStatus] = useState("all");
+  const [filterUserRole, setFilterUserRole] = useState("all");
   const [users, setUsers] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -3028,7 +3029,7 @@ const UsersPage = ({ forceTab }) => {
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={() => { setTab("interne"); setSearchTerm(""); setFilterUserStatus("all"); }}
+                  onClick={() => { setTab("interne"); setSearchTerm(""); setFilterUserStatus("all"); setFilterUserRole("all"); }}
                   style={{
                     background:
                       tab === "interne" ? "var(--primary)" : "transparent",
@@ -3053,7 +3054,7 @@ const UsersPage = ({ forceTab }) => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => { setTab("externe"); setSearchTerm(""); setFilterUserStatus("all"); }}
+                  onClick={() => { setTab("externe"); setSearchTerm(""); setFilterUserStatus("all"); setFilterUserRole("all"); }}
                   style={{
                     background:
                       tab === "externe" ? "var(--primary)" : "transparent",
@@ -3122,12 +3123,31 @@ const UsersPage = ({ forceTab }) => {
               />
               <input
                 type="text"
-                placeholder={tab === "interne" ? t("users.searchPlaceholder", "Rechercher par nom, email ou rôle...") : t("users.searchClientPlaceholder", "Rechercher par nom, email ou secteur...")}
+                placeholder={tab === "interne" ? "Rechercher par nom ou email..." : t("users.searchClientPlaceholder", "Rechercher par nom, email ou secteur...")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full" style={{padding:"0.55rem 1rem 0.55rem 2.25rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF",fontSize:"0.875rem",outline:"none"}}
               />
             </div>
+            {tab === "interne" && (
+              <select
+                value={filterUserRole}
+                onChange={(e) => setFilterUserRole(e.target.value)}
+                style={{
+                  padding: "0.55rem 1rem",
+                  borderRadius: "8px",
+                  border: "1px solid var(--border)",
+                  background: "#FFF",
+                  fontSize: "0.875rem",
+                  minWidth: "160px",
+                }}
+              >
+                <option value="all">Tous les rôles</option>
+                {rolesList.map((r) => (
+                  <option key={r.id} value={r.name}>{r.name}</option>
+                ))}
+              </select>
+            )}
             <select
               value={filterUserStatus}
               onChange={(e) => setFilterUserStatus(e.target.value)}
@@ -3151,12 +3171,13 @@ const UsersPage = ({ forceTab }) => {
               <table className="w-full" style={{tableLayout:"fixed"}}>
                 <thead>
                   <tr>
-                    <th className="text-left" style={{paddingLeft:"1.25rem",width:"24%"}}>{t("users.columns.name", "Nom")}</th>
-                    <th style={{ width: "26%" }}>{t("users.columns.email", "Email")}</th>
-                    <th style={{ width: "20%" }}>{t("users.columns.role", "Rôle")}</th>
-                    <th className="text-center" style={{width:"110px"}}>{t("users.columns.status", "Statut")}</th>
-                    <th className="table-date-cell text-center" style={{width:"165px"}}>{t("users.columns.lastLogin", "Dernière Connexion")}</th>
-                    <th className="text-center" style={{width:"90px"}}>{t("common.actions", "Actions")}</th>
+                    <th className="text-left font-mono" style={{ width: "50px", paddingLeft: "1.25rem" }}>N°</th>
+                    <th className="text-left" style={{ width: "23%" }}>{t("users.columns.name", "Nom")}</th>
+                    <th style={{ width: "20%" }}>{t("users.columns.email", "Email")}</th>
+                    <th className="text-center" style={{ width: "18%" }}>{t("users.columns.role", "Rôle")}</th>
+                    <th className="text-center" style={{ width: "100px" }}>{t("users.columns.status", "Statut")}</th>
+                    <th className="table-date-cell text-center" style={{ width: "155px" }}>{t("users.columns.lastLogin", "Dernière Connexion")}</th>
+                    <th className="text-center" style={{ width: "90px" }}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -3165,16 +3186,26 @@ const UsersPage = ({ forceTab }) => {
                       const term = searchTerm.toLowerCase();
                       const matchSearch = !term ||
                         u.name?.toLowerCase().includes(term) ||
-                        u.email?.toLowerCase().includes(term) ||
-                        u.role?.name?.toLowerCase().includes(term);
+                        u.email?.toLowerCase().includes(term);
                       const matchStatus = filterUserStatus === "all" ||
                         (filterUserStatus === "actif" && !u.isBlocked) ||
                         (filterUserStatus === "inactif" && u.isBlocked);
-                      return matchSearch && matchStatus;
+                      const matchRole = filterUserRole === "all" ||
+                        u.role?.name === filterUserRole ||
+                        u.roleId === filterUserRole;
+                      return matchSearch && matchStatus && matchRole;
                     })
-                    .map((u) => (
+                    .map((u, index) => (
                     <tr key={u.id}>
-                      <td className="text-left" style={{paddingLeft:"1.25rem"}}>
+                      <td
+                        className="text-left font-mono"
+                        style={{ paddingLeft: "1.25rem", color: "var(--text-muted)", fontSize: "0.85rem" }}
+                      >
+                        <div className="truncate-name" style={{ maxWidth: "100%" }}>
+                          {String(index + 1).padStart(2, "0")}
+                        </div>
+                      </td>
+                      <td className="text-left">
                         <div className="truncate-name" style={{ maxWidth: "100%" }} title={u.name}>
                           {u.name}
                         </div>
@@ -3194,7 +3225,7 @@ const UsersPage = ({ forceTab }) => {
                       <td className="text-center">
                         {getRoleBadge(u.role?.name || "Non défini")}
                       </td>
-                      <td>
+                      <td className="text-center">
                         <span
                           style={{
                             color: !u.isBlocked
@@ -3206,7 +3237,7 @@ const UsersPage = ({ forceTab }) => {
                         </span>
                       </td>
                       <td
-                        className="table-date-cell text-center" style={{color:"var(--text-muted)",width:"165px"}}
+                        className="table-date-cell text-center" style={{color:"var(--text-muted)",width:"155px"}}
                       >
                         {u.lastLogin
                           ? formatDate(u.lastLogin)
@@ -3257,14 +3288,14 @@ const UsersPage = ({ forceTab }) => {
               <table className="w-full" style={{tableLayout:"fixed"}}>
                 <thead>
                   <tr>
-                    <th className="text-left" style={{paddingLeft:"1.25rem",width:"20%"}}>{t("users.columns.name", "Société / Nom")}</th>
-                    <th style={{ width: "22%" }}>{t("users.columns.email", "Email")}</th>
-                    <th className="text-center" style={{width:"100px"}}>{t("users.columns.type", "Type")}</th>
-                    <th className="text-center" style={{width:"90px"}}>{t("users.columns.status", "État")}</th>
-                    <th className="text-center" style={{width:"140px"}}>Accès Portail</th>
-                    <th style={{ width: "16%" }}>{t("users.columns.activity", "Activité")}</th>
-                    <th className="table-date-cell text-center" style={{width:"150px"}}>{t("users.columns.createdAt", "Date de création")}</th>
-                    <th className="text-center" style={{width:"95px"}}>{t("common.actions", "Actions")}</th>
+                    <th className="text-left font-mono" style={{ width: "50px", paddingLeft: "1.25rem" }}>N°</th>
+                    <th className="text-left" style={{ width: "24%" }}>{t("users.columns.name", "Société / Nom")}</th>
+                    <th style={{ width: "24%" }}>{t("users.columns.email", "Email")}</th>
+                    <th className="text-center" style={{ width: "100px" }}>{t("users.columns.type", "Type")}</th>
+                    <th className="text-center" style={{ width: "90px" }}>{t("users.columns.status", "État")}</th>
+                    <th className="text-center" style={{ width: "140px" }}>Accès Portail</th>
+                    <th className="table-date-cell text-center" style={{ width: "150px" }}>Créé le</th>
+                    <th className="text-center" style={{ width: "95px" }}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -3274,7 +3305,6 @@ const UsersPage = ({ forceTab }) => {
                       const matchSearch = !term ||
                         c.name?.toLowerCase().includes(term) ||
                         c.email?.toLowerCase().includes(term) ||
-                        c.secteurActivite?.toLowerCase().includes(term) ||
                         c.entreprise?.raisonSociale?.toLowerCase().includes(term);
                       const isClientActive = String(c.status || "ACTIF").toUpperCase() === "ACTIF";
                       const matchStatus = filterUserStatus === "all" ||
@@ -3282,10 +3312,18 @@ const UsersPage = ({ forceTab }) => {
                         (filterUserStatus === "inactif" && !isClientActive);
                       return matchSearch && matchStatus;
                     })
-                    .map((c) => {
+                    .map((c, index) => {
                       const isClientActive = String(c.status || "ACTIF").toUpperCase() === "ACTIF";
                       return (
                     <tr key={c.id}>
+                      <td
+                        className="text-left font-mono"
+                        style={{ paddingLeft: "1.25rem", color: "var(--text-muted)", fontSize: "0.85rem" }}
+                      >
+                        <div className="truncate-name" style={{ maxWidth: "100%" }}>
+                          {String(index + 1).padStart(2, "0")}
+                        </div>
+                      </td>
                       <td>
                         <div
                           className="truncate-name"
@@ -3387,15 +3425,6 @@ const UsersPage = ({ forceTab }) => {
                             <Clock size={11} /> Invitation
                           </span>
                         )}
-                      </td>
-                      <td>
-                        <div
-                          className="truncate-name"
-                          style={{ color: "var(--text-muted)", maxWidth: "100%" }}
-                          title={c.secteurActivite || "N/A"}
-                        >
-                          {c.secteurActivite || "N/A"}
-                        </div>
                       </td>
                       <td className="table-date-cell text-center" style={{width:"150px"}}>
                         <span style={{ color: "var(--text-muted)" }}>

@@ -2141,29 +2141,34 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         <table className="w-full" style={{tableLayout:"fixed"}}>
           <thead>
             <tr>
-              <th className="text-left" style={{width:"110px",paddingLeft:"1.25rem"}}>{t("task.columns.id", "ID")}</th>
-              <th className="text-left" style={{width:"26%"}}>
-                {mode === "MISSION" ? t("task.columns.missionFolder", "Dossier / Mission") : t("task.columns.missionId", "Mission")}
+              <th className="text-center" style={{width:"50px"}}>N°</th>
+              <th className="text-left" style={{width:"28%",paddingLeft:"1.25rem"}}>
+                {mode === "MISSION" ? "Mission" : "Tâche"}
               </th>
-              <th className="text-left" style={{width:"22%"}}>{t("task.columns.assignedTo", "Assigné à")}</th>
+              <th className="text-left" style={{width:"20%"}}>Assigné à</th>
               <th
                 className="table-date-cell text-center" style={{width:"135px"}}
               >
-                {t("task.columns.dueDate", "Échéance")}
+                Échéance
               </th>
-              <th className="text-center" style={{width:"120px"}}>{t("task.columns.status", "Statut")}</th>
-              <th className="table-date-cell text-center" style={{width:"165px"}}>{t("task.columns.date", "Date de création")}</th>
-              <th className="text-center" style={{width:"80px"}}>{t("task.columns.actions", "Actions")}</th>
+              <th className="text-center" style={{width:"120px"}}>Statut</th>
+              <th className="table-date-cell text-center" style={{width:"165px"}}>Créé le</th>
+              <th className="text-center" style={{width:"80px"}}>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {tasks.map((t) => {
+            {tasks.map((t, index) => {
               const deadline = getDeadlineEvaluation(t);
               const isLocked =
                 ["BLOQUE", "EN_ATTENTE"].includes(t.status) ||
                 ["BLOQUE", "EN_ATTENTE"].includes(t.mission?.status) ||
                 ["BLOQUE", "EN_ATTENTE"].includes(t.mission?.dossier?.status) ||
                 ["BLOQUE", "EN_ATTENTE"].includes(t.dossier?.status);
+              const itemReference =
+                t.reference ||
+                (mode === "MISSION"
+                  ? `MSN-${String(index + 1).padStart(2, "0")}`
+                  : `TCH-${String(index + 1).padStart(2, "0")}`);
               return (
                 <tr
                   key={t.id}
@@ -2175,26 +2180,20 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                       : {}
                   }
                 >
-                  <td className="text-left" style={{paddingLeft:"1.25rem"}}>
+                  <td className="text-center">
                     <div
-                      className="truncate-name text-[var(--text-main)] font-normal" style={{maxWidth:"100%"}}
-                      title={t.reference || t.id}
+                      className="truncate-name font-normal text-center" style={{maxWidth:"100%"}}
+                      title={String(index + 1).padStart(2, "0")}
                     >
-                      {t.reference || t.id.slice(0, 8)}
+                      {String(index + 1).padStart(2, "0")}
                     </div>
                   </td>
-                  <td className="text-left">
+                  <td className="text-left" style={{paddingLeft:"1.25rem"}}>
                     <div
-                      className="truncate-name font-normal" style={{color:"var(--primary)",maxWidth:"100%"}}
-                      title={
-                        mode === "MISSION"
-                          ? t.dossier?.name || t.dossierId
-                          : t.mission?.reference || t.missionId
-                      }
+                      className="truncate-name font-medium text-[var(--text-main)]" style={{maxWidth:"100%"}}
+                      title={itemReference}
                     >
-                      {mode === "MISSION"
-                        ? t.dossier?.name || t.dossierId
-                        : t.mission?.reference || t.missionId}
+                      {itemReference}
                     </div>
                   </td>
 

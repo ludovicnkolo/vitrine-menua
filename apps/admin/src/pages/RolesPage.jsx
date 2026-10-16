@@ -366,9 +366,9 @@ const RolesPage = () => {
                     <th className="text-left" style={{ width: "6%", paddingLeft: "1.25rem" }}>
                       N°
                     </th>
-                    <th style={{ width: "26%" }}>Intitulé</th>
-                    <th style={{ width: "24%" }}>Date de création</th>
-                    <th style={{ width: "28%" }}>Statut</th>
+                    <th style={{ width: "28%" }}>Intitulé</th>
+                    <th style={{ width: "26%" }}>Statut</th>
+                    <th style={{ width: "24%" }}>Créé le</th>
                     <th style={{ width: "16%" }}>{t("common.actions", "Actions")}</th>
                   </tr>
                 </thead>
@@ -396,11 +396,6 @@ const RolesPage = () => {
                           </div>
                         </td>
                         <td>
-                          <span style={{ color: "var(--text-muted)" }}>
-                            {new Date(r.createdAt || Date.now()).toLocaleDateString("fr-FR")}
-                          </span>
-                        </td>
-                        <td>
                           <span
                             style={{
                               color: r.status === "Inactif" ? "var(--danger)" : "var(--success)",
@@ -408,6 +403,11 @@ const RolesPage = () => {
                             }}
                           >
                             {r.status === "Inactif" ? t("common.inactive", "Inactif") : t("common.active", "Actif")}
+                          </span>
+                        </td>
+                        <td>
+                          <span style={{ color: "var(--text-muted)" }}>
+                            {new Date(r.createdAt || Date.now()).toLocaleDateString("fr-FR")}
                           </span>
                         </td>
                         <td className="text-center" style={{ padding: "0.5rem", verticalAlign: "middle" }}>

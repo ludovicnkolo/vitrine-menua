@@ -3312,12 +3312,12 @@ const DossiersPage = () => {
           <thead>
             <tr>
               <th className="text-center" style={{width:"50px"}}>N°</th>
-              <th className="text-left" style={{width:"28%",paddingLeft:"1.25rem"}}>{t("dossier.folderName", "Nom du dossier")}</th>
-              <th className="text-center" style={{width:"120px"}}>{t("dossier.origin", "Origine")}</th>
-              <th className="text-center" style={{width:"24%"}}>{t("dossier.owner", "Propriétaire")}</th>
-              <th className="text-center" style={{width:"120px"}}>{t("common.status", "Statut")}</th>
-              <th className="table-date-cell text-center" style={{width:"165px"}}>{t("common.createdAt", "Date de création")}</th>
-              <th className="text-center" style={{width:"80px"}}>{t("common.actions", "Actions")}</th>
+              <th className="text-left" style={{width:"28%",paddingLeft:"1.25rem"}}>Dossier</th>
+              <th className="text-center" style={{width:"18%"}}>Cible</th>
+              <th className="text-center" style={{width:"18%"}}>Assigné à</th>
+              <th className="text-center" style={{width:"120px"}}>Statut</th>
+              <th className="table-date-cell text-center" style={{width:"165px"}}>Créé le</th>
+              <th className="text-center" style={{width:"80px"}}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -3343,8 +3343,7 @@ const DossiersPage = () => {
               dbDossiers
                 .filter((d) => !d.parentDossierId)
                 .map((d, index) => {
-                  const dOrigin = d.origin || "INTERNE";
-                  const dOwner =
+                  const dCible =
                     d.origin === "CLIENT"
                       ? d.client?.name ||
                         d.client?.companyName ||
@@ -3356,7 +3355,11 @@ const DossiersPage = () => {
                         ? d.targetUser?.name ||
                           dbUsers.find((u) => u.id === d.targetUserId)?.name ||
                           "Collaborateur inconnu"
-                        : "MENUA CONSULTING (Interne)";
+                        : "Interne / Général";
+                  const dAssigneA =
+                    d.traitant?.name ||
+                    dbUsers.find((u) => u.id === d.traitantId)?.name ||
+                    "Non assigné";
                   const dCreatorRole = d.createdBy?.role?.name || "-";
                   const isExpired = (dossier) => {
                     return getDeadlineEvaluation(dossier).isCritical;
@@ -3375,7 +3378,7 @@ const DossiersPage = () => {
                       </td>
                       <td className="text-left" style={{paddingLeft:"1.25rem"}}>
                         <span
-                          className="truncate-name text-[var(--text-main)] block" style={{maxWidth:"100%"}}
+                          className="truncate-name text-[var(--text-main)] block font-medium" style={{maxWidth:"100%"}}
                           title={d.name}
                         >
                           {d.name}
@@ -3383,18 +3386,18 @@ const DossiersPage = () => {
                       </td>
                       <td className="text-center">
                         <div
-                          className="truncate-name text-center" style={{color:"var(--text-muted)",textTransform:"uppercase",maxWidth:"100%",fontSize:"0.85rem"}}
-                          title={dOrigin}
+                          className="truncate-name text-center" style={{color:"var(--text-main)",maxWidth:"100%",fontSize:"0.85rem"}}
+                          title={dCible}
                         >
-                          {dOrigin}
+                          {dCible}
                         </div>
                       </td>
                       <td className="text-center">
                         <div
                           className="truncate-name text-center" style={{maxWidth:"100%",fontSize:"0.85rem"}}
-                          title={dOwner}
+                          title={dAssigneA}
                         >
-                          {dOwner}
+                          {dAssigneA}
                         </div>
                       </td>
                       <td className="text-center">

@@ -686,7 +686,7 @@ const CMSPage = () => {
               <h1
                 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.5rem",margin:"0 0 0.25rem 0"}}
               >
-                {t("cms.title", "Espace Site Web — Gestion des Publications")}
+                {t("cms.title", "Gestion des Publications")}
               </h1>
               <p style={{ color: "#64748B", margin: 0, fontSize: "0.85rem" }}>
                 {t("cms.subtitle", "Pilotez les actualités, articles et contenus diffusés publiquement sur le site officiel")}
@@ -759,27 +759,37 @@ const CMSPage = () => {
               <thead>
                 <tr style={{ borderBottom: "1px solid #E2E8F0" }}>
                   <th
-                    className="text-left font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"36%"}}
+                    className="text-left font-mono" style={{padding:"0.85rem 1rem",paddingLeft:"1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"55px",maxWidth:"55px"}}
                   >
-                    {t("cms.columns.title", "Titre de l'actualité")}
+                    N°
                   </th>
                   <th
-                    className="text-left font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"20%"}}
+                    className="text-left font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"32%",maxWidth:"320px"}}
                   >
-                    {t("cms.columns.author", "Auteur")}
+                    {t("cms.columns.title", "Titre")}
                   </th>
                   <th
-                    className="text-left font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"15%"}}
+                    className="text-left font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"20%",maxWidth:"200px"}}
+                  >
+                    {t("cms.columns.category", "Catégorie")}
+                  </th>
+                  <th
+                    className="text-center font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"115px",maxWidth:"115px"}}
                   >
                     {t("cms.columns.status", "Statut")}
                   </th>
                   <th
-                    className="table-date-cell text-left font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"190px"}}
+                    className="table-date-cell text-center font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"140px",maxWidth:"140px"}}
                   >
-                    {t("cms.columns.publishedAt", "Date de publication")}
+                    {t("cms.columns.createdAt", "Créé le")}
                   </th>
                   <th
-                    className="text-right font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"130px"}}
+                    className="table-date-cell text-center font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"140px",maxWidth:"140px"}}
+                  >
+                    {t("cms.columns.updatedAt", "Modifié le")}
+                  </th>
+                  <th
+                    className="text-center font-bold" style={{padding:"0.85rem 1.25rem",fontSize:"0.72rem",color:"#64748B",letterSpacing:"0.05em",textTransform:"uppercase",width:"95px",maxWidth:"95px"}}
                   >
                     {t("cms.columns.actions", "Actions")}
                   </th>
@@ -789,7 +799,7 @@ const CMSPage = () => {
                 {loading ? (
                   <tr>
                     <td
-                      colSpan="5"
+                      colSpan="7"
                       className="text-center" style={{padding:"3rem",color:"#64748B",fontSize:"0.9rem"}}
                     >
                       {t("common.loading", "Chargement des actualités...")}
@@ -798,27 +808,29 @@ const CMSPage = () => {
                 ) : filteredPubs.length === 0 ? (
                   <tr>
                     <td
-                      colSpan="5"
+                      colSpan="7"
                       className="text-center" style={{padding:"3rem",color:"#64748B",fontSize:"0.9rem"}}
                     >
                       {t("common.noResult", "Aucune actualité trouvée.")}
                     </td>
                   </tr>
                 ) : (
-                  paginatedPubs.map((pub) => {
-                    const d = new Date(pub.publishedAt || pub.createdAt || Date.now());
-                    const dateStr = d.toLocaleDateString("fr-FR", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    });
-                    const timeStr = d.toLocaleTimeString("fr-FR", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    });
-
-                    const authorName = pub.author?.name || "Équipe";
-                    const authorInitial = authorName.charAt(0).toUpperCase();
+                  paginatedPubs.map((pub, index) => {
+                    const formatDateTime = (dateVal) => {
+                      if (!dateVal) return "—";
+                      const d = new Date(dateVal);
+                      if (isNaN(d.getTime())) return "—";
+                      const dateStr = d.toLocaleDateString("fr-FR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      });
+                      const timeStr = d.toLocaleTimeString("fr-FR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      });
+                      return `${dateStr} ${timeStr}`;
+                    };
 
                     return (
                       <tr
@@ -828,39 +840,50 @@ const CMSPage = () => {
                           transition: "background 0.15s",
                         }}
                       >
-                        {/* Titre */}
-                        <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
-                          <div style={{ minWidth: 0, overflow: "hidden" }}>
-                            <button
-                              type="button"
-                              onClick={() => openModal(pub)}
-                              className="truncate-name font-bold text-[var(--text-main)] text-left hover:text-[var(--primary)] hover:underline cursor-pointer block w-full"
-                              style={{fontSize:"0.88rem",background:"none",border:"none",padding:0,maxWidth:"100%"}}
-                              title={pub.title}
-                            >
-                              {pub.title}
-                            </button>
-                            <div
-                              className="truncate-name"
-                              style={{ fontSize: "0.75rem", color: "#64748B", marginTop: "2px", maxWidth: "100%" }}
-                            >
-                              {t("cms.category", "Catégorie :")} {pub.category || "Organisation et Externalisation"} • {t("cms.languages", "Langues :")} FR | EN
-                            </div>
+                        {/* N° */}
+                        <td
+                          className="text-left font-mono"
+                          style={{
+                            padding: "0.85rem 1rem",
+                            paddingLeft: "1.25rem",
+                            width: "55px",
+                            maxWidth: "55px",
+                            color: "var(--text-muted)",
+                            fontSize: "0.85rem",
+                            verticalAlign: "middle",
+                          }}
+                        >
+                          <div className="truncate-name" style={{ maxWidth: "100%" }}>
+                            {String((page - 1) * limit + index + 1).padStart(2, "0")}
                           </div>
                         </td>
 
-                        {/* Auteur */}
-                        <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
-                          <span
-                            className="truncate-name font-semibold text-[var(--text-main)]" style={{fontSize:"0.85rem",maxWidth:"100%"}}
-                            title={authorName}
+                        {/* Titre */}
+                        <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle", width: "32%", maxWidth: "320px" }}>
+                          <button
+                            type="button"
+                            onClick={() => openModal(pub)}
+                            className="truncate-name font-bold text-[var(--text-main)] text-left hover:text-[var(--primary)] hover:underline cursor-pointer block w-full"
+                            style={{fontSize:"0.88rem",background:"none",border:"none",padding:0,maxWidth:"100%"}}
+                            title={pub.title}
                           >
-                            {authorName}
-                          </span>
+                            {pub.title}
+                          </button>
+                        </td>
+
+                        {/* Catégorie */}
+                        <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle", width: "20%", maxWidth: "200px" }}>
+                          <div
+                            className="truncate-name font-medium text-[var(--text-main)]"
+                            style={{ fontSize: "0.85rem", maxWidth: "100%", color: "#334155" }}
+                            title={pub.category || "Organisation et Externalisation"}
+                          >
+                            {pub.category || "Organisation et Externalisation"}
+                          </div>
                         </td>
 
                         {/* Statut */}
-                        <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle" }}>
+                        <td className="text-center" style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle", width: "115px", maxWidth: "115px" }}>
                           <span
                             style={{
                               display: "inline-flex",
@@ -880,15 +903,22 @@ const CMSPage = () => {
                           </span>
                         </td>
 
-                        {/* Date de publication */}
-                        <td className="table-date-cell" style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle", width: "190px" }}>
+                        {/* Créé le */}
+                        <td className="table-date-cell text-center" style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle", width: "140px", maxWidth: "140px" }}>
                           <span className="text-[var(--text-main)]" style={{fontSize:"0.85rem",whiteSpace:"nowrap"}}>
-                            {dateStr} {timeStr}
+                            {formatDateTime(pub.createdAt)}
+                          </span>
+                        </td>
+
+                        {/* Modifié le */}
+                        <td className="table-date-cell text-center" style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle", width: "140px", maxWidth: "140px" }}>
+                          <span className="text-[var(--text-main)]" style={{fontSize:"0.85rem",whiteSpace:"nowrap"}}>
+                            {formatDateTime(pub.updatedAt || pub.createdAt)}
                           </span>
                         </td>
 
                         {/* Actions */}
-                        <td className="text-right" style={{ padding: "0.55rem 1.25rem", verticalAlign: "middle" }}>
+                        <td className="text-center" style={{ padding: "0.55rem 1.25rem", verticalAlign: "middle", width: "95px", maxWidth: "95px" }}>
                           <div className="inline-flex flex-col items-center" style={{ gap: "3px" }}>
                             {/* Sommet de la pyramide : Modifier */}
                             <button
@@ -991,7 +1021,7 @@ const CMSPage = () => {
                     {t("cms.contactCardTitle", "Formulaire de Contact Public")}
                   </h3>
                   <p style={{ margin: "0 0 1rem 0", fontSize: "0.78rem", color: "#64748B" }}>
-                    {t("cms.contactCardSub", "Permet aux visiteurs d'envoyer des demandes de devis et d'informations")}
+                    {t("cms.contactCardSub", "Recueille les demandes des prospects intéressés via le formulaire de contact du site web.")}
                   </p>
 
                   <label
@@ -1010,9 +1040,6 @@ const CMSPage = () => {
                         {formSettings.contactFormEnabled
                           ? t("cms.contactEnabled", "Activé (Accepte les soumissions)")
                           : t("cms.contactDisabled", "Désactivé (Bloque les soumissions)")}
-                      </div>
-                      <div style={{ fontSize: "0.75rem", color: "#16A34A", marginTop: "2px" }}>
-                        {t("cms.contactOpen", "Le formulaire est actuellement ouvert et opérationnel sur le site")}
                       </div>
                     </div>
                   </label>
@@ -1033,7 +1060,7 @@ const CMSPage = () => {
                     {t("cms.recruitmentCardTitle", "Formulaire Recrutement (Carrières)")}
                   </h3>
                   <p style={{ margin: "0 0 1rem 0", fontSize: "0.78rem", color: "#64748B" }}>
-                    {t("cms.recruitmentCardSub", "Permet aux candidats de déposer leur CV et lettre de motivation")}
+                    {t("cms.recruitmentCardSub", "Recueille les candidatures via le formulaire de recrutement du site web.")}
                   </p>
 
                   <label
@@ -1052,9 +1079,6 @@ const CMSPage = () => {
                         {formSettings.recrutementFormEnabled
                           ? t("cms.recruitmentEnabled", "Activé (Accepte les candidatures)")
                           : t("cms.recruitmentDisabled", "Désactivé (Bloque les candidatures)")}
-                      </div>
-                      <div style={{ fontSize: "0.75rem", color: "#16A34A", marginTop: "2px" }}>
-                        {t("cms.recruitmentActiveSub", "Les soumissions de CV sont transmises au vivier de talents")}
                       </div>
                     </div>
                   </label>

@@ -797,7 +797,7 @@ export default function DocumentsPage() {
               placeholder="Rechercher dossiers, fichiers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full" style={{padding:"0.55rem 2rem 0.55rem 2.2rem",borderRadius:"8px",border:"1px solid #CBD5E1",background:"#FFF",fontSize:"0.85rem"}}
+              className="w-full text-[var(--text-main)]" style={{padding:"0.55rem 2rem 0.55rem 2.2rem",borderRadius:"8px",border:"1px solid var(--border)",background:"var(--surface)",fontSize:"0.85rem"}}
             />
             {searchQuery && (
               <button
@@ -813,7 +813,7 @@ export default function DocumentsPage() {
             <button
               type="button"
               onClick={() => setShowUploadModal(true)}
-              className="flex items-center text-white font-semibold cursor-pointer" style={{gap:"0.4rem",background:"#1E3A8A",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem",border:"none"}}
+              className="flex items-center text-white font-semibold cursor-pointer btn-primary" style={{gap:"0.4rem",background:"var(--primary)",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem",border:"none"}}
             >
               <Upload size={15} /> Importer
             </button>
@@ -823,7 +823,7 @@ export default function DocumentsPage() {
             <button
               type="button"
               onClick={() => setShowNewFolderModal(true)}
-              className="flex items-center text-[var(--text-main)] font-semibold cursor-pointer" style={{gap:"0.4rem",background:"#FFF",border:"1px solid #CBD5E1",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem"}}
+              className="flex items-center text-[var(--text-main)] font-semibold cursor-pointer" style={{gap:"0.4rem",background:"var(--surface)",border:"1px solid var(--border)",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem"}}
             >
               <Plus size={15} /> Nouveau
             </button>
@@ -833,7 +833,7 @@ export default function DocumentsPage() {
             <button
               type="button"
               onClick={handleOpenTrash}
-              className="flex items-center font-semibold cursor-pointer" style={{gap:"0.4rem",background:"#FFF",color:"#DC2626",border:"1px solid #FECACA",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem"}}
+              className="flex items-center font-semibold cursor-pointer" style={{gap:"0.4rem",background:"var(--btn-action-delete-bg)",color:"var(--btn-action-delete-color)",border:"1px solid var(--btn-action-delete-border)",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem"}}
             >
               <Trash size={15} /> Corbeille
             </button>
@@ -845,7 +845,7 @@ export default function DocumentsPage() {
               setLoading(true);
               fetchDossiers();
             }}
-            className="flex items-center cursor-pointer" style={{gap:"0.4rem",background:"#FFF",color:"#475569",border:"1px solid #CBD5E1",padding:"0.55rem 0.75rem",borderRadius:"8px"}}
+            className="flex items-center cursor-pointer" style={{gap:"0.4rem",background:"var(--surface)",color:"var(--text-main)",border:"1px solid var(--border)",padding:"0.55rem 0.75rem",borderRadius:"8px"}}
             title="Rafraîchir"
           >
             <RefreshCw size={15} />
@@ -856,7 +856,7 @@ export default function DocumentsPage() {
       {/* Breadcrumb Navigation (Hide when searching) */}
       {!isSearching && (
         <div
-          className="flex justify-between items-center mb-6 flex-wrap gap-2" style={{background:"#FFF",padding:"0.75rem 1.25rem",borderRadius:"8px",border:"1px solid var(--border)"}}
+          className="flex justify-between items-center mb-6 flex-wrap gap-2" style={{background:"var(--surface)",padding:"0.75rem 1.25rem",borderRadius:"8px",border:"1px solid var(--border)"}}
         >
           <div className="flex items-center gap-2 flex-wrap">
             <button

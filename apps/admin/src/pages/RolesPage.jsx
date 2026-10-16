@@ -883,13 +883,11 @@ const RolesPage = () => {
                 <button
                   type="button"
                   onClick={() => setConsultRole(null)}
-                  className="inline-flex items-center font-semibold cursor-pointer"
+                  className="inline-flex items-center font-semibold cursor-pointer bg-slate-900 text-white dark:bg-slate-800 dark:text-slate-100 hover:opacity-90 transition-opacity"
                   style={{
                     gap: "0.35rem",
                     fontSize: "0.85rem",
                     padding: "0.5rem 1.25rem",
-                    backgroundColor: "var(--text-main)",
-                    color: "#FFFFFF",
                     border: "none",
                     borderRadius: "8px",
                   }}

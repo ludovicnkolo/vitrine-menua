@@ -168,7 +168,19 @@ router.post(
 
       let effectiveDossierId = dossierId;
       const isClientUpload =
-        req.body.category === "DEPOT_CLIENT" || Boolean(req.user?.clientId);
+        req.body.category === "DEPOT_CLIENT" ||
+        req.body.category === "ENTRANT" ||
+        req.body.direction === "ENTRANT" ||
+        Boolean(req.body.demandId) ||
+        Boolean(req.user?.clientId);
+
+      const isSentToClient =
+        req.body.category === "RESTITUTION" ||
+        req.body.category === "LIVRABLE" ||
+        req.body.category === "SORTANT" ||
+        req.body.direction === "SORTANT" ||
+        req.body.isSentToClient === "true" ||
+        req.body.isSentToClient === true;
 
       let targetDossier = null;
       if (dossierId) {
@@ -185,12 +197,17 @@ router.post(
       const effectiveClientId = req.user?.clientId || targetDossier?.clientId || null;
 
       // Si le dossier est un dossier client, router vers Sortant ou Entrant
-      if (dossierId && (targetDossier?.clientId || req.user?.clientId)) {
+      if (dossierId && (targetDossier?.clientId || req.user?.clientId || isClientUpload || isSentToClient)) {
         try {
           const folders = await ensureClientSharingFolders(dossierId);
-          if (folders && isClientUpload) {
-            // Documents transmis par le client -> sous-dossier « Entrant »
-            effectiveDossierId = folders.entrantFolder?.id || dossierId;
+          if (folders) {
+            if (isClientUpload && folders.entrantFolder?.id) {
+              // Documents transmis par le client -> sous-dossier « Entrant »
+              effectiveDossierId = folders.entrantFolder.id;
+            } else if (isSentToClient && folders.sortantFolder?.id) {
+              // Documents et livrables transmis au client -> sous-dossier « Sortant »
+              effectiveDossierId = folders.sortantFolder.id;
+            }
           }
         } catch (folderErr) {
           console.error("Erreur routage dossier partage client:", folderErr);
@@ -275,7 +292,9 @@ router.post(
           status: req.body.status || (isClientUpload ? "EN_COURS" : "VALIDE"),
           note: req.body.note || null,
           fileSize: formattedSize,
-          category: req.body.category || (isClientUpload ? "DEPOT_CLIENT" : "DOCUMENT"),
+          category:
+            req.body.category ||
+            (isClientUpload ? "DEPOT_CLIENT" : isSentToClient ? "SORTANT" : "DOCUMENT"),
           ...(effectiveDossierId && { dossierId: effectiveDossierId }),
           ...(missionId && { missionId }),
         },

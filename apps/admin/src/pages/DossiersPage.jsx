@@ -495,6 +495,9 @@ const DossiersPage = () => {
           formData.append("dossierId", consultDossier.id);
           formData.append("name", file.name);
           formData.append("file", file);
+          formData.append("category", "LIVRABLE");
+          formData.append("isSentToClient", "true");
+          formData.append("direction", "SORTANT");
           const uploadRes = await fetch(
             getSafeApiUrl("/api/files/upload-and-attach"),
             {
@@ -623,6 +626,8 @@ const DossiersPage = () => {
         formData.append("file", file);
         formData.append("status", directShareStatus);
         formData.append("category", "RESTITUTION");
+        formData.append("isSentToClient", "true");
+        formData.append("direction", "SORTANT");
         if (directShareNote.trim()) {
           formData.append("note", directShareNote.trim());
         }
@@ -1749,7 +1754,7 @@ const DossiersPage = () => {
                 setConsultDossier(null);
                 setPendingStatus("");
               }}
-              className="text-white font-semibold cursor-pointer" style={{background:"var(--text-main)",border:"none",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem"}}
+              className="inline-flex items-center font-semibold cursor-pointer bg-slate-900 text-white dark:bg-slate-800 dark:text-slate-100 hover:opacity-90 transition-opacity" style={{border:"none",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem"}}
             >
               ← Retour
             </button>
@@ -3276,7 +3281,7 @@ const DossiersPage = () => {
       </div>
 
       <div
-        className="flex flex-wrap gap-4 mb-6 p-4" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)"}}
+        className="flex flex-wrap gap-4 mb-6 p-4" style={{background:"var(--surface)",borderRadius:"8px",border:"1px solid var(--border)"}}
       >
         <div className="relative" style={{flex:"1 1 250px"}}>
           <Search
@@ -3288,18 +3293,18 @@ const DossiersPage = () => {
             placeholder="Rechercher par ID, Nom ou Créateur..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input-field w-full" style={{padding:"0.75rem 1rem 0.75rem 2.5rem",borderRadius:"8px",border:"1px solid var(--border)"}}
+            className="input-field w-full text-[var(--text-main)]" style={{padding:"0.75rem 1rem 0.75rem 2.5rem",borderRadius:"8px",border:"1px solid var(--border)",background:"var(--bg-main)"}}
           />
         </div>
         <select
-          className="input-field"
+          className="input-field text-[var(--text-main)] cursor-pointer"
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
           style={{
             padding: "0.75rem 1rem",
             borderRadius: "8px",
             border: "1px solid var(--border)",
-            background: "#FFF",
+            background: "var(--bg-main)",
             minWidth: "150px",
           }}
         >
@@ -3315,14 +3320,14 @@ const DossiersPage = () => {
 
         </select>
         <select
-          className="input-field"
+          className="input-field text-[var(--text-main)] cursor-pointer"
           value={filterOrigine}
           onChange={(e) => setFilterOrigine(e.target.value)}
           style={{
             padding: "0.75rem 1rem",
             borderRadius: "8px",
             border: "1px solid var(--border)",
-            background: "#FFF",
+            background: "var(--bg-main)",
             minWidth: "150px",
           }}
         >

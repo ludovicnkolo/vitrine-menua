@@ -32,14 +32,14 @@ const CollaboratorWeather: React.FC<CollaboratorWeatherProps> = ({
   };
 
   return (
-    <div className="flex flex-col bg-white border border-[#E2E8F0] border-t-4 border-t-blue-600 rounded-xl py-5 px-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+    <div className="flex flex-col bg-[var(--surface)] border border-[var(--border)] border-t-4 border-t-blue-600 rounded-xl py-5 px-6 shadow-sm">
       {/* Header */}
       <div className="flex justify-between items-start mb-5">
         <div>
           <h3 className="font-bold text-[var(--text-main)] m-0 mb-1 text-[1rem]">
             {t("dashboard.workloadWeather", "Météo de Charge (En cours)")}
           </h3>
-          <p className="m-0 text-[0.78rem] text-slate-500">
+          <p className="m-0 text-[0.78rem] text-[var(--text-muted)]">
             {t(
               "dashboard.workloadSub",
               "Répartition de la charge opérationnelle par collaborateur et rôle"
@@ -49,7 +49,7 @@ const CollaboratorWeather: React.FC<CollaboratorWeatherProps> = ({
         <select
           value={selectedRoleFilter}
           onChange={(e) => onRoleFilterChange(e.target.value)}
-          className="text-[var(--text-main)] cursor-pointer py-1.5 pl-3 pr-6 rounded-lg border-[1.5px] border-blue-500 bg-white text-[0.8rem] outline-none"
+          className="text-[var(--text-main)] cursor-pointer py-1.5 pl-3 pr-6 rounded-lg border-[1.5px] border-blue-500 bg-[var(--bg-main)] text-[0.8rem] outline-none"
         >
           <option value="all">{t("common.allRoles", "Tous les rôles")}</option>
           <option value="responsable">{t("role.Responsable opérationnel", "Responsable")}</option>
@@ -67,13 +67,13 @@ const CollaboratorWeather: React.FC<CollaboratorWeatherProps> = ({
           return (
             <div
               key={idx}
-              className="flex items-center justify-between bg-white border border-slate-100 border-l-4 border-l-blue-600 rounded-lg py-2.5 px-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+              className="flex items-center justify-between bg-[var(--bg-main)] border border-[var(--border)] border-l-4 border-l-blue-600 rounded-lg py-2.5 px-3.5 shadow-sm"
             >
               {/* Left: Avatar + Details */}
               <div className="flex items-center gap-3 min-w-0">
                 <div
                   translate="no"
-                  className="notranslate font-bold flex items-center justify-center w-8 h-8 min-w-[32px] max-w-[32px] rounded-full bg-slate-100 text-slate-700 text-[0.75rem] shrink-0 overflow-hidden select-none"
+                  className="notranslate font-bold flex items-center justify-center w-8 h-8 min-w-[32px] max-w-[32px] rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-[0.75rem] shrink-0 overflow-hidden select-none"
                 >
                   <span translate="no" className="notranslate truncate">
                     {initials}
@@ -83,7 +83,7 @@ const CollaboratorWeather: React.FC<CollaboratorWeatherProps> = ({
                   <div className="font-bold text-[var(--text-main)] text-[0.85rem] truncate">
                     {collab.name}
                   </div>
-                  <div className="text-[0.72rem] text-slate-500 mt-[1px] truncate">
+                  <div className="text-[0.72rem] text-[var(--text-muted)] mt-[1px] truncate">
                     {t("common.role", "Rôle")} :{" "}
                     {t(
                       `role.${collab.role || collab.roleCategory}`,
@@ -98,8 +98,8 @@ const CollaboratorWeather: React.FC<CollaboratorWeatherProps> = ({
                 <span
                   className={`py-1 px-2.5 text-[0.75rem] font-semibold rounded-md border ${
                     count > 0
-                      ? "bg-blue-50 border-blue-200 text-blue-600"
-                      : "bg-slate-50 border-slate-200 text-slate-600"
+                      ? "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400"
+                      : "bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
                   }`}
                 >
                   {count} {t("dashboard.tasks", "tâche(s)")}

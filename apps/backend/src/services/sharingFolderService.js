@@ -151,6 +151,40 @@ async function ensureClientSharingFolders(dossierId, tx = prisma) {
     });
   }
 
+  // 5. Auto-relocalisation des fichiers mal positionnés (à la racine ou dans partage_documents)
+  // vers leurs sous-dossiers dédiés (sortant ou entrant)
+  try {
+    const parentFolderIds = [rootDossier.id, partageFolder.id].filter(Boolean);
+
+    if (sortantFolder?.id && parentFolderIds.length > 0) {
+      await tx.document.updateMany({
+        where: {
+          dossierId: { in: parentFolderIds },
+          isDeleted: false,
+          category: { in: ["RESTITUTION", "LIVRABLE", "SORTANT"] },
+        },
+        data: {
+          dossierId: sortantFolder.id,
+        },
+      });
+    }
+
+    if (entrantFolder?.id && parentFolderIds.length > 0) {
+      await tx.document.updateMany({
+        where: {
+          dossierId: { in: parentFolderIds },
+          isDeleted: false,
+          category: { in: ["DEPOT_CLIENT", "ENTRANT", "DEMANDE"] },
+        },
+        data: {
+          dossierId: entrantFolder.id,
+        },
+      });
+    }
+  } catch (healErr) {
+    console.error("Erreur auto-relocalisation documents partage:", healErr);
+  }
+
   return { rootDossier, partageFolder, sortantFolder, entrantFolder };
 }
 

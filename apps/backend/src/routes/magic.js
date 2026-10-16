@@ -11,6 +11,7 @@ const prisma = new PrismaClient();
 const { logAudit } = require("../utils/audit");
 const { notify } = require("../utils/notify");
 const { transporter } = require("../utils/mailer");
+const { ensureClientSharingFolders } = require("../services/sharingFolderService");
 
 // Multer in memory for S3 upload
 const upload = multer({
@@ -182,14 +183,17 @@ router.get("/verify/:token", async (req, res) => {
         } catch (_) {}
       }
 
-      const activeDocs = magicLink.dossier.documents.filter((d) => {
-        if (d.isDeleted) return false;
-        if (allowedIds && allowedIds.length > 0) {
-          return allowedIds.includes(d.id);
-        }
-        // Fallback si pas d'IDs enregistrés : ne rien montrer
-        return false;
-      });
+      let activeDocs = [];
+      if (allowedIds && Array.isArray(allowedIds) && allowedIds.length > 0) {
+        activeDocs = await prisma.document.findMany({
+          where: {
+            id: { in: allowedIds },
+            isDeleted: false,
+          },
+        });
+      } else if (magicLink.dossier?.documents) {
+        activeDocs = magicLink.dossier.documents.filter((d) => !d.isDeleted);
+      }
       const docsWithUrls = await Promise.all(
         activeDocs.map(async (doc) => {
           // If it's an S3 object (no path traversal ./), we generate a presigned URL
@@ -368,19 +372,23 @@ router.post("/upload/:token", upload.array("files", 10), async (req, res) => {
         .json({ success: false, error: "Aucun fichier fourni." });
     }
 
+    // Résolution du sous-dossier « Entrant » dédié aux dépôts client
+    const folders = await ensureClientSharingFolders(magicLink.dossierId);
+    const targetDossierId = folders?.entrantFolder?.id || magicLink.dossierId;
+
     const uploadedDocs = [];
 
     for (const file of req.files) {
       const safeName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, "_");
-      const s3Key = `dossiers/${magicLink.dossierId}/${randomUUID()}-${safeName}`;
+      const s3Key = `dossiers/${targetDossierId}/${randomUUID()}-${safeName}`;
 
       // Upload to S3
       await uploadToS3(file.buffer, s3Key, file.mimetype);
 
-      // Create Document in DB
+      // Create Document in DB dans le sous-dossier entrant
       const doc = await prisma.document.create({
         data: {
-          dossierId: magicLink.dossierId,
+          dossierId: targetDossierId,
           name: file.originalname,
           url: s3Key,
           uploadedById: magicLink.createdBy,
@@ -401,9 +409,14 @@ router.post("/upload/:token", upload.array("files", 10), async (req, res) => {
     });
 
     // ── 2. Clôturer les demandes de documents en cours sur ce dossier ──
+    const closeFolderIds = [magicLink.dossierId];
+    if (folders?.rootDossier?.id) closeFolderIds.push(folders.rootDossier.id);
+    if (folders?.partageFolder?.id) closeFolderIds.push(folders.partageFolder.id);
+    if (folders?.entrantFolder?.id) closeFolderIds.push(folders.entrantFolder.id);
+
     await prisma.document.updateMany({
       where: {
-        dossierId: magicLink.dossierId,
+        dossierId: { in: closeFolderIds },
         category: "DEMANDE",
         status: "ACTION_REQUISE",
       },

@@ -696,7 +696,8 @@ const CMSPage = () => {
               <button
                 type="button"
                 onClick={() => openModal()}
-                className="text-white font-semibold inline-flex items-center gap-2 cursor-pointer" style={{background:"var(--text-main)",border:"none",borderRadius:"8px",padding:"0.65rem 1.25rem",fontSize:"0.88rem",transition:"background 0.2s"}}
+                className="btn btn-primary font-semibold inline-flex items-center gap-2 cursor-pointer"
+                style={{ borderRadius: "8px", padding: "0.65rem 1.25rem", fontSize: "0.88rem" }}
               >
                 {t("cms.newPost", "+ Nouvelle Actualité")}
               </button>
@@ -705,7 +706,7 @@ const CMSPage = () => {
 
           {/* Filter Bar */}
           <div
-            className="mb-6 flex items-center gap-4 flex-wrap" style={{background:"#FFF",border:"1px solid #E2E8F0",borderRadius:"12px",padding:"0.85rem 1.25rem"}}
+            className="mb-6 flex items-center gap-4 flex-wrap" style={{background:"var(--surface)",border:"1px solid var(--border)",borderRadius:"12px",padding:"0.85rem 1.25rem"}}
           >
             <div className="relative" style={{flex:"1 1 260px"}}>
               <Search
@@ -717,14 +718,14 @@ const CMSPage = () => {
                 placeholder={t("cms.searchPlaceholder", "Rechercher par titre, auteur, mot-clé...")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full text-[var(--text-main)]" style={{padding:"0.6rem 1rem 0.6rem 2.4rem",borderRadius:"8px",border:"1px solid #E2E8F0",fontSize:"0.85rem",outline:"none"}}
+                className="w-full text-[var(--text-main)]" style={{padding:"0.6rem 1rem 0.6rem 2.4rem",borderRadius:"8px",border:"1px solid var(--border)",background:"var(--bg-main)",fontSize:"0.85rem",outline:"none"}}
               />
             </div>
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="text-[var(--text-main)] cursor-pointer" style={{padding:"0.6rem 2rem 0.6rem 0.85rem",borderRadius:"8px",border:"1.5px solid #3B82F6",background:"#FFF",fontSize:"0.85rem",outline:"none"}}
+              className="text-[var(--text-main)] cursor-pointer" style={{padding:"0.6rem 2rem 0.6rem 0.85rem",borderRadius:"8px",border:"1px solid var(--border)",background:"var(--bg-main)",fontSize:"0.85rem",outline:"none"}}
             >
               <option value="all">{t("common.allStatuses", "Tous les statuts")}</option>
               <option value="PUBLIE">{t("status.PUBLIE", "PUBLIÉ")}</option>
@@ -734,7 +735,7 @@ const CMSPage = () => {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="text-[var(--text-main)] cursor-pointer" style={{padding:"0.6rem 2rem 0.6rem 0.85rem",borderRadius:"8px",border:"1.5px solid #3B82F6",background:"#FFF",fontSize:"0.85rem",outline:"none"}}
+              className="text-[var(--text-main)] cursor-pointer" style={{padding:"0.6rem 2rem 0.6rem 0.85rem",borderRadius:"8px",border:"1px solid var(--border)",background:"var(--bg-main)",fontSize:"0.85rem",outline:"none"}}
             >
               <option value="all">{t("cms.allCategories", "Toutes les catégories")}</option>
               {CATEGORIES.map((cat) => (
@@ -875,7 +876,7 @@ const CMSPage = () => {
                         <td style={{ padding: "0.85rem 1.25rem", verticalAlign: "middle", width: "20%", maxWidth: "200px" }}>
                           <div
                             className="truncate-name font-medium text-[var(--text-main)]"
-                            style={{ fontSize: "0.85rem", maxWidth: "100%", color: "#334155" }}
+                            style={{ fontSize: "0.85rem", maxWidth: "100%" }}
                             title={pub.category || "Organisation et Externalisation"}
                           >
                             {pub.category || "Organisation et Externalisation"}
@@ -1130,13 +1131,13 @@ const CMSPage = () => {
                   <button
                     type="button"
                     onClick={handleAddBlacklistEmail}
-                    className="text-white font-semibold cursor-pointer" style={{padding:"0.65rem 1.25rem",background:"var(--text-main)",border:"none",borderRadius:"8px",fontSize:"0.875rem",whiteSpace:"nowrap"}}
+                    className="text-white font-semibold cursor-pointer bg-[var(--primary)] hover:opacity-90 transition-opacity" style={{padding:"0.65rem 1.25rem",border:"none",borderRadius:"8px",fontSize:"0.875rem",whiteSpace:"nowrap"}}
                   >
                     {t("cms.addBlacklistBtn", "+ Ajouter")}
                   </button>
                 </div>
 
-                <div className="font-semibold mb-2" style={{fontSize:"0.8rem",color:"#374151"}}>
+                <div className="font-semibold mb-2" style={{fontSize:"0.8rem",color:"var(--text-main)"}}>
                   {t("cms.blockedCount", { count: formSettings.blacklistedEmails?.length || 0, defaultValue: `Adresses actuellement bloquées (${formSettings.blacklistedEmails?.length || 0} active(s)) :` })}
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -1167,13 +1168,13 @@ const CMSPage = () => {
               <div
                 className="flex justify-between items-center flex-wrap gap-4"
               >
-                <span style={{ fontSize: "0.82rem", color: "#64748B" }}>
+                <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
                   {t("cms.settingsNotice", "Toute modification des formulaires prend effet immédiatement sur le site public.")}
                 </span>
                 <button
                   type="button"
                   onClick={saveFormSettings}
-                  className="text-white font-semibold cursor-pointer" style={{padding:"0.65rem 1.5rem",background:"var(--text-main)",border:"none",borderRadius:"8px",fontSize:"0.88rem"}}
+                  className="text-white font-semibold cursor-pointer bg-[var(--primary)] hover:opacity-90 transition-opacity" style={{padding:"0.65rem 1.5rem",border:"none",borderRadius:"8px",fontSize:"0.88rem"}}
                 >
                   {t("cms.saveSettingsBtn", "Enregistrer les paramètres")}
                 </button>

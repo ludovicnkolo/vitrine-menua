@@ -1149,19 +1149,19 @@ const InboxPage = ({ userRole }) => {
                     placeholder="Rechercher par nom ou email..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full" style={{padding:"0.5rem 1rem",borderRadius:"8px",border:"1px solid var(--border)",outline:"none",background:"#F8FAFC"}}
+                    className="w-full text-[var(--text-main)]" style={{padding:"0.5rem 1rem",borderRadius:"8px",border:"1px solid var(--border)",outline:"none",background:"var(--surface)"}}
                   />
                 </div>
                 <input
                   type="date"
                   value={filterDate}
                   onChange={(e) => setFilterDate(e.target.value)}
-                  className="text-[var(--text-main)] cursor-pointer" style={{padding:"0.5rem 1rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF",outline:"none"}}
+                  className="text-[var(--text-main)] cursor-pointer" style={{padding:"0.5rem 1rem",borderRadius:"8px",border:"1px solid var(--border)",background:"var(--surface)",outline:"none"}}
                 />
                 <select
                   value={filterTraite}
                   onChange={(e) => setFilterTraite(e.target.value)}
-                  className="text-[var(--text-main)] cursor-pointer" style={{padding:"0.5rem 1rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF",outline:"none",minWidth:"150px"}}
+                  className="text-[var(--text-main)] cursor-pointer" style={{padding:"0.5rem 1rem",borderRadius:"8px",border:"1px solid var(--border)",background:"var(--surface)",outline:"none",minWidth:"150px"}}
                 >
                   <option value="all">{t("common.allStatuses", "Tous les statuts")}</option>
                   {tab === "contact" && (
@@ -1210,7 +1210,7 @@ const InboxPage = ({ userRole }) => {
                     setLimit(Number(e.target.value));
                     setPage(1);
                   }}
-                  className="p-2 cursor-pointer" style={{borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF",outline:"none"}}
+                  className="text-[var(--text-main)] p-2 cursor-pointer" style={{borderRadius:"8px",border:"1px solid var(--border)",background:"var(--surface)",outline:"none"}}
                 >
                   <option value={12}>{t("common.perPage", { count: 12, defaultValue: "12 par page" })}</option>
                   <option value={25}>{t("common.perPage", { count: 25, defaultValue: "25 par page" })}</option>
@@ -1348,22 +1348,15 @@ const InboxPage = ({ userRole }) => {
                             </td>
                             <td>
                               <span
-                                style={
-                                  tab === "message"
-                                    ? {
-                                        padding: "0.25rem 0.5rem",
-                                        borderRadius: "4px",
-                                        fontSize: "0.72rem",
-                                        fontWeight: 400,
-                                        background: getStatusBadge(m.status).bg,
-                                        color: getStatusBadge(m.status).color,
-                                        whiteSpace: "nowrap",
-                                      }
-                                    : {
-                                        
-                                        color: getStatusBadge(m.status).color,
-                                      }
-                                }
+                                className="status-badge-inbox inline-flex items-center gap-1 font-semibold"
+                                style={{
+                                  padding: "0.25rem 0.65rem",
+                                  borderRadius: "12px",
+                                  fontSize: "0.75rem",
+                                  background: getStatusBadge(m.status).bg,
+                                  color: getStatusBadge(m.status).color,
+                                  whiteSpace: "nowrap",
+                                }}
                               >
                                 {getDisplayStatus(m.status, t)}
                               </span>
@@ -1373,27 +1366,15 @@ const InboxPage = ({ userRole }) => {
                               tab === "recrutement") && (
                               <td style={{ whiteSpace: "nowrap" }}>
                                 <span
-                                  style={
-                                    tab === "message"
-                                      ? {
-                                          padding: "0.25rem 0.5rem",
-                                          borderRadius: "4px",
-                                          fontSize: "0.72rem",
-                                          fontWeight: 400,
-                                          background: getPriorityBadge(
-                                            m.priorite
-                                          ).bg,
-                                          color: getPriorityBadge(
-                                            m.priorite
-                                          ).color,
-                                        }
-                                      : {
-                                          color: getPriorityBadge(
-                                            m.priorite
-                                          ).color,
-                                          fontWeight: 500,
-                                        }
-                                  }
+                                  className="priority-badge-inbox inline-flex items-center gap-1 font-semibold"
+                                  style={{
+                                    padding: "0.25rem 0.65rem",
+                                    borderRadius: "12px",
+                                    fontSize: "0.75rem",
+                                    background: getPriorityBadge(m.priorite).bg,
+                                    color: getPriorityBadge(m.priorite).color,
+                                    whiteSpace: "nowrap",
+                                  }}
                                 >
                                   {formatPriority(m.priorite, t)}
                                 </span>
@@ -1421,7 +1402,7 @@ const InboxPage = ({ userRole }) => {
                             </td>
                             <td>
                               <div
-                                className="flex flex-col items-center" style={{gap:"0.25rem"}}
+                                className="flex items-center justify-center" style={{gap:"4px"}}
                               >
                                 <button
                                   type="button"
@@ -1430,18 +1411,20 @@ const InboxPage = ({ userRole }) => {
                                     setPendingChanges({});
                                     setShowSaveConfirm(false);
                                   }}
-                                  className="cursor-pointer" style={{background:"none",border:"none",color:"var(--primary)",padding:"4px"}}
+                                  className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                                  style={{ width: "28px", height: "28px", borderRadius: "6px", background: "var(--btn-action-view-bg, #F1F5F9)", border: "1px solid var(--btn-action-view-border, #E2E8F0)", color: "var(--btn-action-view-color, #64748B)" }}
                                   title="Consulter le message"
                                 >
-                                  <Eye size={18} />
+                                  <Eye size={14} />
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => handleDeleteMessage(m)}
-                                  className="cursor-pointer" style={{background:"none",border:"none",color:"#EF4444",padding:"4px"}}
+                                  className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                                  style={{ width: "28px", height: "28px", borderRadius: "6px", background: "var(--btn-action-delete-bg, #FEF2F2)", border: "1px solid var(--btn-action-delete-border, #FECACA)", color: "var(--btn-action-delete-color, #DC2626)" }}
                                   title="Supprimer le message"
                                 >
-                                  <Trash size={18} />
+                                  <Trash size={14} />
                                 </button>
                               </div>
                             </td>
@@ -1703,11 +1686,10 @@ const InboxPage = ({ userRole }) => {
                       setPendingChanges({});
                       setShowSaveConfirm(false);
                     }}
-                    className="text-white font-semibold cursor-pointer whitespace-nowrap inline-flex items-center justify-center shrink-0"
+                    className="inline-flex items-center justify-center font-semibold cursor-pointer whitespace-nowrap shrink-0 bg-slate-900 text-white dark:bg-slate-800 dark:text-slate-100 hover:opacity-90 transition-opacity"
                     style={{
                       padding: "0.55rem 1.4rem",
                       borderRadius: "6px",
-                      background: "var(--text-main)",
                       fontSize: "0.85rem",
                       border: "none",
                       whiteSpace: "nowrap",

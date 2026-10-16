@@ -5,13 +5,31 @@
 :root {
   --primary: #1A365D; /* Deep navy */
   --primary-light: #2B6CB0;
-  --secondary: #D4AF37; /* Gold/Beige */
-  --bg-color: #FFFFFF;
+  --secondary: #2563EB;
+  --bg-color: #F8FAFC;
+  --bg-main: #F8FAFC;
   --surface: #FFFFFF;
-  --text-main: #2D3748;
-  --text-muted: #718096;
+  --text-main: #0F172A;
+  --text-muted: #64748B;
   --border: #E2E8F0;
+  --sidebar-bg: #1A365D;
+  --th-bg: #F8FAFC;
   
+  --badge-societe-color: #2563EB;
+  --badge-part-color: #7E22CE;
+
+  --btn-action-edit-bg: #EFF6FF;
+  --btn-action-edit-border: #BFDBFE;
+  --btn-action-edit-color: #2563EB;
+
+  --btn-action-view-bg: #F1F5F9;
+  --btn-action-view-border: #E2E8F0;
+  --btn-action-view-color: #64748B;
+
+  --btn-action-delete-bg: #FEF2F2;
+  --btn-action-delete-border: #FECACA;
+  --btn-action-delete-color: #DC2626;
+
   --success: #48BB78;
   --warning: #ECC94B;
   --danger: #F56565;
@@ -20,26 +38,211 @@
   --radius-md: 8px;
   --radius-lg: 12px;
   
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08);
+  color-scheme: light;
 }
 
-body.dark {
-  --primary: #0F172A; /* Dark navy */
-  --primary-light: #1E293B;
-  --secondary: #D4AF37;
-  --bg-color: #0F172A;
-  --surface: #1E293B;
+body.dark, html.dark {
+  --primary: #2563EB; /* Vibrant accessible blue for primary buttons and actions */
+  --primary-light: #3B82F6;
+  --secondary: #6366F1;
+  --bg-color: #0B1120;
+  --bg-main: #0B1120;
+  --surface: #131B2E;
   --text-main: #F8FAFC;
   --text-muted: #94A3B8;
-  --border: #334155;
-  /* Variable th-bg pour les en-têtes de tableau en dark mode */
+  --border: #1E293B;
+  --sidebar-bg: #0F172A;
   --th-bg: #0F172A;
   
+  --badge-societe-color: #60A5FA;
+  --badge-part-color: #C084FC;
+
+  --btn-action-edit-bg: rgba(59, 130, 246, 0.15);
+  --btn-action-edit-border: rgba(59, 130, 246, 0.35);
+  --btn-action-edit-color: #60A5FA;
+
+  --btn-action-view-bg: rgba(148, 163, 184, 0.15);
+  --btn-action-view-border: rgba(148, 163, 184, 0.35);
+  --btn-action-view-color: #CBD5E1;
+
+  --btn-action-delete-bg: rgba(239, 68, 68, 0.15);
+  --btn-action-delete-border: rgba(239, 68, 68, 0.35);
+  --btn-action-delete-color: #F87171;
+
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.5);
   --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5);
+  color-scheme: dark;
+}
+
+/* Global inputs, selects and textareas dark mode overrides */
+body.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+body.dark select,
+body.dark textarea {
+  background-color: var(--surface) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border) !important;
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+  color: #64748B !important;
+  opacity: 1;
+}
+
+body.dark select option {
+  background-color: #131B2E !important;
+  color: #F8FAFC !important;
+}
+
+/* Action button styles in tables */
+.btn-action-edit {
+  background: var(--btn-action-edit-bg) !important;
+  border: 1px solid var(--btn-action-edit-border) !important;
+  color: var(--btn-action-edit-color) !important;
+}
+
+.btn-action-view {
+  background: var(--btn-action-view-bg) !important;
+  border: 1px solid var(--btn-action-view-border) !important;
+  color: var(--btn-action-view-color) !important;
+}
+
+.btn-action-delete {
+  background: var(--btn-action-delete-bg) !important;
+  border: 1px solid var(--btn-action-delete-border) !important;
+  color: var(--btn-action-delete-color) !important;
+}
+
+/* Action buttons override in dark mode */
+body.dark button[style*="background: #EFF6FF"],
+body.dark button[style*='background: "#EFF6FF"'],
+body.dark button[style*="background:#EFF6FF"] {
+  background: rgba(59, 130, 246, 0.15) !important;
+  border-color: rgba(59, 130, 246, 0.35) !important;
+  color: #60A5FA !important;
+}
+
+body.dark button[style*="background: #F1F5F9"],
+body.dark button[style*='background: "#F1F5F9"'],
+body.dark button[style*="background:#F1F5F9"] {
+  background: rgba(148, 163, 184, 0.15) !important;
+  border-color: rgba(148, 163, 184, 0.35) !important;
+  color: #CBD5E1 !important;
+}
+
+body.dark button[style*="background: #FEF2F2"],
+body.dark button[style*='background: "#FEF2F2"'],
+body.dark button[style*="background:#FEF2F2"] {
+  background: rgba(239, 68, 68, 0.15) !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+  color: #F87171 !important;
+}
+
+/* Inbox Status & Priority Badges in Dark Mode */
+body.dark .status-badge-inbox,
+body.dark .priority-badge-inbox {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Cards & Containers in Dark Mode */
+body.dark div[style*='backgroundColor: "#FFFFFF"'],
+body.dark div[style*="backgroundColor: #FFFFFF"],
+body.dark div[style*="backgroundColor:#FFFFFF"],
+body.dark div[style*='background: "#FFFFFF"'],
+body.dark div[style*="background: #FFFFFF"],
+body.dark div[style*="background:#FFFFFF"],
+body.dark div[style*='background: "#FFF"'],
+body.dark div[style*="background: #FFF"],
+body.dark div[style*="background:#FFF"] {
+  background-color: var(--surface) !important;
+  color: var(--text-main);
+  border-color: var(--border) !important;
+}
+
+body.dark div[style*='background: "#F8FAFC"'],
+body.dark div[style*="background: #F8FAFC"],
+body.dark div[style*="background:#F8FAFC"] {
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+/* Hardcoded white buttons in Dark Mode */
+body.dark button[style*='background: "#FFF"'],
+body.dark button[style*="background: #FFF"],
+body.dark button[style*="background:#FFF"] {
+  background-color: var(--surface) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border) !important;
+}
+
+/* Deep Navy & Dark buttons in Dark Mode become Primary Blue */
+body.dark button[style*="background: #1E3A8A"],
+body.dark button[style*='background: "#1E3A8A"'],
+body.dark button[style*="background:#1E3A8A"],
+body.dark button[style*="var(--text-main)"],
+body.dark a[style*="var(--text-main)"],
+body.dark button[style*="background: #0F172A"],
+body.dark button[style*='background: "#0F172A"'],
+body.dark button[style*="background:#0F172A"],
+body.dark button[style*="backgroundColor: #0F172A"],
+body.dark button[style*='backgroundColor: "#0F172A"'],
+body.dark button[style*="backgroundColor:#0F172A"] {
+  background-color: var(--primary) !important;
+  color: #FFFFFF !important;
+}
+
+/* Light blue badges & buttons in Dark mode */
+body.dark [style*="backgroundColor: #EFF6FF"],
+body.dark [style*='backgroundColor: "#EFF6FF"'],
+body.dark [style*="backgroundColor:#EFF6FF"] {
+  background-color: rgba(59, 130, 246, 0.15) !important;
+  border-color: rgba(59, 130, 246, 0.35) !important;
+  color: #60A5FA !important;
+}
+
+/* High contrast text overrides for dark mode */
+body.dark [style*="color: #1E3A8A"],
+body.dark [style*='color: "#1E3A8A"'],
+body.dark [style*="color:#1E3A8A"],
+body.dark [style*="color: #1D4ED8"],
+body.dark [style*='color: "#1D4ED8"'],
+body.dark [style*="color:#1D4ED8"] {
+  color: #60A5FA !important;
+}
+
+body.dark [style*="color: #166534"],
+body.dark [style*='color: "#166534"'],
+body.dark [style*="color:#166534"] {
+  color: #34D399 !important;
+}
+
+body.dark [style*="color: #7E22CE"],
+body.dark [style*='color: "#7E22CE"'],
+body.dark [style*="color:#7E22CE"] {
+  color: #C084FC !important;
+}
+
+body.dark [style*="color: #334155"],
+body.dark [style*='color: "#334155"'],
+body.dark [style*="color:#334155"],
+body.dark [style*="color: #374151"],
+body.dark [style*='color: "#374151"'],
+body.dark [style*="color:#374151"],
+body.dark [style*="color: #1F2937"],
+body.dark [style*='color: "#1F2937"'],
+body.dark [style*="color:#1F2937"],
+body.dark [style*="color: #111827"],
+body.dark [style*='color: "#111827"'],
+body.dark [style*="color:#111827"],
+body.dark [style*="color: #475569"],
+body.dark [style*='color: "#475569"'],
+body.dark [style*="color:#475569"] {
+  color: #E2E8F0 !important;
 }
 
 * {
@@ -138,7 +341,7 @@ body {
 
 .sidebar {
   width: 250px;
-  background-color: var(--primary);
+  background-color: var(--sidebar-bg, #0F172A);
   color: white;
   display: flex;
   flex-direction: column;

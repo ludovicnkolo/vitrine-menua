@@ -709,6 +709,8 @@ const UsersPage = ({ forceTab }) => {
         emailEntreprise: isSociete ? (editExternal.emailEntreprise?.trim() || null) : null,
         telephoneEntreprise: isSociete ? (editExternal.telephoneEntreprise?.trim() || null) : null,
         status: editExternal.status,
+        accountStatus: editExternal.accountStatus,
+        isAccountBlocked: editExternal.accountStatus === "SUSPENDU",
       },
       () => setEditExternal(null),
       "Erreur lors de la modification",
@@ -1026,6 +1028,7 @@ const UsersPage = ({ forceTab }) => {
                 const isPart = userObj.type === "Particulier" || userObj.type === "PARTICULIER";
                 setEditExternal({
                   ...userObj,
+                  accountStatus: userObj.user?.isBlocked ? "SUSPENDU" : "ACTIF",
                   raisonSociale: userObj.entreprise?.raisonSociale || userObj.raisonSociale || (!isPart ? userObj.name : "") || "",
                   siret: userObj.entreprise?.siret || userObj.siret || "",
                   emailEntreprise: userObj.entreprise?.emailEntreprise || userObj.emailEntreprise || "",
@@ -1275,7 +1278,7 @@ const UsersPage = ({ forceTab }) => {
                           />
                         </div>
 
-                        <div className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}>
+                        <div className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr 1fr"}}>
                           <div>
                             <label style={labelStyle}>Type de client</label>
                             <select
@@ -1293,10 +1296,46 @@ const UsersPage = ({ forceTab }) => {
                               value={String(editExternal.status || "ACTIF").toUpperCase()}
                               onChange={(e) => setEditExternal({ ...editExternal, status: e.target.value })}
                               style={inputStyle}
+                              title="Détermine si le client peut avoir des dossiers, missions ou tâches créés"
                             >
-                              <option value="ACTIF">Actif</option>
-                              <option value="INACTIF">Inactif (bloque les dossiers)</option>
+                              <option value="ACTIF">Actif (Dossiers/Missions/Tâches autorisés)</option>
+                              <option value="INACTIF">Inactif (Création bloquée)</option>
                             </select>
+                            <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", display: "block", marginTop: "0.25rem" }}>
+                              Autorise la création de dossiers, missions et tâches
+                            </span>
+                          </div>
+                          <div>
+                            <label style={labelStyle}>Statut du compte portail</label>
+                            {editExternal.user ? (
+                              <>
+                                <select
+                                  value={editExternal.accountStatus || (editExternal.user?.isBlocked ? "SUSPENDU" : "ACTIF")}
+                                  onChange={(e) => setEditExternal({ ...editExternal, accountStatus: e.target.value })}
+                                  style={inputStyle}
+                                  title="Si suspendu, la connexion au portail client sera impossible"
+                                >
+                                  <option value="ACTIF">Actif (Connexion autorisée)</option>
+                                  <option value="SUSPENDU">Désactivé / Suspendu (Connexion impossible)</option>
+                                </select>
+                                <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", display: "block", marginTop: "0.25rem" }}>
+                                  Compte portail : {editExternal.user.email}
+                                </span>
+                              </>
+                            ) : (
+                              <div
+                                style={{
+                                  ...inputStyle,
+                                  backgroundColor: "var(--border)",
+                                  color: "var(--text-muted)",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  fontSize: "0.8rem",
+                                }}
+                              >
+                                Aucun compte portail créé
+                              </div>
+                            )}
                           </div>
                         </div>
 
@@ -1473,7 +1512,7 @@ const UsersPage = ({ forceTab }) => {
                           />
                         </div>
 
-                        <div className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr"}}>
+                        <div className="grid gap-4" style={{gridTemplateColumns:"1fr 1fr 1fr"}}>
                           <div>
                             <label style={labelStyle}>Type de client</label>
                             <select
@@ -1491,10 +1530,46 @@ const UsersPage = ({ forceTab }) => {
                               value={String(editExternal.status || "ACTIF").toUpperCase()}
                               onChange={(e) => setEditExternal({ ...editExternal, status: e.target.value })}
                               style={inputStyle}
+                              title="Détermine si le client peut avoir des dossiers, missions ou tâches créés"
                             >
-                              <option value="ACTIF">Actif</option>
-                              <option value="INACTIF">Inactif (bloque les dossiers)</option>
+                              <option value="ACTIF">Actif (Dossiers/Missions/Tâches autorisés)</option>
+                              <option value="INACTIF">Inactif (Création bloquée)</option>
                             </select>
+                            <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", display: "block", marginTop: "0.25rem" }}>
+                              Autorise la création de dossiers, missions et tâches
+                            </span>
+                          </div>
+                          <div>
+                            <label style={labelStyle}>Statut du compte portail</label>
+                            {editExternal.user ? (
+                              <>
+                                <select
+                                  value={editExternal.accountStatus || (editExternal.user?.isBlocked ? "SUSPENDU" : "ACTIF")}
+                                  onChange={(e) => setEditExternal({ ...editExternal, accountStatus: e.target.value })}
+                                  style={inputStyle}
+                                  title="Si suspendu, la connexion au portail client sera impossible"
+                                >
+                                  <option value="ACTIF">Actif (Connexion autorisée)</option>
+                                  <option value="SUSPENDU">Désactivé / Suspendu (Connexion impossible)</option>
+                                </select>
+                                <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", display: "block", marginTop: "0.25rem" }}>
+                                  Compte portail : {editExternal.user.email}
+                                </span>
+                              </>
+                            ) : (
+                              <div
+                                style={{
+                                  ...inputStyle,
+                                  backgroundColor: "var(--border)",
+                                  color: "var(--text-muted)",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  fontSize: "0.8rem",
+                                }}
+                              >
+                                Aucun compte portail créé
+                              </div>
+                            )}
                           </div>
                         </div>
 
@@ -1653,30 +1728,28 @@ const UsersPage = ({ forceTab }) => {
 
               {/* Right: Actions */}
               <div className="flex items-center flex-wrap" style={{gap:"0.75rem"}}>
-                {!consultExternal.user && (
-                  <button
-                    type="button"
-                    onClick={() => openConvertModal(consultExternal)}
-                    className="inline-flex items-center font-bold cursor-pointer transition-transform active:scale-95"
-                    style={{
-                      gap: "0.45rem",
-                      fontSize: "0.85rem",
-                      padding: "0.5rem 1.15rem",
-                      backgroundColor: "var(--primary, #c99c5c)",
-                      color: "#FFFFFF",
-                      border: "none",
-                      borderRadius: "8px",
-                      boxShadow: "0 2px 4px rgba(201, 156, 92, 0.25)",
-                    }}
-                  >
-                    <UserPlus size={16} />
-                    Convertir en compte client
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => handleOpenActivityStats("client", consultExternal)}
+                  className="inline-flex items-center font-semibold cursor-pointer transition-colors"
+                  style={{
+                    gap: "0.45rem",
+                    fontSize: "0.85rem",
+                    padding: "0.5rem 1.15rem",
+                    backgroundColor: "var(--btn-action-edit-bg, #EFF6FF)",
+                    color: "var(--btn-action-edit-color, #2563EB)",
+                    border: "1px solid var(--btn-action-edit-border, #BFDBFE)",
+                    borderRadius: "8px",
+                  }}
+                  title="Consulter les statistiques d'activité du client"
+                >
+                  <Activity size={16} />
+                  Consulter les statistiques d'activité
+                </button>
                 <button
                   type="button"
                   onClick={() => setConsultExternal(null)}
-                  className="inline-flex items-center font-semibold cursor-pointer" style={{gap:"0.35rem",fontSize:"0.85rem",padding:"0.5rem 1.25rem",backgroundColor:"var(--text-main)",color:"#FFFFFF",border:"none",borderRadius:"8px"}}
+                  className="inline-flex items-center font-semibold cursor-pointer bg-slate-900 text-white dark:bg-slate-800 dark:text-slate-100 hover:opacity-90 transition-opacity" style={{gap:"0.35rem",fontSize:"0.85rem",padding:"0.5rem 1.25rem",border:"none",borderRadius:"8px"}}
                 >
                   ← Retour
                 </button>
@@ -1754,14 +1827,14 @@ const UsersPage = ({ forceTab }) => {
               <div
                 className="p-5 flex flex-col gap-4"
                 style={{
-                  backgroundColor: "#FFFFFF",
+                  backgroundColor: "var(--surface, #FFFFFF)",
                   borderRadius: "12px",
                   border: "1px solid var(--border)",
                   boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                 }}
               >
-                {/* Entête de la carte compte */}
-                <div className="flex items-center justify-between flex-wrap gap-3" style={{ borderBottom: "1px solid #F1F5F9", paddingBottom: "0.75rem" }}>
+                {/* Entête de la carte compte avec Email et Statut sur la même horizontale */}
+                <div className="flex items-center justify-between flex-wrap gap-3 pb-3" style={{ borderBottom: "1px solid var(--border, #F1F5F9)" }}>
                   <div className="flex items-center gap-3">
                     <div
                       className="flex items-center justify-center shrink-0"
@@ -1786,8 +1859,26 @@ const UsersPage = ({ forceTab }) => {
                     </div>
                   </div>
 
-                  {/* Badge Statut */}
-                  <div>
+                  {/* Email & Badge Statut sur la même horizontale */}
+                  <div className="flex items-center flex-wrap gap-2.5">
+                    {consultExternal.user?.email && (
+                      <span
+                        className="inline-flex items-center gap-1.5 font-medium"
+                        style={{
+                          fontSize: "0.82rem",
+                          padding: "0.3rem 0.75rem",
+                          borderRadius: "16px",
+                          backgroundColor: "var(--bg-main, #F1F5F9)",
+                          border: "1px solid var(--border, #E2E8F0)",
+                          color: "var(--text-main, #334155)",
+                        }}
+                        title={`Email de connexion : ${consultExternal.user.email}`}
+                      >
+                        <Mail size={13} className="text-slate-400 shrink-0" />
+                        <span className="font-semibold">{consultExternal.user.email}</span>
+                      </span>
+                    )}
+
                     {consultExternal.user.isBlocked ? (
                       <span
                         className="inline-flex items-center gap-1.5 font-bold"
@@ -1834,38 +1925,8 @@ const UsersPage = ({ forceTab }) => {
                   </div>
                 </div>
 
-                {/* Détails du compte en grille */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.65rem 0.85rem" }}>
-                    <span style={{ fontSize: "0.7rem", color: "#64748B", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                      Email de connexion
-                    </span>
-                    <div className="font-semibold text-[var(--text-main)] truncate mt-1" style={{ fontSize: "0.9rem" }} title={consultExternal.user.email}>
-                      {consultExternal.user.email}
-                    </div>
-                  </div>
-
-                  <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.65rem 0.85rem" }}>
-                    <span style={{ fontSize: "0.7rem", color: "#64748B", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                      Date de création
-                    </span>
-                    <div className="font-semibold text-[var(--text-main)] mt-1" style={{ fontSize: "0.9rem" }}>
-                      {formatDate(consultExternal.user.createdAt)}
-                    </div>
-                  </div>
-
-                  <div style={{ backgroundColor: "#F8FAFC", border: "1px solid #F1F5F9", borderRadius: "8px", padding: "0.65rem 0.85rem" }}>
-                    <span style={{ fontSize: "0.7rem", color: "#64748B", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                      Dernière connexion
-                    </span>
-                    <div className="font-semibold text-[var(--text-main)] mt-1" style={{ fontSize: "0.9rem" }}>
-                      {consultExternal.user.lastLogin ? formatDate(consultExternal.user.lastLogin) : "Jamais connecté"}
-                    </div>
-                  </div>
-                </div>
-
                 {/* Barre d'actions administratives conformes au cadrage Mme Fouelefack */}
-                <div className="flex items-center justify-between flex-wrap gap-2 pt-2" style={{ borderTop: "1px solid #F1F5F9" }}>
+                <div className="flex items-center justify-between flex-wrap gap-2 pt-0">
                   <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                     Gestion des accès client :
                   </span>
@@ -2247,23 +2308,7 @@ const UsersPage = ({ forceTab }) => {
               )}
             </div>
 
-            {/* Bottom Action: Activity Stats */}
-            <div className="flex justify-center mt-2">
-              <button
-                type="button"
-                onClick={() => handleOpenActivityStats("client", consultExternal)}
-                className="inline-flex items-center gap-2 font-semibold cursor-pointer" style={{fontSize:"0.9rem",padding:"0.75rem 1.5rem",backgroundColor:"#EFF6FF",color:"#1D4ED8",border:"1px solid #BFDBFE",borderRadius:"8px",boxShadow:"0 1px 2px rgba(0,0,0,0.05)",transition:"all 0.2s"}}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = "#DBEAFE";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = "#EFF6FF";
-                }}
-              >
-                <Activity size={18} />
-                Consulter les statistiques d'activité du client (Dossiers, Missions, Tâches)
-              </button>
-            </div>
+
           </div>
         );
       })()}
@@ -2803,7 +2848,7 @@ const UsersPage = ({ forceTab }) => {
               <button
                 type="button"
                 onClick={() => handleOpenActivityStats("user", consultUser)}
-                className="btn btn-outline inline-flex items-center font-semibold" style={{gap:"0.45rem",fontSize:"0.85rem",padding:"0.5rem 1rem",borderColor:"#0284C7",color:"#0284C7",backgroundColor:"#FFFFFF"}}
+                className="btn btn-outline inline-flex items-center font-semibold" style={{gap:"0.45rem",fontSize:"0.85rem",padding:"0.5rem 1rem",borderColor:"#0284C7",color:"#0284C7",backgroundColor:"var(--surface)"}}
               >
                 <BarChart3 size={15} />
                 Bilan d'activité
@@ -2811,7 +2856,7 @@ const UsersPage = ({ forceTab }) => {
               <button
                 type="button"
                 onClick={() => setConsultUser(null)}
-                className="inline-flex items-center font-semibold cursor-pointer" style={{gap:"0.35rem",fontSize:"0.85rem",padding:"0.5rem 1.25rem",backgroundColor:"var(--text-main)",color:"#FFFFFF",border:"none",borderRadius:"8px"}}
+                className="inline-flex items-center font-semibold cursor-pointer bg-slate-900 text-white dark:bg-slate-800 dark:text-slate-100 hover:opacity-90 transition-opacity" style={{gap:"0.35rem",fontSize:"0.85rem",padding:"0.5rem 1.25rem",border:"none",borderRadius:"8px"}}
               >
                 ← Retour
               </button>
@@ -3183,18 +3228,19 @@ const UsersPage = ({ forceTab }) => {
                 placeholder={tab === "interne" ? "Rechercher par nom ou email..." : t("users.searchClientPlaceholder", "Rechercher par nom, email ou secteur...")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full" style={{padding:"0.55rem 1rem 0.55rem 2.25rem",borderRadius:"8px",border:"1px solid var(--border)",background:"#FFF",fontSize:"0.875rem",outline:"none"}}
+                className="w-full text-[var(--text-main)]" style={{padding:"0.55rem 1rem 0.55rem 2.25rem",borderRadius:"8px",border:"1px solid var(--border)",background:"var(--surface)",fontSize:"0.875rem",outline:"none"}}
               />
             </div>
             {tab === "interne" && (
               <select
                 value={filterUserRole}
                 onChange={(e) => setFilterUserRole(e.target.value)}
+                className="text-[var(--text-main)] cursor-pointer"
                 style={{
                   padding: "0.55rem 1rem",
                   borderRadius: "8px",
                   border: "1px solid var(--border)",
-                  background: "#FFF",
+                  background: "var(--surface)",
                   fontSize: "0.875rem",
                   minWidth: "160px",
                 }}
@@ -3208,11 +3254,12 @@ const UsersPage = ({ forceTab }) => {
             <select
               value={filterUserStatus}
               onChange={(e) => setFilterUserStatus(e.target.value)}
+              className="text-[var(--text-main)] cursor-pointer"
               style={{
                 padding: "0.55rem 1rem",
                 borderRadius: "8px",
                 border: "1px solid var(--border)",
-                background: "#FFF",
+                background: "var(--surface)",
                 fontSize: "0.875rem",
                 minWidth: "150px",
               }}
@@ -3391,13 +3438,14 @@ const UsersPage = ({ forceTab }) => {
                       </td>
                       <td className="text-center">
                         <span
+                          className="font-medium"
                           style={{
                             color:
                               c.type === "Société" || c.type === "SOCIETE"
-                                ? "#1D4ED8"
+                                ? "var(--badge-societe-color, #2563EB)"
                                 : c.type === "Anonyme" || c.type === "ANONYME"
-                                  ? "#64748B"
-                                  : "#7E22CE",
+                                  ? "var(--text-muted)"
+                                  : "var(--badge-part-color, #7E22CE)",
                           }}
                         >
                           {c.type === "SOCIETE" || c.type === "Société"
@@ -3466,9 +3514,9 @@ const UsersPage = ({ forceTab }) => {
                               fontSize: "0.75rem",
                               padding: "0.15rem 0.55rem",
                               borderRadius: "12px",
-                              backgroundColor: "#F1F5F9",
-                              color: "#94A3B8",
-                              border: "1px solid #E2E8F0",
+                              backgroundColor: "var(--border)",
+                              color: "var(--text-muted)",
+                              border: "1px solid var(--border)",
                             }}
                             title="Aucun compte portail créé"
                           >
@@ -3491,6 +3539,7 @@ const UsersPage = ({ forceTab }) => {
                               setEditExternal({
                                 ...c,
                                 status: c.status || "ACTIF",
+                                accountStatus: c.user?.isBlocked ? "SUSPENDU" : "ACTIF",
                                 raisonSociale: c.entreprise?.raisonSociale || c.entreprise?.nom || c.raisonSociale || (!isPart ? c.name : "") || "",
                                 siret: c.entreprise?.siret || c.siret || "",
                                 emailEntreprise: c.entreprise?.emailEntreprise || c.emailEntreprise || "",

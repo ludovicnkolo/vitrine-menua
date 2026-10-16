@@ -96,14 +96,14 @@ const FunnelCard: React.FC<FunnelCardProps> = ({
   }, [maxFunnelVolume]);
 
   return (
-    <div className="flex flex-col bg-white border border-[#E2E8F0] border-t-4 border-t-pink-500 rounded-xl py-5 px-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+    <div className="flex flex-col bg-[var(--surface)] border border-[var(--border)] border-t-4 border-t-pink-500 rounded-xl py-5 px-6 shadow-sm">
       {/* Header */}
       <div className="flex justify-between items-start mb-5 gap-3">
         <div>
           <h3 className="font-bold text-[var(--text-main)] m-0 mb-1 text-[1rem]">
             {t("dashboard.productionFunnel", "Entonnoir de Production (Période)")}
           </h3>
-          <p className="m-0 text-[0.78rem] text-slate-500">
+          <p className="m-0 text-[0.78rem] text-[var(--text-muted)]">
             {isDetailed
               ? "Taux de transformation et ratios d'avancement opérationnels"
               : t(
@@ -115,7 +115,7 @@ const FunnelCard: React.FC<FunnelCardProps> = ({
         <select
           value={funnelView}
           onChange={(e) => onFunnelViewChange(e.target.value)}
-          className="text-[var(--text-main)] font-semibold cursor-pointer py-1.5 pl-3 pr-6 rounded-lg border-[1.5px] border-blue-500 bg-white text-[0.8rem] outline-none shadow-sm hover:border-blue-600 transition-colors"
+          className="text-[var(--text-main)] font-semibold cursor-pointer py-1.5 pl-3 pr-6 rounded-lg border-[1.5px] border-blue-500 bg-[var(--bg-main)] text-[0.8rem] outline-none shadow-sm hover:border-blue-600 transition-colors"
         >
           <option value="cumulee">
             {t("dashboard.cumulativeView", "Vue cumulée (Volumes)")}
@@ -144,15 +144,15 @@ const FunnelCard: React.FC<FunnelCardProps> = ({
                   {stage.title}
                 </span>
                 {isDetailed && (
-                  <span className="text-[0.75rem] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                  <span className="text-[0.75rem] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200">
                     {stage.rate}% transf.
                   </span>
                 )}
               </div>
-              <div className="text-[0.72rem] text-slate-500 mb-1.5">
+              <div className="text-[0.72rem] text-[var(--text-muted)] mb-1.5">
                 {stage.subtitle}
               </div>
-              <div className="w-full relative flex items-center bg-slate-100 h-7 rounded-md overflow-hidden">
+              <div className="w-full relative flex items-center bg-slate-100 dark:bg-slate-800/80 h-7 rounded-md overflow-hidden">
                 <div
                   className={`${stage.colorClass} flex items-center justify-end text-white font-bold text-[0.82rem] h-full rounded-md transition-all duration-300 ease-in-out`}
                   style={{
@@ -169,7 +169,7 @@ const FunnelCard: React.FC<FunnelCardProps> = ({
                     : ""}
                 </div>
                 {((isDetailed && stage.rate === 0) || (!isDetailed && stage.value === 0)) && (
-                  <span className="absolute font-bold left-3 text-slate-400 text-[0.82rem]">
+                  <span className="absolute font-bold left-3 text-slate-400 dark:text-slate-500 text-[0.82rem]">
                     {isDetailed ? "0% (0)" : "0"}
                   </span>
                 )}
@@ -179,7 +179,7 @@ const FunnelCard: React.FC<FunnelCardProps> = ({
         })}
 
         {/* Dynamic Axis scale */}
-        <div className="flex justify-between px-1 text-[0.72rem] text-slate-400 mt-1 font-medium">
+        <div className="flex justify-between px-1 text-[0.72rem] text-[var(--text-muted)] mt-1 font-medium">
           {isDetailed ? (
             <>
               <span>0%</span>
@@ -197,7 +197,7 @@ const FunnelCard: React.FC<FunnelCardProps> = ({
       {/* Efficacité de conversion (mode détaillé uniquement) */}
       {isDetailed && (
         <div
-          className="border rounded-lg py-2.5 px-4 mt-5 text-[0.78rem] transition-colors bg-purple-50 border-purple-200 text-purple-700"
+          className="border rounded-lg py-2.5 px-4 mt-5 text-[0.78rem] transition-colors bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300"
         >
           <div>
             <span className="font-bold">Efficacité de conversion : </span>

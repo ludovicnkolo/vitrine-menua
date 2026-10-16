@@ -429,13 +429,30 @@ const handleClientUpdate = async (req, res) => {
       emailEntreprise,
       telephoneEntreprise,
       status,
+      accountStatus,
+      isAccountBlocked,
     } = req.body;
 
     const existingClient = await prisma.client.findUnique({
       where: { id: req.params.id },
-      include: { entreprise: true },
+      include: { entreprise: true, user: true },
     });
     if (!existingClient) return res.status(404).json({ error: "Client introuvable." });
+
+    if (existingClient.user && (accountStatus !== undefined || isAccountBlocked !== undefined)) {
+      const shouldBlock = isAccountBlocked !== undefined 
+        ? Boolean(isAccountBlocked) 
+        : (String(accountStatus).toUpperCase() === "SUSPENDU" || String(accountStatus).toUpperCase() === "INACTIF" || String(accountStatus).toUpperCase() === "BLOQUE");
+      
+      const newStatus = shouldBlock ? "Suspendu / Inactif" : (existingClient.user.lastLogin ? "Actif" : "Invitation envoyée");
+      await prisma.utilisateur.update({
+        where: { id: existingClient.user.id },
+        data: {
+          isBlocked: shouldBlock,
+          status: newStatus,
+        },
+      });
+    }
 
     const resolvedTypeStr = type !== undefined 
       ? String(type).trim().toUpperCase() 

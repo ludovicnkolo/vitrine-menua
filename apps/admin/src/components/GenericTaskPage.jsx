@@ -1596,7 +1596,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 setConsultTask(null);
                 setTaskFile(null);
               }}
-              className="text-white font-semibold cursor-pointer" style={{background:"var(--text-main)",border:"none",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem"}}
+              className="inline-flex items-center font-semibold cursor-pointer bg-slate-900 text-white dark:bg-slate-800 dark:text-slate-100 hover:opacity-90 transition-opacity" style={{border:"none",padding:"0.55rem 1.1rem",borderRadius:"8px",fontSize:"0.85rem"}}
             >
               ← Retour
             </button>
@@ -2133,7 +2133,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
       </div>
 
       <div
-        className="flex gap-4 mb-6 p-4" style={{background:"#F8FAFC",borderRadius:"8px",border:"1px solid var(--border)"}}
+        className="flex gap-4 mb-6 p-4" style={{background:"var(--surface)",borderRadius:"8px",border:"1px solid var(--border)"}}
       >
         <div className="relative" style={{flex:1}}>
           <Search
@@ -2145,18 +2145,18 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             placeholder={t("task.searchPlaceholder", "Rechercher par référence, responsable...")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input-field w-full" style={{padding:"0.75rem 1rem 0.75rem 2.5rem",borderRadius:"8px",border:"1px solid var(--border)"}}
+            className="input-field w-full text-[var(--text-main)]" style={{padding:"0.75rem 1rem 0.75rem 2.5rem",borderRadius:"8px",border:"1px solid var(--border)",background:"var(--bg-main)"}}
           />
         </div>
         <select
-          className="input-field"
+          className="input-field text-[var(--text-main)] cursor-pointer"
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
           style={{
             padding: "0.75rem 1rem",
             borderRadius: "8px",
             border: "1px solid var(--border)",
-            background: "#FFF",
+            background: "var(--bg-main)",
             minWidth: "200px",
           }}
         >
@@ -2410,28 +2410,34 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             type="button"
             disabled={page === 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
+            className="font-medium transition-colors"
             style={{
               padding: "0.5rem 1rem",
-              borderRadius: "4px",
+              borderRadius: "6px",
               border: "1px solid var(--border)",
-              background: "#FFF",
+              background: "var(--surface)",
+              color: page === 1 ? "var(--text-muted)" : "var(--text-main)",
+              opacity: page === 1 ? 0.45 : 1,
               cursor: page === 1 ? "not-allowed" : "pointer",
             }}
           >
             Précédent
           </button>
-          <span style={{  color: "var(--text-muted)" }}>
+          <span style={{ color: "var(--text-muted)", fontSize: "0.875rem", fontWeight: 500 }}>
             Page {page} sur {totalPages}
           </span>
           <button
             type="button"
             disabled={page >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            className="font-medium transition-colors"
             style={{
               padding: "0.5rem 1rem",
-              borderRadius: "4px",
+              borderRadius: "6px",
               border: "1px solid var(--border)",
-              background: "#FFF",
+              background: "var(--surface)",
+              color: page >= totalPages ? "var(--text-muted)" : "var(--text-main)",
+              opacity: page >= totalPages ? 0.45 : 1,
               cursor: page >= totalPages ? "not-allowed" : "pointer",
             }}
           >

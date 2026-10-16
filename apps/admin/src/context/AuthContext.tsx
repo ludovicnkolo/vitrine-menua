@@ -56,9 +56,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       redirectToLogin(reason);
     });
 
-    if (localStorage.getItem("adminTheme") === "dark") {
-      document.body.classList.add("dark");
-    }
+    const isDark = localStorage.getItem("adminTheme") === "dark";
+    document.documentElement.classList.toggle("dark", isDark);
+    document.body.classList.toggle("dark", isDark);
 
     // Si utilisateur ou token manquant lors du montage -> déconnexion immédiate
     const currentToken = getStoredToken();

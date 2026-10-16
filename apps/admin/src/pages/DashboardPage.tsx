@@ -181,20 +181,20 @@ const DashboardPage: React.FC = () => {
           <h1 className="font-bold text-[var(--text-main)] text-[1.6rem] m-0 mb-1">
             {t("dashboard.title", "Tour de Contrôle")}
           </h1>
-          <p className="text-slate-500 m-0 text-[0.85rem]">
+          <p className="text-[var(--text-muted)] m-0 text-[0.85rem]">
             {t("dashboard.subtitle", "Vue d'ensemble stratégique et opérationnelle en temps réel")}
           </p>
         </div>
 
         {/* Date Filter Bar */}
-        <div className="flex items-center gap-2 flex-wrap bg-white px-2.5 py-1.5 rounded-xl border border-slate-200">
-          <span className="font-medium text-[0.82rem] text-slate-500">
+        <div className="flex items-center gap-2 flex-wrap bg-[var(--surface)] px-2.5 py-1.5 rounded-xl border border-[var(--border)] shadow-sm">
+          <span className="font-medium text-[0.82rem] text-[var(--text-muted)]">
             {t("dashboard.period", "Période :")}
           </span>
 
           {/* Date start */}
-          <div className="flex items-center gap-1.5 border-[1.5px] border-blue-500 rounded-lg px-2.5 py-1 bg-white">
-            <span className="text-[0.78rem] text-slate-500">{t("dashboard.from", "Du")}</span>
+          <div className="flex items-center gap-1.5 border-[1.5px] border-blue-500 rounded-lg px-2.5 py-1 bg-[var(--bg-main)]">
+            <span className="text-[0.78rem] text-[var(--text-muted)]">{t("dashboard.from", "Du")}</span>
             <input
               type="date"
               value={startDate}
@@ -203,11 +203,11 @@ const DashboardPage: React.FC = () => {
             />
           </div>
 
-          <span className="text-slate-400 text-[0.9rem]">→</span>
+          <span className="text-[var(--text-muted)] text-[0.9rem]">→</span>
 
           {/* Date end */}
-          <div className="flex items-center gap-1.5 border-[1.5px] border-blue-500 rounded-lg px-2.5 py-1 bg-white">
-            <span className="text-[0.78rem] text-slate-500">{t("dashboard.to", "Au")}</span>
+          <div className="flex items-center gap-1.5 border-[1.5px] border-blue-500 rounded-lg px-2.5 py-1 bg-[var(--bg-main)]">
+            <span className="text-[0.78rem] text-[var(--text-muted)]">{t("dashboard.to", "Au")}</span>
             <input
               type="date"
               value={endDate}
@@ -220,8 +220,8 @@ const DashboardPage: React.FC = () => {
             type="button"
             onClick={handleApplyFilter}
             disabled={loading}
-            className={`px-5 py-2 bg-[var(--text-main)] text-white border-none rounded-lg font-semibold text-[0.82rem] ml-1 transition-colors ${
-              loading ? "cursor-not-allowed opacity-70" : "cursor-pointer hover:bg-slate-800"
+            className={`px-5 py-2 bg-[var(--primary)] text-white border-none rounded-lg font-semibold text-[0.82rem] ml-1 transition-opacity ${
+              loading ? "cursor-not-allowed opacity-70" : "cursor-pointer hover:opacity-90"
             }`}
           >
             {t("dashboard.apply", "Appliquer")}

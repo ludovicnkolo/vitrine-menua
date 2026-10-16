@@ -286,33 +286,26 @@ router.get("/dossiers", async (req, res) => {
     let tachesWhere = undefined;
 
     if (!isSuperAdmin(userRole)) {
-      if (userRole === "Responsable opérationnel" || userRole === "Collaborateur") {
-        missionsWhere = {
-          OR: [
-            { assignedToId: userId },
-            { createdById: userId },
-            { dossier: { traitantId: userId } },
-            { taches: { some: { assignedToId: userId } } }
-          ]
-        };
-        tachesWhere = {
-          OR: [
-            { assignedToId: userId },
-            { createdById: userId },
-            { mission: { assignedToId: userId } },
-            { mission: { dossier: { traitantId: userId } } },
-            { dossierTache: { traitantId: userId } }
-          ]
-        };
-      } else if (userRole === "Relecteur") {
-        missionsWhere = {
-          OR: [
-            { relecteurId: userId },
-            { taches: { some: { relecteurId: userId } } }
-          ]
-        };
-        tachesWhere = { relecteurId: userId };
-      }
+      missionsWhere = {
+        OR: [
+          { assignedToId: userId },
+          { relecteurId: userId },
+          { createdById: userId },
+          { dossier: { traitantId: userId } },
+          { taches: { some: { OR: [{ assignedToId: userId }, { relecteurId: userId }, { createdById: userId }] } } },
+        ],
+      };
+      tachesWhere = {
+        OR: [
+          { assignedToId: userId },
+          { relecteurId: userId },
+          { createdById: userId },
+          { mission: { assignedToId: userId } },
+          { mission: { relecteurId: userId } },
+          { mission: { dossier: { traitantId: userId } } },
+          { dossierTache: { traitantId: userId } },
+        ],
+      };
     }
 
     let total = await prisma.dossier.count({ where });
@@ -494,6 +487,35 @@ router.get("/dossiers", async (req, res) => {
       if (limit) dossiers = dossiers.slice(skip, skip + limit);
     }
 
+    const isSuperAdm =
+      req.user.role === "Super-administrateur" ||
+      req.user.role === "Administrateur";
+    dossiers = dossiers.map((d) => {
+      const isAssignedDirect =
+        d.traitantId === userId || d.createdById === userId || d.targetUserId === userId;
+      const isAssignedMission =
+        d.missions &&
+        d.missions.some(
+          (m) =>
+            m.assignedToId === userId ||
+            m.relecteurId === userId ||
+            m.createdById === userId ||
+            (m.taches &&
+              m.taches.some(
+                (t) => t.assignedToId === userId || t.relecteurId === userId || t.createdById === userId
+              ))
+        );
+      const isAssignedTache =
+        d.tachesLinked &&
+        d.tachesLinked.some(
+          (t) => t.assignedToId === userId || t.relecteurId === userId || t.createdById === userId
+        );
+      return {
+        ...d,
+        canWrite: isSuperAdm || isAssignedDirect || isAssignedMission || isAssignedTache,
+      };
+    });
+
     sendPaginatedResponse(res, dossiers, total, page, limit);
   } catch (error) {
     console.error(error);
@@ -673,13 +695,9 @@ router.patch("/dossiers/:id", async (req, res) => {
     if (req.body.status) {
       req.body.status = normalizeStatus(req.body.status);
     }
+    // Si le statut envoyé est identique au statut actuel, ce n'est pas un changement de statut : on ignore la transition
     if (req.body.status && currentDossier.status === req.body.status) {
-      return res
-        .status(400)
-        .json({
-          error:
-            "Action impossible : le dossier est déjà dans ce statut (peut-être modifié par un autre utilisateur).",
-        });
+      delete req.body.status;
     }
 
     if (["BLOQUE", "EN_ATTENTE"].includes(currentDossier.status)) {
@@ -843,8 +861,9 @@ router.patch("/dossiers/:id", async (req, res) => {
       }
     }
 
-    const { status, name, description, traitantId } = req.body;
+    const { status, name, description, traitantId, priority, categorie } = req.body;
     const updateData = {};
+
     if (status !== undefined && status !== currentDossier.status) {
       updateData.status = status;
       if (currentDossier.status === "EN_ATTENTE") {
@@ -853,13 +872,43 @@ router.patch("/dossiers/:id", async (req, res) => {
         updateData.previousStatus = currentDossier.status;
       }
     }
-    if (name !== undefined) updateData.name = name;
-    if (description !== undefined) updateData.description = description;
+
+    if (name !== undefined) {
+      const trimmedName = name.trim();
+      if (trimmedName && trimmedName !== currentDossier.name) {
+        updateData.name = trimmedName;
+      }
+    }
+
+    if (description !== undefined) {
+      const trimmedDesc = description ? description.trim() : null;
+      const currDesc = currentDossier.description ? currentDossier.description.trim() : null;
+      if (trimmedDesc !== currDesc) {
+        updateData.description = trimmedDesc;
+      }
+    }
+
     if (traitantId !== undefined) {
-      updateData.traitantId =
+      const resolvedTraitantId =
         traitantId === "MASTER-ADMIN"
           ? await resolveCreatorId(req)
-          : traitantId;
+          : (traitantId || null);
+      if (resolvedTraitantId !== currentDossier.traitantId) {
+        updateData.traitantId = resolvedTraitantId;
+      }
+    }
+
+    if (priority !== undefined && priority !== currentDossier.priority) {
+      updateData.priority = priority;
+    }
+
+    if (categorie !== undefined && (categorie || null) !== (currentDossier.categorie || null)) {
+      updateData.categorie = categorie || null;
+    }
+
+    // Si aucun champ n'a été modifié, retourner directement le dossier sans écriture inutile
+    if (Object.keys(updateData).length === 0) {
+      return res.json(currentDossier);
     }
 
     const dossier = await prisma.dossier.update({

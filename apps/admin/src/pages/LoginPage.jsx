@@ -101,16 +101,12 @@ const LoginPage = ({ onLogin, portal: portalProp }) => {
       const isClientUser = data.user.role === "Client" || !!data.user.clientId;
 
       if (isClientPortal && !isClientUser) {
-        setTimedError(
-          "Ce portail est exclusivement réservé aux clients. Veuillez vous connecter sur l'espace collaborateur (/login)."
-        );
+        setTimedError("Identifiant ou mot de passe incorrect.");
         return;
       }
 
       if (!isClientPortal && isClientUser) {
-        setTimedError(
-          "Ce compte est un compte client. Veuillez vous connecter sur votre Espace Client (/client/login)."
-        );
+        setTimedError("Identifiant ou mot de passe incorrect.");
         return;
       }
 

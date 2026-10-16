@@ -142,10 +142,13 @@ export default function DocumentsPage() {
   const currentFolderId =
     currentPath.length > 0 ? currentPath[currentPath.length - 1].id : null;
 
-  // Find current folder's children (Dossiers where parentDossierId === currentFolderId)
-  const childFolders = dossiers.filter(
-    (d) => d.parentDossierId === currentFolderId,
-  );
+  // Find current folder's children (Dossiers where parentDossierId === currentFolderId, or top accessible folders if currentFolderId === null)
+  const childFolders = dossiers.filter((d) => {
+    if (currentFolderId === null) {
+      return !d.parentDossierId || !dossiers.some((p) => p.id === d.parentDossierId);
+    }
+    return d.parentDossierId === currentFolderId;
+  });
 
   // Find current folder's documents (Documents attached to the current dossier)
   const currentFolder = dossiers.find((d) => d.id === currentFolderId);

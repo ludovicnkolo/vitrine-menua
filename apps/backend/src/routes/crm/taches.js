@@ -274,7 +274,7 @@ router.get("/taches", async (req, res) => {
       take: limit,
       include: {
         mission: {
-          include: { dossier: { select: { name: true, reference: true, status: true, traitantId: true } } },
+          include: { dossier: { select: { id: true, name: true, reference: true, status: true, traitantId: true } } },
         },
         dossierTache: { include: { subDossiers: true } },
         authorizedDossiers: { include: { subDossiers: true } },
@@ -540,13 +540,9 @@ router.patch("/taches/:id", async (req, res) => {
     }
 
     // Prévention des actions concurrentes (race conditions) sur le statut
+    // Si le statut envoyé est identique au statut actuel, ce n'est pas un changement de statut : on l'ignore
     if (status && currentTache.status === status) {
-      return res
-        .status(400)
-        .json({
-          error:
-            "Action impossible : la tâche est déjà dans ce statut (peut-être modifiée par un autre utilisateur).",
-        });
+      status = undefined;
     }
 
     const isSA = isSuperAdmin(userRole);
@@ -593,8 +589,25 @@ router.patch("/taches/:id", async (req, res) => {
       }
     }
 
-    // Build the data payload
-    const dataToUpdate = { ...rest };
+    // Build the data payload - seuls les champs modifiés sont enregistrés
+    const dataToUpdate = {};
+    if (rest.description !== undefined) {
+      const trimmed = rest.description ? rest.description.trim() : "";
+      const curr = currentTache.description ? currentTache.description.trim() : "";
+      if (trimmed !== curr) {
+        dataToUpdate.description = rest.description;
+      }
+    }
+    if (rest.attachment !== undefined && (rest.attachment || null) !== (currentTache.attachment || null)) {
+      dataToUpdate.attachment = rest.attachment || null;
+    }
+    if (rest.title !== undefined && rest.title !== currentTache.title) {
+      dataToUpdate.title = rest.title;
+    }
+    if (rest.priority !== undefined && rest.priority !== currentTache.priority) {
+      dataToUpdate.priority = rest.priority;
+    }
+
     if (echeance !== undefined) {
       if (echeance) {
         const today = new Date();
@@ -619,15 +632,15 @@ router.patch("/taches/:id", async (req, res) => {
               }
             }
           }
+          dataToUpdate.echeance = parsedEcheance;
         }
-        dataToUpdate.echeance = parsedEcheance;
-      } else {
+      } else if (currentTache.echeance) {
         dataToUpdate.echeance = null;
       }
     }
     if (
       assignedToId !== undefined &&
-      assignedToId !== currentTache.assignedToId
+      (assignedToId || null) !== (currentTache.assignedToId || null)
     ) {
       if (!isManager(userRole)) {
         return res
@@ -636,9 +649,12 @@ router.patch("/taches/:id", async (req, res) => {
             error: "Accès refusé. Vous ne pouvez pas ré-attribuer une tâche.",
           });
       }
-      dataToUpdate.assignedToId = assignedToId;
+      dataToUpdate.assignedToId = assignedToId || null;
     }
-    if (relecteurId !== undefined && relecteurId !== currentTache.relecteurId) {
+    if (
+      relecteurId !== undefined &&
+      (relecteurId || null) !== (currentTache.relecteurId || null)
+    ) {
       if (!isManager(userRole)) {
         return res
           .status(403)
@@ -646,7 +662,7 @@ router.patch("/taches/:id", async (req, res) => {
             error: "Accès refusé. Vous ne pouvez pas assigner un relecteur.",
           });
       }
-      dataToUpdate.relecteurId = relecteurId;
+      dataToUpdate.relecteurId = relecteurId || null;
     }
 
     if (status !== undefined && status !== currentTache.status) {
@@ -663,11 +679,16 @@ router.patch("/taches/:id", async (req, res) => {
         dataToUpdate.previousStatus = currentTache.status;
       }
       dataToUpdate.status = status;
-    } else if (status !== undefined) {
-      if (adminFeedback !== undefined)
-        dataToUpdate.adminFeedback = adminFeedback;
-      if (managerFeedback !== undefined)
-        dataToUpdate.managerFeedback = managerFeedback;
+    } else {
+      if (adminFeedback !== undefined && (adminFeedback || null) !== (currentTache.adminFeedback || null))
+        dataToUpdate.adminFeedback = adminFeedback ? adminFeedback.trim() : null;
+      if (managerFeedback !== undefined && (managerFeedback || null) !== (currentTache.managerFeedback || null))
+        dataToUpdate.managerFeedback = managerFeedback ? managerFeedback.trim() : null;
+    }
+
+    // Si aucun champ n'a été modifié, retourner directement la tâche
+    if (Object.keys(dataToUpdate).length === 0) {
+      return res.json(currentTache);
     }
 
     const tache = await prisma.tache.update({

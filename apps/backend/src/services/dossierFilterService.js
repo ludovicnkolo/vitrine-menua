@@ -60,39 +60,132 @@ function buildDossierAccessFilter(user, options = {}) {
   }
 
   // Mode schéma réel (compatibilité base SQLite / schema.prisma)
-  // Règle pyramidale descendante stricte :
-  // Le dossier n'est visible que par son Traitant ou son Créateur (ou Super-admin).
-  // L'assignation à une mission ou tâche ne fait JAMAIS remonter le dossier parent pour un collaborateur/responsable.
+  // Règle d'accès aux dossiers :
+  // Toute personne assignée à un dossier, une mission ou une tâche (assigné, relecteur ou créateur)
+  // voit automatiquement le dossier rattaché dans le CRM et dans la GED.
   const conditions = [
+    // 1. Assignation directe au dossier
     { traitantId: userId },
     { createdById: userId },
+    { targetUserId: userId },
   ];
 
   if (user?.clientId) {
     conditions.push({ clientId: user.clientId });
   }
 
-  // Exception Relecteur : visibilité ascendante de contrôle qualité si assigné en relecture
-  if (isUserRelecteur) {
-    conditions.push({
-      missions: {
-        some: {
-          OR: [
-            { relecteurId: userId },
-            { taches: { some: { relecteurId: userId } } },
-          ],
-        },
+  // 2. Assigné, relecteur ou créateur d'une mission de ce dossier
+  conditions.push({
+    missions: {
+      some: {
+        OR: [
+          { assignedToId: userId },
+          { relecteurId: userId },
+          { createdById: userId },
+        ],
       },
-    });
+    },
+  });
 
-    conditions.push({
-      tachesLinked: {
-        some: {
-          relecteurId: userId,
+  // 3. Assigné, relecteur ou créateur d'une tâche de ce dossier (via mission parente)
+  conditions.push({
+    missions: {
+      some: {
+        taches: {
+          some: {
+            OR: [
+              { assignedToId: userId },
+              { relecteurId: userId },
+              { createdById: userId },
+            ],
+          },
         },
       },
-    });
-  }
+    },
+  });
+
+  // 4. Missions et Tâches liées directement au dossier
+  conditions.push({
+    missionsLinked: {
+      some: {
+        OR: [
+          { assignedToId: userId },
+          { relecteurId: userId },
+          { createdById: userId },
+        ],
+      },
+    },
+  });
+
+  conditions.push({
+    tachesLinked: {
+      some: {
+        OR: [
+          { assignedToId: userId },
+          { relecteurId: userId },
+          { createdById: userId },
+        ],
+      },
+    },
+  });
+
+  // 5. Visibilité hiérarchique pour la GED :
+  // Si un sous-dossier contient une mission/tâche de l'utilisateur, le dossier racine est visible pour naviguer
+  conditions.push({
+    subDossiers: {
+      some: {
+        OR: [
+          { traitantId: userId },
+          { createdById: userId },
+          { targetUserId: userId },
+          {
+            missions: {
+              some: {
+                OR: [
+                  { assignedToId: userId },
+                  { relecteurId: userId },
+                  { createdById: userId },
+                  {
+                    taches: {
+                      some: {
+                        OR: [
+                          { assignedToId: userId },
+                          { relecteurId: userId },
+                          { createdById: userId },
+                        ],
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          {
+            tachesLinked: {
+              some: {
+                OR: [
+                  { assignedToId: userId },
+                  { relecteurId: userId },
+                  { createdById: userId },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    },
+  });
+
+  // Et les sous-dossiers d'un dossier parent accessible sont également visibles
+  conditions.push({
+    parentDossier: {
+      OR: [
+        { traitantId: userId },
+        { createdById: userId },
+        { targetUserId: userId },
+      ],
+    },
+  });
 
   return { OR: conditions };
 }
@@ -127,16 +220,14 @@ function buildMissionAccessFilter(user, options = {}) {
       { assignes: { some: { id: userId } } },
     ];
 
-    // Exception Relecteur : visibilité sur la mission parente d'une tâche assignée
-    if (isUserRelecteur) {
-      conditions.push({
-        taches: {
-          some: {
-            assignes: { some: { id: userId } },
-          },
+    // Visibilité sur la mission parente d'une tâche assignée
+    conditions.push({
+      taches: {
+        some: {
+          assignes: { some: { id: userId } },
         },
-      });
-    }
+      },
+    });
 
     return { OR: conditions };
   }
@@ -151,21 +242,20 @@ function buildMissionAccessFilter(user, options = {}) {
     { assignedToId: userId },
     { relecteurId: userId },
     { createdById: userId },
-  ];
 
-  // Exception Relecteur : visibilité sur la mission parente d'une tâche assignée
-  if (isUserRelecteur) {
-    conditions.push({
+    // Visibilité sur la mission parente d'une tâche assignée ou dont l'utilisateur est relecteur
+    {
       taches: {
         some: {
           OR: [
             { relecteurId: userId },
             { assignedToId: userId },
+            { createdById: userId },
           ],
         },
       },
-    });
-  }
+    },
+  ];
 
   return { OR: conditions };
 }
@@ -312,8 +402,8 @@ function getEffectiveRights(user, context = {}) {
     name = "TACHE";
   }
 
-  // Exception Relecteur : visibilité ascendante sur la mission parente et le dossier parent
-  const hasUpwardRelecteur = isUserRelecteur && isAssignedTache;
+  // Visibilité ascendante : toute personne assignée à une tâche ou une mission voit la mission parente et le dossier rattaché
+  const hasAccess = isAssignedDossier || isAssignedMission || isAssignedTache;
 
   return {
     level,
@@ -321,9 +411,9 @@ function getEffectiveRights(user, context = {}) {
     isAssignedDossier,
     isAssignedMission,
     isAssignedTache,
-    canReadDossier: isAssignedDossier || hasUpwardRelecteur,
-    canReadMission: isAssignedDossier || isAssignedMission || hasUpwardRelecteur,
-    canReadTache: isAssignedDossier || isAssignedMission || isAssignedTache,
+    canReadDossier: hasAccess,
+    canReadMission: hasAccess,
+    canReadTache: hasAccess,
     // Suppression de Dossier réservée EXCLUSIVEMENT au Super-administrateur
     canDeleteDossier: false,
     canModifyDossier: isAssignedDossier,

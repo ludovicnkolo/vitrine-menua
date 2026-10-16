@@ -595,13 +595,9 @@ router.patch("/tasks/:id", async (req, res) => {
     if (req.body.status) {
       req.body.status = normalizeStatus(req.body.status);
     }
+    // Si le statut envoyé est identique au statut actuel, ce n'est pas un changement de statut : on ignore la transition
     if (req.body.status && currentMissionForAuth.status === req.body.status) {
-      return res
-        .status(400)
-        .json({
-          error:
-            "Action impossible : la mission est déjà dans ce statut (peut-être modifiée par un autre utilisateur).",
-        });
+      delete req.body.status;
     }
 
     const isAuthorized =
@@ -630,8 +626,16 @@ router.patch("/tasks/:id", async (req, res) => {
       echeance,
     } = req.body;
     const dataToUpdate = {};
-    if (description !== undefined) dataToUpdate.description = description;
-    if (attachment !== undefined) dataToUpdate.attachment = attachment;
+    if (description !== undefined) {
+      const trimmedDesc = description ? description.trim() : "";
+      const currDesc = currentMissionForAuth.description ? currentMissionForAuth.description.trim() : "";
+      if (trimmedDesc !== currDesc) {
+        dataToUpdate.description = description;
+      }
+    }
+    if (attachment !== undefined && (attachment || null) !== (currentMissionForAuth.attachment || null)) {
+      dataToUpdate.attachment = attachment || null;
+    }
     
     if (echeance !== undefined) {
       if (echeance) {
@@ -658,9 +662,9 @@ router.patch("/tasks/:id", async (req, res) => {
               return res.status(400).json({ error: `La date d'échéance de la mission ne peut pas être antérieure à celle de ses tâches (${maxTaskEcheance.toLocaleDateString("fr-FR")}).` });
             }
           }
+          dataToUpdate.echeance = parsedEcheance;
         }
-        dataToUpdate.echeance = parsedEcheance;
-      } else {
+      } else if (currentMissionForAuth.echeance) {
         dataToUpdate.echeance = null;
       }
     }
@@ -668,7 +672,7 @@ router.patch("/tasks/:id", async (req, res) => {
     // Ré-attribution : réservée aux Super-Admin, Admin Tech, Admin et Responsable Op.
     if (
       assignedToId !== undefined &&
-      assignedToId !== currentMissionForAuth.assignedToId
+      (assignedToId || null) !== (currentMissionForAuth.assignedToId || null)
     ) {
       if (!isManager(userRole)) {
         return res
@@ -691,12 +695,12 @@ router.patch("/tasks/:id", async (req, res) => {
             });
         }
       }
-      dataToUpdate.assignedToId = assignedToId;
+      dataToUpdate.assignedToId = assignedToId || null;
     }
 
     if (
       relecteurId !== undefined &&
-      relecteurId !== currentMissionForAuth.relecteurId
+      (relecteurId || null) !== (currentMissionForAuth.relecteurId || null)
     ) {
       if (!isManager(userRole)) {
         return res
@@ -705,11 +709,10 @@ router.patch("/tasks/:id", async (req, res) => {
             error: "Accès refusé. Vous ne pouvez pas assigner un relecteur.",
           });
       }
-      dataToUpdate.relecteurId = relecteurId;
+      dataToUpdate.relecteurId = relecteurId || null;
     }
 
-
-    if (status !== undefined) {
+    if (status !== undefined && status !== currentMissionForAuth.status) {
       const from = currentMissionForAuth.status;
       const to = status;
       const isSA = isSuperAdmin(userRole);
@@ -757,6 +760,11 @@ router.patch("/tasks/:id", async (req, res) => {
           dataToUpdate.previousStatus = currentTask.status;
         }
       }
+    }
+
+    // Si aucun champ n'a été modifié, retourner directement la mission
+    if (Object.keys(dataToUpdate).length === 0) {
+      return res.json(currentMissionForAuth);
     }
 
     const task = await prisma.mission.update({

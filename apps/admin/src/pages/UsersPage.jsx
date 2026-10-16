@@ -37,6 +37,7 @@ import {
 import ActionDropdown from "../components/ActionDropdown";
 import UserFormFields from "../components/UserFormFields";
 import ClientFormFields from "../components/ClientFormFields";
+import PaginationControls from "../components/PaginationControls";
 import { getStatusBadge, getRoleBadge } from "../utils/helpers";
 
 const AVAILABLE_PERMISSIONS = {
@@ -262,6 +263,62 @@ const UsersPage = ({ forceTab }) => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+
+  // Pagination states (Équipe & Client)
+  const [pageUsers, setPageUsers] = useState(1);
+  const [pageClients, setPageClients] = useState(1);
+  const PAGE_SIZE = 15;
+
+  useEffect(() => {
+    setPageUsers(1);
+  }, [searchTerm, filterUserStatus, filterUserRole]);
+
+  useEffect(() => {
+    setPageClients(1);
+  }, [searchTerm, filterUserStatus]);
+
+  const filteredUsers = React.useMemo(() => {
+    return users.filter((u) => {
+      const term = searchTerm.toLowerCase();
+      const matchSearch = !term ||
+        u.name?.toLowerCase().includes(term) ||
+        u.email?.toLowerCase().includes(term);
+      const matchStatus = filterUserStatus === "all" ||
+        (filterUserStatus === "actif" && !u.isBlocked) ||
+        (filterUserStatus === "inactif" && u.isBlocked);
+      const matchRole = filterUserRole === "all" ||
+        u.role?.name === filterUserRole ||
+        u.roleId === filterUserRole;
+      return matchSearch && matchStatus && matchRole;
+    });
+  }, [users, searchTerm, filterUserStatus, filterUserRole]);
+
+  const totalPagesUsers = Math.max(1, Math.ceil(filteredUsers.length / PAGE_SIZE));
+  const paginatedUsers = React.useMemo(() => {
+    const start = (pageUsers - 1) * PAGE_SIZE;
+    return filteredUsers.slice(start, start + PAGE_SIZE);
+  }, [filteredUsers, pageUsers]);
+
+  const filteredClients = React.useMemo(() => {
+    return clients.filter((c) => {
+      const term = searchTerm.toLowerCase();
+      const matchSearch = !term ||
+        c.name?.toLowerCase().includes(term) ||
+        c.email?.toLowerCase().includes(term) ||
+        c.entreprise?.raisonSociale?.toLowerCase().includes(term);
+      const isClientActive = String(c.status || "ACTIF").toUpperCase() === "ACTIF";
+      const matchStatus = filterUserStatus === "all" ||
+        (filterUserStatus === "actif" && isClientActive) ||
+        (filterUserStatus === "inactif" && !isClientActive);
+      return matchSearch && matchStatus;
+    });
+  }, [clients, searchTerm, filterUserStatus]);
+
+  const totalPagesClients = Math.max(1, Math.ceil(filteredClients.length / PAGE_SIZE));
+  const paginatedClients = React.useMemo(() => {
+    const start = (pageClients - 1) * PAGE_SIZE;
+    return filteredClients.slice(start, start + PAGE_SIZE);
+  }, [filteredClients, pageClients]);
 
   // Client Account (Portail) states
   const [accountActionLoading, setAccountActionLoading] = useState(false);
@@ -3171,8 +3228,8 @@ const UsersPage = ({ forceTab }) => {
               <table className="w-full" style={{tableLayout:"fixed"}}>
                 <thead>
                   <tr>
-                    <th className="text-left font-mono" style={{ width: "50px", paddingLeft: "1.25rem" }}>N°</th>
-                    <th className="text-left" style={{ width: "23%" }}>{t("users.columns.name", "Nom")}</th>
+                    <th className="text-center font-mono" style={{ width: "50px" }}>N°</th>
+                    <th className="text-left" style={{ width: "23%", paddingLeft: "1.25rem" }}>{t("users.columns.name", "Nom")}</th>
                     <th style={{ width: "20%" }}>{t("users.columns.email", "Email")}</th>
                     <th className="text-center" style={{ width: "18%" }}>{t("users.columns.role", "Rôle")}</th>
                     <th className="text-center" style={{ width: "100px" }}>{t("users.columns.status", "Statut")}</th>
@@ -3181,32 +3238,25 @@ const UsersPage = ({ forceTab }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {users
-                    .filter((u) => {
-                      const term = searchTerm.toLowerCase();
-                      const matchSearch = !term ||
-                        u.name?.toLowerCase().includes(term) ||
-                        u.email?.toLowerCase().includes(term);
-                      const matchStatus = filterUserStatus === "all" ||
-                        (filterUserStatus === "actif" && !u.isBlocked) ||
-                        (filterUserStatus === "inactif" && u.isBlocked);
-                      const matchRole = filterUserRole === "all" ||
-                        u.role?.name === filterUserRole ||
-                        u.roleId === filterUserRole;
-                      return matchSearch && matchStatus && matchRole;
-                    })
-                    .map((u, index) => (
+                  {paginatedUsers.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="py-12 text-center text-[var(--text-muted)]">
+                        {loading ? t("common.loading", "Chargement...") : t("users.noUsers", "Aucun collaborateur trouvé.")}
+                      </td>
+                    </tr>
+                  ) : (
+                    paginatedUsers.map((u, index) => (
                     <tr key={u.id}>
                       <td
-                        className="text-left font-mono"
-                        style={{ paddingLeft: "1.25rem", color: "var(--text-muted)", fontSize: "0.85rem" }}
+                        className="text-center font-mono"
+                        style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}
                       >
-                        <div className="truncate-name" style={{ maxWidth: "100%" }}>
-                          {String(index + 1).padStart(2, "0")}
+                        <div className="truncate-name font-normal text-center" style={{ maxWidth: "100%" }}>
+                          {String((pageUsers - 1) * PAGE_SIZE + index + 1).padStart(2, "0")}
                         </div>
                       </td>
-                      <td className="text-left">
-                        <div className="truncate-name" style={{ maxWidth: "100%" }} title={u.name}>
+                      <td className="text-left" style={{ paddingLeft: "1.25rem" }}>
+                        <div className="truncate-name text-left font-medium text-[var(--text-main)]" style={{ maxWidth: "100%" }} title={u.name}>
                           {u.name}
                         </div>
                       </td>
@@ -3281,15 +3331,15 @@ const UsersPage = ({ forceTab }) => {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                  )))}
                 </tbody>
               </table>
             ) : (
               <table className="w-full" style={{tableLayout:"fixed"}}>
                 <thead>
                   <tr>
-                    <th className="text-left font-mono" style={{ width: "50px", paddingLeft: "1.25rem" }}>N°</th>
-                    <th className="text-left" style={{ width: "24%" }}>{t("users.columns.name", "Société / Nom")}</th>
+                    <th className="text-center font-mono" style={{ width: "50px" }}>N°</th>
+                    <th className="text-left" style={{ width: "24%", paddingLeft: "1.25rem" }}>{t("users.columns.name", "Société / Nom")}</th>
                     <th style={{ width: "24%" }}>{t("users.columns.email", "Email")}</th>
                     <th className="text-center" style={{ width: "100px" }}>{t("users.columns.type", "Type")}</th>
                     <th className="text-center" style={{ width: "90px" }}>{t("users.columns.status", "État")}</th>
@@ -3299,48 +3349,33 @@ const UsersPage = ({ forceTab }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {clients
-                    .filter((c) => {
-                      const term = searchTerm.toLowerCase();
-                      const matchSearch = !term ||
-                        c.name?.toLowerCase().includes(term) ||
-                        c.email?.toLowerCase().includes(term) ||
-                        c.entreprise?.raisonSociale?.toLowerCase().includes(term);
-                      const isClientActive = String(c.status || "ACTIF").toUpperCase() === "ACTIF";
-                      const matchStatus = filterUserStatus === "all" ||
-                        (filterUserStatus === "actif" && isClientActive) ||
-                        (filterUserStatus === "inactif" && !isClientActive);
-                      return matchSearch && matchStatus;
-                    })
-                    .map((c, index) => {
+                  {paginatedClients.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="py-12 text-center text-[var(--text-muted)]">
+                        {loading ? t("common.loading", "Chargement...") : t("users.noClients", "Aucun client trouvé.")}
+                      </td>
+                    </tr>
+                  ) : (
+                    paginatedClients.map((c, index) => {
                       const isClientActive = String(c.status || "ACTIF").toUpperCase() === "ACTIF";
                       return (
                     <tr key={c.id}>
                       <td
-                        className="text-left font-mono"
-                        style={{ paddingLeft: "1.25rem", color: "var(--text-muted)", fontSize: "0.85rem" }}
+                        className="text-center font-mono"
+                        style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}
                       >
-                        <div className="truncate-name" style={{ maxWidth: "100%" }}>
-                          {String(index + 1).padStart(2, "0")}
+                        <div className="truncate-name font-normal text-center" style={{ maxWidth: "100%" }}>
+                          {String((pageClients - 1) * PAGE_SIZE + index + 1).padStart(2, "0")}
                         </div>
                       </td>
-                      <td>
+                      <td className="text-left" style={{ paddingLeft: "1.25rem" }}>
                         <div
-                          className="truncate-name"
+                          className="truncate-name text-left font-medium text-[var(--text-main)]"
                           style={{ maxWidth: "100%" }}
                           title={(c.type === "Société" || c.type === "SOCIETE") ? c.entreprise?.raisonSociale || c.name : c.name}
                         >
                           {(c.type === "Société" || c.type === "SOCIETE") ? c.entreprise?.raisonSociale || "N/A" : c.name}
                         </div>
-                        {(c.type === "Société" || c.type === "SOCIETE") && (
-                          <div
-                            className="truncate-name"
-                            style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "2px", maxWidth: "100%" }}
-                            title={`${t("users.contactPrefix", "Contact :")} ${c.name}`}
-                          >
-                            {t("users.contactPrefix", "Contact :")} {c.name}
-                          </div>
-                        )}
                       </td>
                       <td>
                         <div
@@ -3409,7 +3444,7 @@ const UsersPage = ({ forceTab }) => {
                           >
                             <CheckCircle2 size={11} /> Actif
                           </span>
-                        ) : (
+                        ) : c.user ? (
                           <span
                             className="inline-flex items-center gap-1 font-semibold"
                             style={{
@@ -3424,6 +3459,21 @@ const UsersPage = ({ forceTab }) => {
                           >
                             <Clock size={11} /> Invitation
                           </span>
+                        ) : (
+                          <span
+                            className="inline-flex items-center gap-1 font-medium"
+                            style={{
+                              fontSize: "0.75rem",
+                              padding: "0.15rem 0.55rem",
+                              borderRadius: "12px",
+                              backgroundColor: "#F1F5F9",
+                              color: "#94A3B8",
+                              border: "1px solid #E2E8F0",
+                            }}
+                            title="Aucun compte portail créé"
+                          >
+                            Non configuré
+                          </span>
                         )}
                       </td>
                       <td className="table-date-cell text-center" style={{width:"150px"}}>
@@ -3433,42 +3483,29 @@ const UsersPage = ({ forceTab }) => {
                       </td>
                       <td className="text-center" style={{ padding: "0.5rem", verticalAlign: "middle" }}>
                         <div className="inline-flex flex-col items-center" style={{ gap: "3px" }}>
-                          {/* Sommet : Modifier + Convertir si pas encore de compte */}
-                          <div className="flex items-center justify-center" style={{ gap: "4px" }}>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const isPart = c.type === "Particulier" || c.type === "PARTICULIER";
-                                setEditExternal({
-                                  ...c,
-                                  status: c.status || "ACTIF",
-                                  raisonSociale: c.entreprise?.raisonSociale || c.raisonSociale || (!isPart ? c.name : "") || "",
-                                  siret: c.entreprise?.siret || c.siret || "",
-                                  emailEntreprise: c.entreprise?.emailEntreprise || c.emailEntreprise || "",
-                                  telephoneEntreprise: c.entreprise?.telephoneEntreprise || c.telephoneEntreprise || "",
-                                  type: isPart ? "Particulier" : "Société",
-                                  contactSecondaire: c.contactSecondaire || "",
-                                });
-                              }}
-                              className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
-                              style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#EFF6FF", border: "1px solid #BFDBFE", color: "#2563EB" }}
-                              title={t("common.edit", "Modifier")}
-                            >
-                              <Pencil size={14} />
-                            </button>
-                            {!c.user && (
-                              <button
-                                type="button"
-                                onClick={() => openConvertModal(c)}
-                                className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
-                                style={{ width: "28px", height: "28px", borderRadius: "6px", background: "rgba(201, 156, 92, 0.15)", border: "1px solid rgba(201, 156, 92, 0.4)", color: "var(--primary, #c99c5c)" }}
-                                title="Convertir en compte client (Créer accès portail)"
-                              >
-                                <UserPlus size={14} />
-                              </button>
-                            )}
-                          </div>
-                          {/* Base : Consulter + Supprimer */}
+                          {/* Sommet de la pyramide : Modifier */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const isPart = c.type === "Particulier" || c.type === "PARTICULIER";
+                              setEditExternal({
+                                ...c,
+                                status: c.status || "ACTIF",
+                                raisonSociale: c.entreprise?.raisonSociale || c.entreprise?.nom || c.raisonSociale || (!isPart ? c.name : "") || "",
+                                siret: c.entreprise?.siret || c.siret || "",
+                                emailEntreprise: c.entreprise?.emailEntreprise || c.emailEntreprise || "",
+                                telephoneEntreprise: c.entreprise?.telephoneEntreprise || c.telephoneEntreprise || "",
+                                type: isPart ? "Particulier" : "Société",
+                                contactSecondaire: c.contactSecondaire || "",
+                              });
+                            }}
+                            className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                            style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#EFF6FF", border: "1px solid #BFDBFE", color: "#2563EB" }}
+                            title={t("common.edit", "Modifier")}
+                          >
+                            <Pencil size={14} />
+                          </button>
+                          {/* Base de la pyramide : Consulter + Supprimer */}
                           <div className="flex items-center justify-center" style={{ gap: "4px" }}>
                             <button
                               type="button"
@@ -3493,11 +3530,17 @@ const UsersPage = ({ forceTab }) => {
                       </td>
                     </tr>
                     );
-                  })}
+                  }))}
                 </tbody>
               </table>
             )}
           </div>
+
+          <PaginationControls
+            page={tab === "interne" ? pageUsers : pageClients}
+            totalPages={tab === "interne" ? totalPagesUsers : totalPagesClients}
+            setPage={tab === "interne" ? setPageUsers : setPageClients}
+          />
         </>
       )}
 

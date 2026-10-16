@@ -838,12 +838,37 @@ const DossiersPage = () => {
   const handleUpdateDossier = async () => {
     try {
       const token = sessionStorage.getItem("adminToken");
-      const payload = {
-        name: editDossier.name,
-        description: editDossier.description,
-        status: editDossier.status,
-        traitantId: editDossier.traitantId,
-      };
+      const orig = editDossier._original || {};
+      const payload = {};
+
+      if (editDossier.name !== undefined && editDossier.name !== orig.name) {
+        payload.name = editDossier.name;
+      }
+      if (
+        editDossier.description !== undefined &&
+        (editDossier.description || "") !== (orig.description || "")
+      ) {
+        payload.description = editDossier.description;
+      }
+      if (
+        editDossier.traitantId !== undefined &&
+        (editDossier.traitantId || "") !== (orig.traitantId || "")
+      ) {
+        payload.traitantId = editDossier.traitantId || null;
+      }
+      if (
+        editDossier.status !== undefined &&
+        editDossier.status !== orig.status
+      ) {
+        payload.status = editDossier.status;
+      }
+
+      if (Object.keys(payload).length === 0) {
+        window.customAlert("Aucune modification détectée.");
+        setEditDossier(null);
+        return;
+      }
+
       const res = await fetch(
         getSafeApiUrl(`/api/crm/dossiers/${editDossier.id}`),
         {
@@ -3432,7 +3457,15 @@ const DossiersPage = () => {
                             type="button"
                             onClick={() => {
                               setConsultDossier(null);
-                              setEditDossier(d);
+                              setEditDossier({
+                                ...d,
+                                _original: {
+                                  name: d.name || "",
+                                  description: d.description || "",
+                                  status: d.status || "",
+                                  traitantId: d.traitantId || "",
+                                },
+                              });
                             }}
                             className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
                             style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#EFF6FF", border: "1px solid #BFDBFE", color: "#2563EB" }}

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next";
 import { MoreVertical, Pencil, Eye, Trash, Check, AlertTriangle, Loader2 } from "lucide-react";
 import ActionDropdown from "../components/ActionDropdown";
+import PaginationControls from "../components/PaginationControls";
 import { alertService } from "../utils/AlertService";
 
 // --- Constantes Système déclarées hors composant pour éviter les réallocations mémoire ---
@@ -98,6 +99,15 @@ const RolesPage = () => {
   const [roleForm, setRoleForm] = useState(null);
   const [consultRole, setConsultRole] = useState(null);
   const [deleteRole, setDeleteRole] = useState(null);
+
+  // Pagination
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 15;
+  const totalPages = Math.max(1, Math.ceil(roles.length / PAGE_SIZE));
+  const paginatedRoles = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return roles.slice(start, start + PAGE_SIZE);
+  }, [roles, page]);
 
   const menuRef = useRef(null);
 
@@ -373,21 +383,21 @@ const RolesPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {roles.length === 0 ? (
+                  {paginatedRoles.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="py-12 text-center text-[var(--text-muted)]">
                         {loading ? "Chargement des rôles..." : "Aucun rôle configuré."}
                       </td>
                     </tr>
                   ) : (
-                    roles.map((r, index) => (
+                    paginatedRoles.map((r, index) => (
                       <tr key={r.id}>
                         <td
                           className="text-left font-mono"
                           style={{ paddingLeft: "1.25rem", color: "var(--text-muted)", fontSize: "0.85rem" }}
                         >
                           <div className="truncate-name" style={{ maxWidth: "100%" }}>
-                            {String(index + 1).padStart(2, "0")}
+                            {String((page - 1) * PAGE_SIZE + index + 1).padStart(2, "0")}
                           </div>
                         </td>
                         <td>
@@ -461,6 +471,12 @@ const RolesPage = () => {
               </table>
             </div>
           </div>
+
+          <PaginationControls
+            page={page}
+            totalPages={totalPages}
+            setPage={setPage}
+          />
         </>
       )}
 

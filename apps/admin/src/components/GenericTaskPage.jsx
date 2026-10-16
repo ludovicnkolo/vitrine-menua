@@ -416,6 +416,37 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
     try {
       const token = sessionStorage.getItem("adminToken");
       const description = `Objet: ${editFormData.subject}\nConsignes: ${editFormData.message}`;
+      const payload = {};
+
+      const origSubject = getSubjectFromTask(editTask.description);
+      const origMessage = getMessageFromTask(editTask.description);
+      if (
+        (editFormData.subject || "").trim() !== (origSubject || "").trim() ||
+        (editFormData.message || "").trim() !== (origMessage || "").trim()
+      ) {
+        payload.description = description;
+      }
+
+      if ((editFormData.assignedToId || null) !== (editTask.assignedToId || null)) {
+        payload.assignedToId = editFormData.assignedToId || null;
+      }
+
+      if ((editFormData.relecteurId || null) !== (editTask.relecteurId || null)) {
+        payload.relecteurId = editFormData.relecteurId || null;
+      }
+
+      const origEcheance = editTask.echeance ? editTask.echeance.substring(0, 10) : "";
+      const newEcheance = editFormData.echeance ? editFormData.echeance.substring(0, 10) : "";
+      if (newEcheance !== origEcheance) {
+        payload.echeance = editFormData.echeance || null;
+      }
+
+      if (Object.keys(payload).length === 0) {
+        setEditTask(null);
+        setErrorMsg("Aucune modification détectée.");
+        return;
+      }
+
       const res = await fetch(
         new URL(
           getSafeApiUrl(
@@ -430,12 +461,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            description,
-            assignedToId: editFormData.assignedToId || null,
-            relecteurId: editFormData.relecteurId || null,
-            echeance: editFormData.echeance || null,
-          }),
+          body: JSON.stringify(payload),
         },
       );
       if (res.ok) {
@@ -1646,6 +1672,27 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                     {dossierAssociated}
                   </div>
                 </div>
+
+                {/* Dossier rattaché pour la tâche */}
+                {mode !== "MISSION" && (
+                  <div
+                    style={{
+                      background: "#F8FAFC",
+                      border: "1px solid #F1F5F9",
+                      borderRadius: "8px",
+                      padding: "0.75rem 1rem",
+                    }}
+                  >
+                    <div className="font-medium" style={{fontSize:"0.75rem",color:"#64748B",marginBottom:"0.25rem"}}>
+                      Dossier rattaché :
+                    </div>
+                    <div className="font-bold text-[var(--text-main)]" style={{fontSize:"0.95rem"}}>
+                      {consultTask.mission?.dossier?.name
+                        ? `${consultTask.mission.dossier.name} (${consultTask.mission.dossier.reference || "DOS-" + consultTask.mission.dossier.id})`
+                        : consultTask.dossierTache?.name || "-"}
+                    </div>
+                  </div>
+                )}
 
                 {/* Optional Dossier Tâche for Task */}
                 {mode !== "MISSION" && consultTask.dossierTache && (

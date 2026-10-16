@@ -64,20 +64,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </div>
 
         <nav style={{ padding: "1rem 0", flex: "0 0 auto" }}>
-          {role === "Client" && (
-            <Link
-              to="/"
-              className={`nav-item ${location.pathname === "/" ? "active" : ""}`}
-            >
-              <Files size={20} />
-              Espace Documentaire
-            </Link>
-          )}
-
           {hasAccess.toGlobal(role) && (
             <Link
-              to="/"
-              className={`nav-item ${location.pathname === "/" ? "active" : ""}`}
+              to="/app/dashboard"
+              className={`nav-item ${location.pathname === "/app/dashboard" || location.pathname === "/" ? "active" : ""}`}
             >
               <LayoutDashboard size={20} />
               {t("nav.global")}
@@ -86,8 +76,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
           {hasAccess.toMessage(role) && (
             <Link
-              to="/inbox"
-              className={`nav-item ${location.pathname.includes("/inbox") ? "active" : ""}`}
+              to="/app/inbox"
+              className={`nav-item ${location.pathname.includes("inbox") ? "active" : ""}`}
             >
               <Inbox size={20} />
               {t("nav.message")}
@@ -96,8 +86,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
           {hasAccess.toWorkspace(role) && (
             <Link
-              to="/workspace"
-              className={`nav-item ${location.pathname.includes("/workspace") ? "active" : ""}`}
+              to="/app/workspace"
+              className={`nav-item ${location.pathname.includes("workspace") || location.pathname.includes("dossiers") || location.pathname.includes("taches") ? "active" : ""}`}
             >
               <Files size={20} />
               {t("nav.workspace")}
@@ -106,8 +96,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
           {hasAccess.toUsers(role) && (
             <Link
-              to="/users-space"
-              className={`nav-item ${location.pathname.includes("/users-space") ? "active" : ""}`}
+              to="/app/users-space"
+              className={`nav-item ${location.pathname.includes("users") ? "active" : ""}`}
             >
               <Users size={20} />
               {t("nav.userSpace")}
@@ -116,8 +106,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
           {hasAccess.toCMS(role) && (
             <Link
-              to="/cms"
-              className={`nav-item ${location.pathname.includes("/cms") ? "active" : ""}`}
+              to="/app/cms"
+              className={`nav-item ${location.pathname.includes("cms") ? "active" : ""}`}
             >
               <Globe size={20} />
               {t("nav.websiteSpace")}
@@ -126,8 +116,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
           {hasAccess.toSystem(role) && (
             <Link
-              to="/system-space"
-              className={`nav-item ${location.pathname.includes("/system-space") ? "active" : ""}`}
+              to="/app/system-space"
+              className={`nav-item ${location.pathname.includes("system") || location.pathname.includes("roles") || location.pathname.includes("audit") ? "active" : ""}`}
             >
               <Settings size={20} />
               {t("nav.systemSpace")}

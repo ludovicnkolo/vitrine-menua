@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --primary: #1A365D; /* Deep navy */
   --primary-light: #2B6CB0;

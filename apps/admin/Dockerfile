@@ -4,7 +4,7 @@ COPY package*.json ./
 RUN npm install --legacy-peer-deps --ignore-scripts --fetch-timeout=600000 --fetch-retry-maxtimeout=120000 --fetch-retries=5
 COPY src/ ./src/
 COPY public/ ./public/
-COPY index.html vite.config.js nginx.conf ./
+COPY index.html vite.config.js tailwind.config.js postcss.config.js nginx.conf ./
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build

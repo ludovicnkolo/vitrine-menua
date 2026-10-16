@@ -46,7 +46,7 @@ const ForgotPasswordPage = ({ portal: portalProp }) => {
     }
   };
 
-  const loginUrl = isClient ? "/client/login" : "/login";
+  const loginUrl = isClient ? "/client/login" : "/app/login";
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[var(--bg-main,#f8fafc)] p-4">

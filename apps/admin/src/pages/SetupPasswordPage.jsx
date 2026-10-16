@@ -133,7 +133,7 @@ const SetupPasswordPage = () => {
 
     const targetUrl = isClient
       ? `/client/login?${statusParam}&email=${emailParam}`
-      : `/login?${statusParam}&email=${emailParam}`;
+      : `/app/login?${statusParam}&email=${emailParam}`;
     const timer = setTimeout(() => navigate(targetUrl), 2600);
     return () => clearTimeout(timer);
   }, [success, tokenContext, navigate]);
@@ -230,7 +230,7 @@ const SetupPasswordPage = () => {
           </div>
 
           <button
-            onClick={() => navigate(tokenContext?.isClient ? "/client/login" : "/login")}
+            onClick={() => navigate(tokenContext?.isClient ? "/client/login" : "/app/login")}
             className="w-full py-2.5 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50 transition cursor-pointer"
           >
             {tokenContext?.isClient ? "Retourner à la connexion Client" : "Retourner à la connexion Collaborateur"}

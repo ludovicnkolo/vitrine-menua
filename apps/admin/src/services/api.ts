@@ -57,7 +57,7 @@ export function redirectToLogin(reason = "expired") {
   if (isClientPath || isClientUser) {
     window.location.href = `/client/login?logout=${reason}`;
   } else {
-    window.location.href = `/login?logout=${reason}`;
+    window.location.href = `/app/login?logout=${reason}`;
   }
 }
 

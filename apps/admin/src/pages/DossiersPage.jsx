@@ -525,7 +525,7 @@ const DossiersPage = () => {
       });
       if (res.ok) {
         const data = await res.json();
-        const magicUrl = `${window.location.origin}/magic-drop/${data.data.token}`;
+        const magicUrl = `${window.location.origin}/depot/${data.data.token}`;
         setGeneratedMagicUrl(magicUrl);
         setGeneratedMagicLinkId(data.data.id);
         const defaultEmail =

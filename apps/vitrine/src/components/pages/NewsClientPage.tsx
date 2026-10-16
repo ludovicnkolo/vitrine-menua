@@ -61,36 +61,30 @@ export default function ActualitesPage({ initialPublications = [] }: ActualitesP
 
   const [activeFilter, setActiveFilter] = useState("TOUTES LES ACTUALITÉS");
   const [publications, setPublications] = useState<Publication[]>(initialPublications);
-  const [isLoading, setIsLoading] = useState<boolean>(!initialPublications || initialPublications.length === 0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [imageErrors, setImageErrors] = useState<Record<string | number, boolean>>({});
 
   useEffect(() => {
+    if (initialPublications && initialPublications.length > 0) {
+      setPublications(initialPublications);
+      return;
+    }
+
     const fetchPubs = async () => {
-      setIsLoading(true);
-      setError(null);
       try {
         const res = await fetch('/api/cms/public?type=ACTUALITE');
-        if (!res.ok) {
-          throw new Error("Erreur de communication avec le serveur");
-        }
+        if (!res.ok) return;
         const data = await res.json();
-        if (data.success && Array.isArray(data.data)) {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
           setPublications(data.data);
-        } else {
-          throw new Error("Format de données invalide");
         }
       } catch (err) {
-        console.error("Erreur lors de la récupération des actualités:", err);
-        setError("Impossible de charger les actualités pour le moment.");
-      } finally {
-        setIsLoading(false);
+        console.error("Erreur rafraîchissement actualités client:", err);
       }
     };
 
-    if (!initialPublications || initialPublications.length === 0) {
-      fetchPubs();
-    }
+    fetchPubs();
   }, [initialPublications]);
 
   const featuredPub = publications.length > 0 ? publications[0] : null;

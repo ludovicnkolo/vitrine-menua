@@ -228,14 +228,7 @@ const LoginPage = ({ onLogin, portal: portalProp }) => {
             {loading ? "Connexion en cours..." : "Connexion"}
           </button>
 
-          <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-100">
-            <Link
-              to="/"
-              className="text-xs text-slate-500 hover:text-slate-800 hover:underline font-medium p-1 inline-flex items-center gap-1"
-            >
-              ← Retour à l'accueil
-            </Link>
-
+          <div className="flex items-center justify-end mt-3 pt-2 border-t border-slate-100">
             <Link
               to={isClientPortal ? "/client/forgot-password" : "/app/forgot-password"}
               className="text-xs text-slate-500 hover:text-slate-800 hover:underline font-medium p-1 inline-block"

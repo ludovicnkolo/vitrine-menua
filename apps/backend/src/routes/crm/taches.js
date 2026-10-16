@@ -358,12 +358,31 @@ router.post("/taches", async (req, res) => {
     const creatorId = await resolveCreatorId(req);
     const reference = await generateReference("tache", "TCH");
 
+    // Validation des champs obligatoires
+    if (!missionId) {
+      return res.status(400).json({ error: "La mission associée à la tâche est obligatoire." });
+    }
+    if (!description || !description.trim()) {
+      return res.status(400).json({ error: "La description / consignes de la tâche est obligatoire." });
+    }
+    if (!assignedToId) {
+      return res.status(400).json({ error: "Le collaborateur assigné à la tâche est obligatoire." });
+    }
+    if (!echeance) {
+      return res.status(400).json({ error: "La date d'échéance de la tâche est obligatoire." });
+    }
+
     let parsedEcheance = null;
     if (echeance) {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       parsedEcheance = new Date(echeance);
       parsedEcheance.setHours(0, 0, 0, 0);
+
+      // Vérification : la date d'échéance ne peut pas être dans le passé
+      if (parsedEcheance < today) {
+        return res.status(400).json({ error: "La date d'échéance d'une tâche ne peut pas être antérieure à aujourd'hui." });
+      }
 
       if (missionId) {
         const parentMission = await prisma.mission.findUnique({

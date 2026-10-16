@@ -768,11 +768,39 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   };
 
   const handleCreateSubTask = async () => {
-    if (!newTaskMessage || !newTaskAssignedTo || !newTaskEcheance) {
-      setErrorMsg(
-        "Veuillez remplir le message, le destinataire et l'échéance.",
-      );
+    if (!newTaskSubject || !newTaskSubject.trim()) {
+      setErrorMsg("L'objet de la tâche est requis.");
       return;
+    }
+    if (!newTaskAssignedTo) {
+      setErrorMsg("Veuillez sélectionner un responsable assigné à la tâche.");
+      return;
+    }
+    if (!newTaskEcheance) {
+      setErrorMsg("La date d'échéance de la tâche est requise.");
+      return;
+    }
+    if (!newTaskMessage || !newTaskMessage.trim()) {
+      setErrorMsg("Le message / consignes est requis.");
+      return;
+    }
+    // Vérification date non antérieure à aujourd'hui
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(newTaskEcheance);
+    selectedDate.setHours(0, 0, 0, 0);
+    if (selectedDate < today) {
+      setErrorMsg("La date d'échéance ne peut pas être antérieure à aujourd'hui.");
+      return;
+    }
+    // Vérification : l'échéance de la tâche ne doit pas dépasser celle de la mission associée
+    if (consultTask?.echeance) {
+      const parentDate = new Date(consultTask.echeance);
+      parentDate.setHours(0, 0, 0, 0);
+      if (selectedDate > parentDate) {
+        setErrorMsg("L'échéance de la tâche ne peut pas dépasser l'échéance de la mission parente.");
+        return;
+      }
     }
 
     setIsSubmitting(true);
@@ -994,6 +1022,7 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
                 <input
                   id="new-task-echeance"
                   type="date"
+                  min={new Date().toISOString().split("T")[0]}
                   max={
                     consultTask?.echeance
                       ? new Date(consultTask.echeance)
@@ -1066,7 +1095,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
             <button
               type="button"
               onClick={handleCreateSubTask}
-              disabled={isSubmitting}
+              disabled={
+                isSubmitting ||
+                !newTaskSubject.trim() ||
+                !newTaskAssignedTo ||
+                !newTaskEcheance ||
+                !newTaskMessage.trim()
+              }
               className="btn btn-primary"
             >
               {isSubmitting ? "Création..." : "Créer la tâche"}

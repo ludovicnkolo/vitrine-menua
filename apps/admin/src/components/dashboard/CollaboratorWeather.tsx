@@ -6,7 +6,6 @@ export interface CollaboratorData {
   role?: string;
   roleCategory?: string;
   tachesEnCours?: number;
-  etat?: string;
 }
 
 export interface CollaboratorWeatherProps {
@@ -63,14 +62,12 @@ const CollaboratorWeather: React.FC<CollaboratorWeatherProps> = ({
       <div className="flex flex-col gap-2 flex-1">
         {collabs.map((collab, idx) => {
           const count = collab.tachesEnCours || 0;
-          const hasTasks = count > 0;
-          const stripeColor = hasTasks ? "border-l-blue-600" : "border-l-emerald-500";
           const initials = getInitials(collab);
 
           return (
             <div
               key={idx}
-              className={`flex items-center justify-between bg-white border border-slate-100 border-l-4 ${stripeColor} rounded-lg py-2.5 px-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)]`}
+              className="flex items-center justify-between bg-white border border-slate-100 border-l-4 border-l-blue-600 rounded-lg py-2.5 px-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
             >
               {/* Left: Avatar + Details */}
               <div className="flex items-center gap-3 min-w-0">
@@ -96,23 +93,13 @@ const CollaboratorWeather: React.FC<CollaboratorWeatherProps> = ({
                 </div>
               </div>
 
-              {/* Right: Badges */}
-              <div className="flex items-center gap-2 shrink-0">
-                {hasTasks ? (
-                  <span className="font-semibold inline-flex items-center bg-blue-50 text-blue-600 rounded-full py-1 px-2.5 text-[0.75rem] gap-1">
-                    <span className="text-[0.65rem]">●</span> {t("dashboard.inActivity", "En activité")}
-                  </span>
-                ) : (
-                  <span className="font-semibold inline-flex items-center bg-emerald-50 text-emerald-600 rounded-full py-1 px-2.5 text-[0.75rem] gap-1">
-                    <span className="text-[0.65rem]">●</span> {t("dashboard.available", "Disponible")}
-                  </span>
-                )}
-
+              {/* Right: Badge Tâches uniquement */}
+              <div className="flex items-center shrink-0">
                 <span
                   className={`py-1 px-2.5 text-[0.75rem] font-semibold rounded-md border ${
-                    hasTasks
+                    count > 0
                       ? "bg-blue-50 border-blue-200 text-blue-600"
-                      : "bg-emerald-50 border-emerald-200 text-emerald-600"
+                      : "bg-slate-50 border-slate-200 text-slate-600"
                   }`}
                 >
                   {count} {t("dashboard.tasks", "tâche(s)")}

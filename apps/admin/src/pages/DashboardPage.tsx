@@ -12,42 +12,36 @@ const SAMPLE_COLLABORATEURS: CollaboratorData[] = [
     role: "Responsable",
     roleCategory: "Responsable",
     tachesEnCours: 0,
-    etat: "VERT",
   },
   {
     name: "Responsable opérationnel 2",
     role: "Responsable",
     roleCategory: "Responsable",
     tachesEnCours: 1,
-    etat: "BLEU",
   },
   {
     name: "Relecteur 1",
     role: "Contrôle Qualité",
     roleCategory: "Relecteur",
     tachesEnCours: 0,
-    etat: "VERT",
   },
   {
     name: "Relecteur 2",
     role: "Contrôle Qualité",
     roleCategory: "Relecteur",
     tachesEnCours: 0,
-    etat: "VERT",
   },
   {
     name: "Collaborateur 1",
     role: "Production",
     roleCategory: "Collaborateur",
     tachesEnCours: 1,
-    etat: "BLEU",
   },
   {
     name: "Collaborateur 2",
     role: "Production",
     roleCategory: "Collaborateur",
     tachesEnCours: 0,
-    etat: "VERT",
   },
 ];
 

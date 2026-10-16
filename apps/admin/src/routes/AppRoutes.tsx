@@ -3,7 +3,6 @@ import { Routes, Route, Navigate, useLocation, useParams } from "react-router-do
 import { useAuth } from "../context/AuthContext";
 import { hasAccess } from "../constants/roles";
 
-import HubPage from "../pages/HubPage";
 import DashboardPage from "../pages/DashboardPage";
 import InboxPage from "../pages/InboxPage";
 import UsersSpacePage from "../pages/UsersSpacePage";
@@ -41,15 +40,15 @@ export default function AppRoutes() {
 
   // ═══════════════════════════════════════════════════════════════════════════
   // 2. UTILISATEURS NON CONNECTÉS
-  // Base URL "/" : Option A - Page d'accueil / Hub de connexion
+  // Base URL "/" : Redirection directe vers l'espace collaborateur de connexion (/app/login)
   // Collaborateurs : /app/login
   // Clients : /client/login
   // ═══════════════════════════════════════════════════════════════════════════
   if (!isAuthenticated || !user) {
     return (
       <Routes>
-        {/* Base URL "/" : Hub de choix Sobres Espace Client / Équipe & Collaborateurs */}
-        <Route path="/" element={<HubPage />} />
+        {/* Base URL "/" : Redirection vers la page de connexion collaborateur */}
+        <Route path="/" element={<Navigate to="/app/login" replace />} />
 
         {/* Procédure d'activation / réinitialisation par token */}
         <Route path="/setup-password" element={<SetupPasswordPage />} />
@@ -74,8 +73,8 @@ export default function AppRoutes() {
         <Route path="/app" element={<Navigate to="/app/login" replace />} />
         <Route path="/app/*" element={<Navigate to="/app/login" replace />} />
 
-        {/* Redirection intelligente pour toute autre URL vers le Hub */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Redirection intelligente pour toute autre URL vers l'espace collaborateur */}
+        <Route path="*" element={<Navigate to="/app/login" replace />} />
       </Routes>
     );
   }

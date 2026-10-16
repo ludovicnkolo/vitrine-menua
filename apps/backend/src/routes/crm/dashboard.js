@@ -340,10 +340,7 @@ router.get("/dashboard-stats", async (req, res) => {
 
     const meteoCharge = activeUsers.map((u) => {
       const count = userTaches.filter((t) => t.assignedToId === u.id).length;
-      let etat = "VERT";
-      if (count > 5) etat = "ROUGE";
-      else if (count >= 3) etat = "ORANGE";
-      return { name: u.name, role: u.role?.name, tachesEnCours: count, etat };
+      return { name: u.name, role: u.role?.name, tachesEnCours: count };
     });
 
     // 5. Entonnoir de Production (Période) : Demandes & formulaires qualifiés traités
@@ -367,8 +364,24 @@ router.get("/dashboard-stats", async (req, res) => {
     });
     const messagesTraitesPeriode = formulairesTraitesPeriode + emailsTraitesPeriode;
 
+    // Une mission démarrée est une mission dont le statut est au moins déjà passé par EN_COURS
+    // (exclut le statut initial NOUVEAU, CORBEILLE, etc.)
     const missionsDemarreesPeriode = await prisma.mission.count({
-      where: { status: { not: "CORBEILLE" }, createdAt: { gte: startPeriod, lte: endPeriod } },
+      where: {
+        status: { notIn: ["NOUVEAU", "CORBEILLE"] },
+        OR: [
+          { status: { in: ["EN_COURS", "TERMINE"] } },
+          { previousStatus: { in: ["EN_COURS", "TERMINE"] } },
+        ],
+        AND: [
+          {
+            OR: [
+              { updatedAt: { gte: startPeriod, lte: endPeriod } },
+              { createdAt: { gte: startPeriod, lte: endPeriod } },
+            ],
+          },
+        ],
+      },
     });
     const tachesCompleteesPeriode = await prisma.tache.count({
       where: {

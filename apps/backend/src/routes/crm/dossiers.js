@@ -519,6 +519,27 @@ router.post("/dossiers", async (req, res) => {
     const { name, description, priority, origin, categorie } = req.body;
     const creatorId = await resolveCreatorId(req);
     const isSubFolder = req.body.parentDossierId ? true : false;
+
+    // Validation des champs obligatoires
+    if (!origin || !["CLIENT", "COLLABORATEUR", "GENERAL", "INTERNE"].includes(origin)) {
+      return res.status(400).json({ error: "L'origine du dossier est obligatoire (CLIENT, COLLABORATEUR ou GENERAL)." });
+    }
+    if (origin === "CLIENT" && !req.body.clientId) {
+      return res.status(400).json({ error: "Le client associé au dossier est obligatoire." });
+    }
+    if (origin === "COLLABORATEUR" && !req.body.targetUserId) {
+      return res.status(400).json({ error: "Le collaborateur associé au dossier est obligatoire." });
+    }
+    if (origin === "GENERAL" && (!name || !name.trim())) {
+      return res.status(400).json({ error: "L'intitulé du dossier général est obligatoire." });
+    }
+    if (!description || !description.trim()) {
+      return res.status(400).json({ error: "La description du dossier est obligatoire." });
+    }
+    if (!req.body.traitantId) {
+      return res.status(400).json({ error: "Le responsable du dossier (traitant) est obligatoire." });
+    }
+
     const reference = isSubFolder
       ? await generateSubDossierReference(req.body.parentDossierId)
       : await generateReference("dossier", "DOS");

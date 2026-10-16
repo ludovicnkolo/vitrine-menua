@@ -1244,6 +1244,15 @@ const InboxPage = ({ userRole }) => {
                   <thead>
                     <tr>
                       <th style={{ width: "50px" }}>{t("inbox.columns.no")}</th>
+                      <th style={{ width: tab === "personnel" ? "24%" : "22%" }}>
+                        {t("inbox.columns.name")}
+                      </th>
+                      <th style={{ width: tab === "personnel" ? "26%" : "22%" }}>
+                        {t("inbox.columns.email")}
+                      </th>
+                      <th style={{ width: (tab === "personnel" || tab === "contact" || tab === "recrutement") ? "120px" : "130px", whiteSpace: "nowrap" }}>
+                        {t("inbox.columns.status")}
+                      </th>
                       {(tab === "personnel" ||
                         tab === "contact" ||
                         tab === "recrutement") && (
@@ -1251,15 +1260,6 @@ const InboxPage = ({ userRole }) => {
                           {t("inbox.columns.priority")}
                         </th>
                       )}
-                      <th style={{ width: (tab === "personnel" || tab === "contact" || tab === "recrutement") ? "120px" : "130px", whiteSpace: "nowrap" }}>
-                        {t("inbox.columns.status")}
-                      </th>
-                      <th style={{ width: tab === "personnel" ? "28%" : "22%" }}>
-                        {t("inbox.columns.name")}
-                      </th>
-                      <th style={{ width: tab === "personnel" ? "30%" : "24%" }}>
-                        {t("inbox.columns.email")}
-                      </th>
                       {(tab === "interne") && (
                         <th style={{ width: "120px", whiteSpace: "nowrap" }}>
                           {t("inbox.columns.type")}
@@ -1325,6 +1325,49 @@ const InboxPage = ({ userRole }) => {
                             >
                               {index + 1}
                             </td>
+                            <td>
+                              <div
+                                className="truncate-name"
+                                style={{ maxWidth: "100%" }}
+                                title={col2}
+                              >
+                                {col2}
+                              </div>
+                            </td>
+                            <td>
+                              <div
+                                className="truncate-name"
+                                style={{
+                                  color: "var(--text-muted)",
+                                  maxWidth: "100%",
+                                }}
+                                title={col3}
+                              >
+                                {col3}
+                              </div>
+                            </td>
+                            <td>
+                              <span
+                                style={
+                                  tab === "message"
+                                    ? {
+                                        padding: "0.25rem 0.5rem",
+                                        borderRadius: "4px",
+                                        fontSize: "0.72rem",
+                                        fontWeight: 400,
+                                        background: getStatusBadge(m.status).bg,
+                                        color: getStatusBadge(m.status).color,
+                                        whiteSpace: "nowrap",
+                                      }
+                                    : {
+                                        
+                                        color: getStatusBadge(m.status).color,
+                                      }
+                                }
+                              >
+                                {getDisplayStatus(m.status, t)}
+                              </span>
+                            </td>
                             {(tab === "personnel" ||
                               tab === "contact" ||
                               tab === "recrutement") && (
@@ -1356,49 +1399,6 @@ const InboxPage = ({ userRole }) => {
                                 </span>
                               </td>
                             )}
-                            <td>
-                              <span
-                                style={
-                                  tab === "message"
-                                    ? {
-                                        padding: "0.25rem 0.5rem",
-                                        borderRadius: "4px",
-                                        fontSize: "0.72rem",
-                                        fontWeight: 400,
-                                        background: getStatusBadge(m.status).bg,
-                                        color: getStatusBadge(m.status).color,
-                                        whiteSpace: "nowrap",
-                                      }
-                                    : {
-                                        
-                                        color: getStatusBadge(m.status).color,
-                                      }
-                                }
-                              >
-                                {getDisplayStatus(m.status, t)}
-                              </span>
-                            </td>
-                            <td>
-                              <div
-                                className="truncate-name"
-                                style={{ maxWidth: "100%" }}
-                                title={col2}
-                              >
-                                {col2}
-                              </div>
-                            </td>
-                            <td>
-                              <div
-                                className="truncate-name"
-                                style={{
-                                  color: "var(--text-muted)",
-                                  maxWidth: "100%",
-                                }}
-                                title={col3}
-                              >
-                                {col3}
-                              </div>
-                            </td>
                             {(tab === "interne") && (
                               <td>
                                 <span

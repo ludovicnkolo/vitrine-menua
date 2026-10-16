@@ -194,28 +194,18 @@ const FunnelCard: React.FC<FunnelCardProps> = ({
         </div>
       </div>
 
-      {/* Note de pilotage dynamique */}
-      <div
-        className={`border rounded-lg py-2.5 px-4 mt-5 text-[0.78rem] transition-colors ${
-          isDetailed
-            ? "bg-purple-50 border-purple-200 text-purple-700"
-            : "bg-blue-50 border-blue-200 text-blue-700"
-        }`}
-      >
-        {isDetailed ? (
+      {/* Efficacité de conversion (mode détaillé uniquement) */}
+      {isDetailed && (
+        <div
+          className="border rounded-lg py-2.5 px-4 mt-5 text-[0.78rem] transition-colors bg-purple-50 border-purple-200 text-purple-700"
+        >
           <div>
             <span className="font-bold">Efficacité de conversion : </span>
             {globalConversionRate}% de concrétisation globale de bout en bout (demande client →
             dossier clôturé).
           </div>
-        ) : (
-          <div>
-            <span className="font-bold">Note de pilotage : </span>
-            Flux opérationnel sur la période • {valDossiers} dossier
-            {valDossiers > 1 ? "s" : ""} finalisé{valDossiers > 1 ? "s" : ""}.
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

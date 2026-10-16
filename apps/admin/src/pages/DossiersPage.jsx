@@ -364,6 +364,14 @@ const DossiersPage = () => {
       window.customAlert("L'échéance est requise.");
       return;
     }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(missionEcheance);
+    selectedDate.setHours(0, 0, 0, 0);
+    if (selectedDate < today) {
+      window.customAlert("La date d'échéance d'une mission ne peut pas être antérieure à aujourd'hui.");
+      return;
+    }
     if (!missionDescription || !missionDescription.trim()) {
       window.customAlert("Le message / consignes est requis.");
       return;
@@ -444,6 +452,8 @@ const DossiersPage = () => {
 
         window.customAlert("Mission créée avec succès !");
         setCreateMissionModal(false);
+        // Retour au tableau des dossiers après création de la mission
+        setConsultDossier(null);
         setMissionSubject("");
         setMissionDescription("");
         setMissionAssignedTo("");
@@ -709,6 +719,14 @@ const DossiersPage = () => {
       !newDossierData.generalName?.trim()
     ) {
       window.customAlert("Veuillez saisir un nom pour ce dossier.");
+      return;
+    }
+    if (!newDossierData.description || !newDossierData.description.trim()) {
+      window.customAlert("La description du dossier est obligatoire.");
+      return;
+    }
+    if (!newDossierData.traitantId) {
+      window.customAlert("Veuillez sélectionner un responsable (traitant) pour ce dossier.");
       return;
     }
 
@@ -3083,7 +3101,14 @@ const DossiersPage = () => {
                     <button
                       type="button"
                       onClick={handleCreateMission}
-                      disabled={isSubmittingMission}
+                      disabled={
+                        isSubmittingMission ||
+                        !missionSubject.trim() ||
+                        !(missionDossierId || consultDossier?.id) ||
+                        !missionAssignedTo ||
+                        !missionEcheance ||
+                        !missionDescription.trim()
+                      }
                       className="btn btn-primary"
                     >
                       {isSubmittingMission ? "Création..." : "Créer la mission"}

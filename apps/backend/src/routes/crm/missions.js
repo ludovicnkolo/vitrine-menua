@@ -353,6 +353,20 @@ router.post("/tasks", async (req, res) => {
     const creatorId = await resolveCreatorId(req);
     const reference = await generateReference("mission", "MSN");
 
+    // Validation des champs obligatoires
+    if (!dossierId) {
+      return res.status(400).json({ error: "Le dossier associé à la mission est obligatoire." });
+    }
+    if (!description || !description.trim()) {
+      return res.status(400).json({ error: "La description / consignes de la mission est obligatoire." });
+    }
+    if (!assignedToId) {
+      return res.status(400).json({ error: "Le responsable assigné à la mission est obligatoire." });
+    }
+    if (!echeance) {
+      return res.status(400).json({ error: "La date d'échéance de la mission est obligatoire." });
+    }
+
     let parsedEcheance = null;
     if (echeance) {
       const today = new Date();

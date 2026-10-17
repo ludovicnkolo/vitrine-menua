@@ -257,7 +257,32 @@ function extractContentFromHtml(html, label, isBlock = false) {
 
 const extractFieldFromHtml = (html, fieldName) =>
   extractContentFromHtml(html, fieldName, false);
+export const getUserInitials = (name) => {
+  if (!name) return "U";
+  const cleanedParts = name.trim().split(/\s+/).filter((p) => p !== "-" && p !== "–" && p !== "—" && p !== ".");
+  if (cleanedParts.length === 0) return "U";
+  if (cleanedParts.length === 1) return cleanedParts[0].substring(0, 2).toUpperCase();
+  const first = cleanedParts[0][0];
+  const second = cleanedParts[1] ? cleanedParts[1][0] : cleanedParts[cleanedParts.length - 1][0];
+  return (first + second).toUpperCase();
+};
+
 const extractBlockFromHtml = (html, blockName) =>
   extractContentFromHtml(html, blockName, true);
 
 export { extractFieldFromHtml, extractBlockFromHtml };
+
+export const getSubjectFromTask = (desc) => {
+  if (!desc) return "Sans objet";
+  const match = desc.match(/Objet: (.*)/);
+  return match ? match[1] : desc.split("\n")[0];
+};
+
+export const getMessageFromTask = (desc) => {
+  if (!desc) return "Aucun message";
+  const match = desc.match(/Consignes:\s*([\s\S]*)/);
+  if (match) return match[1];
+  const lines = desc.split("\n");
+  return lines.length > 1 ? lines.slice(1).join("\n").trim() : desc;
+};
+

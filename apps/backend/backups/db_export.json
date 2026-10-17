@@ -1,10 +1,10 @@
 {
   "_metadata": {
-    "exportedAt": "2026-10-17T09:48:03.542Z",
-    "timestamp": "2026-10-17_10-48-03",
+    "exportedAt": "2026-10-17T16:21:58.947Z",
+    "timestamp": "2026-10-17_17-21-58",
     "version": "1.0",
     "format": "menua-crm-database-backup",
-    "totalRecords": 441
+    "totalRecords": 443
   },
   "roles": [
     {
@@ -14,7 +14,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\",\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\",\"CLIENTS_MANAGE\",\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-10-13T17:12:29.710Z",
-      "updatedAt": "2026-10-17T09:48:03.360Z"
+      "updatedAt": "2026-10-17T16:21:58.731Z"
     },
     {
       "id": "09b32e80-557d-4abf-bdbe-f09ca35ee6ec",
@@ -23,7 +23,7 @@
       "status": "Actif",
       "permissions": "[\"MESSAGES_VIEW\",\"MESSAGES_PROCESS\",\"DOSSIERS_MANAGE\",\"TACHES_MANAGE\",\"TACHES_VIEW_ALL\",\"CLIENTS_MANAGE\"]",
       "createdAt": "2026-10-13T17:12:29.716Z",
-      "updatedAt": "2026-10-17T09:48:03.368Z"
+      "updatedAt": "2026-10-17T16:21:58.752Z"
     },
     {
       "id": "e90cbe7b-4228-4f7a-aafc-42f7fc410c35",
@@ -32,7 +32,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ALL\",\"TACHES_VALIDATE\"]",
       "createdAt": "2026-10-13T17:12:29.721Z",
-      "updatedAt": "2026-10-17T09:48:03.375Z"
+      "updatedAt": "2026-10-17T16:21:58.765Z"
     },
     {
       "id": "6fcc15af-847c-4037-b63f-af5d4f634485",
@@ -41,7 +41,7 @@
       "status": "Actif",
       "permissions": "[\"TACHES_VIEW_ASSIGNED\",\"TACHES_EDIT_ASSIGNED\"]",
       "createdAt": "2026-10-13T17:12:29.731Z",
-      "updatedAt": "2026-10-17T09:48:03.379Z"
+      "updatedAt": "2026-10-17T16:21:58.773Z"
     },
     {
       "id": "c8cbae5d-35a8-4ab3-a42d-7154579542c5",
@@ -50,7 +50,7 @@
       "status": "Actif",
       "permissions": "[\"USERS_MANAGE\",\"ROLES_MANAGE\"]",
       "createdAt": "2026-10-13T17:12:29.736Z",
-      "updatedAt": "2026-10-17T09:48:03.384Z"
+      "updatedAt": "2026-10-17T16:21:58.781Z"
     },
     {
       "id": "4ab41b8c-5465-4fd3-8a27-cbb2c01b0394",
@@ -66,7 +66,7 @@
     {
       "id": "83796f6e-801f-481c-9e09-de0de0269c36",
       "email": "r.fouelefack@menuaconsulting.com",
-      "password": "$2a$10$W8.VFWCtjObZPBDRcGh7gevnAPTZX3y8mexDFymLHkhlCS57VkVda",
+      "password": "$2a$10$uZd2.DL30gL3sBN5MPIpieyKe4q2Ar3XXjrIUfEMxS7w9zuOki4F6",
       "name": "Rosette Fouelefack",
       "roleId": "91289dca-491d-4518-8a29-6e8b7f21f153",
       "telephone": "+33659207511",
@@ -85,9 +85,9 @@
       "resetTokenExpiry": null,
       "isBlocked": false,
       "status": "Actif",
-      "lastLogin": "2026-10-17T07:12:37.318Z",
+      "lastLogin": "2026-10-17T13:50:26.865Z",
       "createdAt": "2026-10-13T17:12:29.933Z",
-      "updatedAt": "2026-10-17T09:48:03.524Z",
+      "updatedAt": "2026-10-17T16:21:58.925Z",
       "clientId": null
     },
     {
@@ -5037,6 +5037,28 @@
       "dossierId": null,
       "formulaireId": null,
       "createdAt": "2026-10-17T07:45:54.995Z"
+    },
+    {
+      "id": "c17b9e27-d7e3-468c-a635-78d8491ec074",
+      "userId": null,
+      "action": "ECHEC_CONNEXION",
+      "targetId": null,
+      "targetType": "AUTH",
+      "details": "Tentative de connexion avec email inconnu : fake@test.com",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-17T13:29:45.092Z"
+    },
+    {
+      "id": "cc7f5558-440e-45a1-a35f-d62e48d741a4",
+      "userId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "action": "CONNEXION_REUSSIE",
+      "targetId": "83796f6e-801f-481c-9e09-de0de0269c36",
+      "targetType": "USER",
+      "details": "Connexion Master-Admin réussie",
+      "dossierId": null,
+      "formulaireId": null,
+      "createdAt": "2026-10-17T13:50:26.880Z"
     }
   ],
   "messagePersonnels": [

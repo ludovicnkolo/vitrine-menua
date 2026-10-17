@@ -50,7 +50,7 @@ import CreateUserModal from "../components/users/CreateUserModal";
 import CollaboratorTableView from "../components/users/CollaboratorTableView";
 import ClientTableView from "../components/users/ClientTableView";
 import ConvertClientAccountModal from "../components/modals/ConvertClientAccountModal";
-import FilePreviewModal from "../components/modals/FilePreviewModal";
+import FilePreviewModal from "../components/FilePreviewModal";
 import UsersToolbar from "../components/users/UsersToolbar";
 
 const UsersPage = ({ forceTab }) => {

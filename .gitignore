@@ -48,18 +48,21 @@ DEPLOIEMENT_VPS.md
 *.sqlite
 *.sqlite3
 
-# Uploads
+# Uploads & Storage (user uploaded files, temporary files, documents)
+apps/storage/
+apps/backend/uploads/
+apps/backend/backups/
 apps/admin/public/uploads/
 apps/vitrine/public/uploads/
+uploads/
+storage/
+*.pdf
 
 # Ignore log, bak, and Cypress artifacts
 *.log
 *.bak
-storage/
 cypress/screenshots/
 cypress/videos/
-apps/backend/backups/db_backup_*.json
-apps/backend/backups/latest.json
 
 # Build outputs
 dist/

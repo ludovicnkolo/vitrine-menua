@@ -7,7 +7,8 @@ import "react-pdf/dist/Page/TextLayer.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-const FilePreviewModal = ({ previewFile, onClose }) => {
+const FilePreviewModal = ({ previewFile: rawPreviewFile, fileUrl, onClose }) => {
+  const previewFile = rawPreviewFile || fileUrl;
   const [previewBlobUrl, setPreviewBlobUrl] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);

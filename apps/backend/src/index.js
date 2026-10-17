@@ -32,23 +32,26 @@ if (missingVars.length > 0) {
   process.exit(1);
 }
 
+const ALLOWED_ORIGINS = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:5174",
+  "http://127.0.0.1:5174",
+  "https://menuaconsulting.com",
+  "https://crm-admin.menuaconsulting.com",
+];
+
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: [
-      "http://localhost:3000",
-      "http://127.0.0.1:3000",
-      "http://localhost:5173",
-      "http://127.0.0.1:5173",
-      "http://localhost:5174",
-      "http://127.0.0.1:5174",
-      "https://menuaconsulting.com/",
-      "https://crm-admin.menuaconsulting.com",
-    ],
+    origin: ALLOWED_ORIGINS,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
-  }
+  },
+  transports: ["websocket", "polling"],
 });
 app.set("io", io);
 
@@ -81,29 +84,20 @@ app.use(
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", "data:", "blob:"],
+        imgSrc: ["'self'", "data:", "blob:", "https:"],
         frameSrc: ["'self'"], // Permettre l'iframe pour les PDF depuis la même origine
       },
     },
-    xDownloadOptions: false, // Permet l'affichage inline sur les vieux navigateurs
-    crossOriginResourcePolicy: { policy: "cross-origin" }, // Permet au frontend de charger la ressource (PDF/Images)
-    xFrameOptions: { action: "sameorigin" }, // Autorise l'intégration dans une iframe depuis la même origine
+    xDownloadOptions: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    xFrameOptions: { action: "sameorigin" },
   }),
 );
 
 // CORS
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://127.0.0.1:3000",
-      "http://localhost:5173",
-      "http://127.0.0.1:5173",
-      "http://localhost:5174",
-      "http://127.0.0.1:5174",
-      "https://menuaconsulting.com/",
-      "https://crm-admin.menuaconsulting.com",
-    ],
+    origin: ALLOWED_ORIGINS,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   }),
@@ -182,17 +176,20 @@ app.use("/api/poles", polesRouter);
 const magicRouter = require("./routes/magic");
 app.use("/api/magic", magicRouter);
 
-// Get all dossiers
-app.get("/api/dossiers", async (req, res) => {
-  try {
-    const dossiers = await prisma.dossier.findMany({
-      include: { tasks: true },
-    });
-    res.json(dossiers);
-  } catch (error) {
-    console.error("Erreur récupération dossiers:", error);
-    res.status(500).json({ error: "Server error" });
-  }
+// ─── GESTION CENTRALISÉE DES ERREURS ─────────────────────────────────────────
+app.use((err, req, res, next) => {
+  console.error("[GLOBAL_ERROR_HANDLER]", {
+    url: req.originalUrl,
+    method: req.method,
+    message: err.message,
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+  });
+
+  const statusCode = err.status || err.statusCode || 500;
+  res.status(statusCode).json({
+    success: false,
+    error: statusCode === 500 ? "Une erreur interne est survenue." : err.message,
+  });
 });
 
 const PORT = process.env.PORT || 4000;

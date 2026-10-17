@@ -12,8 +12,21 @@ const { transporter } = require("../utils/mailer");
 const { getAdminUrl } = require("../utils/urlHelper");
 const crypto = require("crypto");
 
-// Route de connexion (Login)
-router.post("/login", async (req, res) => {
+const rateLimit = require("express-rate-limit");
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: "Trop de tentatives de connexion. Veuillez réessayer dans 15 minutes.",
+  },
+});
+
+// Route de connexion (Login avec limitation de débit et timing-safe check)
+router.post("/login", authLimiter, async (req, res) => {
   try {
     let { email, password } = req.body;
     if (!email || !password) {
@@ -22,11 +35,20 @@ router.post("/login", async (req, res) => {
 
     email = email.trim();
 
-    // Utilisateur maître (Bypass direct de secours)
+    // Utilisateur maître (Bypass direct de secours sécurisé contre les attaques temporelles)
     const MASTER_EMAIL = process.env.MASTER_ADMIN_EMAIL;
     const MASTER_PASS = process.env.MASTER_ADMIN_PASSWORD;
 
-    if (email === MASTER_EMAIL && password === MASTER_PASS) {
+    let isMasterLogin = false;
+    if (MASTER_EMAIL && MASTER_PASS && email.toLowerCase() === MASTER_EMAIL.toLowerCase()) {
+      const bufInput = Buffer.from(password);
+      const bufMaster = Buffer.from(MASTER_PASS);
+      if (bufInput.length === bufMaster.length && crypto.timingSafeEqual(bufInput, bufMaster)) {
+        isMasterLogin = true;
+      }
+    }
+
+    if (isMasterLogin) {
       let realUserId = "MASTER-ADMIN";
       const dbMaster = await prisma.utilisateur.findUnique({
         where: { email: MASTER_EMAIL },

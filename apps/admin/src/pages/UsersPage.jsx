@@ -2840,10 +2840,19 @@ const UsersPage = ({ forceTab }) => {
               <button
                 type="button"
                 onClick={() => handleTriggerPasswordReset(consultUser.id)}
-                className="btn btn-outline inline-flex items-center font-medium" style={{gap:"0.45rem",fontSize:"0.85rem",padding:"0.5rem 1rem",color:"#334155",borderColor:"#CBD5E1",backgroundColor:"#FFFFFF"}}
+                className="inline-flex items-center gap-1.5 font-semibold cursor-pointer hover:bg-amber-50 transition-colors"
+                style={{
+                  fontSize: "0.85rem",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "6px",
+                  border: "1px solid #FCD34D",
+                  backgroundColor: "#FFFBEB",
+                  color: "#B45309",
+                }}
+                title="Envoyer un lien de réinitialisation sécurisé sans connaître le mot de passe"
               >
-                <Lock size={14} />
-                Réinitialiser mot de passe
+                <Key size={14} />
+                Réinitialiser le mot de passe
               </button>
               <button
                 type="button"

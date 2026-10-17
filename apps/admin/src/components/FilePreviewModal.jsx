@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Eye, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
+import { Eye, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, AlertTriangle } from "lucide-react";
 import { getSafeApiUrl } from "../utils/helpers";
 import { pdfjs, Document, Page } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
@@ -60,7 +60,7 @@ const FilePreviewModal = ({ previewFile: rawPreviewFile, fileUrl, onClose }) => 
       setPreviewBlobUrl(urlObj.toString());
     } catch (err) {
       console.error("Error setting preview URL:", err);
-      setError(err.message || "Invalid URL");
+      setError("Lien du document invalide.");
       setIsLoading(false);
     }
   }, [previewFile]);
@@ -145,23 +145,48 @@ const FilePreviewModal = ({ previewFile: rawPreviewFile, fileUrl, onClose }) => 
           >
             {(() => {
               if (error) {
+                const isNotFound = typeof error === "string" && (error.includes("404") || error.includes("introuvable") || error.includes("Not Found"));
+                const shortMessage = isNotFound
+                  ? "Ce fichier est introuvable sur le serveur."
+                  : typeof error === "string" && !error.includes("http") && !error.includes("token=") && error.length < 80
+                    ? error
+                    : "Impossible d'afficher ce fichier.";
+
                 return (
                   <div
-                    className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center"
+                    className="flex flex-col items-center justify-center h-full gap-3 p-8 text-center"
                   >
-                    <div className="font-medium" style={{color:"var(--danger)"}}>
-                      Ce fichier est introuvable ou inaccessible.<br />
-                      Détails de l'erreur: {String(error)}
-                    </div>
-                    <a
-                      href={previewBlobUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="btn btn-outline"
-                      style={{ textDecoration: "none" }}
+                    <div
+                      style={{
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "50%",
+                        background: "#FEE2E2",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#DC2626",
+                        marginBottom: "0.25rem",
+                      }}
                     >
-                      Ouvrir dans un nouvel onglet
-                    </a>
+                      <AlertTriangle size={24} />
+                    </div>
+                    <div className="font-semibold text-base" style={{ color: "var(--danger, #DC2626)" }}>
+                      {shortMessage}
+                    </div>
+                    <p className="text-sm m-0" style={{ color: "var(--text-muted, #64748B)" }}>
+                      Le document a peut-être été déplacé ou supprimé.
+                    </p>
+                    <div className="flex gap-2 mt-3">
+                      <button
+                        type="button"
+                        onClick={onClose}
+                        className="btn btn-outline"
+                        style={{ padding: "0.35rem 1rem", fontSize: "0.875rem" }}
+                      >
+                        Fermer
+                      </button>
+                    </div>
                   </div>
                 );
               }
@@ -256,7 +281,14 @@ const FilePreviewModal = ({ previewFile: rawPreviewFile, fileUrl, onClose }) => 
                     onLoadSuccess={({ numPages }) => { setNumPages(numPages); setIsLoading(false); }}
                     onLoadError={(err) => {
                       console.error("React-pdf error:", err);
-                      setError(err.message || String(err));
+                      const msg = err?.message || String(err);
+                      if (msg.includes("404") || msg.includes("Not Found")) {
+                        setError("Ce fichier est introuvable sur le serveur.");
+                      } else if (msg.includes("403") || msg.includes("Forbidden") || msg.includes("Unauthorized")) {
+                        setError("Accès non autorisé à ce document.");
+                      } else {
+                        setError("Impossible de charger l'aperçu du document.");
+                      }
                       setIsLoading(false);
                     }}
                     loading={

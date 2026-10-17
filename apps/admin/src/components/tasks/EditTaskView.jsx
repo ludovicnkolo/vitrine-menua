@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Trash } from "lucide-react";
 import TaskField from "./TaskField";
+import TaskConsultModal from "../TaskConsultModal";
+import { getStatusBadge } from "../../utils/helpers";
 
 const EditTaskView = ({
   editTask,
@@ -12,10 +14,11 @@ const EditTaskView = ({
   setTaskFile,
   isSubmitting,
   handleEditSubmit,
-  handleRemoveAttachment,
-  handleDeleteExistingDoc,
   users = [],
+  setErrorMsg,
 }) => {
+  const [localConsultSubTask, setLocalConsultSubTask] = useState(null);
+
   if (!editTask) return null;
 
   return (
@@ -244,9 +247,11 @@ const EditTaskView = ({
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setErrorMsg(
-                            `Tâche ${sub.id} supprimée avec succès !`,
-                          );
+                          if (setErrorMsg) {
+                            setErrorMsg(`Tâche ${sub.id} supprimée avec succès !`);
+                          } else if (window.customAlert) {
+                            window.customAlert(`Tâche ${sub.id} supprimée avec succès !`, "Succès", "success");
+                          }
                         }}
                         className="cursor-pointer" style={{background:"none",border:"none",color:"var(--danger)"}}
                         title="Supprimer la tâche liée"
@@ -282,7 +287,7 @@ const EditTaskView = ({
           </button>
           <button
             type="button"
-            onClick={handleUpdateMission}
+            onClick={handleEditSubmit}
             className="btn btn-primary"
           >
             Enregistrer

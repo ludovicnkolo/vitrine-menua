@@ -4,7 +4,7 @@ import TabsNavigation from "../TabsNavigation";
 import PaginationControls from "../PaginationControls";
 import InternalChatTab from "../InternalChatTab";
 import { formatDate } from "../../utils/helpers";
-import { formatPriority, getStatusBadge, getPriorityBadge, isSuperAdmin } from "./inboxHelpers";
+import { formatPriority, getStatusBadge, getPriorityBadge, isSuperAdmin, getDisplayStatus } from "./inboxHelpers";
 
 const InboxMessageTable = ({
   tab,

@@ -38,6 +38,10 @@ import {
   getMessageStatusLabel,
 } from "../utils/constants";
 import { normalizeRole } from "../components/inbox/inboxHelpers";
+import InboxMessageTable from "../components/inbox/InboxMessageTable";
+import MessageDetailView from "../components/inbox/MessageDetailView";
+import MessageCreateTaskModal from "../components/inbox/MessageCreateTaskModal";
+import AssignMessageModal from "../components/inbox/AssignMessageModal";
 
 const InboxPage = ({ userRole }) => {
   const { t } = useTranslation();

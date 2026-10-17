@@ -255,11 +255,14 @@ export default function DocumentsPage() {
     }
   };
 
-  const handleRenameDocument = (doc) => {
-    setRenameItem({ ...doc, type: "file" });
-    setRenameName(doc.name);
+  const openRenameModal = (item, type = "folder") => {
+    setRenameItem({ ...item, type });
+    setRenameName(item.name);
     setShowRenameModal(true);
   };
+
+  const handleRenameDocument = (doc) => openRenameModal(doc, "file");
+  const handleRenameFolder = (folder) => openRenameModal(folder, "folder");
 
   const handleDeleteDocument = async (id) => {
     if (
@@ -839,9 +842,11 @@ export default function DocumentsPage() {
           isSearching={isSearching}
           searchFolders={searchFolders}
           searchFiles={searchFiles}
-          folders={folders}
+          childFolders={childFolders}
           documents={documents}
           currentPath={currentPath}
+          currentFolder={currentFolder}
+          currentFolderId={currentFolderId}
           canWriteCurrent={canWriteCurrent}
           navigateTo={navigateTo}
           navigateToFromSearch={navigateToFromSearch}
@@ -853,23 +858,25 @@ export default function DocumentsPage() {
       </div>
 
       {/* Context Menu */}
-
-      {/* Context Menu */}
       <GedContextMenu
         contextMenu={contextMenu}
         closeContextMenu={closeContextMenu}
         canWriteCurrent={canWriteCurrent}
+        currentFolderId={currentFolderId}
         setShowNewFolderModal={setShowNewFolderModal}
         setShowUploadModal={setShowUploadModal}
-        openRenameModal={openRenameModal}
-        handleDeleteFolder={handleDeleteFolder}
-        handleDeleteDocument={handleDeleteDocument}
+        navigateTo={navigateTo}
+        handleRenameFolder={handleRenameFolder}
+        handleDeleteDossier={handleDeleteDossier}
         setPreviewFile={setPreviewFile}
-        openReplaceFileDialog={openReplaceFileDialog}
+        handleDownloadDocument={handleDownloadDocument}
+        handleReplaceDocument={handleReplaceDocument}
+        handleRenameDocument={handleRenameDocument}
+        handleDeleteDocument={handleDeleteDocument}
         isSuperAdmin={isSuperAdmin}
       />
 
-            {/* Modals: New Folder, Upload, Rename */}
+      {/* Modals: New Folder, Upload, Rename */}
       <GedFolderModals
         showNewFolderModal={showNewFolderModal}
         setShowNewFolderModal={setShowNewFolderModal}
@@ -890,27 +897,25 @@ export default function DocumentsPage() {
         isSubmitting={isSubmitting}
       />
 
-            {/* Modal Corbeille */}
+      {/* Modal Corbeille */}
       <GedTrashModal
         showTrashModal={showTrashModal}
         setShowTrashModal={setShowTrashModal}
+        loadingTrash={loadingTrash}
         normalizedTrashList={normalizedTrashList}
-        trashSearch={trashSearch}
-        setTrashSearch={setTrashSearch}
-        trashFilter={trashFilter}
-        setTrashFilter={setTrashFilter}
-        trashActiveTab={trashActiveTab}
-        setTrashActiveTab={setTrashActiveTab}
-        filteredTrash={filteredTrash}
-        paginatedTrash={paginatedTrash}
-        trashPage={trashPage}
-        setTrashPage={setTrashPage}
-        totalTrashPages={totalTrashPages}
+        trashSearchQuery={trashSearchQuery}
+        setTrashSearchQuery={setTrashSearchQuery}
+        trashTypeFilter={trashTypeFilter}
+        setTrashTypeFilter={setTrashTypeFilter}
+        filteredTrashItems={filteredTrashItems}
+        trashTotalSize={trashTotalSize}
         isSuperAdmin={isSuperAdmin}
-        handleRestore={handleRestore}
-        handlePermanentDelete={handlePermanentDelete}
-        handleEmptyTrash={handleEmptyTrash}
-        formatSize={formatSize}
+        handleRestoreTrash={handleRestoreTrash}
+        handlePurgeTrash={handlePurgeTrash}
+        handleEmptyAllTrash={handleEmptyAllTrash}
+        handleRestoreAllTrash={handleRestoreAllTrash}
+        getTrashOrigin={getTrashOrigin}
+        getTrashAuthorAndRemaining={getTrashAuthorAndRemaining}
       />
 
             <FilePreviewModal

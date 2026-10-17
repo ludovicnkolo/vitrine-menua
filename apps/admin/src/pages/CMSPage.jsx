@@ -769,27 +769,37 @@ const CMSPage = () => {
       <PublicationEditorModal
         showModal={showModal}
         editingPub={editingPub}
-        handleCloseModal={handleCloseModal}
-        activeLang={activeLang}
-        setActiveLang={setActiveLang}
-        formData={formData}
-        setFormData={setFormData}
+        closeModal={closeModal}
+        title={title}
+        setTitle={setTitle}
+        title_en={title_en}
+        setTitleEn={setTitleEn}
+        category={category}
+        setCategory={setCategory}
+        category_en={category_en}
+        setCategoryEn={setCategoryEn}
+        contentHtml={contentHtml}
+        setContentHtml={setContentHtml}
+        contentHtml_en={contentHtml_en}
+        setContentHtmlEn={setContentHtmlEn}
+        coverImage={coverImage}
+        previewImage={previewImage}
+        uploadingImg={uploadingImg}
+        handleImageUpload={handleImageUpload}
+        insertFormatting={insertFormatting}
         sections={sections}
-        setSections={setSections}
-        mainImage={mainImage}
-        mainImagePreview={mainImagePreview}
-        setMainImage={setMainImage}
-        setMainImagePreview={setMainImagePreview}
-        mainImageInputRef={mainImageInputRef}
-        applyToolbar={applyToolbar}
         addSection={addSection}
         removeSection={removeSection}
         moveSection={moveSection}
         updateSection={updateSection}
         handleSectionImageUpload={handleSectionImageUpload}
         removeSectionImage={removeSectionImage}
+        previewLang={previewLang}
+        setPreviewLang={setPreviewLang}
+        status={status}
+        formattedCurrentDate={formattedCurrentDate}
+        handleSaveAction={handleSaveAction}
         setSaveOptionsModal={setSaveOptionsModal}
-        getMediaUrl={getMediaUrl}
       />
 
       {/* Confirm Modal */}

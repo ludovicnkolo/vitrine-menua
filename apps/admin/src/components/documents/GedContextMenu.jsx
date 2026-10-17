@@ -5,13 +5,17 @@ const GedContextMenu = ({
   contextMenu,
   closeContextMenu,
   canWriteCurrent,
+  currentFolderId,
   setShowNewFolderModal,
   setShowUploadModal,
-  openRenameModal,
-  handleDeleteFolder,
-  handleDeleteDocument,
+  navigateTo,
+  handleRenameFolder,
+  handleDeleteDossier,
   setPreviewFile,
-  openReplaceFileDialog,
+  handleDownloadDocument,
+  handleReplaceDocument,
+  handleRenameDocument,
+  handleDeleteDocument,
   isSuperAdmin,
 }) => {
   if (!contextMenu) return null;
@@ -40,7 +44,7 @@ const GedContextMenu = ({
               <button
                 onClick={() => {
                   closeContextMenu();
-                  setShowNewFolderModal(true);
+                  if (setShowNewFolderModal) setShowNewFolderModal(true);
                 }}
                 className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                 onMouseOver={(e) =>
@@ -60,7 +64,7 @@ const GedContextMenu = ({
                 <button
                   onClick={() => {
                     closeContextMenu();
-                    setShowUploadModal(true);
+                    if (setShowUploadModal) setShowUploadModal(true);
                   }}
                   className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                   onMouseOver={(e) =>
@@ -87,7 +91,7 @@ const GedContextMenu = ({
               <button
                 onClick={() => {
                   closeContextMenu();
-                  navigateTo(contextMenu.item);
+                  if (navigateTo) navigateTo(contextMenu.item);
                 }}
                 className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                 onMouseOver={(e) =>
@@ -108,9 +112,7 @@ const GedContextMenu = ({
                   <button
                     onClick={() => {
                       closeContextMenu();
-                      setRenameItem(contextMenu.item);
-                      setRenameName(contextMenu.item.name);
-                      setShowRenameModal(true);
+                      if (handleRenameFolder) handleRenameFolder(contextMenu.item);
                     }}
                     className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                     onMouseOver={(e) =>
@@ -131,7 +133,7 @@ const GedContextMenu = ({
                   <button
                     onClick={() => {
                       closeContextMenu();
-                      handleDeleteDossier(contextMenu.item);
+                      if (handleDeleteDossier) handleDeleteDossier(contextMenu.item);
                     }}
                     className="flex items-center w-full cursor-pointer text-left" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none",color:"var(--danger)"}}
                     onMouseOver={(e) =>
@@ -159,7 +161,7 @@ const GedContextMenu = ({
               <button
                 onClick={() => {
                   closeContextMenu();
-                  setPreviewFile(contextMenu.item.url);
+                  if (setPreviewFile) setPreviewFile(contextMenu.item.url);
                 }}
                 className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                 onMouseOver={(e) =>
@@ -178,7 +180,7 @@ const GedContextMenu = ({
               <button
                 onClick={() => {
                   closeContextMenu();
-                  handleDownloadDocument(contextMenu.item.url);
+                  if (handleDownloadDocument) handleDownloadDocument(contextMenu.item.url, contextMenu.item.name);
                 }}
                 className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                 onMouseOver={(e) =>
@@ -199,7 +201,7 @@ const GedContextMenu = ({
                   <button
                     onClick={() => {
                       closeContextMenu();
-                      handleReplaceDocument(contextMenu.item.id);
+                      if (handleReplaceDocument) handleReplaceDocument(contextMenu.item.id);
                     }}
                     className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                     onMouseOver={(e) =>
@@ -220,7 +222,7 @@ const GedContextMenu = ({
                   <button
                     onClick={() => {
                       closeContextMenu();
-                      handleRenameDocument(contextMenu.item);
+                      if (handleRenameDocument) handleRenameDocument(contextMenu.item);
                     }}
                     className="flex items-center w-full cursor-pointer text-left text-[var(--text-main)]" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none"}}
                     onMouseOver={(e) =>
@@ -241,7 +243,7 @@ const GedContextMenu = ({
                   <button
                     onClick={() => {
                       closeContextMenu();
-                      handleDeleteDocument(contextMenu.item.id);
+                      if (handleDeleteDocument) handleDeleteDocument(contextMenu.item.id);
                     }}
                     className="flex items-center w-full cursor-pointer text-left" style={{gap:"0.75rem",padding:"0.5rem 1rem",background:"none",border:"none",color:"var(--danger)"}}
                     onMouseOver={(e) =>

@@ -15,51 +15,44 @@ const CreateTaskModal = ({
   setNewTaskRelecteur,
   newTaskEcheance,
   setNewTaskEcheance,
-  selectedDossierTacheId,
-  setSelectedDossierTacheId,
-  selectedAuthorizedTacheIds,
-  setSelectedAuthorizedTacheIds,
-  missionTargetDossierId,
-  setMissionTargetDossierId,
-  taskFile,
-  setTaskFile,
+  consultTask,
+  setNewTaskFile,
+  setSelectedParentDocs,
+  setSelectedMissionDocs,
+  handleCreateSubTask,
   isSubmitting,
-  handleCreateTaskSubmit,
   users = [],
-  missions = [],
-  dossiers = [],
   t,
 }) => {
   if (!createTaskModal) return null;
 
-    if (!createTaskModal) return null;
-    return (
+  return (
+    <div
+      className="fade-in fixed inset-0 flex items-center justify-center p-4" style={{backgroundColor:"rgba(15, 23, 42, 0.6)",backdropFilter:"blur(4px)",zIndex:9999}}
+    >
       <div
-        className="fade-in fixed inset-0 flex items-center justify-center p-4" style={{backgroundColor:"rgba(15, 23, 42, 0.6)",backdropFilter:"blur(4px)",zIndex:9999}}
+        className="p-8 w-full" style={{background:"#FFF",borderRadius:"12px",boxShadow:"0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",maxWidth:"750px",maxHeight:"90vh",overflowY:"auto"}}
       >
         <div
-          className="p-8 w-full" style={{background:"#FFF",borderRadius:"12px",boxShadow:"0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",maxWidth:"750px",maxHeight:"90vh",overflowY:"auto"}}
+          className="flex justify-between items-center mb-6"
         >
-          <div
-            className="flex justify-between items-center mb-6"
+          <h3 className="font-semibold" style={{fontSize:"1.25rem"}}>
+            Créer une tâche
+          </h3>
+          <button
+            type="button"
+            onClick={() => {
+              setCreateTaskModal(false);
+              if (setNewTaskFile) setNewTaskFile(null);
+              if (setSelectedParentDocs) setSelectedParentDocs([]);
+              if (setSelectedMissionDocs) setSelectedMissionDocs([]);
+            }}
+            className="cursor-pointer flex flex-col items-center" style={{background:"none",border:"none",color:"var(--text-muted)",fontSize:"0.75rem",gap:"2px"}}
           >
-            <h3 className="font-semibold" style={{fontSize:"1.25rem"}}>
-              Créer une tâche
-            </h3>
-            <button
-              type="button"
-              onClick={() => {
-                setCreateTaskModal(false);
-                setNewTaskFile(null);
-                setSelectedParentDocs([]);
-                setSelectedMissionDocs([]);
-              }}
-              className="cursor-pointer flex flex-col items-center" style={{background:"none",border:"none",color:"var(--text-muted)",fontSize:"0.75rem",gap:"2px"}}
-            >
-              <X size={20} />
-              <span>Fermer</span>
-            </button>
-          </div>
+            <X size={20} />
+            <span>Fermer</span>
+          </button>
+        </div>
 
           <div
             className="flex flex-col gap-4"
@@ -219,9 +212,9 @@ const CreateTaskModal = ({
               type="button"
               onClick={() => {
                 setCreateTaskModal(false);
-                setNewTaskFile(null);
-                setSelectedParentDocs([]);
-                setSelectedMissionDocs([]);
+                if (setNewTaskFile) setNewTaskFile(null);
+                if (setSelectedParentDocs) setSelectedParentDocs([]);
+                if (setSelectedMissionDocs) setSelectedMissionDocs([]);
               }}
               className="btn btn-outline"
               disabled={isSubmitting}

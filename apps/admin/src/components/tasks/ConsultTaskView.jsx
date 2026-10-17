@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FileText,
   Paperclip,
@@ -27,8 +27,8 @@ const ConsultTaskView = ({
   isController,
   pendingStatus,
   setPendingStatus,
-  consultStatusChanging,
-  handleConsultStatusChange,
+  handleWorkflowAction,
+  setConfirmingStatus,
   setEditTask,
   setTaskFile,
   setCreateTaskModal,
@@ -44,6 +44,8 @@ const ConsultTaskView = ({
   isFeedbackSubmitting,
   getAllowedStatuses,
 }) => {
+  const [localConsultSubTask, setLocalConsultSubTask] = useState(null);
+
   if (!consultTask) return null;
 
     const subj = getSubjectFromTask(consultTask.description);

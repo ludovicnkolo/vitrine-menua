@@ -1,26 +1,24 @@
 import React from "react";
-import { Trash2, Search, RotateCcw, Folder, Shield, FileText } from "lucide-react";
+import { Trash2, Search, RotateCcw, Folder, Shield, FileText, X } from "lucide-react";
 
 const GedTrashModal = ({
   showTrashModal,
   setShowTrashModal,
+  loadingTrash,
   normalizedTrashList = [],
-  trashSearch,
-  setTrashSearch,
-  trashFilter,
-  setTrashFilter,
-  trashActiveTab,
-  setTrashActiveTab,
-  filteredTrash = [],
-  paginatedTrash = [],
-  trashPage,
-  setTrashPage,
-  totalTrashPages,
+  trashSearchQuery,
+  setTrashSearchQuery,
+  trashTypeFilter,
+  setTrashTypeFilter,
+  filteredTrashItems = [],
+  trashTotalSize,
   isSuperAdmin,
-  handleRestore,
-  handlePermanentDelete,
-  handleEmptyTrash,
-  formatSize,
+  handleRestoreTrash,
+  handlePurgeTrash,
+  handleEmptyAllTrash,
+  handleRestoreAllTrash,
+  getTrashOrigin,
+  getTrashAuthorAndRemaining,
 }) => {
   if (!showTrashModal) return null;
 

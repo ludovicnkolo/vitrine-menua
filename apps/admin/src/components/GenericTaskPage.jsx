@@ -768,126 +768,123 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
   };
 
 
-  if (editTask) {
-    return (
-      <EditTaskView
-        editTask={editTask}
-        setEditTask={setEditTask}
-        mode={mode}
-        editFormData={editFormData}
-        setEditFormData={setEditFormData}
-        taskFile={taskFile}
-        setTaskFile={setTaskFile}
-        isSubmitting={isSubmitting}
-        handleEditSubmit={handleEditSubmit}
-        handleRemoveAttachment={handleRemoveAttachment}
-        handleDeleteExistingDoc={handleDeleteExistingDoc}
-        users={users}
-      />
-    );
-  }
-
-  if (consultTask) {
-    return (
-      <ConsultTaskView
-        consultTask={consultTask}
-        setConsultTask={setConsultTask}
-        mode={mode}
-        currentUser={currentUser}
-        isSuperAdmin={isSuperAdmin}
-        isResp={isResp}
-        isController={isController}
-        pendingStatus={pendingStatus}
-        setPendingStatus={setPendingStatus}
-        consultStatusChanging={consultStatusChanging}
-        handleConsultStatusChange={handleConsultStatusChange}
-        setEditTask={setEditTask}
-        setTaskFile={setTaskFile}
-        setCreateTaskModal={setCreateTaskModal}
-        previewFile={previewFile}
-        setPreviewFile={setPreviewFile}
-        showSmsModal={showSmsModal}
-        setShowSmsModal={setShowSmsModal}
-        showAdminFeedbackModal={showAdminFeedbackModal}
-        setShowAdminFeedbackModal={setShowAdminFeedbackModal}
-        showManagerFeedbackModal={showManagerFeedbackModal}
-        setShowManagerFeedbackModal={setShowManagerFeedbackModal}
-        handleFeedbackSubmit={handleFeedbackSubmit}
-        isFeedbackSubmitting={isFeedbackSubmitting}
-        getAllowedStatuses={getAllowedStatuses}
-      />
-    );
-  }
-
   return (
     <div>
-      <TaskHeaderToolbar
-        mode={mode}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        filterStatus={filterStatus}
-        setFilterStatus={setFilterStatus}
-      />
-      <TaskTableView
-        tasks={tasks}
-        mode={mode}
-        getDeadlineEvaluation={getDeadlineEvaluation}
-        canEditTaskRow={canEditTaskRow}
-        openEditTask={openEditTask}
-        setConsultTask={setConsultTask}
-        currentUser={currentUser}
-        fetchData={fetchData}
-      />
+      {editTask ? (
+        <EditTaskView
+          editTask={editTask}
+          setEditTask={setEditTask}
+          mode={mode}
+          editFormData={editFormData}
+          setEditFormData={setEditFormData}
+          taskFile={taskFile}
+          setTaskFile={setTaskFile}
+          isSubmitting={isSubmitting}
+          handleEditSubmit={handleUpdateMission}
+          users={users}
+          setErrorMsg={setErrorMsg}
+        />
+      ) : consultTask ? (
+        <ConsultTaskView
+          consultTask={consultTask}
+          setConsultTask={setConsultTask}
+          mode={mode}
+          currentUser={currentUser}
+          isSuperAdmin={isSuperAdmin}
+          isResp={isResp}
+          isController={isController}
+          pendingStatus={pendingStatus}
+          setPendingStatus={setPendingStatus}
+          handleWorkflowAction={handleWorkflowAction}
+          setConfirmingStatus={setConfirmingStatus}
+          setEditTask={setEditTask}
+          setTaskFile={setTaskFile}
+          setCreateTaskModal={setCreateTaskModal}
+          previewFile={previewFile}
+          setPreviewFile={setPreviewFile}
+          showSmsModal={showSmsModal}
+          setShowSmsModal={setShowSmsModal}
+          showAdminFeedbackModal={showAdminFeedbackModal}
+          setShowAdminFeedbackModal={setShowAdminFeedbackModal}
+          showManagerFeedbackModal={showManagerFeedbackModal}
+          setShowManagerFeedbackModal={setShowManagerFeedbackModal}
+          handleFeedbackSubmit={handleFeedbackSubmit}
+          isFeedbackSubmitting={isFeedbackSubmitting}
+          getAllowedStatuses={getAllowedStatuses}
+        />
+      ) : (
+        <>
+          <TaskHeaderToolbar
+            mode={mode}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            filterStatus={filterStatus}
+            setFilterStatus={setFilterStatus}
+          />
+          <TaskTableView
+            tasks={tasks}
+            mode={mode}
+            getDeadlineEvaluation={getDeadlineEvaluation}
+            canEditTaskRow={canEditTaskRow}
+            openEditTask={openEditTask}
+            setConsultTask={setConsultTask}
+            currentUser={currentUser}
+            fetchData={fetchData}
+          />
 
-      {totalPages >= 1 && (
-        <div
-          className="flex justify-center mt-6 gap-4 items-center"
-        >
-          <button
-            type="button"
-            disabled={page === 1}
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="font-medium transition-colors"
-            style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "6px",
-              border: "1px solid var(--border)",
-              background: "var(--surface)",
-              color: page === 1 ? "var(--text-muted)" : "var(--text-main)",
-              opacity: page === 1 ? 0.45 : 1,
-              cursor: page === 1 ? "not-allowed" : "pointer",
-            }}
-          >
-            Précédent
-          </button>
-          <span style={{ color: "var(--text-muted)", fontSize: "0.875rem", fontWeight: 500 }}>
-            Page {page} sur {totalPages}
-          </span>
-          <button
-            type="button"
-            disabled={page >= totalPages}
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className="font-medium transition-colors"
-            style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "6px",
-              border: "1px solid var(--border)",
-              background: "var(--surface)",
-              color: page >= totalPages ? "var(--text-muted)" : "var(--text-main)",
-              opacity: page >= totalPages ? 0.45 : 1,
-              cursor: page >= totalPages ? "not-allowed" : "pointer",
-            }}
-          >
-            Suivant
-          </button>
-        </div>
+          {totalPages >= 1 && (
+            <div
+              className="flex justify-center mt-6 gap-4 items-center"
+            >
+              <button
+                type="button"
+                disabled={page === 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="font-medium transition-colors"
+                style={{
+                  padding: "0.5rem 1rem",
+                  borderRadius: "6px",
+                  border: "1px solid var(--border)",
+                  background: "var(--surface)",
+                  color: page === 1 ? "var(--text-muted)" : "var(--text-main)",
+                  opacity: page === 1 ? 0.45 : 1,
+                  cursor: page === 1 ? "not-allowed" : "pointer",
+                }}
+              >
+                Précédent
+              </button>
+              <span style={{ color: "var(--text-muted)", fontSize: "0.875rem", fontWeight: 500 }}>
+                Page {page} sur {totalPages}
+              </span>
+              <button
+                type="button"
+                disabled={page >= totalPages}
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                className="font-medium transition-colors"
+                style={{
+                  padding: "0.5rem 1rem",
+                  borderRadius: "6px",
+                  border: "1px solid var(--border)",
+                  background: "var(--surface)",
+                  color: page >= totalPages ? "var(--text-muted)" : "var(--text-main)",
+                  opacity: page >= totalPages ? 0.45 : 1,
+                  cursor: page >= totalPages ? "not-allowed" : "pointer",
+                }}
+              >
+                Suivant
+              </button>
+            </div>
+          )}
+        </>
       )}
 
       <CancelMissionConfirmModal
         show={confirmingStatus === "ANNULEE" && mode === "MISSION"}
         onClose={() => setConfirmingStatus("")}
         onConfirm={() => {
-          handleWorkflowAction(consultTask.id, confirmingStatus);
+          if (consultTask) {
+            handleWorkflowAction(consultTask.id, confirmingStatus);
+          }
           setConfirmingStatus("");
         }}
       />
@@ -906,19 +903,13 @@ const GenericTaskPage = ({ mode = "MISSION" }) => {
         setNewTaskRelecteur={setNewTaskRelecteur}
         newTaskEcheance={newTaskEcheance}
         setNewTaskEcheance={setNewTaskEcheance}
-        selectedDossierTacheId={selectedDossierTacheId}
-        setSelectedDossierTacheId={setSelectedDossierTacheId}
-        selectedAuthorizedTacheIds={selectedAuthorizedTacheIds}
-        setSelectedAuthorizedTacheIds={setSelectedAuthorizedTacheIds}
-        missionTargetDossierId={missionTargetDossierId}
-        setMissionTargetDossierId={setMissionTargetDossierId}
-        taskFile={taskFile}
-        setTaskFile={setTaskFile}
+        consultTask={consultTask}
+        setNewTaskFile={setNewTaskFile}
+        setSelectedParentDocs={setSelectedParentDocs}
+        setSelectedMissionDocs={setSelectedMissionDocs}
+        handleCreateSubTask={handleCreateSubTask}
         isSubmitting={isSubmitting}
-        handleCreateTaskSubmit={handleCreateTaskSubmit}
         users={users}
-        missions={missions}
-        dossiers={dossiers}
         t={t}
       />
 

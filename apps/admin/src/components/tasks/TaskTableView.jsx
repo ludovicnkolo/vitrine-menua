@@ -1,6 +1,6 @@
 import React from "react";
-import { Eye, Pencil, Trash } from "lucide-react";
-import { getSafeApiUrl } from "../../utils/helpers";
+import { Eye, Pencil, Trash, AlertTriangle } from "lucide-react";
+import { getSafeApiUrl, getStatusBadge, formatDate } from "../../utils/helpers";
 
 const TaskTableView = ({
   tasks = [],

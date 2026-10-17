@@ -39,6 +39,8 @@ import UserFormFields from "../components/UserFormFields";
 import ClientFormFields from "../components/ClientFormFields";
 import PaginationControls from "../components/PaginationControls";
 import { getStatusBadge, getRoleBadge } from "../utils/helpers";
+import Modal from "../components/ui/Modal";
+import ActivityStatsModal from "../components/modals/ActivityStatsModal";
 
 const AVAILABLE_PERMISSIONS = {
   MESSAGES_VIEW: "Consulter les messages",
@@ -119,125 +121,15 @@ const UsersPage = ({ forceTab }) => {
   const [editUserLangOpen, setEditUserLangOpen] = useState(false);
   const menuRef = useRef(null);
 
-  // Activity Stats Modal state
+  // Activity Stats Modal state (délégué au composant autonome ActivityStatsModal)
   const [activityStatsModal, setActivityStatsModal] = useState({
     open: false,
     type: "user", // "user" or "client"
     target: null,
   });
-  const [statsData, setStatsData] = useState(null);
-  const [statsLoading, setStatsLoading] = useState(false);
-  const [statsPreset, setStatsPreset] = useState("all");
-  const [statsStartDate, setStatsStartDate] = useState("");
-  const [statsEndDate, setStatsEndDate] = useState("");
-  const [statsError, setStatsError] = useState(null);
-
-  const fetchActivityStats = async (type, id, start = "", end = "") => {
-    setStatsLoading(true);
-    setStatsError(null);
-    try {
-      const token = sessionStorage.getItem("adminToken");
-      const params = new URLSearchParams();
-      if (start) params.append("startDate", start);
-      if (end) params.append("endDate", end);
-
-      const endpoint =
-        type === "user"
-          ? `/api/crm/users/${id}/activity-stats`
-          : `/api/crm/clients/${id}/activity-stats`;
-
-      const res = await fetch(
-        getSafeApiUrl(`${endpoint}?${params.toString()}`),
-        {
-          headers: { Authorization: "Bearer " + token },
-        },
-      );
-      if (!res.ok) {
-        const errJson = await res.json().catch(() => ({}));
-        throw new Error(errJson.error || "Erreur lors de la récupération des données");
-      }
-      const data = await res.json();
-      setStatsData(data);
-    } catch (err) {
-      console.error("Erreur stats:", err);
-      setStatsError(err.message || "Erreur de chargement");
-    } finally {
-      setStatsLoading(false);
-    }
-  };
 
   const handleOpenActivityStats = (type, target) => {
     setActivityStatsModal({ open: true, type, target });
-    setStatsPreset("all");
-    setStatsStartDate("");
-    setStatsEndDate("");
-    setStatsError(null);
-    fetchActivityStats(type, target.id, "", "");
-  };
-
-  const handleApplyStatsFilter = () => {
-    if (statsStartDate && statsEndDate && new Date(statsStartDate) > new Date(statsEndDate)) {
-      setStatsError("La date de début doit être antérieure ou égale à la date de fin.");
-      return;
-    }
-    setStatsPreset("custom");
-    setStatsError(null);
-    if (activityStatsModal.target) {
-      fetchActivityStats(
-        activityStatsModal.type,
-        activityStatsModal.target.id,
-        statsStartDate,
-        statsEndDate,
-      );
-    }
-  };
-
-  const handleResetStatsFilter = () => {
-    handlePresetStatsPeriod("all");
-  };
-
-  const handlePresetStatsPeriod = (preset) => {
-    setStatsPreset(preset);
-    setStatsError(null);
-    const now = new Date();
-    let start = "";
-    let end = "";
-
-    const pad = (n) => String(n).padStart(2, "0");
-
-    if (preset === "month") {
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      start = `${year}-${pad(month + 1)}-01`;
-      const lastDay = new Date(year, month + 1, 0).getDate();
-      end = `${year}-${pad(month + 1)}-${pad(lastDay)}`;
-    } else if (preset === "year") {
-      const year = now.getFullYear();
-      start = `${year}-01-01`;
-      end = `${year}-12-31`;
-    } else {
-      start = "";
-      end = "";
-    }
-
-    setStatsStartDate(start);
-    setStatsEndDate(end);
-
-    if (activityStatsModal.target) {
-      fetchActivityStats(
-        activityStatsModal.type,
-        activityStatsModal.target.id,
-        start,
-        end,
-      );
-    }
-  };
-
-  const handleCloseActivityStats = () => {
-    setActivityStatsModal({ open: false, type: "user", target: null });
-    setStatsData(null);
-    setStatsPreset("all");
-    setStatsError(null);
   };
 
   const renderReadOnlyField = (label, value) => (
@@ -3649,641 +3541,121 @@ const UsersPage = ({ forceTab }) => {
         </div>
       )}
 
-      {/* Modal Bilan d'activité (Interne) / Suivi d'activité (Client) */}
-      {activityStatsModal.open && activityStatsModal.target && (
-        <div
-          className="fixed inset-0 flex items-center justify-center p-4" style={{backgroundColor:"rgba(15, 23, 42, 0.65)",backdropFilter:"blur(4px)",zIndex:1100}}
-        >
-          <div
-            className="fade-in w-full flex flex-col" style={{backgroundColor:"#FFFFFF",borderRadius:"12px",maxWidth:"800px",maxHeight:"90vh",overflowY:"auto",boxShadow:"0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",padding:"1.75rem",gap:"1.25rem"}}
-          >
-            {/* Header */}
-            <div
-              className="flex items-start justify-between" style={{borderBottom:"1px solid var(--border)",paddingBottom:"1rem"}}
-            >
-              <div className="flex items-center" style={{gap:"0.75rem"}}>
-                <div
-                  className="flex items-center justify-center" style={{width:"44px",height:"44px",borderRadius:"10px",backgroundColor:"rgba(201, 156, 92, 0.12)",color:"var(--primary, #c99c5c)"}}
-                >
-                  {activityStatsModal.type === "user" ? (
-                    <BarChart3 size={24} />
-                  ) : (
-                    <Activity size={24} />
-                  )}
-                </div>
-                <div>
-                  <h2 className="font-bold text-[var(--text-main)]" style={{fontSize:"1.25rem"}}>
-                    {activityStatsModal.type === "user"
-                      ? `Bilan d'activité : ${activityStatsModal.target.name}`
-                      : `Suivi d'activité : ${activityStatsModal.target.entreprise?.raisonSociale || activityStatsModal.target.name}`}
-                  </h2>
-                  <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.85rem", color: "var(--text-muted)" }}>
-                    {activityStatsModal.type === "user"
-                      ? "Missions, dossiers et tâches assignés et terminés pour ce collaborateur"
-                      : "Dossiers, missions et tâches créés pour ce client"}
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={handleCloseActivityStats}
-                className="cursor-pointer flex items-center justify-center" style={{background:"transparent",border:"none",color:"var(--text-muted)",padding:"0.25rem",borderRadius:"6px"}}
-              >
-                <X size={20} />
-              </button>
-            </div>
+      {/* Modal Bilan d'activité (Interne) / Suivi d'activité (Client) factorisé */}
+      <ActivityStatsModal
+        isOpen={activityStatsModal.open}
+        onClose={() => setActivityStatsModal({ open: false, type: "user", target: null })}
+        type={activityStatsModal.type}
+        target={activityStatsModal.target}
+      />
 
-            {/* Barre de filtrage par date */}
-            <div
-              className="flex flex-col" style={{backgroundColor:"#F8FAFC",border:"1px solid var(--border)",borderRadius:"8px",padding:"0.85rem 1rem",gap:"0.6rem"}}
-            >
-              <div
-                className="flex items-center justify-between flex-wrap" style={{gap:"0.75rem"}}
-              >
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-semibold text-[var(--text-main)] flex items-center" style={{fontSize:"0.85rem",gap:"0.35rem"}}>
-                    <Calendar size={15} /> Période :
-                  </span>
-                  <div className="flex items-center" style={{gap:"0.35rem"}}>
-                    <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Du</span>
-                    <input
-                      type="date"
-                      value={statsStartDate}
-                      onChange={(e) => {
-                        setStatsStartDate(e.target.value);
-                        setStatsPreset("custom");
-                      }}
-                      style={{
-                        padding: "0.3rem 0.5rem",
-                        borderRadius: "6px",
-                        border: "1px solid var(--border)",
-                        fontSize: "0.85rem",
-                        background: "#FFFFFF",
-                      }}
-                    />
-                  </div>
-                  <div className="flex items-center" style={{gap:"0.35rem"}}>
-                    <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Au</span>
-                    <input
-                      type="date"
-                      value={statsEndDate}
-                      onChange={(e) => {
-                        setStatsEndDate(e.target.value);
-                        setStatsPreset("custom");
-                      }}
-                      style={{
-                        padding: "0.3rem 0.5rem",
-                        borderRadius: "6px",
-                        border: "1px solid var(--border)",
-                        fontSize: "0.85rem",
-                        background: "#FFFFFF",
-                      }}
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleApplyStatsFilter}
-                    disabled={statsLoading}
-                    className="btn btn-primary inline-flex items-center" style={{padding:"0.35rem 0.85rem",fontSize:"0.85rem",gap:"0.35rem"}}
-                  >
-                    <Filter size={14} /> Filtrer
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleResetStatsFilter}
-                    disabled={statsLoading}
-                    className="btn btn-outline inline-flex items-center" style={{padding:"0.35rem 0.85rem",fontSize:"0.85rem",gap:"0.35rem"}}
-                  >
-                    <RotateCcw size={14} /> Réinitialiser
-                  </button>
-                </div>
-
-                {/* Filtres rapides */}
-                <div className="flex items-center" style={{gap:"0.4rem"}}>
-                  <button
-                    type="button"
-                    onClick={() => handlePresetStatsPeriod("all")}
-                    style={{
-                      border: statsPreset === "all" ? "1px solid var(--primary, #c99c5c)" : "1px solid var(--border)",
-                      background: statsPreset === "all" ? "rgba(201, 156, 92, 0.15)" : "#FFFFFF",
-                      color: statsPreset === "all" ? "var(--primary, #c99c5c)" : "var(--text-muted)",
-                      borderRadius: "14px",
-                      padding: "0.25rem 0.75rem",
-                      fontSize: "0.8rem",
-                      cursor: "pointer",
-                      fontWeight: statsPreset === "all" ? 700 : 500,
-                      transition: "all 0.15s ease",
-                    }}
-                  >
-                    Tout
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handlePresetStatsPeriod("month")}
-                    style={{
-                      border: statsPreset === "month" ? "1px solid var(--primary, #c99c5c)" : "1px solid var(--border)",
-                      background: statsPreset === "month" ? "rgba(201, 156, 92, 0.15)" : "#FFFFFF",
-                      color: statsPreset === "month" ? "var(--primary, #c99c5c)" : "var(--text-muted)",
-                      borderRadius: "14px",
-                      padding: "0.25rem 0.75rem",
-                      fontSize: "0.8rem",
-                      cursor: "pointer",
-                      fontWeight: statsPreset === "month" ? 700 : 500,
-                      transition: "all 0.15s ease",
-                    }}
-                  >
-                    Ce mois
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handlePresetStatsPeriod("year")}
-                    style={{
-                      border: statsPreset === "year" ? "1px solid var(--primary, #c99c5c)" : "1px solid var(--border)",
-                      background: statsPreset === "year" ? "rgba(201, 156, 92, 0.15)" : "#FFFFFF",
-                      color: statsPreset === "year" ? "var(--primary, #c99c5c)" : "var(--text-muted)",
-                      borderRadius: "14px",
-                      padding: "0.25rem 0.75rem",
-                      fontSize: "0.8rem",
-                      cursor: "pointer",
-                      fontWeight: statsPreset === "year" ? 700 : 500,
-                      transition: "all 0.15s ease",
-                    }}
-                  >
-                    Cette année
-                  </button>
-                </div>
-              </div>
-
-              {statsError && (
-                <div style={{ fontSize: "0.8rem", color: "#EF4444", marginTop: "0.25rem" }}>
-                  {statsError}
-                </div>
-              )}
-            </div>
-
-            {/* Contenu des statistiques */}
-            {statsLoading ? (
-              <div
-                className="flex flex-col items-center justify-center" style={{padding:"3rem 1rem",gap:"0.75rem",color:"var(--text-muted)"}}
-              >
-                <Loader size={30} className="spin" />
-                <span>Chargement des statistiques...</span>
-              </div>
-            ) : activityStatsModal.type === "user" ? (
-              /* Vue INTERNE : Dossiers, Missions, Tâches (Assigné / Terminé) */
-              <div className="flex flex-col gap-4">
-                <div
-                  className="grid gap-4" style={{gridTemplateColumns:"repeat(auto-fit, minmax(220px, 1fr))"}}
-                >
-                  {/* Carte Dossiers Interne */}
-                  <div
-                    className="flex flex-col" style={{background:"#FFFFFF",border:"1px solid var(--border)",borderTop:"4px solid #2563EB",borderRadius:"10px",padding:"1.2rem",gap:"0.85rem",boxShadow:"0 1px 3px rgba(0,0,0,0.05)"}}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-[var(--text-main)]" style={{fontSize:"1rem"}}>
-                        Dossiers
-                      </span>
-                      <div
-                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#FEF3C7",color:"#D97706"}}
-                      >
-                        <Folder size={18} color="#D97706" fill="#FBBF24" />
-                      </div>
-                    </div>
-
-                    <div className="grid" style={{gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
-                      <div
-                        className="text-center" style={{background:"#F8FAFC",border:"1px solid var(--border)",borderRadius:"8px",padding:"0.65rem"}}
-                      >
-                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"var(--text-muted)",textTransform:"uppercase"}}>
-                          Assignés
-                        </span>
-                        <span className="text-[var(--text-main)]" style={{fontSize:"1.5rem",fontWeight:800}}>
-                          {statsData?.dossiers?.assignes ?? statsData?.dossiers?.assignees ?? 0}
-                        </span>
-                      </div>
-                      <div
-                        className="text-center" style={{background:"#ECFDF5",border:"1px solid #A7F3D0",borderRadius:"8px",padding:"0.65rem"}}
-                      >
-                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#065F46",textTransform:"uppercase"}}>
-                          Terminés
-                        </span>
-                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
-                          {statsData?.dossiers?.termines ?? statsData?.dossiers?.terminees ?? 0}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Carte Missions Interne */}
-                  <div
-                    className="flex flex-col" style={{background:"#FFFFFF",border:"1px solid var(--border)",borderTop:"4px solid #0D9488",borderRadius:"10px",padding:"1.2rem",gap:"0.85rem",boxShadow:"0 1px 3px rgba(0,0,0,0.05)"}}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-[var(--text-main)]" style={{fontSize:"1rem"}}>
-                        Missions
-                      </span>
-                      <div
-                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#F0FDFA",color:"#0D9488"}}
-                      >
-                        <CheckSquare size={18} />
-                      </div>
-                    </div>
-
-                    <div className="grid" style={{gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
-                      <div
-                        className="text-center" style={{background:"#F8FAFC",border:"1px solid var(--border)",borderRadius:"8px",padding:"0.65rem"}}
-                      >
-                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"var(--text-muted)",textTransform:"uppercase"}}>
-                          Assignées
-                        </span>
-                        <span className="text-[var(--text-main)]" style={{fontSize:"1.5rem",fontWeight:800}}>
-                          {statsData?.missions?.assignees ?? statsData?.missions?.assignes ?? statsData?.missions?.total ?? 0}
-                        </span>
-                      </div>
-                      <div
-                        className="text-center" style={{background:"#ECFDF5",border:"1px solid #A7F3D0",borderRadius:"8px",padding:"0.65rem"}}
-                      >
-                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#065F46",textTransform:"uppercase"}}>
-                          Terminées
-                        </span>
-                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
-                          {statsData?.missions?.terminees ?? statsData?.missions?.termines ?? 0}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Carte Tâches Interne */}
-                  <div
-                    className="flex flex-col" style={{background:"#FFFFFF",border:"1px solid var(--border)",borderTop:"4px solid #7C3AED",borderRadius:"10px",padding:"1.2rem",gap:"0.85rem",boxShadow:"0 1px 3px rgba(0,0,0,0.05)"}}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-[var(--text-main)]" style={{fontSize:"1rem"}}>
-                        Tâches
-                      </span>
-                      <div
-                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#F5F3FF",color:"#7C3AED"}}
-                      >
-                        <ListTodo size={18} />
-                      </div>
-                    </div>
-
-                    <div className="grid" style={{gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
-                      <div
-                        className="text-center" style={{background:"#F8FAFC",border:"1px solid var(--border)",borderRadius:"8px",padding:"0.65rem"}}
-                      >
-                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"var(--text-muted)",textTransform:"uppercase"}}>
-                          Assignées
-                        </span>
-                        <span className="text-[var(--text-main)]" style={{fontSize:"1.5rem",fontWeight:800}}>
-                          {statsData?.taches?.assignees ?? statsData?.taches?.assignes ?? 0}
-                        </span>
-                      </div>
-                      <div
-                        className="text-center" style={{background:"#ECFDF5",border:"1px solid #A7F3D0",borderRadius:"8px",padding:"0.65rem"}}
-                      >
-                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#065F46",textTransform:"uppercase"}}>
-                          Terminées
-                        </span>
-                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
-                          {statsData?.taches?.terminees ?? statsData?.taches?.termines ?? 0}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  className="flex items-center gap-2" style={{backgroundColor:"#F8FAFC",border:"1px solid var(--border)",borderRadius:"8px",padding:"0.6rem 0.85rem",fontSize:"0.8rem",color:"var(--text-muted)"}}
-                >
-                  <CheckCircle2 size={16} color="#059669" />
-                  <span>Nombre d'éléments directement assignés et finalisés pour cet utilisateur interne.</span>
-                </div>
-              </div>
-            ) : (
-              /* Vue CLIENT : Dossiers, Missions, Tâches créés (En cours / Terminé) */
-              <div className="flex flex-col gap-4">
-                <div
-                  className="grid gap-4" style={{gridTemplateColumns:"repeat(auto-fit, minmax(220px, 1fr))"}}
-                >
-                  {/* Carte Dossiers Client */}
-                  <div
-                    className="flex flex-col" style={{background:"#FFFFFF",border:"1px solid var(--border)",borderTop:"4px solid #2563EB",borderRadius:"10px",padding:"1.2rem",gap:"0.85rem",boxShadow:"0 1px 3px rgba(0,0,0,0.05)"}}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="font-bold text-[var(--text-main)] block" style={{fontSize:"1rem"}}>
-                          Dossiers
-                        </span>
-                        <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                          Total créés : <strong>{statsData?.dossiers?.total ?? 0}</strong>
-                        </span>
-                      </div>
-                      <div
-                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#FEF3C7",color:"#D97706"}}
-                      >
-                        <Folder size={18} color="#D97706" fill="#FBBF24" />
-                      </div>
-                    </div>
-
-                    <div className="grid" style={{gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
-                      <div
-                        className="text-center" style={{background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:"8px",padding:"0.65rem"}}
-                      >
-                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#92400E",textTransform:"uppercase"}}>
-                          En cours
-                        </span>
-                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#D97706" }}>
-                          {statsData?.dossiers?.enCours ?? 0}
-                        </span>
-                      </div>
-                      <div
-                        className="text-center" style={{background:"#ECFDF5",border:"1px solid #A7F3D0",borderRadius:"8px",padding:"0.65rem"}}
-                      >
-                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#065F46",textTransform:"uppercase"}}>
-                          Terminés
-                        </span>
-                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
-                          {statsData?.dossiers?.termines ?? 0}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Carte Missions Client */}
-                  <div
-                    className="flex flex-col" style={{background:"#FFFFFF",border:"1px solid var(--border)",borderTop:"4px solid #0D9488",borderRadius:"10px",padding:"1.2rem",gap:"0.85rem",boxShadow:"0 1px 3px rgba(0,0,0,0.05)"}}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="font-bold text-[var(--text-main)] block" style={{fontSize:"1rem"}}>
-                          Missions
-                        </span>
-                        <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                          Total créées : <strong>{statsData?.missions?.total ?? 0}</strong>
-                        </span>
-                      </div>
-                      <div
-                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#F0FDFA",color:"#0D9488"}}
-                      >
-                        <CheckSquare size={18} />
-                      </div>
-                    </div>
-
-                    <div className="grid" style={{gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
-                      <div
-                        className="text-center" style={{background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:"8px",padding:"0.65rem"}}
-                      >
-                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#92400E",textTransform:"uppercase"}}>
-                          En cours
-                        </span>
-                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#D97706" }}>
-                          {statsData?.missions?.enCours ?? 0}
-                        </span>
-                      </div>
-                      <div
-                        className="text-center" style={{background:"#ECFDF5",border:"1px solid #A7F3D0",borderRadius:"8px",padding:"0.65rem"}}
-                      >
-                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#065F46",textTransform:"uppercase"}}>
-                          Terminées
-                        </span>
-                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
-                          {statsData?.missions?.termines ?? 0}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Carte Tâches Client */}
-                  <div
-                    className="flex flex-col" style={{background:"#FFFFFF",border:"1px solid var(--border)",borderTop:"4px solid #7C3AED",borderRadius:"10px",padding:"1.2rem",gap:"0.85rem",boxShadow:"0 1px 3px rgba(0,0,0,0.05)"}}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="font-bold text-[var(--text-main)] block" style={{fontSize:"1rem"}}>
-                          Tâches
-                        </span>
-                        <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                          Total créées : <strong>{statsData?.taches?.total ?? 0}</strong>
-                        </span>
-                      </div>
-                      <div
-                        className="flex items-center justify-center" style={{width:"32px",height:"32px",borderRadius:"8px",background:"#F5F3FF",color:"#7C3AED"}}
-                      >
-                        <ListTodo size={18} />
-                      </div>
-                    </div>
-
-                    <div className="grid" style={{gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
-                      <div
-                        className="text-center" style={{background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:"8px",padding:"0.65rem"}}
-                      >
-                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#92400E",textTransform:"uppercase"}}>
-                          En cours
-                        </span>
-                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#D97706" }}>
-                          {statsData?.taches?.enCours ?? 0}
-                        </span>
-                      </div>
-                      <div
-                        className="text-center" style={{background:"#ECFDF5",border:"1px solid #A7F3D0",borderRadius:"8px",padding:"0.65rem"}}
-                      >
-                        <span className="block font-semibold" style={{fontSize:"0.72rem",color:"#065F46",textTransform:"uppercase"}}>
-                          Terminées
-                        </span>
-                        <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#059669" }}>
-                          {statsData?.taches?.termines ?? 0}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  className="flex items-center gap-2" style={{backgroundColor:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:"8px",padding:"0.65rem 0.85rem",fontSize:"0.8rem",color:"#1E40AF"}}
-                >
-                  <Clock size={16} />
-                  <span>
-                    <strong>« En cours »</strong> regroupe tous les éléments créés pour ce client qui ne sont pas encore terminés (tous statuts actifs confondus).
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Footer */}
-            <div
-              className="flex justify-end" style={{borderTop:"1px solid var(--border)",paddingTop:"1rem"}}
-            >
-              <button
-                type="button"
-                onClick={handleCloseActivityStats}
-                className="btn btn-outline"
-                style={{ padding: "0.5rem 1.25rem" }}
-              >
-                Fermer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal Convertir en Compte Client (Portail GED) */}
-      {convertModalClient && (
-        <div
-          className="fixed inset-0 flex items-center justify-center p-4"
-          style={{
-            backgroundColor: "rgba(15, 23, 42, 0.65)",
-            backdropFilter: "blur(4px)",
-            zIndex: 1200,
-          }}
-        >
-          <div
-            className="fade-in w-full flex flex-col"
-            style={{
-              backgroundColor: "#FFFFFF",
-              borderRadius: "12px",
-              maxWidth: "520px",
-              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.2)",
-              padding: "1.75rem",
-              gap: "1.25rem",
-            }}
-          >
-            {/* Header */}
-            <div className="flex items-start justify-between" style={{ borderBottom: "1px solid var(--border)", paddingBottom: "1rem" }}>
-              <div className="flex items-center" style={{ gap: "0.75rem" }}>
-                <div
-                  className="flex items-center justify-center shrink-0"
-                  style={{
-                    width: "44px",
-                    height: "44px",
-                    borderRadius: "10px",
-                    backgroundColor: "rgba(201, 156, 92, 0.12)",
-                    color: "var(--primary, #c99c5c)",
-                  }}
-                >
-                  <UserPlus size={24} />
-                </div>
-                <div>
-                  <h2 className="font-bold text-[var(--text-main)]" style={{ fontSize: "1.15rem", margin: 0 }}>
-                    Convertir en Compte Client
-                  </h2>
-                  <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                    Initialisation des accès au portail sécurisé GED
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setConvertModalClient(null)}
-                className="cursor-pointer flex items-center justify-center"
-                style={{ background: "transparent", border: "none", color: "var(--text-muted)", padding: "0.25rem" }}
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Note explicative cadrage Mme Fouelefack */}
-            <div
+      {/* Modal Convertir en Compte Client (Portail GED) factorisé */}
+      <Modal
+        isOpen={Boolean(convertModalClient)}
+        onClose={() => setConvertModalClient(null)}
+        title="Convertir en Compte Client"
+        subtitle="Initialisation des accès au portail sécurisé GED"
+        icon={<UserPlus size={24} />}
+        maxWidth="520px"
+        footer={
+          <>
+            <button
+              type="button"
+              onClick={() => setConvertModalClient(null)}
+              className="cursor-pointer font-semibold"
               style={{
-                backgroundColor: "#F8FAFC",
-                borderLeft: "4px solid var(--primary, #c99c5c)",
-                padding: "0.75rem 1rem",
-                borderRadius: "0 6px 6px 0",
+                padding: "0.55rem 1.15rem",
+                borderRadius: "8px",
+                border: "1px solid var(--border)",
+                backgroundColor: "#FFFFFF",
+                color: "var(--text-muted)",
                 fontSize: "0.85rem",
-                color: "#334155",
-                lineHeight: 1.5,
               }}
             >
-              Un compte nominatif va être créé pour ce client. Une invitation officielle contenant un lien sécurisé d'activation lui sera transmise par e-mail afin qu'il définisse son mot de passe de manière autonome.
-            </div>
+              Annuler
+            </button>
 
-            {/* Formulaire */}
-            <div className="flex flex-col gap-3">
-              <div>
-                <label className="block font-bold text-[var(--text-main)] mb-1" style={{ fontSize: "0.8rem" }}>
-                  Nom / Raison Sociale affiché(e)
-                </label>
-                <input
-                  type="text"
-                  value={convertName}
-                  onChange={(e) => setConvertName(e.target.value)}
-                  className="w-full"
-                  style={{
-                    padding: "0.6rem 0.85rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                    fontSize: "0.9rem",
-                  }}
-                />
-              </div>
+            <button
+              type="button"
+              disabled={accountActionLoading || !convertEmail.trim()}
+              onClick={handleConfirmConvertToAccount}
+              className="cursor-pointer font-bold inline-flex items-center gap-2"
+              style={{
+                padding: "0.55rem 1.25rem",
+                borderRadius: "8px",
+                border: "none",
+                backgroundColor: "var(--primary, #c99c5c)",
+                color: "#FFFFFF",
+                fontSize: "0.85rem",
+                opacity: accountActionLoading || !convertEmail.trim() ? 0.6 : 1,
+              }}
+            >
+              {accountActionLoading ? (
+                <>
+                  <Loader size={16} className="animate-spin" /> Envoi en cours...
+                </>
+              ) : (
+                <>
+                  <UserPlus size={16} /> Créer le compte & Inviter
+                </>
+              )}
+            </button>
+          </>
+        }
+      >
+        <div
+          style={{
+            backgroundColor: "#F8FAFC",
+            borderLeft: "4px solid var(--primary, #c99c5c)",
+            padding: "0.75rem 1rem",
+            borderRadius: "0 6px 6px 0",
+            fontSize: "0.85rem",
+            color: "#334155",
+            lineHeight: 1.5,
+          }}
+        >
+          Un compte nominatif va être créé pour ce client. Une invitation officielle contenant un lien sécurisé d'activation lui sera transmise par e-mail afin qu'il définisse son mot de passe de manière autonome.
+        </div>
 
-              <div>
-                <label className="block font-bold text-[var(--text-main)] mb-1" style={{ fontSize: "0.8rem" }}>
-                  Adresse email du compte (pour réception de l'invitation) <span style={{ color: "var(--danger)" }}>*</span>
-                </label>
-                <input
-                  type="email"
-                  value={convertEmail}
-                  onChange={(e) => setConvertEmail(e.target.value)}
-                  required
-                  className="w-full"
-                  style={{
-                    padding: "0.6rem 0.85rem",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                    fontSize: "0.9rem",
-                  }}
-                />
-              </div>
-            </div>
+        <div className="flex flex-col gap-3">
+          <div>
+            <label className="block font-bold text-[var(--text-main)] mb-1" style={{ fontSize: "0.8rem" }}>
+              Nom / Raison Sociale affiché(e)
+            </label>
+            <input
+              type="text"
+              value={convertName}
+              onChange={(e) => setConvertName(e.target.value)}
+              className="w-full"
+              style={{
+                padding: "0.6rem 0.85rem",
+                borderRadius: "8px",
+                border: "1px solid var(--border)",
+                fontSize: "0.9rem",
+              }}
+            />
+          </div>
 
-            {/* Actions */}
-            <div className="flex items-center justify-end gap-3 pt-2" style={{ borderTop: "1px solid var(--border)" }}>
-              <button
-                type="button"
-                onClick={() => setConvertModalClient(null)}
-                className="cursor-pointer font-semibold"
-                style={{
-                  padding: "0.55rem 1.15rem",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  backgroundColor: "#FFFFFF",
-                  color: "var(--text-muted)",
-                  fontSize: "0.85rem",
-                }}
-              >
-                Annuler
-              </button>
-
-              <button
-                type="button"
-                disabled={accountActionLoading || !convertEmail.trim()}
-                onClick={handleConfirmConvertToAccount}
-                className="cursor-pointer font-bold inline-flex items-center gap-2"
-                style={{
-                  padding: "0.55rem 1.25rem",
-                  borderRadius: "8px",
-                  border: "none",
-                  backgroundColor: "var(--primary, #c99c5c)",
-                  color: "#FFFFFF",
-                  fontSize: "0.85rem",
-                  opacity: accountActionLoading || !convertEmail.trim() ? 0.6 : 1,
-                }}
-              >
-                {accountActionLoading ? (
-                  <>
-                    <Loader size={16} className="animate-spin" /> Envoi en cours...
-                  </>
-                ) : (
-                  <>
-                    <UserPlus size={16} /> Créer le compte & Inviter
-                  </>
-                )}
-              </button>
-            </div>
+          <div>
+            <label className="block font-bold text-[var(--text-main)] mb-1" style={{ fontSize: "0.8rem" }}>
+              Adresse email du compte (pour réception de l'invitation) <span style={{ color: "var(--danger)" }}>*</span>
+            </label>
+            <input
+              type="email"
+              value={convertEmail}
+              onChange={(e) => setConvertEmail(e.target.value)}
+              required
+              className="w-full"
+              style={{
+                padding: "0.6rem 0.85rem",
+                borderRadius: "8px",
+                border: "1px solid var(--border)",
+                fontSize: "0.9rem",
+              }}
+            />
           </div>
         </div>
-      )}
+      </Modal>
     </div>
   );
 };
